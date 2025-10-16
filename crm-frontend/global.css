@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-ivoire text-ardoise;
+}
+
+/* Composants réutilisables */
+@layer components {
+  .btn-primary {
+    @apply px-4 py-2 rounded-lg bg-bleu text-white font-medium hover:bg-blue-600 transition-colors;
+  }
+
+  .btn-secondary {
+    @apply px-4 py-2 rounded-lg border border-ardoise text-ardoise font-medium hover:bg-gray-100 transition-colors;
+  }
+
+  .btn-danger {
+    @apply px-4 py-2 rounded-lg bg-rouge text-white font-medium hover:bg-red-600 transition-colors;
+  }
+
+  .btn-ghost {
+    @apply px-4 py-2 rounded-lg text-ardoise font-medium hover:bg-gray-200 transition-colors;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-md p-6 border border-gray-200;
+  }
+
+  .card-hover {
+    @apply card hover:shadow-lg transition-shadow cursor-pointer;
+  }
+
+  .input-base {
+    @apply w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-bleu focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all;
+  }
+
+  .label-base {
+    @apply block text-sm font-medium text-ardoise mb-2;
+  }
+
+  .badge {
+    @apply inline-block px-3 py-1 rounded-full text-xs font-medium;
+  }
+
+  .badge-success {
+    @apply badge bg-green-100 text-green-800;
+  }
+
+  .badge-warning {
+    @apply badge bg-yellow-100 text-yellow-800;
+  }
+
+  .badge-danger {
+    @apply badge bg-red-100 text-red-800;
+  }
+
+  .badge-info {
+    @apply badge bg-blue-100 text-blue-800;
+  }
+}
+
+/* Loading animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
