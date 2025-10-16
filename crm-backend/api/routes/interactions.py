@@ -25,13 +25,32 @@ async def list_interactions(
 ):
     """Lister toutes les interactions"""
     service = InteractionService(db)
-    
+
     filters = {}
     if investor_id:
         filters["investor_id"] = investor_id
-    
+
     items, total = await service.get_all(skip=skip, limit=limit, filters=filters)
-    
+
+    return PaginatedResponse(
+        total=total,
+        skip=skip,
+        limit=limit,
+        items=[InteractionResponse.model_validate(item) for item in items]
+    )
+
+@router.get("/search", response_model=PaginatedResponse[InteractionResponse])
+async def search_interactions(
+    q: str = Query(..., min_length=1),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=1000),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """Rechercher des interactions"""
+    service = InteractionService(db)
+    items, total = await service.search(q, skip=skip, limit=limit)
+
     return PaginatedResponse(
         total=total,
         skip=skip,

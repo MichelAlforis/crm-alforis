@@ -2,6 +2,7 @@ from pydantic import Field, EmailStr, field_validator
 from typing import Optional, List, Dict
 from datetime import datetime
 from schemas.base import TimestampedSchema, BaseSchema
+from schemas.person import PersonOrganizationLinkResponse
 from models.fournisseur import StageFournisseur, TypeFournisseur, InteractionType
 
 # =====================================================
@@ -130,7 +131,7 @@ class FournisseurCreate(BaseSchema):
     """Création d'un fournisseur"""
     name: str = Field(..., min_length=1, max_length=255)
     email: Optional[EmailStr] = None
-    phone: Optional[str] = Field(None, max_length=20)
+    main_phone: Optional[str] = Field(None, max_length=20)
     website: Optional[str] = Field(None, max_length=255)
     company: Optional[str] = Field(None, max_length=255)
     activity: Optional[str] = Field(None, max_length=255)  # ex: "Asset Management"
@@ -148,7 +149,7 @@ class FournisseurUpdate(BaseSchema):
     """Mise à jour d'un fournisseur"""
     name: Optional[str] = Field(None, min_length=1, max_length=255)
     email: Optional[EmailStr] = None
-    phone: Optional[str] = Field(None, max_length=20)
+    main_phone: Optional[str] = Field(None, max_length=20)
     website: Optional[str] = Field(None, max_length=255)
     company: Optional[str] = Field(None, max_length=255)
     activity: Optional[str] = Field(None, max_length=255)
@@ -167,20 +168,32 @@ class FournisseurResponse(TimestampedSchema):
     """Réponse fournisseur"""
     name: str
     email: Optional[str]
-    phone: Optional[str]
+    main_phone: Optional[str]
     website: Optional[str]
     company: Optional[str]
     activity: Optional[str]
-    stage: StageFournisseur
+    stage: Optional[StageFournisseur] = StageFournisseur.PROSPECT_FROID
     type_fournisseur: Optional[TypeFournisseur]
     notes: Optional[str]
-    is_active: bool
+    is_active: bool = True
+
+    @field_validator("stage", mode="before")
+    @classmethod
+    def ensure_stage(cls, value):
+        return value or StageFournisseur.PROSPECT_FROID
+
+    @field_validator("is_active", mode="before")
+    @classmethod
+    def coerce_is_active(cls, value):
+        if value is None:
+            return True
+        return bool(value)
 
 
 class FournisseurDetailResponse(FournisseurResponse):
     """Réponse détaillée fournisseur avec relations"""
-    contacts: List[FournisseurContactResponse] = []
-    # interactions et KPIs peuvent être ajoutés par les services si besoin
+    contacts: List[FournisseurContactResponse] = []  # Legacy
+    people: List[PersonOrganizationLinkResponse] = []
 
 
 # =====================================================

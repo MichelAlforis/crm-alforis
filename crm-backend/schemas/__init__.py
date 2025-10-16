@@ -51,6 +51,15 @@ from schemas.fournisseur import (
     FournisseurStatsResponse,
     FournisseurFilterParams,
 )
+from schemas.person import (
+    PersonCreate,
+    PersonUpdate,
+    PersonResponse,
+    PersonDetailResponse,
+    PersonOrganizationLinkCreate,
+    PersonOrganizationLinkUpdate,
+    PersonOrganizationLinkResponse,
+)
 
 __all__ = [
     # ---------- Base ----------
@@ -101,4 +110,13 @@ __all__ = [
     "FournisseurDetailResponse",
     "FournisseurStatsResponse",
     "FournisseurFilterParams",
+
+    # ---------- Person ----------
+    "PersonCreate",
+    "PersonUpdate",
+    "PersonResponse",
+    "PersonDetailResponse",
+    "PersonOrganizationLinkCreate",
+    "PersonOrganizationLinkUpdate",
+    "PersonOrganizationLinkResponse",
 ]

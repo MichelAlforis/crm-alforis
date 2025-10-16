@@ -13,6 +13,7 @@ from schemas.fournisseur import (
     FournisseurFilterParams,
 )
 from services.fournisseur import FournisseurService
+from services.person import PersonOrganizationLinkService
 
 router = APIRouter(prefix="/fournisseurs", tags=["fournisseurs"])
 
@@ -86,13 +87,16 @@ async def get_fournisseur(
 ):
     """Récupérer un fournisseur avec tous ses détails"""
     service = FournisseurService(db)
+    link_service = PersonOrganizationLinkService(db)
     details = await service.get_fournisseur_with_details(fournisseur_id)
+    people = link_service.serialize_links(details.get("people_links", []))
 
     return {
         "fournisseur": FournisseurDetailResponse.model_validate(details["fournisseur"]),
         "contacts": details["contacts"],
         "interaction_count": len(details["interactions"]),
         "kpi_count": len(details["kpis"]),
+        "people": people,
     }
 
 

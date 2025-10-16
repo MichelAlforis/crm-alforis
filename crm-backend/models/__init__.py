@@ -16,6 +16,11 @@ from models.fournisseur import (
     StageFournisseur,
     TypeFournisseur,
 )
+from models.person import (
+    Person,
+    PersonOrganizationLink,
+    OrganizationType,
+)
 
 __all__ = [
     # Base
@@ -38,6 +43,11 @@ __all__ = [
     "FournisseurKPI",
     "StageFournisseur",
     "TypeFournisseur",
+
+    # People
+    "Person",
+    "PersonOrganizationLink",
+    "OrganizationType",
 ]
 
 # ---------- Imports API ----------

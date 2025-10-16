@@ -1,11 +1,15 @@
 from typing import Optional, List
-from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy.orm import Session, joinedload
+from sqlalchemy import func, or_
 
 from models.fournisseur import Fournisseur
+from models.person import PersonOrganizationLink, OrganizationType
 from schemas.fournisseur import FournisseurCreate, FournisseurUpdate
 from services.base import BaseService
 from core.exceptions import ResourceNotFound
+import logging
+
+logger = logging.getLogger(__name__)
 
 class FournisseurService(BaseService[Fournisseur, FournisseurCreate, FournisseurUpdate]):
     def __init__(self, db: Session):
@@ -15,42 +19,38 @@ class FournisseurService(BaseService[Fournisseur, FournisseurCreate, Fournisseur
         """Récupère un fournisseur par son email."""
         return db.query(self.model).filter(self.model.email == email).first()
 
-    def search(
+    async def search(
         self,
-        db: Session,
+        search_term: str,
         *,
         skip: int = 0,
         limit: int = 100,
-        search: str = "",
         order_by: str = "created_at",
-        order: str = "desc"
+        order: str = "desc",
     ) -> tuple[List[Fournisseur], int]:
-        """Recherche des fournisseurs avec pagination et filtres."""
-        query = db.query(self.model)
+        """Recherche des fournisseurs avec pagination et tri."""
+        query = self.db.query(self.model)
 
-        # Recherche textuelle
-        if search:
-            search_filter = (
-                (func.lower(self.model.name).contains(search.lower())) |
-                (func.lower(self.model.email).contains(search.lower())) |
-                (func.lower(self.model.description).contains(search.lower()))
+        if search_term:
+            needle = f"%{search_term.lower()}%"
+            query = query.filter(
+                or_(
+                    func.lower(self.model.name).like(needle),
+                    func.lower(self.model.email).like(needle),
+                    func.lower(self.model.description).like(needle),
+                )
             )
-            query = query.filter(search_filter)
 
-        # Count total avant pagination
         total = query.count()
 
-        # Tri
         if hasattr(self.model, order_by):
             order_column = getattr(self.model, order_by)
             if order.lower() == "desc":
                 order_column = order_column.desc()
             query = query.order_by(order_column)
 
-        # Pagination
-        query = query.offset(skip).limit(limit)
-
-        return query.all(), total
+        items = query.offset(skip).limit(limit).all()
+        return items, total
 
     def get_stats(self, db: Session) -> dict:
         """Récupère des statistiques sur les fournisseurs."""
@@ -81,3 +81,29 @@ class FournisseurService(BaseService[Fournisseur, FournisseurCreate, Fournisseur
         db.commit()
         db.refresh(fournisseur)
         return fournisseur
+
+    async def get_fournisseur_with_details(self, fournisseur_id: int) -> dict:
+        """Récupérer un fournisseur avec ses relations (contacts, KPIs, personnes)."""
+        try:
+            fournisseur = await self.get_by_id(fournisseur_id)
+
+            people_links = (
+                self.db.query(PersonOrganizationLink)
+                .options(joinedload(PersonOrganizationLink.person))
+                .filter(
+                    PersonOrganizationLink.organization_type == OrganizationType.FOURNISSEUR,
+                    PersonOrganizationLink.organization_id == fournisseur_id,
+                )
+                .all()
+            )
+
+            return {
+                "fournisseur": fournisseur,
+                "contacts": fournisseur.contacts,
+                "interactions": fournisseur.interactions,
+                "kpis": fournisseur.kpis,
+                "people_links": people_links,
+            }
+        except Exception as exc:
+            logger.error(f"Error fetching fournisseur details {fournisseur_id}: {exc}")
+            raise

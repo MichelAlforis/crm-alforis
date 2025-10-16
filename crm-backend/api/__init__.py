@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from api.routes import auth, investors, interactions, kpis, imports, fournisseurs
+from api.routes import auth, investors, interactions, kpis, imports, fournisseurs, people, org_links
 
 # Créer le routeur principal
 api_router = APIRouter(prefix="/api/v1")
@@ -12,6 +12,8 @@ api_router.include_router(investors.router)
 api_router.include_router(interactions.router)
 api_router.include_router(kpis.router)
 api_router.include_router(fournisseurs.router)
+api_router.include_router(people.router)
+api_router.include_router(org_links.router)
 
 # ⚡ IMPORTS ROUTES (bulk operations)
 api_router.include_router(imports.router)

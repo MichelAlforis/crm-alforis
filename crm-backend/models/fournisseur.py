@@ -55,7 +55,7 @@ class Fournisseur(BaseModel):
     # Infos générales
     name = Column(String(255), nullable=False, index=True)
     email = Column(String(255), unique=True, index=True)
-    phone = Column(String(20))
+    main_phone = Column("phone", String(20))  # Colonne DB = "phone", attribut Python = "main_phone"
     website = Column(String(255))
     company = Column(String(255))
     activity = Column(String(255))  # ex: "Asset Management", "Legal", "Marketing", ...

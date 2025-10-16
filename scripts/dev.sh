@@ -276,15 +276,49 @@ check_free_postgres_port() {
     proc=$(echo "$line" | awk '{print $1}')
     pid=$(echo "$line" | awk '{print $2}')
     log_warning "Le port POSTGRES $PG_PORT est occupé par: $proc (PID $pid)"
+
+    # D'abord, essayer de nettoyer les conteneurs Docker qui publient ce port
+    log_info "Recherche de conteneurs Docker utilisant le port $PG_PORT..."
+    local containers
+    containers=$(docker ps -a --filter "publish=$PG_PORT" --format "{{.Names}}" 2>/dev/null || true)
+
+    if [[ -n "$containers" ]]; then
+      log_info "Conteneurs trouvés: $containers"
+      for container in $containers; do
+        log_info "Arrêt et suppression du conteneur: $container"
+        docker stop "$container" >/dev/null 2>&1 || true
+        docker rm "$container" >/dev/null 2>&1 || true
+      done
+      sleep 2
+
+      # Re-vérifier après nettoyage
+      if ! is_listening_port "$PG_PORT"; then
+        log_success "Port $PG_PORT libéré après nettoyage des conteneurs"
+        return 0
+      fi
+    fi
+
+    # Si toujours occupé par Docker Desktop
     if [[ "$proc" == "com.docke" || "$proc" == "com.docker.backend" ]]; then
-      log_warning "Le port $PG_PORT est tenu par Docker Desktop. Veuillez redémarrer Docker Desktop puis relancer ce script."
-      return 1
+      log_warning "Le port $PG_PORT est tenu par le proxy Docker Desktop."
+      echo "  → Solutions:"
+      echo "    1. Redémarrer Docker Desktop (cmd+Q puis relancer)"
+      echo "    2. OU: docker ps -a | grep 5433 puis docker rm -f <container>"
+      echo "    3. OU: Utiliser un autre port dans docker-compose.yml"
+      log_info "Tentative de nettoyage forcé..."
+      docker ps -a --filter "publish=$PG_PORT" --format "{{.Names}}" | xargs -r docker rm -f 2>/dev/null || true
+      sleep 2
+      if ! is_listening_port "$PG_PORT"; then
+        log_success "Port $PG_PORT libéré"
+        return 0
+      fi
     else
+      # Process local non-Docker
       log_info "→ kill -9 $pid"
       kill -9 "$pid" || true
       sleep 1
       if is_listening_port "$PG_PORT"; then
-        log_warning "Le port $PG_PORT est encore pris. Vérifie les process locaux ou passe un autre port."
+        log_warning "Le port $PG_PORT est encore pris."
       else
         log_success "Port $PG_PORT libéré"
       fi
@@ -357,10 +391,10 @@ up_smart() {
     fi
   fi
 
-  # Restart des services instables
+  # Restart des services instables (utiliser up -d au lieu de restart pour recréer si nécessaire)
   if [[ ${#to_restart[@]} -gt 0 ]]; then
     log_info "Redémarrage: ${to_restart[*]}"
-    if ! compose restart "${to_restart[@]}"; then
+    if ! compose up -d "${to_restart[@]}"; then
       log_error "Échec au redémarrage"
       for s in "${to_restart[@]}"; do show_service_details "$s"; done
       exit 1
@@ -455,17 +489,34 @@ doctor() {
 
 kill_ports_cmd() {
   section "Kill des ports"
+
+  # Postgres 5433
+  echo "→ POSTGRES 5433"
+  local pg_containers=$(docker ps -a --filter "publish=5433" --format "{{.Names}}" 2>/dev/null || true)
+  if [[ -n "$pg_containers" ]]; then
+    log_info "Conteneurs Postgres: $pg_containers"
+    echo "$pg_containers" | xargs docker rm -f 2>/dev/null || true
+  fi
+  if is_listening_port "5433"; then
+    local pgpid=$(lsof -t -iTCP:5433 -sTCP:LISTEN | head -n1 || true)
+    [[ -n "$pgpid" ]] && { log_info "kill -9 $pgpid"; kill -9 "$pgpid" || true; }
+  fi
+
+  # API
   echo "→ API $API_PORT"
   free_publish_port_from_container "$API_PORT"
   if is_listening_port "$API_PORT"; then
     local pid=$(lsof -t -iTCP:"$API_PORT" -sTCP:LISTEN | head -n1 || true)
     [[ -n "$pid" ]] && { log_info "kill -9 $pid"; kill -9 "$pid" || true; }
   fi
+
+  # Frontend
   echo "→ FRONT $FRONT_PORT"
   if is_listening_port "$FRONT_PORT"; then
     local pid2=$(lsof -t -iTCP:"$FRONT_PORT" -sTCP:LISTEN | head -n1 || true)
     [[ -n "$pid2" ]] && { log_info "kill -9 $pid2"; kill -9 "$pid2" || true; }
   fi
+
   log_success "Tentative de libération des ports effectuée"
 }
 

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import and_, func
+from sqlalchemy import and_, func, or_
 from typing import List, Tuple, Optional
 from datetime import datetime
 from models.investor import Interaction, Investor, InteractionType
@@ -41,6 +41,39 @@ class InteractionService(BaseService[Interaction, InteractionCreate, Interaction
             logger.error(f"Error creating interaction: {e}")
             raise
     
+    async def search(
+        self,
+        search_term: str,
+        *,
+        skip: int = 0,
+        limit: int = 100,
+        order_by: str = "date",
+        order: str = "desc",
+    ) -> Tuple[List[Interaction], int]:
+        """Recherche des interactions avec pagination et tri"""
+        query = self.db.query(Interaction)
+
+        if search_term:
+            needle = f"%{search_term.lower()}%"
+            query = query.filter(
+                or_(
+                    func.lower(Interaction.contact_name).like(needle),
+                    func.lower(Interaction.subject).like(needle),
+                    func.lower(Interaction.notes).like(needle),
+                )
+            )
+
+        total = query.count()
+
+        if hasattr(self.model, order_by):
+            order_column = getattr(self.model, order_by)
+            if order.lower() == "desc":
+                order_column = order_column.desc()
+            query = query.order_by(order_column)
+
+        items = query.offset(skip).limit(limit).all()
+        return items, total
+
     async def get_by_investor(
         self,
         investor_id: int,

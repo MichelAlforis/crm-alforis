@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import and_, func
+from sqlalchemy import and_, func, or_
 from typing import List, Tuple, Optional
 from models.investor import KPI, Investor
 from schemas.kpi import KPICreate, KPIUpdate
@@ -14,6 +14,41 @@ class KPIService(BaseService[KPI, KPICreate, KPIUpdate]):
 
     def __init__(self, db: Session):
         super().__init__(KPI, db)
+
+    async def search(
+        self,
+        search_term: str,
+        *,
+        skip: int = 0,
+        limit: int = 100,
+        order_by: str = "year",
+        order: str = "desc",
+    ) -> Tuple[List[KPI], int]:
+        """Recherche des KPIs en joignant avec les investisseurs"""
+        query = self.db.query(KPI).join(Investor, KPI.investor_id == Investor.id)
+
+        if search_term:
+            needle = f"%{search_term.lower()}%"
+            # Recherche par nom d'investisseur ou par année/mois
+            query = query.filter(
+                or_(
+                    func.lower(Investor.name).like(needle),
+                    func.cast(KPI.year, func.TEXT).like(needle),
+                )
+            )
+
+        total = query.count()
+
+        if hasattr(KPI, order_by):
+            order_column = getattr(KPI, order_by)
+            if order.lower() == "desc":
+                order_column = order_column.desc()
+            query = query.order_by(order_column, KPI.month.desc())
+        else:
+            query = query.order_by(KPI.year.desc(), KPI.month.desc())
+
+        items = query.offset(skip).limit(limit).all()
+        return items, total
 
     async def create_or_update(
         self,

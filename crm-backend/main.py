@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, status
+from fastapi import FastAPI, Request, status, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
@@ -42,6 +42,15 @@ async def api_exception_handler(request: Request, exc: APIException):
             "status_code": exc.status_code,
             "timestamp": datetime.utcnow().isoformat(),
         },
+    )
+
+# Exception handler for FastAPI HTTP exceptions (preserves original status/details)
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail},
+        headers=getattr(exc, "headers", None),
     )
 
 # ============= EVENTS =============

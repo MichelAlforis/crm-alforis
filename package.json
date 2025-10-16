@@ -4,6 +4,7 @@
     "stop": "bash ./scripts/dev.sh down",
     "logs": "bash ./scripts/dev.sh logs",
     "docker": "bash ./scripts/dev.sh docker",
-    "rebuild": "bash ./scripts/dev.sh rebuild"
+    "rebuild": "bash ./scripts/dev.sh rebuild",
+    "devc": "bash ./crm-frontend/scripts/dev-clean.sh"
   }
 }

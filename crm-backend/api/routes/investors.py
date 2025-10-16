@@ -13,6 +13,7 @@ from schemas.investor import (
 )
 from schemas.base import PaginatedResponse
 from services.investor import InvestorService
+from services.person import PersonOrganizationLinkService
 
 router = APIRouter(prefix="/investors", tags=["investors"])
 
@@ -80,13 +81,16 @@ async def get_investor(
 ):
     """Récupérer un investisseur avec tous ses détails"""
     service = InvestorService(db)
+    link_service = PersonOrganizationLinkService(db)
     details = await service.get_investor_with_details(investor_id)
+    people = link_service.serialize_links(details.get("people_links", []))
     
     return {
         "investor": InvestorDetailResponse.model_validate(details["investor"]),
         "contacts": details["contacts"],
         "interaction_count": len(details["interactions"]),
         "kpi_count": len(details["kpis"]),
+        "people": people,
     }
 
 # ============= POST ROUTES =============

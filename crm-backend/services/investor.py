@@ -1,7 +1,8 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import or_, and_
 from typing import List, Tuple, Optional
 from models.investor import Investor, Contact, PipelineStage, ClientType
+from models.person import PersonOrganizationLink, OrganizationType
 from schemas.investor import InvestorCreate, InvestorUpdate, InvestorFilterParams
 from services.base import BaseService
 from core.exceptions import ConflictError, ValidationError
@@ -210,13 +211,24 @@ class InvestorService(BaseService[Investor, InvestorCreate, InvestorUpdate]):
             investor = await self.get_by_id(investor_id)
             
             # Lazy load les relations
+            people_links = (
+                self.db.query(PersonOrganizationLink)
+                .options(joinedload(PersonOrganizationLink.person))
+                .filter(
+                    PersonOrganizationLink.organization_type == OrganizationType.INVESTOR,
+                    PersonOrganizationLink.organization_id == investor_id,
+                )
+                .all()
+            )
+
             details = {
                 "investor": investor,
                 "contacts": investor.contacts,
                 "interactions": investor.interactions,
                 "kpis": investor.kpis,
+                "people_links": people_links,
             }
-            
+
             return details
         except Exception as e:
             logger.error(f"Error getting investor details: {e}")
