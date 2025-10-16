@@ -28,6 +28,7 @@ interface SidebarProps {
 
 // Menu items configuration
 const MENU_ITEMS = [
+
   {
     label: 'Dashboard',
     href: '/dashboard',
@@ -57,6 +58,12 @@ const MENU_ITEMS = [
     href: '/dashboard/kpis',
     icon: TrendingUp,
     description: 'Métriques et analyses',
+  },
+    {
+    label: 'Import',
+    href: '/dashboard/imports',
+    icon: Users, // Utilise l'icône Users, à adapter si tu veux une autre
+    description: 'Importer des données',
   },
 ]
 
