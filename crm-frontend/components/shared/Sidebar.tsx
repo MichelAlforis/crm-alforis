@@ -20,11 +20,10 @@ import {
   LogOut,
   HelpCircle,
   FileUp,
-  Search,
   Bell,
-  Zap,
   BarChart3,
 } from 'lucide-react'
+import { DEFAULT_TODAY_TASKS_COUNT } from '@/lib/dashboardMetrics'
 
 interface SidebarProps {
   isOpen?: boolean
@@ -86,21 +85,16 @@ const MENU_ITEMS = [
     href: '/dashboard/imports',
     icon: FileUp,
     description: 'Importer données',
-    badge: 'NEW',
+    badge: null,
     gradient: 'from-yellow-500 to-orange-500',
   },
-]
-
-const QUICK_ACTIONS = [
-  { icon: Search, label: 'Rechercher', action: 'search' },
-  { icon: Bell, label: 'Notifications', action: 'notifications', badge: '3' },
-  { icon: Zap, label: 'Actions rapides', action: 'quick-actions' },
 ]
 
 export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+  const tasksDueToday = DEFAULT_TODAY_TASKS_COUNT
 
   const isActive = (href: string): boolean => {
     if (!pathname) return false
@@ -184,30 +178,40 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
             )}
           </div>
 
-          {/* Quick Actions (non collapsed) */}
-          {!collapsed && (
-            <div className="px-3 pb-4">
-              <div className="flex gap-2">
-                {QUICK_ACTIONS.map((action) => {
-                  const Icon = action.icon
-                  return (
-                    <button
-                      key={action.action}
-                      className="relative flex-1 p-2.5 bg-white/5 hover:bg-white/10 rounded-lg transition-all duration-200 group border border-white/10"
-                      title={action.label}
-                    >
-                      <Icon className="w-4 h-4 text-slate-400 group-hover:text-white transition-colors mx-auto" />
-                      {action.badge && (
-                        <span className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-red-500 to-pink-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">
-                          {action.badge}
-                        </span>
-                      )}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-          )}
+          {/* Daily Tasks Indicator */}
+          <div className="px-3 pb-4">
+            {collapsed ? (
+              <Link
+                href="/dashboard/tasks"
+                className="relative mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-white/10 transition-colors hover:bg-white/20"
+              >
+                <Bell className="h-5 w-5 text-white" />
+                <span className="absolute -top-1.5 -right-1.5 flex h-5 min-w-[20px] items-center justify-center rounded-full border border-slate-900 bg-red-500 px-1 text-[10px] font-semibold text-white shadow-lg">
+                  {tasksDueToday}
+                </span>
+              </Link>
+            ) : (
+              <Link
+                href="/dashboard/tasks"
+                className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/10 px-4 py-3 transition-colors hover:border-white/20 hover:bg-white/20"
+              >
+                <div className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-amber-400 text-white shadow-lg shadow-amber-500/40">
+                  <Bell className="h-5 w-5" />
+                  <span className="absolute -top-1.5 -right-1.5 flex h-5 min-w-[20px] items-center justify-center rounded-full border border-slate-900 bg-red-500 px-1 text-[10px] font-semibold text-white shadow-lg">
+                    {tasksDueToday}
+                  </span>
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs uppercase tracking-wide text-slate-300">
+                    Tâches du jour
+                  </p>
+                  <p className="text-sm font-semibold text-white">
+                    Consultez votre planning
+                  </p>
+                </div>
+              </Link>
+            )}
+          </div>
 
           {/* Navigation */}
           <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto scrollbar-hide">

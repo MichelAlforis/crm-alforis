@@ -8,8 +8,10 @@
 
 import React from 'react'
 import { Bell, Menu, Search, User } from 'lucide-react'
+import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
 import GlobalSearchInputAdvanced from '@/components/shared/GlobalSearchInputAdvanced'
+import { DEFAULT_TODAY_TASKS_COUNT } from '@/lib/dashboardMetrics'
 
 interface NavbarProps {
   onMenuClick?: () => void
@@ -18,7 +20,7 @@ interface NavbarProps {
 export default function Navbar({ onMenuClick }: NavbarProps) {
   const { logout, user } = useAuth()
   const [showUserMenu, setShowUserMenu] = React.useState(false)
-  const [notifications] = React.useState(3) // Mock notification count
+  const dailyTasksCount = DEFAULT_TODAY_TASKS_COUNT
 
   return (
     <nav className="navbar">
@@ -49,18 +51,19 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
             </button>
           </div>
 
-          {/* Notifications */}
-          <button
+          {/* Daily Tasks */}
+          <Link
+            href="/dashboard/tasks"
             className="btn-ghost btn-md relative"
-            aria-label="Notifications"
+            aria-label="Voir les tâches du jour"
           >
             <Bell className="w-5 h-5" />
-            {notifications > 0 && (
+            {dailyTasksCount > 0 && (
               <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-white bg-red-500 rounded-full animate-pulse-soft">
-                {notifications}
+                {dailyTasksCount}
               </span>
             )}
-          </button>
+          </Link>
 
           {/* Brand Name - Hidden on small screens */}
           <div className="hidden sm:block px-3 py-1.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg">
@@ -112,15 +115,19 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
                       <User className="w-4 h-4" />
                       <span>Mon profil</span>
                     </button>
-                    <button className="dropdown-item flex items-center gap-3">
+                    <Link
+                      href="/dashboard/tasks"
+                      className="dropdown-item flex items-center gap-3"
+                      onClick={() => setShowUserMenu(false)}
+                    >
                       <Bell className="w-4 h-4" />
-                      <span>Notifications</span>
-                      {notifications > 0 && (
+                      <span>Tâches du jour</span>
+                      {dailyTasksCount > 0 && (
                         <span className="ml-auto badge-danger">
-                          {notifications}
+                          {dailyTasksCount}
                         </span>
                       )}
-                    </button>
+                    </Link>
                   </div>
 
                   <div className="dropdown-divider" />

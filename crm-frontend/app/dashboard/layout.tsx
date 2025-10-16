@@ -12,7 +12,9 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import Navbar from '@/components/shared/Navbar'
 import Sidebar from '@/components/shared/Sidebar'
+import QueryProvider from '@/components/providers/QueryProvider'
 import { Loader2 } from 'lucide-react'
+import clsx from 'clsx'
 
 export default function DashboardLayout({
   children,
@@ -56,34 +58,39 @@ export default function DashboardLayout({
 
   // Main dashboard layout
   return (
-    <div className="dashboard-layout">
-      {/* Sidebar Navigation */}
-      <Sidebar isOpen={isSidebarOpen} />
+    <QueryProvider>
+      <div className="dashboard-layout">
+        {/* Sidebar Navigation */}
+        <Sidebar isOpen={isSidebarOpen} />
 
-      {/* Main Content Area */}
-      <div
-        className={`flex flex-col min-h-screen transition-all duration-200 ${
-          isSidebarOpen ? 'ml-64' : 'ml-16'
-        }`}
-      >
-        {/* Top Navbar */}
-        <Navbar onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
-
-        {/* Page Content */}
-        <main className="flex-1 overflow-auto bg-gray-50 pt-16">
-          <div className="dashboard-content animate-fadeIn">
-            {children}
-          </div>
-        </main>
-      </div>
-
-      {/* Mobile Sidebar Backdrop */}
-      {isSidebarOpen && (
+        {/* Main Content Area */}
         <div
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
-    </div>
+          className={clsx(
+            'flex flex-col min-h-screen transition-all duration-200 ml-0',
+            isSidebarOpen ? 'lg:ml-64' : 'lg:ml-16'
+          )}
+        >
+          {/* Top Navbar */}
+          <Navbar
+            onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          />
+
+          {/* Page Content */}
+          <main className="flex-1 overflow-auto bg-gray-50 pt-6">
+            <div className="dashboard-content animate-fadeIn">
+              {children}
+            </div>
+          </main>
+        </div>
+
+        {/* Mobile Sidebar Backdrop */}
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+      </div>
+    </QueryProvider>
   )
 }

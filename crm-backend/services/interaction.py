@@ -10,6 +10,11 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# Import différé pour éviter la dépendance circulaire
+def get_automation_service(db):
+    from services.task_automation import TaskAutomationService
+    return TaskAutomationService(db)
+
 class InteractionService(BaseService[Interaction, InteractionCreate, InteractionUpdate]):
     """Service métier pour les interactions"""
     
@@ -21,18 +26,32 @@ class InteractionService(BaseService[Interaction, InteractionCreate, Interaction
         investor_id: int,
         schema: InteractionCreate
     ) -> Interaction:
-        """Créer une interaction pour un investisseur"""
+        """Créer une interaction pour un investisseur + auto-créer une tâche de suivi"""
         try:
             # Vérifier que l'investisseur existe
             investor = self.db.query(Investor).filter(Investor.id == investor_id).first()
             if not investor:
                 raise ResourceNotFound("Investor", investor_id)
-            
+
             interaction = Interaction(**schema.model_dump(), investor_id=investor_id)
             self.db.add(interaction)
             self.db.commit()
             self.db.refresh(interaction)
             logger.info(f"Created interaction for investor {investor_id}")
+
+            # Auto-créer une tâche de suivi
+            try:
+                automation = get_automation_service(self.db)
+                await automation.on_interaction_created(
+                    investor_id=investor_id,
+                    interaction_type=schema.type.value if schema.type else "autre",
+                    notes=schema.notes
+                )
+                logger.info(f"Auto-created task for interaction with investor {investor_id}")
+            except Exception as e:
+                logger.warning(f"Failed to auto-create task for interaction: {e}")
+                # Ne pas faire échouer la création de l'interaction
+
             return interaction
         except ResourceNotFound:
             raise

@@ -10,6 +10,11 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# Import différé pour éviter la dépendance circulaire
+def get_automation_service(db):
+    from services.task_automation import TaskAutomationService
+    return TaskAutomationService(db)
+
 class InvestorService(BaseService[Investor, InvestorCreate, InvestorUpdate]):
     """Service métier pour les investisseurs avec logique spécifique"""
     
@@ -205,11 +210,36 @@ class InvestorService(BaseService[Investor, InvestorCreate, InvestorUpdate]):
             logger.error(f"Error adding contact: {e}")
             raise
     
+    async def update(self, entity_id: int, update_data: InvestorUpdate) -> Investor:
+        """Override update pour déclencher l'auto-création de tâches lors du changement de pipeline"""
+        # Récupérer l'ancien stage avant la mise à jour
+        old_investor = await self.get_by_id(entity_id)
+        old_stage = old_investor.pipeline_stage
+
+        # Appeler la méthode update du parent
+        updated_investor = await super().update(entity_id, update_data)
+
+        # Si le pipeline a changé, créer une tâche automatique
+        if hasattr(update_data, 'pipeline_stage') and update_data.pipeline_stage and update_data.pipeline_stage != old_stage:
+            try:
+                automation = get_automation_service(self.db)
+                await automation.on_investor_pipeline_change(
+                    investor_id=entity_id,
+                    old_stage=old_stage,
+                    new_stage=update_data.pipeline_stage
+                )
+                logger.info(f"Auto-created task for investor {entity_id} pipeline change: {old_stage} → {update_data.pipeline_stage}")
+            except Exception as e:
+                logger.warning(f"Failed to auto-create task for investor {entity_id}: {e}")
+                # Ne pas faire échouer la mise à jour si la création de tâche échoue
+
+        return updated_investor
+
     async def get_investor_with_details(self, investor_id: int) -> dict:
         """Obtenir un investisseur avec tous ses détails (contacts, interactions, KPIs)"""
         try:
             investor = await self.get_by_id(investor_id)
-            
+
             # Lazy load les relations
             people_links = (
                 self.db.query(PersonOrganizationLink)

@@ -60,6 +60,16 @@ from schemas.person import (
     PersonOrganizationLinkUpdate,
     PersonOrganizationLinkResponse,
 )
+from schemas.task import (
+    TaskCreate,
+    TaskUpdate,
+    TaskResponse,
+    TaskWithRelations,
+    TaskSnoozeRequest,
+    TaskStatsResponse,
+    TaskFilterParams,
+    TaskQuickActionRequest,
+)
 
 __all__ = [
     # ---------- Base ----------
@@ -119,4 +129,14 @@ __all__ = [
     "PersonOrganizationLinkCreate",
     "PersonOrganizationLinkUpdate",
     "PersonOrganizationLinkResponse",
+
+    # ---------- Task ----------
+    "TaskCreate",
+    "TaskUpdate",
+    "TaskResponse",
+    "TaskWithRelations",
+    "TaskSnoozeRequest",
+    "TaskStatsResponse",
+    "TaskFilterParams",
+    "TaskQuickActionRequest",
 ]

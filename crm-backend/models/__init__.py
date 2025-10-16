@@ -21,6 +21,12 @@ from models.person import (
     PersonOrganizationLink,
     OrganizationType,
 )
+from models.task import (
+    Task,
+    TaskPriority,
+    TaskStatus,
+    TaskCategory,
+)
 
 __all__ = [
     # Base
@@ -48,6 +54,12 @@ __all__ = [
     "Person",
     "PersonOrganizationLink",
     "OrganizationType",
+
+    # Tasks
+    "Task",
+    "TaskPriority",
+    "TaskStatus",
+    "TaskCategory",
 ]
 
 # ---------- Imports API ----------

@@ -330,3 +330,88 @@ export interface FormState {
   error?: string
   success?: boolean
 }
+
+// ============= TASKS =============
+
+export type TaskPriority = "critique" | "haute" | "moyenne" | "basse" | "non_prioritaire"
+export type TaskStatus = "todo" | "doing" | "done" | "snoozed"
+export type TaskCategory = "relance" | "rdv" | "email" | "due_diligence" | "admin" | "pitch" | "negociation" | "autre"
+
+export interface Task {
+  id: number
+  created_at: string
+  updated_at: string
+  title: string
+  description?: string
+  due_date: string // Format: YYYY-MM-DD
+  snoozed_until?: string
+  completed_at?: string
+  priority: TaskPriority
+  status: TaskStatus
+  category: TaskCategory
+
+  // Relations optionnelles
+  investor_id?: number
+  fournisseur_id?: number
+  person_id?: number
+
+  // Métadonnées
+  is_auto_created: boolean
+  auto_creation_rule?: string
+
+  // Propriétés calculées
+  is_overdue: boolean
+  is_today: boolean
+  is_next_7_days: boolean
+  days_until_due: number
+}
+
+export interface TaskWithRelations extends Task {
+  investor_name?: string
+  fournisseur_name?: string
+  person_name?: string
+  linked_entity_display?: string
+}
+
+export interface TaskInput {
+  title: string
+  description?: string
+  due_date: string
+  priority?: TaskPriority
+  status?: TaskStatus
+  category?: TaskCategory
+  investor_id?: number
+  fournisseur_id?: number
+  person_id?: number
+}
+
+export interface TaskUpdateInput {
+  title?: string
+  description?: string
+  due_date?: string
+  priority?: TaskPriority
+  status?: TaskStatus
+  category?: TaskCategory
+  investor_id?: number
+  fournisseur_id?: number
+  person_id?: number
+}
+
+export interface TaskStats {
+  total: number
+  overdue: number
+  today: number
+  next_7_days: number
+  by_status: Record<TaskStatus, number>
+  by_priority: Record<TaskPriority, number>
+}
+
+export interface TaskFilters {
+  status?: TaskStatus
+  priority?: TaskPriority
+  category?: TaskCategory
+  investor_id?: number
+  fournisseur_id?: number
+  person_id?: number
+  view?: "today" | "overdue" | "next7" | "all"
+}
