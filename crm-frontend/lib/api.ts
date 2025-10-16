@@ -41,6 +41,10 @@ class ApiClient {
   private token: string | null = null
 
   constructor(baseUrl: string) {
+    // Force toujours le /api/v1 à la fin de la baseUrl
+    if (!baseUrl.endsWith('/api/v1')) {
+      baseUrl = baseUrl.replace(/\/?$/, '/api/v1')
+    }
     this.baseUrl = baseUrl
     this.initToken()
   }
@@ -137,9 +141,8 @@ class ApiClient {
     config: RequestConfig = {}
   ): Promise<T> {
     const { params, ...requestConfig } = config
-    
-    // Construire l'URL avec params
-    let url = `${this.baseUrl}${endpoint}`
+    // Toujours garantir un seul slash entre baseUrl et endpoint
+    let url = this.baseUrl.replace(/\/$/, '') + (endpoint.startsWith('/') ? endpoint : '/' + endpoint)
     if (params) {
       const query = new URLSearchParams()
       Object.entries(params).forEach(([key, value]) => {

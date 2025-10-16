@@ -36,7 +36,8 @@ fi
 # ---------- CONFIG PAR DÉFAUT ----------
 FRONT_PORT="${FRONT_PORT:-3010}"
 API_PORT="${API_PORT:-8000}"
-REQUEST_FRONTEND="${REQUEST_FRONTEND:-0}"
+# Par défaut, on active le frontend sauf si --no-frontend est passé
+REQUEST_FRONTEND="${REQUEST_FRONTEND:-1}"
 DOCKER_WAIT_TIMEOUT="${DOCKER_WAIT_TIMEOUT:-60}"
 DOCKER_CHECK_INTERVAL="${DOCKER_CHECK_INTERVAL:-2}"
 
@@ -266,6 +267,33 @@ check_free_front_port() {
   fi
 }
 
+check_free_postgres_port() {
+  section "Pré-check du port POSTGRES (5433)"
+  local PG_PORT=5433
+  if is_listening_port "$PG_PORT"; then
+    local line proc pid
+    line=$(lsof -nP -iTCP:"$PG_PORT" -sTCP:LISTEN | tail -n1)
+    proc=$(echo "$line" | awk '{print $1}')
+    pid=$(echo "$line" | awk '{print $2}')
+    log_warning "Le port POSTGRES $PG_PORT est occupé par: $proc (PID $pid)"
+    if [[ "$proc" == "com.docke" || "$proc" == "com.docker.backend" ]]; then
+      log_warning "Le port $PG_PORT est tenu par Docker Desktop. Veuillez redémarrer Docker Desktop puis relancer ce script."
+      return 1
+    else
+      log_info "→ kill -9 $pid"
+      kill -9 "$pid" || true
+      sleep 1
+      if is_listening_port "$PG_PORT"; then
+        log_warning "Le port $PG_PORT est encore pris. Vérifie les process locaux ou passe un autre port."
+      else
+        log_success "Port $PG_PORT libéré"
+      fi
+    fi
+  else
+    log_success "Port $PG_PORT libre"
+  fi
+}
+
 # ---------- SURVEILLANCE SERVICES ----------
 svc_state(){ compose ps --format json "${1:-}" 2>/dev/null | grep -o '"State":"[^"]*"' | cut -d'"' -f4 || echo "not_found"; }
 svc_health(){ compose ps --format json "${1:-}" 2>/dev/null | grep -o '"Health":"[^"]*"' | cut -d'"' -f4 || echo ""; }
@@ -314,6 +342,8 @@ up_smart() {
 
   if [[ $all_healthy == true ]]; then
     [[ $SILENT -eq 1 ]] || { echo; log_success "Tous les services sont OK"; echo; compose ps; }
+    print_endpoints
+    print_services_status
     return 0
   fi
 
@@ -341,8 +371,9 @@ up_smart() {
   section "Stabilisation"
   sleep 3
   [[ $SILENT -eq 1 ]] || { echo; log_info "État final:"; compose ps; }
+  print_endpoints
+  print_services_status
 }
-
 compose_down(){ section "Arrêt de la stack"; compose down; log_success "Stack stoppée"; }
 compose_logs(){ section "Logs (Ctrl+C pour quitter)"; compose logs -f --tail=80; }
 compose_ps(){ section "État des services"; compose ps; }
@@ -350,6 +381,42 @@ compose_restart(){ section "Redémarrage forcé"; compose restart "${TARGET_SERV
 compose_rebuild(){ section "Rebuild complet"; compose up -d --build --force-recreate "${TARGET_SERVICES[@]}"; sleep 3; compose_ps; }
 compose_clean(){ section "Nettoyage complet"; log_warning "Supprime volumes & orphelins"; read -p "Confirmer ? (y/N) " -n1 -r; echo; [[ $REPLY =~ ^[Yy]$ ]] && compose down -v --remove-orphans && log_success "OK" || log_info "Annulé"; }
 compose_shell(){ local s=${1:-api}; section "Shell dans $s"; compose exec "$s" /bin/bash || compose exec "$s" /bin/sh; }
+
+# ----------- ETAT FINAL EXPLICITE -----------
+print_services_status() {
+  section "Résumé de l'état des services"
+  local services=(postgres api)
+  if [[ "$REQUEST_FRONTEND" -eq 1 || "$WANT_PROFILE_FRONTEND" -eq 1 ]]; then
+    services+=(frontend)
+  fi
+  local all_ok=1
+  for s in "${services[@]}"; do
+    local st=$(svc_state "$s")
+    local h=$(svc_health "$s")
+    if [[ "$st" == "running" ]]; then
+      if [[ -n "$h" && "$h" != "healthy" ]]; then
+        echo -e "${YELLOW}⚠️  $s : running ($h)${NC}"
+        all_ok=0
+      else
+        echo -e "${GREEN}✅ $s : running${NC}"
+      fi
+    elif [[ "$st" == "exited" ]]; then
+      echo -e "${RED}❌ $s : exited/crashed${NC}"
+      all_ok=0
+    elif [[ "$st" == "not_found" ]]; then
+      echo -e "${RED}❌ $s : non démarré (not found)${NC}"
+      all_ok=0
+    else
+      echo -e "${YELLOW}⚠️  $s : état inconnu ($st)${NC}"
+      all_ok=0
+    fi
+  done
+  if [[ $all_ok -eq 1 ]]; then
+    echo -e "\n${GREEN}🎉 Tous les services sont opérationnels !${NC}"
+  else
+    echo -e "\n${YELLOW}Vérifiez les logs avec : ./scripts/dev.sh logs --frontend${NC}"
+  fi
+}
 
 # ---------- OUTILS D'AIDE ----------
 print_endpoints() {
@@ -413,10 +480,10 @@ main() {
       check_docker_daemon
       load_available_services
       compute_target_services_and_args
+      check_free_postgres_port
       check_free_api_port
       check_free_front_port
       up_smart
-      print_endpoints
       ;;
     down)
       check_prerequisites
