@@ -8,13 +8,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { apiClient } from '@/lib/api'
-import { LoginRequest, TokenResponse, FormState } from '@/lib/types'
-
-interface AuthState {
-  isAuthenticated: boolean
-  isLoading: boolean
-  error?: string
-}
+import { LoginRequest, FormState, AuthState } from '@/lib/types'
 
 export function useAuth() {
   const router = useRouter()
@@ -29,11 +23,41 @@ export function useAuth() {
   // Vérifier le token au montage
   useEffect(() => {
     const token = apiClient.getToken()
-    setState(prev => ({
-      ...prev,
-      isAuthenticated: !!token,
-      isLoading: false,
-    }))
+    if (!token) {
+      setState(prev => ({
+        ...prev,
+        isAuthenticated: false,
+        isLoading: false,
+      }))
+      return
+    }
+
+    let isMounted = true
+    ;(async () => {
+      try {
+        const profile = await apiClient.getCurrentUser()
+        if (!isMounted) return
+        setState({
+          isAuthenticated: !!profile,
+          isLoading: false,
+          user: profile || undefined,
+        })
+      } catch (error: any) {
+        console.error('Failed to fetch current user:', error)
+        apiClient.clearToken()
+        if (!isMounted) return
+        setState({
+          isAuthenticated: false,
+          isLoading: false,
+          error: 'Session expirée, veuillez vous reconnecter',
+        })
+        router.push('/auth/login')
+      }
+    })()
+
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   // ============= LOGIN =============
@@ -46,9 +70,11 @@ export function useAuth() {
       console.log('✅ Login successful:', response)
       apiClient.setToken(response.access_token)
 
+      const profile = await apiClient.getCurrentUser()
       setState({
         isAuthenticated: true,
         isLoading: false,
+        user: profile || undefined,
       })
       setFormState({ isSubmitting: false, success: true })
 
@@ -76,6 +102,7 @@ export function useAuth() {
     setState({
       isAuthenticated: false,
       isLoading: false,
+      user: undefined,
     })
     router.push('/auth/login')
   }, [router])
@@ -83,6 +110,7 @@ export function useAuth() {
   return {
     ...state,
     ...formState,
+    user: state.user,
     login,
     logout,
   }

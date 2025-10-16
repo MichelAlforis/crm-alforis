@@ -13,13 +13,6 @@ import {
   LoadingState 
 } from '@/lib/types'
 
-interface InteractionsHookState {
-  interactions: InteractionListState
-  create: OperationState
-  update: OperationState
-  delete: OperationState
-}
-
 interface InteractionListState extends LoadingState {
   data?: PaginatedResponse<Interaction>
 }
@@ -80,7 +73,7 @@ export function useInteractions(investorId: number) {
   const updateInteraction = useCallback(async (interactionId: number, data: InteractionUpdate) => {
     setUpdate({ isLoading: true })
     try {
-      const updated = await apiClient.updateInteraction(investorId, interactionId, data)
+      const updated = await apiClient.updateInteraction(interactionId, data)
       setUpdate({
         isLoading: false,
         success: true,
@@ -100,7 +93,7 @@ export function useInteractions(investorId: number) {
   const deleteInteraction = useCallback(async (interactionId: number) => {
     setDelete({ isLoading: true })
     try {
-      await apiClient.deleteInteraction(investorId, interactionId)
+      await apiClient.deleteInteraction(interactionId)
       setDelete({
         isLoading: false,
         success: true,

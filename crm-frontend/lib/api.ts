@@ -33,7 +33,8 @@ import {
   FournisseurDetail,
   Newsletter,
   NewsletterCreate,
-  NewsletterType
+  NewsletterType,
+  UserInfo
 } from './types'
 
 import type { ApiError } from './types'
@@ -214,6 +215,17 @@ class ApiClient {
     })
   }
 
+  async getCurrentUser(): Promise<UserInfo | null> {
+    try {
+      return await this.request<UserInfo>('/auth/me')
+    } catch (error: any) {
+      if (error?.status_code === 401) {
+        return null
+      }
+      throw error
+    }
+  }
+
   async logout(): Promise<void> {
     this.clearToken()
   }
@@ -279,14 +291,14 @@ class ApiClient {
     })
   }
 
-  async updateInteraction(investorId: number, interactionId: number, data: InteractionUpdate): Promise<Interaction> {
+  async updateInteraction(interactionId: number, data: InteractionUpdate): Promise<Interaction> {
     return this.request<Interaction>(`/interactions/${interactionId}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     })
   }
 
-  async deleteInteraction(investorId: number, interactionId: number): Promise<void> {
+  async deleteInteraction(interactionId: number): Promise<void> {
     await this.request<void>(`/interactions/${interactionId}`, {
       method: 'DELETE',
     })
@@ -318,14 +330,14 @@ class ApiClient {
     })
   }
 
-  async updateKPI(investorId: number, kpiId: number, data: KPIUpdate): Promise<KPI> {
+  async updateKPI(kpiId: number, data: KPIUpdate): Promise<KPI> {
     return this.request<KPI>(`/kpis/${kpiId}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     })
   }
 
-  async deleteKPI(investorId: number, kpiId: number): Promise<void> {
+  async deleteKPI(kpiId: number): Promise<void> {
     await this.request<void>(`/kpis/${kpiId}`, {
       method: 'DELETE',
     })

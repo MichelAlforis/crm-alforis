@@ -152,17 +152,17 @@ function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
 
 // Helpers pour utilisation rapide
 export const toast = {
-  success: (title: string, message?: string, duration?: number) => {
+  success: (title: string, message?: string) => {
     // Cette fonction sera remplacée par le hook dans les composants
     console.log('Toast success:', title, message)
   },
-  error: (title: string, message?: string, duration?: number) => {
+  error: (title: string, message?: string) => {
     console.log('Toast error:', title, message)
   },
-  warning: (title: string, message?: string, duration?: number) => {
+  warning: (title: string, message?: string) => {
     console.log('Toast warning:', title, message)
   },
-  info: (title: string, message?: string, duration?: number) => {
+  info: (title: string, message?: string) => {
     console.log('Toast info:', title, message)
   },
 }

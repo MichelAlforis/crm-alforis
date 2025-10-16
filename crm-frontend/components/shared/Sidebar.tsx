@@ -13,10 +13,8 @@ import {
   UserCircle2,
   Building2,
   MessageSquare,
-  TrendingUp,
   ChevronLeft,
   ChevronRight,
-  Menu,
   X,
   Settings,
   LogOut,
@@ -105,6 +103,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
 
   const isActive = (href: string): boolean => {
+    if (!pathname) return false
     if (href === '/dashboard') {
       return pathname === '/dashboard'
     }

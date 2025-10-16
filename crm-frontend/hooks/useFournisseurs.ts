@@ -14,14 +14,6 @@ import {
   FournisseurDetail 
 } from '@/lib/types'
 
-interface FournisseursHookState {
-  fournisseurs: FournisseurListState
-  single: FournisseurSingleState
-  create: OperationState
-  update: OperationState
-  delete: OperationState
-}
-
 interface FournisseurListState extends LoadingState {
   data?: PaginatedResponse<Fournisseur>
 }

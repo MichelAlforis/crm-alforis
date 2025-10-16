@@ -19,6 +19,13 @@ export interface UserInfo {
   is_admin: boolean
 }
 
+export interface AuthState {
+  isAuthenticated: boolean
+  isLoading: boolean
+  error?: string
+  user?: UserInfo
+}
+
 // ============= INVESTOR =============
 
 export type PipelineStage =

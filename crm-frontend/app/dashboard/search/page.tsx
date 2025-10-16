@@ -3,6 +3,7 @@
 // ============================
 import React from 'react'
 import { headers } from 'next/headers'
+import type { SearchItem } from '@/lib/search'
 import {
   Factory,
   Building2,
@@ -17,8 +18,6 @@ import {
 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
-
-type SearchItem = import('../api/search/route').SearchItem
 
 // ----- Utils -----
 function getBaseUrlFromHeaders() {
@@ -122,7 +121,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function Row({ item, q }: { item: SearchItem; q: string }) {
   const Icon = ICONS[item.type] || Info
   const title = normalize(item.title)
-  const subtitle = normalize(item.subtitle)
+  const subtitle = normalize(item.subtitle ?? '')
 
   return (
     <a

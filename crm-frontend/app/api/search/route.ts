@@ -4,6 +4,7 @@
 // ============================
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
+import type { SearchItem } from '@/lib/search'
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
@@ -20,7 +21,7 @@ export async function GET(req: Request) {
     {
       key: 'fournisseurs',
       url: `${API}/api/v1/fournisseurs/search?q=${encodeURIComponent(q)}&skip=0&limit=20`,
-      toItems: (rows: any[]) => rows.map((r) => ({
+      toItems: (rows: any[]): SearchItem[] => rows.map((r) => ({
         id: String(r.id ?? ''),
         type: 'fournisseur' as const,
         title: r.name || 'Fournisseur',
@@ -31,7 +32,7 @@ export async function GET(req: Request) {
     {
       key: 'investisseurs',
       url: `${API}/api/v1/investors/search?q=${encodeURIComponent(q)}&skip=0&limit=20`,
-      toItems: (rows: any[]) => rows.map((r) => ({
+      toItems: (rows: any[]): SearchItem[] => rows.map((r) => ({
         id: String(r.id ?? ''),
         type: 'investisseur' as const,
         title: r.name || 'Investisseur',
@@ -42,7 +43,7 @@ export async function GET(req: Request) {
     {
       key: 'people',
       url: `${API}/api/v1/people?q=${encodeURIComponent(q)}&skip=0&limit=20`,
-      toItems: (rows: any[]) => rows.map((r) => ({
+      toItems: (rows: any[]): SearchItem[] => rows.map((r) => ({
         id: String(r.id ?? ''),
         type: 'person' as const,
         title: [r.first_name, r.last_name].filter(Boolean).join(' ') || 'Personne',
@@ -53,7 +54,7 @@ export async function GET(req: Request) {
     {
       key: 'interactions',
       url: `${API}/api/v1/interactions/search?q=${encodeURIComponent(q)}&skip=0&limit=20`,
-      toItems: (rows: any[]) => rows.map((r) => ({
+      toItems: (rows: any[]): SearchItem[] => rows.map((r) => ({
         id: String(r.id ?? ''),
         type: 'contact' as const,
         title: r.contact_name || 'Interaction',
@@ -64,7 +65,7 @@ export async function GET(req: Request) {
     {
       key: 'kpis',
       url: `${API}/api/v1/kpis/search?q=${encodeURIComponent(q)}&skip=0&limit=20`,
-      toItems: (rows: any[]) => rows.map((r) => ({
+      toItems: (rows: any[]): SearchItem[] => rows.map((r) => ({
         id: String(r.id ?? ''),
         type: 'kpi' as const,
         title: `KPI ${r.year}-${String(r.month).padStart(2, '0')}`,
@@ -115,12 +116,4 @@ export async function GET(req: Request) {
   const results = settled.flat()
 
   return NextResponse.json({ results, q })
-}
-
-export type SearchItem = {
-  id: string
-  type: 'fournisseur' | 'investisseur' | 'person' | 'contact' | 'opportunite' | 'kpi' | 'info'
-  title: string
-  subtitle?: string
-  href: string
 }

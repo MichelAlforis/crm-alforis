@@ -5,7 +5,7 @@
 
 import { useState } from 'react'
 import { apiClient } from '@/lib/api'
-import { InvestorCreate } from '@/lib/types'
+import { InvestorCreate, PipelineStage, ClientType } from '@/lib/types'
 
 export interface ImportResult {
   total: number
@@ -76,21 +76,23 @@ export function useImportInvestors() {
   /**
    * Normaliser le pipeline_stage
    */
-  const normalizePipelineStage = (value: any): string => {
+  const normalizePipelineStage = (value: any): PipelineStage => {
     if (!value) return 'prospect_froid'
     const str = value.toString().toLowerCase().replace(/ /g, '_')
-    const valid = ['prospect_froid', 'prospect_tiede', 'prospect_chaud', 'en_negociation', 'client', 'inactif']
-    return valid.includes(str) ? str : 'prospect_froid'
+    const normalized = str as PipelineStage
+    const valid: PipelineStage[] = ['prospect_froid', 'prospect_tiede', 'prospect_chaud', 'en_negociation', 'client', 'inactif']
+    return valid.includes(normalized) ? normalized : 'prospect_froid'
   }
 
   /**
    * Normaliser le client_type
    */
-  const normalizeClientType = (value: any): string | undefined => {
+  const normalizeClientType = (value: any): ClientType | undefined => {
     if (!value) return undefined
     const str = value.toString().toLowerCase().replace(/ /g, '_')
-    const valid = ['cgpi', 'wholesale', 'institutionnel', 'autre']
-    return valid.includes(str) ? str : undefined
+    const normalized = str as ClientType
+    const valid: ClientType[] = ['cgpi', 'wholesale', 'institutionnel', 'autre']
+    return valid.includes(normalized) ? normalized : undefined
   }
 
   /**
@@ -119,8 +121,8 @@ export function useImportInvestors() {
             main_phone: investor.main_phone,
             company: investor.company,
             industry: investor.industry,
-            pipeline_stage: investor.pipeline_stage as any,
-            client_type: investor.client_type as any,
+            pipeline_stage: investor.pipeline_stage,
+            client_type: investor.client_type,
             notes: investor.notes,
           })
 

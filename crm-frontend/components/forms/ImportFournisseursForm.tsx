@@ -3,7 +3,7 @@
 
 'use client'
 
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Button, Alert, Table, Card } from '@/components/shared'
 import { useImportFournisseurs, ImportedFournisseur } from '@/hooks/useImportFournisseurs'
 
@@ -17,6 +17,7 @@ export function ImportFournisseursForm({ onSuccess }: ImportFournisseursFormProp
   const [preview, setPreview] = useState<ImportedFournisseur[]>([])
   const [previewErrors, setPreviewErrors] = useState<{ row: number; error: string }[]>([])
   const [step, setStep] = useState<'upload' | 'preview' | 'result'>('upload')
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   /** Lire le fichier Excel/CSV */
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,17 +93,20 @@ export function ImportFournisseursForm({ onSuccess }: ImportFournisseursFormProp
               Sélectionnez un fichier Excel (.xlsx, .xls) ou CSV
             </p>
 
-            <label className="inline-block">
-              <input
-                type="file"
-                accept=".xlsx,.xls,.csv"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-              <Button as="span" variant="primary">
-                Choisir un fichier
-              </Button>
-            </label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".xlsx,.xls,.csv"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+            <Button
+              type="button"
+              variant="primary"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              Choisir un fichier
+            </Button>
 
             {file && (
               <p className="text-sm text-gray-700 mt-4">

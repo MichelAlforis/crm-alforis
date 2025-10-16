@@ -7,13 +7,6 @@ import { useState, useCallback } from 'react'
 import { apiClient } from '@/lib/api'
 import { KPI, KPICreate, KPIUpdate, LoadingState } from '@/lib/types'
 
-interface KPIsFournisseurHookState {
-  kpis: KPIListState
-  create: OperationState
-  update: OperationState
-  delete: OperationState
-}
-
 interface KPIListState extends LoadingState {
   data?: KPI[]
 }

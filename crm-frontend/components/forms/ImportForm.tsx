@@ -3,11 +3,7 @@
 
 import React, { useState } from 'react'
 
-interface ImportFormProps {
-  onSuccess?: () => void
-}
-
-export function ImportForm({ onSuccess }: ImportFormProps) {
+export function ImportForm() {
   const [importType, setImportType] = useState<'investor' | 'fournisseur'>('investor')
 
   // Placeholder pour le contenu du formulaire selon le type

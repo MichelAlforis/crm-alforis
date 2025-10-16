@@ -4,9 +4,9 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { Input, Select, Button, Alert } from '@/components/shared'
-import { Interaction, InteractionCreate, InteractionType, Fournisseur } from '@/lib/types'
+import { Interaction, InteractionCreate, InteractionType } from '@/lib/types'
 import { useFournisseurs } from '@/hooks/useFournisseurs'
 
 interface InteractionFormProps {

@@ -12,18 +12,9 @@ import {
   InvestorCreate, 
   InvestorUpdate, 
   PaginatedResponse, 
-  ApiError,
   LoadingState,
   InvestorDetail 
 } from '@/lib/types'
-
-interface InvestorsHookState {
-  investors: InvestorState
-  single: InvestorSingleState
-  create: OperationState
-  update: OperationState
-  delete: OperationState
-}
 
 interface InvestorState extends LoadingState {
   data?: PaginatedResponse<Investor>

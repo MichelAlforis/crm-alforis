@@ -7,13 +7,6 @@ import { useState, useCallback } from 'react'
 import { apiClient } from '@/lib/api'
 import { KPI, KPICreate, KPIUpdate, LoadingState } from '@/lib/types'
 
-interface KPIsHookState {
-  kpis: KPIListState
-  create: OperationState
-  update: OperationState
-  delete: OperationState
-}
-
 interface KPIListState extends LoadingState {
   data?: KPI[]
 }
@@ -74,7 +67,7 @@ export function useKPIs(investorId: number) {
   const updateKPI = useCallback(async (kpiId: number, data: KPIUpdate) => {
     setUpdate({ isLoading: true })
     try {
-      const updated = await apiClient.updateKPI(investorId, kpiId, data)
+      const updated = await apiClient.updateKPI(kpiId, data)
       setUpdate({
         isLoading: false,
         success: true,
@@ -94,7 +87,7 @@ export function useKPIs(investorId: number) {
   const deleteKPI = useCallback(async (kpiId: number) => {
     setDelete({ isLoading: true })
     try {
-      await apiClient.deleteKPI(investorId, kpiId)
+      await apiClient.deleteKPI(kpiId)
       setDelete({
         isLoading: false,
         success: true,
