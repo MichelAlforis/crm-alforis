@@ -1,5 +1,5 @@
 // ============================
-// app/search/page.tsx — version améliorée
+// app/dashboard/search/page.tsx — version optimisée
 // ============================
 import React from 'react'
 import { headers } from 'next/headers'
@@ -12,6 +12,8 @@ import {
   Info,
   Search as SearchIcon,
   AlertTriangle,
+  Sparkles,
+  ArrowRight,
 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
@@ -81,7 +83,11 @@ const ORDER: SearchItem['type'][] = [
 
 // ----- Data fetch -----
 async function getResults(q: string) {
-  const res = await fetch(buildApiUrl(q), { cache: 'no-store' })
+  const cookieHeader = headers().get('cookie') ?? ''
+  const res = await fetch(buildApiUrl(q), {
+    cache: 'no-store',
+    headers: cookieHeader ? { cookie: cookieHeader } : undefined,
+  })
   if (!res.ok) {
     const msg = await safeText(res)
     throw new Error(`Search failed: ${res.status} ${res.statusText} — ${msg}`)
@@ -101,8 +107,11 @@ async function safeText(res: Response) {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mb-8">
-      <h2 className="text-sm font-semibold text-gray-500 mb-2 uppercase tracking-wide">{title}</h2>
-      <div className="divide-y rounded-lg border border-gray-200 overflow-hidden bg-white">{children}</div>
+      <h2 className="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide flex items-center gap-2">
+        <Sparkles className="w-4 h-4 text-blue-500" />
+        {title}
+      </h2>
+      <div className="divide-y divide-gray-100 rounded-xl border border-gray-200 overflow-hidden bg-white shadow-sm">{children}</div>
     </section>
   )
 }
@@ -115,14 +124,22 @@ function Row({ item, q }: { item: SearchItem; q: string }) {
   return (
     <a
       href={item.href}
-      className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none"
+      className="group flex items-center gap-4 px-5 py-4 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 focus:bg-gradient-to-r focus:from-blue-50 focus:to-indigo-50 focus:outline-none transition-all duration-200 border-l-4 border-transparent hover:border-blue-500"
       aria-label={`${LABELS[item.type]} : ${title}`}
     >
-      <Icon className="w-5 h-5 text-gray-500 shrink-0" />
-      <div className="min-w-0">
-        <div className="truncate font-medium text-gray-900">{highlight(title, q)}</div>
-        {subtitle && <div className="truncate text-sm text-gray-500">{highlight(subtitle, q)}</div>}
+      <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100 group-hover:from-blue-200 group-hover:to-indigo-200 transition-all duration-200">
+        <Icon className="w-5 h-5 text-blue-600" />
       </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2">
+          <div className="truncate font-semibold text-gray-900 group-hover:text-blue-900">{highlight(title, q)}</div>
+          <ArrowRight className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+        </div>
+        {subtitle && <div className="truncate text-sm text-gray-600 mt-0.5">{highlight(subtitle, q)}</div>}
+      </div>
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 group-hover:bg-blue-100 group-hover:text-blue-700 transition-colors">
+        {LABELS[item.type]}
+      </span>
     </a>
   )
 }
@@ -139,14 +156,14 @@ function Tabs({
   const allCount = ORDER.reduce((sum, k) => sum + (counts[k] || 0), 0)
   const tabClass = (active: boolean) =>
     [
-      'inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm',
+      'inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200',
       active
-        ? 'border-gray-900 text-gray-900 bg-gray-100'
-        : 'border-gray-300 text-gray-600 hover:bg-gray-50',
+        ? 'border-blue-600 text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md'
+        : 'border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400',
     ].join(' ')
 
   const mkHref = (type?: SearchItem['type']) => {
-    const url = new URL('/search', getBaseUrlFromHeaders())
+    const url = new URL('/dashboard/search', getBaseUrlFromHeaders())
     url.searchParams.set('q', q)
     if (type && type !== 'info') url.searchParams.set('type', type)
     return url.pathname + url.search
@@ -186,22 +203,48 @@ export default async function Page({
 
   if (!q) {
     return (
-      <main className="max-w-5xl mx-auto px-6 py-10">
-        <header className="mb-6">
-          <h1 className="text-2xl font-semibold">Recherche</h1>
-          <p className="text-gray-600 mt-2">
-            Tapez un mot-clé dans la barre de recherche ou appuyez sur{' '}
-            <kbd className="px-1 py-0.5 border rounded text-xs">/</kbd> pour commencer.
+      <main className="max-w-6xl mx-auto px-6 py-12">
+        <header className="text-center mb-12">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 mb-4">
+            <SearchIcon className="w-8 h-8 text-blue-600" />
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-3">Recherche Globale</h1>
+          <p className="text-lg text-gray-600">
+            Recherchez dans vos fournisseurs, investisseurs, contacts, opportunités et KPIs
           </p>
         </header>
 
-        <div className="rounded-lg border border-dashed p-6 text-sm text-gray-600">
-          <p className="mb-2 font-medium">Exemples utiles</p>
-          <ul className="list-disc pl-5 space-y-1">
-            <li>« Mandarine Gestion », « Keren Finance »</li>
-            <li>« prospect chaud », « Luxembourg », « CIO », « assurance vie »</li>
-            <li>Emails, sociétés, contacts, pipelines…</li>
-          </ul>
+        <div className="max-w-3xl mx-auto">
+          <div className="rounded-2xl border-2 border-dashed border-gray-300 bg-gradient-to-br from-gray-50 to-blue-50/30 p-8">
+            <div className="flex items-start gap-3 mb-6">
+              <Sparkles className="w-5 h-5 text-blue-600 mt-0.5" />
+              <div>
+                <p className="font-semibold text-gray-900 mb-2">Exemples de recherche</p>
+                <ul className="space-y-2 text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                    <span>Nom d'entreprise : <code className="px-2 py-0.5 bg-white rounded text-sm">Mandarine Gestion</code></span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                    <span>Nom de contact : <code className="px-2 py-0.5 bg-white rounded text-sm">Michel</code></span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                    <span>Email : <code className="px-2 py-0.5 bg-white rounded text-sm">contact@example.com</code></span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                    <span>Mots-clés : <code className="px-2 py-0.5 bg-white rounded text-sm">Luxembourg</code>, <code className="px-2 py-0.5 bg-white rounded text-sm">CIO</code></span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-900">
+              <p className="font-medium mb-1">💡 Astuce</p>
+              <p>Utilisez la barre de recherche en haut de la page pour commencer votre recherche</p>
+            </div>
+          </div>
         </div>
       </main>
     )
@@ -234,9 +277,20 @@ export default async function Page({
     ORDER.reduce((sum, t) => sum + (counts[t] || 0), 0) > 0
 
   return (
-    <main className="max-w-5xl mx-auto px-6 py-8">
-      <header className="mb-4">
-        <h1 className="text-xl font-semibold">Résultats pour « {q} »</h1>
+    <main className="max-w-6xl mx-auto px-6 py-8">
+      <header className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <SearchIcon className="w-6 h-6 text-blue-600" />
+          <h1 className="text-2xl font-bold text-gray-900">Résultats pour</h1>
+        </div>
+        <div className="flex items-center gap-2 text-3xl font-bold">
+          <span className="text-gray-400">«</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{q}</span>
+          <span className="text-gray-400">»</span>
+        </div>
+        <p className="text-gray-600 mt-2">
+          {hasAny ? `${ORDER.reduce((sum, t) => sum + (counts[t] || 0), 0)} résultat${ORDER.reduce((sum, t) => sum + (counts[t] || 0), 0) > 1 ? 's' : ''} trouvé${ORDER.reduce((sum, t) => sum + (counts[t] || 0), 0) > 1 ? 's' : ''}` : 'Aucun résultat'}
+        </p>
       </header>
 
       <Tabs counts={counts} currentType={filterType || undefined} q={q} />
@@ -244,12 +298,14 @@ export default async function Page({
       {error && (
         <div
           role="alert"
-          className="mb-6 flex items-start gap-3 rounded-lg border border-amber-300 bg-amber-50 p-4 text-amber-900"
+          className="mb-8 flex items-start gap-4 rounded-xl border border-amber-400 bg-gradient-to-r from-amber-50 to-orange-50 p-5 shadow-sm"
         >
-          <AlertTriangle className="w-5 h-5 mt-0.5 shrink-0" />
-          <div>
-            <p className="font-medium">Impossible de charger certains résultats</p>
-            <p className="text-sm opacity-90">{error}</p>
+          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-amber-100 shrink-0">
+            <AlertTriangle className="w-5 h-5 text-amber-700" />
+          </div>
+          <div className="flex-1">
+            <p className="font-bold text-amber-900 mb-1">Impossible de charger certains résultats</p>
+            <p className="text-sm text-amber-800">{error}</p>
           </div>
         </div>
       )}
@@ -267,9 +323,23 @@ export default async function Page({
       })}
 
       {!hasAny && !error && (
-        <p className="text-gray-600">
-          Aucun résultat. Essayez d’autres mots-clés, ou vérifiez que les endpoints backend existent.
-        </p>
+        <div className="text-center py-16">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-100 mb-4">
+            <SearchIcon className="w-10 h-10 text-gray-400" />
+          </div>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">Aucun résultat trouvé</h3>
+          <p className="text-gray-600 mb-6">
+            Essayez d'autres mots-clés ou vérifiez l'orthographe
+          </p>
+          <div className="inline-flex flex-col gap-2 text-sm text-gray-500">
+            <p>Suggestions :</p>
+            <ul className="text-left space-y-1">
+              <li>• Utilisez des mots-clés plus généraux</li>
+              <li>• Vérifiez l'orthographe</li>
+              <li>• Essayez des termes alternatifs</li>
+            </ul>
+          </div>
+        </div>
       )}
     </main>
   )

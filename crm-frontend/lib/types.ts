@@ -103,6 +103,13 @@ export interface Contact {
   updated_at: string
 }
 
+export interface InvestorDetail {
+  investor: Investor
+  contacts: Contact[]
+  interaction_count: number
+  kpi_count: number
+}
+
 // ============= INTERACTION =============
 
 export type InteractionType = "appel" | "email" | "reunion" | "webinaire" | "autre"

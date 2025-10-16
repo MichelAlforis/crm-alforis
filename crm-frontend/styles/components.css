@@ -1,0 +1,319 @@
+/* =============================================== */
+/*              COMPONENT CLASSES                 */
+/* =============================================== */
+
+/* ============ BUTTONS ============ */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 font-medium;
+    @apply transition-all duration-[var(--transition-base)];
+    @apply rounded-[var(--radius-md)] disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+  }
+
+  .btn-primary {
+    @apply btn bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800;
+    @apply shadow-sm hover:shadow-md hover:-translate-y-0.5;
+  }
+
+  .btn-secondary {
+    @apply btn bg-white border border-gray-300 text-gray-700;
+    @apply hover:bg-gray-50 hover:border-gray-400 active:bg-gray-100;
+  }
+
+  .btn-ghost {
+    @apply btn text-gray-600 hover:text-gray-900 hover:bg-gray-100 active:bg-gray-200;
+  }
+
+  .btn-danger {
+    @apply btn bg-red-600 text-white hover:bg-red-700 active:bg-red-800;
+    @apply shadow-sm hover:shadow-red-200;
+  }
+
+  .btn-success {
+    @apply btn bg-green-600 text-white hover:bg-green-700 active:bg-green-800;
+  }
+
+  /* Button Sizes */
+  .btn-xs {
+    @apply text-xs px-2 py-1 rounded-md;
+  }
+
+  .btn-sm {
+    @apply text-sm px-3 py-1.5 rounded-md;
+  }
+
+  .btn-md {
+    @apply text-sm px-4 py-2 rounded-lg;
+  }
+
+  .btn-lg {
+    @apply text-base px-6 py-3 rounded-lg;
+  }
+
+  .btn-xl {
+    @apply text-lg px-8 py-4 rounded-xl;
+  }
+
+  /* ============ CARDS ============ */
+  .card {
+    @apply bg-white rounded-[var(--radius-lg)] border border-gray-200;
+    @apply shadow-sm backdrop-blur-xl;
+  }
+
+  .card-hover {
+    @apply card transition-all duration-[var(--transition-base)] cursor-pointer;
+    @apply hover:shadow-lg hover:-translate-y-1 hover:border-gray-300;
+  }
+
+  .card-glass {
+    @apply bg-white/80 backdrop-blur-xl border border-white/20 shadow-xl;
+  }
+
+  .card-gradient {
+    @apply relative overflow-hidden;
+    @apply before:absolute before:inset-0 before:bg-gradient-to-br;
+    @apply before:from-blue-500/10 before:to-purple-500/10;
+  }
+
+  /* ============ INPUT FIELDS ============ */
+  .input-field {
+    @apply w-full px-4 py-2.5 rounded-[var(--radius-md)];
+    @apply bg-white border border-gray-300 text-gray-900;
+    @apply placeholder:text-gray-400 transition-all duration-[var(--transition-base)];
+    @apply hover:border-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20;
+    @apply disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed;
+  }
+
+  .input-error {
+    @apply border-red-500 focus:border-red-500 focus:ring-red-500/20;
+  }
+
+  .input-success {
+    @apply border-green-500 focus:border-green-500 focus:ring-green-500/20;
+  }
+
+  /* Textarea */
+  .textarea {
+    @apply input-field resize-none min-h-[100px];
+  }
+
+  /* Select */
+  .select-field {
+    @apply input-field appearance-none cursor-pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+  }
+
+  /* ============ LABELS ============ */
+  .label {
+    @apply block text-sm font-medium text-gray-700 mb-1.5;
+  }
+
+  .label-required::after {
+    content: '*';
+    @apply text-red-500 ml-1;
+  }
+
+  /* ============ BADGES ============ */
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5;
+    @apply text-xs font-medium tracking-wide rounded-full;
+  }
+
+  .badge-primary {
+    @apply badge bg-blue-100 text-blue-700 ring-1 ring-blue-700/10;
+  }
+
+  .badge-success {
+    @apply badge bg-green-100 text-green-700 ring-1 ring-green-700/10;
+  }
+
+  .badge-warning {
+    @apply badge bg-orange-100 text-orange-700 ring-1 ring-orange-700/10;
+  }
+
+  .badge-danger {
+    @apply badge bg-red-100 text-red-700 ring-1 ring-red-700/10;
+  }
+
+  .badge-neutral {
+    @apply badge bg-gray-100 text-gray-700 ring-1 ring-gray-700/10;
+  }
+
+  .badge-dot::before {
+    content: '';
+    @apply w-1.5 h-1.5 rounded-full bg-current;
+  }
+
+  /* ============ TABLES ============ */
+  .table-container {
+    @apply w-full overflow-x-auto rounded-[var(--radius-lg)] border border-gray-200;
+    @apply shadow-sm bg-white;
+  }
+
+  .table {
+    @apply w-full text-sm;
+  }
+
+  .table thead {
+    @apply bg-gray-50 border-b border-gray-200;
+  }
+
+  .table th {
+    @apply px-4 py-3 text-left font-semibold text-gray-700 uppercase text-xs tracking-wider;
+    @apply first:pl-6 last:pr-6;
+  }
+
+  .table tbody tr {
+    @apply border-b border-gray-100 transition-colors duration-[var(--transition-fast)];
+    @apply hover:bg-gray-50/50;
+  }
+
+  .table tbody tr:last-child {
+    @apply border-0;
+  }
+
+  .table td {
+    @apply px-4 py-4 text-gray-900;
+    @apply first:pl-6 last:pr-6;
+  }
+
+  /* ============ ALERTS ============ */
+  .alert {
+    @apply flex items-start gap-3 p-4 rounded-[var(--radius-lg)] border;
+  }
+
+  .alert-info {
+    @apply alert bg-blue-50 border-blue-200 text-blue-800;
+  }
+
+  .alert-success {
+    @apply alert bg-green-50 border-green-200 text-green-800;
+  }
+
+  .alert-warning {
+    @apply alert bg-orange-50 border-orange-200 text-orange-800;
+  }
+
+  .alert-danger {
+    @apply alert bg-red-50 border-red-200 text-red-800;
+  }
+
+  /* ============ TABS ============ */
+  .tabs {
+    @apply flex gap-1 border-b border-gray-200;
+  }
+
+  .tab {
+    @apply px-4 py-2.5 text-sm font-medium text-gray-600;
+    @apply border-b-2 border-transparent transition-all duration-[var(--transition-base)];
+    @apply hover:text-gray-900 hover:border-gray-300;
+  }
+
+  .tab-active {
+    @apply tab text-blue-600 border-blue-600;
+  }
+
+  /* ============ DROPDOWN ============ */
+  .dropdown {
+    @apply absolute mt-2 rounded-[var(--radius-lg)] bg-white shadow-lg border border-gray-200;
+    @apply py-1 z-[var(--z-dropdown)] min-w-[12rem];
+  }
+
+  .dropdown-item {
+    @apply block w-full px-4 py-2 text-sm text-left text-gray-700;
+    @apply transition-colors duration-[var(--transition-fast)];
+    @apply hover:bg-gray-50 hover:text-gray-900;
+  }
+
+  .dropdown-divider {
+    @apply h-px bg-gray-200 my-1;
+  }
+
+  /* ============ MODAL ============ */
+  .modal-backdrop {
+    @apply fixed inset-0 bg-black/50 backdrop-blur-sm z-[var(--z-modal-backdrop)];
+  }
+
+  .modal {
+    @apply fixed inset-0 flex items-center justify-center p-4 z-[var(--z-modal)];
+  }
+
+  .modal-content {
+    @apply bg-white rounded-[var(--radius-xl)] shadow-2xl max-w-lg w-full;
+    @apply max-h-[90vh] overflow-y-auto;
+  }
+
+  .modal-header {
+    @apply flex items-center justify-between p-6 border-b border-gray-200;
+  }
+
+  .modal-body {
+    @apply p-6;
+  }
+
+  .modal-footer {
+    @apply flex items-center justify-end gap-3 p-6 border-t border-gray-200;
+  }
+
+  /* ============ SKELETON LOADING ============ */
+  .skeleton {
+    @apply animate-pulse bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200;
+    @apply bg-[length:200%_100%] rounded-[var(--radius-md)];
+  }
+
+  .skeleton-text {
+    @apply skeleton h-4 w-full;
+  }
+
+  .skeleton-avatar {
+    @apply skeleton h-10 w-10 rounded-full;
+  }
+
+  /* ============ DIVIDERS ============ */
+  .divider {
+    @apply h-px bg-gray-200 my-6;
+  }
+
+  .divider-vertical {
+    @apply w-px bg-gray-200 mx-4 self-stretch;
+  }
+
+  /* ============ CONTAINERS ============ */
+  .container-fluid {
+    @apply w-full px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-max {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* ============ NAVBAR ============ */
+  .navbar {
+    @apply fixed top-0 left-0 right-0 z-[var(--z-fixed)];
+    @apply bg-white/95 backdrop-blur-md border-b border-gray-200;
+    @apply shadow-sm h-16;
+  }
+
+  .navbar-content {
+    @apply flex items-center justify-between h-full px-4 sm:px-6 lg:px-8;
+  }
+
+  /* ============ SIDEBAR ============ */
+  .sidebar {
+    @apply fixed left-0 top-0 bottom-0 z-[var(--z-fixed)];
+    @apply bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900;
+    @apply border-r border-slate-700/50 shadow-xl;
+    @apply transition-all duration-[var(--transition-base)];
+  }
+
+  .sidebar-expanded {
+    @apply sidebar w-64;
+  }
+
+.sidebar-collapsed {
+  @apply sidebar w-16;
+}

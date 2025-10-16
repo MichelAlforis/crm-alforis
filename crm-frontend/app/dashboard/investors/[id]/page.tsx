@@ -10,7 +10,7 @@ import { useInvestors } from '@/hooks/useInvestors'
 import { useInteractions } from '@/hooks/useInteractions'
 import { Card, Button, Table, Alert, Modal } from '@/components/shared'
 import { InvestorForm, InteractionForm } from '@/components/forms'
-import { Investor, InteractionCreate } from '@/lib/types'
+import { InvestorDetail, InteractionCreate } from '@/lib/types'
 
 export default function InvestorDetailPage() {
   const params = useParams()
@@ -62,7 +62,8 @@ export default function InvestorDetailPage() {
   if (investor.isLoading) return <div className="text-center p-6">Chargement...</div>
   if (!investor.data) return <div className="text-center p-6">Non trouvé</div>
 
-  const data = investor.data as Investor
+  const details = investor.data as InvestorDetail
+  const data = details.investor
 
   const interactionColumns = [
     { 

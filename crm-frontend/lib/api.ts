@@ -9,6 +9,7 @@ import {
   Investor,
   InvestorCreate,
   InvestorUpdate,
+  InvestorDetail,
   Interaction,
   InteractionCreate,
   InteractionUpdate,
@@ -214,8 +215,8 @@ class ApiClient {
     })
   }
 
-  async getInvestor(id: number): Promise<Investor> {
-    return this.request<Investor>(`/investors/${id}`)
+  async getInvestor(id: number): Promise<InvestorDetail> {
+    return this.request<InvestorDetail>(`/investors/${id}`)
   }
 
   async createInvestor(data: InvestorCreate): Promise<Investor> {
@@ -241,27 +242,27 @@ class ApiClient {
   // ============= INTERACTION ENDPOINTS =============
 
   async getInteractions(investorId: number, skip = 0, limit = 50): Promise<PaginatedResponse<Interaction>> {
-    return this.request<PaginatedResponse<Interaction>>(`/investors/${investorId}/interactions`, {
+    return this.request<PaginatedResponse<Interaction>>(`/interactions/investor/${investorId}`, {
       params: { skip, limit },
     })
   }
 
   async createInteraction(investorId: number, data: InteractionCreate): Promise<Interaction> {
-    return this.request<Interaction>(`/investors/${investorId}/interactions`, {
+    return this.request<Interaction>(`/interactions/investor/${investorId}`, {
       method: 'POST',
       body: JSON.stringify(data),
     })
   }
 
   async updateInteraction(investorId: number, interactionId: number, data: InteractionUpdate): Promise<Interaction> {
-    return this.request<Interaction>(`/investors/${investorId}/interactions/${interactionId}`, {
+    return this.request<Interaction>(`/interactions/${interactionId}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     })
   }
 
   async deleteInteraction(investorId: number, interactionId: number): Promise<void> {
-    await this.request<void>(`/investors/${investorId}/interactions/${interactionId}`, {
+    await this.request<void>(`/interactions/${interactionId}`, {
       method: 'DELETE',
     })
   }

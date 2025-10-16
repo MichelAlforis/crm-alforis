@@ -117,6 +117,7 @@ module.exports = {
         'pulse-soft': 'pulseSoft 2s ease-in-out infinite',
         'bounce-soft': 'bounceSoft 1s infinite',
         'spin-slow': 'spin 3s linear infinite',
+        'wave': 'wave 1.5s ease-in-out infinite',
       },
       
       keyframes: {
@@ -151,6 +152,10 @@ module.exports = {
         bounceSoft: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-10px)' },
+        },
+        wave: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
         },
       },
       

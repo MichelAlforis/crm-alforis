@@ -10,14 +10,17 @@ const nextConfig = {
   
   // Rewrites pour proxy API (optionnel)
   async rewrites() {
-    return {
-      beforeFiles: [
-        {
-          source: '/api/:path*',
-          destination: `${process.env.NEXT_PUBLIC_API_URL}/:path*`,
-        },
-      ],
-    };
+    const apiProxyBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '')
+    if (!apiProxyBase) {
+      return []
+    }
+
+    return [
+      {
+        source: '/api/v1/:path*',
+        destination: `${apiProxyBase}/:path*`,
+      },
+    ]
   },
 };
 

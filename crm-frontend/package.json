@@ -4,12 +4,14 @@
   "description": "CRM Frontend - TPM Finance",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "devc": "sh -c 'chmod +x scripts/dev-clean.sh && ./scripts/dev-clean.sh && npm run dev -- --port ${PORT:-3010}'",
+    "dev": "next dev -p 3010",
+    "devc": "bash scripts/dev-clean.sh",
+    "dev:clean:win": "powershell -ExecutionPolicy Bypass -File scripts/dev-clean.ps1",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3010",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "kill-port": "lsof -ti:3010 | xargs kill -9 2>/dev/null || true"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.0",

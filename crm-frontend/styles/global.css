@@ -1,0 +1,281 @@
+/* =============================================== */
+/*          TPM FINANCE CRM - GLOBAL STYLES       */
+/* =============================================== */
+
+/* Tailwind Directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============== DESIGN TOKENS =============== */
+@layer base {
+  @import './variables.css';
+
+  /* =============== BASE STYLES =============== */
+  /* Reset & Normalization */
+  * {
+    @apply border-0 border-solid border-gray-200;
+  }
+
+  *::before,
+  *::after {
+    @apply box-border;
+  }
+
+  /* HTML & Body */
+  html {
+    @apply scroll-smooth antialiased;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-900;
+    @apply min-h-screen;
+    font-family: var(--font-sans);
+  }
+
+  /* Typography Hierarchy */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-semibold text-gray-900 tracking-tight;
+  }
+
+  h1 {
+    @apply text-4xl lg:text-5xl;
+  }
+
+  h2 {
+    @apply text-3xl lg:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl lg:text-3xl;
+  }
+
+  h4 {
+    @apply text-xl lg:text-2xl;
+  }
+
+  h5 {
+    @apply text-lg lg:text-xl;
+  }
+
+  h6 {
+    @apply text-base lg:text-lg;
+  }
+
+  p {
+    @apply leading-relaxed text-gray-700;
+  }
+
+  /* Links */
+  a {
+    @apply text-blue-600 hover:text-blue-700 transition-colors duration-200;
+  }
+
+  /* Lists */
+  ul,
+  ol {
+    @apply list-inside;
+  }
+
+  /* Focus Styles - Accessibility */
+  *:focus {
+    @apply outline-none;
+  }
+
+  *:focus-visible {
+    @apply outline-none ring-2 ring-blue-500 ring-offset-2 ring-offset-white;
+    @apply rounded-md;
+  }
+
+  /* Buttons Reset */
+  button {
+    @apply cursor-pointer;
+  }
+
+  button:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+
+  /* Images */
+  img,
+  svg {
+    @apply max-w-full h-auto;
+  }
+
+  /* Code Blocks */
+  code {
+    @apply bg-gray-100 text-gray-900 px-1.5 py-0.5 rounded text-sm;
+    font-family: var(--font-mono);
+  }
+
+  pre {
+    @apply bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto;
+    font-family: var(--font-mono);
+  }
+
+  pre code {
+    @apply bg-transparent text-gray-100 p-0;
+  }
+
+  /* Horizontal Rules */
+  hr {
+    @apply border-t border-gray-200 my-8;
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-blue-500 text-white;
+  }
+
+  /* Scrollbar - Global */
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full hover:bg-gray-400;
+  }
+
+  /* Tables - Base Styling */
+  table {
+    @apply w-full border-collapse;
+  }
+
+  /* Forms - Base Styling */
+  input,
+  textarea,
+  select {
+    @apply w-full;
+  }
+
+  input[type='checkbox'],
+  input[type='radio'] {
+    @apply w-auto;
+  }
+
+  /* Remove autofill background */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+  }
+}
+
+/* =============== COMPONENTS =============== */
+@layer components {
+  @import './components.css';
+}
+
+/* =============== UTILITIES =============== */
+@layer utilities {
+  @import './utilities.css';
+
+  /* Container with max-width */
+  .container {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Dashboard Layout */
+  .dashboard-layout {
+    @apply flex min-h-screen bg-gray-50;
+  }
+
+  .dashboard-sidebar {
+    @apply fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-gray-200;
+  }
+
+  .dashboard-main {
+    @apply flex-1 ml-64 transition-all duration-200;
+  }
+
+  .dashboard-content {
+    @apply p-6 lg:p-8;
+  }
+
+  /* Page Header */
+  .page-header {
+    @apply mb-8;
+  }
+
+  .page-title {
+    @apply text-3xl font-bold text-gray-900 mb-2;
+  }
+
+  .page-description {
+    @apply text-gray-600;
+  }
+
+  /* Section Spacing */
+  .section {
+    @apply py-12 lg:py-16;
+  }
+
+  .section-sm {
+    @apply py-8 lg:py-12;
+  }
+
+  .section-lg {
+    @apply py-16 lg:py-24;
+  }
+}
+
+/* =============== PRINT STYLES =============== */
+@media print {
+  body {
+    @apply bg-white text-black;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  a[href]::after {
+    content: ' (' attr(href) ')';
+  }
+}
+
+/* =============== DARK MODE (Optional) =============== */
+@media (prefers-color-scheme: dark) {
+  /* Uncomment to enable automatic dark mode based on system preference */
+  /*
+  .dark-mode-auto {
+    @apply bg-gray-900 text-gray-100;
+  }
+  */
+}
+
+/* =============== REDUCED MOTION =============== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* =============== HIGH CONTRAST MODE =============== */
+@media (prefers-contrast: high) {
+  * {
+    @apply border-black;
+  }
+
+  a {
+    @apply underline;
+  }
+}

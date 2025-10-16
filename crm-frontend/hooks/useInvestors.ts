@@ -13,7 +13,8 @@ import {
   InvestorUpdate, 
   PaginatedResponse, 
   ApiError,
-  LoadingState 
+  LoadingState,
+  InvestorDetail 
 } from '@/lib/types'
 
 interface InvestorsHookState {
@@ -31,7 +32,7 @@ interface InvestorState extends LoadingState {
 }
 
 interface InvestorSingleState extends LoadingState {
-  data?: Investor
+  data?: InvestorDetail
 }
 
 interface OperationState {
