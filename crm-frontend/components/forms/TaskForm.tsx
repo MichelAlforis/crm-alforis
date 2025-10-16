@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useTasks } from '@/hooks/useTasks'
 import type { TaskInput, TaskPriority, TaskCategory } from '@/lib/types'
+import { useToast } from '@/components/ui/Toast'
 
 interface TaskFormProps {
   isOpen: boolean
@@ -37,6 +38,7 @@ const CATEGORIES: { value: TaskCategory; label: string }[] = [
 
 export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps) {
   const { createTask, isCreating } = useTasks()
+  const { showToast } = useToast()
 
   const [formData, setFormData] = useState<TaskInput>({
     title: initialData?.title || '',
@@ -70,6 +72,11 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
 
     if (!formData.title.trim()) {
       setError('Le titre est requis')
+      showToast({
+        type: 'warning',
+        title: 'Titre requis',
+        message: 'Ajoutez un titre pour enregistrer la tâche.',
+      })
       return
     }
 
@@ -84,8 +91,18 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
         priority: 'moyenne',
         category: 'relance',
       })
+      showToast({
+        type: 'success',
+        title: 'Tâche créée',
+        message: 'La tâche a été ajoutée à votre agenda.',
+      })
     } catch (err: any) {
       setError(err.message || 'Erreur lors de la création')
+      showToast({
+        type: 'error',
+        title: 'Création impossible',
+        message: err?.message || 'Réessayez dans quelques instants.',
+      })
     }
   }
 

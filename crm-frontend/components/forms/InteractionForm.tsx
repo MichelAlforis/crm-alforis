@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form'
 import { Input, Select, Button, Alert } from '@/components/shared'
 import { Interaction, InteractionCreate, InteractionType } from '@/lib/types'
 import { useFournisseurs } from '@/hooks/useFournisseurs'
+import { useToast } from '@/components/ui/Toast'
 
 interface InteractionFormProps {
   initialData?: Interaction
@@ -31,6 +32,7 @@ export function InteractionForm({
   error,
 }: InteractionFormProps) {
   const { fournisseurs, fetchFournisseurs } = useFournisseurs()
+  const { showToast } = useToast()
   const [selectedFournisseurs, setSelectedFournisseurs] = useState<number[]>(
     initialData?.fournisseurs || []
   )
@@ -53,13 +55,32 @@ export function InteractionForm({
 
   const handleFormSubmit = async (data: InteractionCreate) => {
     if (selectedFournisseurs.length === 0) {
-      alert('Sélectionnez au moins un fournisseur')
+      showToast({
+        type: 'warning',
+        title: 'Fournisseur manquant',
+        message: 'Sélectionnez au moins un fournisseur pour enregistrer cette interaction.',
+      })
       return
     }
-    await onSubmit({
-      ...data,
-      fournisseurs: selectedFournisseurs,
-    })
+    try {
+      await onSubmit({
+        ...data,
+        fournisseurs: selectedFournisseurs,
+      })
+      showToast({
+        type: 'success',
+        title: 'Interaction enregistrée',
+        message: "L'interaction a été ajoutée au dossier.",
+      })
+    } catch (err: any) {
+      const message = err?.detail || err?.message || "Impossible d'enregistrer l'interaction."
+      showToast({
+        type: 'error',
+        title: 'Erreur',
+        message,
+      })
+      throw err
+    }
   }
 
   const toggleFournisseur = (fournisseurId: number) => {

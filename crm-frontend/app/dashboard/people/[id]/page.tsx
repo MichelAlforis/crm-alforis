@@ -18,6 +18,7 @@ import {
 import { PersonForm } from '@/components/forms'
 import { usePeople } from '@/hooks/usePeople'
 import { OrganizationType, PersonOrganizationLinkInput } from '@/lib/types'
+import { SkeletonCard, SkeletonTable } from '@/components/ui/Skeleton'
 
 const ORGANIZATION_OPTIONS = [
   { value: 'investor', label: 'Investisseur' },
@@ -181,7 +182,12 @@ export default function PersonDetailPage() {
   ]
 
   if (single.isLoading) {
-    return <div className="p-8 text-center text-gray-500">Chargement...</div>
+    return (
+      <div className="space-y-6">
+        <SkeletonCard />
+        <SkeletonTable rows={4} />
+      </div>
+    )
   }
 
   if (personId === null) {

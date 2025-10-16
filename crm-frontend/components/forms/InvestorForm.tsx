@@ -8,6 +8,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Input, Select, Button, Alert } from '@/components/shared'
 import { Investor, InvestorCreate, PipelineStage, ClientType } from '@/lib/types'
+import { useToast } from '@/components/ui/Toast'
 
 interface InvestorFormProps {
   initialData?: Investor
@@ -40,6 +41,7 @@ export function InvestorForm({
   error,
   submitLabel = 'Créer',
 }: InvestorFormProps) {
+  const { showToast } = useToast()
   const {
     register,
     handleSubmit,
@@ -49,8 +51,29 @@ export function InvestorForm({
     mode: 'onBlur',
   })
 
+  const handleFormSubmit = async (data: InvestorCreate) => {
+    try {
+      await onSubmit(data)
+      showToast({
+        type: 'success',
+        title: initialData ? 'Investisseur mis à jour' : 'Investisseur créé',
+        message: initialData
+          ? "Les informations de l'investisseur ont été enregistrées."
+          : "Le nouvel investisseur a été ajouté avec succès.",
+      })
+    } catch (err: any) {
+      const message = err?.detail || err?.message || "Impossible d'enregistrer l'investisseur."
+      showToast({
+        type: 'error',
+        title: 'Erreur',
+        message,
+      })
+      throw err
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
       {error && (
         <Alert type="error" message={error} />
       )}

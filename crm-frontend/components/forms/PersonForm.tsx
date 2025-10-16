@@ -7,6 +7,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Input, Button, Alert } from '@/components/shared'
 import { Person, PersonInput } from '@/lib/types'
+import { useToast } from '@/components/ui/Toast'
 
 interface PersonFormProps {
   initialData?: Person
@@ -23,6 +24,7 @@ export function PersonForm({
   error,
   submitLabel = 'Créer',
 }: PersonFormProps) {
+  const { showToast } = useToast()
   const {
     register,
     handleSubmit,
@@ -32,8 +34,30 @@ export function PersonForm({
     mode: 'onBlur',
   })
 
+  const handleFormSubmit = async (data: PersonInput) => {
+    try {
+      await onSubmit(data)
+      showToast({
+        type: 'success',
+        title: initialData ? 'Contact mis à jour' : 'Contact créé',
+        message: initialData
+          ? 'Le contact a été mis à jour avec succès.'
+          : 'Le contact a été ajouté à votre CRM.',
+      })
+    } catch (err: any) {
+      const message =
+        err?.detail || err?.message || "Impossible d'enregistrer le contact."
+      showToast({
+        type: 'error',
+        title: 'Erreur',
+        message,
+      })
+      throw err
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
       {error && <Alert type="error" message={error} />}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

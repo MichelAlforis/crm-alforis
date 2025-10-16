@@ -6,6 +6,7 @@
  */
 import type { Metadata, Viewport } from 'next'
 import '@/styles/global.css'
+import Providers from './providers'
 
 export const metadata: Metadata = {
   title: {
@@ -57,7 +58,9 @@ export default function RootLayout({
         </a>
 
         {/* Main Application */}
-        <div id="root">{children}</div>
+        <Providers>
+          <div id="root">{children}</div>
+        </Providers>
 
         {/* Portal for modals, toasts, etc. */}
         <div id="portal-root" />

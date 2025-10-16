@@ -7,6 +7,7 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Input, Button, Alert } from '@/components/shared'
 import { LoginRequest } from '@/lib/types'
+import { useToast } from '@/components/ui/Toast'
 
 interface LoginFormProps {
   onSubmit: (data: LoginRequest) => Promise<void>
@@ -15,6 +16,7 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ onSubmit, isLoading, error }: LoginFormProps) {
+  const { showToast } = useToast()
   const {
     register,
     handleSubmit,
@@ -29,8 +31,20 @@ export function LoginForm({ onSubmit, isLoading, error }: LoginFormProps) {
     try {
       setLocalError('')
       await onSubmit(data)
+      showToast({
+        type: 'success',
+        title: 'Connexion réussie',
+        message: 'Bienvenue sur le portail TPM Finance.',
+      })
     } catch (err: any) {
-      setLocalError(err.message || 'Une erreur est survenue')
+      const message = err?.message || 'Une erreur est survenue'
+      setLocalError(message)
+      showToast({
+        type: 'error',
+        title: 'Connexion impossible',
+        message,
+      })
+      throw err
     }
   }
 

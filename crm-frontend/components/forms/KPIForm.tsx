@@ -7,6 +7,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Input, Button, Alert } from '@/components/shared'
 import { KPI, KPICreate } from '@/lib/types'
+import { useToast } from '@/components/ui/Toast'
 
 interface KPIFormProps {
   initialData?: KPI
@@ -21,6 +22,7 @@ export function KPIForm({
   isLoading,
   error,
 }: KPIFormProps) {
+  const { showToast } = useToast()
   const {
     register,
     handleSubmit,
@@ -30,8 +32,27 @@ export function KPIForm({
     mode: 'onBlur',
   })
 
+  const handleFormSubmit = async (data: KPICreate) => {
+    try {
+      await onSubmit(data)
+      showToast({
+        type: 'success',
+        title: initialData ? 'KPI mis à jour' : 'KPI enregistré',
+        message: 'Les indicateurs ont été sauvegardés.',
+      })
+    } catch (err: any) {
+      const message = err?.detail || err?.message || 'Impossible de sauvegarder ce KPI.'
+      showToast({
+        type: 'error',
+        title: 'Erreur',
+        message,
+      })
+      throw err
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
       {error && <Alert type="error" message={error} />}
 
       <div className="grid grid-cols-2 gap-4">

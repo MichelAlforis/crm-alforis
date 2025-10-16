@@ -14,6 +14,7 @@ import { FournisseurForm } from '@/components/forms'
 import { KPIForm } from '@/components/forms'
 import { FournisseurDetail, KPICreate, PersonOrganizationLink, PersonOrganizationLinkInput } from '@/lib/types'
 import { usePeople } from '@/hooks/usePeople'
+import { SkeletonCard, SkeletonTable } from '@/components/ui/Skeleton'
 
 export default function FournisseurDetailPage() {
   const params = useParams<{ id?: string }>()
@@ -81,7 +82,15 @@ export default function FournisseurDetailPage() {
   }
 
   if (fournisseurId === null) return <div className="text-center p-6">Fournisseur introuvable</div>
-  if (fournisseur.isLoading) return <div className="text-center p-6">Chargement...</div>
+  if (fournisseur.isLoading) {
+    return (
+      <div className="space-y-6">
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonTable rows={4} />
+      </div>
+    )
+  }
   if (!fournisseur.data) return <div className="text-center p-6">Non trouvé</div>
 
   const details = fournisseur.data as FournisseurDetail

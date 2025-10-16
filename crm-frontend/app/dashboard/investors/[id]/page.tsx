@@ -12,6 +12,7 @@ import { Card, Button, Table, Alert, Modal, Input } from '@/components/shared'
 import { InvestorForm, InteractionForm } from '@/components/forms'
 import { InvestorDetail, InteractionCreate, PersonOrganizationLink, PersonOrganizationLinkInput } from '@/lib/types'
 import { usePeople } from '@/hooks/usePeople'
+import { SkeletonCard, SkeletonTable } from '@/components/ui/Skeleton'
 
 export default function InvestorDetailPage() {
   const params = useParams<{ id?: string }>()
@@ -92,7 +93,15 @@ export default function InvestorDetailPage() {
     setIsInteractionModalOpen(false)
   }
 
-  if (investor.isLoading) return <div className="text-center p-6">Chargement...</div>
+  if (investor.isLoading) {
+    return (
+      <div className="space-y-6">
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonTable rows={4} />
+      </div>
+    )
+  }
   if (!investor.data) return <div className="text-center p-6">Non trouvé</div>
 
   const details = investor.data as InvestorDetail

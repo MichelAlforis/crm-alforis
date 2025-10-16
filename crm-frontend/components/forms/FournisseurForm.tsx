@@ -7,6 +7,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Input, Button, Alert } from '@/components/shared'
 import { Fournisseur, FournisseurCreate } from '@/lib/types'
+import { useToast } from '@/components/ui/Toast'
 
 interface FournisseurFormProps {
   initialData?: Fournisseur
@@ -23,6 +24,7 @@ export function FournisseurForm({
   error,
   submitLabel = 'Créer',
 }: FournisseurFormProps) {
+  const { showToast } = useToast()
   const {
     register,
     handleSubmit,
@@ -32,8 +34,30 @@ export function FournisseurForm({
     mode: 'onBlur',
   })
 
+  const handleFormSubmit = async (data: FournisseurCreate) => {
+    try {
+      await onSubmit(data)
+      showToast({
+        type: 'success',
+        title: initialData ? 'Fournisseur mis à jour' : 'Fournisseur créé',
+        message: initialData
+          ? 'Les informations du fournisseur ont été enregistrées.'
+          : 'Le nouveau fournisseur a été ajouté avec succès.',
+      })
+    } catch (err: any) {
+      const message =
+        err?.detail || err?.message || "Impossible d'enregistrer le fournisseur."
+      showToast({
+        type: 'error',
+        title: 'Erreur',
+        message,
+      })
+      throw err
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
       {error && (
         <Alert type="error" message={error} />
       )}
