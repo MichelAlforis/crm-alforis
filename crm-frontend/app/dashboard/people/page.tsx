@@ -8,6 +8,23 @@ import Link from 'next/link'
 import { usePeople } from '@/hooks/usePeople'
 import { Card, Button, Table, Input, Alert } from '@/components/shared'
 import { Person } from '@/lib/types'
+import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
+
+const COUNTRY_LABELS = COUNTRY_OPTIONS.filter((option) => option.value).reduce(
+  (acc, option) => {
+    acc[option.value] = option.label
+    return acc
+  },
+  {} as Record<string, string>,
+)
+
+const LANGUAGE_LABELS = LANGUAGE_OPTIONS.filter((option) => option.value).reduce(
+  (acc, option) => {
+    acc[option.value] = option.label
+    return acc
+  },
+  {} as Record<string, string>,
+)
 
 const COLUMNS = [
   {
@@ -33,6 +50,18 @@ const COLUMNS = [
   {
     header: 'Mobile',
     accessor: 'personal_phone',
+  },
+  {
+    header: 'Pays',
+    accessor: 'country_code',
+    render: (value: string | null | undefined) =>
+      value ? COUNTRY_LABELS[value] || value : '-',
+  },
+  {
+    header: 'Langue',
+    accessor: 'language',
+    render: (value: string | null | undefined) =>
+      value ? LANGUAGE_LABELS[value] || value : '-',
   },
 ]
 

@@ -6,19 +6,12 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
-import {
-  Card,
-  Button,
-  Alert,
-  Table,
-  Modal,
-  Input,
-  Select,
-} from '@/components/shared'
+import { Card, Button, Alert, Table, Modal, Input, Select } from '@/components/shared'
 import { PersonForm } from '@/components/forms'
 import { usePeople } from '@/hooks/usePeople'
 import { OrganizationType, PersonOrganizationLinkInput } from '@/lib/types'
 import { SkeletonCard, SkeletonTable } from '@/components/ui/Skeleton'
+import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 
 const ORGANIZATION_OPTIONS = [
   { value: 'investor', label: 'Investisseur' },
@@ -62,6 +55,16 @@ export default function PersonDetailPage() {
   }, [personId])
 
   const person = single.data
+  const countryValue = person?.country_code || ''
+  const countryLabel =
+    countryValue
+      ? COUNTRY_OPTIONS.find((option) => option.value === countryValue)?.label || countryValue
+      : '-'
+  const languageValue = person?.language || ''
+  const languageLabel =
+    languageValue
+      ? LANGUAGE_OPTIONS.find((option) => option.value === languageValue)?.label || languageValue
+      : '-'
 
   const organizationRows = useMemo(() => {
     return person?.organizations.map((link) => ({
@@ -229,6 +232,14 @@ export default function PersonDetailPage() {
           <div>
             <p className="text-sm text-gray-600">Mobile</p>
             <p className="font-medium text-sm">{person.personal_phone || '-'}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">Pays</p>
+            <p className="font-medium text-sm">{countryLabel}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">Langue préférée</p>
+            <p className="font-medium text-sm">{languageLabel}</p>
           </div>
           <div>
             <p className="text-sm text-gray-600">LinkedIn</p>

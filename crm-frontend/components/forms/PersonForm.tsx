@@ -5,8 +5,9 @@
 
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { Input, Button, Alert } from '@/components/shared'
+import { Input, Button, Alert, Select } from '@/components/shared'
 import { Person, PersonInput } from '@/lib/types'
+import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import { useToast } from '@/components/ui/Toast'
 
 interface PersonFormProps {
@@ -30,7 +31,11 @@ export function PersonForm({
     handleSubmit,
     formState: { errors },
   } = useForm<PersonInput>({
-    defaultValues: initialData,
+    defaultValues: {
+      ...initialData,
+      country_code: initialData?.country_code ?? undefined,
+      language: initialData?.language ?? undefined,
+    },
     mode: 'onBlur',
   })
 
@@ -106,6 +111,23 @@ export function PersonForm({
         error={errors.linkedin_url?.message}
         placeholder="https://www.linkedin.com/in/..."
       />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Select
+          label="Pays"
+          {...register('country_code', {
+            setValueAs: (value) => (value ? value : undefined),
+          })}
+          options={COUNTRY_OPTIONS}
+        />
+        <Select
+          label="Langue préférée"
+          {...register('language', {
+            setValueAs: (value) => (value ? value : undefined),
+          })}
+          options={LANGUAGE_OPTIONS}
+        />
+      </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>

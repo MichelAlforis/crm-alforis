@@ -81,6 +81,8 @@ export interface Person {
   role?: string
   linkedin_url?: string
   notes?: string
+  country_code?: string | null
+  language?: string | null
   created_at: string
   updated_at: string
 }
@@ -93,6 +95,8 @@ export interface PersonInput {
   role?: string
   linkedin_url?: string
   notes?: string
+  country_code?: string
+  language?: string
 }
 
 export type PersonUpdateInput = Partial<PersonInput>

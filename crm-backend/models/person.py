@@ -34,6 +34,8 @@ class Person(BaseModel):
     role = Column(String(255), nullable=True)
     linkedin_url = Column(String(512), nullable=True)
     notes = Column(Text, nullable=True)
+    country_code = Column(String(2), nullable=True, index=True)
+    language = Column(String(5), nullable=True, index=True)
 
     organizations = relationship(
         "PersonOrganizationLink",

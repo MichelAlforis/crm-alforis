@@ -1,5 +1,5 @@
 from typing import Optional, List
-from pydantic import Field, EmailStr
+from pydantic import Field, EmailStr, field_validator
 
 from schemas.base import BaseSchema, TimestampedSchema
 from models.person import OrganizationType
@@ -13,6 +13,34 @@ class PersonBase(BaseSchema):
     role: Optional[str] = Field(None, max_length=255)
     linkedin_url: Optional[str] = Field(None, max_length=512)
     notes: Optional[str] = None
+    country_code: Optional[str] = Field(
+        None,
+        min_length=2,
+        max_length=2,
+        pattern=r"^[A-Za-z]{2}$",
+        description="Code pays ISO 3166-1 alpha-2 (ex: FR, US)",
+    )
+    language: Optional[str] = Field(
+        None,
+        min_length=2,
+        max_length=5,
+        pattern=r"^[A-Za-z]{2,5}$",
+        description="Langue préférée ISO 639-1 (ex: fr, en)",
+    )
+
+    @field_validator("country_code")
+    @classmethod
+    def normalize_country_code(cls, value: Optional[str]) -> Optional[str]:
+        if value is None:
+            return None
+        return value.strip().upper()
+
+    @field_validator("language")
+    @classmethod
+    def normalize_language(cls, value: Optional[str]) -> Optional[str]:
+        if value is None:
+            return None
+        return value.strip().lower()
 
 
 class PersonCreate(PersonBase):
@@ -27,6 +55,27 @@ class PersonUpdate(BaseSchema):
     role: Optional[str] = Field(None, max_length=255)
     linkedin_url: Optional[str] = Field(None, max_length=512)
     notes: Optional[str] = None
+    country_code: Optional[str] = Field(
+        None,
+        min_length=2,
+        max_length=2,
+        pattern=r"^[A-Za-z]{2}$",
+        description="Code pays ISO 3166-1 alpha-2 (ex: FR, US)",
+    )
+    language: Optional[str] = Field(
+        None,
+        min_length=2,
+        max_length=5,
+        pattern=r"^[A-Za-z]{2,5}$",
+        description="Langue préférée ISO 639-1 (ex: fr, en)",
+    )
+
+    _normalize_country_code = field_validator("country_code")(
+        PersonBase.normalize_country_code.__func__
+    )
+    _normalize_language = field_validator("language")(
+        PersonBase.normalize_language.__func__
+    )
 
 
 class PersonResponse(TimestampedSchema, PersonBase):
