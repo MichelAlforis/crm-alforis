@@ -1,0 +1,180 @@
+# ===========================================
+# DOCKER COMPOSE - CRM TPM FINANCE
+# ===========================================
+# Version optimisée avec:
+# - Gestion des secrets via .env
+# - Healthchecks pour tous les services
+# - Volumes pour hot-reload en développement
+# - Réseau isolé
+# - Restart automatique
+
+
+# --- RÉSEAUX ---
+networks:
+  crm-network:
+    driver: bridge
+    name: crm-network
+
+# --- VOLUMES ---
+volumes:
+  postgres-data:
+    name: crm-postgres-data
+  api-uploads:
+    name: crm-api-uploads
+  api-backups:
+    name: crm-api-backups
+
+# --- SERVICES ---
+services:
+  # ========================================
+  # BASE DE DONNÉES POSTGRESQL
+  # ========================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: crm-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-crm_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-crm_password}
+      POSTGRES_DB: ${POSTGRES_DB:-crm_db}
+      PGDATA: /var/lib/postgresql/data/pgdata
+
+    ports:
+      - "${POSTGRES_EXTERNAL_PORT:-5433}:5432"
+
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+    networks:
+      - crm-network
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-crm_user} -d ${POSTGRES_DB:-crm_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ========================================
+  # API BACKEND (FastAPI)
+  # ========================================
+  api:
+    build:
+      context: ./crm-backend
+      dockerfile: Dockerfile
+
+    container_name: crm-api
+    restart: unless-stopped
+
+    environment:
+      # Base de données
+      DATABASE_URL: postgresql://${POSTGRES_USER:-crm_user}:${POSTGRES_PASSWORD:-crm_password}@postgres:5432/${POSTGRES_DB:-crm_db}
+
+      # Configuration API
+      DEBUG: ${DEBUG:-True}
+      SECRET_KEY: ${SECRET_KEY:-dev_secret_key_change_in_production}
+
+      # CORS
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3010,http://localhost:3000,http://localhost:5173}
+
+      # JWT
+      JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
+      JWT_EXPIRATION_HOURS: ${JWT_EXPIRATION_HOURS:-24}
+
+      # Divers
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      MAX_UPLOAD_SIZE_MB: ${MAX_UPLOAD_SIZE_MB:-10}
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    ports:
+      - "${API_PORT:-8000}:8000"
+
+    volumes:
+      # Hot-reload: sync du code source (DEV ONLY)
+      - ./crm-backend:/app
+      # Exclure le venv pour éviter conflits
+      - /app/venv
+      # Volumes persistants
+      - api-uploads:/app/uploads
+      - api-backups:/app/backups
+
+    networks:
+      - crm-network
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ========================================
+  # FRONTEND (Next.js)
+  # ========================================
+  frontend:
+    build:
+      context: ./crm-frontend
+      dockerfile: Dockerfile
+      target: development
+
+    container_name: crm-frontend
+    restart: unless-stopped
+
+    environment:
+      # API URL (accessible depuis le navigateur)
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+
+      # Port Next.js
+      PORT: ${FRONTEND_PORT:-3010}
+
+      # Environnement
+      NODE_ENV: development
+
+    depends_on:
+      api:
+        condition: service_healthy
+
+    ports:
+      - "${FRONTEND_PORT:-3010}:${FRONTEND_PORT:-3010}"
+
+    volumes:
+      # Hot-reload: sync du code source (DEV ONLY)
+      - ./crm-frontend:/app
+      # Exclure node_modules et .next pour éviter conflits
+      - /app/node_modules
+      - /app/.next
+
+    networks:
+      - crm-network
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${FRONTEND_PORT:-3010}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    # Commande: nettoyage + démarrage dev
+    command: sh -c "rm -rf .next && npm run dev"
