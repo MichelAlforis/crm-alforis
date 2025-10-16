@@ -7,10 +7,10 @@
 from fastapi import APIRouter, HTTPException, Depends, status
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Set
 import logging
 
-# ---- Tes dépendances / modèles / schémas (adapter si chemins différents)
+# ---- Dépendances / modèles / schémas
 from core.database import get_db
 from core.security import get_current_user_optional
 from models.investor import Investor
@@ -34,6 +34,15 @@ def _index_to_row(idx: int) -> int:
     return idx + 2
 
 
+def _collect_nonempty_emails(items: List[dict], key: str = "email") -> Set[str]:
+    emails: Set[str] = set()
+    for it in items:
+        e = _normalize_email(it.get(key))
+        if e:
+            emails.add(e)
+    return emails
+
+
 # ============= BULK CREATE INVESTORS =============
 
 @router.post("/investors/bulk")
@@ -44,30 +53,10 @@ async def bulk_create_investors(
 ) -> Dict[str, Any]:
     """
     Créer plusieurs investisseurs en une seule requête.
-
-    Body (exemple):
-    [
-      {
-        "name": "Client A",
-        "email": "a@example.com",
-        "phone": "+33123456789",
-        "pipeline_stage": "prospect_froid",
-        "client_type": "cgpi",
-        "notes": "VIP"
-      }
-    ]
-
-    Réponse:
-    {
-      "total": 3,
-      "created": [1, 2, 3],
-      "failed": 0,
-      "errors": []
-    }
     """
 
     total = len(investors)
-    result = {
+    result: Dict[str, Any] = {
         "total": total,
         "created": [],
         "failed": 0,
@@ -77,62 +66,66 @@ async def bulk_create_investors(
     if total == 0:
         return result
 
-    # Déduplication interne (dans le payload) par email normalisé
-    seen_emails = set()
+    # -------- Déduplication payload --------
+    seen_emails: Set[str] = set()
     for idx, inv in enumerate(investors):
         norm_email = _normalize_email(inv.email)
-        if norm_email and norm_email in seen_emails:
-            result["failed"] += 1
-            result["errors"].append({
-                "index": idx,
-                "row": _index_to_row(idx),
-                "error": f"Doublon dans le payload pour l'email: {norm_email}"
-            })
-        elif norm_email:
-            seen_emails.add(norm_email)
-
-    # Si tout est en doublon dans le payload, on évite la requête inutile
-    if result["failed"] == total:
-        return result
-
-    try:
-        for idx, inv in enumerate(investors):
-            try:
-                payload = inv.dict()
-                payload["email"] = _normalize_email(payload.get("email"))
-
-                # Skip si déjà marqué en doublon payload
-                if any(e["index"] == idx for e in result["errors"]):
-                    continue
-
-                # Vérifier si l'investisseur existe déjà (par email)
-                if payload.get("email"):
-                    existing = db.query(Investor).filter(
-                        Investor.email == payload["email"]
-                    ).first()
-                    if existing:
-                        result["failed"] += 1
-                        result["errors"].append({
-                            "index": idx,
-                            "row": _index_to_row(idx),
-                            "error": f"Email déjà existant en base: {payload['email']}"
-                        })
-                        continue
-
-                # Créer l'investisseur
-                new_inv = Investor(**payload)
-                db.add(new_inv)
-                db.flush()  # récupère l'ID sans commit
-
-                result["created"].append(new_inv.id)
-
-            except IntegrityError as ie:
-                db.rollback()  # rollback partiel nécessaire après IntegrityError
+        if norm_email:
+            if norm_email in seen_emails:
                 result["failed"] += 1
                 result["errors"].append({
                     "index": idx,
                     "row": _index_to_row(idx),
-                    "error": f"Contrainte d'intégrité: {str(ie.orig) if hasattr(ie, 'orig') else str(ie)}"
+                    "error": f"Doublon dans le payload pour l'email: {norm_email}"
+                })
+            else:
+                seen_emails.add(norm_email)
+
+    if result["failed"] == total:
+        return result
+
+    # -------- Précharger emails existants en base --------
+    payload_dicts = [inv.dict() for inv in investors]
+    for p in payload_dicts:
+        p["email"] = _normalize_email(p.get("email"))
+
+    payload_emails = {p["email"] for p in payload_dicts if p.get("email")}
+    existing_emails = set()
+    if payload_emails:
+        existing_emails = {
+            e[0] for e in db.query(Investor.email).filter(Investor.email.in_(payload_emails)).all()
+        }
+
+    try:
+        for idx, payload in enumerate(payload_dicts):
+            try:
+                # Skip si doublon payload déjà détecté
+                if any(e["index"] == idx for e in result["errors"]):
+                    continue
+
+                # Doublon base
+                email = payload.get("email")
+                if email and email in existing_emails:
+                    result["failed"] += 1
+                    result["errors"].append({
+                        "index": idx,
+                        "row": _index_to_row(idx),
+                        "error": f"Email déjà existant en base: {email}"
+                    })
+                    continue
+
+                new_inv = Investor(**payload)
+                db.add(new_inv)
+                db.flush()  # récupère l'ID sans commit
+                result["created"].append(new_inv.id)
+
+            except IntegrityError as ie:
+                db.rollback()  # nécessaire après IntegrityError
+                result["failed"] += 1
+                result["errors"].append({
+                    "index": idx,
+                    "row": _index_to_row(idx),
+                    "error": f"Contrainte d'intégrité: {getattr(ie, 'orig', ie)}"
                 })
             except Exception as e:
                 result["failed"] += 1
@@ -142,7 +135,6 @@ async def bulk_create_investors(
                     "error": str(e)
                 })
 
-        # Commit final
         if result["created"]:
             db.commit()
         else:
@@ -160,34 +152,19 @@ async def bulk_create_investors(
 
 
 # ============= BULK CREATE FOURNISSEURS =============
-# Si tu n'as pas encore de schéma ou modèle strict, on accepte Dict.
-# Sinon remplace `List[Dict[str, Any]]` par `List[FournisseurCreate]`
-# et adapte l'import + l'instanciation modèle.
 
 @router.post("/fournisseurs/bulk")
 async def bulk_create_fournisseurs(
-    fournisseurs: List[Dict[str, Any]],
+    fournisseurs: List[FournisseurCreate],
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user_optional),
 ) -> Dict[str, Any]:
     """
     Créer plusieurs fournisseurs en une seule requête.
-
-    Body minimal attendu:
-    [
-      { "name": "Mandarine Gestion", "email": "contact@mandarinegestion.com", "activity": "Asset Management" }
-    ]
     """
 
-    # Import local pour éviter dépendances circulaires si ta structure le nécessite
-    try:
-        from models.fournisseur import Fournisseur
-    except Exception:
-        # Compat si ton modèle est ailleurs
-        from app.models import Fournisseur  # type: ignore
-
     total = len(fournisseurs)
-    result = {
+    result: Dict[str, Any] = {
         "total": total,
         "created": [],
         "failed": 0,
@@ -197,51 +174,57 @@ async def bulk_create_fournisseurs(
     if total == 0:
         return result
 
-    # Déduplication interne (payload)
-    seen_emails = set()
+    # -------- Déduplication payload --------
+    seen_emails: Set[str] = set()
     for idx, f in enumerate(fournisseurs):
-        norm_email = _normalize_email(f.get("email"))
-        if norm_email and norm_email in seen_emails:
-            result["failed"] += 1
-            result["errors"].append({
-                "index": idx,
-                "row": _index_to_row(idx),
-                "error": f"Doublon dans le payload pour l'email: {norm_email}"
-            })
-        elif norm_email:
-            seen_emails.add(norm_email)
+        norm_email = _normalize_email(f.email)
+        if norm_email:
+            if norm_email in seen_emails:
+                result["failed"] += 1
+                result["errors"].append({
+                    "index": idx,
+                    "row": _index_to_row(idx),
+                    "error": f"Doublon dans le payload pour l'email: {norm_email}"
+                })
+            else:
+                seen_emails.add(norm_email)
 
     if result["failed"] == total:
         return result
 
-    try:
-        for idx, f in enumerate(fournisseurs):
-            try:
-                payload = dict(f)  # shallow copy
-                payload["email"] = _normalize_email(payload.get("email"))
+    # -------- Précharger emails existants en base --------
+    payload_dicts = [f.dict() for f in fournisseurs]
+    for p in payload_dicts:
+        p["email"] = _normalize_email(p.get("email"))
 
-                # Skip si doublon payload déjà signalé
+    payload_emails = {p["email"] for p in payload_dicts if p.get("email")}
+    existing_emails = set()
+    if payload_emails:
+        existing_emails = {
+            e[0] for e in db.query(Fournisseur.email).filter(Fournisseur.email.in_(payload_emails)).all()
+        }
+
+    try:
+        for idx, payload in enumerate(payload_dicts):
+            try:
+                # Skip si doublon payload déjà détecté
                 if any(e["index"] == idx for e in result["errors"]):
                     continue
 
-                # Vérifier existence par email
-                if payload.get("email"):
-                    existing = db.query(Fournisseur).filter(
-                        Fournisseur.email == payload["email"]
-                    ).first()
-                    if existing:
-                        result["failed"] += 1
-                        result["errors"].append({
-                            "index": idx,
-                            "row": _index_to_row(idx),
-                            "error": f"Email déjà existant en base: {payload['email']}"
-                        })
-                        continue
+                # Doublon base
+                email = payload.get("email")
+                if email and email in existing_emails:
+                    result["failed"] += 1
+                    result["errors"].append({
+                        "index": idx,
+                        "row": _index_to_row(idx),
+                        "error": f"Email déjà existant en base: {email}"
+                    })
+                    continue
 
                 new_f = Fournisseur(**payload)
                 db.add(new_f)
                 db.flush()
-
                 result["created"].append(new_f.id)
 
             except IntegrityError as ie:
@@ -250,7 +233,7 @@ async def bulk_create_fournisseurs(
                 result["errors"].append({
                     "index": idx,
                     "row": _index_to_row(idx),
-                    "error": f"Contrainte d'intégrité: {str(ie.orig) if hasattr(ie, 'orig') else str(ie)}"
+                    "error": f"Contrainte d'intégrité: {getattr(ie, 'orig', ie)}"
                 })
             except Exception as e:
                 result["failed"] += 1

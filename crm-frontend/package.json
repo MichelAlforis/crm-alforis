@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "devc": "./scripts/dev-clean.sh",
+    "devc": "sh -c 'chmod +x scripts/dev-clean.sh && ./scripts/dev-clean.sh && npm run dev -- --port ${PORT:-3010}'",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
