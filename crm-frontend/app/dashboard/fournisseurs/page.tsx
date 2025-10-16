@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useFournisseurs } from '@/hooks/useFournisseurs'
 import { Card, Button, Table, Input, Alert } from '@/components/shared'
+import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 
 export default function FournisseursPage() {
   const { fournisseurs, fetchFournisseurs } = useFournisseurs()
@@ -24,6 +25,16 @@ export default function FournisseursPage() {
     fetchFournisseurs(0, 100, debouncedSearch)
   }, [debouncedSearch, fetchFournisseurs])
 
+  const getCountryLabel = (code?: string | null) => {
+    if (!code) return '-'
+    return COUNTRY_OPTIONS.find((option) => option.value === code)?.label ?? code
+  }
+
+  const getLanguageLabel = (code?: string | null) => {
+    if (!code) return '-'
+    return LANGUAGE_OPTIONS.find((option) => option.value === code)?.label ?? code
+  }
+
   const columns = [
     {
       header: 'Nom',
@@ -40,6 +51,16 @@ export default function FournisseursPage() {
     {
       header: 'Téléphone accueil',
       accessor: 'main_phone',
+    },
+    {
+      header: 'Pays',
+      accessor: 'country_code',
+      render: (value: string | null) => getCountryLabel(value),
+    },
+    {
+      header: 'Langue',
+      accessor: 'language',
+      render: (value: string | null) => getLanguageLabel(value),
     },
     {
       header: 'Actions',

@@ -138,11 +138,39 @@ class FournisseurCreate(BaseSchema):
     stage: StageFournisseur = StageFournisseur.PROSPECT_FROID
     type_fournisseur: Optional[TypeFournisseur] = None
     notes: Optional[str] = None
+    country_code: Optional[str] = Field(
+        None,
+        min_length=2,
+        max_length=2,
+        pattern=r"^[A-Za-z]{2}$",
+        description="Code pays ISO 3166-1 alpha-2",
+    )
+    language: Optional[str] = Field(
+        None,
+        min_length=2,
+        max_length=5,
+        pattern=r"^[A-Za-z]{2,5}$",
+        description="Langue préférée ISO 639-1",
+    )
 
     @field_validator("email", mode="before")
     @classmethod
     def normalize_email(cls, v):
         return v.strip().lower() if isinstance(v, str) else v
+
+    @field_validator("country_code")
+    @classmethod
+    def normalize_country_code(cls, value: Optional[str]) -> Optional[str]:
+        if value is None:
+            return None
+        return value.strip().upper()
+
+    @field_validator("language")
+    @classmethod
+    def normalize_language(cls, value: Optional[str]) -> Optional[str]:
+        if value is None:
+            return None
+        return value.strip().lower()
 
 
 class FournisseurUpdate(BaseSchema):
@@ -157,11 +185,32 @@ class FournisseurUpdate(BaseSchema):
     type_fournisseur: Optional[TypeFournisseur] = None
     notes: Optional[str] = None
     is_active: Optional[bool] = None
+    country_code: Optional[str] = Field(
+        None,
+        min_length=2,
+        max_length=2,
+        pattern=r"^[A-Za-z]{2}$",
+        description="Code pays ISO 3166-1 alpha-2",
+    )
+    language: Optional[str] = Field(
+        None,
+        min_length=2,
+        max_length=5,
+        pattern=r"^[A-Za-z]{2,5}$",
+        description="Langue préférée ISO 639-1",
+    )
 
     @field_validator("email", mode="before")
     @classmethod
     def normalize_email(cls, v):
         return v.strip().lower() if isinstance(v, str) else v
+
+    _normalize_country_code = field_validator("country_code")(
+        FournisseurCreate.normalize_country_code.__func__
+    )
+    _normalize_language = field_validator("language")(
+        FournisseurCreate.normalize_language.__func__
+    )
 
 
 class FournisseurResponse(TimestampedSchema):
@@ -176,6 +225,8 @@ class FournisseurResponse(TimestampedSchema):
     type_fournisseur: Optional[TypeFournisseur]
     notes: Optional[str]
     is_active: bool = True
+    country_code: Optional[str] = None
+    language: Optional[str] = None
 
     @field_validator("stage", mode="before")
     @classmethod
@@ -213,6 +264,27 @@ class FournisseurFilterParams(BaseSchema):
     stage: Optional[StageFournisseur] = None
     type_fournisseur: Optional[TypeFournisseur] = None
     is_active: Optional[bool] = True
+    country_code: Optional[str] = Field(
+        None,
+        min_length=2,
+        max_length=2,
+        pattern=r"^[A-Za-z]{2}$",
+        description="Filtrer par code pays ISO 3166-1 alpha-2",
+    )
+    language: Optional[str] = Field(
+        None,
+        min_length=2,
+        max_length=5,
+        pattern=r"^[A-Za-z]{2,5}$",
+        description="Filtrer par langue ISO 639-1",
+    )
     search: Optional[str] = None  # Recherche sur name, email, company, activity
     skip: int = 0
     limit: int = 100
+
+    _normalize_filter_country = field_validator("country_code")(
+        FournisseurCreate.normalize_country_code.__func__
+    )
+    _normalize_filter_language = field_validator("language")(
+        FournisseurCreate.normalize_language.__func__
+    )

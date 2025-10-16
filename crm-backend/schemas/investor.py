@@ -46,6 +46,34 @@ class InvestorCreate(BaseSchema):
     pipeline_stage: PipelineStage = PipelineStage.PROSPECT_FROID
     client_type: Optional[ClientType] = None
     notes: Optional[str] = None
+    country_code: Optional[str] = Field(
+        None,
+        min_length=2,
+        max_length=2,
+        pattern=r"^[A-Za-z]{2}$",
+        description="Code pays ISO 3166-1 alpha-2",
+    )
+    language: Optional[str] = Field(
+        None,
+        min_length=2,
+        max_length=5,
+        pattern=r"^[A-Za-z]{2,5}$",
+        description="Langue préférée ISO 639-1",
+    )
+
+    @field_validator("country_code")
+    @classmethod
+    def normalize_country_code(cls, value: Optional[str]) -> Optional[str]:
+        if value is None:
+            return None
+        return value.strip().upper()
+
+    @field_validator("language")
+    @classmethod
+    def normalize_language(cls, value: Optional[str]) -> Optional[str]:
+        if value is None:
+            return None
+        return value.strip().lower()
 
 
 class InvestorUpdate(BaseSchema):
@@ -60,6 +88,27 @@ class InvestorUpdate(BaseSchema):
     client_type: Optional[ClientType] = None
     notes: Optional[str] = None
     is_active: Optional[bool] = None
+    country_code: Optional[str] = Field(
+        None,
+        min_length=2,
+        max_length=2,
+        pattern=r"^[A-Za-z]{2}$",
+        description="Code pays ISO 3166-1 alpha-2",
+    )
+    language: Optional[str] = Field(
+        None,
+        min_length=2,
+        max_length=5,
+        pattern=r"^[A-Za-z]{2,5}$",
+        description="Langue préférée ISO 639-1",
+    )
+
+    _normalize_country_code = field_validator("country_code")(
+        InvestorCreate.normalize_country_code.__func__
+    )
+    _normalize_language = field_validator("language")(
+        InvestorCreate.normalize_language.__func__
+    )
 
 
 class InvestorResponse(TimestampedSchema):
@@ -74,6 +123,8 @@ class InvestorResponse(TimestampedSchema):
     client_type: Optional[ClientType]
     notes: Optional[str]
     is_active: bool = True
+    country_code: Optional[str] = None
+    language: Optional[str] = None
 
     @field_validator("pipeline_stage", mode="before")
     @classmethod
@@ -105,6 +156,27 @@ class InvestorFilterParams(BaseSchema):
     pipeline_stage: Optional[PipelineStage] = None
     client_type: Optional[ClientType] = None
     is_active: Optional[bool] = True
+    country_code: Optional[str] = Field(
+        None,
+        min_length=2,
+        max_length=2,
+        pattern=r"^[A-Za-z]{2}$",
+        description="Filtrer par code pays ISO 3166-1 alpha-2",
+    )
+    language: Optional[str] = Field(
+        None,
+        min_length=2,
+        max_length=5,
+        pattern=r"^[A-Za-z]{2,5}$",
+        description="Filtrer par langue ISO 639-1",
+    )
     search: Optional[str] = None  # Recherche sur name, email, company
     skip: int = 0
     limit: int = 100
+
+    _normalize_filter_country = field_validator("country_code")(
+        InvestorCreate.normalize_country_code.__func__
+    )
+    _normalize_filter_language = field_validator("language")(
+        InvestorCreate.normalize_language.__func__
+    )

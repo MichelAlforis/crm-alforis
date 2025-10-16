@@ -8,6 +8,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Input, Select, Button, Alert } from '@/components/shared'
 import { Investor, InvestorCreate, PipelineStage, ClientType } from '@/lib/types'
+import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import { useToast } from '@/components/ui/Toast'
 
 interface InvestorFormProps {
@@ -47,7 +48,11 @@ export function InvestorForm({
     handleSubmit,
     formState: { errors },
   } = useForm<InvestorCreate>({
-    defaultValues: initialData,
+    defaultValues: {
+      ...initialData,
+      country_code: initialData?.country_code ?? undefined,
+      language: initialData?.language ?? undefined,
+    },
     mode: 'onBlur',
   })
 
@@ -135,6 +140,23 @@ export function InvestorForm({
         options={CLIENT_TYPE_OPTIONS}
         error={errors.client_type?.message}
       />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Select
+          label="Pays"
+          {...register('country_code', {
+            setValueAs: (value) => (value ? value : undefined),
+          })}
+          options={COUNTRY_OPTIONS}
+        />
+        <Select
+          label="Langue préférée"
+          {...register('language', {
+            setValueAs: (value) => (value ? value : undefined),
+          })}
+          options={LANGUAGE_OPTIONS}
+        />
+      </div>
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">

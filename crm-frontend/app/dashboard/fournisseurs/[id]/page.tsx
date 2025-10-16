@@ -15,6 +15,7 @@ import { KPIForm } from '@/components/forms'
 import { FournisseurDetail, KPICreate, PersonOrganizationLink, PersonOrganizationLinkInput } from '@/lib/types'
 import { usePeople } from '@/hooks/usePeople'
 import { SkeletonCard, SkeletonTable } from '@/components/ui/Skeleton'
+import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 
 export default function FournisseurDetailPage() {
   const params = useParams<{ id?: string }>()
@@ -96,6 +97,14 @@ export default function FournisseurDetailPage() {
   const details = fournisseur.data as FournisseurDetail
   const data = details.fournisseur
   const peopleLinks = details.people || []
+  const countryValue = data.country_code || ''
+  const countryLabel = countryValue
+    ? COUNTRY_OPTIONS.find((option) => option.value === countryValue)?.label || countryValue
+    : '-'
+  const languageValue = data.language || ''
+  const languageLabel = languageValue
+    ? LANGUAGE_OPTIONS.find((option) => option.value === languageValue)?.label || languageValue
+    : '-'
 
   const primaryLink = details.people.find((p) => p.is_primary) ?? details.people[0]
   const primaryContactName = primaryLink?.person
@@ -229,7 +238,7 @@ export default function FournisseurDetailPage() {
 
       {/* Main info */}
       <Card padding="lg">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
           <div>
             <p className="text-sm text-gray-600">Email</p>
             <p className="font-medium text-sm">{data.email || '-'}</p>
@@ -247,6 +256,14 @@ export default function FournisseurDetailPage() {
             <p className="font-medium text-sm">
               {primaryContactName}
             </p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">Pays</p>
+            <p className="font-medium text-sm">{countryLabel}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">Langue</p>
+            <p className="font-medium text-sm">{languageLabel}</p>
           </div>
         </div>
       </Card>

@@ -67,6 +67,8 @@ class Fournisseur(BaseModel):
     # Métadonnées
     notes = Column(Text)
     is_active = Column(Boolean, default=True, index=True)
+    country_code = Column(String(2), nullable=True, index=True)
+    language = Column(String(5), nullable=True, index=True)
 
     # Relations
     contacts = relationship(

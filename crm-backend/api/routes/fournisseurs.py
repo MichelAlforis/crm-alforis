@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status, HTTPException, Query
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 
 from core import get_db, get_current_user
 from schemas.base import PaginatedResponse
@@ -26,6 +26,8 @@ async def list_fournisseurs(
     stage: str = Query(None),
     type_fournisseur: str = Query(None),
     is_active: bool = Query(True),
+    country_code: Optional[str] = Query(None, min_length=2, max_length=2),
+    language: Optional[str] = Query(None, min_length=2, max_length=5),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
@@ -37,6 +39,10 @@ async def list_fournisseurs(
         filters["stage"] = stage
     if type_fournisseur:
         filters["type_fournisseur"] = type_fournisseur
+    if country_code:
+        filters["country_code"] = country_code.upper()
+    if language:
+        filters["language"] = language.lower()
 
     items, total = await service.get_all(skip=skip, limit=limit, filters=filters)
 

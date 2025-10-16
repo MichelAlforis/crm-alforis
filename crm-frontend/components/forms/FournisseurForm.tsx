@@ -5,8 +5,9 @@
 
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { Input, Button, Alert } from '@/components/shared'
+import { Input, Button, Alert, Select } from '@/components/shared'
 import { Fournisseur, FournisseurCreate } from '@/lib/types'
+import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import { useToast } from '@/components/ui/Toast'
 
 interface FournisseurFormProps {
@@ -30,7 +31,11 @@ export function FournisseurForm({
     handleSubmit,
     formState: { errors },
   } = useForm<FournisseurCreate>({
-    defaultValues: initialData,
+    defaultValues: {
+      ...initialData,
+      country_code: initialData?.country_code ?? undefined,
+      language: initialData?.language ?? undefined,
+    },
     mode: 'onBlur',
   })
 
@@ -93,6 +98,13 @@ export function FournisseurForm({
       />
 
       <Input
+        label="Société"
+        {...register('company')}
+        error={errors.company?.message}
+        placeholder="Nom de la société (si différent)"
+      />
+
+      <Input
         label="Activité principale"
         {...register('activity')}
         error={errors.activity?.message}
@@ -108,6 +120,23 @@ export function FournisseurForm({
           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-bleu"
           rows={4}
           placeholder="Notes supplémentaires sur le fournisseur..."
+        />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Select
+          label="Pays"
+          {...register('country_code', {
+            setValueAs: (value) => (value ? value : undefined),
+          })}
+          options={COUNTRY_OPTIONS}
+        />
+        <Select
+          label="Langue préférée"
+          {...register('language', {
+            setValueAs: (value) => (value ? value : undefined),
+          })}
+          options={LANGUAGE_OPTIONS}
         />
       </div>
 

@@ -123,7 +123,13 @@ class InvestorService(BaseService[Investor, InvestorCreate, InvestorUpdate]):
             
             if filter_params.is_active is not None:
                 query = query.filter(Investor.is_active == filter_params.is_active)
-            
+
+            if filter_params.country_code:
+                query = query.filter(Investor.country_code == filter_params.country_code)
+
+            if filter_params.language:
+                query = query.filter(Investor.language == filter_params.language)
+    
             # Recherche textuelle
             if filter_params.search:
                 search = f"%{filter_params.search}%"

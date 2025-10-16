@@ -50,6 +50,8 @@ export interface Investor {
   client_type?: ClientType
   notes?: string
   is_active: boolean
+  country_code?: string | null
+  language?: string | null
   created_at: string
   updated_at: string
 }
@@ -64,6 +66,8 @@ export interface InvestorCreate {
   pipeline_stage?: PipelineStage
   client_type?: ClientType
   notes?: string
+  country_code?: string
+  language?: string
 }
 
 export interface InvestorUpdate extends Partial<InvestorCreate> {}
@@ -150,6 +154,8 @@ export interface Fournisseur {
   type_fournisseur?: string
   notes?: string
   is_active: boolean
+  country_code?: string | null
+  language?: string | null
   created_at: string
   updated_at: string
 }
@@ -164,6 +170,8 @@ export interface FournisseurCreate {
   stage?: string
   type_fournisseur?: string
   notes?: string
+  country_code?: string
+  language?: string
 }
 
 export interface FournisseurUpdate extends Partial<FournisseurCreate> {}

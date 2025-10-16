@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { useInvestors } from '@/hooks/useInvestors'
 import { Card, Button, Table, Input, Alert } from '@/components/shared'
 import { PipelineStage } from '@/lib/types'
+import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 
 const PIPELINE_COLORS: Record<PipelineStage, string> = {
   prospect_froid: 'bg-blue-100 text-blue-800',
@@ -36,10 +37,30 @@ export default function InvestorsPage() {
     fetchInvestors(0, 100, debouncedSearch)
   }, [debouncedSearch, fetchInvestors])
 
+  const getCountryLabel = (code?: string | null) => {
+    if (!code) return '-'
+    return COUNTRY_OPTIONS.find((option) => option.value === code)?.label ?? code
+  }
+
+  const getLanguageLabel = (code?: string | null) => {
+    if (!code) return '-'
+    return LANGUAGE_OPTIONS.find((option) => option.value === code)?.label ?? code
+  }
+
   const columns = [
     {
       header: 'Nom',
       accessor: 'name',
+    },
+    {
+      header: 'Pays',
+      accessor: 'country_code',
+      render: (value: string | null) => getCountryLabel(value),
+    },
+    {
+      header: 'Langue',
+      accessor: 'language',
+      render: (value: string | null) => getLanguageLabel(value),
     },
     {
       header: 'Email',
@@ -113,4 +134,3 @@ export default function InvestorsPage() {
     </div>
   )
 }
-
