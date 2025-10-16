@@ -71,10 +71,10 @@ export function InvestorForm({
       />
 
       <Input
-        label="Téléphone"
-        {...register('phone')}
-        error={errors.phone?.message}
-        placeholder="+33 1 2X XX XX XX"
+        label="Téléphone accueil"
+        {...register('main_phone')}
+        error={errors.main_phone?.message}
+        placeholder="+33 1 23 45 67 89"
       />
 
       <Input

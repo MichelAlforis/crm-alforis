@@ -24,7 +24,7 @@ export async function GET(req: Request) {
         id: String(r.id ?? ''),
         type: 'fournisseur' as const,
         title: r.name || 'Fournisseur',
-        subtitle: [r.sector, r.country, r.email].filter(Boolean).join(' • '),
+        subtitle: [r.activity, r.main_phone, r.email].filter(Boolean).join(' • '),
         href: `/dashboard/fournisseurs/${r.id ?? ''}`,
       })),
     },
@@ -35,8 +35,19 @@ export async function GET(req: Request) {
         id: String(r.id ?? ''),
         type: 'investisseur' as const,
         title: r.name || 'Investisseur',
-        subtitle: [r.segment, r.city, r.email].filter(Boolean).join(' • '),
+        subtitle: [r.company, r.main_phone, r.email].filter(Boolean).join(' • '),
         href: `/dashboard/investors/${r.id ?? ''}`,
+      })),
+    },
+    {
+      key: 'people',
+      url: `${API}/api/v1/people?q=${encodeURIComponent(q)}&skip=0&limit=20`,
+      toItems: (rows: any[]) => rows.map((r) => ({
+        id: String(r.id ?? ''),
+        type: 'person' as const,
+        title: [r.first_name, r.last_name].filter(Boolean).join(' ') || 'Personne',
+        subtitle: [r.role, r.personal_email, r.personal_phone].filter(Boolean).join(' • '),
+        href: `/dashboard/people/${r.id ?? ''}`,
       })),
     },
     {
@@ -108,7 +119,7 @@ export async function GET(req: Request) {
 
 export type SearchItem = {
   id: string
-  type: 'fournisseur' | 'investisseur' | 'contact' | 'opportunite' | 'kpi' | 'info'
+  type: 'fournisseur' | 'investisseur' | 'person' | 'contact' | 'opportunite' | 'kpi' | 'info'
   title: string
   subtitle?: string
   href: string

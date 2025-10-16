@@ -1,0 +1,340 @@
+'use client'
+
+// app/dashboard/people/[id]/page.tsx
+// ============= PERSON DETAIL PAGE =============
+
+import React, { useEffect, useMemo, useState } from 'react'
+import Link from 'next/link'
+import { useParams, useRouter } from 'next/navigation'
+import {
+  Card,
+  Button,
+  Alert,
+  Table,
+  Modal,
+  Input,
+  Select,
+} from '@/components/shared'
+import { PersonForm } from '@/components/forms'
+import { usePeople } from '@/hooks/usePeople'
+import { OrganizationType, PersonOrganizationLinkInput } from '@/lib/types'
+
+const ORGANIZATION_OPTIONS = [
+  { value: 'investor', label: 'Investisseur' },
+  { value: 'fournisseur', label: 'Fournisseur' },
+]
+
+export default function PersonDetailPage() {
+  const params = useParams()
+  const router = useRouter()
+  const personId = Number(params.id)
+
+  const { single, fetchPerson, updatePerson, deletePerson, update, remove, linkPersonToOrganization, updatePersonOrganizationLink, deletePersonOrganizationLink } = usePeople()
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
+  const [linkPayload, setLinkPayload] = useState<PersonOrganizationLinkInput>({
+    person_id: personId,
+    organization_type: 'investor',
+    organization_id: 0,
+    is_primary: false,
+  })
+  const [linkError, setLinkError] = useState<string>()
+  const [isLinkSubmitting, setIsLinkSubmitting] = useState(false)
+
+  useEffect(() => {
+    fetchPerson(personId)
+  }, [personId, fetchPerson])
+
+  const person = single.data
+
+  const organizationRows = useMemo(() => {
+    return person?.organizations.map((link) => ({
+      ...link,
+      organizationLabel:
+        link.organization_name ||
+        (link.organization_type === 'investor'
+          ? `Investisseur #${link.organization_id}`
+          : `Fournisseur #${link.organization_id}`),
+      personLabel: link.person
+        ? `${link.person.first_name} ${link.person.last_name}`
+        : '',
+    })) || []
+  }, [person])
+
+  const refresh = async () => {
+    await fetchPerson(personId)
+  }
+
+  const handleUpdatePerson = async (data: Parameters<typeof updatePerson>[1]) => {
+    await updatePerson(personId, data)
+    setIsEditModalOpen(false)
+  }
+
+  const handleDelete = async () => {
+    if (!confirm('Supprimer cette personne ? Cette action est définitive.')) {
+      return
+    }
+    await deletePerson(personId)
+    router.push('/dashboard/people')
+  }
+
+  const handleCreateLink = async () => {
+    if (!linkPayload.organization_id || linkPayload.organization_id <= 0) {
+      setLinkError('Identifiant organisation invalide')
+      return
+    }
+    setIsLinkSubmitting(true)
+    setLinkError(undefined)
+    try {
+      await linkPersonToOrganization(linkPayload)
+      setIsLinkModalOpen(false)
+      setLinkPayload({
+        person_id: personId,
+        organization_type: linkPayload.organization_type,
+        organization_id: 0,
+        is_primary: false,
+      })
+      await refresh()
+    } catch (error: any) {
+      setLinkError(error?.detail || 'Erreur lors de la création du rattachement')
+    } finally {
+      setIsLinkSubmitting(false)
+    }
+  }
+
+  const handleDeleteLink = async (linkId: number) => {
+    if (!confirm('Retirer ce rattachement ?')) return
+    await deletePersonOrganizationLink(linkId)
+    await refresh()
+  }
+
+  const linkColumns = [
+    {
+      header: 'Organisation',
+      accessor: 'organizationLabel',
+    },
+    {
+      header: 'Rôle',
+      accessor: 'job_title',
+    },
+    {
+      header: 'Email pro',
+      accessor: 'work_email',
+    },
+    {
+      header: 'Téléphone',
+      accessor: 'work_phone',
+    },
+    {
+      header: 'Principal',
+      accessor: 'is_primary',
+      render: (value: boolean) => (value ? 'Oui' : 'Non'),
+    },
+    {
+      header: 'Actions',
+      accessor: 'id',
+      render: (_: number, row: any) => (
+        <div className="flex gap-2">
+          <Button
+            variant="ghost"
+            size="xs"
+            onClick={() =>
+              updatePersonOrganizationLink(row.id, { is_primary: !row.is_primary }).then(refresh)
+            }
+          >
+            {row.is_primary ? 'Retirer' : 'Définir principal'}
+          </Button>
+          <Button
+            variant="ghost"
+            size="xs"
+            className="text-rouge"
+            onClick={() => handleDeleteLink(row.id)}
+          >
+            Supprimer
+          </Button>
+        </div>
+      ),
+    },
+  ]
+
+  if (single.isLoading) {
+    return <div className="p-8 text-center text-gray-500">Chargement...</div>
+  }
+
+  if (!person) {
+    return <div className="p-8 text-center text-gray-500">Personne introuvable</div>
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <Link href="/dashboard/people" className="text-bleu hover:underline text-sm mb-2 block">
+            ← Retour à l’annuaire
+          </Link>
+          <h1 className="text-3xl font-bold text-ardoise">
+            {person.first_name} {person.last_name}
+          </h1>
+          {person.role && <p className="text-sm text-gray-500 mt-1">{person.role}</p>}
+        </div>
+        <div className="flex gap-2">
+          <Button variant="secondary" onClick={() => setIsEditModalOpen(true)}>
+            Éditer
+          </Button>
+          <Button variant="danger" onClick={handleDelete} isLoading={remove.isLoading}>
+            Supprimer
+          </Button>
+        </div>
+      </div>
+
+      <Card padding="lg">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p className="text-sm text-gray-600">Email personnel</p>
+            <p className="font-medium text-sm">{person.personal_email || '-'}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">Mobile</p>
+            <p className="font-medium text-sm">{person.personal_phone || '-'}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">LinkedIn</p>
+            {person.linkedin_url ? (
+              <a
+                href={person.linkedin_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-bleu hover:underline text-sm"
+              >
+                Voir le profil
+              </a>
+            ) : (
+              <p className="text-sm text-gray-500">-</p>
+            )}
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">Notes</p>
+            <p className="text-sm text-gray-800 whitespace-pre-line">
+              {person.notes || '-'}
+            </p>
+          </div>
+        </div>
+      </Card>
+
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-ardoise">Rattachements</h2>
+        <Button variant="primary" onClick={() => setIsLinkModalOpen(true)}>
+          + Associer une organisation
+        </Button>
+      </div>
+
+      <Card>
+        <Table
+          columns={linkColumns}
+          data={organizationRows}
+          isLoading={single.isLoading}
+          isEmpty={organizationRows.length === 0}
+        />
+      </Card>
+
+      {/* Edit Modal */}
+      <Modal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        title="Modifier la fiche"
+      >
+        <PersonForm
+          initialData={person}
+          onSubmit={handleUpdatePerson}
+          isLoading={update.isLoading}
+          error={update.error}
+          submitLabel="Mettre à jour"
+        />
+      </Modal>
+
+      {/* Link Modal */}
+      <Modal
+        isOpen={isLinkModalOpen}
+        onClose={() => setIsLinkModalOpen(false)}
+        title="Associer à une organisation"
+      >
+        <div className="space-y-4">
+          {linkError && <Alert type="error" message={linkError} />}
+
+          <Select
+            label="Type d'organisation"
+            value={linkPayload.organization_type}
+            onChange={(e) =>
+              setLinkPayload((prev) => ({
+                ...prev,
+                organization_type: e.target.value as OrganizationType,
+              }))
+            }
+            options={ORGANIZATION_OPTIONS}
+          />
+
+          <Input
+            label="Identifiant organisation"
+            type="number"
+            value={linkPayload.organization_id ? String(linkPayload.organization_id) : ''}
+            onChange={(e) =>
+              setLinkPayload((prev) => ({
+                ...prev,
+                organization_id: Number(e.target.value),
+              }))
+            }
+            placeholder="Ex: 12"
+          />
+
+          <Input
+            label="Rôle / fonction"
+            value={linkPayload.job_title || ''}
+            onChange={(e) =>
+              setLinkPayload((prev) => ({ ...prev, job_title: e.target.value || undefined }))
+            }
+            placeholder="ex: Responsable Distribution"
+          />
+
+          <Input
+            label="Email professionnel"
+            value={linkPayload.work_email || ''}
+            onChange={(e) =>
+              setLinkPayload((prev) => ({ ...prev, work_email: e.target.value || undefined }))
+            }
+            placeholder="prenom.nom@entreprise.com"
+          />
+
+          <Input
+            label="Téléphone professionnel"
+            value={linkPayload.work_phone || ''}
+            onChange={(e) =>
+              setLinkPayload((prev) => ({ ...prev, work_phone: e.target.value || undefined }))
+            }
+            placeholder="+33 ..."
+          />
+
+          <label className="flex items-center gap-3 text-sm text-gray-700">
+            <input
+              type="checkbox"
+              className="h-4 w-4 rounded border-gray-300"
+              checked={linkPayload.is_primary ?? false}
+              onChange={(e) =>
+                setLinkPayload((prev) => ({ ...prev, is_primary: e.target.checked }))
+              }
+            />
+            Marquer comme contact principal
+          </label>
+
+          <Button
+            variant="primary"
+            className="w-full"
+            isLoading={isLinkSubmitting}
+            onClick={handleCreateLink}
+          >
+            Enregistrer le rattachement
+          </Button>
+        </div>
+      </Modal>
+    </div>
+  )
+}

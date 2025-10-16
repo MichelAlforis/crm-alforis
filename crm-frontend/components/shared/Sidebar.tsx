@@ -10,6 +10,7 @@ import clsx from 'clsx'
 import {
   LayoutDashboard,
   Users,
+  UserCircle2,
   Building2,
   MessageSquare,
   TrendingUp,
@@ -49,6 +50,14 @@ const MENU_ITEMS = [
     description: 'Gestion des clients',
     badge: '24',
     gradient: 'from-purple-500 to-pink-500',
+  },
+  {
+    label: 'Personnes',
+    href: '/dashboard/people',
+    icon: UserCircle2,
+    description: 'Annuaire des contacts',
+    badge: null,
+    gradient: 'from-teal-500 to-emerald-500',
   },
   {
     label: 'Fournisseurs',

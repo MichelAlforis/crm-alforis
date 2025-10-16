@@ -11,12 +11,11 @@ export interface ImportedFournisseur {
   rowNumber: number
   name: string
   email?: string
-  phone?: string
-  sector?: string
+  main_phone?: string
+  activity?: string
   company?: string
-  pipeline?: 'prospect_froid' | 'prospect_tiede' | 'prospect_chaud' | 'en_negociation' | 'actif' | 'inactif'
-  fournisseur_type?: 'societe_de_gestion' | 'legal' | 'it' | 'marketing' | 'autre'
-  country?: string
+  stage?: 'prospect_froid' | 'prospect_tiede' | 'prospect_chaud' | 'en_negociation' | 'client' | 'inactif'
+  type_fournisseur?: 'asset_manager' | 'prestataire' | 'distributeur' | 'assurance' | 'autre'
   notes?: string
 }
 
@@ -70,12 +69,11 @@ export function useImportFournisseurs() {
 
       const name = get('nom', ['name'])
       const email = get('email', ['e-mail', 'mail'])
-      const phone = get('téléphone', ['telephone', 'phone', 'tel'])
-      const sector = get('secteur', ['sector', 'industry'])
+      const mainPhone = get('téléphone', ['telephone', 'phone', 'tel'])
+      const activity = get('secteur', ['sector', 'industry', 'activity'])
       const company = get('société', ['societe', 'company', 'organisation', 'organization'])
-      const pipeline = (get('pipeline') || 'prospect_froid') as ImportedFournisseur['pipeline']
-      const fournisseur_type = (get('type fournisseur', ['type_fournisseur', 'fournisseur_type', 'type'])) as ImportedFournisseur['fournisseur_type']
-      const country = get('pays', ['country'])
+      const stage = (get('pipeline', ['stage']) || 'prospect_froid') as ImportedFournisseur['stage']
+      const type_fournisseur = (get('type fournisseur', ['type_fournisseur', 'fournisseur_type', 'type'])) as ImportedFournisseur['type_fournisseur']
       const notes = get('notes', ['note', 'commentaires', 'comments'])
 
       const rowNumber = idx + 2 // +2 pour compter l’entête CSV
@@ -90,12 +88,11 @@ export function useImportFournisseurs() {
         rowNumber,
         name,
         email,
-        phone,
-        sector,
+        main_phone: mainPhone,
+        activity,
         company,
-        pipeline: (pipeline || 'prospect_froid') as ImportedFournisseur['pipeline'],
-        fournisseur_type: (fournisseur_type || 'autre') as ImportedFournisseur['fournisseur_type'],
-        country,
+        stage: (stage || 'prospect_froid') as ImportedFournisseur['stage'],
+        type_fournisseur: (type_fournisseur || 'autre') as ImportedFournisseur['type_fournisseur'],
         notes,
       })
     })
@@ -125,12 +122,11 @@ export function useImportFournisseurs() {
           const payload: FournisseurCreate = {
             name: f.name,
             email: f.email,
-            phone: f.phone,
-            sector: f.sector,
+            main_phone: f.main_phone,
+            activity: f.activity,
             company: f.company,
-            pipeline: f.pipeline || 'prospect_froid',
-            fournisseur_type: f.fournisseur_type || 'autre',
-            country: f.country,
+            stage: f.stage || 'prospect_froid',
+            type_fournisseur: f.type_fournisseur || 'autre',
             notes: f.notes,
           }
 

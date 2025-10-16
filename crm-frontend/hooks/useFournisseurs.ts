@@ -10,7 +10,8 @@ import {
   FournisseurCreate, 
   FournisseurUpdate, 
   PaginatedResponse, 
-  LoadingState 
+  LoadingState,
+  FournisseurDetail 
 } from '@/lib/types'
 
 interface FournisseursHookState {
@@ -26,7 +27,7 @@ interface FournisseurListState extends LoadingState {
 }
 
 interface FournisseurSingleState extends LoadingState {
-  data?: Fournisseur
+  data?: FournisseurDetail
 }
 
 interface OperationState {

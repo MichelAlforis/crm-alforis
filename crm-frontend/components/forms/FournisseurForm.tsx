@@ -54,10 +54,10 @@ export function FournisseurForm({
       />
 
       <Input
-        label="Téléphone"
-        {...register('phone')}
-        error={errors.phone?.message}
-        placeholder="+33 1 2X XX XX XX"
+        label="Téléphone accueil"
+        {...register('main_phone')}
+        error={errors.main_phone?.message}
+        placeholder="+33 1 23 45 67 89"
       />
 
       <Input
@@ -69,17 +69,10 @@ export function FournisseurForm({
       />
 
       <Input
-        label="Secteur d'activité"
-        {...register('industry')}
-        error={errors.industry?.message}
-        placeholder="ex: SaaS, Services financiers, etc."
-      />
-
-      <Input
-        label="Personne de contact"
-        {...register('contact_person')}
-        error={errors.contact_person?.message}
-        placeholder="Nom du contact principal"
+        label="Activité principale"
+        {...register('activity')}
+        error={errors.activity?.message}
+        placeholder="ex: Asset Management, IT, Marketing..."
       />
 
       <div className="mb-4">

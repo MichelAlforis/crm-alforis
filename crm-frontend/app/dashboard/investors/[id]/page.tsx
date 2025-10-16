@@ -10,7 +10,8 @@ import { useInvestors } from '@/hooks/useInvestors'
 import { useInteractions } from '@/hooks/useInteractions'
 import { Card, Button, Table, Alert, Modal } from '@/components/shared'
 import { InvestorForm, InteractionForm } from '@/components/forms'
-import { InvestorDetail, InteractionCreate } from '@/lib/types'
+import { InvestorDetail, InteractionCreate, PersonOrganizationLink, PersonOrganizationLinkInput } from '@/lib/types'
+import { usePeople } from '@/hooks/usePeople'
 
 export default function InvestorDetailPage() {
   const params = useParams()
@@ -33,9 +34,23 @@ export default function InvestorDetailPage() {
     fetchInteractions, 
     createInteraction 
   } = useInteractions(investorId)
+  const {
+    linkPersonToOrganization,
+    deletePersonOrganizationLink,
+    updatePersonOrganizationLink,
+  } = usePeople()
   
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isInteractionModalOpen, setIsInteractionModalOpen] = useState(false)
+  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
+  const [linkError, setLinkError] = useState<string>()
+  const [isLinkSubmitting, setIsLinkSubmitting] = useState(false)
+  const [linkPayload, setLinkPayload] = useState<PersonOrganizationLinkInput>({
+    person_id: 0,
+    organization_type: 'investor',
+    organization_id: investorId,
+    is_primary: false,
+  })
 
   useEffect(() => {
     fetchInvestor(investorId)
@@ -64,6 +79,7 @@ export default function InvestorDetailPage() {
 
   const details = investor.data as InvestorDetail
   const data = details.investor
+  const peopleLinks = details.people || []
 
   const interactionColumns = [
     { 
@@ -83,6 +99,92 @@ export default function InvestorDetailPage() {
     { header: 'Sujet', accessor: 'subject' },
     { header: 'Durée (min)', accessor: 'duration_minutes' },
   ]
+
+  const peopleColumns = [
+    {
+      header: 'Personne',
+      accessor: 'personLabel',
+      render: (_: string, row: PersonOrganizationLink & { personLabel: string }) => (
+        <a href={`/dashboard/people/${row.person_id}`} className="text-bleu hover:underline">
+          {row.personLabel}
+        </a>
+      ),
+    },
+    {
+      header: 'Rôle',
+      accessor: 'job_title',
+    },
+    {
+      header: 'Email pro',
+      accessor: 'work_email',
+    },
+    {
+      header: 'Tel pro',
+      accessor: 'work_phone',
+    },
+    {
+      header: 'Principal',
+      accessor: 'is_primary',
+      render: (value: boolean) => (value ? 'Oui' : 'Non'),
+    },
+    {
+      header: 'Actions',
+      accessor: 'id',
+      render: (_: number, row: PersonOrganizationLink) => (
+        <div className="flex gap-2">
+          <Button
+            variant="ghost"
+            size="xs"
+            onClick={() =>
+              updatePersonOrganizationLink(row.id, { is_primary: !row.is_primary }).then(() =>
+                fetchInvestor(investorId),
+              )
+            }
+          >
+            {row.is_primary ? 'Retirer principal' : 'Marquer principal'}
+          </Button>
+          <Button
+            variant="ghost"
+            size="xs"
+            className="text-rouge"
+            onClick={() => handleDeleteLink(row.id)}
+          >
+            Détacher
+          </Button>
+        </div>
+      ),
+    },
+  ]
+
+  const handleCreateLink = async () => {
+    if (!linkPayload.person_id || linkPayload.person_id <= 0) {
+      setLinkError('Sélectionnez une personne valide (ID numérique).')
+      return
+    }
+    setIsLinkSubmitting(true)
+    setLinkError(undefined)
+    try {
+      await linkPersonToOrganization(linkPayload)
+      setIsLinkModalOpen(false)
+      setLinkPayload({
+        person_id: 0,
+        organization_type: 'investor',
+        organization_id: investorId,
+        is_primary: false,
+      })
+      await fetchInvestor(investorId)
+    } catch (err: any) {
+      setLinkError(err?.detail || 'Erreur lors du rattachement')
+    } finally {
+      setIsLinkSubmitting(false)
+    }
+  }
+
+  const handleDeleteLink = async (linkId: number) => {
+    if (!confirm('Retirer ce rattachement ?')) return
+    await deletePersonOrganizationLink(linkId)
+    await fetchInvestor(investorId)
+  }
 
   return (
     <div className="space-y-6">
@@ -112,8 +214,8 @@ export default function InvestorDetailPage() {
             <p className="font-medium text-sm">{data.email || '-'}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Téléphone</p>
-            <p className="font-medium text-sm">{data.phone || '-'}</p>
+            <p className="text-sm text-gray-600">Téléphone accueil</p>
+            <p className="font-medium text-sm">{data.main_phone || '-'}</p>
           </div>
           <div>
             <p className="text-sm text-gray-600">Société</p>
@@ -131,6 +233,28 @@ export default function InvestorDetailPage() {
             <p className="text-sm mt-1">{data.notes}</p>
           </div>
         )}
+      </Card>
+
+      {/* People Section */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-ardoise">Personnes associées</h2>
+        <Button variant="primary" onClick={() => setIsLinkModalOpen(true)}>
+          + Associer une personne
+        </Button>
+      </div>
+
+      <Card>
+        <Table
+          columns={peopleColumns}
+          data={peopleLinks.map((link) => ({
+            ...link,
+            personLabel: link.person
+              ? `${link.person.first_name} ${link.person.last_name}`
+              : `Personne #${link.person_id}`,
+          }))}
+          isLoading={investor.isLoading}
+          isEmpty={peopleLinks.length === 0}
+        />
       </Card>
 
       {/* Interactions Section */}
@@ -180,6 +304,78 @@ export default function InvestorDetailPage() {
           isLoading={interactionCreate.isLoading}
           error={interactionCreate.error}
         />
+      </Modal>
+
+      {/* Link Person Modal */}
+      <Modal
+        isOpen={isLinkModalOpen}
+        onClose={() => setIsLinkModalOpen(false)}
+        title="Associer une personne"
+      >
+        <div className="space-y-4">
+          {linkError && <Alert type="error" message={linkError} />}
+
+          <Input
+            label="ID de la personne"
+            type="number"
+            value={linkPayload.person_id ? String(linkPayload.person_id) : ''}
+            onChange={(e) =>
+              setLinkPayload((prev) => ({
+                ...prev,
+                person_id: Number(e.target.value),
+              }))
+            }
+            placeholder="Ex: 42"
+          />
+
+          <Input
+            label="Rôle / fonction"
+            value={linkPayload.job_title || ''}
+            onChange={(e) =>
+              setLinkPayload((prev) => ({ ...prev, job_title: e.target.value || undefined }))
+            }
+            placeholder="Ex: Responsable investissement"
+          />
+
+          <Input
+            label="Email professionnel"
+            value={linkPayload.work_email || ''}
+            onChange={(e) =>
+              setLinkPayload((prev) => ({ ...prev, work_email: e.target.value || undefined }))
+            }
+            placeholder="prenom.nom@entreprise.com"
+          />
+
+          <Input
+            label="Téléphone professionnel"
+            value={linkPayload.work_phone || ''}
+            onChange={(e) =>
+              setLinkPayload((prev) => ({ ...prev, work_phone: e.target.value || undefined }))
+            }
+            placeholder="+33 ..."
+          />
+
+          <label className="flex items-center gap-3 text-sm text-gray-700">
+            <input
+              type="checkbox"
+              className="h-4 w-4 rounded border-gray-300"
+              checked={linkPayload.is_primary ?? false}
+              onChange={(e) =>
+                setLinkPayload((prev) => ({ ...prev, is_primary: e.target.checked }))
+              }
+            />
+            Marquer comme contact principal
+          </label>
+
+          <Button
+            variant="primary"
+            className="w-full"
+            isLoading={isLinkSubmitting}
+            onClick={handleCreateLink}
+          >
+            Valider le rattachement
+          </Button>
+        </div>
       </Modal>
     </div>
   )

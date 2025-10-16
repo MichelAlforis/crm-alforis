@@ -35,12 +35,12 @@ export default function FournisseursPage() {
       accessor: 'email',
     },
     {
-      header: 'Secteur',
-      accessor: 'industry',
+      header: 'Activité',
+      accessor: 'activity',
     },
     {
-      header: 'Contact',
-      accessor: 'contact_person',
+      header: 'Téléphone accueil',
+      accessor: 'main_phone',
     },
     {
       header: 'Actions',

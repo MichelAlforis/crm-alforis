@@ -28,6 +28,15 @@ interface SearchHistory {
 
 const STORAGE_KEY = 'crm_search_history'
 const MAX_HISTORY = 5
+const TYPE_LABELS: Record<string, string> = {
+  fournisseur: 'Fournisseur',
+  investisseur: 'Investisseur',
+  person: 'Personne',
+  contact: 'Interaction',
+  opportunite: 'Opportunité',
+  kpi: 'KPI',
+  info: 'Info',
+}
 
 export default function GlobalSearchInputAdvanced({
   placeholder = 'Rechercher partout…',
@@ -265,7 +274,9 @@ export default function GlobalSearchInputAdvanced({
                   {result.subtitle && (
                     <div className="text-xs text-gray-500 mt-0.5">{result.subtitle}</div>
                   )}
-                  <div className="text-xs text-blue-600 mt-1 capitalize">{result.type}</div>
+                  <div className="text-xs text-blue-600 mt-1 capitalize">
+                    {TYPE_LABELS[result.type] || result.type}
+                  </div>
                 </button>
               ))}
               {quickResults.length > 0 && (

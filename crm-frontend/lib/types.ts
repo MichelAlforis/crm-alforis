@@ -35,7 +35,7 @@ export interface Investor {
   id: number
   name: string
   email?: string
-  phone?: string
+  main_phone?: string
   website?: string
   company?: string
   industry?: string
@@ -50,7 +50,7 @@ export interface Investor {
 export interface InvestorCreate {
   name: string
   email?: string
-  phone?: string
+  main_phone?: string
   website?: string
   company?: string
   industry?: string
@@ -61,16 +61,82 @@ export interface InvestorCreate {
 
 export interface InvestorUpdate extends Partial<InvestorCreate> {}
 
+// ============= PERSONNE PHYSIQUE =============
+
+export type OrganizationType = "investor" | "fournisseur"
+
+export interface Person {
+  id: number
+  first_name: string
+  last_name: string
+  personal_email?: string
+  personal_phone?: string
+  role?: string
+  linkedin_url?: string
+  notes?: string
+  created_at: string
+  updated_at: string
+}
+
+export interface PersonInput {
+  first_name: string
+  last_name: string
+  personal_email?: string
+  personal_phone?: string
+  role?: string
+  linkedin_url?: string
+  notes?: string
+}
+
+export type PersonUpdateInput = Partial<PersonInput>
+
+export interface PersonOrganizationLink {
+  id: number
+  person_id: number
+  organization_type: OrganizationType
+  organization_id: number
+  job_title?: string
+  work_email?: string
+  work_phone?: string
+  is_primary: boolean
+  notes?: string
+  organization_name?: string
+  person?: Person
+  created_at: string
+  updated_at: string
+}
+
+export interface PersonOrganizationLinkInput {
+  person_id: number
+  organization_type: OrganizationType
+  organization_id: number
+  job_title?: string
+  work_email?: string
+  work_phone?: string
+  is_primary?: boolean
+  notes?: string
+}
+
+export type PersonOrganizationLinkUpdateInput = Partial<
+  Omit<PersonOrganizationLinkInput, "person_id" | "organization_type" | "organization_id">
+>
+
+export interface PersonDetail extends Person {
+  organizations: PersonOrganizationLink[]
+}
+
 // ============= FOURNISSEUR (FSS) =============
 
 export interface Fournisseur {
   id: number
   name: string
   email?: string
-  phone?: string
+  main_phone?: string
   website?: string
-  industry?: string
-  contact_person?: string
+  company?: string
+  activity?: string
+  stage?: string
+  type_fournisseur?: string
   notes?: string
   is_active: boolean
   created_at: string
@@ -80,10 +146,12 @@ export interface Fournisseur {
 export interface FournisseurCreate {
   name: string
   email?: string
-  phone?: string
+  main_phone?: string
   website?: string
-  industry?: string
-  contact_person?: string
+  company?: string
+  activity?: string
+  stage?: string
+  type_fournisseur?: string
   notes?: string
 }
 
@@ -108,6 +176,27 @@ export interface InvestorDetail {
   contacts: Contact[]
   interaction_count: number
   kpi_count: number
+  people: PersonOrganizationLink[]
+}
+
+export interface FournisseurContact {
+  id: number
+  fournisseur_id: number
+  name: string
+  email?: string
+  phone?: string
+  title?: string
+  notes?: string
+  created_at: string
+  updated_at: string
+}
+
+export interface FournisseurDetail {
+  fournisseur: Fournisseur
+  contacts: FournisseurContact[]
+  interaction_count: number
+  kpi_count: number
+  people: PersonOrganizationLink[]
 }
 
 // ============= INTERACTION =============

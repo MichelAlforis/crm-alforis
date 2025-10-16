@@ -1,0 +1,107 @@
+// components/forms/PersonForm.tsx
+// ============= PERSON FORM - RÉUTILISABLE =============
+
+'use client'
+
+import React from 'react'
+import { useForm } from 'react-hook-form'
+import { Input, Button, Alert } from '@/components/shared'
+import { Person, PersonInput } from '@/lib/types'
+
+interface PersonFormProps {
+  initialData?: Person
+  onSubmit: (data: PersonInput) => Promise<void>
+  isLoading?: boolean
+  error?: string
+  submitLabel?: string
+}
+
+export function PersonForm({
+  initialData,
+  onSubmit,
+  isLoading,
+  error,
+  submitLabel = 'Créer',
+}: PersonFormProps) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<PersonInput>({
+    defaultValues: initialData,
+    mode: 'onBlur',
+  })
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {error && <Alert type="error" message={error} />}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Input
+          label="Prénom"
+          {...register('first_name', { required: 'Prénom requis' })}
+          error={errors.first_name?.message}
+          placeholder="Prénom"
+        />
+
+        <Input
+          label="Nom"
+          {...register('last_name', { required: 'Nom requis' })}
+          error={errors.last_name?.message}
+          placeholder="Nom"
+        />
+      </div>
+
+      <Input
+        label="Rôle / Fonction"
+        {...register('role')}
+        error={errors.role?.message}
+        placeholder="ex: Directeur des partenariats"
+      />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Input
+          label="Email personnel"
+          type="email"
+          {...register('personal_email')}
+          error={errors.personal_email?.message}
+          placeholder="prenom.nom@email.com"
+        />
+
+        <Input
+          label="Mobile"
+          {...register('personal_phone')}
+          error={errors.personal_phone?.message}
+          placeholder="+33 6 12 34 56 78"
+        />
+      </div>
+
+      <Input
+        label="Profil LinkedIn"
+        {...register('linkedin_url')}
+        error={errors.linkedin_url?.message}
+        placeholder="https://www.linkedin.com/in/..."
+      />
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+        <textarea
+          {...register('notes')}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-bleu"
+          rows={4}
+          placeholder="Informations complémentaires, centres d'intérêt, disponibilités..."
+        />
+      </div>
+
+      <Button
+        type="submit"
+        variant="primary"
+        size="lg"
+        isLoading={isLoading}
+        className="w-full"
+      >
+        {submitLabel}
+      </Button>
+    </form>
+  )
+}

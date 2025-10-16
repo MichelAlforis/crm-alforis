@@ -136,10 +136,10 @@ export default function ImportFournisseursPage() {
 function DownloadTemplateButton() {
   const downloadTemplate = () => {
     // Créer le CSV
-    const csv = `Nom,Email,Téléphone,Secteur,Société,Pipeline,Type Fournisseur,Pays,Notes
-Fournisseur A,a@example.com,+33123456789,Asset Management,SG XYZ,prospect_froid,societe_de_gestion,FR,Gamme actions Europe
-Fournisseur B,b@example.com,+33987654321,Juridique,Cabinet ABC,prospect_tiede,legal,LU,Contrat à valider
-Fournisseur C,c@example.com,+33555555555,IT,SaaS DEF,actif,it,ES,Intégration API en cours`
+    const csv = `Nom,Email,Téléphone,Activité,Société,Étape,Type Fournisseur,Notes
+Fournisseur A,a@example.com,+33123456789,Asset Management,SG XYZ,prospect_froid,asset_manager,Gamme actions Europe
+Fournisseur B,b@example.com,+33987654321,Juridique,Cabinet ABC,prospect_tiede,prestataire,Contrat à valider
+Fournisseur C,c@example.com,+33555555555,IT,SaaS DEF,client,it,Intégration API en cours`
 
     // Créer le blob + déclencher le téléchargement
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })

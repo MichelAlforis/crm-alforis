@@ -116,7 +116,7 @@ export function ImportFournisseursForm({ onSuccess }: ImportFournisseursFormProp
             <p className="text-xs text-gray-600">
               Colonnes attendues (dans n'importe quel ordre):
               <br />
-              <strong>Nom</strong> (requis), Email, Téléphone, Secteur, Société, Pipeline, Type Fournisseur, Pays
+              <strong>Nom</strong> (requis), Email, Téléphone accueil, Activité, Société, Étape, Type Fournisseur, Notes
             </p>
             <br />
             <p className="text-xs text-gray-600 mb-2">

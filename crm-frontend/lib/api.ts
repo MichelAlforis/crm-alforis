@@ -10,6 +10,14 @@ import {
   InvestorCreate,
   InvestorUpdate,
   InvestorDetail,
+  Person,
+  PersonInput,
+  PersonUpdateInput,
+  PersonDetail,
+  PersonOrganizationLink,
+  PersonOrganizationLinkInput,
+  PersonOrganizationLinkUpdateInput,
+  OrganizationType,
   Interaction,
   InteractionCreate,
   InteractionUpdate,
@@ -17,9 +25,12 @@ import {
   KPICreate,
   KPIUpdate,
   PaginatedResponse,
+  Contact,
   Fournisseur,
   FournisseurCreate,
   FournisseurUpdate,
+  FournisseurContact,
+  FournisseurDetail,
   Newsletter,
   NewsletterCreate,
   NewsletterType
@@ -216,7 +227,21 @@ class ApiClient {
   }
 
   async getInvestor(id: number): Promise<InvestorDetail> {
-    return this.request<InvestorDetail>(`/investors/${id}`)
+    const data = await this.request<{
+      investor: Investor
+      contacts: Contact[]
+      interaction_count: number
+      kpi_count: number
+      people?: PersonOrganizationLink[]
+    }>(`/investors/${id}`)
+
+    return {
+      investor: data.investor,
+      contacts: data.contacts ?? [],
+      interaction_count: data.interaction_count ?? 0,
+      kpi_count: data.kpi_count ?? 0,
+      people: data.people ?? [],
+    }
   }
 
   async createInvestor(data: InvestorCreate): Promise<Investor> {
@@ -270,27 +295,38 @@ class ApiClient {
   // ============= KPI ENDPOINTS =============
 
   async getKPIs(investorId: number, year?: number, month?: number): Promise<KPI[]> {
-    return this.request<KPI[]>(`/investors/${investorId}/kpis`, {
-      params: { year, month },
+    const targetYear = year ?? new Date().getFullYear()
+
+    if (month !== undefined) {
+      const kpi = await this.request<KPI>(
+        `/kpis/investor/${investorId}/month/${targetYear}/${month}`
+      )
+      return kpi ? [kpi] : []
+    }
+
+    return this.request<KPI[]>(`/kpis/investor/${investorId}`, {
+      params: { year: targetYear },
     })
   }
 
   async createKPI(investorId: number, data: KPICreate): Promise<KPI> {
-    return this.request<KPI>(`/investors/${investorId}/kpis`, {
+    const { year, month, ...payload } = data
+    return this.request<KPI>(`/kpis/investor/${investorId}`, {
       method: 'POST',
-      body: JSON.stringify(data),
+      params: { year, month },
+      body: JSON.stringify(payload),
     })
   }
 
   async updateKPI(investorId: number, kpiId: number, data: KPIUpdate): Promise<KPI> {
-    return this.request<KPI>(`/investors/${investorId}/kpis/${kpiId}`, {
+    return this.request<KPI>(`/kpis/${kpiId}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     })
   }
 
   async deleteKPI(investorId: number, kpiId: number): Promise<void> {
-    await this.request<void>(`/investors/${investorId}/kpis/${kpiId}`, {
+    await this.request<void>(`/kpis/${kpiId}`, {
       method: 'DELETE',
     })
   }
@@ -314,8 +350,22 @@ class ApiClient {
     })
   }
 
-  async getFournisseur(id: number): Promise<Fournisseur> {
-    return this.request<Fournisseur>(`/fournisseurs/${id}`)
+  async getFournisseur(id: number): Promise<FournisseurDetail> {
+    const data = await this.request<{
+      fournisseur: Fournisseur
+      contacts: FournisseurContact[]
+      interaction_count: number
+      kpi_count: number
+      people?: PersonOrganizationLink[]
+    }>(`/fournisseurs/${id}`)
+
+    return {
+      fournisseur: data.fournisseur,
+      contacts: data.contacts ?? [],
+      interaction_count: data.interaction_count ?? 0,
+      kpi_count: data.kpi_count ?? 0,
+      people: data.people ?? [],
+    }
   }
 
   async createFournisseur(data: FournisseurCreate): Promise<Fournisseur> {
@@ -362,6 +412,72 @@ class ApiClient {
 
   async deleteKPIForFournisseur(fournisseurId: number, kpiId: number): Promise<void> {
     await this.request<void>(`/fournisseurs/${fournisseurId}/kpis/${kpiId}`, {
+      method: 'DELETE',
+    })
+  }
+
+  // ============= PEOPLE ENDPOINTS =============
+
+  async getPeople(
+    skip = 0,
+    limit = 50,
+    options?: { q?: string; organizationType?: OrganizationType; organizationId?: number },
+  ): Promise<PaginatedResponse<Person>> {
+    const params: Record<string, any> = { skip, limit }
+    if (options?.q) params.q = options.q
+    if (options?.organizationType) params.organization_type = options.organizationType
+    if (options?.organizationId) params.organization_id = options.organizationId
+
+    return this.request<PaginatedResponse<Person>>('/people', { params })
+  }
+
+  async getPerson(id: number): Promise<PersonDetail> {
+    const data = await this.request<PersonDetail>(`/people/${id}`)
+    return data
+  }
+
+  async createPerson(data: PersonInput): Promise<Person> {
+    return this.request<Person>('/people', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async updatePerson(id: number, data: PersonUpdateInput): Promise<Person> {
+    return this.request<Person>(`/people/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deletePerson(id: number): Promise<void> {
+    await this.request<void>(`/people/${id}`, {
+      method: 'DELETE',
+    })
+  }
+
+  async createPersonOrganizationLink(
+    data: PersonOrganizationLinkInput,
+  ): Promise<PersonOrganizationLink> {
+    const response = await this.request<PersonOrganizationLink>('/org-links', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+    return response
+  }
+
+  async updatePersonOrganizationLink(
+    linkId: number,
+    data: PersonOrganizationLinkUpdateInput,
+  ): Promise<PersonOrganizationLink> {
+    return this.request<PersonOrganizationLink>(`/org-links/${linkId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deletePersonOrganizationLink(linkId: number): Promise<void> {
+    await this.request<void>(`/org-links/${linkId}`, {
       method: 'DELETE',
     })
   }

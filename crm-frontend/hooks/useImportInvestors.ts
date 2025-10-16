@@ -38,7 +38,7 @@ export function useImportInvestors() {
         // Récupérer les colonnes (flexible sur les noms)
         const nom = row['Nom'] || row['nom'] || row['Name'] || row['name']
         const email = row['Email'] || row['email']
-        const phone = row['Téléphone'] || row['telephone'] || row['Phone'] || row['phone']
+        const mainPhone = row['Téléphone'] || row['telephone'] || row['Phone'] || row['phone']
         const company = row['Société'] || row['societe'] || row['Company'] || row['company']
         const industry = row['Secteur'] || row['secteur'] || row['Industry'] || row['industry']
         const pipelineStage = row['Pipeline'] || row['pipeline'] || 'prospect_froid'
@@ -56,7 +56,7 @@ export function useImportInvestors() {
           rowNumber,
           name: nom.toString().trim(),
           email: email ? email.toString().trim() : undefined,
-          phone: phone ? phone.toString().trim() : undefined,
+          main_phone: mainPhone ? mainPhone.toString().trim() : undefined,
           company: company ? company.toString().trim() : undefined,
           industry: industry ? industry.toString().trim() : undefined,
           pipeline_stage: normalizePipelineStage(pipelineStage),
@@ -116,7 +116,7 @@ export function useImportInvestors() {
           const created = await apiClient.createInvestor({
             name: investor.name,
             email: investor.email,
-            phone: investor.phone,
+            main_phone: investor.main_phone,
             company: investor.company,
             industry: investor.industry,
             pipeline_stage: investor.pipeline_stage as any,
