@@ -76,19 +76,11 @@ services:
     environment:
       # Base de données
       DATABASE_URL: postgresql://${POSTGRES_USER:-crm_user}:${POSTGRES_PASSWORD:-crm_password}@postgres:5432/${POSTGRES_DB:-crm_db}
-
-      # Configuration API
       DEBUG: ${DEBUG:-True}
       SECRET_KEY: ${SECRET_KEY:-dev_secret_key_change_in_production}
-
-      # CORS
-      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3010,http://localhost:3000,http://localhost:5173}
-
-      # JWT
+      ALLOWED_ORIGINS: '["http://localhost:3010","http://localhost:3000","http://localhost:5173"]'
       JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
       JWT_EXPIRATION_HOURS: ${JWT_EXPIRATION_HOURS:-24}
-
-      # Divers
       ENVIRONMENT: ${ENVIRONMENT:-development}
       MAX_UPLOAD_SIZE_MB: ${MAX_UPLOAD_SIZE_MB:-10}
 
@@ -139,16 +131,8 @@ services:
     environment:
       # API URL (accessible depuis le navigateur)
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
-
-      # Port Next.js
       PORT: ${FRONTEND_PORT:-3010}
-
-      # Environnement
       NODE_ENV: development
-
-    depends_on:
-      api:
-        condition: service_healthy
 
     ports:
       - "${FRONTEND_PORT:-3010}:${FRONTEND_PORT:-3010}"
@@ -177,4 +161,4 @@ services:
         max-file: "3"
 
     # Commande: nettoyage + démarrage dev
-    command: sh -c "rm -rf .next && npm run dev"
+    command: sh -c "chmod +x scripts/dev-clean.sh && npm run devc"

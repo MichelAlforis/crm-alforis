@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "dev": "bash ./scripts/dev.sh up",
+    "stop": "bash ./scripts/dev.sh down",
+    "logs": "bash ./scripts/dev.sh logs",
+    "docker": "bash ./scripts/dev.sh docker"
+  }
+}

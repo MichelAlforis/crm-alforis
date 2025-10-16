@@ -2,76 +2,359 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  scroll-behavior: smooth;
+/* =============== DESIGN TOKENS =============== */
+@layer base {
+  :root {
+    /* Modern Color Palette */
+    --color-background: 249 250 251;     /* Gray-50 */
+    --color-foreground: 255 255 255;     /* White */
+    --color-border: 229 231 235;         /* Gray-200 */
+    --color-muted: 243 244 246;          /* Gray-100 */
+    
+    --color-text-primary: 17 24 39;      /* Gray-900 */
+    --color-text-secondary: 107 114 128; /* Gray-500 */
+    --color-text-muted: 156 163 175;     /* Gray-400 */
+    
+    --color-primary: 59 130 246;         /* Blue-500 */
+    --color-primary-hover: 37 99 235;    /* Blue-600 */
+    --color-success: 34 197 94;          /* Green-500 */
+    --color-warning: 251 146 60;         /* Orange-400 */
+    --color-danger: 239 68 68;           /* Red-500 */
+    
+    /* Spacing System (8px base) */
+    --spacing-xs: 0.5rem;    /* 8px */
+    --spacing-sm: 0.75rem;   /* 12px */
+    --spacing-md: 1rem;      /* 16px */
+    --spacing-lg: 1.5rem;    /* 24px */
+    --spacing-xl: 2rem;      /* 32px */
+    --spacing-2xl: 3rem;     /* 48px */
+    --spacing-3xl: 4rem;     /* 64px */
+    
+    /* Border Radius */
+    --radius-sm: 0.375rem;   /* 6px */
+    --radius-md: 0.5rem;     /* 8px */
+    --radius-lg: 0.75rem;    /* 12px */
+    --radius-xl: 1rem;       /* 16px */
+    --radius-2xl: 1.5rem;    /* 24px */
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+    
+    /* Transitions */
+    --transition-fast: 150ms;
+    --transition-base: 200ms;
+    --transition-slow: 300ms;
+  }
+  
+  /* Dark mode (optional) */
+  .dark {
+    --color-background: 17 24 39;
+    --color-foreground: 31 41 55;
+    --color-border: 55 65 81;
+    --color-text-primary: 243 244 246;
+    --color-text-secondary: 156 163 175;
+  }
 }
 
-body {
-  @apply bg-ivoire text-ardoise;
+/* =============== BASE STYLES =============== */
+@layer base {
+  * {
+    @apply border-border/0;
+  }
+  
+  html {
+    @apply scroll-smooth antialiased;
+    -webkit-tap-highlight-color: transparent;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  
+  body {
+    @apply bg-background text-text-primary;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 
+                 'Inter', sans-serif;
+  }
+  
+  /* Typography Scale */
+  h1 {
+    @apply text-4xl font-bold tracking-tight;
+  }
+  
+  h2 {
+    @apply text-3xl font-semibold tracking-tight;
+  }
+  
+  h3 {
+    @apply text-2xl font-semibold;
+  }
+  
+  h4 {
+    @apply text-xl font-semibold;
+  }
+  
+  h5 {
+    @apply text-lg font-medium;
+  }
+  
+  p {
+    @apply leading-relaxed;
+  }
+  
+  /* Focus Styles */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+  
+  /* Scrollbar Styling */
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-muted rounded-lg;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-lg hover:bg-text-muted;
+  }
 }
 
-/* Composants réutilisables */
+/* =============== COMPONENT CLASSES =============== */
 @layer components {
+  /* Buttons - Modern Design */
+  .btn {
+    @apply inline-flex items-center justify-center font-medium transition-all duration-base;
+    @apply rounded-radius-md disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary;
+  }
+  
   .btn-primary {
-    @apply px-4 py-2 rounded-lg bg-bleu text-white font-medium hover:bg-blue-600 transition-colors;
+    @apply btn bg-primary text-white hover:bg-primary-hover;
+    @apply shadow-sm hover:shadow-md;
   }
-
+  
   .btn-secondary {
-    @apply px-4 py-2 rounded-lg border border-ardoise text-ardoise font-medium hover:bg-gray-100 transition-colors;
+    @apply btn bg-foreground border border-border text-text-primary;
+    @apply hover:bg-muted hover:border-text-muted;
   }
-
-  .btn-danger {
-    @apply px-4 py-2 rounded-lg bg-rouge text-white font-medium hover:bg-red-600 transition-colors;
-  }
-
+  
   .btn-ghost {
-    @apply px-4 py-2 rounded-lg text-ardoise font-medium hover:bg-gray-200 transition-colors;
+    @apply btn text-text-secondary hover:text-text-primary hover:bg-muted;
   }
-
+  
+  .btn-danger {
+    @apply btn bg-danger text-white hover:bg-red-600;
+  }
+  
+  /* Button Sizes */
+  .btn-sm {
+    @apply text-sm px-spacing-sm py-[0.375rem];
+  }
+  
+  .btn-md {
+    @apply text-sm px-spacing-md py-spacing-sm;
+  }
+  
+  .btn-lg {
+    @apply text-base px-spacing-lg py-spacing-sm;
+  }
+  
+  /* Cards - Glass Morphism */
   .card {
-    @apply bg-white rounded-lg shadow-md p-6 border border-gray-200;
+    @apply bg-foreground rounded-radius-lg border border-border shadow-sm;
+    @apply backdrop-blur-xl bg-opacity-95;
   }
-
+  
   .card-hover {
-    @apply card hover:shadow-lg transition-shadow cursor-pointer;
+    @apply card transition-all duration-base cursor-pointer;
+    @apply hover:shadow-lg hover:translate-y-[-2px] hover:border-text-muted;
   }
-
-  .input-base {
-    @apply w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-bleu focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all;
+  
+  .card-glass {
+    @apply bg-white/80 backdrop-blur-xl border border-white/20 shadow-xl;
   }
-
-  .label-base {
-    @apply block text-sm font-medium text-ardoise mb-2;
+  
+  /* Input Fields */
+  .input-field {
+    @apply w-full px-spacing-md py-spacing-sm rounded-radius-md;
+    @apply bg-foreground border border-border text-text-primary;
+    @apply placeholder:text-text-muted transition-all duration-base;
+    @apply hover:border-text-muted focus:border-primary focus:ring-2 focus:ring-primary/20;
   }
-
+  
+  .input-error {
+    @apply border-danger focus:border-danger focus:ring-danger/20;
+  }
+  
+  /* Labels */
+  .label {
+    @apply block text-sm font-medium text-text-primary mb-spacing-xs;
+  }
+  
+  /* Badges - Modern Design */
   .badge {
-    @apply inline-block px-3 py-1 rounded-full text-xs font-medium;
+    @apply inline-flex items-center px-spacing-sm py-1 rounded-radius-2xl;
+    @apply text-xs font-medium tracking-wide;
   }
-
+  
+  .badge-primary {
+    @apply badge bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400;
+  }
+  
   .badge-success {
-    @apply badge bg-green-100 text-green-800;
+    @apply badge bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400;
   }
-
+  
   .badge-warning {
-    @apply badge bg-yellow-100 text-yellow-800;
+    @apply badge bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400;
   }
-
+  
   .badge-danger {
-    @apply badge bg-red-100 text-red-800;
+    @apply badge bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400;
   }
-
-  .badge-info {
-    @apply badge bg-blue-100 text-blue-800;
+  
+  .badge-neutral {
+    @apply badge bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300;
+  }
+  
+  /* Tables - Modern Styling */
+  .table-container {
+    @apply w-full overflow-x-auto rounded-radius-lg border border-border;
+  }
+  
+  .table {
+    @apply w-full text-sm;
+  }
+  
+  .table thead {
+    @apply bg-muted border-b border-border;
+  }
+  
+  .table th {
+    @apply px-spacing-md py-spacing-sm text-left font-medium text-text-secondary;
+    @apply first:pl-spacing-lg last:pr-spacing-lg;
+  }
+  
+  .table tbody tr {
+    @apply border-b border-border/50 transition-colors duration-base;
+    @apply hover:bg-muted/50;
+  }
+  
+  .table tbody tr:last-child {
+    @apply border-0;
+  }
+  
+  .table td {
+    @apply px-spacing-md py-spacing-md text-text-primary;
+    @apply first:pl-spacing-lg last:pr-spacing-lg;
+  }
+  
+  /* Skeleton Loading */
+  .skeleton {
+    @apply animate-pulse bg-gradient-to-r from-muted via-gray-200 to-muted;
+    @apply bg-[length:200%_100%] rounded-radius-md;
+  }
+  
+  /* Dividers */
+  .divider {
+    @apply h-px bg-border my-spacing-lg;
+  }
+  
+  /* Container */
+  .container-fluid {
+    @apply w-full px-spacing-lg;
+  }
+  
+  .container-max {
+    @apply max-w-7xl mx-auto px-spacing-lg;
   }
 }
 
-/* Loading animation */
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+/* =============== UTILITIES =============== */
+@layer utilities {
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
-}
-
-.spinner {
-  animation: spin 1s linear infinite;
+  
+  @keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+  }
+  
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  .animate-slideIn {
+    animation: slideIn 0.3s ease-out;
+  }
+  
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
+  }
+  
+  .animate-pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
+  }
+  
+  /* Glassmorphism */
+  .glass {
+    @apply backdrop-blur-xl bg-white/80 border border-white/20;
+  }
+  
+  .glass-dark {
+    @apply backdrop-blur-xl bg-gray-900/80 border border-gray-700/50;
+  }
+  
+  /* Gradients */
+  .gradient-primary {
+    @apply bg-gradient-to-r from-blue-500 to-purple-600;
+  }
+  
+  .gradient-success {
+    @apply bg-gradient-to-r from-green-500 to-emerald-600;
+  }
+  
+  .gradient-warm {
+    @apply bg-gradient-to-r from-orange-400 to-pink-500;
+  }
+  
+  .gradient-mesh {
+    background-image: 
+      radial-gradient(at 27% 37%, hsla(215, 98%, 61%, 0.15) 0px, transparent 50%),
+      radial-gradient(at 97% 21%, hsla(265, 98%, 72%, 0.15) 0px, transparent 50%),
+      radial-gradient(at 52% 99%, hsla(354, 98%, 61%, 0.15) 0px, transparent 50%);
+  }
+  
+  /* Text Gradients */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600;
+  }
+  
+  /* Hover Lift */
+  .hover-lift {
+    @apply transition-transform duration-base hover:-translate-y-1;
+  }
+  
+  /* Grid Patterns */
+  .grid-pattern {
+    background-image: 
+      linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
 }

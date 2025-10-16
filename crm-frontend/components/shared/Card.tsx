@@ -1,44 +1,186 @@
-
 // components/shared/Card.tsx
-// ============= CARD COMPONENT - RÉUTILISABLE =============
-// Composant de base pour tous les containers
+// ============= MODERN CARD COMPONENT =============
 
-import React from 'react'
+import React, { forwardRef } from 'react'
 import clsx from 'clsx'
 
-interface CardProps {
-  children: React.ReactNode
-  className?: string
-  padding?: 'sm' | 'md' | 'lg'
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: 'default' | 'glass' | 'bordered' | 'elevated'
+  padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl'
   hoverable?: boolean
-  onClick?: () => void
+  gradient?: boolean
+  children: React.ReactNode
 }
 
-export function Card({
-  children,
-  className,
-  padding = 'md',
-  hoverable = false,
-  onClick,
-}: CardProps) {
-  const paddingClasses = {
-    sm: 'p-3',
-    md: 'p-4',
-    lg: 'p-6',
-  }
+export const Card = forwardRef<HTMLDivElement, CardProps>(
+  (
+    {
+      variant = 'default',
+      padding = 'lg',
+      hoverable = false,
+      gradient = false,
+      children,
+      className,
+      ...props
+    },
+    ref
+  ) => {
+    // Variant styles
+    const variants = {
+      default: [
+        'bg-foreground border border-border',
+        'shadow-sm',
+      ],
+      glass: [
+        'bg-white/80 dark:bg-gray-900/80',
+        'backdrop-blur-xl border border-white/20',
+        'shadow-xl',
+      ],
+      bordered: [
+        'bg-transparent border-2 border-border',
+      ],
+      elevated: [
+        'bg-foreground border border-border',
+        'shadow-lg',
+      ],
+    }
 
-  return (
+    // Padding styles
+    const paddings = {
+      none: '',
+      sm: 'p-spacing-sm',
+      md: 'p-spacing-md',
+      lg: 'p-spacing-lg',
+      xl: 'p-spacing-xl',
+    }
+
+    return (
+      <>
+        {gradient && (
+          <div className="absolute inset-0 -z-10 overflow-hidden rounded-radius-lg">
+            <div className="absolute -inset-[100%] animate-pulse-soft gradient-mesh opacity-30" />
+          </div>
+        )}
+        
+        <div
+          ref={ref}
+          className={clsx(
+            // Base styles
+            'relative rounded-radius-lg',
+            'transition-all duration-base',
+            
+            // Variant
+            variants[variant],
+            
+            // Padding
+            paddings[padding],
+            
+            // Hoverable effect
+            hoverable && [
+              'cursor-pointer',
+              'hover:shadow-lg hover:translate-y-[-2px]',
+              'hover:border-text-muted',
+              'active:translate-y-0',
+            ],
+            
+            // Custom classes
+            className
+          )}
+          {...props}
+        >
+          {children}
+        </div>
+      </>
+    )
+  }
+)
+
+Card.displayName = 'Card'
+
+// ============= CARD HEADER COMPONENT =============
+interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+  title?: string
+  subtitle?: string
+  action?: React.ReactNode
+  children?: React.ReactNode
+}
+
+export const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
+  ({ title, subtitle, action, children, className, ...props }, ref) => {
+    if (children) {
+      return (
+        <div
+          ref={ref}
+          className={clsx('pb-spacing-md', className)}
+          {...props}
+        >
+          {children}
+        </div>
+      )
+    }
+
+    return (
+      <div
+        ref={ref}
+        className={clsx(
+          'flex items-start justify-between pb-spacing-md',
+          className
+        )}
+        {...props}
+      >
+        <div>
+          {title && (
+            <h3 className="text-lg font-semibold text-text-primary">
+              {title}
+            </h3>
+          )}
+          {subtitle && (
+            <p className="mt-1 text-sm text-text-secondary">
+              {subtitle}
+            </p>
+          )}
+        </div>
+        {action && (
+          <div className="flex-shrink-0 ml-spacing-md">
+            {action}
+          </div>
+        )}
+      </div>
+    )
+  }
+)
+
+CardHeader.displayName = 'CardHeader'
+
+// ============= CARD BODY COMPONENT =============
+interface CardBodyProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+export const CardBody = forwardRef<HTMLDivElement, CardBodyProps>(
+  ({ className, ...props }, ref) => (
     <div
-      onClick={onClick}
+      ref={ref}
+      className={clsx('py-spacing-md', className)}
+      {...props}
+    />
+  )
+)
+
+CardBody.displayName = 'CardBody'
+
+// ============= CARD FOOTER COMPONENT =============
+interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+export const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
       className={clsx(
-        'bg-white rounded-lg border border-gray-200 shadow-sm',
-        paddingClasses[padding],
-        hoverable && 'hover:shadow-md hover:border-gray-300 transition-all cursor-pointer',
+        'pt-spacing-md border-t border-border',
         className
       )}
-    >
-      {children}
-    </div>
+      {...props}
+    />
   )
-}
+)
 
+CardFooter.displayName = 'CardFooter'

@@ -6,8 +6,8 @@
 # --- STAGE 1: BASE ---
 FROM node:20-alpine AS base
 
-# Installer curl pour healthchecks
-RUN apk add --no-cache curl
+# Installer curl et bash pour healthchecks et scripts
+RUN apk add --no-cache curl bash
 
 WORKDIR /app
 
