@@ -25,15 +25,19 @@ const ORGANIZATION_OPTIONS = [
 ]
 
 export default function PersonDetailPage() {
-  const params = useParams()
+  const params = useParams<{ id?: string }>()
   const router = useRouter()
-  const personId = Number(params.id)
+  const personId = useMemo(() => {
+    const rawId = params?.id
+    const parsed = rawId ? Number.parseInt(rawId, 10) : NaN
+    return Number.isNaN(parsed) ? null : parsed
+  }, [params])
 
   const { single, fetchPerson, updatePerson, deletePerson, update, remove, linkPersonToOrganization, updatePersonOrganizationLink, deletePersonOrganizationLink } = usePeople()
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
   const [linkPayload, setLinkPayload] = useState<PersonOrganizationLinkInput>({
-    person_id: personId,
+    person_id: personId ?? 0,
     organization_type: 'investor',
     organization_id: 0,
     is_primary: false,
@@ -42,8 +46,19 @@ export default function PersonDetailPage() {
   const [isLinkSubmitting, setIsLinkSubmitting] = useState(false)
 
   useEffect(() => {
+    if (personId === null) {
+      router.replace('/dashboard/people')
+      return
+    }
     fetchPerson(personId)
-  }, [personId, fetchPerson])
+  }, [personId, fetchPerson, router])
+
+  useEffect(() => {
+    setLinkPayload((prev) => ({
+      ...prev,
+      person_id: personId ?? 0,
+    }))
+  }, [personId])
 
   const person = single.data
 
@@ -62,15 +77,19 @@ export default function PersonDetailPage() {
   }, [person])
 
   const refresh = async () => {
-    await fetchPerson(personId)
+    if (personId !== null) {
+      await fetchPerson(personId)
+    }
   }
 
   const handleUpdatePerson = async (data: Parameters<typeof updatePerson>[1]) => {
+    if (personId === null) return
     await updatePerson(personId, data)
     setIsEditModalOpen(false)
   }
 
   const handleDelete = async () => {
+    if (personId === null) return
     if (!confirm('Supprimer cette personne ? Cette action est définitive.')) {
       return
     }
@@ -79,6 +98,10 @@ export default function PersonDetailPage() {
   }
 
   const handleCreateLink = async () => {
+    if (personId === null) {
+      setLinkError('Personne introuvable')
+      return
+    }
     if (!linkPayload.organization_id || linkPayload.organization_id <= 0) {
       setLinkError('Identifiant organisation invalide')
       return
@@ -159,6 +182,10 @@ export default function PersonDetailPage() {
 
   if (single.isLoading) {
     return <div className="p-8 text-center text-gray-500">Chargement...</div>
+  }
+
+  if (personId === null) {
+    return <div className="p-8 text-center text-gray-500">Personne introuvable</div>
   }
 
   if (!person) {

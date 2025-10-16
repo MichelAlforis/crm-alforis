@@ -3,20 +3,24 @@
 
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useInvestors } from '@/hooks/useInvestors'
 import { useInteractions } from '@/hooks/useInteractions'
-import { Card, Button, Table, Alert, Modal } from '@/components/shared'
+import { Card, Button, Table, Alert, Modal, Input } from '@/components/shared'
 import { InvestorForm, InteractionForm } from '@/components/forms'
 import { InvestorDetail, InteractionCreate, PersonOrganizationLink, PersonOrganizationLinkInput } from '@/lib/types'
 import { usePeople } from '@/hooks/usePeople'
 
 export default function InvestorDetailPage() {
-  const params = useParams()
+  const params = useParams<{ id?: string }>()
   const router = useRouter()
-  const investorId = parseInt(params.id as string)
+  const investorId = useMemo(() => {
+    const rawId = params?.id
+    const parsed = rawId ? Number.parseInt(rawId, 10) : NaN
+    return Number.isNaN(parsed) ? null : parsed
+  }, [params])
   
   // Destructurer correctement les hooks
   const { 
@@ -27,13 +31,13 @@ export default function InvestorDetailPage() {
     delete: deleteOp, 
     deleteInvestor 
   } = useInvestors()
-  
+
   const { 
     interactions, 
     create: interactionCreate,
     fetchInteractions, 
     createInteraction 
-  } = useInteractions(investorId)
+  } = useInteractions(investorId ?? 0)
   const {
     linkPersonToOrganization,
     deletePersonOrganizationLink,
@@ -48,21 +52,34 @@ export default function InvestorDetailPage() {
   const [linkPayload, setLinkPayload] = useState<PersonOrganizationLinkInput>({
     person_id: 0,
     organization_type: 'investor',
-    organization_id: investorId,
+    organization_id: investorId ?? 0,
     is_primary: false,
   })
 
   useEffect(() => {
+    setLinkPayload((prev) => ({
+      ...prev,
+      organization_id: investorId ?? 0,
+    }))
+  }, [investorId])
+
+  useEffect(() => {
+    if (investorId === null) {
+      router.replace('/dashboard/investors')
+      return
+    }
     fetchInvestor(investorId)
     fetchInteractions()
-  }, [investorId, fetchInvestor, fetchInteractions])
+  }, [investorId, fetchInvestor, fetchInteractions, router])
 
   const handleUpdate = async (data: any) => {
+    if (investorId === null) return
     await updateInvestor(investorId, data)
     setIsEditModalOpen(false)
   }
 
   const handleDelete = async () => {
+    if (investorId === null) return
     if (confirm('Êtes-vous sûr de vouloir supprimer cet investisseur?')) {
       await deleteInvestor(investorId)
       router.push('/dashboard/investors')
@@ -70,6 +87,7 @@ export default function InvestorDetailPage() {
   }
 
   const handleAddInteraction = async (data: InteractionCreate) => {
+    if (investorId === null) return
     await createInteraction(data)
     setIsInteractionModalOpen(false)
   }
@@ -136,9 +154,11 @@ export default function InvestorDetailPage() {
             variant="ghost"
             size="xs"
             onClick={() =>
-              updatePersonOrganizationLink(row.id, { is_primary: !row.is_primary }).then(() =>
-                fetchInvestor(investorId),
-              )
+              updatePersonOrganizationLink(row.id, { is_primary: !row.is_primary }).then(() => {
+                if (investorId !== null) {
+                  fetchInvestor(investorId)
+                }
+              })
             }
           >
             {row.is_primary ? 'Retirer principal' : 'Marquer principal'}
@@ -169,10 +189,12 @@ export default function InvestorDetailPage() {
       setLinkPayload({
         person_id: 0,
         organization_type: 'investor',
-        organization_id: investorId,
+        organization_id: investorId ?? 0,
         is_primary: false,
       })
-      await fetchInvestor(investorId)
+      if (investorId !== null) {
+        await fetchInvestor(investorId)
+      }
     } catch (err: any) {
       setLinkError(err?.detail || 'Erreur lors du rattachement')
     } finally {
@@ -183,7 +205,13 @@ export default function InvestorDetailPage() {
   const handleDeleteLink = async (linkId: number) => {
     if (!confirm('Retirer ce rattachement ?')) return
     await deletePersonOrganizationLink(linkId)
-    await fetchInvestor(investorId)
+    if (investorId !== null) {
+      await fetchInvestor(investorId)
+    }
+  }
+
+  if (investorId === null) {
+    return <div className="text-center p-6">Investisseur introuvable</div>
   }
 
   return (

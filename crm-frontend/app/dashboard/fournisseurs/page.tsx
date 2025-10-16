@@ -7,7 +7,6 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useFournisseurs } from '@/hooks/useFournisseurs'
 import { Card, Button, Table, Input, Alert } from '@/components/shared'
-import { Fournisseur } from '@/lib/types'
 
 export default function FournisseursPage() {
   const { fournisseurs, fetchFournisseurs } = useFournisseurs()

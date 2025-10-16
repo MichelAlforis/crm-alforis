@@ -6,7 +6,6 @@
 import React from 'react'
 import { LoginForm } from '@/components/forms'
 import { useAuth } from '@/hooks/useAuth'
-import { Alert } from '@/components/shared'
 
 export default function LoginPage() {
   const { login, isSubmitting, error } = useAuth()

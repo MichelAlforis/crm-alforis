@@ -4,12 +4,11 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import Link from 'next/link'
 import { useInvestors } from '@/hooks/useInvestors'
 import { useInteractions } from '@/hooks/useInteractions'
-import { Card, Button, Table, Select, Modal, Alert } from '@/components/shared'
+import { Card, Button, Table, Modal, Alert } from '@/components/shared'
 import { InteractionForm } from '@/components/forms'
-import { Interaction, InteractionCreate } from '@/lib/types'
+import { InteractionCreate } from '@/lib/types'
 
 export default function InteractionsPage() {
   const { investors, fetchInvestors } = useInvestors()

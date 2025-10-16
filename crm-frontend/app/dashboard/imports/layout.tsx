@@ -8,7 +8,7 @@ import React from 'react'
 export default function ImportsLayout({ children }: { children: React.ReactNode }) {
   const segments = useSelectedLayoutSegments()
   // segments pour /imports/investors => ['investors']
-  const active = segments[0] === 'fournisseurs' ? 'fournisseurs' : 'investors'
+  const active = segments?.[0] === 'fournisseurs' ? 'fournisseurs' : 'investors'
 
   const Tab = ({ href, label, isActive }: { href: string; label: string; isActive: boolean }) => (
     <Link

@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useInvestors } from '@/hooks/useInvestors'
 import { Card, Button, Table, Input, Alert } from '@/components/shared'
-import { Investor, PipelineStage } from '@/lib/types'
+import { PipelineStage } from '@/lib/types'
 
 const PIPELINE_COLORS: Record<PipelineStage, string> = {
   prospect_froid: 'bg-blue-100 text-blue-800',

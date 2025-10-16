@@ -16,12 +16,16 @@ import { FournisseurDetail, KPICreate, PersonOrganizationLink, PersonOrganizatio
 import { usePeople } from '@/hooks/usePeople'
 
 export default function FournisseurDetailPage() {
-  const params = useParams()
+  const params = useParams<{ id?: string }>()
   const router = useRouter()
-  const fournisseurId = parseInt(params.id as string)
+  const fournisseurId = React.useMemo(() => {
+    const rawId = params?.id
+    const parsed = rawId ? Number.parseInt(rawId, 10) : NaN
+    return Number.isNaN(parsed) ? null : parsed
+  }, [params])
 
   const { single: fournisseur, fetchFournisseur, updateFournisseur, delete: deleteOp, deleteFournisseur, update: updateOp } = useFournisseurs()
-  const { kpis, fetchKPIs, createKPI, create: kpiCreate } = useKPIsFournisseur(fournisseurId)
+  const { kpis, fetchKPIs, createKPI, create: kpiCreate } = useKPIsFournisseur(fournisseurId ?? 0)
   const {
     linkPersonToOrganization,
     deletePersonOrganizationLink,
@@ -36,21 +40,34 @@ export default function FournisseurDetailPage() {
   const [linkPayload, setLinkPayload] = useState<PersonOrganizationLinkInput>({
     person_id: 0,
     organization_type: 'fournisseur',
-    organization_id: fournisseurId,
+    organization_id: fournisseurId ?? 0,
     is_primary: false,
   })
 
   useEffect(() => {
+    if (fournisseurId === null) {
+      router.replace('/dashboard/fournisseurs')
+      return
+    }
     fetchFournisseur(fournisseurId)
     fetchKPIs()
-  }, [fournisseurId, fetchFournisseur, fetchKPIs])
+  }, [fournisseurId, fetchFournisseur, fetchKPIs, router])
+
+  useEffect(() => {
+    setLinkPayload((prev) => ({
+      ...prev,
+      organization_id: fournisseurId ?? 0,
+    }))
+  }, [fournisseurId])
 
   const handleUpdate = async (data: any) => {
+    if (fournisseurId === null) return
     await updateFournisseur(fournisseurId, data)
     setIsEditModalOpen(false)
   }
 
   const handleDelete = async () => {
+    if (fournisseurId === null) return
     if (confirm('Êtes-vous sûr de vouloir supprimer ce fournisseur?')) {
       await deleteFournisseur(fournisseurId)
       router.push('/dashboard/fournisseurs')
@@ -58,10 +75,12 @@ export default function FournisseurDetailPage() {
   }
 
   const handleAddKPI = async (data: KPICreate) => {
+    if (fournisseurId === null) return
     await createKPI(data)
     setIsKPIModalOpen(false)
   }
 
+  if (fournisseurId === null) return <div className="text-center p-6">Fournisseur introuvable</div>
   if (fournisseur.isLoading) return <div className="text-center p-6">Chargement...</div>
   if (!fournisseur.data) return <div className="text-center p-6">Non trouvé</div>
 
@@ -145,6 +164,10 @@ export default function FournisseurDetailPage() {
   ]
 
   const handleCreateLink = async () => {
+    if (fournisseurId === null) {
+      setLinkError('Fournisseur invalide')
+      return
+    }
     if (!linkPayload.person_id || linkPayload.person_id <= 0) {
       setLinkError('ID personne invalide')
       return
@@ -169,6 +192,7 @@ export default function FournisseurDetailPage() {
   }
 
   const handleDeleteLink = async (linkId: number) => {
+    if (fournisseurId === null) return
     if (!confirm('Retirer ce rattachement ?')) return
     await deletePersonOrganizationLink(linkId)
     await fetchFournisseur(fournisseurId)
