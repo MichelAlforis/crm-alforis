@@ -59,15 +59,15 @@ export default function DashboardLayout({
   // Main dashboard layout
   return (
     <QueryProvider>
-      <div className="dashboard-layout">
+      <div className="dashboard-layout flex">
         {/* Sidebar Navigation */}
-        <Sidebar isOpen={isSidebarOpen} />
+        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
         {/* Main Content Area */}
         <div
           className={clsx(
-            'flex flex-col min-h-screen transition-all duration-200 ml-0',
-            isSidebarOpen ? 'lg:ml-64' : 'lg:ml-16'
+            'flex flex-col min-h-screen flex-1 transition-all duration-300 ease-in-out',
+            'w-full lg:w-auto'
           )}
         >
           {/* Top Navbar */}
@@ -76,7 +76,7 @@ export default function DashboardLayout({
           />
 
           {/* Page Content */}
-          <main className="flex-1 overflow-auto bg-gray-50 pt-6">
+          <main className="flex-1 overflow-auto bg-gray-50">
             <div className="dashboard-content animate-fadeIn">
               {children}
             </div>
@@ -86,7 +86,7 @@ export default function DashboardLayout({
         {/* Mobile Sidebar Backdrop */}
         {isSidebarOpen && (
           <div
-            className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 lg:hidden animate-in fade-in duration-200"
             onClick={() => setIsSidebarOpen(false)}
           />
         )}

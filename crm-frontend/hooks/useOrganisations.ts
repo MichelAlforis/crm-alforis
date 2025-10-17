@@ -1,12 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api'
-import type {
-  Organisation,
-  OrganisationCreate,
-  OrganisationUpdate,
-  OrganisationDetail,
-  PaginatedResponse,
-} from '@/lib/types'
+import type { OrganisationCreate, OrganisationUpdate } from '@/lib/types'
 
 // ============= QUERY KEYS =============
 

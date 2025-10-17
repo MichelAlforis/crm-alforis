@@ -1,10 +1,12 @@
 from typing import Optional, List, Tuple
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func, or_, and_
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 from models.task import Task, TaskStatus, TaskPriority, TaskCategory
+from models.interaction import InteractionType
 from schemas.task import TaskCreate, TaskUpdate, TaskFilterParams
+from schemas.interaction import InteractionCreate
 from services.base import BaseService
 from core.exceptions import ResourceNotFound, ValidationError
 import logging
@@ -29,6 +31,7 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
         query = self.db.query(self.model).options(
             joinedload(Task.investor),
             joinedload(Task.fournisseur),
+            joinedload(Task.organisation),
             joinedload(Task.person),
         )
 
@@ -116,6 +119,7 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
             .options(
                 joinedload(Task.investor),
                 joinedload(Task.fournisseur),
+                joinedload(Task.organisation),
                 joinedload(Task.person),
             )
             .filter(self.model.id == task_id)
@@ -146,17 +150,60 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
         return task
 
     async def mark_done(self, task_id: int) -> Task:
-        """Marquer une tâche comme terminée"""
-        task = await self.get_by_id(task_id)
+        """Marquer une tâche comme terminée et créer une interaction associée"""
+        task = await self.get_task_with_relations(task_id)
 
         task.status = TaskStatus.DONE
         task.completed_at = date.today()
 
+        # Générer automatiquement une interaction
+        await self._create_interaction_from_task(task)
+
         self.db.commit()
         self.db.refresh(task)
 
-        logger.info(f"Task {task_id} marked as done")
+        logger.info(f"Task {task_id} marked as done and interaction created")
         return task
+
+    async def _create_interaction_from_task(self, task: Task) -> None:
+        """Créer une interaction automatiquement depuis une tâche terminée"""
+        from services.interaction import InteractionService
+
+        # Déterminer le type d'interaction selon la catégorie de la tâche
+        interaction_type_map = {
+            TaskCategory.RELANCE: InteractionType.CALL,
+            TaskCategory.RDV: InteractionType.MEETING,
+            TaskCategory.EMAIL: InteractionType.EMAIL,
+            TaskCategory.DUE_DILIGENCE: InteractionType.MEETING,
+            TaskCategory.PITCH: InteractionType.MEETING,
+            TaskCategory.NEGOCIATION: InteractionType.MEETING,
+            TaskCategory.ADMIN: InteractionType.NOTE,
+            TaskCategory.AUTRE: InteractionType.NOTE,
+        }
+
+        interaction_type = interaction_type_map.get(task.category, InteractionType.NOTE)
+
+        # Construire le contenu de l'interaction
+        notes = f"Tâche complétée: {task.title}"
+        if task.description:
+            notes += f"\n\nDétails: {task.description}"
+
+        # Créer l'interaction
+        interaction_data = InteractionCreate(
+            type=interaction_type,
+            date=datetime.now(),
+            notes=notes,
+            investor_id=task.investor_id,
+            fournisseur_id=task.fournisseur_id,
+            organisation_id=task.organisation_id,
+            person_id=task.person_id,
+        )
+
+        interaction_service = InteractionService(self.db)
+        interaction = await interaction_service.create(interaction_data)
+
+        logger.info(f"Created interaction {interaction.id} from completed task {task.id}")
+        return interaction
 
     async def quick_action(self, task_id: int, action: str) -> Task:
         """Exécuter une action rapide sur une tâche"""

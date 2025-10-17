@@ -2,10 +2,13 @@
 
 import { useState } from 'react'
 import {
+  Activity,
   Bell,
   Calendar,
   CheckCircle2,
   CreditCard,
+  Globe,
+  Link as LinkIcon,
   KeyRound,
   Mail,
   Palette,
@@ -13,6 +16,7 @@ import {
   Smartphone,
   UserPlus,
   Users,
+  Download,
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import {
@@ -58,6 +62,11 @@ export default function SettingsPage() {
     Record<IntegrationOptionKey, boolean>
   >(integrationInitialState)
 
+  // Modals state
+  const [showEditProfileModal, setShowEditProfileModal] = useState(false)
+  const [showInviteModal, setShowInviteModal] = useState(false)
+  const [showNewsletterModal, setShowNewsletterModal] = useState(false)
+
   const toggleNotification = (key: NotificationOptionKey) => {
     setNotificationOptions((prev) => ({
       ...prev,
@@ -77,6 +86,59 @@ export default function SettingsPage() {
       ...prev,
       [key]: !prev[key],
     }))
+  }
+
+  // Handler functions
+  const handleEditProfile = () => {
+    setShowEditProfileModal(true)
+  }
+
+  const handleInviteCollaborator = () => {
+    setShowInviteModal(true)
+  }
+
+  const handleNewsletterSubscribe = () => {
+    setShowNewsletterModal(true)
+  }
+
+  const handleDownloadInvoice = () => {
+    alert('Le téléchargement de factures sera disponible une fois Stripe connecté.')
+  }
+
+  const handleConfigureSecurity = () => {
+    alert('La configuration de la sécurité sera disponible prochainement.')
+  }
+
+  const handleResetTheme = () => {
+    setPreferredTheme('system')
+    alert('Thème réinitialisé aux valeurs par défaut.')
+  }
+
+  const handleSaveTheme = () => {
+    localStorage.setItem('preferred_theme', preferredTheme)
+    alert('Vos préférences de thème ont été enregistrées localement.')
+  }
+
+  const handleDownloadSecurityLog = () => {
+    const csvContent = [
+      'Événement,Détails,Horodatage',
+      ...securityEvents.map(
+        (event) => `"${event.context}","${event.detail}","${event.time}"`
+      ),
+    ].join('\n')
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    const url = URL.createObjectURL(blob)
+    link.setAttribute('href', url)
+    link.setAttribute('download', `security_log_${new Date().toISOString().split('T')[0]}.csv`)
+    link.style.visibility = 'hidden'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
+  const handleOpenIntegrationDocs = (integrationName: string) => {
+    alert(`Documentation pour ${integrationName} : sera disponible prochainement.`)
   }
   return (
     <div className="p-6 lg:p-8 max-w-5xl mx-auto space-y-8">
@@ -133,10 +195,16 @@ export default function SettingsPage() {
           </dl>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <button className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50">
+            <button
+              onClick={handleEditProfile}
+              className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
+            >
               Modifier le profil
             </button>
-            <button className="rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">
+            <button
+              onClick={handleInviteCollaborator}
+              className="rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+            >
               Inviter un collaborateur
             </button>
           </div>
@@ -154,7 +222,10 @@ export default function SettingsPage() {
               </p>
             </div>
           </div>
-          <button className="mt-4 inline-flex items-center justify-center rounded-full border border-indigo-500 px-4 py-1.5 text-xs font-semibold text-indigo-600 transition hover:bg-indigo-500 hover:text-white">
+          <button
+            onClick={handleNewsletterSubscribe}
+            className="mt-4 inline-flex items-center justify-center rounded-full border border-indigo-500 px-4 py-1.5 text-xs font-semibold text-indigo-600 transition hover:bg-indigo-500 hover:text-white"
+          >
             S&apos;inscrire à la newsletter
           </button>
         </aside>
@@ -223,7 +294,10 @@ export default function SettingsPage() {
             <p className="text-xs text-gray-500">
               Dernière mise à jour : 12 mars 2024
             </p>
-            <button className="mt-3 inline-flex items-center rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50">
+            <button
+              onClick={() => alert('La mise à jour du moyen de paiement sera disponible avec Stripe.')}
+              className="mt-3 inline-flex items-center rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
+            >
               Mettre à jour
             </button>
           </div>
@@ -234,7 +308,10 @@ export default function SettingsPage() {
             L&apos;historique détaillé et les factures PDF seront disponibles ici
             une fois Stripe connecté à l&apos;API back-office.
           </p>
-          <button className="inline-flex items-center gap-2 rounded-full border border-sky-500 bg-sky-500 px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-sky-600">
+          <button
+            onClick={handleDownloadInvoice}
+            className="inline-flex items-center gap-2 rounded-full border border-sky-500 bg-sky-500 px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-sky-600"
+          >
             Télécharger la dernière facture
           </button>
         </div>
@@ -306,7 +383,10 @@ export default function SettingsPage() {
               )}
             </div>
 
-            <button className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-rose-500 bg-rose-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-600">
+            <button
+              onClick={handleInviteCollaborator}
+              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-rose-500 bg-rose-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-600"
+            >
               <UserPlus className="h-4 w-4" />
               Inviter un membre
             </button>
@@ -455,7 +535,10 @@ export default function SettingsPage() {
             ))}
           </div>
 
-          <button className="mt-6 w-full rounded-lg border border-emerald-500 bg-emerald-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-600">
+          <button
+            onClick={handleConfigureSecurity}
+            className="mt-6 w-full rounded-lg border border-emerald-500 bg-emerald-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-600"
+          >
             Configurer maintenant
           </button>
         </div>
@@ -508,10 +591,16 @@ export default function SettingsPage() {
             moment ils sont stockés localement.
           </p>
           <div className="flex gap-3">
-            <button className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50">
+            <button
+              onClick={handleResetTheme}
+              className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
+            >
               Réinitialiser
             </button>
-            <button className="rounded-lg border border-purple-600 bg-purple-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-purple-700">
+            <button
+              onClick={handleSaveTheme}
+              className="rounded-lg border border-purple-600 bg-purple-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-purple-700"
+            >
               Enregistrer
             </button>
           </div>
@@ -560,7 +649,11 @@ export default function SettingsPage() {
             Les journaux complets seront exportables (CSV, JSON) lorsque la
             télémétrie back-end sera branchée.
           </p>
-          <button className="inline-flex items-center gap-2 rounded-full border border-emerald-500 bg-white px-3 py-1.5 font-semibold text-emerald-600 transition hover:bg-emerald-50">
+          <button
+            onClick={handleDownloadSecurityLog}
+            className="inline-flex items-center gap-2 rounded-full border border-emerald-500 bg-white px-3 py-1.5 font-semibold text-emerald-600 transition hover:bg-emerald-50"
+          >
+            <Download className="h-3.5 w-3.5" />
             Télécharger le journal
           </button>
         </div>
@@ -618,7 +711,10 @@ export default function SettingsPage() {
                   <span className="rounded-full bg-white px-3 py-1 font-medium text-blue-600">
                     Bientôt synchronisé
                   </span>
-                  <button className="inline-flex items-center gap-1 rounded-full border border-blue-500 px-3 py-1 font-semibold text-blue-600 transition hover:bg-blue-500 hover:text-white">
+                  <button
+                    onClick={() => handleOpenIntegrationDocs(name)}
+                    className="inline-flex items-center gap-1 rounded-full border border-blue-500 px-3 py-1 font-semibold text-blue-600 transition hover:bg-blue-500 hover:text-white"
+                  >
                     {docsLabel}
                   </button>
                 </div>
@@ -633,6 +729,120 @@ export default function SettingsPage() {
           secrets stockés dans Vault.
         </p>
       </section>
+
+      {/* Modal - Modifier le profil */}
+      {showEditProfileModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+            <h3 className="text-xl font-semibold text-gray-900">
+              Modifier le profil
+            </h3>
+            <p className="mt-2 text-sm text-gray-600">
+              La modification de profil sera disponible prochainement. Vous
+              pourrez modifier votre nom, email et photo.
+            </p>
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={() => setShowEditProfileModal(false)}
+                className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal - Inviter un collaborateur */}
+      {showInviteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+            <h3 className="text-xl font-semibold text-gray-900">
+              Inviter un collaborateur
+            </h3>
+            <p className="mt-2 text-sm text-gray-600">
+              Entrez l&apos;adresse email du collaborateur à inviter.
+            </p>
+            <div className="mt-4">
+              <label
+                htmlFor="invite-email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Adresse email
+              </label>
+              <input
+                id="invite-email"
+                type="email"
+                placeholder="collaborateur@example.com"
+                className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+              />
+            </div>
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={() => setShowInviteModal(false)}
+                className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={() => {
+                  alert('Invitation envoyée ! (fonctionnalité en développement)')
+                  setShowInviteModal(false)
+                }}
+                className="rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+              >
+                Envoyer l&apos;invitation
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal - S'inscrire à la newsletter */}
+      {showNewsletterModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+            <h3 className="text-xl font-semibold text-gray-900">
+              S&apos;inscrire à la newsletter
+            </h3>
+            <p className="mt-2 text-sm text-gray-600">
+              Recevez chaque mois les dernières actualités et améliorations du
+              CRM directement dans votre boîte mail.
+            </p>
+            <div className="mt-4">
+              <label
+                htmlFor="newsletter-email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Votre adresse email
+              </label>
+              <input
+                id="newsletter-email"
+                type="email"
+                defaultValue={user?.email || ''}
+                className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+              />
+            </div>
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={() => setShowNewsletterModal(false)}
+                className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={() => {
+                  alert('Inscription réussie ! (fonctionnalité en développement)')
+                  setShowNewsletterModal(false)
+                }}
+                className="rounded-lg border border-indigo-600 bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700"
+              >
+                S&apos;inscrire
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

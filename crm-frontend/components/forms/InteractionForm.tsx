@@ -1,11 +1,18 @@
 // components/forms/InteractionForm.tsx - UPDATED
-// ============= INTERACTION FORM - UPDATED WITH MULTI-SELECT FSS =============
+// ============= INTERACTION FORM - WITH SEARCHABLE MULTI-SELECT =============
 
 'use client'
 
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Input, Select, Button, Alert } from '@/components/shared'
+import {
+  Input,
+  Select,
+  Button,
+  Alert,
+  SearchableMultiSelect,
+  type SelectOption
+} from '@/components/shared'
 import { Interaction, InteractionCreate, InteractionType } from '@/lib/types'
 import { useFournisseurs } from '@/hooks/useFournisseurs'
 import { useToast } from '@/components/ui/Toast'
@@ -51,7 +58,14 @@ export function InteractionForm({
 
   useEffect(() => {
     fetchFournisseurs(0, 1000)
-  }, [])
+  }, [fetchFournisseurs])
+
+  // Convertir les fournisseurs en options pour le SearchableMultiSelect
+  const fournisseurOptions: SelectOption[] = fournisseurs.data?.items?.map((fss) => ({
+    id: fss.id,
+    label: fss.name,
+    sublabel: fss.activity || fss.company || undefined,
+  })) || []
 
   const handleFormSubmit = async (data: InteractionCreate) => {
     if (selectedFournisseurs.length === 0) {
@@ -83,46 +97,23 @@ export function InteractionForm({
     }
   }
 
-  const toggleFournisseur = (fournisseurId: number) => {
-    setSelectedFournisseurs((prev) =>
-      prev.includes(fournisseurId)
-        ? prev.filter((id) => id !== fournisseurId)
-        : [...prev, fournisseurId]
-    )
-  }
-
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
       {error && (
         <Alert type="error" message={error} />
       )}
 
-      {/* Sélection des fournisseurs (multi-select) */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Fournisseurs concernés *
-        </label>
-        <div className="border border-gray-300 rounded-lg p-3 space-y-2 max-h-48 overflow-y-auto">
-          {fournisseurs.data?.items && fournisseurs.data.items.length > 0 ? (
-            fournisseurs.data.items.map((fss) => (
-              <label key={fss.id} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded">
-                <input
-                  type="checkbox"
-                  checked={selectedFournisseurs.includes(fss.id)}
-                  onChange={() => toggleFournisseur(fss.id)}
-                  className="w-4 h-4 rounded border-gray-300"
-                />
-                <span className="text-sm">{fss.name}</span>
-              </label>
-            ))
-          ) : (
-            <p className="text-sm text-gray-500">Aucun fournisseur disponible</p>
-          )}
-        </div>
-        {selectedFournisseurs.length === 0 && (
-          <p className="text-xs text-rouge mt-1">Sélectionnez au moins un fournisseur</p>
-        )}
-      </div>
+      {/* Sélection des fournisseurs avec recherche */}
+      <SearchableMultiSelect
+        label="Fournisseurs concernés"
+        options={fournisseurOptions}
+        value={selectedFournisseurs}
+        onChange={setSelectedFournisseurs}
+        placeholder="Rechercher et sélectionner des fournisseurs..."
+        required
+        error={selectedFournisseurs.length === 0 ? 'Sélectionnez au moins un fournisseur' : undefined}
+        isLoading={fournisseurs.isLoading}
+      />
 
       <Select
         label="Type d'interaction"

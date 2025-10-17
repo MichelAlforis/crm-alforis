@@ -21,6 +21,7 @@ class TaskCreate(BaseSchema):
     # Liens optionnels (peut en avoir plusieurs ou aucun)
     investor_id: Optional[int] = None
     fournisseur_id: Optional[int] = None
+    organisation_id: Optional[int] = None
     person_id: Optional[int] = None
 
     # Métadonnées auto-création
@@ -46,6 +47,7 @@ class TaskUpdate(BaseSchema):
     category: Optional[TaskCategory] = None
     investor_id: Optional[int] = None
     fournisseur_id: Optional[int] = None
+    organisation_id: Optional[int] = None
     person_id: Optional[int] = None
 
     @field_validator("due_date", mode="before")
@@ -70,6 +72,7 @@ class TaskResponse(TimestampedSchema):
     category: TaskCategory
     investor_id: Optional[int]
     fournisseur_id: Optional[int]
+    organisation_id: Optional[int]
     person_id: Optional[int]
     is_auto_created: bool
     auto_creation_rule: Optional[str]

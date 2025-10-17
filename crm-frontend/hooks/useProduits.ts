@@ -1,14 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api'
-import type {
-  Produit,
-  ProduitCreate,
-  ProduitUpdate,
-  ProduitDetail,
-  MandatProduit,
-  MandatProduitCreate,
-  PaginatedResponse,
-} from '@/lib/types'
+import type { ProduitCreate, ProduitUpdate, MandatProduitCreate } from '@/lib/types'
 
 // ============= QUERY KEYS =============
 

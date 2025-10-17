@@ -65,6 +65,7 @@ class Task(BaseModel):
     # Relations optionnelles (liens multiples possibles)
     investor_id = Column(Integer, ForeignKey("investors.id", ondelete="CASCADE"), nullable=True, index=True)
     fournisseur_id = Column(Integer, ForeignKey("fournisseurs.id", ondelete="CASCADE"), nullable=True, index=True)
+    organisation_id = Column(Integer, ForeignKey("organisations.id", ondelete="CASCADE"), nullable=True, index=True)
     person_id = Column(Integer, ForeignKey("people.id", ondelete="CASCADE"), nullable=True, index=True)
 
     # Métadonnées
@@ -74,6 +75,7 @@ class Task(BaseModel):
     # Relations SQLAlchemy
     investor = relationship("Investor", foreign_keys=[investor_id])
     fournisseur = relationship("Fournisseur", foreign_keys=[fournisseur_id])
+    organisation = relationship("Organisation", foreign_keys=[organisation_id])
     person = relationship("Person", foreign_keys=[person_id])
 
     def __repr__(self):
@@ -112,6 +114,8 @@ class Task(BaseModel):
             return f"📊 {self.investor.name}"
         if self.fournisseur:
             return f"🏢 {self.fournisseur.name}"
+        if self.organisation:
+            return f"🏛️ {self.organisation.name}"
         if self.person:
             return f"👤 {self.person.name}"
         return "Sans lien"

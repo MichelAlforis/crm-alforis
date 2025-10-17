@@ -2,8 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { useTasks } from '@/hooks/useTasks'
+import { useOrganisations } from '@/hooks/useOrganisations'
+import { usePeople } from '@/hooks/usePeople'
 import type { TaskInput, TaskPriority, TaskCategory } from '@/lib/types'
 import { useToast } from '@/components/ui/Toast'
+import { SearchableSelect, type SelectOption } from '@/components/shared'
 
 interface TaskFormProps {
   isOpen: boolean
@@ -38,6 +41,8 @@ const CATEGORIES: { value: TaskCategory; label: string }[] = [
 
 export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps) {
   const { createTask, isCreating } = useTasks()
+  const { data: organisationsData } = useOrganisations()
+  const { people: peopleState } = usePeople()
   const { showToast } = useToast()
 
   const [formData, setFormData] = useState<TaskInput>({
@@ -52,6 +57,20 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
   })
 
   const [error, setError] = useState<string | null>(null)
+
+  // Convertir les organisations en options
+  const organisationOptions: SelectOption[] = organisationsData?.items?.map((org) => ({
+    id: org.id,
+    label: org.name,
+    sublabel: org.category || undefined,
+  })) || []
+
+  // Convertir les personnes en options
+  const peopleOptions: SelectOption[] = peopleState?.data?.items?.map((person) => ({
+    id: person.id,
+    label: `${person.first_name} ${person.last_name}`,
+    sublabel: person.role || person.personal_email || undefined,
+  })) || []
 
   useEffect(() => {
     if (initialData) {
@@ -76,6 +95,17 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
         type: 'warning',
         title: 'Titre requis',
         message: 'Ajoutez un titre pour enregistrer la tâche.',
+      })
+      return
+    }
+
+    // Validation: Au moins une organisation OU une personne doit être sélectionnée
+    if (!formData.organisation_id && !formData.person_id) {
+      setError('Vous devez lier la tâche à une organisation ou une personne')
+      showToast({
+        type: 'warning',
+        title: 'Liaison requise',
+        message: 'Sélectionnez une organisation ou une personne pour cette tâche.',
       })
       return
     }
@@ -259,6 +289,43 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
                     {category.label}
                   </button>
                 ))}
+              </div>
+            </div>
+
+            {/* Liaison requise */}
+            <div className="border-2 border-orange-200 bg-orange-50 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <svg className="w-5 h-5 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                <span className="text-sm font-bold text-orange-900">
+                  Liaison obligatoire <span className="text-red-600">*</span>
+                </span>
+              </div>
+              <p className="text-xs text-orange-700 mb-4">
+                Chaque tâche doit être liée à une organisation et/ou une personne
+              </p>
+
+              {/* Organisation avec recherche */}
+              <div className="mb-4">
+                <SearchableSelect
+                  label="Organisation"
+                  options={organisationOptions}
+                  value={formData.organisation_id || null}
+                  onChange={(value) => setFormData({ ...formData, organisation_id: value || undefined })}
+                  placeholder="Rechercher une organisation..."
+                />
+              </div>
+
+              {/* Personne avec recherche */}
+              <div>
+                <SearchableSelect
+                  label="Personne"
+                  options={peopleOptions}
+                  value={formData.person_id || null}
+                  onChange={(value) => setFormData({ ...formData, person_id: value || undefined })}
+                  placeholder="Rechercher une personne..."
+                />
               </div>
             </div>
 

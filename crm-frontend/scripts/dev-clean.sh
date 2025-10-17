@@ -25,6 +25,19 @@ echo "🧹 Nettoyage Next.js (.next + cache)..."
 rm -rf .next node_modules/.cache 2>/dev/null || true
 echo "✅ Cache Next.js supprimé."
 
+# --- Nettoyage du port ---
+if [ "$DOCKER_ENV" = false ]; then
+  echo "🔍 Vérification du port $PORT..."
+  PIDS=$(lsof -ti:$PORT 2>/dev/null || true)
+  if [ ! -z "$PIDS" ]; then
+    echo "🛑 Arrêt des processus utilisant le port $PORT..."
+    kill -9 $PIDS 2>/dev/null || true
+    echo "✅ Port $PORT libéré."
+  else
+    echo "✅ Port $PORT disponible."
+  fi
+fi
+
 # --- Lancement ---
 if [ "$DOCKER_ENV" = false ]; then
   echo "🚀 Démarrage local du serveur Next.js sur le port $PORT..."

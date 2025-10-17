@@ -49,6 +49,14 @@ import {
   ProduitDetail,
   MandatProduit,
   MandatProduitCreate,
+  Task,
+  TaskInput,
+  TaskUpdateInput,
+  TaskWithRelations,
+  TaskStatus,
+  TaskPriority,
+  TaskCategory,
+  TaskStats,
 } from './types'
 
 import type { ApiError } from './types'
@@ -101,7 +109,20 @@ class ApiClient {
    * Récupère le token
    */
   public getToken(): string | null {
-    return this.token
+    if (this.token) {
+      return this.token
+    }
+
+    if (typeof window !== 'undefined') {
+      const fromStorage =
+        localStorage.getItem('auth_token') || this.getCookie('auth_token')
+      if (fromStorage) {
+        this.token = fromStorage
+        return fromStorage
+      }
+    }
+
+    return null
   }
 
   /**
@@ -195,9 +216,6 @@ class ApiClient {
         if (response.status === 401) {
           // Token expiré ou invalide
           this.clearToken()
-          if (typeof window !== 'undefined') {
-            window.location.href = '/auth/login'
-          }
         }
 
         const error = await response.json().catch(() => ({}))

@@ -376,13 +376,13 @@ export interface Task {
   is_today: boolean
   is_next_7_days: boolean
   days_until_due: number
+  linked_entity_display?: string
 }
 
 export interface TaskWithRelations extends Task {
   investor_name?: string
   fournisseur_name?: string
   person_name?: string
-  linked_entity_display?: string
 }
 
 export interface TaskInput {
@@ -394,6 +394,7 @@ export interface TaskInput {
   category?: TaskCategory
   investor_id?: number
   fournisseur_id?: number
+  organisation_id?: number
   person_id?: number
 }
 
@@ -406,6 +407,7 @@ export interface TaskUpdateInput {
   category?: TaskCategory
   investor_id?: number
   fournisseur_id?: number
+  organisation_id?: number
   person_id?: number
 }
 

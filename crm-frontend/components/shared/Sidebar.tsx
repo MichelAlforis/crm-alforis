@@ -25,7 +25,7 @@ import {
   Briefcase,
   Package,
 } from 'lucide-react'
-import { DEFAULT_TODAY_TASKS_COUNT } from '@/lib/dashboardMetrics'
+import { useTaskViews } from '@/hooks/useTasks'
 
 interface SidebarProps {
   isOpen?: boolean
@@ -120,7 +120,8 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
-  const tasksDueToday = DEFAULT_TODAY_TASKS_COUNT
+  const { todayCount } = useTaskViews()
+  const tasksDueToday = todayCount
 
   const isActive = (href: string): boolean => {
     if (!pathname) return false
@@ -149,7 +150,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
           'border-r border-white/10',
           'transition-all duration-300 ease-in-out',
           'flex flex-col',
-          'shadow-2xl',
+          'shadow-2xl backdrop-blur-sm',
           collapsed ? 'w-20' : 'w-72',
           !isOpen && '-translate-x-full md:translate-x-0'
         )}
@@ -209,30 +210,35 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
             {collapsed ? (
               <Link
                 href="/dashboard/tasks"
-                className="relative mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-white/10 transition-colors hover:bg-white/20"
+                className="relative mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 transition-all hover:scale-110 hover:shadow-xl shadow-lg group"
               >
-                <Bell className="h-5 w-5 text-white" />
-                <span className="absolute -top-1.5 -right-1.5 flex h-5 min-w-[20px] items-center justify-center rounded-full border border-slate-900 bg-red-500 px-1 text-[10px] font-semibold text-white shadow-lg">
-                  {tasksDueToday}
-                </span>
+                <Bell className="h-5 w-5 text-white group-hover:animate-pulse" />
+                {tasksDueToday > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 flex h-5 min-w-[20px] items-center justify-center rounded-full border-2 border-slate-900 bg-gradient-to-br from-red-500 to-red-600 px-1 text-[10px] font-bold text-white shadow-lg animate-pulse">
+                    {tasksDueToday}
+                  </span>
+                )}
               </Link>
             ) : (
               <Link
                 href="/dashboard/tasks"
-                className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/10 px-4 py-3 transition-colors hover:border-white/20 hover:bg-white/20"
+                className="group relative flex items-center gap-3 rounded-xl border-2 border-orange-500/30 bg-gradient-to-br from-orange-500/20 to-amber-500/20 px-4 py-3.5 transition-all hover:border-orange-400 hover:from-orange-500/30 hover:to-amber-500/30 hover:shadow-xl overflow-hidden"
               >
-                <div className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-amber-400 text-white shadow-lg shadow-amber-500/40">
-                  <Bell className="h-5 w-5" />
-                  <span className="absolute -top-1.5 -right-1.5 flex h-5 min-w-[20px] items-center justify-center rounded-full border border-slate-900 bg-red-500 px-1 text-[10px] font-semibold text-white shadow-lg">
-                    {tasksDueToday}
-                  </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-400/0 via-orange-400/20 to-orange-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                <div className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 text-white shadow-lg shadow-amber-500/50 group-hover:scale-110 transition-transform">
+                  <Bell className="h-5 w-5 group-hover:animate-pulse" />
+                  {tasksDueToday > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 flex h-5 min-w-[20px] items-center justify-center rounded-full border-2 border-slate-900 bg-gradient-to-br from-red-500 to-red-600 px-1 text-[10px] font-bold text-white shadow-lg animate-pulse">
+                      {tasksDueToday}
+                    </span>
+                  )}
                 </div>
-                <div className="flex-1">
-                  <p className="text-xs uppercase tracking-wide text-slate-300">
+                <div className="flex-1 relative z-10">
+                  <p className="text-xs uppercase tracking-wider text-orange-200 font-semibold">
                     Tâches du jour
                   </p>
-                  <p className="text-sm font-semibold text-white">
-                    Consultez votre planning
+                  <p className="text-sm font-bold text-white mt-0.5">
+                    {tasksDueToday === 0 ? 'Aucune tâche' : `${tasksDueToday} à traiter`}
                   </p>
                 </div>
               </Link>
@@ -240,7 +246,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto scrollbar-hide">
+          <nav className="flex-1 px-3 py-2 space-y-1.5 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
             {MENU_ITEMS.map((item) => {
               const Icon = item.icon
               const active = isActive(item.href)
@@ -255,11 +261,11 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                   className={clsx(
                     'group relative flex items-center gap-3',
                     'px-3 py-3 rounded-xl',
-                    'transition-all duration-200',
+                    'transition-all duration-300',
                     'overflow-hidden',
                     active
-                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30'
-                      : 'text-slate-300 hover:text-white hover:bg-white/10',
+                      ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-2xl shadow-blue-500/40 scale-105'
+                      : 'text-slate-300 hover:text-white hover:bg-white/10 hover:scale-102',
                     collapsed && 'justify-center'
                   )}
                   title={collapsed ? item.label : undefined}
@@ -267,24 +273,29 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                   {/* Hover Effect Background */}
                   {!active && isHovered && !collapsed && (
                     <div className={clsx(
-                      'absolute inset-0 bg-gradient-to-r opacity-10',
+                      'absolute inset-0 bg-gradient-to-r opacity-15 animate-in fade-in duration-300',
                       item.gradient
                     )} />
+                  )}
+
+                  {/* Active shimmer effect */}
+                  {active && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                   )}
 
                   {/* Icon Container */}
                   <div className={clsx(
                     'relative flex items-center justify-center',
-                    'w-9 h-9 rounded-lg flex-shrink-0',
-                    'transition-all duration-200',
+                    'w-10 h-10 rounded-xl flex-shrink-0',
+                    'transition-all duration-300',
                     active
-                      ? 'bg-white/20'
-                      : 'bg-white/5 group-hover:bg-white/10'
+                      ? 'bg-white/20 shadow-lg'
+                      : 'bg-white/5 group-hover:bg-white/15 group-hover:scale-110'
                   )}>
                     <Icon
                       className={clsx(
-                        'w-5 h-5 transition-all duration-200',
-                        active && 'scale-110'
+                        'w-5 h-5 transition-all duration-300',
+                        active && 'scale-110 drop-shadow-lg'
                       )}
                     />
                   </div>
@@ -292,12 +303,15 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                   {!collapsed && (
                     <>
                       <div className="flex-1 relative z-10">
-                        <p className="text-sm font-semibold">
+                        <p className={clsx(
+                          'text-sm font-bold transition-all duration-200',
+                          active && 'drop-shadow-sm'
+                        )}>
                           {item.label}
                         </p>
                         <p className={clsx(
-                          'text-xs transition-colors',
-                          active ? 'text-white/70' : 'text-slate-400'
+                          'text-[11px] transition-colors duration-200',
+                          active ? 'text-white/80' : 'text-slate-400 group-hover:text-slate-300'
                         )}>
                           {item.description}
                         </p>
@@ -306,11 +320,11 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                       {/* Badge */}
                       {item.badge && (
                         <div className={clsx(
-                          'px-2 py-0.5 rounded-md text-xs font-bold',
-                          'transition-all duration-200',
+                          'px-2.5 py-1 rounded-lg text-xs font-bold',
+                          'transition-all duration-300 shadow-sm',
                           active
-                            ? 'bg-white/20 text-white'
-                            : 'bg-white/10 text-slate-300 group-hover:bg-white/20'
+                            ? 'bg-white/30 text-white shadow-lg'
+                            : 'bg-white/10 text-slate-300 group-hover:bg-white/20 group-hover:scale-110'
                         )}>
                           {item.badge}
                         </div>
@@ -318,14 +332,14 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
 
                       {/* Active Indicator */}
                       {active && (
-                        <div className="w-1 h-8 bg-white rounded-full opacity-100" />
+                        <div className="w-1.5 h-10 bg-white rounded-full shadow-lg animate-pulse" />
                       )}
                     </>
                   )}
 
                   {/* Collapsed Badge */}
                   {collapsed && item.badge && (
-                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full text-[9px] font-bold text-white flex items-center justify-center">
+                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full text-[9px] font-bold text-white flex items-center justify-center shadow-lg border-2 border-slate-900">
                       {item.badge === 'NEW' ? '!' : item.badge}
                     </div>
                   )}
@@ -371,32 +385,32 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
           {/* Footer - User Profile */}
           <div className="px-3 py-4 border-t border-white/10">
             {!collapsed ? (
-              <div className="flex items-center gap-3 p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-200 cursor-pointer group">
-                <div className="relative">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-br from-white/5 to-white/10 hover:from-white/10 hover:to-white/15 transition-all duration-300 cursor-pointer group shadow-lg hover:shadow-xl border border-white/10 hover:border-white/20">
+                <div className="relative group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-green-400 via-emerald-500 to-blue-500 flex items-center justify-center shadow-lg">
                     <span className="text-white font-bold text-sm">A</span>
                   </div>
-                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-slate-900" />
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-slate-900 animate-pulse" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-white truncate">
+                  <p className="text-sm font-bold text-white truncate group-hover:text-blue-200 transition-colors">
                     Admin User
                   </p>
-                  <p className="text-xs text-slate-400 truncate">
+                  <p className="text-xs text-slate-400 truncate group-hover:text-slate-300 transition-colors">
                     admin@tpm.finance
                   </p>
                 </div>
                 <button
-                  className="p-2 hover:bg-white/10 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                  className="p-2 hover:bg-white/20 rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110"
                   title="Déconnexion"
                 >
-                  <LogOut className="w-4 h-4 text-slate-400" />
+                  <LogOut className="w-4 h-4 text-slate-400 hover:text-red-400" />
                 </button>
               </div>
             ) : (
-              <button className="mx-auto w-10 h-10 rounded-lg bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center relative group">
+              <button className="mx-auto w-11 h-11 rounded-xl bg-gradient-to-br from-green-400 via-emerald-500 to-blue-500 flex items-center justify-center relative group shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300">
                 <span className="text-white font-bold text-sm">A</span>
-                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-slate-900" />
+                <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-slate-900 animate-pulse" />
               </button>
             )}
           </div>

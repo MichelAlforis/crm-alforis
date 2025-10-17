@@ -3,7 +3,6 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api'
 import type { Task, TaskInput, TaskUpdateInput, TaskStats, TaskFilters, PaginatedResponse } from '@/lib/types'

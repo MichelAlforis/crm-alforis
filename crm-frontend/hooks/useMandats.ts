@@ -1,11 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api'
 import type {
-  MandatDistribution,
   MandatDistributionCreate,
   MandatDistributionUpdate,
-  MandatDistributionDetail,
-  PaginatedResponse,
 } from '@/lib/types'
 
 // ============= QUERY KEYS =============
