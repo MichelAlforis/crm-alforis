@@ -47,6 +47,30 @@ export default function RootLayout({
         {/* Preconnect to speed up external resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/favicon/apple-touch-icon.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon/favicon-32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon/favicon-16.png"
+        />
+        <link rel="manifest" href="/favicon/site.webmanifest" />
+        <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#E39F70" />
+        <link rel="shortcut icon" href="/favicon/favicon.ico" />
+        <meta name="apple-mobile-web-app-title" content="Alforis" />
+        <meta name="application-name" content="Alforis" />
+        <meta name="msapplication-TileColor" content="#E39F70" />
+        <meta name="theme-color" content="#E39F70" />
       </head>
       <body className="bg-gray-50 text-gray-900 min-h-screen">
         {/* Skip to main content - Accessibility */}
