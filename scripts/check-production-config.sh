@@ -170,7 +170,6 @@ if [ -f "$COMPOSE_FILE" ]; then
     fi
 
     # Vérifier les services
-    local services
     services=$(grep -E "^  [a-z]+:" "$COMPOSE_FILE" | sed 's/://g' | tr -d ' ')
     echo -e "${BLUE}Services trouvés: $services${NC}"
 fi

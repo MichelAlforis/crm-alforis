@@ -79,9 +79,15 @@ if ! command -v docker &> /dev/null; then
     exit 1
 fi
 
-# Vérifier que docker-compose est installé
-if ! command -v docker-compose &> /dev/null; then
-    echo -e "${RED}❌ docker-compose n'est pas installé${NC}"
+# Vérifier la disponibilité de docker compose (v1 ou plugin v2)
+if command -v docker-compose &> /dev/null; then
+    COMPOSE_CMD=(docker-compose)
+    COMPOSE_CMD_STRING="docker-compose"
+elif docker compose version &> /dev/null; then
+    COMPOSE_CMD=(docker compose)
+    COMPOSE_CMD_STRING="docker compose"
+else
+    echo -e "${RED}❌ docker-compose (ou le plugin docker compose) n'est pas installé${NC}"
     exit 1
 fi
 
@@ -125,11 +131,11 @@ fi
 
 # --- Backup de la base de données (si elle existe) ---
 echo -e "\n${YELLOW}💾 Backup de la base de données...${NC}"
-if docker-compose -f "$COMPOSE_FILE" ps postgres | grep -q "Up"; then
+if "${COMPOSE_CMD[@]}" -f "$COMPOSE_FILE" ps postgres | grep -q "Up"; then
     BACKUP_FILE="backups/backup_$(date +%Y%m%d_%H%M%S).sql"
     mkdir -p backups
 
-    docker-compose -f "$COMPOSE_FILE" exec -T postgres pg_dump -U crm_user crm_db > "$BACKUP_FILE" 2>/dev/null || true
+    "${COMPOSE_CMD[@]}" -f "$COMPOSE_FILE" exec -T postgres pg_dump -U crm_user crm_db > "$BACKUP_FILE" 2>/dev/null || true
 
     if [ -f "$BACKUP_FILE" ]; then
         echo -e "${GREEN}✅ Backup créé: $BACKUP_FILE${NC}"
@@ -142,19 +148,19 @@ fi
 
 # --- Arrêter les conteneurs existants ---
 echo -e "\n${YELLOW}🛑 Arrêt des conteneurs existants...${NC}"
-docker-compose -f "$COMPOSE_FILE" down
+"${COMPOSE_CMD[@]}" -f "$COMPOSE_FILE" down
 
 # --- Pull des dernières images ---
 echo -e "\n${YELLOW}📥 Pull des dernières images...${NC}"
-docker-compose -f "$COMPOSE_FILE" pull || true
+"${COMPOSE_CMD[@]}" -f "$COMPOSE_FILE" pull || true
 
 # --- Build des images ---
 echo -e "\n${YELLOW}🔨 Build des images...${NC}"
-docker-compose -f "$COMPOSE_FILE" build --no-cache
+"${COMPOSE_CMD[@]}" -f "$COMPOSE_FILE" build --no-cache
 
 # --- Démarrer les services ---
 echo -e "\n${YELLOW}🚀 Démarrage des services...${NC}"
-docker-compose -f "$COMPOSE_FILE" up -d
+"${COMPOSE_CMD[@]}" -f "$COMPOSE_FILE" up -d
 
 # --- Attendre que les services soient prêts ---
 echo -e "\n${YELLOW}⏳ Attente du démarrage des services...${NC}"
@@ -162,11 +168,11 @@ sleep 10
 
 # --- Vérifier l'état des services ---
 echo -e "\n${YELLOW}🔍 Vérification de l'état des services...${NC}"
-docker-compose -f "$COMPOSE_FILE" ps
+"${COMPOSE_CMD[@]}" -f "$COMPOSE_FILE" ps
 
 # --- Appliquer les migrations ---
 echo -e "\n${YELLOW}🗄️  Application des migrations de base de données...${NC}"
-docker-compose -f "$COMPOSE_FILE" exec -T api alembic upgrade head || echo -e "${YELLOW}⚠️  Migrations non appliquées (alembic peut ne pas être configuré)${NC}"
+"${COMPOSE_CMD[@]}" -f "$COMPOSE_FILE" exec -T api alembic upgrade head || echo -e "${YELLOW}⚠️  Migrations non appliquées (alembic peut ne pas être configuré)${NC}"
 
 # --- Tests de connectivité ---
 echo -e "\n${YELLOW}🧪 Tests de connectivité...${NC}"
@@ -187,7 +193,7 @@ fi
 
 # --- Afficher les logs récents ---
 echo -e "\n${YELLOW}📋 Logs récents:${NC}"
-docker-compose -f "$COMPOSE_FILE" logs --tail=20
+"${COMPOSE_CMD[@]}" -f "$COMPOSE_FILE" logs --tail=20
 
 # --- Résumé final ---
 echo -e "\n${BLUE}=======================================${NC}"
@@ -204,12 +210,12 @@ echo -e "\n${YELLOW}Prochaines étapes:${NC}"
 echo -e "  1. Vérifier que Nginx est configuré (voir nginx/crm.alforis.fr.conf)"
 echo -e "  2. Obtenir un certificat SSL avec certbot"
 echo -e "  3. Tester l'accès via https://crm.alforis.fr"
-echo -e "  4. Vérifier les logs: ${BLUE}docker-compose -f $COMPOSE_FILE logs -f${NC}"
+echo -e "  4. Vérifier les logs: ${BLUE}$COMPOSE_CMD_STRING -f $COMPOSE_FILE logs -f${NC}"
 
 echo -e "\n${GREEN}Commandes utiles:${NC}"
-echo -e "  • Voir les logs:      ${BLUE}docker-compose -f $COMPOSE_FILE logs -f${NC}"
-echo -e "  • Voir l'état:        ${BLUE}docker-compose -f $COMPOSE_FILE ps${NC}"
-echo -e "  • Redémarrer:         ${BLUE}docker-compose -f $COMPOSE_FILE restart${NC}"
-echo -e "  • Arrêter:            ${BLUE}docker-compose -f $COMPOSE_FILE down${NC}"
+echo -e "  • Voir les logs:      ${BLUE}$COMPOSE_CMD_STRING -f $COMPOSE_FILE logs -f${NC}"
+echo -e "  • Voir l'état:        ${BLUE}$COMPOSE_CMD_STRING -f $COMPOSE_FILE ps${NC}"
+echo -e "  • Redémarrer:         ${BLUE}$COMPOSE_CMD_STRING -f $COMPOSE_FILE restart${NC}"
+echo -e "  • Arrêter:            ${BLUE}$COMPOSE_CMD_STRING -f $COMPOSE_FILE down${NC}"
 
 echo ""
