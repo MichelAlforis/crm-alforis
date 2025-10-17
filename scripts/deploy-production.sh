@@ -48,6 +48,31 @@ if [ "$COMPOSE_FILE" = "$FALLBACK_COMPOSE_FILE" ]; then
     echo -e "${YELLOW}⚠️  Utilisation de $COMPOSE_FILE (fallback). Pensez à conserver un fichier $DEFAULT_COMPOSE_FILE si possible.${NC}"
 fi
 
+DEFAULT_ENV_FILE=".env.production"
+FALLBACK_ENV_FILE=".env"
+
+if [ -n "${ENV_FILE_OVERRIDE:-}" ]; then
+    ROOT_ENV_FILE="$ENV_FILE_OVERRIDE"
+elif [ -f "$DEFAULT_ENV_FILE" ]; then
+    ROOT_ENV_FILE="$DEFAULT_ENV_FILE"
+elif [ -f "$FALLBACK_ENV_FILE" ]; then
+    ROOT_ENV_FILE="$FALLBACK_ENV_FILE"
+else
+    ROOT_ENV_FILE=""
+fi
+
+if [ -z "$ROOT_ENV_FILE" ]; then
+    echo -e "${RED}❌ Aucun fichier d'environnement trouvé (recherché: $DEFAULT_ENV_FILE et $FALLBACK_ENV_FILE)${NC}"
+    echo -e "${YELLOW}   Créez-le à partir de .env.production.example${NC}"
+    exit 1
+fi
+
+if [ "$ROOT_ENV_FILE" = "$FALLBACK_ENV_FILE" ]; then
+    echo -e "${YELLOW}⚠️  Utilisation de $ROOT_ENV_FILE (fallback). Assurez-vous que $COMPOSE_FILE l'utilise.${NC}"
+fi
+
+ENV_FILENAME=$(basename "$ROOT_ENV_FILE")
+
 # Vérifier que Docker est installé
 if ! command -v docker &> /dev/null; then
     echo -e "${RED}❌ Docker n'est pas installé${NC}"
@@ -61,8 +86,8 @@ if ! command -v docker-compose &> /dev/null; then
 fi
 
 # Vérifier les fichiers .env
-if [ ! -f ".env.production" ]; then
-    echo -e "${RED}❌ Fichier .env.production introuvable${NC}"
+if [ ! -f "$ROOT_ENV_FILE" ]; then
+    echo -e "${RED}❌ Fichier $ROOT_ENV_FILE introuvable${NC}"
     echo -e "${YELLOW}   Créez-le à partir de .env.production.example${NC}"
     exit 1
 fi

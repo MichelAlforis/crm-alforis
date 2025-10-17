@@ -21,7 +21,7 @@ docker compose -f docker-compose.prod.yml up -d --build
 
 ```
 
-> ℹ️ Les scripts (`check-production-config.sh`, `deploy-production.sh`) utilisent `docker-compose.prod.yml` par défaut et basculent automatiquement sur `docker-compose.yml` si le fichier prod n'existe pas.
+> ℹ️ Les scripts (`check-production-config.sh`, `deploy-production.sh`) utilisent `docker-compose.prod.yml` par défaut (fallback automatique sur `docker-compose.yml`) et chargent le fichier d'environnement `.env.production` ou, à défaut, `.env`.
 
 ---
 

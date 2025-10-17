@@ -47,6 +47,31 @@ if [ "$COMPOSE_FILE" = "$FALLBACK_COMPOSE_FILE" ]; then
     echo -e "${YELLOW}⚠️  Utilisation de $COMPOSE_FILE (fallback). Pensez à conserver un fichier $DEFAULT_COMPOSE_FILE si possible.${NC}\n"
 fi
 
+DEFAULT_ENV_FILE=".env.production"
+FALLBACK_ENV_FILE=".env"
+
+if [ -n "${ENV_FILE_OVERRIDE:-}" ]; then
+    ROOT_ENV_FILE="$ENV_FILE_OVERRIDE"
+elif [ -f "$DEFAULT_ENV_FILE" ]; then
+    ROOT_ENV_FILE="$DEFAULT_ENV_FILE"
+elif [ -f "$FALLBACK_ENV_FILE" ]; then
+    ROOT_ENV_FILE="$FALLBACK_ENV_FILE"
+else
+    ROOT_ENV_FILE=""
+fi
+
+if [ -z "$ROOT_ENV_FILE" ]; then
+    echo -e "${RED}❌ Aucun fichier d'environnement trouvé (recherché: $DEFAULT_ENV_FILE et $FALLBACK_ENV_FILE)${NC}"
+    echo -e "${RED}   Créez ou restaurez le fichier d'environnement de production.${NC}"
+    exit 1
+fi
+
+if [ "$ROOT_ENV_FILE" = "$FALLBACK_ENV_FILE" ]; then
+    echo -e "${YELLOW}⚠️  Utilisation de $ROOT_ENV_FILE (fallback). Assurez-vous que docker-compose l'utilise bien.${NC}\n"
+fi
+
+ENV_FILENAME=$(basename "$ROOT_ENV_FILE")
+
 # --- Fonction pour vérifier un fichier ---
 check_file() {
     local file=$1
@@ -102,7 +127,7 @@ echo -e "${YELLOW}📋 Vérification des fichiers...${NC}\n"
 
 # --- Vérifier les fichiers de configuration ---
 check_file "$COMPOSE_FILE" "true"
-check_file ".env.production" "true"
+check_file "$ROOT_ENV_FILE" "true"
 check_file "nginx/crm.alforis.fr.conf" "true"
 check_file "crm-backend/.env.production.local" "false"
 check_file "crm-frontend/.env.production.local" "false"
@@ -112,13 +137,13 @@ echo ""
 # --- Vérifier les variables d'environnement ---
 echo -e "${YELLOW}🔑 Vérification des variables d'environnement...${NC}\n"
 
-if [ -f ".env.production" ]; then
-    check_env_var ".env.production" "POSTGRES_PASSWORD" "true"
-    check_env_var ".env.production" "SECRET_KEY" "true"
-    check_env_var ".env.production" "ALLOWED_ORIGINS" "true"
-    check_env_var ".env.production" "NEXT_PUBLIC_API_URL" "true"
-    check_env_var ".env.production" "POSTGRES_USER" "false"
-    check_env_var ".env.production" "POSTGRES_DB" "false"
+if [ -f "$ROOT_ENV_FILE" ]; then
+    check_env_var "$ROOT_ENV_FILE" "POSTGRES_PASSWORD" "true"
+    check_env_var "$ROOT_ENV_FILE" "SECRET_KEY" "true"
+    check_env_var "$ROOT_ENV_FILE" "ALLOWED_ORIGINS" "true"
+    check_env_var "$ROOT_ENV_FILE" "NEXT_PUBLIC_API_URL" "true"
+    check_env_var "$ROOT_ENV_FILE" "POSTGRES_USER" "false"
+    check_env_var "$ROOT_ENV_FILE" "POSTGRES_DB" "false"
 fi
 
 echo ""
@@ -128,11 +153,11 @@ echo -e "${YELLOW}🐳 Vérification de $COMPOSE_FILE...${NC}\n"
 
 if [ -f "$COMPOSE_FILE" ]; then
     # Vérifier que le fichier charge .env.production
-    if grep -q "env_file:" "$COMPOSE_FILE" && grep -q ".env.production" "$COMPOSE_FILE"; then
-        echo -e "${GREEN}✅ $COMPOSE_FILE charge .env.production${NC}"
+    if grep -q "env_file:" "$COMPOSE_FILE" && grep -q "$ENV_FILENAME" "$COMPOSE_FILE"; then
+        echo -e "${GREEN}✅ $COMPOSE_FILE référence $ENV_FILENAME${NC}"
     else
-        echo -e "${RED}❌ $COMPOSE_FILE ne charge pas .env.production${NC}"
-        echo -e "${YELLOW}   Ajouter 'env_file: - .env.production' dans chaque service${NC}"
+        echo -e "${RED}❌ $COMPOSE_FILE ne référence pas $ENV_FILENAME${NC}"
+        echo -e "${YELLOW}   Ajouter 'env_file: - $ENV_FILENAME' dans chaque service${NC}"
         ((ERRORS++))
     fi
 
@@ -289,19 +314,16 @@ echo ""
 if [ $ERRORS -gt 0 ] || [ $WARNINGS -gt 0 ]; then
     echo -e "${YELLOW}📋 Actions recommandées:${NC}"
 
-    if [ ! -f ".env.production" ]; then
-        echo -e "  1. ${BLUE}cp .env.production.example .env.production${NC}"
-        echo -e "  2. ${BLUE}nano .env.production${NC} (remplir les variables)"
-    fi
+    echo -e "  • ${BLUE}Vérifier/mettre à jour $ROOT_ENV_FILE${NC}"
 
-    if ! grep -q ".env.production" "$COMPOSE_FILE" 2>/dev/null; then
-        echo -e "  3. Mettre à jour ${BLUE}$COMPOSE_FILE${NC} pour charger .env.production"
+    if ! grep -q "$ENV_FILENAME" "$COMPOSE_FILE" 2>/dev/null; then
+        echo -e "  • Mettre à jour ${BLUE}$COMPOSE_FILE${NC} pour charger $ENV_FILENAME"
     fi
 
     if [ ! -L "/etc/nginx/sites-enabled/crm.alforis.fr" ]; then
-        echo -e "  4. ${BLUE}sudo cp nginx/crm.alforis.fr.conf /etc/nginx/sites-available/${NC}"
-        echo -e "  5. ${BLUE}sudo ln -s /etc/nginx/sites-available/crm.alforis.fr /etc/nginx/sites-enabled/${NC}"
-        echo -e "  6. ${BLUE}sudo certbot --nginx -d crm.alforis.fr${NC}"
+        echo -e "  • ${BLUE}sudo cp nginx/crm.alforis.fr.conf /etc/nginx/sites-available/${NC}"
+        echo -e "  • ${BLUE}sudo ln -s /etc/nginx/sites-available/crm.alforis.fr /etc/nginx/sites-enabled/${NC}"
+        echo -e "  • ${BLUE}sudo certbot --nginx -d crm.alforis.fr${NC}"
     fi
 
     echo ""
