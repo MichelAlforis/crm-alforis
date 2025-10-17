@@ -6,7 +6,7 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useInvestors } from '@/hooks/useInvestors'
-import { Card, Button, Table, Input, Alert } from '@/components/shared'
+import { Card, Button, Table, Input, Alert, AdvancedFilters } from '@/components/shared'
 import { PipelineStage } from '@/lib/types'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 
@@ -23,6 +23,30 @@ export default function InvestorsPage() {
   const { investors, fetchInvestors } = useInvestors()
   const [searchText, setSearchText] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
+  const [filtersState, setFiltersState] = useState({
+    pipeline: '',
+    country: '',
+    language: '',
+    createdFrom: '',
+    createdTo: '',
+  })
+
+  const handleFilterChange = (key: string, value: unknown) => {
+    if (Array.isArray(value)) return
+    setFiltersState((prev) => ({
+      ...prev,
+      [key]: value as string,
+    }))
+  }
+
+  const resetFilters = () =>
+    setFiltersState({
+      pipeline: '',
+      country: '',
+      language: '',
+      createdFrom: '',
+      createdTo: '',
+    })
 
   // Debounce search
   useEffect(() => {
@@ -39,12 +63,18 @@ export default function InvestorsPage() {
 
   const getCountryLabel = (code?: string | null) => {
     if (!code) return '-'
-    return COUNTRY_OPTIONS.find((option) => option.value === code)?.label ?? code
+    const match = COUNTRY_OPTIONS.find(
+      (option) => option.value === code || option.code === code
+    )
+    return match?.label ?? code
   }
 
   const getLanguageLabel = (code?: string | null) => {
     if (!code) return '-'
-    return LANGUAGE_OPTIONS.find((option) => option.value === code)?.label ?? code
+    const match = LANGUAGE_OPTIONS.find(
+      (option) => option.value === code || option.code === code
+    )
+    return match?.label ?? code
   }
 
   const columns = [
@@ -92,6 +122,92 @@ export default function InvestorsPage() {
     },
   ]
 
+  const advancedFilterDefinitions = [
+    {
+      key: 'pipeline',
+      label: 'Pipeline',
+      type: 'select' as const,
+      options: [
+        { value: '', label: 'Toutes les étapes' },
+        ...Object.keys(PIPELINE_COLORS).map((value) => ({
+          value,
+          label: value.replace(/_/g, ' '),
+        })),
+      ],
+    },
+    {
+      key: 'country',
+      label: 'Pays',
+      type: 'select' as const,
+      options: [
+        { value: '', label: 'Tous les pays' },
+        ...COUNTRY_OPTIONS.filter((option) => option.value).map((option) => ({
+          value: option.value,
+          label: option.label,
+        })),
+      ],
+    },
+    {
+      key: 'language',
+      label: 'Langue',
+      type: 'select' as const,
+      options: [
+        { value: '', label: 'Toutes les langues' },
+        ...LANGUAGE_OPTIONS.filter((option) => option.code).map((option) => ({
+          value: (option.code || '').toUpperCase(),
+          label: `${option.flag} ${option.name}`,
+        })),
+      ],
+    },
+    {
+      key: 'createdFrom',
+      label: 'Créés après',
+      type: 'date' as const,
+    },
+    {
+      key: 'createdTo',
+      label: 'Créés avant',
+      type: 'date' as const,
+    },
+  ]
+
+  const filteredInvestors = (investors.data?.items ?? []).filter((investor) => {
+    const search = searchText.trim().toLowerCase()
+    const matchesSearch =
+      investor.name.toLowerCase().includes(search) ||
+      (investor.email ?? '').toLowerCase().includes(search) ||
+      (investor.company ?? '').toLowerCase().includes(search)
+
+    const matchesPipeline = filtersState.pipeline
+      ? investor.pipeline_stage === filtersState.pipeline
+      : true
+
+    const matchesCountry = filtersState.country
+      ? investor.country_code === filtersState.country
+      : true
+
+    const matchesLanguage = filtersState.language
+      ? (investor.language || '').toUpperCase() === filtersState.language
+      : true
+
+    const createdAt = investor.created_at ? new Date(investor.created_at) : null
+    const matchesCreatedFrom = filtersState.createdFrom
+      ? createdAt && createdAt >= new Date(filtersState.createdFrom)
+      : true
+    const matchesCreatedTo = filtersState.createdTo
+      ? createdAt && createdAt <= new Date(filtersState.createdTo)
+      : true
+
+    return (
+      matchesSearch &&
+      matchesPipeline &&
+      matchesCountry &&
+      matchesLanguage &&
+      matchesCreatedFrom &&
+      matchesCreatedTo
+    )
+  })
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -102,11 +218,19 @@ export default function InvestorsPage() {
       </div>
 
       <Card>
-        <Input
-          placeholder="Rechercher par nom, email, société..."
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-        />
+        <div className="space-y-4">
+          <Input
+            placeholder="Rechercher par nom, email, société..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+          <AdvancedFilters
+            filters={advancedFilterDefinitions}
+            values={filtersState}
+            onChange={handleFilterChange}
+            onReset={resetFilters}
+          />
+        </div>
       </Card>
 
       {investors.error && (
@@ -116,9 +240,9 @@ export default function InvestorsPage() {
       <Card>
         <Table
           columns={columns}
-          data={investors.data?.items || []}
+          data={filteredInvestors}
           isLoading={investors.isLoading}
-          isEmpty={investors.data?.items.length === 0}
+          isEmpty={filteredInvestors.length === 0}
         />
       </Card>
 

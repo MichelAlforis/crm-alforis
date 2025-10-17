@@ -6,13 +6,16 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePeople } from '@/hooks/usePeople'
-import { Card, Button, Table, Input, Alert } from '@/components/shared'
+import { Card, Button, Table, Input, Alert, AdvancedFilters } from '@/components/shared'
 import { Person } from '@/lib/types'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 
 const COUNTRY_LABELS = COUNTRY_OPTIONS.filter((option) => option.value).reduce(
   (acc, option) => {
     acc[option.value] = option.label
+    if (option.code) {
+      acc[option.code] = option.label
+    }
     return acc
   },
   {} as Record<string, string>,
@@ -21,6 +24,9 @@ const COUNTRY_LABELS = COUNTRY_OPTIONS.filter((option) => option.value).reduce(
 const LANGUAGE_LABELS = LANGUAGE_OPTIONS.filter((option) => option.value).reduce(
   (acc, option) => {
     acc[option.value] = option.label
+    if (option.code) {
+      acc[option.code] = option.label
+    }
     return acc
   },
   {} as Record<string, string>,
@@ -69,6 +75,30 @@ export default function PeoplePage() {
   const { people, fetchPeople } = usePeople()
   const [searchText, setSearchText] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
+  const [filtersState, setFiltersState] = useState({
+    role: '',
+    country: '',
+    language: '',
+    createdFrom: '',
+    createdTo: '',
+  })
+
+  const handleFilterChange = (key: string, value: unknown) => {
+    if (Array.isArray(value)) return
+    setFiltersState((prev) => ({
+      ...prev,
+      [key]: value as string,
+    }))
+  }
+
+  const resetFilters = () =>
+    setFiltersState({
+      role: '',
+      country: '',
+      language: '',
+      createdFrom: '',
+      createdTo: '',
+    })
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(searchText), 300)
@@ -78,6 +108,89 @@ export default function PeoplePage() {
   useEffect(() => {
     fetchPeople(0, 50, debouncedSearch ? { q: debouncedSearch } : undefined)
   }, [debouncedSearch, fetchPeople])
+
+  const advancedFilterDefinitions = [
+    {
+      key: 'role',
+      label: 'Rôle contient',
+      type: 'search' as const,
+      placeholder: 'Directeur, Analyste...',
+    },
+    {
+      key: 'country',
+      label: 'Pays',
+      type: 'select' as const,
+      options: [
+        { value: '', label: 'Tous les pays' },
+        ...COUNTRY_OPTIONS.filter((option) => option.value).map((option) => ({
+          value: option.value,
+          label: option.label,
+        })),
+      ],
+    },
+    {
+      key: 'language',
+      label: 'Langue',
+      type: 'select' as const,
+      options: [
+        { value: '', label: 'Toutes les langues' },
+        ...LANGUAGE_OPTIONS.filter((option) => option.code).map((option) => ({
+          value: option.code,
+          label: `${option.flag} ${option.name}`,
+        })),
+      ],
+    },
+    {
+      key: 'createdFrom',
+      label: 'Créés après',
+      type: 'date' as const,
+    },
+    {
+      key: 'createdTo',
+      label: 'Créés avant',
+      type: 'date' as const,
+    },
+  ]
+
+  const filteredPeople = (people.data?.items ?? []).filter((person) => {
+    const matchesSearch =
+      `${person.first_name} ${person.last_name}`.toLowerCase().includes(
+        searchText.toLowerCase()
+      ) ||
+      person.personal_email?.toLowerCase().includes(searchText.toLowerCase()) ||
+      person.role?.toLowerCase().includes(searchText.toLowerCase()) ||
+      ''
+
+    const matchesRole = filtersState.role
+      ? person.role?.toLowerCase().includes(filtersState.role.toLowerCase())
+      : true
+
+    const matchesCountry = filtersState.country
+      ? person.country_code === filtersState.country
+      : true
+
+    const matchesLanguage = filtersState.language
+      ? (person.language || '').toUpperCase() === filtersState.language
+      : true
+
+    const createdAt = person.created_at ? new Date(person.created_at) : null
+    const matchesCreatedFrom = filtersState.createdFrom
+      ? createdAt && createdAt >= new Date(filtersState.createdFrom)
+      : true
+
+    const matchesCreatedTo = filtersState.createdTo
+      ? createdAt && createdAt <= new Date(filtersState.createdTo)
+      : true
+
+    return (
+      matchesSearch &&
+      matchesRole &&
+      matchesCountry &&
+      matchesLanguage &&
+      matchesCreatedFrom &&
+      matchesCreatedTo
+    )
+  })
 
   return (
     <div className="space-y-6">
@@ -94,11 +207,19 @@ export default function PeoplePage() {
       </div>
 
       <Card>
-        <Input
-          placeholder="Rechercher par nom, email, rôle..."
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-        />
+        <div className="space-y-4">
+          <Input
+            placeholder="Rechercher par nom, email, rôle..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+          <AdvancedFilters
+            filters={advancedFilterDefinitions}
+            values={filtersState}
+            onChange={handleFilterChange}
+            onReset={resetFilters}
+          />
+        </div>
       </Card>
 
       {people.error && <Alert type="error" message={people.error} />}
@@ -106,9 +227,9 @@ export default function PeoplePage() {
       <Card>
         <Table
           columns={COLUMNS}
-          data={people.data?.items || []}
+          data={filteredPeople}
           isLoading={people.isLoading}
-          isEmpty={(people.data?.items?.length ?? 0) === 0}
+          isEmpty={filteredPeople.length === 0}
         />
       </Card>
     </div>

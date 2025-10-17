@@ -1,18 +1,18 @@
 // components/shared/SearchableMultiSelect.tsx
 // ============= SEARCHABLE MULTI-SELECT COMPONENT =============
-// Composant de sélection multiple avec recherche
-// Utilisé pour fournisseurs, tags, etc.
+// Supporte la recherche distante et l'infinite scroll
 
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from 'react'
 import { Search, X, ChevronDown } from 'lucide-react'
-
-export interface SelectOption {
-  id: number
-  label: string
-  sublabel?: string
-}
+import type { SelectOption } from './SearchableSelect'
 
 interface SearchableMultiSelectProps {
   options: SelectOption[]
@@ -25,7 +25,12 @@ interface SearchableMultiSelectProps {
   error?: string
   onSearch?: (query: string) => void
   isLoading?: boolean
+  onLoadMore?: () => void
+  hasMore?: boolean
+  isLoadingMore?: boolean
   maxSelection?: number
+  emptyMessage?: string
+  noResultsMessage?: string
 }
 
 export function SearchableMultiSelect({
@@ -39,26 +44,38 @@ export function SearchableMultiSelect({
   error,
   onSearch,
   isLoading = false,
+  onLoadMore,
+  hasMore = false,
+  isLoadingMore = false,
   maxSelection,
+  emptyMessage = 'Aucune option disponible',
+  noResultsMessage = 'Aucun résultat trouvé',
 }: SearchableMultiSelectProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const containerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const listRef = useRef<HTMLDivElement>(null)
+  const hasTriggeredInitialSearchRef = useRef(false)
 
-  // Filtrer les options localement
-  const filteredOptions = options.filter((option) =>
-    option.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    option.sublabel?.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredOptions = useMemo(() => {
+    if (!searchQuery) return options
+    const query = searchQuery.toLowerCase()
+    return options.filter(
+      (option) =>
+        option.label.toLowerCase().includes(query) ||
+        option.sublabel?.toLowerCase().includes(query)
+    )
+  }, [options, searchQuery])
 
-  // Trouver les options sélectionnées
   const selectedOptions = options.filter((opt) => value.includes(opt.id))
 
-  // Gérer le clic en dehors
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false)
         setSearchQuery('')
       }
@@ -66,22 +83,24 @@ export function SearchableMultiSelect({
 
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [isOpen])
 
-  // Gérer la recherche avec debounce
   useEffect(() => {
-    if (onSearch && searchQuery) {
-      const timer = setTimeout(() => {
-        onSearch(searchQuery)
-      }, 300)
-      return () => clearTimeout(timer)
+    if (!onSearch) return
+    const timer = setTimeout(() => {
+      onSearch(searchQuery.trim())
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [onSearch, searchQuery])
+
+  useEffect(() => {
+    if (isOpen && onSearch && !hasTriggeredInitialSearchRef.current) {
+      onSearch('')
+      hasTriggeredInitialSearchRef.current = true
     }
-  }, [searchQuery, onSearch])
+  }, [isOpen, onSearch])
 
   const handleToggle = (optionId: number) => {
     if (value.includes(optionId)) {
@@ -102,14 +121,35 @@ export function SearchableMultiSelect({
     onChange([])
   }
 
-  const handleToggleDropdown = () => {
-    if (!disabled) {
-      setIsOpen(!isOpen)
-      if (!isOpen) {
-        setTimeout(() => inputRef.current?.focus(), 50)
-      }
+  const toggleDropdown = () => {
+    if (disabled) return
+    setIsOpen((prev) => !prev)
+    if (!isOpen) {
+      setTimeout(() => inputRef.current?.focus(), 50)
     }
   }
+
+  const handleScroll = useCallback(() => {
+    if (!hasMore || isLoadingMore || !onLoadMore) {
+      return
+    }
+    const element = listRef.current
+    if (!element) return
+    const threshold = 48
+    if (
+      element.scrollTop + element.clientHeight >=
+      element.scrollHeight - threshold
+    ) {
+      onLoadMore()
+    }
+  }, [hasMore, isLoadingMore, onLoadMore])
+
+  useEffect(() => {
+    const element = listRef.current
+    if (!element || !onLoadMore) return
+    element.addEventListener('scroll', handleScroll)
+    return () => element.removeEventListener('scroll', handleScroll)
+  }, [handleScroll, onLoadMore])
 
   return (
     <div ref={containerRef} className="relative">
@@ -120,9 +160,8 @@ export function SearchableMultiSelect({
         </label>
       )}
 
-      {/* Trigger button with selected items */}
       <div
-        onClick={handleToggleDropdown}
+        onClick={toggleDropdown}
         className={`
           w-full min-h-[44px] px-3 py-2 border rounded-lg bg-white
           cursor-pointer transition-colors
@@ -178,10 +217,8 @@ export function SearchableMultiSelect({
         </div>
       </div>
 
-      {/* Dropdown */}
       {isOpen && (
         <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
-          {/* Search input */}
           <div className="p-2 border-b border-gray-200">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -196,63 +233,70 @@ export function SearchableMultiSelect({
             </div>
           </div>
 
-          {/* Selection info */}
           {maxSelection && (
             <div className="px-4 py-2 bg-gray-50 border-b border-gray-200 text-xs text-gray-600">
               {value.length} / {maxSelection} sélectionné{value.length > 1 ? 's' : ''}
             </div>
           )}
 
-          {/* Options list */}
-          <div className="max-h-64 overflow-y-auto">
-            {isLoading ? (
+          <div ref={listRef} className="max-h-64 overflow-y-auto">
+            {isLoading && filteredOptions.length === 0 ? (
               <div className="p-4 text-center text-sm text-gray-500">
                 Chargement...
               </div>
             ) : filteredOptions.length > 0 ? (
-              filteredOptions.map((option) => {
-                const isSelected = value.includes(option.id)
-                const isDisabled = maxSelection
-                  ? !isSelected && value.length >= maxSelection
-                  : false
+              <>
+                {filteredOptions.map((option) => {
+                  const isSelected = value.includes(option.id)
+                  const isDisabled = maxSelection
+                    ? !isSelected && value.length >= maxSelection
+                    : false
 
-                return (
-                  <label
-                    key={option.id}
-                    className={`
-                      flex items-center gap-3 px-4 py-2 cursor-pointer
-                      transition-colors
-                      ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-50'}
-                      ${isSelected ? 'bg-blue-50' : ''}
-                    `}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={isSelected}
-                      onChange={() => !isDisabled && handleToggle(option.id)}
-                      disabled={isDisabled}
-                      className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <div className="flex-1">
-                      <div className="text-sm text-gray-900">{option.label}</div>
-                      {option.sublabel && (
-                        <div className="text-xs text-gray-500">{option.sublabel}</div>
-                      )}
-                    </div>
-                  </label>
-                )
-              })
+                  return (
+                    <label
+                      key={option.id}
+                      className={`
+                        flex items-center gap-3 px-4 py-2 cursor-pointer
+                        transition-colors
+                        ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-50'}
+                        ${isSelected ? 'bg-blue-50' : ''}
+                      `}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => !isDisabled && handleToggle(option.id)}
+                        disabled={isDisabled}
+                        className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      <div className="flex-1">
+                        <div className="text-sm text-gray-900">{option.label}</div>
+                        {option.sublabel && (
+                          <div className="text-xs text-gray-500">{option.sublabel}</div>
+                        )}
+                      </div>
+                    </label>
+                  )
+                })}
+                {(hasMore || isLoadingMore) && (
+                  <div className="p-3 text-center text-xs text-gray-500 bg-gray-50">
+                    {isLoadingMore
+                      ? 'Chargement...'
+                      : 'Faites défiler pour charger plus'}
+                  </div>
+                )}
+              </>
             ) : (
               <div className="p-4 text-center text-sm text-gray-500">
-                Aucun résultat trouvé
+                {options.length === 0 ? emptyMessage : noResultsMessage}
               </div>
             )}
           </div>
         </div>
       )}
 
-      {/* Error message */}
       {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
     </div>
   )
 }
+

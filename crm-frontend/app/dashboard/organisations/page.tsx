@@ -6,7 +6,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useOrganisations } from '@/hooks/useOrganisations'
-import { Card, Button, Table, Input, Alert, Select } from '@/components/shared'
+import { Card, Button, Table, Input, Alert, AdvancedFilters } from '@/components/shared'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import { OrganisationCategory } from '@/lib/types'
 
@@ -25,13 +25,44 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 export default function OrganisationsPage() {
   const [searchText, setSearchText] = useState('')
-  const [categoryFilter, setCategoryFilter] = useState<string>('')
-  const [activeFilter, setActiveFilter] = useState<string>('')
+  const [filtersState, setFiltersState] = useState({
+    category: '',
+    status: '',
+    country: '',
+    language: '',
+    createdFrom: '',
+    createdTo: '',
+  })
+
+  const handleFilterChange = (key: string, value: unknown) => {
+    if (Array.isArray(value)) {
+      return
+    }
+    setFiltersState((prev) => ({
+      ...prev,
+      [key]: value as string,
+    }))
+  }
+
+  const resetFilters = () =>
+    setFiltersState({
+      category: '',
+      status: '',
+      country: '',
+      language: '',
+      createdFrom: '',
+      createdTo: '',
+    })
 
   const { data, isLoading, error } = useOrganisations({
     limit: 100,
-    category: categoryFilter || undefined,
-    is_active: activeFilter ? activeFilter === 'true' : undefined,
+    category: filtersState.category || undefined,
+    is_active:
+      filtersState.status === ''
+        ? undefined
+        : filtersState.status === 'active',
+    country_code: filtersState.country || undefined,
+    language: filtersState.language || undefined,
   })
 
   const getCountryLabel = (code?: string | null) => {
@@ -46,13 +77,108 @@ export default function OrganisationsPage() {
     return lang ? `${lang.flag} ${lang.name}` : code
   }
 
-  // Filtrer côté client par nom/email
+  const advancedFilterDefinitions = [
+    {
+      key: 'category',
+      label: 'Catégorie',
+      type: 'select' as const,
+      options: [
+        { value: '', label: 'Toutes les catégories' },
+        ...Object.keys(CATEGORY_LABELS).map((value) => ({
+          value,
+          label: CATEGORY_LABELS[value],
+        })),
+      ],
+    },
+    {
+      key: 'status',
+      label: 'Statut',
+      type: 'select' as const,
+      options: [
+        { value: '', label: 'Tous les statuts' },
+        { value: 'active', label: 'Actives' },
+        { value: 'inactive', label: 'Inactives' },
+      ],
+    },
+    {
+      key: 'country',
+      label: 'Pays',
+      type: 'select' as const,
+      options: [
+        { value: '', label: 'Tous les pays' },
+        ...COUNTRY_OPTIONS.filter((option) => option.code).map((option) => ({
+          value: option.code,
+          label: `${option.flag} ${option.name}`,
+        })),
+      ],
+    },
+    {
+      key: 'language',
+      label: 'Langue',
+      type: 'select' as const,
+      options: [
+        { value: '', label: 'Toutes les langues' },
+        ...LANGUAGE_OPTIONS.filter((option) => option.code).map((option) => ({
+          value: option.code,
+          label: `${option.flag} ${option.name}`,
+        })),
+      ],
+    },
+    {
+      key: 'createdFrom',
+      label: 'Créées après',
+      type: 'date' as const,
+    },
+    {
+      key: 'createdTo',
+      label: 'Créées avant',
+      type: 'date' as const,
+    },
+  ]
+
   const filteredData = data?.items.filter((org) => {
     const search = searchText.toLowerCase()
-    return (
+    const matchesSearch =
       org.name.toLowerCase().includes(search) ||
       org.email?.toLowerCase().includes(search) ||
       ''
+
+    const matchesCategory = filtersState.category
+      ? org.category === filtersState.category
+      : true
+
+    const matchesStatus =
+      filtersState.status === ''
+        ? true
+        : filtersState.status === 'active'
+          ? org.is_active
+          : !org.is_active
+
+    const matchesCountry = filtersState.country
+      ? org.country_code === filtersState.country
+      : true
+
+    const matchesLanguage = filtersState.language
+      ? (org.language || '').toUpperCase() === filtersState.language
+      : true
+
+    const createdAt = org.created_at ? new Date(org.created_at) : null
+    const matchesCreatedFrom = filtersState.createdFrom
+      ? createdAt && createdAt >= new Date(filtersState.createdFrom)
+      : true
+
+    const matchesCreatedTo = filtersState.createdTo
+      ? createdAt && createdAt <= new Date(filtersState.createdTo)
+      : true
+
+    return (
+      matchesSearch &&
+      matchesCategory &&
+      matchesStatus &&
+      matchesCountry &&
+      matchesLanguage &&
+      matchesCreatedFrom &&
+      matchesCreatedTo
     )
   })
 
@@ -122,27 +248,18 @@ export default function OrganisationsPage() {
       </div>
 
       <Card>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="space-y-4">
           <Input
             placeholder="Rechercher par nom, email..."
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
           />
-
-          <Select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
-            <option value="">Toutes les catégories</option>
-            <option value="DISTRIBUTEUR">Distributeur</option>
-            <option value="EMETTEUR">Émetteur</option>
-            <option value="FOURNISSEUR_SERVICE">Fournisseur de service</option>
-            <option value="PARTENAIRE">Partenaire</option>
-            <option value="AUTRE">Autre</option>
-          </Select>
-
-          <Select value={activeFilter} onChange={(e) => setActiveFilter(e.target.value)}>
-            <option value="">Tous les statuts</option>
-            <option value="true">Actives</option>
-            <option value="false">Inactives</option>
-          </Select>
+          <AdvancedFilters
+            filters={advancedFilterDefinitions}
+            values={filtersState}
+            onChange={handleFilterChange}
+            onReset={resetFilters}
+          />
         </div>
       </Card>
 

@@ -4,7 +4,7 @@ from sqlalchemy import func, or_, and_
 from datetime import date, timedelta, datetime
 
 from models.task import Task, TaskStatus, TaskPriority, TaskCategory
-from models.interaction import InteractionType
+from models.investor import InteractionType
 from schemas.task import TaskCreate, TaskUpdate, TaskFilterParams
 from schemas.interaction import InteractionCreate
 from services.base import BaseService

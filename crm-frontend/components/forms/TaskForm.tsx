@@ -1,12 +1,18 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useTasks } from '@/hooks/useTasks'
-import { useOrganisations } from '@/hooks/useOrganisations'
-import { usePeople } from '@/hooks/usePeople'
-import type { TaskInput, TaskPriority, TaskCategory } from '@/lib/types'
+import { usePaginatedOptions, type PaginatedFetcherParams } from '@/hooks/usePaginatedOptions'
+import { apiClient } from '@/lib/api'
+import type {
+  TaskInput,
+  TaskPriority,
+  TaskCategory,
+  Organisation,
+  Person,
+} from '@/lib/types'
 import { useToast } from '@/components/ui/Toast'
-import { SearchableSelect, type SelectOption } from '@/components/shared'
+import { SearchableSelect } from '@/components/shared'
 
 interface TaskFormProps {
   isOpen: boolean
@@ -15,6 +21,7 @@ interface TaskFormProps {
     investor_id?: number
     fournisseur_id?: number
     person_id?: number
+    organisation_id?: number
     title?: string
     description?: string
   }
@@ -41,9 +48,73 @@ const CATEGORIES: { value: TaskCategory; label: string }[] = [
 
 export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps) {
   const { createTask, isCreating } = useTasks()
-  const { data: organisationsData } = useOrganisations()
-  const { people: peopleState } = usePeople()
   const { showToast } = useToast()
+
+  const fetchOrganisationOptions = useCallback(
+    ({ query, skip, limit }: PaginatedFetcherParams) => {
+      if (query) {
+        return apiClient.searchOrganisations(query, skip, limit)
+      }
+      return apiClient.getOrganisations({
+        skip,
+        limit,
+        is_active: true,
+      })
+    },
+    []
+  )
+
+  const mapOrganisationToOption = useCallback(
+    (organisation: Organisation) => ({
+      id: organisation.id,
+      label: organisation.name,
+      sublabel: organisation.category || undefined,
+    }),
+    []
+  )
+
+  const {
+    options: organisationOptions,
+    isLoading: isLoadingOrganisations,
+    isLoadingMore: isLoadingMoreOrganisations,
+    hasMore: hasMoreOrganisations,
+    search: searchOrganisations,
+    loadMore: loadMoreOrganisations,
+    upsertOption: upsertOrganisationOption,
+  } = usePaginatedOptions<Organisation>({
+    fetcher: fetchOrganisationOptions,
+    mapItem: mapOrganisationToOption,
+    limit: 25,
+  })
+
+  const fetchPeopleOptions = useCallback(
+    ({ query, skip, limit }: PaginatedFetcherParams) =>
+      apiClient.getPeople(skip, limit, query ? { q: query } : undefined),
+    []
+  )
+
+  const mapPersonToOption = useCallback(
+    (person: Person) => ({
+      id: person.id,
+      label: `${person.first_name} ${person.last_name}`,
+      sublabel: person.role || person.personal_email || undefined,
+    }),
+    []
+  )
+
+  const {
+    options: peopleOptions,
+    isLoading: isLoadingPeople,
+    isLoadingMore: isLoadingMorePeople,
+    hasMore: hasMorePeople,
+    search: searchPeople,
+    loadMore: loadMorePeople,
+    upsertOption: upsertPersonOption,
+  } = usePaginatedOptions<Person>({
+    fetcher: fetchPeopleOptions,
+    mapItem: mapPersonToOption,
+    limit: 25,
+  })
 
   const [formData, setFormData] = useState<TaskInput>({
     title: initialData?.title || '',
@@ -53,24 +124,59 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
     category: 'relance',
     investor_id: initialData?.investor_id,
     fournisseur_id: initialData?.fournisseur_id,
+     organisation_id: initialData?.organisation_id,
     person_id: initialData?.person_id,
   })
 
   const [error, setError] = useState<string | null>(null)
 
-  // Convertir les organisations en options
-  const organisationOptions: SelectOption[] = organisationsData?.items?.map((org) => ({
-    id: org.id,
-    label: org.name,
-    sublabel: org.category || undefined,
-  })) || []
+  useEffect(() => {
+    if (!initialData?.organisation_id) return
+    const organisationId = initialData.organisation_id
+    let isMounted = true
 
-  // Convertir les personnes en options
-  const peopleOptions: SelectOption[] = peopleState?.data?.items?.map((person) => ({
-    id: person.id,
-    label: `${person.first_name} ${person.last_name}`,
-    sublabel: person.role || person.personal_email || undefined,
-  })) || []
+    void (async () => {
+      try {
+        const organisation = await apiClient.getOrganisation(organisationId)
+        if (!isMounted) return
+        upsertOrganisationOption({
+          id: organisation.id,
+          label: organisation.name,
+          sublabel: organisation.category || undefined,
+        })
+      } catch (error) {
+        console.error('Impossible de pré-charger l’organisation sélectionnée', error)
+      }
+    })()
+
+    return () => {
+      isMounted = false
+    }
+  }, [initialData?.organisation_id, upsertOrganisationOption])
+
+  useEffect(() => {
+    if (!initialData?.person_id) return
+    const personId = initialData.person_id
+    let isMounted = true
+
+    void (async () => {
+      try {
+        const person = await apiClient.getPerson(personId)
+        if (!isMounted) return
+        upsertPersonOption({
+          id: person.id,
+          label: `${person.first_name} ${person.last_name}`,
+          sublabel: person.role || person.personal_email || undefined,
+        })
+      } catch (error) {
+        console.error('Impossible de pré-charger la personne sélectionnée', error)
+      }
+    })()
+
+    return () => {
+      isMounted = false
+    }
+  }, [initialData?.person_id, upsertPersonOption])
 
   useEffect(() => {
     if (initialData) {
@@ -80,6 +186,7 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
         description: initialData.description || prev.description,
         investor_id: initialData.investor_id,
         fournisseur_id: initialData.fournisseur_id,
+        organisation_id: initialData.organisation_id,
         person_id: initialData.person_id,
       }))
     }
@@ -120,6 +227,7 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
         due_date: new Date().toISOString().split('T')[0],
         priority: 'moyenne',
         category: 'relance',
+        organisation_id: undefined,
       })
       showToast({
         type: 'success',
@@ -314,6 +422,11 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
                   value={formData.organisation_id || null}
                   onChange={(value) => setFormData({ ...formData, organisation_id: value || undefined })}
                   placeholder="Rechercher une organisation..."
+                  onSearch={searchOrganisations}
+                  onLoadMore={loadMoreOrganisations}
+                  hasMore={hasMoreOrganisations}
+                  isLoading={isLoadingOrganisations}
+                  isLoadingMore={isLoadingMoreOrganisations}
                 />
               </div>
 
@@ -325,6 +438,11 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
                   value={formData.person_id || null}
                   onChange={(value) => setFormData({ ...formData, person_id: value || undefined })}
                   placeholder="Rechercher une personne..."
+                  onSearch={searchPeople}
+                  onLoadMore={loadMorePeople}
+                  hasMore={hasMorePeople}
+                  isLoading={isLoadingPeople}
+                  isLoadingMore={isLoadingMorePeople}
                 />
               </div>
             </div>

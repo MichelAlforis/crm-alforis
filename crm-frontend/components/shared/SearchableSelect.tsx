@@ -1,11 +1,16 @@
 // components/shared/SearchableSelect.tsx
 // ============= SEARCHABLE SELECT COMPONENT =============
-// Composant de sélection avec recherche pour améliorer l'UX
-// Utilisé pour organisations, personnes, etc.
+// Composant de sélection avec recherche + infinite scroll
 
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from 'react'
 import { Search, X, ChevronDown } from 'lucide-react'
 
 export interface SelectOption {
@@ -25,6 +30,11 @@ interface SearchableSelectProps {
   error?: string
   onSearch?: (query: string) => void
   isLoading?: boolean
+  onLoadMore?: () => void
+  hasMore?: boolean
+  isLoadingMore?: boolean
+  emptyMessage?: string
+  noResultsMessage?: string
 }
 
 export function SearchableSelect({
@@ -38,26 +48,39 @@ export function SearchableSelect({
   error,
   onSearch,
   isLoading = false,
+  onLoadMore,
+  hasMore = false,
+  isLoadingMore = false,
+  emptyMessage = 'Aucune option disponible',
+  noResultsMessage = 'Aucun résultat trouvé',
 }: SearchableSelectProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [highlightedIndex, setHighlightedIndex] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const listRef = useRef<HTMLDivElement>(null)
+  const hasTriggeredInitialSearchRef = useRef(false)
 
-  // Filtrer les options localement
-  const filteredOptions = options.filter((option) =>
-    option.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    option.sublabel?.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredOptions = useMemo(() => {
+    if (!searchQuery) return options
+    const query = searchQuery.toLowerCase()
+    return options.filter(
+      (option) =>
+        option.label.toLowerCase().includes(query) ||
+        option.sublabel?.toLowerCase().includes(query)
+    )
+  }, [options, searchQuery])
 
-  // Trouver l'option sélectionnée
   const selectedOption = value ? options.find((opt) => opt.id === value) : null
 
-  // Gérer le clic en dehors
+  // Fermer en cliquant à l'extérieur
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false)
         setSearchQuery('')
       }
@@ -65,24 +88,38 @@ export function SearchableSelect({
 
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [isOpen])
 
-  // Gérer la recherche avec debounce
+  // Déclenche la recherche (débouce)
   useEffect(() => {
-    if (onSearch && searchQuery) {
-      const timer = setTimeout(() => {
-        onSearch(searchQuery)
-      }, 300)
-      return () => clearTimeout(timer)
-    }
-  }, [searchQuery, onSearch])
+    if (!onSearch) return
+    const timer = setTimeout(() => {
+      onSearch(searchQuery.trim())
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [onSearch, searchQuery])
 
-  // Gérer la navigation au clavier
+  // Charger les options au premier affichage
+  useEffect(() => {
+    if (isOpen && onSearch && !hasTriggeredInitialSearchRef.current) {
+      onSearch('')
+      hasTriggeredInitialSearchRef.current = true
+    }
+  }, [isOpen, onSearch])
+
+  useEffect(() => {
+    if (filteredOptions.length === 0) {
+      setHighlightedIndex(0)
+      return
+    }
+    if (highlightedIndex >= filteredOptions.length) {
+      setHighlightedIndex(filteredOptions.length - 1)
+    }
+  }, [filteredOptions.length, highlightedIndex])
+
+  // Navigation clavier
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!isOpen) {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -130,13 +167,35 @@ export function SearchableSelect({
   }
 
   const handleToggle = () => {
-    if (!disabled) {
-      setIsOpen(!isOpen)
-      if (!isOpen) {
-        setTimeout(() => inputRef.current?.focus(), 50)
-      }
+    if (disabled) return
+    setIsOpen((prev) => !prev)
+    if (!isOpen) {
+      setTimeout(() => inputRef.current?.focus(), 50)
     }
   }
+
+  const handleScroll = useCallback(() => {
+    if (!hasMore || isLoadingMore || !onLoadMore) {
+      return
+    }
+    const element = listRef.current
+    if (!element) return
+
+    const threshold = 48 // px avant la fin
+    if (
+      element.scrollTop + element.clientHeight >=
+      element.scrollHeight - threshold
+    ) {
+      onLoadMore()
+    }
+  }, [hasMore, isLoadingMore, onLoadMore])
+
+  useEffect(() => {
+    const element = listRef.current
+    if (!element || !onLoadMore) return
+    element.addEventListener('scroll', handleScroll)
+    return () => element.removeEventListener('scroll', handleScroll)
+  }, [handleScroll, onLoadMore])
 
   return (
     <div ref={containerRef} className="relative">
@@ -147,7 +206,6 @@ export function SearchableSelect({
         </label>
       )}
 
-      {/* Trigger button */}
       <button
         type="button"
         onClick={handleToggle}
@@ -185,10 +243,8 @@ export function SearchableSelect({
         </div>
       </button>
 
-      {/* Dropdown */}
       {isOpen && (
         <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
-          {/* Search input */}
           <div className="p-2 border-b border-gray-200">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -204,41 +260,48 @@ export function SearchableSelect({
             </div>
           </div>
 
-          {/* Options list */}
-          <div className="max-h-64 overflow-y-auto">
-            {isLoading ? (
+          <div ref={listRef} className="max-h-64 overflow-y-auto">
+            {isLoading && filteredOptions.length === 0 ? (
               <div className="p-4 text-center text-sm text-gray-500">
                 Chargement...
               </div>
             ) : filteredOptions.length > 0 ? (
-              filteredOptions.map((option, index) => (
-                <button
-                  key={option.id}
-                  type="button"
-                  onClick={() => handleSelect(option.id)}
-                  className={`
-                    w-full px-4 py-2 text-left hover:bg-blue-50 transition-colors
-                    ${index === highlightedIndex ? 'bg-blue-50' : ''}
-                    ${option.id === value ? 'bg-blue-100 font-medium' : ''}
-                  `}
-                  onMouseEnter={() => setHighlightedIndex(index)}
-                >
-                  <div className="text-sm text-gray-900">{option.label}</div>
-                  {option.sublabel && (
-                    <div className="text-xs text-gray-500">{option.sublabel}</div>
-                  )}
-                </button>
-              ))
+              <>
+                {filteredOptions.map((option, index) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => handleSelect(option.id)}
+                    className={`
+                      w-full px-4 py-2 text-left hover:bg-blue-50 transition-colors
+                      ${index === highlightedIndex ? 'bg-blue-50' : ''}
+                      ${option.id === value ? 'bg-blue-100 font-medium' : ''}
+                    `}
+                    onMouseEnter={() => setHighlightedIndex(index)}
+                  >
+                    <div className="text-sm text-gray-900">{option.label}</div>
+                    {option.sublabel && (
+                      <div className="text-xs text-gray-500">{option.sublabel}</div>
+                    )}
+                  </button>
+                ))}
+                {(hasMore || isLoadingMore) && (
+                  <div className="p-3 text-center text-xs text-gray-500 bg-gray-50">
+                    {isLoadingMore
+                      ? 'Chargement...'
+                      : 'Faites défiler pour charger plus'}
+                  </div>
+                )}
+              </>
             ) : (
               <div className="p-4 text-center text-sm text-gray-500">
-                Aucun résultat trouvé
+                {options.length === 0 ? emptyMessage : noResultsMessage}
               </div>
             )}
           </div>
         </div>
       )}
 
-      {/* Error message */}
       {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
     </div>
   )

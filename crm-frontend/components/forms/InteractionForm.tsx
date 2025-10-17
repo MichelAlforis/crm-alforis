@@ -3,7 +3,7 @@
 
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import {
   Input,
@@ -11,10 +11,15 @@ import {
   Button,
   Alert,
   SearchableMultiSelect,
-  type SelectOption
 } from '@/components/shared'
-import { Interaction, InteractionCreate, InteractionType } from '@/lib/types'
-import { useFournisseurs } from '@/hooks/useFournisseurs'
+import {
+  Interaction,
+  InteractionCreate,
+  InteractionType,
+  Fournisseur,
+} from '@/lib/types'
+import { usePaginatedOptions, type PaginatedFetcherParams } from '@/hooks/usePaginatedOptions'
+import { apiClient } from '@/lib/api'
 import { useToast } from '@/components/ui/Toast'
 
 interface InteractionFormProps {
@@ -38,11 +43,39 @@ export function InteractionForm({
   isLoading,
   error,
 }: InteractionFormProps) {
-  const { fournisseurs, fetchFournisseurs } = useFournisseurs()
   const { showToast } = useToast()
   const [selectedFournisseurs, setSelectedFournisseurs] = useState<number[]>(
     initialData?.fournisseurs || []
   )
+
+  const fetchFournisseurOptions = useCallback(
+    ({ query, skip, limit }: PaginatedFetcherParams) =>
+      apiClient.getFournisseurs(skip, limit, query),
+    []
+  )
+
+  const mapFournisseurToOption = useCallback(
+    (fss: Fournisseur) => ({
+      id: fss.id,
+      label: fss.name,
+      sublabel: fss.activity || fss.company || undefined,
+    }),
+    []
+  )
+
+  const {
+    options: fournisseurOptions,
+    isLoading: isLoadingFournisseurs,
+    isLoadingMore: isLoadingMoreFournisseurs,
+    hasMore: hasMoreFournisseurs,
+    search: searchFournisseurs,
+    loadMore: loadMoreFournisseurs,
+    upsertOption: upsertFournisseurOption,
+  } = usePaginatedOptions<Fournisseur>({
+    fetcher: fetchFournisseurOptions,
+    mapItem: mapFournisseurToOption,
+    limit: 25,
+  })
 
   const {
     register,
@@ -56,16 +89,42 @@ export function InteractionForm({
     mode: 'onBlur',
   })
 
-  useEffect(() => {
-    fetchFournisseurs(0, 1000)
-  }, [fetchFournisseurs])
+  const preloadKeyRef = useRef<string | null>(null)
 
-  // Convertir les fournisseurs en options pour le SearchableMultiSelect
-  const fournisseurOptions: SelectOption[] = fournisseurs.data?.items?.map((fss) => ({
-    id: fss.id,
-    label: fss.name,
-    sublabel: fss.activity || fss.company || undefined,
-  })) || []
+  useEffect(() => {
+    const ids = initialData?.fournisseurs ?? []
+    if (ids.length === 0) return
+
+    const key = ids.slice().sort((a, b) => a - b).join(',')
+    if (preloadKeyRef.current === key) {
+      return
+    }
+    preloadKeyRef.current = key
+
+    const existingIds = new Set(fournisseurOptions.map((option) => option.id))
+    const missingIds = ids.filter((id) => !existingIds.has(id))
+
+    if (missingIds.length === 0) {
+      return
+    }
+
+    void (async () => {
+      try {
+        const responses = await Promise.all(
+          missingIds.map((id) => apiClient.getFournisseur(id))
+        )
+        responses.forEach(({ fournisseur }) =>
+          upsertFournisseurOption({
+            id: fournisseur.id,
+            label: fournisseur.name,
+            sublabel: fournisseur.activity || fournisseur.company || undefined,
+          })
+        )
+      } catch (err) {
+        console.error('Impossible de pré-charger les fournisseurs sélectionnés', err)
+      }
+    })()
+  }, [fournisseurOptions, initialData?.fournisseurs, upsertFournisseurOption])
 
   const handleFormSubmit = async (data: InteractionCreate) => {
     if (selectedFournisseurs.length === 0) {
@@ -112,7 +171,11 @@ export function InteractionForm({
         placeholder="Rechercher et sélectionner des fournisseurs..."
         required
         error={selectedFournisseurs.length === 0 ? 'Sélectionnez au moins un fournisseur' : undefined}
-        isLoading={fournisseurs.isLoading}
+        isLoading={isLoadingFournisseurs}
+        onSearch={searchFournisseurs}
+        onLoadMore={loadMoreFournisseurs}
+        hasMore={hasMoreFournisseurs}
+        isLoadingMore={isLoadingMoreFournisseurs}
       />
 
       <Select
