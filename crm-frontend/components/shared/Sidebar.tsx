@@ -22,6 +22,8 @@ import {
   FileUp,
   Bell,
   BarChart3,
+  Briefcase,
+  Package,
 } from 'lucide-react'
 import { DEFAULT_TODAY_TASKS_COUNT } from '@/lib/dashboardMetrics'
 
@@ -57,10 +59,34 @@ const MENU_ITEMS = [
     gradient: 'from-teal-500 to-emerald-500',
   },
   {
+    label: 'Organisations',
+    href: '/dashboard/organisations',
+    icon: Building2,
+    description: 'Distributeurs, émetteurs...',
+    badge: null,
+    gradient: 'from-cyan-500 to-blue-500',
+  },
+  {
+    label: 'Mandats',
+    href: '/dashboard/mandats',
+    icon: Briefcase,
+    description: 'Mandats de distribution',
+    badge: null,
+    gradient: 'from-violet-500 to-purple-500',
+  },
+  {
+    label: 'Produits',
+    href: '/dashboard/produits',
+    icon: Package,
+    description: 'OPCVM, ETF, SCPI...',
+    badge: null,
+    gradient: 'from-amber-500 to-orange-500',
+  },
+  {
     label: 'Fournisseurs',
     href: '/dashboard/fournisseurs',
     icon: Building2,
-    description: 'Partenaires FSS',
+    description: 'Partenaires FSS (legacy)',
     badge: '12',
     gradient: 'from-orange-500 to-red-500',
   },

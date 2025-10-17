@@ -6,11 +6,11 @@ import clsx from 'clsx';
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string
   error?: string
-  options: { value: string; label: string }[]
+  options?: { value: string; label: string }[]
 }
 
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
-  ({ label, error, options, ...props }, ref) => {
+  ({ label, error, options, children, ...props }, ref) => {
     return (
       <div className="mb-4">
         {label && (
@@ -27,11 +27,13 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             'focus:outline-none focus:ring-2 focus:ring-bleu'
           )}
         >
-          {options.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
+          {options
+            ? options.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))
+            : children}
         </select>
         {error && <p className="text-xs text-rouge mt-1">{error}</p>}
       </div>

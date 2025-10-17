@@ -1,0 +1,243 @@
+// app/dashboard/produits/[id]/page.tsx
+// ============= PRODUIT DETAIL PAGE =============
+
+'use client'
+
+import React, { useState } from 'react'
+import Link from 'next/link'
+import { useParams, useRouter } from 'next/navigation'
+import { useProduit, useUpdateProduit, useDeleteProduit } from '@/hooks/useProduits'
+import { Card, Button, Table, Alert, Modal } from '@/components/shared'
+import { ProduitForm } from '@/components/forms'
+import { SkeletonCard } from '@/components/ui/Skeleton'
+import type { ProduitUpdate } from '@/lib/types'
+
+const TYPE_LABELS: Record<string, string> = {
+  OPCVM: 'OPCVM (Fonds)',
+  ETF: 'ETF (Trackers)',
+  SCPI: 'SCPI (Immobilier)',
+  ASSURANCE_VIE: 'Assurance Vie',
+  PER: 'PER',
+  AUTRE: 'Autre',
+}
+
+const STATUS_LABELS: Record<string, string> = {
+  ACTIF: 'Actif',
+  INACTIF: 'Inactif',
+  ARCHIVE: 'Archivé',
+}
+
+const MANDAT_STATUS_LABELS: Record<string, string> = {
+  BROUILLON: 'Brouillon',
+  EN_NEGOCIATION: 'En négociation',
+  SIGNE: 'Signé',
+  ACTIF: 'Actif',
+  EXPIRE: 'Expiré',
+  RESILIE: 'Résilié',
+}
+
+export default function ProduitDetailPage() {
+  const params = useParams<{ id?: string }>()
+  const router = useRouter()
+  const produitId = React.useMemo(() => {
+    const rawId = params?.id
+    const parsed = rawId ? Number.parseInt(rawId, 10) : NaN
+    return Number.isNaN(parsed) ? null : parsed
+  }, [params])
+
+  const { data: produit, isLoading, error } = useProduit(produitId ?? 0)
+  const updateMutation = useUpdateProduit()
+  const deleteMutation = useDeleteProduit()
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+
+  const handleUpdate = async (data: ProduitUpdate) => {
+    if (!produitId) return
+    await updateMutation.mutateAsync({ id: produitId, data })
+    setIsEditModalOpen(false)
+  }
+
+  const handleDelete = async () => {
+    if (!produitId) return
+    if (
+      confirm(
+        "Êtes-vous sûr de vouloir supprimer ce produit ? Cette action est irréversible et supprimera toutes les associations avec les mandats."
+      )
+    ) {
+      await deleteMutation.mutateAsync(produitId)
+      router.push('/dashboard/produits')
+    }
+  }
+
+  if (produitId === null) {
+    return <div className="text-center p-6">Produit introuvable</div>
+  }
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <SkeletonCard />
+        <SkeletonCard />
+      </div>
+    )
+  }
+
+  if (error || !produit) {
+    return (
+      <div className="text-center p-6">
+        <Alert type="error" message="Produit non trouvé" />
+      </div>
+    )
+  }
+
+  const mandatColumns = [
+    {
+      header: 'N° Mandat',
+      accessor: 'numero_mandat',
+      render: (value: string | null) => value || '-',
+    },
+    {
+      header: 'Organisation',
+      accessor: 'organisation',
+      render: (org: any) => (
+        <Link
+          href={`/dashboard/organisations/${org.id}`}
+          className="text-bleu hover:underline"
+        >
+          {org.name}
+        </Link>
+      ),
+    },
+    {
+      header: 'Statut',
+      accessor: 'status',
+      render: (value: string) => (
+        <span
+          className={`px-2 py-1 text-xs rounded ${
+            value === 'ACTIF' || value === 'SIGNE'
+              ? 'bg-green-100 text-green-800'
+              : value === 'EXPIRE' || value === 'RESILIE'
+                ? 'bg-red-100 text-red-800'
+                : 'bg-yellow-100 text-yellow-800'
+          }`}
+        >
+          {MANDAT_STATUS_LABELS[value] || value}
+        </span>
+      ),
+    },
+    {
+      header: 'Date début',
+      accessor: 'date_debut',
+      render: (value: string) => new Date(value).toLocaleDateString('fr-FR'),
+    },
+    {
+      header: 'Actions',
+      accessor: 'id',
+      render: (id: number) => (
+        <Link href={`/dashboard/mandats/${id}`} className="text-bleu hover:underline text-sm">
+          Voir
+        </Link>
+      ),
+    },
+  ]
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-ardoise">{produit.name}</h1>
+          <p className="text-gray-600 mt-1">
+            {TYPE_LABELS[produit.type]} •{' '}
+            <span
+              className={
+                produit.status === 'ACTIF'
+                  ? 'text-green-600'
+                  : produit.status === 'ARCHIVE'
+                    ? 'text-gray-500'
+                    : 'text-yellow-600'
+              }
+            >
+              {STATUS_LABELS[produit.status]}
+            </span>
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="secondary" onClick={() => setIsEditModalOpen(true)}>
+            Modifier
+          </Button>
+          <Button variant="danger" onClick={handleDelete} disabled={deleteMutation.isPending}>
+            {deleteMutation.isPending ? 'Suppression...' : 'Supprimer'}
+          </Button>
+        </div>
+      </div>
+
+      {/* Informations générales */}
+      <Card>
+        <h2 className="text-xl font-semibold mb-4">Informations générales</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p className="text-sm text-gray-600">Type de produit</p>
+            <p className="font-medium">{TYPE_LABELS[produit.type]}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">Code ISIN</p>
+            <p className="font-medium font-mono">{produit.isin_code || '-'}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">Statut</p>
+            <p className="font-medium">{STATUS_LABELS[produit.status]}</p>
+          </div>
+          <div className="col-span-2">
+            <p className="text-sm text-gray-600">Description</p>
+            <p className="font-medium">{produit.description || '-'}</p>
+          </div>
+        </div>
+      </Card>
+
+      {/* Mandats associés */}
+      <Card>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold">
+            Mandats associés ({produit.mandats?.length || 0})
+          </h2>
+        </div>
+
+        {produit.mandats && produit.mandats.length > 0 ? (
+          <Table
+            columns={mandatColumns}
+            data={produit.mandats}
+            isLoading={false}
+            isEmpty={false}
+          />
+        ) : (
+          <div className="text-center py-8 text-gray-500">
+            Aucun mandat associé à ce produit.
+            <p className="mt-2 text-sm">
+              Associez ce produit à un mandat depuis la{' '}
+              <Link href="/dashboard/mandats" className="text-bleu hover:underline">
+                page des mandats
+              </Link>
+              .
+            </p>
+          </div>
+        )}
+      </Card>
+
+      {/* Modal d'édition */}
+      <Modal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        title="Modifier le produit"
+      >
+        <ProduitForm
+          initialData={produit}
+          onSubmit={handleUpdate}
+          isLoading={updateMutation.isPending}
+          error={updateMutation.error?.message}
+          submitLabel="Enregistrer"
+        />
+      </Modal>
+    </div>
+  )
+}

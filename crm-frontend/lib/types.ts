@@ -430,37 +430,55 @@ export interface TaskFilters {
 
 // ============= ORGANISATION (Nouveau modèle remplaçant Fournisseur) =============
 
-export type OrganisationCategory = "Institution" | "Wholesale" | "SDG" | "CGPI" | "Autres"
+export type OrganisationCategory =
+  | "DISTRIBUTEUR"
+  | "EMETTEUR"
+  | "FOURNISSEUR_SERVICE"
+  | "PARTENAIRE"
+  | "AUTRE"
+  | "Institution" // Legacy
+  | "Wholesale" // Legacy
+  | "SDG" // Legacy
+  | "CGPI" // Legacy
+  | "Autres" // Legacy
 
 export interface Organisation {
   id: number
   name: string
   category: OrganisationCategory
-  aum?: number // Assets Under Management
-  aum_date?: string // Format: YYYY-MM-DD
-  strategies?: string[] // Liste de stratégies d'investissement
+  email?: string
+  main_phone?: string
   website?: string
+  address?: string
   country_code?: string
-  domicile?: string
   language: string // Langue principale (FR, EN, ES, etc.)
-  notes?: string
   is_active: boolean
   created_at: string
   updated_at: string
+  // Legacy fields
+  aum?: number // Assets Under Management
+  aum_date?: string // Format: YYYY-MM-DD
+  strategies?: string[] // Liste de stratégies d'investissement
+  domicile?: string
+  notes?: string
 }
 
 export interface OrganisationCreate {
   name: string
   category: OrganisationCategory
+  email?: string
+  main_phone?: string
+  website?: string
+  address?: string
+  country_code?: string
+  language?: string // Défaut: FR
+  is_active?: boolean
+  // Legacy fields
   aum?: number
   aum_date?: string
   strategies?: string[]
-  website?: string
-  country_code?: string
   domicile?: string
-  language?: string // Défaut: FR
   notes?: string
-  is_active?: boolean
 }
 
 export interface OrganisationUpdate extends Partial<OrganisationCreate> {}
@@ -484,35 +502,52 @@ export interface OrganisationDetail extends Organisation {
 
 // ============= MANDAT DE DISTRIBUTION =============
 
-export type MandatStatus = "proposé" | "signé" | "actif" | "terminé"
+export type MandatStatus =
+  | "BROUILLON"
+  | "EN_NEGOCIATION"
+  | "SIGNE"
+  | "ACTIF"
+  | "EXPIRE"
+  | "RESILIE"
+  | "proposé" // Legacy
+  | "signé" // Legacy
+  | "actif" // Legacy
+  | "terminé" // Legacy
 
 export interface MandatDistribution {
   id: number
   organisation_id: number
+  numero_mandat?: string
   status: MandatStatus
-  date_signature?: string // Format: YYYY-MM-DD
-  date_debut?: string // Format: YYYY-MM-DD
+  date_debut: string // Format: YYYY-MM-DD
   date_fin?: string // Format: YYYY-MM-DD
-  notes?: string
-  is_actif: boolean // True si signé ou actif
   created_at: string
   updated_at: string
+  organisation: Organisation // Relation populated
+  // Legacy fields
+  date_signature?: string
+  notes?: string
+  is_actif?: boolean
 }
 
 export interface MandatDistributionCreate {
   organisation_id: number
-  status?: MandatStatus // Défaut: proposé
-  date_signature?: string
-  date_debut?: string
+  numero_mandat?: string
+  status?: MandatStatus // Défaut: BROUILLON
+  date_debut: string
   date_fin?: string
+  // Legacy fields
+  date_signature?: string
   notes?: string
 }
 
 export interface MandatDistributionUpdate {
+  numero_mandat?: string
   status?: MandatStatus
-  date_signature?: string
   date_debut?: string
   date_fin?: string
+  // Legacy fields
+  date_signature?: string
   notes?: string
 }
 
@@ -523,32 +558,55 @@ export interface MandatDistributionDetail extends MandatDistribution {
 
 // ============= PRODUIT =============
 
-export type ProduitType = "OPCVM" | "FCP" | "SICAV" | "ETF" | "Fonds Alternatif" | "Autre"
-export type ProduitStatus = "actif" | "inactif" | "en_attente"
+export type ProduitType =
+  | "OPCVM"
+  | "ETF"
+  | "SCPI"
+  | "ASSURANCE_VIE"
+  | "PER"
+  | "AUTRE"
+  | "FCP" // Legacy
+  | "SICAV" // Legacy
+  | "Fonds Alternatif" // Legacy
+  | "Autre" // Legacy
+
+export type ProduitStatus =
+  | "ACTIF"
+  | "INACTIF"
+  | "ARCHIVE"
+  | "actif" // Legacy
+  | "inactif" // Legacy
+  | "en_attente" // Legacy
 
 export interface Produit {
   id: number
   name: string
-  isin?: string // Code ISIN unique
+  isin_code?: string // Code ISIN unique
   type: ProduitType
   status: ProduitStatus
-  notes?: string
+  description?: string
   created_at: string
   updated_at: string
+  // Legacy fields
+  isin?: string
+  notes?: string
 }
 
 export interface ProduitCreate {
   name: string
-  isin?: string
+  isin_code?: string
   type: ProduitType
-  status?: ProduitStatus // Défaut: en_attente
+  status?: ProduitStatus // Défaut: ACTIF
+  description?: string
+  // Legacy fields
+  isin?: string
   notes?: string
 }
 
 export interface ProduitUpdate extends Partial<ProduitCreate> {}
 
 export interface ProduitDetail extends Produit {
-  mandats: MandatProduit[]
+  mandats: MandatDistribution[]
 }
 
 // ============= MANDAT-PRODUIT (Association) =============
