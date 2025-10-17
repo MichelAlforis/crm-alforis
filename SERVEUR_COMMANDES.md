@@ -17,11 +17,9 @@ D'après vos commandes, le serveur a :
 ssh -i ~/.ssh/id_rsa_hetzner root@159.69.108.234
 cd /srv/crm-alforis
 git pull origin main
-docker compose -f docker-compose.prod.yml up -d --build
+docker compose up -d --build
 
 ```
-
-> ℹ️ Les scripts (`check-production-config.sh`, `deploy-production.sh`) utilisent `docker-compose.prod.yml` par défaut (fallback automatique sur `docker-compose.yml`) et chargent le fichier d'environnement `.env.production` ou, à défaut, `.env`.
 
 ---
 
@@ -217,7 +215,7 @@ echo "✅ Nginx configuré"
 
 ```bash
 # Arrêter tous les conteneurs
-docker-compose -f docker-compose.prod.yml down
+docker-compose down
 
 # Vérifier qu'ils sont bien arrêtés
 docker ps -a | grep crm
@@ -420,20 +418,6 @@ df -h
 docker volume ls
 docker volume inspect crm-alforis_postgres-data
 ```
-
----
-
-## 🔁 Mode Watch Frontend (debug ponctuel)
-
-```bash
-# Lancer le frontend en mode hot reload
-docker compose -f docker-compose.prod.yml -f docker-compose.watch.yml up --build frontend
-
-# Revenir au mode standard
-docker compose -f docker-compose.prod.yml up -d --build frontend
-```
-
-> ⚠️ Ce mode lance `next dev` (hot reload, volumes montés). À n'utiliser que temporairement pour du dépannage, puis revenir à la commande standard de production.
 
 ---
 

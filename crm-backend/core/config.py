@@ -42,6 +42,11 @@ class Settings(BaseSettings):
     # Backup
     backup_dir: str = "./backups"
 
+    # Monitoring & Logging
+    sentry_dsn: str = ""  # Sentry DSN (vide = désactivé)
+    environment: str = "development"  # development, staging, production
+    log_level: str = "INFO"  # DEBUG, INFO, WARNING, ERROR
+
     class Config:
         env_file = ".env"
         case_sensitive = False

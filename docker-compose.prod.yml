@@ -85,9 +85,9 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    # Charger les variables depuis .env.production.local si présent, sinon depuis les env: ci-dessous
+    # Charger les variables depuis le fichier d'env (configurable via COMPOSE_ENV_FILE, défaut .env.production)
     env_file:
-      - .env.production
+      - ${COMPOSE_ENV_FILE:-.env.production}
     environment:
       # URL de connexion PostgreSQL (utilise le nom du service 'postgres')
       DATABASE_URL: postgresql://${POSTGRES_USER:-crm_user}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-crm_db}
@@ -140,7 +140,7 @@ services:
       api:
         condition: service_healthy
     env_file:
-      - .env.production
+      - ${COMPOSE_ENV_FILE:-.env.production}
     environment:
       # URL de l'API accessible depuis le navigateur
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://crm.alforis.fr/api/v1}

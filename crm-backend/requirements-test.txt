@@ -1,0 +1,25 @@
+# Requirements pour les tests
+
+# Framework de test
+pytest==7.4.3
+pytest-cov==4.1.0
+pytest-asyncio==0.21.1
+
+# Test client HTTP
+httpx==0.25.2
+
+# Fake data generation
+faker==20.1.0
+
+# Test fixtures avancées
+pytest-mock==3.12.0
+factory-boy==3.3.0
+
+# Coverage
+coverage[toml]==7.3.2
+
+# Pour tester les tâches asynchrones
+pytest-timeout==2.2.0
+
+# Pour les tests parallèles (optionnel)
+pytest-xdist==3.5.0

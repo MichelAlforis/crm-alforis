@@ -70,7 +70,9 @@ if [ "$ROOT_ENV_FILE" = "$FALLBACK_ENV_FILE" ]; then
     echo -e "${YELLOW}⚠️  Utilisation de $ROOT_ENV_FILE (fallback). Assurez-vous que docker-compose l'utilise bien.${NC}\n"
 fi
 
+ENV_FILE_VALUE="$ROOT_ENV_FILE"
 ENV_FILENAME=$(basename "$ROOT_ENV_FILE")
+export COMPOSE_ENV_FILE="$ENV_FILE_VALUE"
 
 # --- Fonction pour vérifier un fichier ---
 check_file() {
@@ -153,7 +155,7 @@ echo -e "${YELLOW}🐳 Vérification de $COMPOSE_FILE...${NC}\n"
 
 if [ -f "$COMPOSE_FILE" ]; then
     # Vérifier que le fichier charge .env.production
-    if grep -q "env_file:" "$COMPOSE_FILE" && grep -q "$ENV_FILENAME" "$COMPOSE_FILE"; then
+    if grep -q "env_file:" "$COMPOSE_FILE" && (grep -q "$ENV_FILENAME" "$COMPOSE_FILE" || grep -q "\${COMPOSE_ENV_FILE" "$COMPOSE_FILE"); then
         echo -e "${GREEN}✅ $COMPOSE_FILE référence $ENV_FILENAME${NC}"
     else
         echo -e "${RED}❌ $COMPOSE_FILE ne référence pas $ENV_FILENAME${NC}"

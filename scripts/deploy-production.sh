@@ -72,6 +72,8 @@ if [ "$ROOT_ENV_FILE" = "$FALLBACK_ENV_FILE" ]; then
 fi
 
 ENV_FILENAME=$(basename "$ROOT_ENV_FILE")
+ENV_FILE_VALUE="$ROOT_ENV_FILE"
+export COMPOSE_ENV_FILE="$ENV_FILE_VALUE"
 
 # Vérifier que Docker est installé
 if ! command -v docker &> /dev/null; then
