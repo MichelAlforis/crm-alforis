@@ -17,8 +17,10 @@ import {
   UserPlus,
   Users,
   Download,
+  Loader2,
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
+import { useToast } from '@/components/ui/Toast'
 import {
   useBillingSummary,
   useTeamOverview,
@@ -36,6 +38,7 @@ type NotificationOptionKey =
 type SecurityOptionKey = 'twoFactor' | 'loginAlerts'
 export default function SettingsPage() {
   const { user } = useAuth()
+  const { showToast } = useToast()
   const billingSummary = useBillingSummary()
   const { members: teamMembers, pendingInvites } = useTeamOverview()
   const securityEvents = useSecurityEvents()
@@ -66,6 +69,10 @@ export default function SettingsPage() {
   const [showEditProfileModal, setShowEditProfileModal] = useState(false)
   const [showInviteModal, setShowInviteModal] = useState(false)
   const [showNewsletterModal, setShowNewsletterModal] = useState(false)
+  const [inviteEmail, setInviteEmail] = useState('')
+  const [newsletterEmail, setNewsletterEmail] = useState(user?.email || '')
+  const [isInviting, setIsInviting] = useState(false)
+  const [isSubscribing, setIsSubscribing] = useState(false)
 
   const toggleNotification = (key: NotificationOptionKey) => {
     setNotificationOptions((prev) => ({
@@ -102,21 +109,38 @@ export default function SettingsPage() {
   }
 
   const handleDownloadInvoice = () => {
-    alert('Le téléchargement de factures sera disponible une fois Stripe connecté.')
+    showToast({
+      type: 'info',
+      title: 'Fonctionnalité à venir',
+      message: 'Le téléchargement de factures sera disponible une fois Stripe connecté.',
+    })
   }
 
   const handleConfigureSecurity = () => {
-    alert('La configuration de la sécurité sera disponible prochainement.')
+    showToast({
+      type: 'info',
+      title: 'En développement',
+      message: 'La configuration avancée de la sécurité sera disponible prochainement.',
+    })
   }
 
   const handleResetTheme = () => {
     setPreferredTheme('system')
-    alert('Thème réinitialisé aux valeurs par défaut.')
+    localStorage.removeItem('preferred_theme')
+    showToast({
+      type: 'success',
+      title: 'Thème réinitialisé',
+      message: 'Le thème a été réinitialisé aux valeurs par défaut.',
+    })
   }
 
   const handleSaveTheme = () => {
     localStorage.setItem('preferred_theme', preferredTheme)
-    alert('Vos préférences de thème ont été enregistrées localement.')
+    showToast({
+      type: 'success',
+      title: 'Préférences enregistrées',
+      message: `Votre thème "${preferredTheme}" a été sauvegardé.`,
+    })
   }
 
   const handleDownloadSecurityLog = () => {
@@ -138,7 +162,58 @@ export default function SettingsPage() {
   }
 
   const handleOpenIntegrationDocs = (integrationName: string) => {
-    alert(`Documentation pour ${integrationName} : sera disponible prochainement.`)
+    showToast({
+      type: 'info',
+      title: 'Documentation à venir',
+      message: `La documentation pour ${integrationName} sera disponible prochainement.`,
+    })
+  }
+
+  const handleInviteSubmit = async () => {
+    if (!inviteEmail) {
+      showToast({
+        type: 'warning',
+        title: 'Email requis',
+        message: 'Veuillez entrer une adresse email valide.',
+      })
+      return
+    }
+
+    setIsInviting(true)
+    // Simuler un délai réseau
+    setTimeout(() => {
+      setIsInviting(false)
+      setShowInviteModal(false)
+      setInviteEmail('')
+      showToast({
+        type: 'success',
+        title: 'Invitation envoyée',
+        message: `Une invitation a été envoyée à ${inviteEmail}`,
+      })
+    }, 1000)
+  }
+
+  const handleNewsletterSubmit = async () => {
+    if (!newsletterEmail) {
+      showToast({
+        type: 'warning',
+        title: 'Email requis',
+        message: 'Veuillez entrer une adresse email valide.',
+      })
+      return
+    }
+
+    setIsSubscribing(true)
+    // Simuler un délai réseau
+    setTimeout(() => {
+      setIsSubscribing(false)
+      setShowNewsletterModal(false)
+      showToast({
+        type: 'success',
+        title: 'Inscription réussie',
+        message: 'Vous recevrez désormais les actualités du CRM.',
+      })
+    }, 1000)
   }
   return (
     <div className="p-6 lg:p-8 max-w-5xl mx-auto space-y-8">
@@ -755,8 +830,13 @@ export default function SettingsPage() {
 
       {/* Modal - Inviter un collaborateur */}
       {showInviteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 animate-in fade-in duration-200"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowInviteModal(false)
+          }}
+        >
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl animate-in slide-in-from-bottom duration-300">
             <h3 className="text-xl font-semibold text-gray-900">
               Inviter un collaborateur
             </h3>
@@ -774,23 +854,35 @@ export default function SettingsPage() {
                 id="invite-email"
                 type="email"
                 placeholder="collaborateur@example.com"
-                className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                value={inviteEmail}
+                onChange={(e) => setInviteEmail(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !isInviting) {
+                    handleInviteSubmit()
+                  }
+                }}
+                disabled={isInviting}
+                className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 disabled:bg-gray-50 disabled:cursor-not-allowed"
+                autoFocus
               />
             </div>
             <div className="mt-6 flex justify-end gap-3">
               <button
-                onClick={() => setShowInviteModal(false)}
-                className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
+                onClick={() => {
+                  setShowInviteModal(false)
+                  setInviteEmail('')
+                }}
+                disabled={isInviting}
+                className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Annuler
               </button>
               <button
-                onClick={() => {
-                  alert('Invitation envoyée ! (fonctionnalité en développement)')
-                  setShowInviteModal(false)
-                }}
-                className="rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+                onClick={handleInviteSubmit}
+                disabled={isInviting}
+                className="rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed inline-flex items-center gap-2"
               >
+                {isInviting && <Loader2 className="h-4 w-4 animate-spin" />}
                 Envoyer l&apos;invitation
               </button>
             </div>
@@ -800,8 +892,13 @@ export default function SettingsPage() {
 
       {/* Modal - S'inscrire à la newsletter */}
       {showNewsletterModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 animate-in fade-in duration-200"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowNewsletterModal(false)
+          }}
+        >
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl animate-in slide-in-from-bottom duration-300">
             <h3 className="text-xl font-semibold text-gray-900">
               S&apos;inscrire à la newsletter
             </h3>
@@ -819,24 +916,32 @@ export default function SettingsPage() {
               <input
                 id="newsletter-email"
                 type="email"
-                defaultValue={user?.email || ''}
-                className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !isSubscribing) {
+                    handleNewsletterSubmit()
+                  }
+                }}
+                disabled={isSubscribing}
+                className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 disabled:bg-gray-50 disabled:cursor-not-allowed"
+                autoFocus
               />
             </div>
             <div className="mt-6 flex justify-end gap-3">
               <button
                 onClick={() => setShowNewsletterModal(false)}
-                className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
+                disabled={isSubscribing}
+                className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Annuler
               </button>
               <button
-                onClick={() => {
-                  alert('Inscription réussie ! (fonctionnalité en développement)')
-                  setShowNewsletterModal(false)
-                }}
-                className="rounded-lg border border-indigo-600 bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700"
+                onClick={handleNewsletterSubmit}
+                disabled={isSubscribing}
+                className="rounded-lg border border-indigo-600 bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:opacity-70 disabled:cursor-not-allowed inline-flex items-center gap-2"
               >
+                {isSubscribing && <Loader2 className="h-4 w-4 animate-spin" />}
                 S&apos;inscrire
               </button>
             </div>

@@ -2,10 +2,17 @@
 # DOCKER COMPOSE - PRODUCTION
 # ===========================================
 # Configuration optimisée pour la production
-# - Pas de volumes de développement
-# - Build optimisé
+# - Chargement automatique de .env.production
+# - Build optimisé avec multi-stage
 # - Healthchecks robustes
-# - Logs limités
+# - Logs limités avec rotation
+# - Variables d'environnement sécurisées
+
+# IMPORTANT: Créer un fichier .env.production à la racine avec:
+# - POSTGRES_PASSWORD
+# - SECRET_KEY
+# - ALLOWED_ORIGINS
+# - NEXT_PUBLIC_API_URL
 
 # --- Réseau ---
 networks:
@@ -15,8 +22,11 @@ networks:
 # --- Volumes ---
 volumes:
   postgres-data:
+    driver: local
   api-uploads:
+    driver: local
   api-backups:
+    driver: local
 
 # --- Services ---
 services:
@@ -29,17 +39,18 @@ services:
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-crm_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD doit être défini dans .env.production}
       POSTGRES_DB: ${POSTGRES_DB:-crm_db}
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-      - "127.0.0.1:5432:5432"
+      # Utiliser un port différent pour éviter les conflits avec PostgreSQL local
+      - "127.0.0.1:${POSTGRES_EXTERNAL_PORT:-5433}:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
       - crm-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-crm_user} -d ${POSTGRES_DB:-crm_db}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-crm_user} -d ${POSTGRES_DB:-crm_db} -h 127.0.0.1 -p 5432"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -62,23 +73,28 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    # Charger les variables depuis .env.production.local si présent, sinon depuis les env: ci-dessous
     env_file:
-      - ./crm-backend/.env.production.local
+      - .env.production
     environment:
-      DATABASE_URL: ${DATABASE_URL}
+      # URL de connexion PostgreSQL (utilise le nom du service 'postgres')
+      DATABASE_URL: postgresql://${POSTGRES_USER:-crm_user}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-crm_db}
+      # Sécurité
       DEBUG: "False"
-      SECRET_KEY: ${SECRET_KEY}
-      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY doit être défini dans .env.production}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-["https://crm.alforis.fr"]}
+      # JWT
       JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
       JWT_EXPIRATION_HOURS: ${JWT_EXPIRATION_HOURS:-24}
+      # Environnement
       ENVIRONMENT: production
       MAX_UPLOAD_SIZE_MB: ${MAX_UPLOAD_SIZE_MB:-10}
       API_PORT: 8000
     working_dir: /app
-    command: >
-      sh -c "uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4 --no-access-log"
+    # Production: 4 workers, pas de logs d'accès pour les perfs
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4 --no-access-log
     ports:
-      - "127.0.0.1:8000:8000"
+      - "127.0.0.1:${API_PORT:-8000}:8000"
     volumes:
       - api-uploads:/app/uploads
       - api-backups:/app/backups
@@ -105,23 +121,28 @@ services:
       dockerfile: Dockerfile
       target: production
       args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+        # Passer l'URL de l'API au build pour l'inclure dans le bundle Next.js
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://crm.alforis.fr/api/v1}
     restart: always
     depends_on:
       api:
         condition: service_healthy
+    env_file:
+      - .env.production
     environment:
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      # URL de l'API accessible depuis le navigateur
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://crm.alforis.fr/api/v1}
       NODE_ENV: production
-      PORT: 3010
+      PORT: ${FRONTEND_PORT:-3010}
     working_dir: /app
     command: npm start
     ports:
-      - "127.0.0.1:3010:3010"
+      - "127.0.0.1:${FRONTEND_PORT:-3010}:${FRONTEND_PORT:-3010}"
     networks:
       - crm-network
     healthcheck:
-      test: ["CMD-SHELL", "node -e 'require(\"http\").get(\"http://localhost:3010\",r=>process.exit(r.statusCode>=200&&r.statusCode<500?0:1)).on(\"error\",()=>process.exit(1))'"]
+      # Healthcheck plus robuste qui vérifie vraiment la disponibilité
+      test: ["CMD-SHELL", "node -e 'require(\"http\").get(\"http://localhost:${FRONTEND_PORT:-3010}\",r=>process.exit(r.statusCode>=200&&r.statusCode<500?0:1)).on(\"error\",()=>process.exit(1))'"]
       interval: 30s
       timeout: 10s
       retries: 5

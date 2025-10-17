@@ -21,8 +21,18 @@ backups/
 
 # Build / caches
 .env
-.env.local
-.env.*.local
+.env.*
+*.env
+.env.production
+crm-backend/.env.*
+crm-frontend/.env.*
 
 # Mac system files
 *.swp
+docker-compose.override.local.yml
+docker-compose.yml
+nginx/*.local.conf
+
+!.env.example
+!crm-backend/.env.production.example
+!crm-frontend/.env.production.example
