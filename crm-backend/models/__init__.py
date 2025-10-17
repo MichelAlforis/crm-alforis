@@ -2,7 +2,7 @@ from models.base import Base, BaseModel
 from models.investor import (
     Investor,
     Contact,
-    Interaction,
+    Interaction as InvestorInteraction,
     KPI,
     PipelineStage,
     ClientType,
@@ -27,6 +27,20 @@ from models.task import (
     TaskStatus,
     TaskCategory,
 )
+from models.organisation import (
+    Organisation,
+    OrganisationContact,
+    OrganisationCategory,
+    MandatDistribution,
+    MandatStatus,
+    Produit,
+    ProduitStatus,
+    ProduitType,
+    MandatProduit,
+    OrganisationInteraction,
+    InteractionPipeline,
+    InteractionStatus,
+)
 
 __all__ = [
     # Base
@@ -36,19 +50,33 @@ __all__ = [
     # Investor
     "Investor",
     "Contact",
-    "Interaction",
+    "InvestorInteraction",
     "KPI",
     "PipelineStage",
     "ClientType",
     "InteractionType",
 
-    # Fournisseur
+    # Fournisseur (legacy - sera progressivement remplacé par Organisation)
     "Fournisseur",
     "FournisseurContact",
     "FournisseurInteraction",
     "FournisseurKPI",
     "StageFournisseur",
     "TypeFournisseur",
+
+    # Organisation (nouveau modèle)
+    "Organisation",
+    "OrganisationContact",
+    "OrganisationCategory",
+    "MandatDistribution",
+    "MandatStatus",
+    "Produit",
+    "ProduitStatus",
+    "ProduitType",
+    "MandatProduit",
+    "OrganisationInteraction",
+    "InteractionPipeline",
+    "InteractionStatus",
 
     # People
     "Person",

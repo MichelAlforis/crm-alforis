@@ -34,7 +34,21 @@ import {
   Newsletter,
   NewsletterCreate,
   NewsletterType,
-  UserInfo
+  UserInfo,
+  Organisation,
+  OrganisationCreate,
+  OrganisationUpdate,
+  OrganisationDetail,
+  MandatDistribution,
+  MandatDistributionCreate,
+  MandatDistributionUpdate,
+  MandatDistributionDetail,
+  Produit,
+  ProduitCreate,
+  ProduitUpdate,
+  ProduitDetail,
+  MandatProduit,
+  MandatProduitCreate,
 } from './types'
 
 import type { ApiError } from './types'
@@ -576,6 +590,174 @@ class ApiClient {
     return this.request<Task>(`/tasks/${id}/quick-action`, {
       method: 'POST',
       body: JSON.stringify({ action }),
+    })
+  }
+
+  // ============= ORGANISATION ENDPOINTS =============
+
+  async getOrganisations(params?: {
+    skip?: number
+    limit?: number
+    category?: string
+    is_active?: boolean
+    country_code?: string
+    language?: string
+  }): Promise<PaginatedResponse<Organisation>> {
+    return this.request<PaginatedResponse<Organisation>>('/organisations', { params })
+  }
+
+  async getOrganisation(id: number): Promise<OrganisationDetail> {
+    return this.request<OrganisationDetail>(`/organisations/${id}`)
+  }
+
+  async searchOrganisations(query: string, skip = 0, limit = 100): Promise<PaginatedResponse<Organisation>> {
+    return this.request<PaginatedResponse<Organisation>>('/organisations/search', {
+      params: { q: query, skip, limit },
+    })
+  }
+
+  async getOrganisationsByLanguage(language: string, skip = 0, limit = 100): Promise<PaginatedResponse<Organisation>> {
+    return this.request<PaginatedResponse<Organisation>>(`/organisations/by-language/${language}`, {
+      params: { skip, limit },
+    })
+  }
+
+  async getOrganisationStats(): Promise<{
+    total: number
+    by_category: Record<string, number>
+    by_language: Record<string, number>
+  }> {
+    return this.request(`/organisations/stats`)
+  }
+
+  async createOrganisation(data: OrganisationCreate): Promise<Organisation> {
+    return this.request<Organisation>('/organisations', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async updateOrganisation(id: number, data: OrganisationUpdate): Promise<Organisation> {
+    return this.request<Organisation>(`/organisations/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deleteOrganisation(id: number): Promise<void> {
+    await this.request<void>(`/organisations/${id}`, {
+      method: 'DELETE',
+    })
+  }
+
+  // ============= MANDAT DISTRIBUTION ENDPOINTS =============
+
+  async getMandats(params?: {
+    skip?: number
+    limit?: number
+    organisation_id?: number
+    status?: string
+  }): Promise<PaginatedResponse<MandatDistribution>> {
+    return this.request<PaginatedResponse<MandatDistribution>>('/mandats', { params })
+  }
+
+  async getMandat(id: number): Promise<MandatDistributionDetail> {
+    return this.request<MandatDistributionDetail>(`/mandats/${id}`)
+  }
+
+  async getActiveMandats(organisation_id?: number): Promise<MandatDistribution[]> {
+    return this.request<MandatDistribution[]>('/mandats/active', {
+      params: organisation_id ? { organisation_id } : undefined,
+    })
+  }
+
+  async getMandatsByOrganisation(organisation_id: number): Promise<MandatDistribution[]> {
+    return this.request<MandatDistribution[]>(`/mandats/organisation/${organisation_id}`)
+  }
+
+  async checkMandatActif(id: number): Promise<{ mandat_id: number; is_actif: boolean }> {
+    return this.request(`/mandats/${id}/is-actif`)
+  }
+
+  async createMandat(data: MandatDistributionCreate): Promise<MandatDistribution> {
+    return this.request<MandatDistribution>('/mandats', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async updateMandat(id: number, data: MandatDistributionUpdate): Promise<MandatDistribution> {
+    return this.request<MandatDistribution>(`/mandats/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deleteMandat(id: number): Promise<void> {
+    await this.request<void>(`/mandats/${id}`, {
+      method: 'DELETE',
+    })
+  }
+
+  // ============= PRODUIT ENDPOINTS =============
+
+  async getProduits(params?: {
+    skip?: number
+    limit?: number
+    type?: string
+    status?: string
+  }): Promise<PaginatedResponse<Produit>> {
+    return this.request<PaginatedResponse<Produit>>('/produits', { params })
+  }
+
+  async getProduit(id: number): Promise<ProduitDetail> {
+    return this.request<ProduitDetail>(`/produits/${id}`)
+  }
+
+  async searchProduits(query: string, skip = 0, limit = 100): Promise<PaginatedResponse<Produit>> {
+    return this.request<PaginatedResponse<Produit>>('/produits/search', {
+      params: { q: query, skip, limit },
+    })
+  }
+
+  async getProduitByIsin(isin: string): Promise<Produit> {
+    return this.request<Produit>(`/produits/by-isin/${isin}`)
+  }
+
+  async getProduitsByMandat(mandat_id: number): Promise<Produit[]> {
+    return this.request<Produit[]>(`/produits/by-mandat/${mandat_id}`)
+  }
+
+  async createProduit(data: ProduitCreate): Promise<Produit> {
+    return this.request<Produit>('/produits', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async updateProduit(id: number, data: ProduitUpdate): Promise<Produit> {
+    return this.request<Produit>(`/produits/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deleteProduit(id: number): Promise<void> {
+    await this.request<void>(`/produits/${id}`, {
+      method: 'DELETE',
+    })
+  }
+
+  async associateProduitToMandat(data: MandatProduitCreate): Promise<MandatProduit> {
+    return this.request<MandatProduit>('/produits/associate-to-mandat', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deleteMandatProduitAssociation(association_id: number): Promise<void> {
+    await this.request<void>(`/produits/association/${association_id}`, {
+      method: 'DELETE',
     })
   }
 }

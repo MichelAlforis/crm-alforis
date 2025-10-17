@@ -427,3 +427,189 @@ export interface TaskFilters {
   person_id?: number
   view?: "today" | "overdue" | "next7" | "all"
 }
+
+// ============= ORGANISATION (Nouveau modèle remplaçant Fournisseur) =============
+
+export type OrganisationCategory = "Institution" | "Wholesale" | "SDG" | "CGPI" | "Autres"
+
+export interface Organisation {
+  id: number
+  name: string
+  category: OrganisationCategory
+  aum?: number // Assets Under Management
+  aum_date?: string // Format: YYYY-MM-DD
+  strategies?: string[] // Liste de stratégies d'investissement
+  website?: string
+  country_code?: string
+  domicile?: string
+  language: string // Langue principale (FR, EN, ES, etc.)
+  notes?: string
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface OrganisationCreate {
+  name: string
+  category: OrganisationCategory
+  aum?: number
+  aum_date?: string
+  strategies?: string[]
+  website?: string
+  country_code?: string
+  domicile?: string
+  language?: string // Défaut: FR
+  notes?: string
+  is_active?: boolean
+}
+
+export interface OrganisationUpdate extends Partial<OrganisationCreate> {}
+
+export interface OrganisationContact {
+  id: number
+  organisation_id: number
+  name: string
+  email?: string
+  phone?: string
+  title?: string
+  notes?: string
+  created_at: string
+  updated_at: string
+}
+
+export interface OrganisationDetail extends Organisation {
+  mandats: MandatDistribution[]
+  contacts: OrganisationContact[]
+}
+
+// ============= MANDAT DE DISTRIBUTION =============
+
+export type MandatStatus = "proposé" | "signé" | "actif" | "terminé"
+
+export interface MandatDistribution {
+  id: number
+  organisation_id: number
+  status: MandatStatus
+  date_signature?: string // Format: YYYY-MM-DD
+  date_debut?: string // Format: YYYY-MM-DD
+  date_fin?: string // Format: YYYY-MM-DD
+  notes?: string
+  is_actif: boolean // True si signé ou actif
+  created_at: string
+  updated_at: string
+}
+
+export interface MandatDistributionCreate {
+  organisation_id: number
+  status?: MandatStatus // Défaut: proposé
+  date_signature?: string
+  date_debut?: string
+  date_fin?: string
+  notes?: string
+}
+
+export interface MandatDistributionUpdate {
+  status?: MandatStatus
+  date_signature?: string
+  date_debut?: string
+  date_fin?: string
+  notes?: string
+}
+
+export interface MandatDistributionDetail extends MandatDistribution {
+  organisation: Organisation
+  produits: Produit[]
+}
+
+// ============= PRODUIT =============
+
+export type ProduitType = "OPCVM" | "FCP" | "SICAV" | "ETF" | "Fonds Alternatif" | "Autre"
+export type ProduitStatus = "actif" | "inactif" | "en_attente"
+
+export interface Produit {
+  id: number
+  name: string
+  isin?: string // Code ISIN unique
+  type: ProduitType
+  status: ProduitStatus
+  notes?: string
+  created_at: string
+  updated_at: string
+}
+
+export interface ProduitCreate {
+  name: string
+  isin?: string
+  type: ProduitType
+  status?: ProduitStatus // Défaut: en_attente
+  notes?: string
+}
+
+export interface ProduitUpdate extends Partial<ProduitCreate> {}
+
+export interface ProduitDetail extends Produit {
+  mandats: MandatProduit[]
+}
+
+// ============= MANDAT-PRODUIT (Association) =============
+
+export interface MandatProduit {
+  id: number
+  mandat_id: number
+  produit_id: number
+  date_ajout?: string // Format: YYYY-MM-DD
+  notes?: string
+  created_at: string
+  updated_at: string
+  mandat?: MandatDistribution
+  produit?: Produit
+}
+
+export interface MandatProduitCreate {
+  mandat_id: number
+  produit_id: number
+  date_ajout?: string
+  notes?: string
+}
+
+// ============= NOUVELLE INTERACTION (avec produit) =============
+
+export type InteractionPipeline = "fournisseur" | "vente"
+export type InteractionStatus = "prospect_froid" | "prospect_chaud" | "refus" | "en_discussion" | "validé"
+
+export interface InteractionNew {
+  id: number
+  organisation_id: number
+  personne_id?: number
+  produit_id?: number // Nécessite un mandat actif
+  date: string // Format: YYYY-MM-DD
+  type: InteractionType
+  pipeline: InteractionPipeline
+  status?: InteractionStatus // Pour pipeline fournisseur
+  duration_minutes?: number
+  subject?: string
+  notes?: string
+  created_at: string
+  updated_at: string
+}
+
+export interface InteractionCreateNew {
+  organisation_id: number
+  personne_id?: number
+  produit_id?: number
+  date: string
+  type: InteractionType
+  pipeline: InteractionPipeline
+  status?: InteractionStatus
+  duration_minutes?: number
+  subject?: string
+  notes?: string
+}
+
+export interface InteractionUpdateNew extends Partial<InteractionCreateNew> {}
+
+export interface InteractionDetailNew extends InteractionNew {
+  organisation?: Organisation
+  personne?: Person
+  produit?: Produit
+}
