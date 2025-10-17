@@ -42,6 +42,18 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD doit être défini dans .env.production}
       POSTGRES_DB: ${POSTGRES_DB:-crm_db}
       PGDATA: /var/lib/postgresql/data/pgdata
+    command:
+      - "postgres"
+      - "-c"
+      - "shared_buffers=128MB"
+      - "-c"
+      - "work_mem=4MB"
+      - "-c"
+      - "maintenance_work_mem=64MB"
+      - "-c"
+      - "effective_cache_size=512MB"
+      - "-c"
+      - "max_connections=50"
     ports:
       # Utiliser un port différent pour éviter les conflits avec PostgreSQL local
       - "127.0.0.1:${POSTGRES_EXTERNAL_PORT:-5433}:5432"
