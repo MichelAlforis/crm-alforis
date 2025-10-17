@@ -11,7 +11,8 @@ export async function GET(req: Request) {
   const q = searchParams.get('q')?.trim() || ''
   if (!q) return NextResponse.json({ results: [], q })
 
-  const API = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, '') || 'http://localhost:8000'
+  // En production, utiliser l'URL complète du domaine, sinon localhost
+  const API = process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1$/, '').replace(/\/$/, '') || 'http://localhost:8000'
 
   // Récupérer le token d'authentification
   const cookieStore = cookies()

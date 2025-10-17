@@ -1,0 +1,133 @@
+# ===========================================
+# DOCKER COMPOSE - PRODUCTION
+# ===========================================
+# Configuration optimisée pour la production
+# - Pas de volumes de développement
+# - Build optimisé
+# - Healthchecks robustes
+# - Logs limités
+
+# --- Réseau ---
+networks:
+  crm-network:
+    driver: bridge
+
+# --- Volumes ---
+volumes:
+  postgres-data:
+  api-uploads:
+  api-backups:
+
+# --- Services ---
+services:
+
+  # ========================================
+  # POSTGRES
+  # ========================================
+  postgres:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-crm_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-crm_db}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - crm-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-crm_user} -d ${POSTGRES_DB:-crm_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ========================================
+  # API (FastAPI)
+  # ========================================
+  api:
+    build:
+      context: ./crm-backend
+      dockerfile: Dockerfile
+      target: production
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - ./crm-backend/.env.production.local
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      DEBUG: "False"
+      SECRET_KEY: ${SECRET_KEY}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+      JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
+      JWT_EXPIRATION_HOURS: ${JWT_EXPIRATION_HOURS:-24}
+      ENVIRONMENT: production
+      MAX_UPLOAD_SIZE_MB: ${MAX_UPLOAD_SIZE_MB:-10}
+      API_PORT: 8000
+    working_dir: /app
+    command: >
+      sh -c "uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4 --no-access-log"
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - api-uploads:/app/uploads
+      - api-backups:/app/backups
+    networks:
+      - crm-network
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import urllib.request;urllib.request.urlopen(\"http://localhost:8000/health\")' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+  # ========================================
+  # FRONTEND (Next.js)
+  # ========================================
+  frontend:
+    build:
+      context: ./crm-frontend
+      dockerfile: Dockerfile
+      target: production
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+    restart: always
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      NODE_ENV: production
+      PORT: 3010
+    working_dir: /app
+    command: npm start
+    ports:
+      - "127.0.0.1:3010:3010"
+    networks:
+      - crm-network
+    healthcheck:
+      test: ["CMD-SHELL", "node -e 'require(\"http\").get(\"http://localhost:3010\",r=>process.exit(r.statusCode>=200&&r.statusCode<500?0:1)).on(\"error\",()=>process.exit(1))'"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
