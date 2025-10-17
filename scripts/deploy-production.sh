@@ -22,11 +22,30 @@ echo -e "${BLUE}=======================================${NC}\n"
 # --- Vérifications préliminaires ---
 echo -e "${YELLOW}📋 Vérifications préliminaires...${NC}"
 
-# Vérifier qu'on est dans le bon répertoire
-if [ ! -f "docker-compose.prod.yml" ]; then
-    echo -e "${RED}❌ Erreur: docker-compose.prod.yml introuvable${NC}"
+# Déterminer le fichier docker-compose à utiliser
+DEFAULT_COMPOSE_FILE="docker-compose.prod.yml"
+FALLBACK_COMPOSE_FILE="docker-compose.yml"
+
+if [ -n "${COMPOSE_FILE_OVERRIDE:-}" ]; then
+    COMPOSE_FILE="$COMPOSE_FILE_OVERRIDE"
+elif [ -n "${COMPOSE_FILE:-}" ]; then
+    COMPOSE_FILE="$COMPOSE_FILE"
+elif [ -f "$DEFAULT_COMPOSE_FILE" ]; then
+    COMPOSE_FILE="$DEFAULT_COMPOSE_FILE"
+elif [ -f "$FALLBACK_COMPOSE_FILE" ]; then
+    COMPOSE_FILE="$FALLBACK_COMPOSE_FILE"
+else
+    COMPOSE_FILE="$DEFAULT_COMPOSE_FILE"
+fi
+
+if [ ! -f "$COMPOSE_FILE" ]; then
+    echo -e "${RED}❌ Erreur: aucun fichier docker-compose trouvé (recherché: $COMPOSE_FILE, $DEFAULT_COMPOSE_FILE, $FALLBACK_COMPOSE_FILE)${NC}"
     echo -e "${RED}   Êtes-vous dans le bon répertoire ?${NC}"
     exit 1
+fi
+
+if [ "$COMPOSE_FILE" = "$FALLBACK_COMPOSE_FILE" ]; then
+    echo -e "${YELLOW}⚠️  Utilisation de $COMPOSE_FILE (fallback). Pensez à conserver un fichier $DEFAULT_COMPOSE_FILE si possible.${NC}"
 fi
 
 # Vérifier que Docker est installé
@@ -81,11 +100,11 @@ fi
 
 # --- Backup de la base de données (si elle existe) ---
 echo -e "\n${YELLOW}💾 Backup de la base de données...${NC}"
-if docker-compose -f docker-compose.prod.yml ps postgres | grep -q "Up"; then
+if docker-compose -f "$COMPOSE_FILE" ps postgres | grep -q "Up"; then
     BACKUP_FILE="backups/backup_$(date +%Y%m%d_%H%M%S).sql"
     mkdir -p backups
 
-    docker-compose -f docker-compose.prod.yml exec -T postgres pg_dump -U crm_user crm_db > "$BACKUP_FILE" 2>/dev/null || true
+    docker-compose -f "$COMPOSE_FILE" exec -T postgres pg_dump -U crm_user crm_db > "$BACKUP_FILE" 2>/dev/null || true
 
     if [ -f "$BACKUP_FILE" ]; then
         echo -e "${GREEN}✅ Backup créé: $BACKUP_FILE${NC}"
@@ -98,19 +117,19 @@ fi
 
 # --- Arrêter les conteneurs existants ---
 echo -e "\n${YELLOW}🛑 Arrêt des conteneurs existants...${NC}"
-docker-compose -f docker-compose.prod.yml down
+docker-compose -f "$COMPOSE_FILE" down
 
 # --- Pull des dernières images ---
 echo -e "\n${YELLOW}📥 Pull des dernières images...${NC}"
-docker-compose -f docker-compose.prod.yml pull || true
+docker-compose -f "$COMPOSE_FILE" pull || true
 
 # --- Build des images ---
 echo -e "\n${YELLOW}🔨 Build des images...${NC}"
-docker-compose -f docker-compose.prod.yml build --no-cache
+docker-compose -f "$COMPOSE_FILE" build --no-cache
 
 # --- Démarrer les services ---
 echo -e "\n${YELLOW}🚀 Démarrage des services...${NC}"
-docker-compose -f docker-compose.prod.yml up -d
+docker-compose -f "$COMPOSE_FILE" up -d
 
 # --- Attendre que les services soient prêts ---
 echo -e "\n${YELLOW}⏳ Attente du démarrage des services...${NC}"
@@ -118,11 +137,11 @@ sleep 10
 
 # --- Vérifier l'état des services ---
 echo -e "\n${YELLOW}🔍 Vérification de l'état des services...${NC}"
-docker-compose -f docker-compose.prod.yml ps
+docker-compose -f "$COMPOSE_FILE" ps
 
 # --- Appliquer les migrations ---
 echo -e "\n${YELLOW}🗄️  Application des migrations de base de données...${NC}"
-docker-compose -f docker-compose.prod.yml exec -T api alembic upgrade head || echo -e "${YELLOW}⚠️  Migrations non appliquées (alembic peut ne pas être configuré)${NC}"
+docker-compose -f "$COMPOSE_FILE" exec -T api alembic upgrade head || echo -e "${YELLOW}⚠️  Migrations non appliquées (alembic peut ne pas être configuré)${NC}"
 
 # --- Tests de connectivité ---
 echo -e "\n${YELLOW}🧪 Tests de connectivité...${NC}"
@@ -143,7 +162,7 @@ fi
 
 # --- Afficher les logs récents ---
 echo -e "\n${YELLOW}📋 Logs récents:${NC}"
-docker-compose -f docker-compose.prod.yml logs --tail=20
+docker-compose -f "$COMPOSE_FILE" logs --tail=20
 
 # --- Résumé final ---
 echo -e "\n${BLUE}=======================================${NC}"
@@ -160,12 +179,12 @@ echo -e "\n${YELLOW}Prochaines étapes:${NC}"
 echo -e "  1. Vérifier que Nginx est configuré (voir nginx/crm.alforis.fr.conf)"
 echo -e "  2. Obtenir un certificat SSL avec certbot"
 echo -e "  3. Tester l'accès via https://crm.alforis.fr"
-echo -e "  4. Vérifier les logs: ${BLUE}docker-compose -f docker-compose.prod.yml logs -f${NC}"
+echo -e "  4. Vérifier les logs: ${BLUE}docker-compose -f $COMPOSE_FILE logs -f${NC}"
 
 echo -e "\n${GREEN}Commandes utiles:${NC}"
-echo -e "  • Voir les logs:      ${BLUE}docker-compose -f docker-compose.prod.yml logs -f${NC}"
-echo -e "  • Voir l'état:        ${BLUE}docker-compose -f docker-compose.prod.yml ps${NC}"
-echo -e "  • Redémarrer:         ${BLUE}docker-compose -f docker-compose.prod.yml restart${NC}"
-echo -e "  • Arrêter:            ${BLUE}docker-compose -f docker-compose.prod.yml down${NC}"
+echo -e "  • Voir les logs:      ${BLUE}docker-compose -f $COMPOSE_FILE logs -f${NC}"
+echo -e "  • Voir l'état:        ${BLUE}docker-compose -f $COMPOSE_FILE ps${NC}"
+echo -e "  • Redémarrer:         ${BLUE}docker-compose -f $COMPOSE_FILE restart${NC}"
+echo -e "  • Arrêter:            ${BLUE}docker-compose -f $COMPOSE_FILE down${NC}"
 
 echo ""

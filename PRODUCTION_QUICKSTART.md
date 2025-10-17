@@ -114,3 +114,13 @@ docker-compose -f docker-compose.prod.yml down
 # Backup de la base de données
 docker-compose -f docker-compose.prod.yml exec postgres pg_dump -U crm_user crm_db > backup.sql
 ```
+
+### Mode Watch Frontend (debug)
+
+Pour activer le hot reload du frontend en production (utile pour un debug ponctuel), combine le fichier principal et l'override dédié :
+
+```bash
+docker compose -f docker-compose.prod.yml -f docker-compose.watch.yml up --build frontend
+```
+
+⚠️ À n'activer que temporairement : ce mode lance `next dev`, consomme plus de ressources et n'est pas adapté à une exposition publique prolongée.

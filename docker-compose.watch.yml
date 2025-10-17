@@ -1,0 +1,24 @@
+# ===========================================
+# DOCKER COMPOSE OVERRIDE - FRONTEND WATCH
+# ===========================================
+# À utiliser en complément de docker-compose.prod.yml pour activer le mode
+# développement avec hot reload sur le frontend.
+#
+# Exemple:
+#   docker compose -f docker-compose.prod.yml -f docker-compose.watch.yml up --build
+
+services:
+  frontend:
+    build:
+      target: development
+    environment:
+      NODE_ENV: development
+    command: >
+      sh -euc '
+        [ -f scripts/dev-clean.sh ] && chmod +x scripts/dev-clean.sh && ./scripts/dev-clean.sh || echo "skip dev-clean";
+        exec npm run dev -- --hostname "0.0.0.0" --port "${PORT:-3010}"
+      '
+    volumes:
+      - ./crm-frontend:/app
+      - /app/node_modules
+      - /app/.next

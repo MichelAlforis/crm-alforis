@@ -21,6 +21,32 @@ echo -e "${BLUE}=======================================${NC}\n"
 ERRORS=0
 WARNINGS=0
 
+# --- Déterminer le fichier docker-compose à utiliser ---
+DEFAULT_COMPOSE_FILE="docker-compose.prod.yml"
+FALLBACK_COMPOSE_FILE="docker-compose.yml"
+
+if [ -n "${COMPOSE_FILE_OVERRIDE:-}" ]; then
+    COMPOSE_FILE="$COMPOSE_FILE_OVERRIDE"
+elif [ -n "${COMPOSE_FILE:-}" ]; then
+    COMPOSE_FILE="$COMPOSE_FILE"
+elif [ -f "$DEFAULT_COMPOSE_FILE" ]; then
+    COMPOSE_FILE="$DEFAULT_COMPOSE_FILE"
+elif [ -f "$FALLBACK_COMPOSE_FILE" ]; then
+    COMPOSE_FILE="$FALLBACK_COMPOSE_FILE"
+else
+    COMPOSE_FILE="$DEFAULT_COMPOSE_FILE"
+fi
+
+if [ ! -f "$COMPOSE_FILE" ]; then
+    echo -e "${RED}❌ Aucun fichier docker-compose trouvé (recherché: $COMPOSE_FILE, $DEFAULT_COMPOSE_FILE, $FALLBACK_COMPOSE_FILE)${NC}"
+    echo -e "${RED}   Créez ou restaurez le fichier docker-compose de production.${NC}"
+    exit 1
+fi
+
+if [ "$COMPOSE_FILE" = "$FALLBACK_COMPOSE_FILE" ]; then
+    echo -e "${YELLOW}⚠️  Utilisation de $COMPOSE_FILE (fallback). Pensez à conserver un fichier $DEFAULT_COMPOSE_FILE si possible.${NC}\n"
+fi
+
 # --- Fonction pour vérifier un fichier ---
 check_file() {
     local file=$1
@@ -75,7 +101,7 @@ check_env_var() {
 echo -e "${YELLOW}📋 Vérification des fichiers...${NC}\n"
 
 # --- Vérifier les fichiers de configuration ---
-check_file "docker-compose.prod.yml" "true"
+check_file "$COMPOSE_FILE" "true"
 check_file ".env.production" "true"
 check_file "nginx/crm.alforis.fr.conf" "true"
 check_file "crm-backend/.env.production.local" "false"
@@ -97,29 +123,30 @@ fi
 
 echo ""
 
-# --- Vérifier docker-compose.prod.yml ---
-echo -e "${YELLOW}🐳 Vérification de docker-compose.prod.yml...${NC}\n"
+# --- Vérifier le fichier docker-compose sélectionné ---
+echo -e "${YELLOW}🐳 Vérification de $COMPOSE_FILE...${NC}\n"
 
-if [ -f "docker-compose.prod.yml" ]; then
+if [ -f "$COMPOSE_FILE" ]; then
     # Vérifier que le fichier charge .env.production
-    if grep -q "env_file:" docker-compose.prod.yml && grep -q ".env.production" docker-compose.prod.yml; then
-        echo -e "${GREEN}✅ docker-compose.prod.yml charge .env.production${NC}"
+    if grep -q "env_file:" "$COMPOSE_FILE" && grep -q ".env.production" "$COMPOSE_FILE"; then
+        echo -e "${GREEN}✅ $COMPOSE_FILE charge .env.production${NC}"
     else
-        echo -e "${RED}❌ docker-compose.prod.yml ne charge pas .env.production${NC}"
+        echo -e "${RED}❌ $COMPOSE_FILE ne charge pas .env.production${NC}"
         echo -e "${YELLOW}   Ajouter 'env_file: - .env.production' dans chaque service${NC}"
         ((ERRORS++))
     fi
 
     # Vérifier le target production
-    if grep -q "target: production" docker-compose.prod.yml; then
-        echo -e "${GREEN}✅ docker-compose.prod.yml utilise le target production${NC}"
+    if grep -q "target: production" "$COMPOSE_FILE"; then
+        echo -e "${GREEN}✅ $COMPOSE_FILE utilise le target production${NC}"
     else
-        echo -e "${YELLOW}⚠️  docker-compose.prod.yml n'utilise pas 'target: production'${NC}"
+        echo -e "${YELLOW}⚠️  $COMPOSE_FILE n'utilise pas 'target: production'${NC}"
         ((WARNINGS++))
     fi
 
     # Vérifier les services
-    local services=$(grep -E "^  [a-z]+:" docker-compose.prod.yml | sed 's/://g' | tr -d ' ')
+    local services
+    services=$(grep -E "^  [a-z]+:" "$COMPOSE_FILE" | sed 's/://g' | tr -d ' ')
     echo -e "${BLUE}Services trouvés: $services${NC}"
 fi
 
@@ -267,8 +294,8 @@ if [ $ERRORS -gt 0 ] || [ $WARNINGS -gt 0 ]; then
         echo -e "  2. ${BLUE}nano .env.production${NC} (remplir les variables)"
     fi
 
-    if ! grep -q ".env.production" docker-compose.prod.yml 2>/dev/null; then
-        echo -e "  3. Mettre à jour ${BLUE}docker-compose.prod.yml${NC} pour charger .env.production"
+    if ! grep -q ".env.production" "$COMPOSE_FILE" 2>/dev/null; then
+        echo -e "  3. Mettre à jour ${BLUE}$COMPOSE_FILE${NC} pour charger .env.production"
     fi
 
     if [ ! -L "/etc/nginx/sites-enabled/crm.alforis.fr" ]; then
