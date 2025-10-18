@@ -28,7 +28,8 @@ class BaseModel(Base):
     
     def to_dict(self):
         """Convertir le modèle en dictionnaire"""
-        return {
-            column.name: getattr(self, column.name)
-            for column in self.__table__.columns
-        }
+        data = {attr.key: getattr(self, attr.key) for attr in self.__mapper__.column_attrs}
+        for column in self.__table__.columns:
+            if column.name not in data:
+                data[column.name] = getattr(self, column.name, None)
+        return data

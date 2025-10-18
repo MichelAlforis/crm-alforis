@@ -32,6 +32,7 @@ class OrganisationCategory(str, enum.Enum):
     SDG = "SDG"
     CGPI = "CGPI"
     AUTRES = "Autres"
+    STARTUP = "Startup"
 
 
 class OrganisationType(str, enum.Enum):
@@ -145,6 +146,7 @@ class Organisation(BaseModel):
         nullable=True,
         index=True,
     )
+    search_vector = Column(Text, nullable=True)
 
     # Infos financières (pour asset managers principalement)
     aum = Column(Numeric(20, 2), nullable=True)  # Assets Under Management

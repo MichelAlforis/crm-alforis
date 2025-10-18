@@ -69,21 +69,39 @@ class SearchService:
         Returns:
             Dict avec results et metadata
         """
-        # Construire la requête de base
-        base_query = db.query(
-            Organisation,
-            func.ts_rank(
-                Organisation.search_vector,
-                func.plainto_tsquery('french', query)
-            ).label('rank')
+        dialect = getattr(getattr(db, "bind", None), "dialect", None)
+        use_fulltext = (
+            dialect is not None
+            and dialect.name.lower().startswith("postgres")
+            and hasattr(Organisation, "search_vector")
+            and query
         )
 
-        # Filtrer par Full-Text Search
-        base_query = base_query.filter(
-            Organisation.search_vector.op('@@')(
-                func.plainto_tsquery('french', query)
+        if use_fulltext:
+            base_query = db.query(
+                Organisation,
+                func.ts_rank(
+                    Organisation.search_vector,
+                    func.plainto_tsquery('french', query)
+                ).label('rank')
             )
-        )
+
+            base_query = base_query.filter(
+                Organisation.search_vector.op('@@')(
+                    func.plainto_tsquery('french', query)
+                )
+            )
+        else:
+            base_query = db.query(Organisation)
+            like_pattern = f"%{query}%" if query else None
+            if like_pattern:
+                base_query = base_query.filter(
+                    or_(
+                        Organisation.name.ilike(like_pattern),
+                        Organisation.email.ilike(like_pattern),
+                        Organisation.notes.ilike(like_pattern),
+                    )
+                )
 
         # Appliquer filtres additionnels
         if filters:
@@ -112,23 +130,35 @@ class SearchService:
         )
 
         # Trier par pertinence
-        base_query = base_query.order_by(text('rank DESC'))
+        if use_fulltext:
+            base_query = base_query.order_by(text('rank DESC'))
+        else:
+            base_query = base_query.order_by(Organisation.name)
 
         # Total (avant pagination)
         total = base_query.count()
 
-        # Pagination
+        # Pagination et formatage
         results = base_query.offset(offset).limit(limit).all()
 
-        # Formater résultats
-        items = [
-            {
-                **org.to_dict(),
-                'relevance': float(rank),
-                'match_type': 'full_text',
-            }
-            for org, rank in results
-        ]
+        if use_fulltext:
+            items = [
+                {
+                    **org.to_dict(),
+                    'relevance': float(rank),
+                    'match_type': 'full_text',
+                }
+                for org, rank in results
+            ]
+        else:
+            items = [
+                {
+                    **org.to_dict(),
+                    'relevance': None,
+                    'match_type': 'fallback',
+                }
+                for org in results
+            ]
 
         return {
             'items': items,

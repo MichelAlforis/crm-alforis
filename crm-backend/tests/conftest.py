@@ -17,6 +17,8 @@ from core.security import get_password_hash
 from models.user import User
 from models.organisation import Organisation, OrganisationCategory
 from models.person import Person, PersonOrganizationLink, OrganizationType
+from models.role import Role, UserRole
+from core.permissions import init_default_permissions
 
 
 # ============================================================================
@@ -94,14 +96,30 @@ def admin_user(test_db):
     """
     Crée un administrateur de test
     """
-    from models.user import UserRole
+    # S'assurer que les rôles/permissions legacy existent
+    init_default_permissions(test_db)
+
+    admin_role = (
+        test_db.query(Role)
+        .filter(Role.name == UserRole.ADMIN)
+        .first()
+    )
+    if admin_role is None:
+        admin_role = Role(
+            name=UserRole.ADMIN,
+            display_name="Admin",
+            level=3,
+            is_system=True,
+        )
+        test_db.add(admin_role)
+        test_db.flush()
 
     user = User(
         email="admin@example.com",
         hashed_password=get_password_hash("adminpassword123"),
         full_name="Admin User",
         is_active=True,
-        role=UserRole.ADMIN if hasattr(User, 'role') else None,
+        role=admin_role,
     )
     test_db.add(user)
     test_db.commit()

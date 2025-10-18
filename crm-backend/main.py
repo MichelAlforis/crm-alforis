@@ -77,7 +77,6 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 def _ensure_test_users(db: Session) -> None:
     """Seed default API users required by the legacy test suite."""
     if not TEST_USERS:
-        logger.warning("seed_users_skipped", reason="TEST_USERS empty")
         return
 
     roles_cache: dict[str, Role | None] = {}
@@ -106,7 +105,7 @@ def _ensure_test_users(db: Session) -> None:
             is_active=True,
         )
         db.add(user)
-        logger.info(
+        logger.debug(
             "seed_user_created",
             email=normalized_email,
             role=role.name if role else None,
