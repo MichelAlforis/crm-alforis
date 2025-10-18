@@ -35,7 +35,6 @@ from datetime import datetime
 from models.organisation import Organisation, OrganisationCategory
 from models.person import Person
 from models.mandat import Mandat
-from models.interaction import Interaction
 from core.permissions import filter_query_by_team
 
 

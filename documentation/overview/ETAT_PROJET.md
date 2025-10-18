@@ -1,7 +1,7 @@
 # 📊 État du Projet CRM - Vue d'Ensemble
 
-**Date de mise à jour:** 2025-10-19
-**Progression globale:** 7/11 améliorations ✅ **(64%)**
+**Date de mise à jour:** 2025-01-20
+**Progression globale:** 8/11 améliorations ✅ **(73%)**
 
 ---
 
@@ -139,7 +139,26 @@ Le projet d'amélioration du CRM Alforis a **dépassé les attentes** avec **5 s
 
 **Impact:** Rapports professionnels, graphiques statistiques, branding cohérent
 
-**Total Semaine 5:** 2,810 lignes (code + docs)
+#### Email Automation (Nurturing) ✅
+- **Code:** 2,350 lignes
+  - `models/email.py` (420 lignes)
+  - `services/email_service.py` (520 lignes)
+  - `api/routes/email_campaigns.py` (260 lignes)
+  - `tasks/email_tasks.py` (190 lignes)
+  - `webhooks/sendgrid.py` (120 lignes)
+  - `frontend/components/email/*` (600 lignes)
+  - `frontend/hooks/useEmailAutomation.ts` (160 lignes)
+- **Fonctionnalités:**
+  - Éditeur WYSIWYG (drag & drop) + bibliothèque de templates responsive
+  - Campagnes drip multi-étapes avec A/B testing, tracking opens/clicks, désabonnements
+  - Segmentation avancée (filtres organisations/contacts + import manuel)
+  - Envoi planifié & rate limiting (Celery beat + tâches asynchrones)
+  - Webhooks SendGrid → base `email_events` + analytics temps réel (open/click rate)
+  - UI analytics (per variant, KPIs clés) & APIs REST complètes
+
+**Impact:** Activation marketing automatisée, nurturing personnalisable, conformité RGPD
+
+**Total Semaine 5:** ~5,160 lignes (code + docs)
 
 ---
 
@@ -152,7 +171,8 @@ crm-backend/
 ├── models/
 │   ├── role.py                    ✅ 149 lignes
 │   ├── permission.py              ✅ 254 lignes
-│   └── notification.py            ✅ 221 lignes
+│   ├── notification.py            ✅ 221 lignes
+│   └── email.py                   ✅ 420 lignes (Templates, campagnes, events)
 │
 ├── core/
 │   ├── monitoring.py              ✅ 393 lignes (Sentry + logging)
@@ -161,14 +181,22 @@ crm-backend/
 │   ├── notifications.py           ✅ 529 lignes (WebSocket)
 │   ├── events.py                  ✅ 466 lignes (Event Bus)
 │   ├── search.py                  ✅ 370 lignes (Full-Text Search)
-│   └── exports.py                 ✅ 380 lignes (CSV/Excel/PDF)
+│   ├── exports.py                 ✅ 380 lignes (CSV/Excel/PDF)
+│   └── email_service.py           ✅ 520 lignes (Automatisation email)
+│
+├── webhooks/
+│   └── sendgrid.py                ✅ 120 lignes (Webhook provider)
 │
 ├── migrations/
 │   └── add_fulltext_search.py     ✅ 150 lignes (PostgreSQL)
 │
 ├── routers/
 │   ├── search.py                  ✅ 230 lignes (5 endpoints API)
-│   └── exports.py                 ✅ 240 lignes (5 endpoints API)
+│   ├── exports.py                 ✅ 240 lignes (5 endpoints API)
+│   └── email_campaigns.py         ✅ 260 lignes (Email automation)
+│
+├── tasks/
+│   └── email_tasks.py             ✅ 190 lignes (Celery envoi & quota)
 │
 ├── tests/
 │   ├── conftest.py                ✅ 271 lignes (Fixtures)
@@ -192,6 +220,10 @@ Documentation/
 ├── RECHERCHE_COMPLET.md           ✅ 520 lignes
 ├── EXPORTS_COMPLET.md             ✅ 530 lignes
 └── PLAN_AMELIORATIONS_CRM.md      ✅ Mis à jour
+
+crm-frontend/
+├── components/email/               ✅ EmailEditor, TemplateLibrary, CampaignBuilder, AudienceSelector, CampaignAnalytics
+└── hooks/useEmailAutomation.ts     ✅ Hooks React Query (templates/campagnes/stats)
 ```
 
 ### Technologies Utilisées
@@ -200,6 +232,8 @@ Documentation/
 - FastAPI (décorateurs, WebSocket)
 - SQLAlchemy (modèles, relations many-to-many)
 - Redis (cache + Pub/Sub)
+- Celery (tasks async + beat rate limiting)
+- SendGrid SDK & Mailgun HTTP API (envoi emails)
 - Sentry (error tracking)
 - structlog (structured logging)
 - openpyxl (Excel avec graphiques)
@@ -207,14 +241,17 @@ Documentation/
 - pytest (tests)
 
 **Infrastructure:**
-- Docker Compose (Redis)
+- Docker Compose (Redis + workers)
 - PostgreSQL (DB principale + Full-Text Search)
-- Redis (cache + event bus)
+- Redis (cache + event bus + Celery broker)
+- Celery workers/beat (scheduling campagnes)
 
 **Nouveaux:**
 - PostgreSQL tsvector + GIN index (recherche)
 - openpyxl charts (BarChart, PieChart)
 - reportlab (PDF styling)
+- SendGrid Event Webhooks + rate limiting quotas
+- react-email-editor (éditeur drag & drop)
 
 ---
 

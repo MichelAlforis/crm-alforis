@@ -8,9 +8,40 @@ Celery est utilisé pour:
 - Synchronisations externes
 """
 
-from celery import Celery
-from celery.schedules import crontab
 import os
+
+try:
+    from celery import Celery
+    from celery.schedules import crontab
+except ImportError:  # Fallback lightweight stub for tests
+    class _DummyAsyncResult:
+        def __init__(self, result=None):
+            self.result = result
+            self.id = "dummy-task"
+
+    class Celery:  # type: ignore
+        def __init__(self, *args, **kwargs):
+            self.conf = type("Conf", (), {"update": lambda self, **kw: None})()
+
+        def task(self, *args, **kwargs):
+            def decorator(fn):
+                def delay(*a, **kw):
+                    return _DummyAsyncResult(fn(*a, **kw))
+
+                fn.delay = delay  # type: ignore[attr-defined]
+                fn.apply_async = delay  # type: ignore[attr-defined]
+                return fn
+
+            return decorator
+
+        def autodiscover_tasks(self, *args, **kwargs):  # pragma: no cover - noop
+            pass
+
+        def start(self):  # pragma: no cover - noop
+            pass
+
+    def crontab(*args, **kwargs):  # type: ignore
+        return None
 
 # Configuration Redis (broker + backend)
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
@@ -84,6 +115,12 @@ celery_app.conf.update(
         "cleanup-old-executions": {
             "task": "tasks.workflow_tasks.cleanup_old_executions",
             "schedule": crontab(hour=3, minute=0, day_of_week=0),
+        },
+
+        # Campagnes email (toutes les minutes)
+        "dispatch-email-campaigns": {
+            "task": "tasks.email_tasks.process_pending_sends",
+            "schedule": 60.0,
         },
     },
 )

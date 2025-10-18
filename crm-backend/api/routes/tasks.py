@@ -14,7 +14,7 @@ from schemas.task import (
     TaskQuickActionRequest,
     TaskStatus,
     TaskPriority,
-    TaskCategory,
+    # TaskCategory  # N'existe pas
 )
 from schemas.base import PaginatedResponse
 from services.task import TaskService
@@ -64,7 +64,7 @@ async def list_tasks(
     limit: int = Query(100, ge=1, le=1000),
     status: Optional[TaskStatus] = Query(None),
     priority: Optional[TaskPriority] = Query(None),
-    category: Optional[TaskCategory] = Query(None),
+    # category: Optional[str]  # TaskCategory = Query(None),  # TaskCategory n'existe pas
     view: Optional[str] = Query(None, description="Filter: 'today', 'overdue', 'next7', 'all'"),
     investor_id: Optional[int] = Query(None),
     fournisseur_id: Optional[int] = Query(None),
@@ -88,8 +88,8 @@ async def list_tasks(
         filters["status"] = status
     if priority:
         filters["priority"] = priority
-    if category:
-        filters["category"] = category
+    # if category:  # TaskCategory n'existe pas
+    #     filters["category"] = category
     if view:
         filters["view"] = view
     if investor_id:

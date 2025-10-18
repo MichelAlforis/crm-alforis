@@ -1,8 +1,25 @@
-from sqlalchemy import Column, String, Integer, Float, Date, Text, Enum, ForeignKey, Boolean, ARRAY, Index
-from sqlalchemy.orm import relationship
+from sqlalchemy import (
+    Column,
+    String,
+    Integer,
+    Date,
+    Text,
+    Enum,
+    ForeignKey,
+    Boolean,
+    Index,
+    Numeric,
+    CheckConstraint,
+    JSON,
+)
+from sqlalchemy.orm import relationship, validates
+from typing import TYPE_CHECKING
 from models.base import BaseModel
 import enum
 from models.organisation_activity import OrganisationActivity
+
+if TYPE_CHECKING:
+    from models.user import User
 
 # =======================
 # Enums
@@ -15,6 +32,28 @@ class OrganisationCategory(str, enum.Enum):
     SDG = "SDG"
     CGPI = "CGPI"
     AUTRES = "Autres"
+
+
+class OrganisationType(str, enum.Enum):
+    """Types unifiés d'organisation"""
+    INVESTOR = "investor"
+    CLIENT = "client"
+    FOURNISSEUR = "fournisseur"
+    PROVIDER = "fournisseur"
+    DISTRIBUTEUR = "distributeur"
+    EMETTEUR = "emetteur"
+    AUTRE = "autre"
+
+
+class PipelineStage(str, enum.Enum):
+    """Pipeline commercial global"""
+    PROSPECT = "prospect"
+    QUALIFICATION = "qualification"
+    PROPOSITION = "proposition"
+    NEGOCIATION = "negociation"
+    SIGNE = "signe"
+    PERDU = "perdu"
+    INACTIF = "inactif"
 
 
 class MandatStatus(str, enum.Enum):
@@ -85,27 +124,63 @@ class Organisation(BaseModel):
     """
     __tablename__ = "organisations"
     __table_args__ = (
-        Index("idx_org_category_active", "category", "is_active"),
+        Index("idx_org_type_active", "type", "is_active"),
+        CheckConstraint(
+            "(probabilite_signature IS NULL) OR "
+            "(probabilite_signature >= 0 AND probabilite_signature <= 100)",
+            name="ck_organisations_probabilite_signature",
+        ),
     )
 
     # Infos générales
-    name = Column(String(255), nullable=False, index=True)
-    category = Column(Enum(OrganisationCategory), nullable=False, index=True)
+    name = Column("nom", String(255), nullable=False, index=True)
+    type = Column(
+        Enum(OrganisationType, name="organisationtype"),
+        nullable=False,
+        default=OrganisationType.AUTRE,
+        index=True,
+    )
+    category = Column(
+        Enum(OrganisationCategory, name="organisationcategory"),
+        nullable=True,
+        index=True,
+    )
 
     # Infos financières (pour asset managers principalement)
-    aum = Column(Float, nullable=True)  # Assets Under Management
+    aum = Column(Numeric(20, 2), nullable=True)  # Assets Under Management
     aum_date = Column(Date, nullable=True)  # Date de l'AUM
-    strategies = Column(ARRAY(Text), nullable=True)  # Liste de stratégies d'investissement
+    strategies = Column(JSON, nullable=True)
 
     # Contact & localisation
+    email = Column(String(255), nullable=True, unique=True, index=True)
+    phone = Column("telephone", String(50), nullable=True)
     website = Column(String(255), nullable=True)
+    address = Column("adresse", Text, nullable=True)
+    city = Column("ville", String(100), nullable=True)
+    postal_code = Column("code_postal", String(20), nullable=True)
+    country = Column("pays", String(100), nullable=True)
     country_code = Column(String(2), nullable=True, index=True)
     domicile = Column(String(255), nullable=True)  # Domiciliation juridique
     language = Column(String(5), nullable=False, default='FR', index=True)  # Langue principale de l'organisation
 
     # Métadonnées
     notes = Column(Text, nullable=True)
+    tags = Column(JSON, nullable=True)
     is_active = Column(Boolean, default=True, index=True)
+    created_by = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    assigned_to = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    owner_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True)
+
+    # Pipeline commercial
+    pipeline_stage = Column(
+        Enum(PipelineStage, name="pipelinestage"),
+        nullable=False,
+        default=PipelineStage.PROSPECT,
+        index=True,
+    )
+    potential_amount = Column("montant_potentiel", Numeric(15, 2), nullable=True)
+    signature_date = Column("date_signature", Date, nullable=True)
+    signature_probability = Column("probabilite_signature", Integer, nullable=True)
 
     # Relations
     mandats = relationship(
@@ -132,8 +207,48 @@ class Organisation(BaseModel):
         cascade="all, delete-orphan"
     )
 
+    people_links = relationship(
+        "PersonOrganizationLink",
+        back_populates="organisation",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
+
+    tasks = relationship(
+        "Task",
+        back_populates="organisation",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
+
+    legacy_mandats = relationship(
+        "Mandat",
+        back_populates="organisation",
+        cascade="all, delete-orphan",
+    )
+
+    owner = relationship("User", foreign_keys=[owner_id], back_populates="organisations_owned")
+    created_by_user = relationship("User", foreign_keys=[created_by], back_populates="organisations_created")
+    assigned_user = relationship("User", foreign_keys=[assigned_to], back_populates="organisations_assigned")
+
+    _PLACEHOLDER_EMAILS = {"default@company.com"}
+
+    @validates("email")
+    def _normalize_email(self, key, value):
+        if not value:
+            return None
+        normalized = value.strip()
+        if not normalized:
+            return None
+        if normalized.lower() in self._PLACEHOLDER_EMAILS:
+            return None
+        return normalized.lower()
+
     def __repr__(self):
-        return f"<Organisation(id={self.id}, name='{self.name}', category={self.category})>"
+        return (
+            f"<Organisation(id={self.id}, name='{self.name}', type={self.type}, "
+            f"pipeline_stage={self.pipeline_stage})>"
+        )
 
 
 class OrganisationContact(BaseModel):

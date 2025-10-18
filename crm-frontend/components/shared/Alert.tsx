@@ -1,14 +1,18 @@
 // components/shared/Alert.tsx
-// ============= ALERT COMPONENT - RÉUTILISABLE =============
-import clsx from 'clsx';
+// ============= ALERT COMPONENT - RÉUTILISABLE AVEC TITRE/ICÔNE =============
+import clsx from 'clsx'
+import type { ReactNode } from 'react'
 
 interface AlertProps {
   type: 'success' | 'error' | 'warning' | 'info'
-  message: string
+  title?: string
+  message?: string
+  icon?: ReactNode
+  children?: ReactNode
   onClose?: () => void
 }
 
-export function Alert({ type, message, onClose }: AlertProps) {
+export function Alert({ type, title, message, icon, children, onClose }: AlertProps) {
   const typeClasses = {
     success: 'bg-green-50 text-vert border-vert',
     error: 'bg-red-50 text-rouge border-rouge',
@@ -17,15 +21,27 @@ export function Alert({ type, message, onClose }: AlertProps) {
   }
 
   return (
-    <div className={clsx('p-4 rounded-lg border', typeClasses[type])}>
-      <div className="flex items-center justify-between">
-        <p className="text-sm font-medium">{message}</p>
-        {onClose && (
-          <button onClick={onClose} className="text-lg leading-none">
-            ✕
-          </button>
-        )}
+    <div
+      className={clsx(
+        'rounded-radius-md border p-spacing-sm text-sm',
+        'flex items-start gap-3',
+        typeClasses[type]
+      )}
+    >
+      {icon && <div className="mt-0.5 flex-shrink-0">{icon}</div>}
+      <div className="flex-1 space-y-1">
+        {title && <p className="font-semibold">{title}</p>}
+        {message && <p>{message}</p>}
+        {children}
       </div>
+      {onClose && (
+        <button
+          onClick={onClose}
+          className="ml-2 text-xs font-semibold uppercase tracking-wide text-current"
+        >
+          Fermer
+        </button>
+      )}
     </div>
   )
 }

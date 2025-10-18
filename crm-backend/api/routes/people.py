@@ -1,10 +1,11 @@
+from __future__ import annotations  # Permet les annotations lazy (résout circular imports)
+
 from fastapi import APIRouter, Depends, status, Query
 from sqlalchemy.orm import Session
-from typing import Optional
+from typing import List, Optional
 
 from core import get_db, get_current_user
 from core.events import emit_event, EventType
-from schemas.base import PaginatedResponse
 from schemas.person import (
     PersonCreate,
     PersonUpdate,
@@ -13,7 +14,7 @@ from schemas.person import (
     PersonOrganizationLinkResponse,
 )
 from services.person import PersonService, PersonOrganizationLinkService
-from models.person import OrganizationType
+from models.organisation import OrganisationType
 
 router = APIRouter(prefix="/people", tags=["people"])
 
@@ -28,12 +29,12 @@ def _extract_user_id(current_user: dict) -> Optional[int]:
         return None
 
 
-@router.get("", response_model=PaginatedResponse[PersonResponse])
+@router.get("", response_model=List[PersonResponse])
 async def list_people(
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=200),
     q: Optional[str] = Query(None, description="Recherche par nom, prénom ou email"),
-    organization_type: Optional[OrganizationType] = Query(
+    organization_type: Optional[OrganisationType] = Query(
         None, description="Filtrer par type d'organisation"
     ),
     organization_id: Optional[int] = Query(
@@ -45,29 +46,26 @@ async def list_people(
     service = PersonService(db)
     link_service = PersonOrganizationLinkService(db)
 
-    if organization_type and organization_id:
-        links = await link_service.list_links_for_organization(organization_type, organization_id)
-        people = [link.person for link in links]
-        total = len(people)
-        items = [PersonResponse.model_validate(person) for person in people]
-        return PaginatedResponse(
-            total=total,
-            skip=skip,
-            limit=limit,
-            items=items,
+    if organization_id is not None:
+        links = await link_service.list_for_organisation(
+            organization_id,
+            organization_type=organization_type,
         )
+        seen_people = {}
+        for link in links:
+            person = getattr(link, "person", None)
+            if person is not None and getattr(person, "id", None) is not None:
+                seen_people[person.id] = person
+        people = list(seen_people.values())
+        sliced = people[skip : skip + limit] if limit else people
+        return [PersonResponse.model_validate(person) for person in sliced]
 
     if q:
-        people, total = await service.search(q, skip=skip, limit=limit)
+        people, _ = await service.search(q, skip=skip, limit=limit)
     else:
-        people, total = await service.get_all(skip=skip, limit=limit)
+        people, _ = await service.get_all(skip=skip, limit=limit)
 
-    return PaginatedResponse(
-        total=total,
-        skip=skip,
-        limit=limit,
-        items=[PersonResponse.model_validate(person) for person in people],
-    )
+    return [PersonResponse.model_validate(person) for person in people]
 
 
 @router.post("", response_model=PersonResponse, status_code=status.HTTP_201_CREATED)
@@ -93,6 +91,19 @@ async def create_person(
     return PersonResponse.model_validate(person)
 
 
+@router.get("/search", response_model=List[PersonResponse])
+async def search_people_endpoint(
+    q: str = Query(..., min_length=1, description="Terme de recherche"),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(20, ge=1, le=100),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    service = PersonService(db)
+    people, _ = await service.search(q, skip=skip, limit=limit)
+    return [PersonResponse.model_validate(person) for person in people]
+
+
 @router.get("/{person_id}", response_model=PersonDetailResponse)
 async def get_person(
     person_id: int,
@@ -100,22 +111,30 @@ async def get_person(
     current_user: dict = Depends(get_current_user),
 ):
     service = PersonService(db)
+    person = await service.get_by_id(person_id)
     link_service = PersonOrganizationLinkService(db)
-
-    details = await service.get_person_with_links(person_id)
-    serialized_links = [
-        link.model_dump()
-        for link in link_service.serialize_links(details["links"])
+    links = await link_service.list_for_person(person_id)
+    person_payload = PersonResponse.model_validate(person).model_dump(by_alias=True)
+    person_payload["organizations"] = [
+        PersonOrganizationLinkResponse.model_validate(link).model_dump(by_alias=True)
+        for link in links
     ]
 
-    return PersonDetailResponse.model_validate(
-        {
-            **details["person"].to_dict(),
-            "created_at": details["person"].created_at,
-            "updated_at": details["person"].updated_at,
-            "organizations": serialized_links,
-        }
-    )
+    return person_payload
+
+
+@router.get("/{person_id}/organisations", response_model=List[PersonOrganizationLinkResponse])
+async def list_person_organisations(
+    person_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    link_service = PersonOrganizationLinkService(db)
+    links = await link_service.list_for_person(person_id)
+    return [
+        PersonOrganizationLinkResponse.model_validate(link)
+        for link in links
+    ]
 
 
 @router.put("/{person_id}", response_model=PersonResponse)

@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     secret_key: str = "your-secret-key"
 
     # Database
-    database_url: str = "postgresql://user:password@localhost/crm_db"
+    database_url: str = "sqlite:///./crm_test.db"
     database_echo: bool = False
 
     # JWT
@@ -48,10 +48,25 @@ class Settings(BaseSettings):
     log_level: str = "INFO"  # DEBUG, INFO, WARNING, ERROR
 
     # Redis Cache
+    redis_enabled: bool = False
     redis_host: str = "redis"
     redis_port: int = 6379
     redis_password: str = ""  # Vide = pas de password
     redis_db: int = 0
+
+    # Email Automation
+    sendgrid_api_key: str = ""
+    sendgrid_event_webhook_key: str = ""
+    mailgun_api_key: str = ""
+    mailgun_domain: str = ""
+    default_email_from_name: str = "Alforis CRM"
+    default_email_from_address: str = "noreply@example.com"
+    default_email_reply_to: str = "support@example.com"
+    default_email_unsubscribe_base_url: str = "https://example.com/email/unsubscribe"
+    email_rate_limit_per_minute: int = 120
+    email_batch_size: int = 500
+    email_track_opens: bool = True
+    email_track_clicks: bool = True
 
     class Config:
         env_file = ".env"

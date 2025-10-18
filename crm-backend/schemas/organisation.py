@@ -1,8 +1,14 @@
-from pydantic import BaseModel, Field, field_validator
-from typing import Optional, List
-from datetime import date, datetime
+from decimal import Decimal
+from typing import List, Optional
+from datetime import date
+import json
+
+from pydantic import BaseModel, EmailStr, Field, field_validator
+
+from models.organisation import OrganisationCategory, OrganisationType, PipelineStage
 from schemas.base import TimestampedSchema
-from schemas.person import PersonResponse
+from schemas.person import PersonOrganizationLinkResponse, PersonResponse
+from schemas.organisation_activity import OrganisationActivityResponse
 
 
 # =======================
@@ -10,68 +16,116 @@ from schemas.person import PersonResponse
 # =======================
 
 class OrganisationBase(BaseModel):
-    """Schéma de base pour Organisation"""
+    """Schéma de base pour une organisation unifiée."""
+
     name: str = Field(..., min_length=1, max_length=255)
-    category: str = Field(..., description="Institution, Wholesale, SDG, CGPI, Autres")
-    aum: Optional[float] = Field(None, description="Assets Under Management")
-    aum_date: Optional[date] = None
-    strategies: Optional[List[str]] = Field(default_factory=list)
+    type: OrganisationType = Field(..., description="client|fournisseur|distributeur|emetteur|autre")
+    category: Optional[OrganisationCategory] = Field(
+        None, description="Institution, Wholesale, SDG, CGPI, Autres"
+    )
+
+    email: Optional[EmailStr] = Field(None, max_length=255)
+    phone: Optional[str] = Field(None, max_length=50)
     website: Optional[str] = Field(None, max_length=255)
-    country_code: Optional[str] = Field(None, max_length=2)
+    address: Optional[str] = Field(None, max_length=500)
+    city: Optional[str] = Field(None, max_length=100)
+    postal_code: Optional[str] = Field(None, max_length=20)
+    country: Optional[str] = Field(None, max_length=100)
+    country_code: Optional[str] = Field(None, min_length=2, max_length=2)
+
+    pipeline_stage: PipelineStage = Field(default=PipelineStage.PROSPECT)
+    potential_amount: Optional[Decimal] = Field(
+        None, description="Montant potentiel pour les clients (pipeline)"
+    )
+    signature_date: Optional[date] = None
+    signature_probability: Optional[int] = Field(
+        None, ge=0, le=100, description="Probabilité de signature (0-100%)"
+    )
+
+    aum: Optional[Decimal] = Field(None, description="Assets Under Management")
+    aum_date: Optional[date] = None
+    strategies: List[str] = Field(default_factory=list)
     domicile: Optional[str] = Field(None, max_length=255)
-    language: str = Field(default='FR', max_length=5, description="Langue principale de l'organisation")
+    language: str = Field(default="FR", max_length=5, description="Langue principale")
+
     notes: Optional[str] = None
-    is_active: bool = True
+    tags: List[str] = Field(default_factory=list)
+    is_active: bool = Field(default=True)
+    created_by: Optional[int] = Field(None, description="User ID créateur")
+    assigned_to: Optional[int] = Field(None, description="User ID assigné")
 
-    @field_validator('category')
+    @field_validator("language")
     @classmethod
-    def validate_category(cls, v):
-        valid_categories = ['Institution', 'Wholesale', 'SDG', 'CGPI', 'Autres']
-        if v not in valid_categories:
-            raise ValueError(f"Category must be one of {valid_categories}")
-        return v
-
-    @field_validator('language')
-    @classmethod
-    def validate_language(cls, v):
-        valid_languages = ['FR', 'EN', 'ES', 'DE', 'IT']
-        if v and v not in valid_languages:
-            raise ValueError(f"Language must be one of {valid_languages}")
-        return v
+    def normalize_language(cls, value: str) -> str:
+        return value.upper()
 
 
 class OrganisationCreate(OrganisationBase):
-    """Schéma pour la création d'une organisation"""
-    pass
+    """Payload création."""
+
+    name: str = Field(..., min_length=1, max_length=255)
+    type: OrganisationType = Field(default=OrganisationType.AUTRE)
+    pipeline_stage: PipelineStage = Field(default=PipelineStage.PROSPECT)
 
 
 class OrganisationUpdate(BaseModel):
-    """Schéma pour la mise à jour d'une organisation"""
+    """Payload mise à jour (patch)."""
+
     name: Optional[str] = Field(None, min_length=1, max_length=255)
-    category: Optional[str] = None
-    aum: Optional[float] = None
+    type: Optional[OrganisationType] = None
+    category: Optional[OrganisationCategory] = None
+    email: Optional[EmailStr] = Field(None, max_length=255)
+    phone: Optional[str] = Field(None, max_length=50)
+    website: Optional[str] = Field(None, max_length=255)
+    address: Optional[str] = Field(None, max_length=500)
+    city: Optional[str] = Field(None, max_length=100)
+    postal_code: Optional[str] = Field(None, max_length=20)
+    country: Optional[str] = Field(None, max_length=100)
+    country_code: Optional[str] = Field(None, min_length=2, max_length=2)
+    pipeline_stage: Optional[PipelineStage] = None
+    potential_amount: Optional[Decimal] = None
+    signature_date: Optional[date] = None
+    signature_probability: Optional[int] = Field(None, ge=0, le=100)
+    aum: Optional[Decimal] = None
     aum_date: Optional[date] = None
     strategies: Optional[List[str]] = None
-    website: Optional[str] = Field(None, max_length=255)
-    country_code: Optional[str] = Field(None, max_length=2)
     domicile: Optional[str] = Field(None, max_length=255)
     language: Optional[str] = Field(None, max_length=5)
     notes: Optional[str] = None
+    tags: Optional[List[str]] = None
     is_active: Optional[bool] = None
+    created_by: Optional[int] = None
+    assigned_to: Optional[int] = None
 
 
 class OrganisationResponse(OrganisationBase, TimestampedSchema):
-    """Schéma de réponse pour une organisation"""
+    """Réponse standard."""
+
     id: int
 
     class Config:
         from_attributes = True
 
+    @field_validator("strategies", "tags", mode="before")
+    @classmethod
+    def _coerce_lists(cls, value):
+        if value in (None, ""):
+            return []
+        if isinstance(value, str):
+            try:
+                loaded = json.loads(value)
+                if isinstance(loaded, list):
+                    return loaded
+            except Exception:
+                return [value]
+        return value
+
 
 class OrganisationDetailResponse(OrganisationResponse):
-    """Schéma de réponse détaillée pour une organisation avec relations"""
-    mandats: List["MandatDistributionResponse"] = []
-    contacts: List["OrganisationContactResponse"] = []
+    """Réponse détaillée avec relations principales."""
+
+    people_links: List[PersonOrganizationLinkResponse] = Field(default_factory=list)
+    activities: List[OrganisationActivityResponse] = Field(default_factory=list)
 
     class Config:
         from_attributes = True

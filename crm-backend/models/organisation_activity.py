@@ -13,62 +13,49 @@ from sqlalchemy import (
     Integer,
     String,
     Enum,
-    DateTime,
     ForeignKey,
     Text,
     JSON,
     Index,
-    func,
+    DateTime,
 )
 from sqlalchemy.orm import relationship
+from datetime import datetime
 
 from models.base import BaseModel
 
 
 class OrganisationActivityType(str, enum.Enum):
-    """Types d'activités supportés dans la timeline."""
+    """Types d'activités supportés dans la timeline unifiée."""
 
-    INTERACTION_CREATED = "interaction_created"
-    INTERACTION_UPDATED = "interaction_updated"
-    TASK_CREATED = "task_created"
-    TASK_COMPLETED = "task_completed"
-    TASK_UPDATED = "task_updated"
-    NOTE_ADDED = "note_added"
-    DOCUMENT_ADDED = "document_added"
-    MANDAT_CREATED = "mandat_created"
-    MANDAT_STATUS_CHANGED = "mandat_status_changed"
-    MANDAT_UPDATED = "mandat_updated"
+    NOTE = "note"
+    APPEL = "appel"
+    EMAIL = "email"
+    REUNION = "reunion"
+    TACHE_COMPLETEE = "tache_completee"
+    CHANGEMENT_STAGE = "changement_stage"
     ORGANISATION_CREATED = "organisation_created"
     ORGANISATION_UPDATED = "organisation_updated"
-    EMAIL_SENT = "email_sent"
-    SYSTEM_EVENT = "system_event"
+    ORGANISATION_DELETED = "organisation_deleted"
+    MANDAT_CREATED = "mandat_created"
+    MANDAT_UPDATED = "mandat_updated"
+    MANDAT_SIGNED = "mandat_signed"
+    AUTRE = "autre"
 
 
 class OrganisationActivity(BaseModel):
     """
     Ligne d'activité associée à une organisation.
 
-    Champs principaux:
-        - organisation_id: Organisation concernée
-        - occurred_at: Horodatage de l'événement métier
-        - type: Catégorie d'événement
-        - title: Résumé lisible (titre)
-        - preview: Détails additionnels (optionnel)
-        - actor_id / actor_name: Utilisateur ou système à l'origine
-        - resource_type / resource_id: Lien vers la ressource concernée
-        - metadata: Données contextuelles JSON (payload libre)
+    Les activités forment la timeline consolidée :
+    notes, appels, emails, réunions, changements de pipeline, etc.
     """
 
     __tablename__ = "organisation_activities"
     __table_args__ = (
-        Index(
-            "idx_org_activities_org_occurred",
-            "organisation_id",
-            "occurred_at",
-            postgresql_using="btree",
-        ),
+        Index("idx_org_activities_org", "organisation_id"),
         Index("idx_org_activities_type", "type"),
-        Index("idx_org_activities_resource", "resource_type", "resource_id"),
+        Index("idx_org_activities_created", "created_at"),
     )
 
     organisation_id = Column(
@@ -78,35 +65,21 @@ class OrganisationActivity(BaseModel):
         index=True,
     )
 
-    occurred_at = Column(
-        DateTime(timezone=True),
-        nullable=False,
-        server_default=func.now(),
-    )
-
     type = Column(
         Enum(OrganisationActivityType, name="organisationactivitytype"),
         nullable=False,
         index=True,
     )
+    title = Column(String(500), nullable=True)
+    description = Column(Text, nullable=True)
+    activity_metadata = Column("metadata", JSON, nullable=True)  # Renommé: 'metadata' est réservé par SQLAlchemy
+    created_by = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True)
+    occurred_at = Column(DateTime(timezone=True), nullable=False, default=datetime.utcnow, index=True)
 
-    title = Column(String(255), nullable=False)
-    preview = Column(Text, nullable=True)
-
-    actor_id = Column(String(64), nullable=True, index=True)
-    actor_name = Column(String(255), nullable=True)
-    actor_avatar_url = Column(String(512), nullable=True)
-
-    resource_type = Column(String(64), nullable=True)
-    resource_id = Column(Integer, nullable=True)
-
-    metadata = Column(JSON, nullable=True)
-
-    # Relations
     organisation = relationship("Organisation", back_populates="activities")
 
     def __repr__(self) -> str:
         return (
             f"<OrganisationActivity(id={self.id}, organisation_id={self.organisation_id}, "
-            f"type={self.type}, occurred_at={self.occurred_at})>"
+            f"type={self.type})>"
         )

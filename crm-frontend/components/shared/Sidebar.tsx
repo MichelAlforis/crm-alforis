@@ -24,6 +24,7 @@ import {
   BarChart3,
   Briefcase,
   Package,
+  Workflow,
 } from 'lucide-react'
 import { useTaskViews } from '@/hooks/useTasks'
 import ThemeToggle from '@/components/shared/ThemeToggle'
@@ -34,6 +35,10 @@ interface SidebarProps {
 }
 
 // Menu items configuration
+// ✅ ARCHITECTURE UNIFIÉE (2025-10-18)
+// - Organisations (remplace Investisseurs + Fournisseurs)
+// - People (contacts unifiés)
+// - Workflows (automatisations)
 const MENU_ITEMS = [
   {
     label: 'Dashboard',
@@ -44,11 +49,11 @@ const MENU_ITEMS = [
     gradient: 'from-blue-500 to-cyan-500',
   },
   {
-    label: 'Investisseurs',
-    href: '/dashboard/investors',
-    icon: Users,
-    description: 'Gestion des clients',
-    badge: '24',
+    label: 'Organisations',
+    href: '/dashboard/organisations',
+    icon: Building2,
+    description: 'Clients, fournisseurs, distributeurs...',
+    badge: null,
     gradient: 'from-purple-500 to-pink-500',
   },
   {
@@ -58,14 +63,6 @@ const MENU_ITEMS = [
     description: 'Annuaire des contacts',
     badge: null,
     gradient: 'from-teal-500 to-emerald-500',
-  },
-  {
-    label: 'Organisations',
-    href: '/dashboard/organisations',
-    icon: Building2,
-    description: 'Distributeurs, émetteurs...',
-    badge: null,
-    gradient: 'from-cyan-500 to-blue-500',
   },
   {
     label: 'Mandats',
@@ -84,28 +81,12 @@ const MENU_ITEMS = [
     gradient: 'from-amber-500 to-orange-500',
   },
   {
-    label: 'Fournisseurs',
-    href: '/dashboard/fournisseurs',
-    icon: Building2,
-    description: 'Partenaires FSS (legacy)',
-    badge: '12',
-    gradient: 'from-orange-500 to-red-500',
-  },
-  {
-    label: 'Interactions',
-    href: '/dashboard/interactions',
-    icon: MessageSquare,
-    description: 'Historique',
-    badge: '8',
-    gradient: 'from-green-500 to-emerald-500',
-  },
-  {
-    label: 'KPIs',
-    href: '/dashboard/kpis',
-    icon: BarChart3,
-    description: 'Analytics',
+    label: 'Workflows',
+    href: '/workflows',
+    icon: Workflow,
+    description: 'Automatisations',
     badge: null,
-    gradient: 'from-indigo-500 to-blue-500',
+    gradient: 'from-indigo-500 to-purple-500',
   },
   {
     label: 'Import',
@@ -115,6 +96,11 @@ const MENU_ITEMS = [
     badge: null,
     gradient: 'from-yellow-500 to-orange-500',
   },
+  // ❌ LEGACY ITEMS REMOVED (2025-10-18):
+  // - Investisseurs → Organisations (type=client)
+  // - Fournisseurs → Organisations (type=fournisseur)
+  // - Interactions → Organisations Activity
+  // - KPIs → Dashboards
 ]
 
 export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {

@@ -1,9 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, EmailStr
 from datetime import timedelta
-from core.security import create_access_token, decode_token
+from sqlalchemy.orm import Session
+
+from core.security import create_access_token, decode_token, verify_password, get_password_hash
 from core.config import settings
+from core.database import get_db
+from models.user import User
+from models.role import Role, UserRole
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 security = HTTPBearer()
@@ -47,7 +52,7 @@ TEST_USERS = {
 # ============= ROUTES =============
 
 @router.post("/login", response_model=TokenResponse)
-async def login(credentials: LoginRequest):
+async def login(request: Request, db: Session = Depends(get_db)):
     """
     Authentifier un utilisateur et retourner un token JWT
 
@@ -77,23 +82,77 @@ async def login(credentials: LoginRequest):
          http://localhost:8000/api/v1/investors
     ```
     """
-    # Vérifier les credentials
-    user = TEST_USERS.get(credentials.email)
-    
-    if not user or user["password"] != credentials.password:
+    payload = None
+    try:
+        payload = await request.json()
+    except Exception:
+        form = await request.form()
+        payload = {
+            "email": form.get("username") or form.get("email"),
+            "password": form.get("password"),
+        }
+
+    if not payload:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Missing credentials",
+        )
+
+    credentials = LoginRequest(**payload)
+
+    # Vérifier les credentials via la base
+    normalized_email = credentials.email.lower()
+    user = db.query(User).filter(User.email == normalized_email).first()
+
+    if user is None and normalized_email in TEST_USERS:
+        seed = TEST_USERS[normalized_email]
+        if seed["password"] != credentials.password:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Email ou mot de passe incorrect",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+
+        role = (
+            db.query(Role)
+            .filter(
+                Role.name
+                == (UserRole.ADMIN if seed.get("is_admin") else UserRole.USER)
+            )
+            .first()
+        )
+        user = User(
+            email=normalized_email,
+            username=seed.get("email").split("@")[0],
+            full_name=seed.get("name"),
+            hashed_password=get_password_hash(seed["password"]),
+            role=role,
+            is_active=True,
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+
+    if user is None or not verify_password(credentials.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Email ou mot de passe incorrect",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
+    is_admin_flag = bool(
+        getattr(user.role, "name", None) in {UserRole.ADMIN, UserRole.ADMIN.value, "admin"}
+    )
+    if normalized_email in TEST_USERS:
+        is_admin_flag = bool(TEST_USERS[normalized_email].get("is_admin"))
+
     # Créer le token JWT
     access_token = create_access_token(
         data={
-            "sub": user["email"],
-            "email": user["email"],
-            "is_admin": user["is_admin"],
-            "name": user["name"]
+            "sub": str(user.id),
+            "email": user.email,
+            "is_admin": is_admin_flag,
+            "name": user.display_name,
         },
         expires_delta=timedelta(hours=settings.jwt_expiration_hours)
     )

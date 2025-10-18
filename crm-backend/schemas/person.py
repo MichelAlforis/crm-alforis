@@ -1,115 +1,115 @@
-from typing import Optional, List
-from pydantic import Field, EmailStr, field_validator
+from typing import List, Optional
 
+from pydantic import AliasChoices, EmailStr, Field
+from pydantic import ConfigDict
+
+from models.person import PersonRole, OrganizationType
 from schemas.base import BaseSchema, TimestampedSchema
-from models.person import OrganizationType
 
 
 class PersonBase(BaseSchema):
-    first_name: str = Field(..., min_length=1, max_length=255)
-    last_name: str = Field(..., min_length=1, max_length=255)
+    """Schema partagé pour une personne."""
+
+    first_name: Optional[str] = Field(None, max_length=100)
+    last_name: Optional[str] = Field(None, max_length=100)
+    email: Optional[EmailStr] = Field(None, max_length=255)
     personal_email: Optional[EmailStr] = Field(None, max_length=255)
-    personal_phone: Optional[str] = Field(None, max_length=20)
-    role: Optional[str] = Field(None, max_length=255)
-    linkedin_url: Optional[str] = Field(None, max_length=512)
+    phone: Optional[str] = Field(None, max_length=50)
+    personal_phone: Optional[str] = Field(None, max_length=50)
+    mobile: Optional[str] = Field(None, max_length=50)
+    job_title: Optional[str] = Field(None, max_length=200)
+    role: Optional[str] = Field(None, max_length=150)
+    country_code: Optional[str] = Field(None, min_length=2, max_length=2)
+    language: Optional[str] = Field(None, max_length=5)
     notes: Optional[str] = None
-    country_code: Optional[str] = Field(
-        None,
-        min_length=2,
-        max_length=2,
-        pattern=r"^[A-Za-z]{2}$",
-        description="Code pays ISO 3166-1 alpha-2 (ex: FR, US)",
-    )
-    language: Optional[str] = Field(
-        None,
-        min_length=2,
-        max_length=5,
-        pattern=r"^[A-Za-z]{2,5}$",
-        description="Langue préférée ISO 639-1 (ex: fr, en)",
-    )
-
-    @field_validator("country_code")
-    @classmethod
-    def normalize_country_code(cls, value: Optional[str]) -> Optional[str]:
-        if value is None:
-            return None
-        return value.strip().upper()
-
-    @field_validator("language")
-    @classmethod
-    def normalize_language(cls, value: Optional[str]) -> Optional[str]:
-        if value is None:
-            return None
-        return value.strip().lower()
+    linkedin_url: Optional[str] = Field(None, max_length=500)
+    is_active: bool = Field(default=True)
 
 
 class PersonCreate(PersonBase):
-    pass
+    """Payload création d'une personne."""
+
+    first_name: Optional[str] = Field(None, max_length=100)
+    last_name: Optional[str] = Field(None, max_length=100)
 
 
 class PersonUpdate(BaseSchema):
-    first_name: Optional[str] = Field(None, min_length=1, max_length=255)
-    last_name: Optional[str] = Field(None, min_length=1, max_length=255)
-    personal_email: Optional[EmailStr] = Field(None, max_length=255)
-    personal_phone: Optional[str] = Field(None, max_length=20)
-    role: Optional[str] = Field(None, max_length=255)
-    linkedin_url: Optional[str] = Field(None, max_length=512)
+    """Payload patch d'une personne."""
+
+    first_name: Optional[str] = Field(None, max_length=100)
+    last_name: Optional[str] = Field(None, max_length=100)
+    email: Optional[EmailStr] = Field(None, max_length=255)
+    phone: Optional[str] = Field(None, max_length=50)
+    personal_phone: Optional[str] = Field(None, max_length=50)
+    mobile: Optional[str] = Field(None, max_length=50)
+    job_title: Optional[str] = Field(None, max_length=200)
+    role: Optional[str] = Field(None, max_length=150)
     notes: Optional[str] = None
-    country_code: Optional[str] = Field(
-        None,
-        min_length=2,
-        max_length=2,
-        pattern=r"^[A-Za-z]{2}$",
-        description="Code pays ISO 3166-1 alpha-2 (ex: FR, US)",
-    )
-    language: Optional[str] = Field(
-        None,
-        min_length=2,
-        max_length=5,
-        pattern=r"^[A-Za-z]{2,5}$",
-        description="Langue préférée ISO 639-1 (ex: fr, en)",
-    )
-
-    _normalize_country_code = field_validator("country_code")(
-        PersonBase.normalize_country_code.__func__
-    )
-    _normalize_language = field_validator("language")(
-        PersonBase.normalize_language.__func__
-    )
+    linkedin_url: Optional[str] = Field(None, max_length=500)
+    is_active: Optional[bool] = None
 
 
-class PersonResponse(TimestampedSchema, PersonBase):
-    pass
+class PersonResponse(PersonBase, TimestampedSchema):
+    """Personne avec timestamps."""
+
+    id: int
+
+    class Config:
+        from_attributes = True
 
 
 class PersonOrganizationLinkBase(BaseSchema):
-    organization_type: OrganizationType
-    organization_id: int = Field(..., ge=1)
-    job_title: Optional[str] = Field(None, max_length=255)
+    """Données communes pour un lien Personne <-> Organisation."""
+
+    organisation_id: int = Field(..., ge=1, alias="organization_id")
+    organization_type: OrganizationType = Field(default=OrganizationType.CLIENT, alias="organization_type")
+    role: PersonRole = Field(default=PersonRole.CONTACT_SECONDAIRE)
+    is_primary: bool = Field(default=False)
+    job_title: Optional[str] = Field(None, max_length=200)
     work_email: Optional[EmailStr] = Field(None, max_length=255)
-    work_phone: Optional[str] = Field(None, max_length=20)
-    is_primary: bool = False
+    work_phone: Optional[str] = Field(None, max_length=50)
     notes: Optional[str] = None
+
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class PersonOrganizationLinkCreate(PersonOrganizationLinkBase):
+    """Création d'un lien."""
+
     person_id: int = Field(..., ge=1)
 
 
 class PersonOrganizationLinkUpdate(BaseSchema):
-    job_title: Optional[str] = Field(None, max_length=255)
-    work_email: Optional[EmailStr] = Field(None, max_length=255)
-    work_phone: Optional[str] = Field(None, max_length=20)
+    """Mise à jour d'un lien."""
+
+    role: Optional[PersonRole] = None
     is_primary: Optional[bool] = None
+    job_title: Optional[str] = Field(None, max_length=200)
+    work_email: Optional[EmailStr] = Field(None, max_length=255)
+    work_phone: Optional[str] = Field(None, max_length=50)
+    organization_type: Optional[OrganizationType] = Field(None, alias="organization_type")
     notes: Optional[str] = None
+
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class PersonOrganizationLinkResponse(TimestampedSchema, PersonOrganizationLinkBase):
-    id: Optional[int] = None
+    """Réponse API pour un lien."""
+
+    id: int
     person_id: int
-    organization_name: Optional[str] = None
+    organisation_name: Optional[str] = None
     person: Optional[PersonResponse] = None
+
+    class Config:
+        from_attributes = True
 
 
 class PersonDetailResponse(PersonResponse):
-    organizations: List[PersonOrganizationLinkResponse] = []
+    """Personne enrichie avec ses organisations."""
+
+    organisations: List[PersonOrganizationLinkResponse] = Field(
+        default_factory=list,
+        serialization_alias="organizations",
+        validation_alias=AliasChoices("organizations", "organisation_links"),
+    )

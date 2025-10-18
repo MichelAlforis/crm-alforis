@@ -430,6 +430,252 @@ export interface TaskFilters {
   view?: "today" | "overdue" | "next7" | "all"
 }
 
+// ============= EMAIL AUTOMATION =============
+
+export type EmailTemplateCategory =
+  | 'welcome'
+  | 'follow_up'
+  | 'newsletter'
+  | 'case_study'
+  | 'event'
+  | 'onboarding'
+  | 'custom'
+
+export type EmailProvider = 'sendgrid' | 'mailgun'
+export type EmailCampaignStatus = 'draft' | 'scheduled' | 'running' | 'paused' | 'completed' | 'cancelled'
+export type EmailScheduleType = 'manual' | 'immediate' | 'scheduled' | 'recurring'
+export type EmailVariant = 'A' | 'B'
+export type EmailSendStatus =
+  | 'queued'
+  | 'scheduled'
+  | 'sending'
+  | 'sent'
+  | 'delivered'
+  | 'opened'
+  | 'clicked'
+  | 'failed'
+  | 'bounced'
+  | 'unsubscribed'
+  | 'complained'
+export type EmailEventType =
+  | 'processed'
+  | 'delivered'
+  | 'opened'
+  | 'clicked'
+  | 'bounced'
+  | 'dropped'
+  | 'spamreport'
+  | 'unsubscribe'
+  | 'group_unsubscribe'
+  | 'group_resubscribe'
+  | 'deferred'
+
+export interface EmailTemplate {
+  id: number
+  name: string
+  code?: string | null
+  subject: string
+  preheader?: string | null
+  description?: string | null
+  category: EmailTemplateCategory
+  html_content: string
+  design_json?: Record<string, any> | null
+  is_active: boolean
+  is_default: boolean
+  tags?: string[] | null
+  last_used_at?: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface EmailTemplateInput {
+  name: string
+  subject: string
+  preheader?: string
+  description?: string
+  category?: EmailTemplateCategory
+  html_content: string
+  design_json?: Record<string, any> | null
+  code?: string | null
+  tags?: string[]
+  is_active?: boolean
+  is_default?: boolean
+}
+
+export interface EmailTemplateUpdateInput extends Partial<EmailTemplateInput> {}
+
+export interface EmailCampaignStep {
+  id: number
+  campaign_id: number
+  template_id: number
+  subject?: string | null
+  preheader?: string | null
+  order_index: number
+  delay_hours: number
+  wait_for_event?: EmailEventType | null
+  variant?: EmailVariant | null
+  send_window_hours?: number | null
+  metadata?: Record<string, any> | null
+  created_at: string
+  updated_at: string
+}
+
+export interface EmailCampaignStepInput {
+  template_id?: number
+  subject?: string
+  preheader?: string
+  order_index?: number
+  delay_hours?: number
+  wait_for_event?: EmailEventType
+  variant?: EmailVariant
+  send_window_hours?: number
+  metadata?: Record<string, any>
+}
+
+export interface EmailAudienceSnapshot {
+  total_contacts: number
+  total_organisations: number
+  filters_applied?: Record<string, any> | null
+}
+
+export interface EmailCampaign {
+  id: number
+  name: string
+  description?: string | null
+  provider: EmailProvider
+  status: EmailCampaignStatus
+  schedule_type: EmailScheduleType
+  from_name: string
+  from_email: string
+  reply_to?: string | null
+  default_template_id?: number | null
+  subject?: string | null
+  preheader?: string | null
+  audience_filters?: Record<string, any> | null
+  audience_snapshot?: EmailAudienceSnapshot | null
+  scheduled_at?: string | null
+  timezone?: string | null
+  track_opens: boolean
+  track_clicks: boolean
+  is_ab_test: boolean
+  ab_test_split_percentage: number
+  rate_limit_per_minute?: number | null
+  total_recipients?: number | null
+  total_sent: number
+  last_sent_at?: string | null
+  created_at: string
+  updated_at: string
+  steps: EmailCampaignStep[]
+}
+
+export interface EmailCampaignInput {
+  name: string
+  description?: string
+  provider?: EmailProvider
+  from_name: string
+  from_email: string
+  reply_to?: string
+  default_template_id?: number
+  subject?: string
+  preheader?: string
+  audience_filters?: Record<string, any>
+  track_opens?: boolean
+  track_clicks?: boolean
+  is_ab_test?: boolean
+  ab_test_split_percentage?: number
+  rate_limit_per_minute?: number
+  schedule_type?: EmailScheduleType
+  steps: EmailCampaignStepInput[]
+}
+
+export interface EmailCampaignUpdateInput extends Partial<Omit<EmailCampaignInput, 'steps'>> {
+  status?: EmailCampaignStatus
+  steps?: EmailCampaignStepInput[]
+}
+
+export interface EmailRecipient {
+  email: string
+  first_name?: string
+  last_name?: string
+  full_name?: string
+  person_id?: number
+  organisation_id?: number
+  organisation_name?: string
+  custom_data?: Record<string, any>
+}
+
+export interface EmailCampaignScheduleInput {
+  scheduled_at?: string
+  timezone?: string
+  recipients: EmailRecipient[]
+  audience_snapshot?: EmailAudienceSnapshot
+  rate_limit_per_minute?: number
+  schedule_type?: EmailScheduleType
+}
+
+export interface EmailCampaignFilters {
+  skip?: number
+  limit?: number
+  status?: EmailCampaignStatus
+  provider?: EmailProvider
+}
+
+export interface EmailSend {
+  id: number
+  campaign_id: number
+  step_id?: number | null
+  template_id?: number | null
+  recipient_email: string
+  recipient_name?: string | null
+  recipient_person_id?: number | null
+  organisation_id?: number | null
+  variant?: EmailVariant | null
+  status: EmailSendStatus
+  scheduled_at?: string | null
+  sent_at?: string | null
+  provider_message_id?: string | null
+  error_message?: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface EmailSendFilters {
+  skip?: number
+  limit?: number
+  status?: EmailSendStatus
+}
+
+export interface EmailCampaignStatsVariant {
+  variant: EmailVariant
+  total_sent: number
+  opens: number
+  clicks: number
+  bounces: number
+  unsubscribes: number
+  open_rate: number
+  click_rate: number
+}
+
+export interface EmailCampaignStats {
+  campaign_id: number
+  total_recipients: number
+  total_sent: number
+  delivered: number
+  opens: number
+  unique_opens: number
+  clicks: number
+  unique_clicks: number
+  bounces: number
+  unsubscribes: number
+  complaints: number
+  open_rate: number
+  click_rate: number
+  bounce_rate: number
+  unsubscribe_rate: number
+  last_event_at?: string | null
+  per_variant: EmailCampaignStatsVariant[]
+}
+
 // ============= ORGANISATION (Nouveau modèle remplaçant Fournisseur) =============
 
 export type OrganisationCategory =

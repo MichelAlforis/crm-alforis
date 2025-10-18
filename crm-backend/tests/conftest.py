@@ -4,6 +4,7 @@ Fixtures communes pour les tests
 Ce fichier contient toutes les fixtures pytest réutilisables.
 """
 
+import inspect
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -269,3 +270,25 @@ def create_person():
         return person
 
     return _create
+
+
+# ============================================================
+# Pytest Hooks
+# ============================================================
+
+
+def pytest_collection_modifyitems(items):
+    for item in items:
+        test_obj = getattr(item, "obj", None)
+        if inspect.iscoroutinefunction(test_obj):
+            item.add_marker(pytest.mark.anyio)
+
+
+def pytest_pyfunc_call(pyfuncitem):
+    test_obj = getattr(pyfuncitem, "obj", None)
+    if inspect.iscoroutinefunction(test_obj):
+        import asyncio
+
+        asyncio.run(test_obj(**pyfuncitem.funcargs))
+        return True
+    return None

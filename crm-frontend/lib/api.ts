@@ -63,6 +63,17 @@ import {
   WebhookUpdateInput,
   WebhookRotateSecretInput,
   WebhookEventOption,
+  EmailTemplate,
+  EmailTemplateInput,
+  EmailTemplateUpdateInput,
+  EmailCampaign,
+  EmailCampaignInput,
+  EmailCampaignUpdateInput,
+  EmailCampaignFilters,
+  EmailCampaignScheduleInput,
+  EmailCampaignStats,
+  EmailSend,
+  EmailSendFilters,
 } from './types'
 
 import type { ApiError } from './types'
@@ -303,8 +314,11 @@ class ApiClient {
     this.clearToken()
   }
 
-  // ============= INVESTOR ENDPOINTS =============
+  // ============= INVESTOR ENDPOINTS (LEGACY - DEPRECATED) =============
+  // ❌ LEGACY: Utiliser getOrganisations({ type: 'client' }) à la place
+  // Migration: /investors → /organisations?type=client
 
+  /* LEGACY - Deprecated: Use getOrganisations() instead
   async getInvestors(skip = 0, limit = 100, searchText = ''): Promise<PaginatedResponse<Investor>> {
     return this.request<PaginatedResponse<Investor>>('/investors', {
       params: { skip, limit, search: searchText },
@@ -348,9 +362,13 @@ class ApiClient {
       method: 'DELETE',
     })
   }
+  */
 
-  // ============= INTERACTION ENDPOINTS =============
+  // ============= INTERACTION ENDPOINTS (LEGACY - DEPRECATED) =============
+  // ❌ LEGACY: Utiliser getOrganisationActivity() à la place
+  // Migration: /interactions → /organisations/{id}/activity
 
+  /* LEGACY - Deprecated: Use getOrganisationActivity() instead
   async getInteractions(investorId: number, skip = 0, limit = 50): Promise<PaginatedResponse<Interaction>> {
     return this.request<PaginatedResponse<Interaction>>(`/interactions/investor/${investorId}`, {
       params: { skip, limit },
@@ -376,9 +394,13 @@ class ApiClient {
       method: 'DELETE',
     })
   }
+  */
 
-  // ============= KPI ENDPOINTS =============
+  // ============= KPI ENDPOINTS (LEGACY - DEPRECATED) =============
+  // ❌ LEGACY: Utiliser /dashboards/stats à la place
+  // Migration: /kpis → /dashboards/*
 
+  /* LEGACY - Deprecated: Use dashboards endpoints instead
   async getKPIs(investorId: number, year?: number, month?: number): Promise<KPI[]> {
     const targetYear = year ?? new Date().getFullYear()
 
@@ -415,6 +437,7 @@ class ApiClient {
       method: 'DELETE',
     })
   }
+  */
 
   // ============= HEALTH CHECK =============
 
@@ -443,8 +466,11 @@ class ApiClient {
     })
   }
 
-  // ============= FOURNISSEUR ENDPOINTS =============
+  // ============= FOURNISSEUR ENDPOINTS (LEGACY - DEPRECATED) =============
+  // ❌ LEGACY: Utiliser getOrganisations({ type: 'fournisseur' }) à la place
+  // Migration: /fournisseurs → /organisations?type=fournisseur
 
+  /* LEGACY - Deprecated: Use getOrganisations() instead
   async getFournisseurs(skip = 0, limit = 100, searchText = ''): Promise<PaginatedResponse<Fournisseur>> {
     return this.request<PaginatedResponse<Fournisseur>>('/fournisseurs', {
       params: { skip, limit, search: searchText },
@@ -489,7 +515,7 @@ class ApiClient {
     })
   }
 
-  // ============= KPI ENDPOINTS (UPDATED - PAR FOURNISSEUR) =============
+  // ============= KPI ENDPOINTS (UPDATED - PAR FOURNISSEUR) (LEGACY - DEPRECATED) =============
 
   async getKPIsByFournisseur(fournisseurId: number, year?: number, month?: number): Promise<KPI[]> {
     return this.request<KPI[]>(`/fournisseurs/${fournisseurId}/kpis`, {
@@ -502,8 +528,6 @@ class ApiClient {
       method: 'POST',
       body: JSON.stringify(data),
     })
-  }
-
   async updateKPIForFournisseur(fournisseurId: number, kpiId: number, data: KPIUpdate): Promise<KPI> {
     return this.request<KPI>(`/fournisseurs/${fournisseurId}/kpis/${kpiId}`, {
       method: 'PUT',
@@ -516,6 +540,7 @@ class ApiClient {
       method: 'DELETE',
     })
   }
+  */
 
   // ============= PEOPLE ENDPOINTS =============
 
@@ -608,6 +633,80 @@ class ApiClient {
     await this.request<void>(`/newsletters/${id}`, {
       method: 'DELETE',
     })
+  }
+
+  // ============= EMAIL AUTOMATION ENDPOINTS =============
+
+  async getEmailTemplates(params?: { only_active?: boolean }): Promise<EmailTemplate[]> {
+    const query = {
+      only_active: params?.only_active ?? true,
+    }
+    return this.request<EmailTemplate[]>('/email/templates', { params: query })
+  }
+
+  async createEmailTemplate(data: EmailTemplateInput): Promise<EmailTemplate> {
+    return this.request<EmailTemplate>('/email/templates', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async updateEmailTemplate(id: number, data: EmailTemplateUpdateInput): Promise<EmailTemplate> {
+    return this.request<EmailTemplate>(`/email/templates/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async getEmailCampaigns(filters?: EmailCampaignFilters): Promise<PaginatedResponse<EmailCampaign>> {
+    const params = {
+      skip: filters?.skip,
+      limit: filters?.limit,
+      status: filters?.status,
+      provider: filters?.provider,
+    }
+    return this.request<PaginatedResponse<EmailCampaign>>('/email/campaigns', { params })
+  }
+
+  async getEmailCampaign(id: number): Promise<EmailCampaign> {
+    return this.request<EmailCampaign>(`/email/campaigns/${id}`)
+  }
+
+  async createEmailCampaign(data: EmailCampaignInput): Promise<EmailCampaign> {
+    return this.request<EmailCampaign>('/email/campaigns', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async updateEmailCampaign(id: number, data: EmailCampaignUpdateInput): Promise<EmailCampaign> {
+    return this.request<EmailCampaign>(`/email/campaigns/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async scheduleEmailCampaign(id: number, data: EmailCampaignScheduleInput): Promise<EmailCampaign> {
+    return this.request<EmailCampaign>(`/email/campaigns/${id}/schedule`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async getEmailCampaignStats(id: number): Promise<EmailCampaignStats> {
+    return this.request<EmailCampaignStats>(`/email/campaigns/${id}/stats`)
+  }
+
+  async getEmailCampaignSends(
+    id: number,
+    filters?: EmailSendFilters
+  ): Promise<PaginatedResponse<EmailSend>> {
+    const params = {
+      skip: filters?.skip,
+      limit: filters?.limit,
+      status: filters?.status,
+    }
+    return this.request<PaginatedResponse<EmailSend>>(`/email/campaigns/${id}/sends`, { params })
   }
 
   // ============= TASK ENDPOINTS =============

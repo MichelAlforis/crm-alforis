@@ -7,12 +7,16 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi import Depends, HTTPException, status
 
 # Configuration du hachage des mots de passe
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 security = HTTPBearer()
 
 def hash_password(password: str) -> str:
     """Hasher un mot de passe"""
     return pwd_context.hash(password)
+
+def get_password_hash(password: str) -> str:
+    """Alias compatibilité legacy."""
+    return hash_password(password)
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Vérifier un mot de passe contre son hash"""

@@ -2,7 +2,7 @@ from pydantic import Field, EmailStr, field_validator
 from typing import Optional, List
 from datetime import datetime
 from schemas.base import TimestampedSchema, BaseSchema
-from models.investor import PipelineStage, ClientType
+# from models.investor import PipelineStage, ClientType
 
 # ============= CONTACT SCHEMAS =============
 

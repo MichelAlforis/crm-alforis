@@ -347,6 +347,52 @@ class NotificationService:
             })
         db.commit()
 
+
+class NotificationManager:
+    """Facilite la création et l'envoi de notifications côté services métier."""
+
+    def __init__(self, db: Session):
+        self.db = db
+
+    def create_notification(
+        self,
+        user_id: int,
+        type: NotificationType,
+        title: str,
+        message: Optional[str] = None,
+        link: Optional[str] = None,
+        resource_type: Optional[str] = None,
+        resource_id: Optional[int] = None,
+        priority: NotificationPriority = NotificationPriority.NORMAL,
+        expires_at: Optional[datetime] = None,
+        metadata: Optional[dict] = None,
+        data: Optional[dict] = None,
+    ) -> Notification:
+        if metadata is None and data is not None:
+            metadata = data
+
+        notification = NotificationService.create_notification(
+            db=self.db,
+            user_id=user_id,
+            type=type,
+            title=title,
+            message=message,
+            link=link,
+            resource_type=resource_type,
+            resource_id=resource_id,
+            priority=priority,
+            expires_at=expires_at,
+            metadata=metadata,
+        )
+
+        return notification
+
+    async def send_notification(self, notification: Notification, user_id: int) -> None:
+        await NotificationService.send_notification(notification, user_id)
+
+    def get_unread_count(self, user_id: int) -> int:
+        return NotificationService.get_unread_count(self.db, user_id)
+
     @staticmethod
     def cleanup_old_notifications(
         db: Session,

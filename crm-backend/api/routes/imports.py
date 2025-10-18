@@ -15,7 +15,7 @@ import logging
 # ---- Dépendances / modèles / schémas
 from core.database import get_db
 from core.security import get_current_user_optional
-from models.organisation import Organisation, OrganisationCategory
+from models.organisation import Organisation, OrganisationCategory, OrganisationType
 from models.person import Person, OrganizationType, PersonOrganizationLink
 from schemas.organisation import OrganisationCreate
 from schemas.person import PersonCreate, PersonOrganizationLinkCreate

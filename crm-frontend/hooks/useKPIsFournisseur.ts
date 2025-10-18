@@ -1,5 +1,8 @@
 // hooks/useKPIsFournisseur.ts
-// ============= KPIs PAR FOURNISSEUR HOOK =============
+// ============= KPIs PAR FOURNISSEUR HOOK (LEGACY - DEPRECATED) =============
+// ❌ LEGACY: Ce hook est déprécié et ne doit plus être utilisé
+// ✅ Utiliser: Les endpoints /dashboards/stats à la place
+// Migration: KPIs Fournisseur → Dashboards
 
 'use client'
 

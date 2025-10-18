@@ -13,7 +13,7 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 import enum
 
-from core.database import Base
+from models.base import Base
 
 
 class UserRole(str, enum.Enum):

@@ -1,5 +1,8 @@
 // hooks/useInteractions.ts
-// ============= INTERACTIONS CRUD HOOK =============
+// ============= INTERACTIONS CRUD HOOK (LEGACY - DEPRECATED) =============
+// ❌ LEGACY: Ce hook est déprécié et ne doit plus être utilisé
+// ✅ Utiliser: useOrganisationActivity() à la place
+// Migration: Interactions → OrganisationActivity
 
 'use client'
 

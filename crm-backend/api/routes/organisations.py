@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status, HTTPException, Query
 from sqlalchemy.orm import Session
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 from core import get_db, get_current_user
 from core.events import emit_event, EventType
@@ -33,13 +33,13 @@ def _extract_user_id(current_user: dict) -> Optional[int]:
 
 # ============= GET ROUTES =============
 
-@router.get("", response_model=PaginatedResponse[OrganisationResponse])
+@router.get("", response_model=List[OrganisationResponse])
 @cache_response(ttl=300, key_prefix="organisations:list")
 async def list_organisations(
-    skip: int = Query(0, ge=0),
-    limit: int = Query(100, ge=1, le=1000),
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
     category: Optional[str] = Query(None),
-    is_active: bool = Query(True),
+    active_only: bool = Query(False, alias="active_only"),
     country_code: Optional[str] = Query(None, min_length=2, max_length=2),
     language: Optional[str] = Query(None, min_length=2, max_length=5),
     db: Session = Depends(get_db),
@@ -56,7 +56,9 @@ async def list_organisations(
     """
     service = OrganisationService(db)
 
-    filters = {"is_active": is_active}
+    filters: Dict[str, Any] = {}
+    if active_only:
+        filters["is_active"] = True
     if category:
         filters["category"] = category
     if country_code:
@@ -64,35 +66,26 @@ async def list_organisations(
     if language:
         filters["language"] = language.upper()
 
-    items, total = await service.get_all(skip=skip, limit=limit, filters=filters)
+    skip = (page - 1) * limit
+    items, _ = await service.get_all(skip=skip, limit=limit, filters=filters)
 
-    return PaginatedResponse(
-        total=total,
-        skip=skip,
-        limit=limit,
-        items=[OrganisationResponse.model_validate(item) for item in items]
-    )
+    return [OrganisationResponse.model_validate(item) for item in items]
 
 
-@router.get("/search", response_model=PaginatedResponse[OrganisationResponse])
+@router.get("/search", response_model=List[OrganisationResponse])
 @cache_response(ttl=300, key_prefix="organisations:search")
 async def search_organisations(
     q: str = Query(..., min_length=1),
     skip: int = Query(0, ge=0),
-    limit: int = Query(100, ge=1, le=1000),
+    limit: int = Query(20, ge=1, le=100),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
     """Rechercher des organisations par nom, website ou notes"""
     service = OrganisationService(db)
-    items, total = await service.search(q, skip=skip, limit=limit)
+    items, _ = await service.search(q, skip=skip, limit=limit)
 
-    return PaginatedResponse(
-        total=total,
-        skip=skip,
-        limit=limit,
-        items=[OrganisationResponse.model_validate(item) for item in items]
-    )
+    return [OrganisationResponse.model_validate(item) for item in items]
 
 
 @router.get("/stats")
@@ -114,12 +107,12 @@ async def get_organisation_stats(
     return stats
 
 
-@router.get("/by-language/{language}", response_model=PaginatedResponse[OrganisationResponse])
+@router.get("/by-language/{language}", response_model=List[OrganisationResponse])
 @cache_response(ttl=300, key_prefix="organisations:language")
 async def get_organisations_by_language(
     language: str,
     skip: int = Query(0, ge=0),
-    limit: int = Query(100, ge=1, le=1000),
+    limit: int = Query(20, ge=1, le=100),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
@@ -128,14 +121,9 @@ async def get_organisations_by_language(
     Utile pour la segmentation des newsletters
     """
     service = OrganisationService(db)
-    items, total = await service.get_by_language(language.upper(), skip=skip, limit=limit)
+    items, _ = await service.get_by_language(language.upper(), skip=skip, limit=limit)
 
-    return PaginatedResponse(
-        total=total,
-        skip=skip,
-        limit=limit,
-        items=[OrganisationResponse.model_validate(item) for item in items]
-    )
+    return [OrganisationResponse.model_validate(item) for item in items]
 
 
 @router.get("/{organisation_id}", response_model=OrganisationDetailResponse)

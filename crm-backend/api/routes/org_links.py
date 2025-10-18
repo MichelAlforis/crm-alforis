@@ -24,6 +24,18 @@ async def create_link(
     return responses[0]
 
 
+@router.get("/{link_id}", response_model=PersonOrganizationLinkResponse)
+async def get_link(
+    link_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    service = PersonOrganizationLinkService(db)
+    link = await service.get_link(link_id)
+    responses = service.serialize_links([link])
+    return responses[0]
+
+
 @router.put("/{link_id}", response_model=PersonOrganizationLinkResponse)
 async def update_link(
     link_id: int,

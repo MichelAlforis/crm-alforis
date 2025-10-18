@@ -1,5 +1,8 @@
 // hooks/useKPIs.ts
-// ============= KPIs CRUD HOOK =============
+// ============= KPIs CRUD HOOK (LEGACY - DEPRECATED) =============
+// ❌ LEGACY: Ce hook est déprécié et ne doit plus être utilisé
+// ✅ Utiliser: Les endpoints /dashboards/stats à la place
+// Migration: KPIs → Dashboards
 
 'use client'
 

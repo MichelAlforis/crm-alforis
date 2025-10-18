@@ -4,14 +4,14 @@ from typing import Optional
 
 from core import get_db, get_current_user
 from core.events import emit_event, EventType
-from schemas.interaction import (
+# from schemas.interaction import (
     InteractionCreate,
     InteractionUpdate,
     InteractionResponse,
     InteractionFilterParams,
 )
 from schemas.base import PaginatedResponse
-from services.interaction import InteractionService
+# from services.interaction import InteractionService
 
 router = APIRouter(prefix="/interactions", tags=["interactions"])
 

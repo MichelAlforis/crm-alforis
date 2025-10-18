@@ -325,23 +325,23 @@ crm-backend/api/routes/workflows.py
 **Effort:** 🛠️🛠️🛠️🛠️ (5 jours)
 
 **Tâches:**
-- [ ] Éditeur d'emails (WYSIWYG):
-  - [ ] Templates HTML responsive
-  - [ ] Variables dynamiques {{organisation.nom}}, {{contact.prenom}}
-  - [ ] Bibliothèque templates (bienvenue, relance, newsletter)
-- [ ] Campagnes email:
-  - [ ] Séquences multi-emails (drip campaigns)
-  - [ ] A/B testing (2 versions, split 50/50)
-  - [ ] Segmentation audiences (filtres avancés)
-  - [ ] Envoi planifié (date/heure précise)
-- [ ] Tracking & Analytics:
-  - [ ] Taux d'ouverture (tracking pixel)
-  - [ ] Taux de clics (liens trackés)
-  - [ ] Désabonnements (lien unsubscribe)
-  - [ ] Bounces & erreurs
-- [ ] Intégration SendGrid/Mailgun:
-  - [ ] Webhooks (events: delivered, opened, clicked, bounced)
-  - [ ] Rate limiting (respecter quotas)
+- [x] Éditeur d'emails (WYSIWYG):
+  - [x] Templates HTML responsive
+  - [x] Variables dynamiques {{organisation.nom}}, {{contact.prenom}}
+  - [x] Bibliothèque templates (bienvenue, relance, newsletter)
+- [x] Campagnes email:
+  - [x] Séquences multi-emails (drip campaigns)
+  - [x] A/B testing (2 versions, split 50/50)
+  - [x] Segmentation audiences (filtres avancés)
+  - [x] Envoi planifié (date/heure précise)
+- [x] Tracking & Analytics:
+  - [x] Taux d'ouverture (tracking pixel)
+  - [x] Taux de clics (liens trackés)
+  - [x] Désabonnements (lien unsubscribe)
+  - [x] Bounces & erreurs
+- [x] Intégration SendGrid/Mailgun:
+  - [x] Webhooks (events: delivered, opened, clicked, bounced)
+  - [x] Rate limiting (respecter quotas)
 
 **Stack Technique:**
 ```typescript
@@ -375,6 +375,13 @@ crm-backend/services/email_service.py
 crm-backend/api/routes/email_campaigns.py
 crm-backend/webhooks/sendgrid.py   (webhooks tracking)
 ```
+
+**Livrables implémentés (2025-01-20):**
+- API REST `/api/v1/email/templates`, `/api/v1/email/campaigns`, `/api/v1/email/campaigns/{id}/schedule|stats|sends` + webhooks `/email/webhooks/sendgrid`.
+- Services `EmailTemplateService`, `EmailCampaignService`, `EmailDeliveryService` (Celery), analytics & ingestion des événements providers.
+- Nouvelles tables SQLAlchemy: `email_templates`, `email_campaigns`, `email_campaign_steps`, `email_sends`, `email_events` (+ enums providers/statuts).
+- Frontend: hooks React Query (`useEmailAutomation`) et composants `EmailEditor`, `TemplateLibrary`, `CampaignBuilder`, `AudienceSelector`, `CampaignAnalytics`.
+- Rate limiting & traitement planifié via `tasks/email_tasks.py` (beat dispatch + envoi unitaire) avec suivi RGPD (unsubscribe).
 
 **Templates email prédéfinis:**
 ```

@@ -3,7 +3,7 @@ from typing import Optional, List, Dict
 from datetime import datetime
 from schemas.base import TimestampedSchema, BaseSchema
 from schemas.person import PersonOrganizationLinkResponse
-from models.fournisseur import StageFournisseur, TypeFournisseur, InteractionType
+# from models.fournisseur import StageFournisseur, TypeFournisseur, InteractionType
 
 # =====================================================
 # CONTACTS FOURNISSEUR

@@ -30,6 +30,7 @@ from typing import Optional, List, Dict, Any, BinaryIO
 from datetime import datetime
 from io import BytesIO
 import csv
+from sqlalchemy.orm import Session
 
 # Excel
 from openpyxl import Workbook
@@ -428,8 +429,32 @@ class ExportService:
 # Helpers Simplifiés
 # ============================================
 
+async def export_organisations_csv(
+    organisations: List[Organisation],
+    db: Session | None = None,
+    filename: str = "organisations.csv",
+) -> BytesIO:
+    """Helper CSV pour les organisations."""
+
+    columns = [
+        "id",
+        "name",
+        "type",
+        "category",
+        "email",
+        "city",
+        "country",
+        "is_active",
+    ]
+
+    data = [org.to_dict() for org in organisations]
+
+    return ExportService.export_csv(data=data, columns=columns, filename=filename)
+
+
 async def export_organisations_excel(
     organisations: List[Organisation],
+    db: Session | None = None,
     filename: str = "organisations.xlsx",
     include_charts: bool = True,
 ) -> BytesIO:
@@ -453,6 +478,7 @@ async def export_organisations_excel(
 
 async def export_organisations_pdf(
     organisations: List[Organisation],
+    db: Session | None = None,
     filename: str = "organisations.pdf",
     title: str = "Rapport Organisations",
 ) -> BytesIO:
@@ -471,4 +497,18 @@ async def export_organisations_pdf(
         organisations=organisations,
         filename=filename,
         title=title,
+    )
+
+
+async def export_mandats_pdf(
+    mandats: List[Mandat],
+    db: Session | None = None,
+    filename: str = "mandats.pdf",
+) -> BytesIO:
+    """
+    Helper export PDF mandats.
+    """
+    return ExportService.export_mandats_pdf(
+        mandats=mandats,
+        filename=filename,
     )

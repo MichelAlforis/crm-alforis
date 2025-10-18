@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from core import get_db, get_current_user
 from schemas.base import PaginatedResponse
-from schemas.fournisseur import (
+# from schemas.fournisseur import (
     FournisseurCreate,
     FournisseurUpdate,
     FournisseurResponse,
@@ -12,7 +12,7 @@ from schemas.fournisseur import (
     FournisseurStatsResponse,
     FournisseurFilterParams,
 )
-from services.fournisseur import FournisseurService
+# from services.fournisseur import FournisseurService
 from services.person import PersonOrganizationLinkService
 
 router = APIRouter(prefix="/fournisseurs", tags=["fournisseurs"])

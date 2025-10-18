@@ -1,5 +1,9 @@
 // hooks/useInvestors.ts
-// ============= INVESTORS CRUD HOOK =============
+// ============= INVESTORS CRUD HOOK (LEGACY - DEPRECATED) =============
+// ❌ LEGACY: Ce hook est déprécié et ne doit plus être utilisé
+// ✅ Utiliser: useOrganisations() à la place avec { type: 'client' }
+// Migration: Investors → Organisations (type=client)
+//
 // Encapsule toute la logique CRUD pour les investors
 // Utilisable dans n'importe quel composant
 

@@ -6,51 +6,51 @@ from schemas.base import (
     HealthCheckResponse,
 )
 
-from schemas.investor import (
-    ContactCreate,
-    ContactUpdate,
-    ContactResponse,
-    InvestorCreate,
-    InvestorUpdate,
-    InvestorResponse,
-    InvestorDetailResponse,
-    InvestorStatsResponse,
-    InvestorFilterParams,
-)
+# from schemas.investor import (
+#     ContactCreate,
+#     ContactUpdate,
+#     ContactResponse,
+#     InvestorCreate,
+#     InvestorUpdate,
+#     InvestorResponse,
+#     InvestorDetailResponse,
+#     InvestorStatsResponse,
+#     InvestorFilterParams,
+# )
 
-from schemas.interaction import (
-    InteractionCreate,
-    InteractionUpdate,
-    InteractionResponse,
-    InteractionSummary,
-    InteractionFilterParams,
-)
+# from schemas.interaction import (
+#     InteractionCreate,
+#     InteractionUpdate,
+#     InteractionResponse,
+#     InteractionSummary,
+#     InteractionFilterParams,
+# )
 
-from schemas.kpi import (
-    KPICreate,
-    KPIUpdate,
-    KPIResponse,
-    KPISummary,
-    KPIFilterParams,
-)
+# from schemas.kpi import (
+#     KPICreate,
+#     KPIUpdate,
+#     KPIResponse,
+#     KPISummary,
+#     KPIFilterParams,
+# )
 
-from schemas.fournisseur import (
-    FournisseurContactCreate,
-    FournisseurContactUpdate,
-    FournisseurContactResponse,
-    FournisseurInteractionCreate,
-    FournisseurInteractionUpdate,
-    FournisseurInteractionResponse,
-    FournisseurKPICreate,
-    FournisseurKPIUpdate,
-    FournisseurKPIResponse,
-    FournisseurCreate,
-    FournisseurUpdate,
-    FournisseurResponse,
-    FournisseurDetailResponse,
-    FournisseurStatsResponse,
-    FournisseurFilterParams,
-)
+# from schemas.fournisseur import (
+#     FournisseurContactCreate,
+#     FournisseurContactUpdate,
+#     FournisseurContactResponse,
+#     FournisseurInteractionCreate,
+#     FournisseurInteractionUpdate,
+#     FournisseurInteractionResponse,
+#     FournisseurKPICreate,
+#     FournisseurKPIUpdate,
+#     FournisseurKPIResponse,
+#     FournisseurCreate,
+#     FournisseurUpdate,
+#     FournisseurResponse,
+#     FournisseurDetailResponse,
+#     FournisseurStatsResponse,
+#     FournisseurFilterParams,
+# )
 from schemas.person import (
     PersonCreate,
     PersonUpdate,
@@ -81,6 +81,20 @@ from schemas.organisation_activity import (
     OrganisationActivityUpdate,
     OrganisationActivityResponse,
 )
+from schemas.email import (
+    EmailTemplateCreate,
+    EmailTemplateUpdate,
+    EmailTemplateResponse,
+    EmailCampaignCreate,
+    EmailCampaignUpdate,
+    EmailCampaignResponse,
+    EmailCampaignScheduleRequest,
+    EmailCampaignStatsResponse,
+    EmailCampaignStepResponse,
+    EmailSendResponse,
+    EmailEventResponse,
+    EmailSendFilterParams,
+)
 
 __all__ = [
     # ---------- Base ----------
@@ -90,47 +104,47 @@ __all__ = [
     "PaginatedResponse",
     "HealthCheckResponse",
 
-    # ---------- Investor ----------
-    "ContactCreate",
-    "ContactUpdate",
-    "ContactResponse",
-    "InvestorCreate",
-    "InvestorUpdate",
-    "InvestorResponse",
-    "InvestorDetailResponse",
-    "InvestorStatsResponse",
-    "InvestorFilterParams",
+    # ---------- Investor (LEGACY - commenté) ----------
+    # "ContactCreate",
+    # "ContactUpdate",
+    # "ContactResponse",
+    # "InvestorCreate",
+    # "InvestorUpdate",
+    # "InvestorResponse",
+    # "InvestorDetailResponse",
+    # "InvestorStatsResponse",
+    # "InvestorFilterParams",
 
-    # ---------- Interaction ----------
-    "InteractionCreate",
-    "InteractionUpdate",
-    "InteractionResponse",
-    "InteractionSummary",
-    "InteractionFilterParams",
+    # ---------- Interaction (LEGACY - commenté) ----------
+    # "InteractionCreate",
+    # "InteractionUpdate",
+    # "InteractionResponse",
+    # "InteractionSummary",
+    # "InteractionFilterParams",
 
-    # ---------- KPI ----------
-    "KPICreate",
-    "KPIUpdate",
-    "KPIResponse",
-    "KPISummary",
-    "KPIFilterParams",
+    # ---------- KPI (LEGACY - commenté) ----------
+    # "KPICreate",
+    # "KPIUpdate",
+    # "KPIResponse",
+    # "KPISummary",
+    # "KPIFilterParams",
 
-    # ---------- Fournisseur ----------
-    "FournisseurContactCreate",
-    "FournisseurContactUpdate",
-    "FournisseurContactResponse",
-    "FournisseurInteractionCreate",
-    "FournisseurInteractionUpdate",
-    "FournisseurInteractionResponse",
-    "FournisseurKPICreate",
-    "FournisseurKPIUpdate",
-    "FournisseurKPIResponse",
-    "FournisseurCreate",
-    "FournisseurUpdate",
-    "FournisseurResponse",
-    "FournisseurDetailResponse",
-    "FournisseurStatsResponse",
-    "FournisseurFilterParams",
+    # ---------- Fournisseur (LEGACY - commenté) ----------
+    # "FournisseurContactCreate",
+    # "FournisseurContactUpdate",
+    # "FournisseurContactResponse",
+    # "FournisseurInteractionCreate",
+    # "FournisseurInteractionUpdate",
+    # "FournisseurInteractionResponse",
+    # "FournisseurKPICreate",
+    # "FournisseurKPIUpdate",
+    # "FournisseurKPIResponse",
+    # "FournisseurCreate",
+    # "FournisseurUpdate",
+    # "FournisseurResponse",
+    # "FournisseurDetailResponse",
+    # "FournisseurStatsResponse",
+    # "FournisseurFilterParams",
 
     # ---------- Person ----------
     "PersonCreate",
@@ -161,4 +175,18 @@ __all__ = [
     "OrganisationActivityCreate",
     "OrganisationActivityUpdate",
     "OrganisationActivityResponse",
+
+    # ---------- Email ----------
+    "EmailTemplateCreate",
+    "EmailTemplateUpdate",
+    "EmailTemplateResponse",
+    "EmailCampaignCreate",
+    "EmailCampaignUpdate",
+    "EmailCampaignResponse",
+    "EmailCampaignScheduleRequest",
+    "EmailCampaignStatsResponse",
+    "EmailCampaignStepResponse",
+    "EmailSendResponse",
+    "EmailEventResponse",
+    "EmailSendFilterParams",
 ]

@@ -8,9 +8,9 @@ from datetime import date, timedelta
 from sqlalchemy.orm import Session
 import logging
 
-from models.task import Task, TaskPriority, TaskCategory, TaskStatus
-from models.investor import Investor, PipelineStage
-from models.fournisseur import Fournisseur, StageFournisseur
+from models.task import Task, TaskPriority, TaskStatus  # TaskCategory n\'existe pas,
+# from models.investor import Investor, PipelineStage
+# from models.fournisseur import Fournisseur, StageFournisseur
 from services.task import TaskService
 
 logger = logging.getLogger(__name__)
@@ -207,7 +207,7 @@ class TaskAutomationService:
         description: str,
         days_from_now: int,
         priority: TaskPriority,
-        category: TaskCategory,
+        category: str,  # TaskCategory
         investor_id: Optional[int] = None,
         fournisseur_id: Optional[int] = None,
         person_id: Optional[int] = None,

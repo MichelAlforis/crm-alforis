@@ -1,37 +1,43 @@
 from models.base import Base, BaseModel
-from models.investor import (
-    Investor,
-    Contact,
-    Interaction as InvestorInteraction,
-    KPI,
-    PipelineStage,
-    ClientType,
-    InteractionType,
-)
-from models.fournisseur import (
-    Fournisseur,
-    FournisseurContact,
-    FournisseurInteraction,
-    FournisseurKPI,
-    StageFournisseur,
-    TypeFournisseur,
-)
+
+# ❌ LEGACY - Models archivés dans legacy/models/
+# # from models.investor import (
+#     Investor,
+#     Contact,
+#     Interaction as InvestorInteraction,
+#     KPI,
+#     PipelineStage,
+#     ClientType,
+#     InteractionType,
+# )
+# # from models.fournisseur import (
+#     Fournisseur,
+#     FournisseurContact,
+#     FournisseurInteraction,
+#     FournisseurKPI,
+#     StageFournisseur,
+#     TypeFournisseur,
+# )
+
 from models.person import (
     Person,
     PersonOrganizationLink,
-    OrganizationType,
+    PersonRole,
 )
+from models.user import User
+from models.team import Team
 from models.task import (
     Task,
     TaskPriority,
     TaskStatus,
-    TaskCategory,
 )
 from models.webhook import Webhook
 from models.organisation import (
     Organisation,
     OrganisationContact,
     OrganisationCategory,
+    OrganisationType,
+    PipelineStage,
     MandatDistribution,
     MandatStatus,
     Produit,
@@ -46,6 +52,16 @@ from models.organisation_activity import (
     OrganisationActivity,
     OrganisationActivityType,
 )
+from models.notification import (
+    Notification,
+    NotificationType,
+    NotificationPriority,
+)
+from models.mandat import (
+    Mandat,
+    MandatType,
+    MandatStatus,
+)
 from models.workflow import (
     Workflow,
     WorkflowExecution,
@@ -54,33 +70,49 @@ from models.workflow import (
     WorkflowStatus,
     WorkflowExecutionStatus,
 )
+from models.email import (
+    EmailTemplate,
+    EmailCampaign,
+    EmailCampaignStep,
+    EmailSend,
+    EmailEvent,
+    EmailTemplateCategory,
+    EmailProvider,
+    EmailCampaignStatus,
+    EmailScheduleType,
+    EmailVariant,
+    EmailSendStatus,
+    EmailEventType,
+)
 
 __all__ = [
     # Base
     "Base",
     "BaseModel",
 
-    # Investor
-    "Investor",
-    "Contact",
-    "InvestorInteraction",
-    "KPI",
-    "PipelineStage",
-    "ClientType",
-    "InteractionType",
+    # ❌ LEGACY - Investor (archivé)
+    # # "Investor",
+    # # "Contact",
+    # # "InvestorInteraction",
+    # # "KPI",
+    # "PipelineStage",
+    # # "ClientType",
+    # # "InteractionType",
 
-    # Fournisseur (legacy - sera progressivement remplacé par Organisation)
-    "Fournisseur",
-    "FournisseurContact",
-    "FournisseurInteraction",
-    "FournisseurKPI",
-    "StageFournisseur",
-    "TypeFournisseur",
+    # ❌ LEGACY - Fournisseur (archivé)
+    # # "Fournisseur",
+    # # "FournisseurContact",
+    # # "FournisseurInteraction",
+    # # "FournisseurKPI",
+    # # "StageFournisseur",
+    # # "TypeFournisseur",
 
-    # Organisation (nouveau modèle)
+    # Organisation (nouveau modèle unif ié)
     "Organisation",
     "OrganisationContact",
     "OrganisationCategory",
+    "OrganisationType",
+    "PipelineStage",
     "MandatDistribution",
     "MandatStatus",
     "Produit",
@@ -96,13 +128,24 @@ __all__ = [
     # People
     "Person",
     "PersonOrganizationLink",
-    "OrganizationType",
+    "PersonRole",
+    "User",
+    "Team",
 
     # Tasks
     "Task",
     "TaskPriority",
     "TaskStatus",
-    "TaskCategory",
+
+    # Notifications
+    "Notification",
+    "NotificationType",
+    "NotificationPriority",
+
+    # Mandats (legacy compatibility)
+    "Mandat",
+    "MandatType",
+    "MandatStatus",
 
     # Webhooks
     "Webhook",
@@ -114,6 +157,20 @@ __all__ = [
     "WorkflowActionType",
     "WorkflowStatus",
     "WorkflowExecutionStatus",
+
+    # Email Automation
+    "EmailTemplate",
+    "EmailCampaign",
+    "EmailCampaignStep",
+    "EmailSend",
+    "EmailEvent",
+    "EmailTemplateCategory",
+    "EmailProvider",
+    "EmailCampaignStatus",
+    "EmailScheduleType",
+    "EmailVariant",
+    "EmailSendStatus",
+    "EmailEventType",
 ]
 
 # ---------- Imports API ----------

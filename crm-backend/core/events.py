@@ -77,6 +77,13 @@ class EventType(str, enum.Enum):
     IMPORT_STARTED = "import.started"
     IMPORT_COMPLETED = "import.completed"
 
+    # Email Automation
+    EMAIL_TEMPLATE_CREATED = "email.template_created"
+    EMAIL_CAMPAIGN_CREATED = "email.campaign_created"
+    EMAIL_CAMPAIGN_SCHEDULED = "email.campaign_scheduled"
+    EMAIL_SEND_FAILED = "email.send_failed"
+    EMAIL_EVENT_RECEIVED = "email.event_received"
+
     # Système
     SYSTEM_STARTUP = "system.startup"
     SYSTEM_SHUTDOWN = "system.shutdown"
@@ -147,6 +154,8 @@ class EventBus:
 
     async def connect(self):
         """Connecte au serveur Redis"""
+        if not settings.redis_enabled:
+            return
         if self.redis_client is None:
             try:
                 self.redis_client = await aioredis.from_url(
@@ -156,6 +165,8 @@ class EventBus:
                     decode_responses=True,
                 )
                 self.pubsub = self.redis_client.pubsub()
+                # Vérifier la connexion
+                await self.redis_client.ping()
                 print("✅ Event Bus connecté à Redis")
             except Exception as e:
                 print(f"❌ Erreur connexion Event Bus Redis: {e}")
@@ -193,6 +204,8 @@ class EventBus:
         Returns:
             bool: True si publié avec succès
         """
+        if not settings.redis_enabled:
+            return False
         # Connecter si pas encore fait
         if not self.is_available():
             await self.connect()
@@ -294,6 +307,9 @@ class EventBus:
 
         À appeler au démarrage de l'application.
         """
+        if not settings.redis_enabled:
+            print("ℹ️  Event Bus désactivé (redis_enabled=False)")
+            return
         if self.is_listening:
             print("⚠️  Event Bus déjà en écoute")
             return
@@ -317,6 +333,8 @@ class EventBus:
 
         À appeler à l'arrêt de l'application.
         """
+        if not settings.redis_enabled:
+            return
         self.is_listening = False
 
         if self._listener_task:

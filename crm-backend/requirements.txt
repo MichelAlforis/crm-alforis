@@ -18,6 +18,7 @@ APScheduler==3.10.4
 alembic==1.13.0
 
 # Monitoring & Logging
+sendgrid==6.11.0
 sentry-sdk[fastapi]==1.39.1
 structlog==23.2.0
 

@@ -1,5 +1,8 @@
 // hooks/useFournisseurs.ts
-// ============= FOURNISSEURS CRUD HOOK =============
+// ============= FOURNISSEURS CRUD HOOK (LEGACY - DEPRECATED) =============
+// ❌ LEGACY: Ce hook est déprécié et ne doit plus être utilisé
+// ✅ Utiliser: useOrganisations() à la place avec { type: 'fournisseur' }
+// Migration: Fournisseurs → Organisations (type=fournisseur)
 
 'use client'
 

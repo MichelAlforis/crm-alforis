@@ -14,10 +14,18 @@ from core.monitoring import (
     capture_exception,
 )
 from core.notifications import websocket_endpoint
-from core.security import decode_token
+from core.security import decode_token, get_password_hash
 from core.events import event_bus
 from core.permissions import init_default_permissions
 from core.database import SessionLocal
+from models.role import Role, UserRole
+from models.user import User
+from sqlalchemy.orm import Session
+
+try:
+    from api.routes.auth import TEST_USERS
+except Exception:
+    TEST_USERS = {}
 
 # Initialiser monitoring (Sentry + structured logging)
 init_structured_logging()
@@ -66,6 +74,46 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 
 # ============= EVENTS =============
 
+def _ensure_test_users(db: Session) -> None:
+    """Seed default API users required by the legacy test suite."""
+    if not TEST_USERS:
+        logger.warning("seed_users_skipped", reason="TEST_USERS empty")
+        return
+
+    roles_cache: dict[str, Role | None] = {}
+
+    def _get_role(name: UserRole | None) -> Role | None:
+        if name is None:
+            return None
+        key = name.value
+        if key not in roles_cache:
+            roles_cache[key] = db.query(Role).filter(Role.name == name).first()
+        return roles_cache[key]
+
+    for email, payload in TEST_USERS.items():
+        normalized_email = email.strip().lower()
+        existing = db.query(User).filter(User.email == normalized_email).first()
+        if existing:
+            continue
+
+        role = _get_role(UserRole.ADMIN if payload.get("is_admin") else UserRole.USER)
+        user = User(
+            email=normalized_email,
+            username=normalized_email.split("@")[0],
+            full_name=payload.get("name"),
+            hashed_password=get_password_hash(payload["password"]),
+            role=role,
+            is_active=True,
+        )
+        db.add(user)
+        logger.info(
+            "seed_user_created",
+            email=normalized_email,
+            role=role.name if role else None,
+        )
+    db.commit()
+
+
 @app.on_event("startup")
 async def startup_event():
     """Initialiser la base de données au démarrage"""
@@ -78,6 +126,7 @@ async def startup_event():
     try:
         init_default_permissions(db)
         logger.info("permissions_initialized", message="Permissions RBAC initialisées")
+        _ensure_test_users(db)
     finally:
         db.close()
 

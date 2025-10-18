@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 
 from core import get_db, get_current_user
-from schemas.investor import (
+# from schemas.investor import (
     InvestorCreate,
     InvestorUpdate,
     InvestorResponse,
@@ -12,7 +12,7 @@ from schemas.investor import (
     InvestorFilterParams,
 )
 from schemas.base import PaginatedResponse
-from services.investor import InvestorService
+# from services.investor import InvestorService
 from services.person import PersonOrganizationLinkService
 
 router = APIRouter(prefix="/investors", tags=["investors"])

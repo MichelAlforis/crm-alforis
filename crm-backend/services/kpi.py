@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, func, or_
 from typing import List, Tuple, Optional
-from models.investor import KPI, Investor
-from schemas.kpi import KPICreate, KPIUpdate
+# from models.investor import KPI, Investor
+# from schemas.kpi import KPICreate, KPIUpdate
 from services.base import BaseService
 from core.exceptions import ValidationError, ResourceNotFound
 import logging

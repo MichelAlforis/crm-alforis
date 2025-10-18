@@ -16,7 +16,7 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 import enum
 
-from core.database import Base
+from models.base import Base
 from models.role import role_permissions
 
 

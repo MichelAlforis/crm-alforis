@@ -3,10 +3,10 @@ from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func, or_, and_
 from datetime import date, timedelta, datetime
 
-from models.task import Task, TaskStatus, TaskPriority, TaskCategory
-from models.investor import InteractionType
+from models.task import Task, TaskStatus, TaskPriority  # TaskCategory n\'existe pas,
+# from models.investor import InteractionType
 from schemas.task import TaskCreate, TaskUpdate, TaskFilterParams
-from schemas.interaction import InteractionCreate
+# from schemas.interaction import InteractionCreate
 from services.base import BaseService
 from services.organisation_activity import OrganisationActivityService
 from models.organisation_activity import OrganisationActivityType
@@ -360,7 +360,7 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
 
     async def _create_interaction_from_task(self, task: Task) -> None:
         """Créer une interaction automatiquement depuis une tâche terminée"""
-        from services.interaction import InteractionService
+        # from services.interaction import InteractionService
 
         # Déterminer le type d'interaction selon la catégorie de la tâche
         interaction_type_map = {
@@ -494,7 +494,7 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
         description: str,
         due_date: date,
         priority: TaskPriority,
-        category: TaskCategory,
+        category: str,  # TaskCategory
         rule_name: str,
         investor_id: Optional[int] = None,
         fournisseur_id: Optional[int] = None,

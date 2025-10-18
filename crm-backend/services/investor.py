@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import or_, and_
 from typing import List, Tuple, Optional
-from models.investor import Investor, Contact, PipelineStage, ClientType
+# from models.investor import Investor, Contact, PipelineStage, ClientType
 from models.person import PersonOrganizationLink, OrganizationType
-from schemas.investor import InvestorCreate, InvestorUpdate, InvestorFilterParams
+# from schemas.investor import InvestorCreate, InvestorUpdate, InvestorFilterParams
 from services.base import BaseService
 from core.exceptions import ConflictError, ValidationError
 import logging

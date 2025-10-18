@@ -3,9 +3,24 @@ Tâches Celery pour l'exécution de workflows
 
 Ces tâches sont exécutées de manière asynchrone par Celery workers
 """
+import logging
 
-from celery import Task
-from celery.utils.log import get_task_logger
+try:
+    from celery import Task
+    from celery.utils.log import get_task_logger
+except ImportError:  # pragma: no cover
+    class Task:  # Minimal stub
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def retry(self, exc=None, countdown=0):
+            raise exc or RuntimeError("Task retry")
+
+        def after_return(self, *args, **kwargs):
+            pass
+
+    def get_task_logger(name):
+        return logging.getLogger(name)
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from typing import Dict, Any, Optional

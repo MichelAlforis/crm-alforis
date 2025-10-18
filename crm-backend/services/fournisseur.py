@@ -2,9 +2,9 @@ from typing import Optional, List
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func, or_
 
-from models.fournisseur import Fournisseur
+# from models.fournisseur import Fournisseur
 from models.person import PersonOrganizationLink, OrganizationType
-from schemas.fournisseur import FournisseurCreate, FournisseurUpdate
+# from schemas.fournisseur import FournisseurCreate, FournisseurUpdate
 from services.base import BaseService
 from core.exceptions import ResourceNotFound
 import logging

@@ -56,3 +56,10 @@ export {
   useDeleteWebhook,
   useRotateWebhookSecret,
 } from './useWebhooks'
+export {
+  useEmailTemplates,
+  useEmailCampaigns,
+  useEmailCampaign,
+  useEmailCampaignStats,
+  useEmailCampaignSends,
+} from './useEmailAutomation'

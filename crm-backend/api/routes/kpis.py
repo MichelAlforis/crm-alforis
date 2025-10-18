@@ -2,13 +2,13 @@ from fastapi import APIRouter, Depends, status, Query, Path
 from sqlalchemy.orm import Session
 
 from core import get_db, get_current_user
-from schemas.kpi import (
+# from schemas.kpi import (
     KPICreate,
     KPIUpdate,
     KPIResponse,
 )
 from schemas.base import PaginatedResponse
-from services.kpi import KPIService
+# from services.kpi import KPIService
 
 router = APIRouter(prefix="/kpis", tags=["kpis"])
 
