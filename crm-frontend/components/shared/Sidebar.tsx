@@ -367,6 +367,18 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
               <Settings className="w-4 h-4" />
               {!collapsed && <span className="text-sm">Paramètres</span>}
             </Link>
+            <Link
+              href="/dashboard/settings/webhooks"
+              className={clsx(
+                'flex items-center gap-3 px-3 py-2.5 rounded-lg',
+                'text-slate-300 hover:text-white hover:bg-white/10',
+                'transition-all duration-200',
+                collapsed && 'justify-center'
+              )}
+            >
+              <LinkIcon className="w-4 h-4" />
+              {!collapsed && <span className="text-sm">Webhooks</span>}
+            </Link>
 
             <Link
               href="/dashboard/help"

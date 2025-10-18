@@ -7,11 +7,12 @@
 'use client'
 
 import React from 'react'
-import { Bell, Menu, Search, User } from 'lucide-react'
+import { Bell, ClipboardList, Menu, Search, User } from 'lucide-react'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
 import GlobalSearchInputAdvanced from '@/components/shared/GlobalSearchInputAdvanced'
 import { useTaskViews } from '@/hooks/useTasks'
+import NotificationBell from '@/components/shared/NotificationBell'
 
 interface NavbarProps {
   onMenuClick?: () => void
@@ -53,13 +54,16 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
               </button>
             </div>
 
+            {/* Notifications temps réel */}
+            <NotificationBell />
+
             {/* Daily Tasks */}
             <Link
               href="/dashboard/tasks"
               className="relative p-2 rounded-xl hover:bg-gray-100 active:bg-gray-200 transition-colors group"
               aria-label="Voir les tâches du jour"
             >
-              <Bell className="w-5 h-5 text-gray-700 group-hover:text-blue-600 transition-colors" />
+              <ClipboardList className="w-5 h-5 text-gray-700 group-hover:text-blue-600 transition-colors" />
               {dailyTasksCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-bold text-white bg-gradient-to-br from-red-500 to-red-600 rounded-full shadow-lg animate-pulse">
                   {dailyTasksCount}
@@ -138,7 +142,7 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
                         onClick={() => setShowUserMenu(false)}
                       >
                         <div className="w-8 h-8 flex items-center justify-center bg-orange-100 rounded-lg group-hover:bg-orange-200 transition-colors relative">
-                          <Bell className="w-4 h-4 text-orange-600" />
+                          <ClipboardList className="w-4 h-4 text-orange-600" />
                           {dailyTasksCount > 0 && (
                             <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[16px] h-4 px-1 text-[9px] font-bold text-white bg-red-500 rounded-full">
                               {dailyTasksCount}

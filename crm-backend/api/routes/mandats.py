@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 
 from core import get_db, get_current_user
+from core.events import emit_event, EventType
 from schemas.base import PaginatedResponse
 from schemas.organisation import (
     MandatDistributionCreate,
@@ -11,8 +12,19 @@ from schemas.organisation import (
     MandatDistributionDetailResponse,
 )
 from services.organisation import MandatDistributionService
+from models.organisation import MandatStatus
 
 router = APIRouter(prefix="/mandats", tags=["mandats"])
+
+
+def _extract_user_id(current_user: dict) -> Optional[int]:
+    user_id = current_user.get("user_id") if current_user else None
+    if user_id is None:
+        return None
+    try:
+        return int(user_id)
+    except (TypeError, ValueError):
+        return None
 
 # ============= GET ROUTES =============
 
@@ -137,6 +149,27 @@ async def create_mandat(
     """
     service = MandatDistributionService(db)
     new_mandat = await service.create(mandat)
+    await emit_event(
+        EventType.MANDAT_CREATED,
+        data={
+            "mandat_id": new_mandat.id,
+            "organisation_id": new_mandat.organisation_id,
+            "status": new_mandat.status.value if getattr(new_mandat, "status", None) else None,
+            "date_signature": getattr(new_mandat, "date_signature", None).isoformat() if getattr(new_mandat, "date_signature", None) else None,
+        },
+        user_id=_extract_user_id(current_user),
+    )
+
+    if getattr(new_mandat, "status", None) == MandatStatus.SIGNE:
+        await emit_event(
+            EventType.MANDAT_SIGNED,
+            data={
+                "mandat_id": new_mandat.id,
+                "organisation_id": new_mandat.organisation_id,
+                "date_signature": getattr(new_mandat, "date_signature", None).isoformat() if getattr(new_mandat, "date_signature", None) else None,
+            },
+            user_id=_extract_user_id(current_user),
+        )
     return MandatDistributionResponse.model_validate(new_mandat)
 
 
@@ -156,7 +189,33 @@ async def update_mandat(
     (proposé → signé → actif → terminé)
     """
     service = MandatDistributionService(db)
+    existing_mandat = await service.get_by_id(mandat_id)
+    previous_status = getattr(existing_mandat, "status", None)
     updated_mandat = await service.update(mandat_id, mandat)
+    await emit_event(
+        EventType.MANDAT_UPDATED,
+        data={
+            "mandat_id": updated_mandat.id,
+            "organisation_id": updated_mandat.organisation_id,
+            "status": updated_mandat.status.value if getattr(updated_mandat, "status", None) else None,
+            "date_signature": getattr(updated_mandat, "date_signature", None).isoformat() if getattr(updated_mandat, "date_signature", None) else None,
+        },
+        user_id=_extract_user_id(current_user),
+    )
+
+    if (
+        previous_status != MandatStatus.SIGNE
+        and getattr(updated_mandat, "status", None) == MandatStatus.SIGNE
+    ):
+        await emit_event(
+            EventType.MANDAT_SIGNED,
+            data={
+                "mandat_id": updated_mandat.id,
+                "organisation_id": updated_mandat.organisation_id,
+                "date_signature": getattr(updated_mandat, "date_signature", None).isoformat() if getattr(updated_mandat, "date_signature", None) else None,
+            },
+            user_id=_extract_user_id(current_user),
+        )
     return MandatDistributionResponse.model_validate(updated_mandat)
 
 

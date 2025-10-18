@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import Optional
 
 from core import get_db, get_current_user
+from core.events import emit_event, EventType
 from schemas.base import PaginatedResponse
 from schemas.person import (
     PersonCreate,
@@ -15,6 +16,16 @@ from services.person import PersonService, PersonOrganizationLinkService
 from models.person import OrganizationType
 
 router = APIRouter(prefix="/people", tags=["people"])
+
+
+def _extract_user_id(current_user: dict) -> Optional[int]:
+    user_id = current_user.get("user_id") if current_user else None
+    if user_id is None:
+        return None
+    try:
+        return int(user_id)
+    except (TypeError, ValueError):
+        return None
 
 
 @router.get("", response_model=PaginatedResponse[PersonResponse])
@@ -67,6 +78,18 @@ async def create_person(
 ):
     service = PersonService(db)
     person = await service.create(payload)
+
+    await emit_event(
+        EventType.PERSON_CREATED,
+        data={
+            "person_id": person.id,
+            "first_name": getattr(person, "first_name", None),
+            "last_name": getattr(person, "last_name", None),
+            "email": getattr(person, "personal_email", None),
+        },
+        user_id=_extract_user_id(current_user),
+    )
+
     return PersonResponse.model_validate(person)
 
 
@@ -104,6 +127,18 @@ async def update_person(
 ):
     service = PersonService(db)
     person = await service.update(person_id, payload)
+
+    await emit_event(
+        EventType.PERSON_UPDATED,
+        data={
+            "person_id": person.id,
+            "first_name": getattr(person, "first_name", None),
+            "last_name": getattr(person, "last_name", None),
+            "email": getattr(person, "personal_email", None),
+        },
+        user_id=_extract_user_id(current_user),
+    )
+
     return PersonResponse.model_validate(person)
 
 
@@ -115,4 +150,10 @@ async def delete_person(
 ):
     service = PersonService(db)
     await service.delete(person_id)
+
+    await emit_event(
+        EventType.PERSON_DELETED,
+        data={"person_id": person_id},
+        user_id=_extract_user_id(current_user),
+    )
     return None

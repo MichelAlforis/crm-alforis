@@ -57,6 +57,11 @@ import {
   TaskPriority,
   TaskCategory,
   TaskStats,
+  Webhook,
+  WebhookCreateInput,
+  WebhookUpdateInput,
+  WebhookRotateSecretInput,
+  WebhookEventOption,
 } from './types'
 
 import type { ApiError } from './types'
@@ -820,6 +825,47 @@ class ApiClient {
     await this.request<void>(`/produits/association/${association_id}`, {
       method: 'DELETE',
     })
+  }
+
+  // ============= WEBHOOKS ENDPOINTS =============
+
+  async getWebhooks(params?: { is_active?: boolean }): Promise<Webhook[]> {
+    return this.request<Webhook[]>('/webhooks', { params })
+  }
+
+  async getWebhook(id: number): Promise<Webhook> {
+    return this.request<Webhook>(`/webhooks/${id}`)
+  }
+
+  async createWebhook(data: WebhookCreateInput): Promise<Webhook> {
+    return this.request<Webhook>('/webhooks', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async updateWebhook(id: number, data: WebhookUpdateInput): Promise<Webhook> {
+    return this.request<Webhook>(`/webhooks/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deleteWebhook(id: number): Promise<void> {
+    await this.request<void>(`/webhooks/${id}`, {
+      method: 'DELETE',
+    })
+  }
+
+  async rotateWebhookSecret(id: number, data?: WebhookRotateSecretInput): Promise<Webhook> {
+    return this.request<Webhook>(`/webhooks/${id}/rotate-secret`, {
+      method: 'POST',
+      body: JSON.stringify(data ?? {}),
+    })
+  }
+
+  async getWebhookEvents(): Promise<WebhookEventOption[]> {
+    return this.request<WebhookEventOption[]>('/webhooks/events/available')
   }
 }
 

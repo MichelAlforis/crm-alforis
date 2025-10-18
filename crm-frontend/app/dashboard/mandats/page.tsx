@@ -5,8 +5,10 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useMandats } from '@/hooks/useMandats'
-import { Card, Button, Table, Alert, Select } from '@/components/shared'
+import { Card, Button, Table, Alert, Select, ExportButtons } from '@/components/shared'
+import SearchBar from '@/components/search/SearchBar'
 import { MandatStatus } from '@/lib/types'
 
 const STATUS_LABELS: Record<string, string> = {
@@ -23,7 +25,9 @@ const STATUS_LABELS: Record<string, string> = {
 }
 
 export default function MandatsPage() {
+  const router = useRouter()
   const [statusFilter, setStatusFilter] = useState<string>('')
+  const [searchQuery, setSearchQuery] = useState('')
 
   const { data, isLoading, error } = useMandats({
     limit: 100,
@@ -87,6 +91,21 @@ export default function MandatsPage() {
     },
   ]
 
+  const filteredMandats = (data?.items ?? []).filter((mandat) => {
+    const search = searchQuery.trim().toLowerCase()
+    if (!search) return true
+    const numero = mandat.numero_mandat ?? ''
+    const organisationName = mandat.organisation?.name ?? ''
+    return (
+      numero.toLowerCase().includes(search) ||
+      organisationName.toLowerCase().includes(search)
+    )
+  })
+
+  const exportParams = {
+    status: statusFilter || undefined,
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -102,20 +121,38 @@ export default function MandatsPage() {
       </div>
 
       <Card>
-        <div className="flex gap-4">
-          <Select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-64"
-          >
-            <option value="">Tous les statuts</option>
-            <option value="BROUILLON">Brouillon</option>
-            <option value="EN_NEGOCIATION">En négociation</option>
-            <option value="SIGNE">Signé</option>
-            <option value="ACTIF">Actif</option>
-            <option value="EXPIRE">Expiré</option>
-            <option value="RESILIE">Résilié</option>
-          </Select>
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <SearchBar
+            placeholder="Rechercher un mandat…"
+            entityType="mandats"
+            onQueryChange={setSearchQuery}
+            onSubmit={setSearchQuery}
+            onSelectSuggestion={(suggestion) => {
+              if (suggestion?.id) {
+                router.push(`/dashboard/mandats/${suggestion.id}`)
+              }
+            }}
+          />
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <Select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="w-48"
+            >
+              <option value="">Tous les statuts</option>
+              <option value="BROUILLON">Brouillon</option>
+              <option value="EN_NEGOCIATION">En négociation</option>
+              <option value="SIGNE">Signé</option>
+              <option value="ACTIF">Actif</option>
+              <option value="EXPIRE">Expiré</option>
+              <option value="RESILIE">Résilié</option>
+            </Select>
+            <ExportButtons
+              resource="mandats"
+              params={exportParams}
+              baseFilename="mandats"
+            />
+          </div>
         </div>
       </Card>
 
@@ -124,9 +161,9 @@ export default function MandatsPage() {
       <Card>
         <Table
           columns={columns}
-          data={data?.items || []}
+          data={filteredMandats}
           isLoading={isLoading}
-          isEmpty={!data || data.items.length === 0}
+          isEmpty={filteredMandats.length === 0}
         />
       </Card>
 

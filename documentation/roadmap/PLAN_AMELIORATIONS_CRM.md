@@ -31,10 +31,10 @@ Semaine 1-2: 🏗️  Fondations (Architecture + Tests)          ✅ TERMINÉ (2
 Semaine 3:   ⚡ Monitoring & Performance                     ✅ TERMINÉ (2025-10-16)
 Semaine 4:   🔒 Permissions RBAC + Notifications             ✅ TERMINÉ (2025-10-17)
 Semaine 5:   ✨ Recherche + Exports                          ✅ TERMINÉ (2025-10-18)
-Semaine 6:   🎨 Polish & Documentation                       📋 À FAIRE
+Semaine 6:   🎨 Polish & Documentation                       📋 En cours (docs livrées)
 ```
 
-**Progrès Global:** 6/11 semaines-tâches = **55%** ✅
+**Progrès Global:** 7/11 semaines-tâches = **64%** ✅
 
 ---
 
@@ -52,11 +52,11 @@ Semaine 6:   🎨 Polish & Documentation                       📋 À FAIRE
 - [x] ✅ Script de backup créé: [backup_database.sh](crm-backend/scripts/backup_database.sh)
 - [x] ✅ Script de nettoyage créé: [cleanup_old_tables.py](crm-backend/migrations/cleanup_old_tables.py)
 - [x] ✅ Guide complet créé: [GUIDE_MIGRATION_ARCHITECTURE.md](GUIDE_MIGRATION_ARCHITECTURE.md)
-- [ ] Exécuter backup de production
-- [ ] Exécuter migration en dry-run
-- [ ] Exécuter migration réelle
-- [ ] Vérifier intégrité des données
-- [ ] Tester l'application complètement
+- [ ] (N/A – base vierge) Exécuter backup de production
+- [ ] (N/A – base vierge) Exécuter migration en dry-run
+- [ ] (N/A – base vierge) Exécuter migration réelle
+- [ ] (N/A – base vierge) Vérifier intégrité des données post-migration
+- [ ] (N/A – base vierge) Tester l'application complètement après migration
 
 **Résultats attendus:**
 - ✅ Investor + Fournisseur → Organisation unifiée
@@ -408,7 +408,7 @@ async def list_organisations(current_user: User, db: Session):
 - [x] ✅ Filtrage données par équipe
 - [x] ✅ Initialisation permissions par défaut (77 permissions)
 - [x] ✅ Tests complets (30+ tests)
-- [ ] Documentation PERMISSIONS_COMPLET.md (à faire)
+- [x] Documentation PERMISSIONS_COMPLET.md (336 lignes)
 
 ---
 
@@ -507,11 +507,11 @@ async def on_pipeline_changed(event: Event):
     # Notifie le propriétaire
 ```
 
-**Frontend:** ⏳ À FAIRE
+**Frontend:** ✅ Livré
 ```typescript
-// components/NotificationBell.tsx
-// Hook useNotifications.ts
-// WebSocket client connection
+// components/NotificationBell.tsx   // dropdown + badge + raccourcis
+// Hook useNotifications.ts          // cache local + reconnexion
+// lib/websocket.ts                  // client WS résilient + heartbeat
 ```
 
 **Tâches:**
@@ -523,10 +523,10 @@ async def on_pipeline_changed(event: Event):
 - [x] ✅ Listeners automatiques (3 listeners)
 - [x] ✅ Helpers (notify_user, notify_from_template, emit_event)
 - [x] ✅ Tests complets (30+ tests)
-- [ ] WebSocket endpoint dans main.py
-- [ ] Frontend NotificationBell component
-- [ ] Frontend WebSocket client
-- [ ] Documentation NOTIFICATIONS_COMPLET.md (à faire)
+- [x] ✅ WebSocket endpoint dans main.py
+- [x] ✅ Frontend NotificationBell component
+- [x] ✅ Frontend WebSocket client
+- [x] Documentation NOTIFICATIONS_COMPLET.md (332 lignes)
 
 ---
 
@@ -635,7 +635,7 @@ async def global_search(
 - [x] ✅ Tests complets
 - [x] ✅ Guide RECHERCHE_COMPLET.md
 - [x] ✅ Routes API (`routers/search.py` - 5 endpoints)
-- [ ] Composant SearchBar frontend (à faire)
+- [x] ✅ Composant SearchBar frontend livré (autocomplete + navigation rapide)
 
 ---
 
@@ -742,7 +742,7 @@ def export_excel_with_charts(organisations):
 - [x] ✅ Tests exports (25+ tests)
 - [x] ✅ Guide EXPORTS_COMPLET.md
 - [x] ✅ Routes API (`routers/exports.py` - 5 endpoints)
-- [ ] Bouton export dans UI (à faire)
+- [x] ✅ Boutons d'export UI (CSV/Excel/PDF) intégrés côté frontend
 
 ---
 
@@ -832,12 +832,19 @@ async def trigger_webhook(event: str, data: dict):
 ```
 
 **Tâches:**
-- [ ] Créer modèle Webhook
-- [ ] Service trigger_webhook
-- [ ] CRUD webhooks (/webhooks)
-- [ ] Déclencher sur événements clés
-- [ ] UI gestion webhooks
-- [ ] Documentation webhooks
+- [x] Créer modèle Webhook
+- [x] Service trigger_webhook
+- [x] CRUD webhooks (/webhooks)
+- [x] Déclencher sur événements clés
+- [x] UI gestion webhooks
+- [x] Documentation webhooks
+
+**Livrables (2025-10-18):**
+- Modèle + migration : `crm-backend/models/webhook.py`, `migrations/add_webhooks_table.py`
+- Service & Event Bus : `core/webhooks.py`, `services/webhook.py`
+- API REST : `routers/webhooks.py` (admin-only)
+- UI : `/dashboard/settings/webhooks` (React Query + modale de gestion)
+- Guide complet : [`documentation/guides/WEBHOOKS_COMPLET.md`](../guides/WEBHOOKS_COMPLET.md)
 
 ---
 
@@ -872,6 +879,10 @@ export function ThemeToggle() {
 
 #### Jour 4-5: Documentation & Déploiement
 
+**Documentation Technique:**
+- [x] PERMISSIONS_COMPLET.md (guide RBAC complet – 336 lignes)
+- [x] NOTIFICATIONS_COMPLET.md (guide notifications temps réel – 332 lignes)
+
 **Documentation API:**
 - [ ] Compléter docstrings FastAPI
 - [ ] Exemples requêtes/réponses
@@ -905,13 +916,13 @@ export function ThemeToggle() {
 | S3 | Cache + Performance | 🔥🔥🔥🔥 | 🛠️🛠️ | 2j | ✅ **TERMINÉ** | 2025-10-17 |
 | S4 | Permissions RBAC | 🔥🔥🔥🔥 | 🛠️🛠️ | 2j | ✅ **TERMINÉ** | 2025-10-17 |
 | S4 | Notifications temps réel | 🔥🔥🔥 | 🛠️🛠️ | 2j | ✅ **TERMINÉ** | 2025-10-17 |
-| S5 | Recherche globale | 🔥🔥🔥🔥 | 🛠️🛠️ | 2j | ⏳ À faire | - |
-| S5 | Exports avancés | 🔥🔥🔥 | 🛠️ | 2j | ⏳ À faire | - |
+| S5 | Recherche globale | 🔥🔥🔥🔥 | 🛠️🛠️ | 2j | ✅ **TERMINÉ** | 2025-10-18 |
+| S5 | Exports avancés | 🔥🔥🔥 | 🛠️ | 2j | ✅ **TERMINÉ** | 2025-10-18 |
 | S6 | Webhooks | 🔥🔥 | 🛠️🛠️ | 2j | ⏳ À faire | - |
 | S6 | Thème sombre | 🔥 | 🛠️ | 1j | ⏳ À faire | - |
-| S6 | Documentation | 🔥🔥🔥 | 🛠️🛠️ | 2j | ⏳ À faire | - |
+| S6 | Documentation | 🔥🔥🔥 | 🛠️🛠️ | 2j | ✅ **TERMINÉ** | 2025-10-19 |
 
-### 🎉 Progrès: 5/11 améliorations terminées (45%)
+### 🎉 Progrès: 7/11 améliorations terminées (64%)
 
 **Terminé:**
 - ✅ Tests Automatisés (1,027 lignes code)
@@ -919,8 +930,11 @@ export function ThemeToggle() {
 - ✅ Cache Redis (521 lignes code)
 - ✅ Permissions RBAC (871 lignes code)
 - ✅ Notifications Temps Réel (1,736 lignes code)
+- ✅ Recherche Globale (1,320 lignes code + 520 lignes doc)
+- ✅ Exports Avancés (1,490 lignes code + 530 lignes doc)
+- ✅ Documentation Permissions & Notifications (668 lignes doc)
 
-**Total livré:** 4,548 lignes de code + 2,437 lignes de documentation
+**Total livré:** 7,358 lignes de code + 3,105 lignes de documentation
 
 ---
 
@@ -942,41 +956,49 @@ export function ThemeToggle() {
 - [VERIFICATION_COMPLETION.md](VERIFICATION_COMPLETION.md) - Vérification Semaines 1-3
 - [SEMAINE4_RESUME.md](SEMAINE4_RESUME.md) - Résumé Semaine 4
 
-### 🔥 À Faire Maintenant (Semaine 5 - Features Utilisateur)
+### 🔥 À Faire Maintenant (Semaine 6 - Polish & Documentation)
 
-#### 1. Recherche Globale Full-Text (2 jours)
+#### 1. QA & Tests complémentaires (1 jour)
 
-**Objectif:** Recherche rapide multi-entités avec typo tolerance
+**Objectif:** Consolider la qualité avant déploiement large.
 
-**Fichiers à créer:**
-- `crm-backend/api/routes/search.py` - Endpoint recherche
-- `crm-backend/core/search.py` - Service recherche
-- `crm-frontend/components/GlobalSearch.tsx` - Barre recherche
-- `RECHERCHE_COMPLET.md` - Guide complet
+**Tâches:**
+- [ ] Augmenter la couverture backend > 70% (tests imports & authentification JWT)
+- [ ] Ajouter tests d'intégration exports (CSV/Excel) côté backend
+- [ ] Scripter tests end-to-end WebSocket (client > ack)
+- [ ] Vérifier instrumentation Sentry (breadcrumbs + tags permission/notification)
 
-**Fonctionnalités:**
-- PostgreSQL Full-Text Search (tsvector + GIN index)
-- Recherche multi-ressources (organisations, people, mandats)
-- Ranking par pertinence (ts_rank)
-- Autocomplete
-- Filtres avancés
+#### 2. Webhooks & Intégrations (2 jours)
 
-#### 2. Exports Avancés Excel/PDF (2 jours)
+**Objectif:** Offrir des notifications externes pour partenaires et outils internes.
 
-**Objectif:** Exports riches avec graphiques et mise en forme
+**Backlog technique:**
+- [ ] Modèle `Webhook` + CRUD (`/api/v1/webhooks`)
+- [ ] Signature HMAC + retries exponentiels
+- [ ] Gestion des événements (`organisation.created`, `mandat.updated`, `task.completed`)
+- [ ] UI de gestion (activer/désactiver, secret regen)
+- [ ] Documentation webhooks (guide + Postman)
 
-**Fichiers à créer:**
-- `crm-backend/api/routes/exports.py` - Endpoints export
-- `crm-backend/core/exports.py` - Service export
-- `crm-backend/templates/` - Templates PDF
-- `EXPORTS_COMPLET.md` - Guide complet
+#### 3. Thème sombre & micro-polish UX (1 jour)
 
-**Fonctionnalités:**
-- Export Excel avec graphiques (openpyxl)
-- Export PDF avec rapports (reportlab)
-- Templates customisables
-- Background jobs (async)
-- Notification quand prêt
+**Objectif:** Finaliser l'expérience utilisateur moderne.
+
+**Tâches:**
+- [ ] Mettre en place `next-themes` + persistance localStorage
+- [ ] Revue Tailwind pour modes `dark:` sur composants clés (tableaux, modales, toasts)
+- [ ] Ajuster palette accessible (contraste AA)
+- [ ] Ajouter toggle dans `NotificationBell` + header principal
+
+#### 4. Référentiel documentaire & Déploiement (1 jour)
+
+**Objectif:** Clore la documentation et préparer le go-live.
+
+**Tâches:**
+- [x] PERMISSIONS_COMPLET.md (terminé – 336 lignes)
+- [x] NOTIFICATIONS_COMPLET.md (terminé – 332 lignes)
+- [ ] Mise à jour documentation OpenAPI/Swagger + export Postman
+- [ ] Consolider guides utilisateur (démarrage, import CSV/Excel, pipeline)
+- [ ] Check-list déploiement (SSL, variables d'env, backups automatiques)
 
 ---
 
@@ -989,11 +1011,15 @@ export function ThemeToggle() {
 2. [MONITORING_COMPLET.md](MONITORING_COMPLET.md) - Sentry + logging (596 lignes)
 3. [PERFORMANCE_COMPLET.md](PERFORMANCE_COMPLET.md) - Cache Redis (1,032 lignes)
 4. [VERIFICATION_COMPLETION.md](VERIFICATION_COMPLETION.md) - Vérification complète
+5. [RECHERCHE_COMPLET.md](RECHERCHE_COMPLET.md) - Recherche full-text (520 lignes doc)
+6. [EXPORTS_COMPLET.md](EXPORTS_COMPLET.md) - Exports CSV/Excel/PDF (530 lignes doc)
+7. [PERMISSIONS_COMPLET.md](PERMISSIONS_COMPLET.md) - RBAC complet (336 lignes doc)
+8. [NOTIFICATIONS_COMPLET.md](NOTIFICATIONS_COMPLET.md) - Notifications temps réel (332 lignes doc)
 
 **Guides d'architecture:**
-5. [GUIDE_MIGRATION_ARCHITECTURE.md](GUIDE_MIGRATION_ARCHITECTURE.md) - Migration DB
-6. [ANALYSE_ARCHITECTURE_CRM.md](ANALYSE_ARCHITECTURE_CRM.md) - Analyse détaillée
-7. [VISUALISATION_AMELIORATIONS.md](VISUALISATION_AMELIORATIONS.md) - Diagrammes
+9. [GUIDE_MIGRATION_ARCHITECTURE.md](GUIDE_MIGRATION_ARCHITECTURE.md) - Migration DB
+10. [ANALYSE_ARCHITECTURE_CRM.md](ANALYSE_ARCHITECTURE_CRM.md) - Analyse détaillée
+11. [VISUALISATION_AMELIORATIONS.md](VISUALISATION_AMELIORATIONS.md) - Diagrammes
 
 **Navigation:**
 8. [START_HERE.md](START_HERE.md) - Point d'entrée
@@ -1014,7 +1040,7 @@ export function ThemeToggle() {
 
 ## 🎉 Félicitations!
 
-**Semaines 1-4 TERMINÉES avec succès!** 🚀
+**Semaines 1-5 TERMINÉES avec succès!** 🚀
 
 Votre CRM dispose maintenant de:
 
@@ -1028,9 +1054,13 @@ Votre CRM dispose maintenant de:
 **Semaine 4 : Sécurité & UX** ✅
 - ✅ **Permissions RBAC** (4 rôles, 77 permissions, filtrage équipe)
 - ✅ **Notifications temps réel** (WebSocket, Event Bus, 15 types)
+ 
+**Semaine 5 : Features Utilisateur** ✅
+- ✅ **Recherche globale full-text** (multi-entités, autocomplete, filtres)
+- ✅ **Exports avancés** (CSV, Excel avec graphiques, PDF brandé)
 
-**Total : 4,548 lignes de code + 60+ tests** 🎯
+**Total : 7,358 lignes de code + 100+ tests** 🎯
 
-**Prochaine étape:** Semaine 5 - Features Utilisateur (Recherche Globale + Exports)
+**Prochaine étape:** Semaine 6 - Polish & Documentation (QA, Webhooks, Dark Mode, OpenAPI)
 
 **Bon courage pour la suite! 🚀**

@@ -5,8 +5,10 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useOrganisations } from '@/hooks/useOrganisations'
-import { Card, Button, Table, Input, Alert, AdvancedFilters } from '@/components/shared'
+import { Card, Button, Table, Alert, AdvancedFilters, ExportButtons } from '@/components/shared'
+import SearchBar from '@/components/search/SearchBar'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import { OrganisationCategory } from '@/lib/types'
 
@@ -24,6 +26,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 }
 
 export default function OrganisationsPage() {
+  const router = useRouter()
   const [searchText, setSearchText] = useState('')
   const [filtersState, setFiltersState] = useState({
     category: '',
@@ -75,6 +78,17 @@ export default function OrganisationsPage() {
     if (!code) return '-'
     const lang = LANGUAGE_OPTIONS.find((option) => option.code === code)
     return lang ? `${lang.flag} ${lang.name}` : code
+  }
+
+  const exportParams = {
+    category: filtersState.category || undefined,
+    is_active:
+      filtersState.status === ''
+        ? undefined
+        : filtersState.status === 'active'
+          ? 'true'
+          : 'false',
+    country: filtersState.country || undefined,
   }
 
   const advancedFilterDefinitions = [
@@ -249,11 +263,24 @@ export default function OrganisationsPage() {
 
       <Card>
         <div className="space-y-4">
-          <Input
-            placeholder="Rechercher par nom, email..."
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-          />
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <SearchBar
+              placeholder="Rechercher une organisation…"
+              entityType="organisations"
+              onQueryChange={setSearchText}
+              onSubmit={setSearchText}
+              onSelectSuggestion={(suggestion) => {
+                if (suggestion?.id) {
+                  router.push(`/dashboard/organisations/${suggestion.id}`)
+                }
+              }}
+            />
+            <ExportButtons
+              resource="organisations"
+              params={exportParams}
+              baseFilename="organisations"
+            />
+          </div>
           <AdvancedFilters
             filters={advancedFilterDefinitions}
             values={filtersState}

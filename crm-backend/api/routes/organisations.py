@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 
 from core import get_db, get_current_user
+from core.events import emit_event, EventType
 from core.cache import cache_response, invalidate_organisation_cache
 from schemas.base import PaginatedResponse
 from schemas.organisation import (
@@ -15,6 +16,17 @@ from services.organisation import OrganisationService
 from services.person import PersonOrganizationLinkService
 
 router = APIRouter(prefix="/organisations", tags=["organisations"])
+
+
+def _extract_user_id(current_user: dict) -> Optional[int]:
+    """Convertit l'identifiant utilisateur en int si possible."""
+    user_id = current_user.get("user_id") if current_user else None
+    if user_id is None:
+        return None
+    try:
+        return int(user_id)
+    except (TypeError, ValueError):
+        return None
 
 # ============= GET ROUTES =============
 
@@ -165,6 +177,18 @@ async def create_organisation(
     service = OrganisationService(db)
     new_organisation = await service.create(organisation)
     invalidate_organisation_cache()
+
+    await emit_event(
+        EventType.ORGANISATION_CREATED,
+        data={
+            "organisation_id": new_organisation.id,
+            "name": new_organisation.name,
+            "category": getattr(new_organisation, "category", None),
+            "country_code": getattr(new_organisation, "country_code", None),
+        },
+        user_id=_extract_user_id(current_user),
+    )
+
     return OrganisationResponse.model_validate(new_organisation)
 
 
@@ -181,6 +205,18 @@ async def update_organisation(
     service = OrganisationService(db)
     updated_organisation = await service.update(organisation_id, organisation)
     invalidate_organisation_cache()
+
+    await emit_event(
+        EventType.ORGANISATION_UPDATED,
+        data={
+            "organisation_id": updated_organisation.id,
+            "name": updated_organisation.name,
+            "category": getattr(updated_organisation, "category", None),
+            "country_code": getattr(updated_organisation, "country_code", None),
+        },
+        user_id=_extract_user_id(current_user),
+    )
+
     return OrganisationResponse.model_validate(updated_organisation)
 
 
@@ -201,4 +237,10 @@ async def delete_organisation(
     service = OrganisationService(db)
     await service.delete(organisation_id)
     invalidate_organisation_cache()
+
+    await emit_event(
+        EventType.ORGANISATION_DELETED,
+        data={"organisation_id": organisation_id},
+        user_id=_extract_user_id(current_user),
+    )
     return None

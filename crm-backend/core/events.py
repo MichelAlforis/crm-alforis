@@ -398,6 +398,12 @@ async def on_mandat_signed(event: Event):
         db.close()
 
 
+# Enregistrer les listeners webhooks après la définition de l'event bus
+from core.webhooks import register_webhook_listeners
+
+register_webhook_listeners(event_bus)
+
+
 @event_bus.subscribe(EventType.TASK_ASSIGNED)
 async def on_task_assigned(event: Event):
     """

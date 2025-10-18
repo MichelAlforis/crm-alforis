@@ -13,7 +13,7 @@ from api.routes import (
     mandats,
     produits,
 )
-from routers import search, exports
+from routers import search, exports, webhooks
 
 # Créer le routeur principal
 api_router = APIRouter(prefix="/api/v1")
@@ -38,6 +38,7 @@ api_router.include_router(produits.router)
 # 🔍 RECHERCHE & EXPORTS (Semaine 5)
 api_router.include_router(search.router)
 api_router.include_router(exports.router)
+api_router.include_router(webhooks.router)
 
 # ⚡ IMPORTS ROUTES (bulk operations)
 api_router.include_router(imports.router)

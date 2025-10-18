@@ -70,6 +70,12 @@ from schemas.task import (
     TaskFilterParams,
     TaskQuickActionRequest,
 )
+from schemas.webhook import (
+    WebhookCreate,
+    WebhookUpdate,
+    WebhookResponse,
+    WebhookRotateSecretRequest,
+)
 
 __all__ = [
     # ---------- Base ----------
@@ -139,4 +145,10 @@ __all__ = [
     "TaskStatsResponse",
     "TaskFilterParams",
     "TaskQuickActionRequest",
+
+    # ---------- Webhook ----------
+    "WebhookCreate",
+    "WebhookUpdate",
+    "WebhookResponse",
+    "WebhookRotateSecretRequest",
 ]

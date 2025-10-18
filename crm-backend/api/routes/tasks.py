@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, status, Query
 from sqlalchemy.orm import Session
-from typing import List, Optional
+from typing import Optional
 
 from core import get_db, get_current_user
+from core.events import emit_event, EventType
 from schemas.task import (
     TaskCreate,
     TaskUpdate,
@@ -19,6 +20,20 @@ from schemas.base import PaginatedResponse
 from services.task import TaskService
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
+
+
+def _extract_user_id(current_user: dict) -> Optional[int]:
+    user_id = current_user.get("user_id") if current_user else None
+    if user_id is None:
+        return None
+    try:
+        return int(user_id)
+    except (TypeError, ValueError):
+        return None
+
+
+def _enum_value(value):
+    return value.value if value is not None else None
 
 
 # ============= HELPER =============
@@ -131,6 +146,17 @@ async def create_task(
     """Créer une nouvelle tâche"""
     service = TaskService(db)
     task = await service.create(task_create)
+    await emit_event(
+        EventType.TASK_CREATED,
+        data={
+            "task_id": task.id,
+            "title": task.title,
+            "status": _enum_value(getattr(task, "status", None)),
+            "due_date": getattr(task, "due_date", None).isoformat() if getattr(task, "due_date", None) else None,
+            "priority": _enum_value(getattr(task, "priority", None)),
+        },
+        user_id=_extract_user_id(current_user),
+    )
     return TaskResponse.model_validate(task)
 
 
@@ -165,6 +191,16 @@ async def task_quick_action(
     """
     service = TaskService(db)
     task = await service.quick_action(task_id, action_request.action)
+    if getattr(task, "status", None) == TaskStatus.DONE:
+        await emit_event(
+            EventType.TASK_COMPLETED,
+            data={
+                "task_id": task.id,
+                "title": task.title,
+                "completed_at": getattr(task, "completed_at", None).isoformat() if getattr(task, "completed_at", None) else None,
+            },
+            user_id=_extract_user_id(current_user),
+        )
     return enrich_task_response(task)
 
 
@@ -180,6 +216,16 @@ async def update_task(
     """Mettre à jour une tâche"""
     service = TaskService(db)
     task = await service.update(task_id, task_update)
+    if task_update.status == TaskStatus.DONE or getattr(task, "status", None) == TaskStatus.DONE:
+        await emit_event(
+            EventType.TASK_COMPLETED,
+            data={
+                "task_id": task.id,
+                "title": task.title,
+                "completed_at": getattr(task, "completed_at", None).isoformat() if getattr(task, "completed_at", None) else None,
+            },
+            user_id=_extract_user_id(current_user),
+        )
     return TaskResponse.model_validate(task)
 
 

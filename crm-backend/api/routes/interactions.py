@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends, status, Query
 from sqlalchemy.orm import Session
+from typing import Optional
 
 from core import get_db, get_current_user
+from core.events import emit_event, EventType
 from schemas.interaction import (
     InteractionCreate,
     InteractionUpdate,
@@ -12,6 +14,16 @@ from schemas.base import PaginatedResponse
 from services.interaction import InteractionService
 
 router = APIRouter(prefix="/interactions", tags=["interactions"])
+
+
+def _extract_user_id(current_user: dict) -> Optional[int]:
+    user_id = current_user.get("user_id") if current_user else None
+    if user_id is None:
+        return None
+    try:
+        return int(user_id)
+    except (TypeError, ValueError):
+        return None
 
 # ============= GET ROUTES =============
 
@@ -100,6 +112,16 @@ async def create_interaction(
     """Créer une nouvelle interaction pour un investisseur"""
     service = InteractionService(db)
     interaction = await service.create_for_investor(investor_id, interaction_create)
+    await emit_event(
+        EventType.INTERACTION_CREATED,
+        data={
+            "interaction_id": interaction.id,
+            "investor_id": getattr(interaction, "investor_id", investor_id),
+            "type": getattr(interaction, "type", None).value if getattr(interaction, "type", None) else None,
+            "subject": getattr(interaction, "subject", None),
+        },
+        user_id=_extract_user_id(current_user),
+    )
     return InteractionResponse.model_validate(interaction)
 
 # ============= PUT ROUTES =============
@@ -114,6 +136,16 @@ async def update_interaction(
     """Mettre à jour une interaction"""
     service = InteractionService(db)
     interaction = await service.update(interaction_id, interaction_update)
+    await emit_event(
+        EventType.INTERACTION_UPDATED,
+        data={
+            "interaction_id": interaction.id,
+            "investor_id": getattr(interaction, "investor_id", None),
+            "type": getattr(interaction, "type", None).value if getattr(interaction, "type", None) else None,
+            "subject": getattr(interaction, "subject", None),
+        },
+        user_id=_extract_user_id(current_user),
+    )
     return InteractionResponse.model_validate(interaction)
 
 # ============= DELETE ROUTES =============

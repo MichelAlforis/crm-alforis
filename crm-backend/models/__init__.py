@@ -27,6 +27,7 @@ from models.task import (
     TaskStatus,
     TaskCategory,
 )
+from models.webhook import Webhook
 from models.organisation import (
     Organisation,
     OrganisationContact,
@@ -88,6 +89,9 @@ __all__ = [
     "TaskPriority",
     "TaskStatus",
     "TaskCategory",
+
+    # Webhooks
+    "Webhook",
 ]
 
 # ---------- Imports API ----------

@@ -17,7 +17,12 @@ export interface SearchItem {
 
 export interface SearchSuggestion {
   id: number | string
-  name: string
+  name?: string
+  title?: string
   type: string
+  category?: string
+  email?: string
+  status?: string
+  role?: string
   [key: string]: unknown
 }

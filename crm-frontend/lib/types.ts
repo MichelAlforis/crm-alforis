@@ -674,6 +674,38 @@ export interface InteractionDetailNew extends InteractionNew {
   produit?: Produit
 }
 
+// ============= WEBHOOKS =============
+
+export interface Webhook {
+  id: number
+  url: string
+  events: string[]
+  is_active: boolean
+  description?: string | null
+  secret: string
+  created_at: string
+  updated_at: string
+}
+
+export interface WebhookCreateInput {
+  url: string
+  events: string[]
+  description?: string | null
+  is_active?: boolean
+  secret?: string
+}
+
+export type WebhookUpdateInput = Partial<WebhookCreateInput>
+
+export interface WebhookRotateSecretInput {
+  secret?: string
+}
+
+export interface WebhookEventOption {
+  value: string
+  label: string
+}
+
 // ============= NOTIFICATIONS =============
 
 export type NotificationType =
