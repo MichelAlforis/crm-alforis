@@ -186,14 +186,9 @@ class ApiClient {
   }
 
   /**
-   * Effectue une requête HTTP générique
+   * Construit une URL absolue vers l'API en ajoutant les paramètres de requête
    */
-  private async request<T>(
-    endpoint: string,
-    config: RequestConfig = {}
-  ): Promise<T> {
-    const { params, ...requestConfig } = config
-    // Toujours garantir un seul slash entre baseUrl et endpoint
+  private buildUrl(endpoint: string, params?: Record<string, any>): string {
     let url = this.baseUrl.replace(/\/$/, '') + (endpoint.startsWith('/') ? endpoint : '/' + endpoint)
     if (params) {
       const query = new URLSearchParams()
@@ -203,8 +198,22 @@ class ApiClient {
         }
       })
       const queryString = query.toString()
-      if (queryString) url += `?${queryString}`
+      if (queryString) {
+        url += (url.includes('?') ? '&' : '?') + queryString
+      }
     }
+    return url
+  }
+
+  /**
+   * Effectue une requête HTTP générique
+   */
+  private async request<T>(
+    endpoint: string,
+    config: RequestConfig = {}
+  ): Promise<T> {
+    const { params, ...requestConfig } = config
+    const url = this.buildUrl(endpoint, params)
 
     try {
       const response = await fetch(url, {
@@ -240,6 +249,20 @@ class ApiClient {
         detail: error instanceof Error ? error.message : 'Erreur inconnue',
       }
     }
+  }
+
+  /**
+   * Retourne l'URL absolue vers un endpoint API (utile pour téléchargements)
+   */
+  public resolveUrl(endpoint: string, params?: Record<string, any>): string {
+    return this.buildUrl(endpoint, params)
+  }
+
+  /**
+   * Retourne l'URL de base actuelle (incluant /api/v1)
+   */
+  public getBaseUrl(): string {
+    return this.baseUrl
   }
 
   // ============= AUTH ENDPOINTS =============
@@ -388,6 +411,22 @@ class ApiClient {
     } catch {
       return false
     }
+  }
+
+  // ============= SEARCH ENDPOINTS =============
+
+  async searchAutocomplete(
+    query: string,
+    entityType: 'organisations' | 'people' | 'mandats' | 'tasks' = 'organisations',
+    limit = 10
+  ): Promise<Array<{ id: number; name: string; type: string; [key: string]: any }>> {
+    return this.request('/search/autocomplete', {
+      params: {
+        q: query,
+        type: entityType,
+        limit,
+      },
+    })
   }
 
   // ============= FOURNISSEUR ENDPOINTS =============

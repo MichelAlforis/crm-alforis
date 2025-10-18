@@ -44,6 +44,8 @@ python crm-backend/migrations/unify_architecture.py --execute
 **Solution:** Pytest (backend) + Jest (frontend)
 **ROI:** 🚀🚀🚀🚀🚀 Zéro régression, développement confiant
 
+**Status:** ✅ **Implémenté!** (40+ tests, fixtures, 50% coverage)
+
 **Temps:** 3 jours
 
 ---
@@ -54,7 +56,21 @@ python crm-backend/migrations/unify_architecture.py --execute
 **Solution:** Sentry pour capturer toutes les erreurs
 **ROI:** 🚀🚀🚀🚀 Détection bugs en temps réel
 
+**Status:** ✅ **Implémenté!** (Sentry + structured logging)
+
 **Temps:** 1 jour
+
+---
+
+### 4️⃣ Cache & Performance ⭐⭐⭐⭐
+
+**Problème:** Réponses lentes (500ms+)
+**Solution:** Redis cache + optimisation DB
+**ROI:** 🚀🚀🚀🚀 10x plus rapide (50ms)
+
+**Status:** ✅ **Implémenté!** (Redis, decorators, stats)
+
+**Temps:** 2 jours
 
 ---
 
@@ -66,21 +82,38 @@ python crm-backend/migrations/unify_architecture.py --execute
 2. **[RESUME_AMELIORATIONS.md](RESUME_AMELIORATIONS.md)** - Vue rapide (5 min)
 3. **[PLAN_AMELIORATIONS_CRM.md](PLAN_AMELIORATIONS_CRM.md)** - Plan 6 semaines (15 min)
 
-### 📖 Pour Exécuter la Migration
+### 📖 Pour Exécuter les Améliorations
 
-4. **[GUIDE_MIGRATION_ARCHITECTURE.md](GUIDE_MIGRATION_ARCHITECTURE.md)** - Guide pas-à-pas (30 min)
-5. **[VISUALISATION_AMELIORATIONS.md](VISUALISATION_AMELIORATIONS.md)** - Diagrammes (10 min)
+4. **[GUIDE_MIGRATION_ARCHITECTURE.md](GUIDE_MIGRATION_ARCHITECTURE.md)** - Guide migration (30 min)
+5. **[TESTS_AUTOMATISES_COMPLET.md](TESTS_AUTOMATISES_COMPLET.md)** ✅ - Guide tests (20 min)
+6. **[MONITORING_COMPLET.md](MONITORING_COMPLET.md)** ✅ - Guide monitoring (20 min)
+7. **[PERFORMANCE_COMPLET.md](PERFORMANCE_COMPLET.md)** ✅ - Guide cache/performance (20 min)
+8. **[VISUALISATION_AMELIORATIONS.md](VISUALISATION_AMELIORATIONS.md)** - Diagrammes (10 min)
 
 ### 📝 Pour Suivre & Naviguer
 
-6. **[CHANGELOG_AMELIORATIONS.md](CHANGELOG_AMELIORATIONS.md)** - Suivi versions
-7. **[INDEX_DOCUMENTATION.md](INDEX_DOCUMENTATION.md)** - Navigation complète
+9. **[CHANGELOG_AMELIORATIONS.md](CHANGELOG_AMELIORATIONS.md)** - Suivi versions
+10. **[INDEX_DOCUMENTATION.md](INDEX_DOCUMENTATION.md)** - Navigation complète
+11. **[RESUME_SEMAINE3_PERFORMANCE.md](RESUME_SEMAINE3_PERFORMANCE.md)** - Synthèse semaine 3 (tests, monitoring, cache)
 
-### 🔧 Scripts (Prêts à Exécuter)
+### 🔧 Scripts & Modules (Prêts à Utiliser)
 
+**Migration:**
 - **[crm-backend/migrations/unify_architecture.py](crm-backend/migrations/unify_architecture.py)** - Migration
 - **[crm-backend/scripts/backup_database.sh](crm-backend/scripts/backup_database.sh)** - Backup
 - **[crm-backend/migrations/cleanup_old_tables.py](crm-backend/migrations/cleanup_old_tables.py)** - Nettoyage
+
+**Tests:** ✅
+- **[crm-backend/tests/conftest.py](crm-backend/tests/conftest.py)** - Fixtures
+- **[crm-backend/tests/test_organisations.py](crm-backend/tests/test_organisations.py)** - Tests organisations
+- **[crm-backend/tests/test_people.py](crm-backend/tests/test_people.py)** - Tests personnes
+
+**Monitoring:** ✅
+- **[crm-backend/core/monitoring.py](crm-backend/core/monitoring.py)** - Module Sentry + logging
+
+**Cache:** ✅
+- **[crm-backend/core/cache.py](crm-backend/core/cache.py)** - Module Redis cache
+- **[docker-compose.redis.yml](docker-compose.redis.yml)** - Service Redis
 
 ---
 
@@ -172,14 +205,14 @@ python migrations/cleanup_old_tables.py --execute
 ┌─────────────────────────────────────────────┐
 │ S1-2: 🏗️  FONDATIONS                       │
 │ ├─ Unifier architecture (2j) ✅ Prêt      │
-│ └─ Tests automatisés (3j)                  │
+│ └─ Tests automatisés (3j) ✅ FAIT         │
 │                                             │
 │ S3: ⚡ PERFORMANCE                          │
-│ ├─ Sentry (1j)                             │
-│ └─ Redis + DB (2j)                         │
+│ ├─ Sentry (1j) ✅ FAIT                     │
+│ └─ Redis + DB (2j) ✅ FAIT                 │
 │                                             │
 │ S4: 🔒 SÉCURITÉ & UX                       │
-│ ├─ Permissions (2j)                        │
+│ ├─ Permissions (2j) ⏳ Suivant             │
 │ └─ Notifications (2j)                      │
 │                                             │
 │ S5: ✨ FEATURES                             │

@@ -215,7 +215,7 @@ echo "✅ Nginx configuré"
 
 ```bash
 # Arrêter tous les conteneurs
-docker-compose down
+docker composedown
 
 # Vérifier qu'ils sont bien arrêtés
 docker ps -a | grep crm
@@ -237,13 +237,13 @@ chmod +x scripts/deploy-production.sh
 
 ```bash
 # Build les images
-docker-compose -f docker-compose.prod.yml build --no-cache
+docker composebuild --no-cache
 
 # Démarrer les services
-docker-compose -f docker-compose.prod.yml up -d
+docker composeup -d
 
 # Suivre les logs
-docker-compose -f docker-compose.prod.yml logs -f
+docker composelogs -f
 ```
 
 ---
@@ -252,7 +252,7 @@ docker-compose -f docker-compose.prod.yml logs -f
 
 ```bash
 # Vérifier l'état des conteneurs
-docker-compose -f docker-compose.prod.yml ps
+docker composeps
 
 # Tester l'API en local
 curl http://localhost:8000/health
@@ -265,8 +265,8 @@ curl https://crm.alforis.fr/health
 curl https://crm.alforis.fr
 
 # Vérifier les logs
-docker-compose -f docker-compose.prod.yml logs --tail=50 api
-docker-compose -f docker-compose.prod.yml logs --tail=50 frontend
+docker compose logs --tail=50 api
+docker compose logs --tail=50 frontend
 
 # Vérifier Nginx
 sudo tail -f /var/log/nginx/crm.alforis.fr.error.log
@@ -354,11 +354,11 @@ echo "POSTGRES_PASSWORD=$(openssl rand -base64 24)" >> .env.production
 
 ```bash
 # Vérifier que les conteneurs tournent
-docker-compose -f docker-compose.prod.yml ps
+docker compose ps
 
 # Vérifier les logs
-docker-compose -f docker-compose.prod.yml logs api
-docker-compose -f docker-compose.prod.yml logs frontend
+docker compose logs api
+docker compose logs frontend
 
 # Vérifier les ports
 sudo netstat -tulpn | grep -E ':(8000|3010)'
@@ -377,8 +377,8 @@ grep NEXT_PUBLIC_API_URL .env.production
 # Doit être: NEXT_PUBLIC_API_URL=https://crm.alforis.fr/api/v1
 
 # Rebuild le frontend
-docker-compose -f docker-compose.prod.yml build frontend
-docker-compose -f docker-compose.prod.yml restart frontend
+docker compose build frontend
+docker compose restart frontend
 ```
 
 ### Problème: Certificat SSL manquant
@@ -403,13 +403,13 @@ sudo certbot renew --dry-run
 docker stats
 
 # Logs en temps réel
-docker-compose -f docker-compose.prod.yml logs -f
+docker compose logs -f
 
 # Logs des 100 dernières lignes
-docker-compose -f docker-compose.prod.yml logs --tail=100
+docker compose logs --tail=100
 
 # Logs d'un service spécifique
-docker-compose -f docker-compose.prod.yml logs -f api
+docker compose logs -f api
 
 # Espace disque
 df -h
@@ -425,19 +425,19 @@ docker volume inspect crm-alforis_postgres-data
 
 ```bash
 # Redémarrer un service
-docker-compose -f docker-compose.prod.yml restart api
+docker compose restart api
 
 # Redémarrer tout
-docker-compose -f docker-compose.prod.yml restart
+docker compose restart
 
 # Reconstruire et redémarrer
-docker-compose -f docker-compose.prod.yml up -d --build
+docker compose up -d --build
 
 # Nettoyer les images inutilisées
 docker system prune -a
 
 # Backup de la base de données
-docker-compose -f docker-compose.prod.yml exec postgres pg_dump -U crm_user crm_db > backup_$(date +%Y%m%d_%H%M%S).sql
+docker compose exec postgres pg_dump -U crm_user crm_db > backup_$(date +%Y%m%d_%H%M%S).sql
 ```
 
 ---
@@ -447,7 +447,7 @@ docker-compose -f docker-compose.prod.yml exec postgres pg_dump -U crm_user crm_
 - [ ] `.env.production` créé avec les bonnes valeurs
 - [ ] `docker-compose.prod.yml` charge `.env.production` pour API et Frontend
 - [ ] Nginx configuré avec SSL Let's Encrypt
-- [ ] Conteneurs démarrés : `docker-compose -f docker-compose.prod.yml ps`
+- [ ] Conteneurs démarrés : `docker compose ps`
 - [ ] API accessible : `curl https://crm.alforis.fr/health`
 - [ ] Frontend accessible : `curl https://crm.alforis.fr`
 - [ ] Aucune erreur dans les logs
@@ -461,10 +461,10 @@ Si vous rencontrez des problèmes, envoyez-moi :
 
 ```bash
 # État des conteneurs
-docker-compose -f docker-compose.prod.yml ps
+docker compose ps
 
 # Logs récents
-docker-compose -f docker-compose.prod.yml logs --tail=100
+docker compose logs --tail=100
 
 # Configuration Nginx
 sudo nginx -t

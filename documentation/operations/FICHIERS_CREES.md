@@ -6,14 +6,14 @@ Tous les fichiers créés pour améliorer le CRM Alforis.
 
 ## 📊 Résumé
 
-- **14 fichiers créés**
-- **Documentation:** 10 fichiers
-- **Scripts:** 3 fichiers
-- **Support:** 1 fichier
+- **20 fichiers livrés**
+- **Documentation:** 13 guides & synthèses
+- **Code & scripts:** 7 modules/utilitaires
+- **Dernière mise à jour:** 2025-10-17
 
 ---
 
-## 📚 Documentation (10 fichiers)
+## 📚 Documentation (12 fichiers)
 
 ### Fichiers Principaux
 
@@ -65,16 +65,34 @@ Tous les fichiers créés pour améliorer le CRM Alforis.
    - Descriptions
    - Organisation
 
+10. **TESTS_AUTOMATISES_COMPLET.md**
+    - Guide complet pytest
+    - Commandes utiles
+    - Bonnes pratiques
+
+11. **MONITORING_COMPLET.md**
+    - Intégration Sentry
+    - Logging structuré
+    - Alerting & dashboard
+
+12. **PERFORMANCE_COMPLET.md**
+    - Cache Redis
+    - Optimisation SQL
+    - Troubleshooting complet
+
+13. **RESUME_SEMAINE3_PERFORMANCE.md**
+    - Synthèse livrables Semaine 3
+    - Métriques atteintes
+    - Checklist validation
+
 ### Fichiers Existants Mis à Jour
 
-10. **ANALYSE_ARCHITECTURE_CRM.md** (existant)
+14. **ANALYSE_ARCHITECTURE_CRM.md** (existant)
     - Analyse détaillée problème
     - Architecture cible
     - Justification technique
 
----
-
-## 🔧 Scripts Exécutables (3 fichiers)
+## 🔧 Code & Scripts (7 fichiers)
 
 ### Scripts de Migration
 
@@ -100,15 +118,43 @@ Tous les fichiers créés pour améliorer le CRM Alforis.
    - Rotation (garde 10 derniers)
    - ~100 lignes Bash
 
+4. **crm-backend/run_tests.sh**
+   - Lance pytest rapidement
+   - Options coverage / parallèle
+   - Mode verbose
+
+### Modules Backend
+
+5. **crm-backend/core/monitoring.py**
+   - Initialisation Sentry
+   - Structured logging
+   - Performance monitor
+
+6. **crm-backend/core/cache.py**
+   - Client Redis singleton
+   - Décorateur `@cache_response`
+   - Statistiques & invalidation
+
+### Configuration Docker
+
+7. **docker-compose.redis.yml**
+   - Service Redis 7-alpine
+   - Volume persistant
+   - Healthcheck & logs
+
 ---
 
-## 📝 Fichiers Support (1 fichier)
+## 📝 Fichiers Support (2 fichiers)
 
 1. **crm-backend/migrations/README.md**
    - Documentation dossier migrations
    - Usage des scripts
    - Ordre d'exécution
    - Warnings
+
+2. **crm-backend/requirements-test.txt**
+   - Dépendances test backend
+   - pytest, pytest-cov, httpx, faker
 
 ---
 
@@ -141,23 +187,13 @@ Tous les fichiers créés pour améliorer le CRM Alforis.
 
 ---
 
-## 📊 Statistiques
+## 📊 Statistiques (approx.)
 
-### Par Type
-
-| Type | Nombre | Taille totale |
-|------|--------|---------------|
-| Documentation MD | 10 | ~150 KB |
-| Scripts Python | 2 | ~700 lignes |
-| Scripts Bash | 1 | ~100 lignes |
-| **TOTAL** | **13** | **~160 KB** |
-
-### Par Priorité
-
-| Priorité | Fichiers |
-|----------|----------|
-| ⭐⭐⭐ (Essentiel) | 5 fichiers |
-| ⭐⭐ (Important) | 5 fichiers |
+- **Guides Markdown:** ~13 fichiers / ~220 KB
+- **Python:** 4 modules / ~1 200 lignes
+- **Bash:** 2 scripts / ~150 lignes
+- **YAML:** 1 fichier / ~40 lignes
+- **Autres (requirements, README migrations):** 2 fichiers
 | ⭐ (Utile) | 3 fichiers |
 
 ---

@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 
 from core import get_db, get_current_user
+from core.cache import cache_response, invalidate_organisation_cache
 from schemas.base import PaginatedResponse
 from schemas.organisation import (
     OrganisationCreate,
@@ -18,6 +19,7 @@ router = APIRouter(prefix="/organisations", tags=["organisations"])
 # ============= GET ROUTES =============
 
 @router.get("", response_model=PaginatedResponse[OrganisationResponse])
+@cache_response(ttl=300, key_prefix="organisations:list")
 async def list_organisations(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
@@ -58,6 +60,7 @@ async def list_organisations(
 
 
 @router.get("/search", response_model=PaginatedResponse[OrganisationResponse])
+@cache_response(ttl=300, key_prefix="organisations:search")
 async def search_organisations(
     q: str = Query(..., min_length=1),
     skip: int = Query(0, ge=0),
@@ -78,6 +81,7 @@ async def search_organisations(
 
 
 @router.get("/stats")
+@cache_response(ttl=600, key_prefix="organisations:stats")
 async def get_organisation_stats(
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
@@ -96,6 +100,7 @@ async def get_organisation_stats(
 
 
 @router.get("/by-language/{language}", response_model=PaginatedResponse[OrganisationResponse])
+@cache_response(ttl=300, key_prefix="organisations:language")
 async def get_organisations_by_language(
     language: str,
     skip: int = Query(0, ge=0),
@@ -119,6 +124,7 @@ async def get_organisations_by_language(
 
 
 @router.get("/{organisation_id}", response_model=OrganisationDetailResponse)
+@cache_response(ttl=600, key_prefix="organisations:detail")
 async def get_organisation(
     organisation_id: int,
     db: Session = Depends(get_db),
@@ -158,6 +164,7 @@ async def create_organisation(
     """
     service = OrganisationService(db)
     new_organisation = await service.create(organisation)
+    invalidate_organisation_cache()
     return OrganisationResponse.model_validate(new_organisation)
 
 
@@ -173,6 +180,7 @@ async def update_organisation(
     """Mettre à jour une organisation"""
     service = OrganisationService(db)
     updated_organisation = await service.update(organisation_id, organisation)
+    invalidate_organisation_cache()
     return OrganisationResponse.model_validate(updated_organisation)
 
 
@@ -192,4 +200,5 @@ async def delete_organisation(
     """
     service = OrganisationService(db)
     await service.delete(organisation_id)
+    invalidate_organisation_cache()
     return None

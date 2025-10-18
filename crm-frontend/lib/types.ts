@@ -673,3 +673,57 @@ export interface InteractionDetailNew extends InteractionNew {
   personne?: Person
   produit?: Produit
 }
+
+// ============= NOTIFICATIONS =============
+
+export type NotificationType =
+  | 'task_due'
+  | 'task_assigned'
+  | 'task_completed'
+  | 'interaction_new'
+  | 'interaction_assigned'
+  | 'mandat_signed'
+  | 'mandat_expired'
+  | 'mandat_expiring_soon'
+  | 'organisation_created'
+  | 'organisation_updated'
+  | 'organisation_assigned'
+  | 'pipeline_moved'
+  | 'pipeline_stuck'
+  | 'mention'
+  | 'comment_reply'
+  | 'system'
+  | 'export_ready'
+  | 'import_completed'
+
+export type NotificationPriority = 'low' | 'normal' | 'high' | 'urgent'
+
+export interface NotificationItem {
+  id: number
+  user_id: number
+  type: NotificationType
+  priority: NotificationPriority
+  title: string
+  message?: string | null
+  link?: string | null
+  resource_type?: string | null
+  resource_id?: number | null
+  is_read: boolean
+  read_at?: string | null
+  is_archived: boolean
+  archived_at?: string | null
+  created_at?: string | null
+  expires_at?: string | null
+  metadata?: any
+}
+
+export interface NotificationPayload {
+  type: 'notification'
+  data: NotificationItem
+}
+
+export interface NotificationsSnapshot {
+  notifications: NotificationItem[]
+  unreadCount: number
+  lastSyncedAt: string
+}

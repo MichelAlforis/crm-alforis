@@ -43,6 +43,7 @@ Fichiers créés:
 
 **Effort:** 3 jours
 **Coverage cible:** 70% backend, 60% frontend
+**Status:** ✅ Backend livré (40+ tests) | ⏳ Frontend à planifier
 
 ```bash
 # Backend
@@ -65,6 +66,7 @@ npm run test:coverage
 - Alertes par email
 
 **Effort:** 1 jour
+**Status:** ✅ Backend intégré | ⏳ Frontend & alertes à configurer
 
 ```bash
 # Installation
@@ -79,6 +81,7 @@ npm install @sentry/nextjs
 ### 4️⃣ **Cache Redis** ⭐⭐⭐⭐
 
 **Gain:** Temps de réponse divisé par 5-10x
+**Status:** ✅ Module + docker-compose livrés | ⏳ Activer sur endpoints clés
 
 ```python
 @cache_response(ttl=300)  # Cache 5 minutes
@@ -178,12 +181,12 @@ Drag & drop widgets avec react-grid-layout
 ┌─────────────────────────────────────────────────────────┐
 │  SEMAINE 1-2: 🏗️  FONDATIONS                           │
 │  - Unifier architecture (2j) ✅ Scripts prêts          │
-│  - Tests automatisés (3j)                              │
+│  - Tests automatisés (3j) ✅ Livrés (backend)          │
 │  Impact: 🔥🔥🔥🔥🔥  |  Effort: 🛠️🛠️🛠️              │
 ├─────────────────────────────────────────────────────────┤
 │  SEMAINE 3: ⚡ MONITORING & PERFORMANCE                 │
-│  - Sentry (1j)                                         │
-│  - Redis + Optimisation DB (2j)                        │
+│  - Sentry (1j) ✅ Backend                              │
+│  - Redis + Optimisation DB (2j) ✅ Cache & guide       │
 │  Impact: 🔥🔥🔥🔥  |  Effort: 🛠️🛠️                    │
 ├─────────────────────────────────────────────────────────┤
 │  SEMAINE 4: 🔒 SÉCURITÉ & UX                           │

@@ -25,7 +25,7 @@ from schemas.organisation import (
     InteractionUpdate,
 )
 from services.base import BaseService
-from core.exceptions import ResourceNotFound, ValidationError
+from core.exceptions import ResourceNotFound, ValidationError, DatabaseError
 import logging
 
 logger = logging.getLogger(__name__)
@@ -36,6 +36,37 @@ class OrganisationService(BaseService[Organisation, OrganisationCreate, Organisa
 
     def __init__(self, db: Session):
         super().__init__(Organisation, db)
+
+    async def get_all(
+        self,
+        skip: int = 0,
+        limit: int = 100,
+        filters: Optional[dict] = None
+    ) -> Tuple[List[Organisation], int]:
+        """
+        Récupérer les organisations avec leurs relations clés préchargées pour éviter le N+1.
+        """
+        try:
+            query = (
+                self.db.query(Organisation)
+                .options(
+                    joinedload(Organisation.mandats),
+                    joinedload(Organisation.contacts),
+                )
+            )
+
+            if filters:
+                for key, value in filters.items():
+                    column = getattr(Organisation, key, None)
+                    if column is not None and value is not None:
+                        query = query.filter(column == value)
+
+            total = query.count()
+            items = query.offset(skip).limit(limit).all()
+            return items, total
+        except Exception as e:
+            logger.error(f"Error fetching organisations with relations: {e}")
+            raise DatabaseError("Failed to fetch organisations")
 
     async def get_by_category(
         self,

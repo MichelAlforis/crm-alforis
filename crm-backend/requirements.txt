@@ -19,3 +19,6 @@ alembic==1.13.0
 # Monitoring & Logging
 sentry-sdk[fastapi]==1.39.1
 structlog==23.2.0
+
+# Cache
+redis==5.0.1

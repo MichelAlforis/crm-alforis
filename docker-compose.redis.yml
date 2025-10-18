@@ -1,0 +1,38 @@
+# ===========================================
+# DOCKER COMPOSE - Redis Cache
+# ===========================================
+# À utiliser avec docker-compose.yml:
+# docker compose -f docker-compose.yml -f docker-compose.redis.yml up -d
+
+version: '3.8'
+
+services:
+  # ============================================
+  # Cache Redis
+  # ============================================
+  redis:
+    image: redis:7-alpine
+    container_name: crm-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-redis_password}
+    ports:
+      - "127.0.0.1:${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - crm-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  redis-data:
+    driver: local

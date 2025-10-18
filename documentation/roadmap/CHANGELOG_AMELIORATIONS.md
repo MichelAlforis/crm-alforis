@@ -4,6 +4,33 @@ Suivi des améliorations apportées au CRM Alforis.
 
 ---
 
+## ✅ 2025-10-17 — Tests, Monitoring & Cache
+
+### 🧪 Qualité
+- [x] Suite pytest backend (40+ tests organisations/personnes)
+- [x] Fixtures centralisées (`crm-backend/tests/conftest.py`)
+- [x] Script exécution rapide (`crm-backend/run_tests.sh`)
+- [x] Documentation tests (`TESTS_AUTOMATISES_COMPLET.md`, `crm-backend/tests/README.md`)
+- [ ] Tests frontend (Jest) — à planifier
+
+### 🛡️ Monitoring
+- [x] Module `core/monitoring.py` (Sentry + structlog)
+- [x] Intégration backend (`init_sentry()` dans `crm-backend/main.py`)
+- [x] Guide complet `MONITORING_COMPLET.md`
+- [ ] Alertes email / Slack
+- [ ] Intégration frontend Next.js
+
+### ⚡ Performance
+- [x] Service Redis (`docker-compose.redis.yml`)
+- [x] Module cache (`core/cache.py` + décorateur `@cache_response`)
+- [x] Activation du cache sur les routes organisations (list/detail/search/stats)
+- [x] Guide `PERFORMANCE_COMPLET.md`
+- [x] Synthèse `RESUME_SEMAINE3_PERFORMANCE.md`
+- [ ] Activer le cache côté endpoints critiques
+- [ ] Index DB & eager loading (documentation prête)
+
+---
+
 ## 🚀 Version 3.0.0 - "Architecture Unifiée" (À venir)
 
 **Date prévue:** TBD
@@ -16,7 +43,7 @@ Suivi des améliorations apportées au CRM Alforis.
 - [ ] **[BREAKING]** Migration Contact → Person + PersonOrganizationLink
 - [ ] **[BREAKING]** Suppression tables obsolètes (investors, fournisseurs, contacts)
 - [ ] Ajout colonnes `type`, `pipeline_stage`, `email`, `main_phone` à Organisation
-- [ ] Scripts de migration créés et testés
+- [x] Scripts de migration créés et testés
 
 ### 🧪 Tests
 
@@ -28,7 +55,7 @@ Suivi des améliorations apportées au CRM Alforis.
 
 ### 📚 Documentation
 
-- [ ] Guide de migration complet
+- [x] Guide de migration complet
 - [ ] Documentation API mise à jour
 - [ ] Guide utilisateur
 - [ ] Vidéos tutoriels (optionnel)
@@ -37,21 +64,23 @@ Suivi des améliorations apportées au CRM Alforis.
 
 ---
 
-## ⚡ Version 2.5.0 - "Performance & Monitoring" (À venir)
+## ⚡ Version 2.5.0 - "Performance & Monitoring" (En cours)
 
 **Date prévue:** TBD
-**Statut:** 📋 Planifié
+**Statut:** 🚧 En cours (backend livré)
 
 ### 🔍 Monitoring
 
-- [ ] Intégration Sentry (backend + frontend)
-- [ ] Logs structurés (structlog)
+- [x] Intégration Sentry backend
+- [ ] Intégration Sentry frontend
+- [x] Logs structurés (structlog)
 - [ ] Alertes par email
 - [ ] Dashboard monitoring
 
 ### ⚡ Performance
 
-- [ ] Cache Redis pour API
+- [x] Cache Redis pour API (module & docker-compose)
+- [ ] Activer cache sur endpoints critiques
 - [ ] Index DB optimisés (type, pipeline_stage)
 - [ ] Eager loading (joinedload) pour éviter N+1
 - [ ] Pagination optimisée

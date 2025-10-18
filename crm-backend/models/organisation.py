@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, Float, Date, Text, Enum, ForeignKey, Boolean, ARRAY
+from sqlalchemy import Column, String, Integer, Float, Date, Text, Enum, ForeignKey, Boolean, ARRAY, Index
 from sqlalchemy.orm import relationship
 from models.base import BaseModel
 import enum
@@ -83,6 +83,9 @@ class Organisation(BaseModel):
         - Relations (mandats, interactions, contacts)
     """
     __tablename__ = "organisations"
+    __table_args__ = (
+        Index("idx_org_category_active", "category", "is_active"),
+    )
 
     # Infos générales
     name = Column(String(255), nullable=False, index=True)

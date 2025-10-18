@@ -14,3 +14,10 @@ export interface SearchItem {
   subtitle?: string
   href: string
 }
+
+export interface SearchSuggestion {
+  id: number | string
+  name: string
+  type: string
+  [key: string]: unknown
+}

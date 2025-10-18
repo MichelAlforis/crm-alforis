@@ -13,6 +13,7 @@ from api.routes import (
     mandats,
     produits,
 )
+from routers import search, exports
 
 # Créer le routeur principal
 api_router = APIRouter(prefix="/api/v1")
@@ -33,6 +34,10 @@ api_router.include_router(tasks.router)
 api_router.include_router(organisations.router)
 api_router.include_router(mandats.router)
 api_router.include_router(produits.router)
+
+# 🔍 RECHERCHE & EXPORTS (Semaine 5)
+api_router.include_router(search.router)
+api_router.include_router(exports.router)
 
 # ⚡ IMPORTS ROUTES (bulk operations)
 api_router.include_router(imports.router)

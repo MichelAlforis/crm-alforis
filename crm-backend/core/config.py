@@ -47,6 +47,12 @@ class Settings(BaseSettings):
     environment: str = "development"  # development, staging, production
     log_level: str = "INFO"  # DEBUG, INFO, WARNING, ERROR
 
+    # Redis Cache
+    redis_host: str = "redis"
+    redis_port: int = 6379
+    redis_password: str = ""  # Vide = pas de password
+    redis_db: int = 0
+
     class Config:
         env_file = ".env"
         case_sensitive = False

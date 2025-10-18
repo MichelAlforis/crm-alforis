@@ -1,17 +1,27 @@
-from fastapi import FastAPI, Request, status, HTTPException
+from fastapi import FastAPI, Request, status, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
-import logging
 
 from core import init_db, health_check, settings
 from core.exceptions import APIException
 from api import api_router
 from schemas.base import HealthCheckResponse
+from core.monitoring import (
+    init_sentry,
+    init_structured_logging,
+    get_logger,
+    capture_exception,
+)
+from core.notifications import websocket_endpoint
+from core.events import event_bus
+from core.permissions import init_default_permissions
+from core.database import SessionLocal
 
-# Configuration du logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Initialiser monitoring (Sentry + structured logging)
+init_structured_logging()
+init_sentry()
+logger = get_logger(__name__)
 
 # Créer l'application FastAPI
 app = FastAPI(
@@ -58,14 +68,30 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 @app.on_event("startup")
 async def startup_event():
     """Initialiser la base de données au démarrage"""
-    logger.info("🚀 Démarrage de l'application CRM...")
+    logger.info("app_startup", message="Démarrage de l'application CRM")
     init_db()
-    logger.info("✅ Base de données initialisée")
+    logger.info("app_startup_complete", message="Base de données initialisée")
+
+    # Initialiser permissions par défaut
+    db = SessionLocal()
+    try:
+        init_default_permissions(db)
+        logger.info("permissions_initialized", message="Permissions RBAC initialisées")
+    finally:
+        db.close()
+
+    # Démarrer Event Bus (notifications)
+    await event_bus.start_listening()
+    logger.info("event_bus_started", message="Event Bus Redis démarré")
 
 @app.on_event("shutdown")
 async def shutdown_event():
     """Cleanup au shutdown"""
-    logger.info("🛑 Arrêt de l'application CRM")
+    # Arrêter Event Bus
+    await event_bus.stop_listening()
+    logger.info("event_bus_stopped", message="Event Bus Redis arrêté")
+
+    logger.info("app_shutdown", message="Arrêt de l'application CRM")
 
 # ============= ROUTES =============
 
@@ -93,6 +119,16 @@ async def root():
         "health": "/health",
     }
 
+# WebSocket endpoint pour notifications temps réel
+@app.websocket("/ws/notifications")
+async def notifications_ws(websocket: WebSocket):
+    """
+    WebSocket endpoint pour notifications temps réel
+
+    Frontend se connecte: ws://localhost:8000/ws/notifications?token=<jwt_token>
+    """
+    await websocket_endpoint(websocket)
+
 # ============= ERROR HANDLERS =============
 
 @app.exception_handler(404)
@@ -107,7 +143,13 @@ async def not_found_handler(request: Request, exc):
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
-    logger.error(f"Unhandled exception: {exc}")
+    capture_exception(exc)
+    logger.error(
+        "unhandled_exception",
+        error=str(exc),
+        path=str(request.url.path),
+        method=request.method,
+    )
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={
