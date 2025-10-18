@@ -502,6 +502,39 @@ export interface OrganisationDetail extends Organisation {
   contacts: OrganisationContact[]
 }
 
+export type OrganisationActivityType =
+  | 'interaction_created'
+  | 'interaction_updated'
+  | 'task_created'
+  | 'task_completed'
+  | 'task_updated'
+  | 'note_added'
+  | 'document_added'
+  | 'mandat_created'
+  | 'mandat_status_changed'
+  | 'mandat_updated'
+  | 'organisation_created'
+  | 'organisation_updated'
+  | 'email_sent'
+  | 'system_event'
+
+export interface OrganisationActivity {
+  id: number
+  organisation_id: number
+  occurred_at: string
+  type: OrganisationActivityType
+  title: string
+  preview?: string | null
+  actor_id?: string | null
+  actor_name?: string | null
+  actor_avatar_url?: string | null
+  resource_type?: string | null
+  resource_id?: number | null
+  metadata?: Record<string, any> | null
+  created_at: string
+  updated_at: string
+}
+
 // ============= MANDAT DE DISTRIBUTION =============
 
 export type MandatStatus =

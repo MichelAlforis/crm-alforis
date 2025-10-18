@@ -148,7 +148,7 @@ async def create_mandat(
     Note: Un mandat doit être signé ou actif pour permettre l'association de produits
     """
     service = MandatDistributionService(db)
-    new_mandat = await service.create(mandat)
+    new_mandat = await service.create(mandat, actor=current_user)
     await emit_event(
         EventType.MANDAT_CREATED,
         data={
@@ -191,7 +191,7 @@ async def update_mandat(
     service = MandatDistributionService(db)
     existing_mandat = await service.get_by_id(mandat_id)
     previous_status = getattr(existing_mandat, "status", None)
-    updated_mandat = await service.update(mandat_id, mandat)
+    updated_mandat = await service.update(mandat_id, mandat, actor=current_user)
     await emit_event(
         EventType.MANDAT_UPDATED,
         data={

@@ -17,6 +17,7 @@ import { OrganisationForm } from '@/components/forms'
 import { SkeletonCard } from '@/components/ui/Skeleton'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import type { OrganisationUpdate } from '@/lib/types'
+import { OrganisationTimeline } from '@/components/organisations/OrganisationTimeline'
 
 const CATEGORY_LABELS: Record<string, string> = {
   DISTRIBUTEUR: 'Distributeur',
@@ -242,6 +243,8 @@ export default function OrganisationDetailPage() {
           </div>
         )}
       </Card>
+
+      {organisationId && <OrganisationTimeline organisationId={organisationId} />}
 
       {/* Modal d'édition */}
       <Modal

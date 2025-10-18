@@ -145,7 +145,7 @@ async def create_task(
 ):
     """Créer une nouvelle tâche"""
     service = TaskService(db)
-    task = await service.create(task_create)
+    task = await service.create(task_create, actor=current_user)
     await emit_event(
         EventType.TASK_CREATED,
         data={
@@ -169,7 +169,7 @@ async def snooze_task(
 ):
     """Snoozer une tâche de X jours"""
     service = TaskService(db)
-    task = await service.snooze_task(task_id, snooze_request.days)
+    task = await service.snooze_task(task_id, snooze_request.days, actor=current_user)
     return enrich_task_response(task)
 
 
@@ -190,7 +190,7 @@ async def task_quick_action(
     - next_day: Passer au lendemain
     """
     service = TaskService(db)
-    task = await service.quick_action(task_id, action_request.action)
+    task = await service.quick_action(task_id, action_request.action, actor=current_user)
     if getattr(task, "status", None) == TaskStatus.DONE:
         await emit_event(
             EventType.TASK_COMPLETED,
@@ -215,7 +215,7 @@ async def update_task(
 ):
     """Mettre à jour une tâche"""
     service = TaskService(db)
-    task = await service.update(task_id, task_update)
+    task = await service.update(task_id, task_update, actor=current_user)
     if task_update.status == TaskStatus.DONE or getattr(task, "status", None) == TaskStatus.DONE:
         await emit_event(
             EventType.TASK_COMPLETED,

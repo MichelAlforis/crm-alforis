@@ -2,6 +2,7 @@ from sqlalchemy import Column, String, Integer, Float, Date, Text, Enum, Foreign
 from sqlalchemy.orm import relationship
 from models.base import BaseModel
 import enum
+from models.organisation_activity import OrganisationActivity
 
 # =======================
 # Enums
@@ -121,6 +122,12 @@ class Organisation(BaseModel):
 
     interactions = relationship(
         "OrganisationInteraction",
+        back_populates="organisation",
+        cascade="all, delete-orphan"
+    )
+
+    activities = relationship(
+        "OrganisationActivity",
         back_populates="organisation",
         cascade="all, delete-orphan"
     )

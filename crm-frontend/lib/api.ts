@@ -39,6 +39,7 @@ import {
   OrganisationCreate,
   OrganisationUpdate,
   OrganisationDetail,
+  OrganisationActivity,
   MandatDistribution,
   MandatDistributionCreate,
   MandatDistributionUpdate,
@@ -199,7 +200,15 @@ class ApiClient {
       const query = new URLSearchParams()
       Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
-          query.append(key, String(value))
+          if (Array.isArray(value)) {
+            value.forEach((item) => {
+              if (item !== undefined && item !== null) {
+                query.append(key, String(item))
+              }
+            })
+          } else {
+            query.append(key, String(value))
+          }
         }
       })
       const queryString = query.toString()
@@ -674,6 +683,27 @@ class ApiClient {
 
   async getOrganisation(id: number): Promise<OrganisationDetail> {
     return this.request<OrganisationDetail>(`/organisations/${id}`)
+  }
+
+  async getOrganisationActivity(
+    organisationId: number,
+    params?: { limit?: number; before_id?: number; types?: string[] }
+  ): Promise<PaginatedResponse<OrganisationActivity>> {
+    return this.request<PaginatedResponse<OrganisationActivity>>(
+      `/organisations/${organisationId}/activity`,
+      { params },
+    )
+  }
+
+  async getActivityWidget(params?: {
+    organisation_ids?: number[]
+    types?: string[]
+    limit?: number
+  }): Promise<PaginatedResponse<OrganisationActivity>> {
+    return this.request<PaginatedResponse<OrganisationActivity>>(
+      '/dashboards/widgets/activity',
+      { params },
+    )
   }
 
   async searchOrganisations(query: string, skip = 0, limit = 100): Promise<PaginatedResponse<Organisation>> {

@@ -76,6 +76,11 @@ from schemas.webhook import (
     WebhookResponse,
     WebhookRotateSecretRequest,
 )
+from schemas.organisation_activity import (
+    OrganisationActivityCreate,
+    OrganisationActivityUpdate,
+    OrganisationActivityResponse,
+)
 
 __all__ = [
     # ---------- Base ----------
@@ -151,4 +156,9 @@ __all__ = [
     "WebhookUpdate",
     "WebhookResponse",
     "WebhookRotateSecretRequest",
+
+    # ---------- Organisation Activity ----------
+    "OrganisationActivityCreate",
+    "OrganisationActivityUpdate",
+    "OrganisationActivityResponse",
 ]

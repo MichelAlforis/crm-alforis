@@ -12,6 +12,8 @@ from api.routes import (
     organisations,
     mandats,
     produits,
+    dashboards,
+    workflows,
 )
 from routers import search, exports, webhooks
 
@@ -34,11 +36,15 @@ api_router.include_router(tasks.router)
 api_router.include_router(organisations.router)
 api_router.include_router(mandats.router)
 api_router.include_router(produits.router)
+api_router.include_router(dashboards.router)
 
 # 🔍 RECHERCHE & EXPORTS (Semaine 5)
 api_router.include_router(search.router)
 api_router.include_router(exports.router)
 api_router.include_router(webhooks.router)
+
+# 🤖 WORKFLOWS & AUTOMATION (Phase 2.2)
+api_router.include_router(workflows.router)
 
 # ⚡ IMPORTS ROUTES (bulk operations)
 api_router.include_router(imports.router)

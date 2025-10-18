@@ -1,4 +1,4 @@
-from typing import Optional, List, Tuple
+from typing import Optional, List, Tuple, Dict, Any
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func, or_, and_
 from datetime import date, timedelta, datetime
@@ -8,6 +8,8 @@ from models.investor import InteractionType
 from schemas.task import TaskCreate, TaskUpdate, TaskFilterParams
 from schemas.interaction import InteractionCreate
 from services.base import BaseService
+from services.organisation_activity import OrganisationActivityService
+from models.organisation_activity import OrganisationActivityType
 from core.exceptions import ResourceNotFound, ValidationError
 import logging
 
@@ -17,6 +19,92 @@ logger = logging.getLogger(__name__)
 class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
     def __init__(self, db: Session):
         super().__init__(Task, db)
+
+    @staticmethod
+    def _extract_actor(actor: Optional[dict]) -> Tuple[Optional[str], Optional[str], Optional[str]]:
+        """Normalise les informations acteur pour la timeline."""
+        if not actor:
+            return None, None, None
+
+        actor_id = actor.get("user_id")
+        if actor_id is not None:
+            actor_id = str(actor_id)
+
+        actor_name = (
+            actor.get("full_name")
+            or actor.get("name")
+            or actor.get("email")
+            or (str(actor.get("user_id")) if actor.get("user_id") is not None else None)
+        )
+        actor_avatar = actor.get("avatar_url")
+
+        return actor_id, actor_name, actor_avatar
+
+    @staticmethod
+    def _task_metadata(task: Task) -> Dict[str, Any]:
+        """Construit les métadonnées standard à stocker pour une tâche."""
+        return {
+            "task_id": task.id,
+            "title": task.title,
+            "status": task.status.value if task.status else None,
+            "priority": task.priority.value if task.priority else None,
+            "due_date": task.due_date.isoformat() if task.due_date else None,
+            "is_auto_created": task.is_auto_created,
+            "auto_rule": task.auto_creation_rule,
+            "organisation_id": task.organisation_id,
+            "organisation_name": getattr(getattr(task, "organisation", None), "name", None),
+        }
+
+    @staticmethod
+    def _task_preview(task: Task, extra_parts: Optional[List[str]] = None) -> Optional[str]:
+        """Génère un résumé texte court des informations de la tâche."""
+        parts: List[str] = []
+        if task.due_date:
+            parts.append(f"Échéance {task.due_date.strftime('%d/%m/%Y')}")
+        if task.priority:
+            parts.append(f"Priorité {task.priority.value}")
+        if task.status:
+            parts.append(f"Statut {task.status.value}")
+        if extra_parts:
+            parts.extend([p for p in extra_parts if p])
+
+        parts = [p for p in parts if p]
+        return " • ".join(parts) if parts else None
+
+    async def _record_task_activity(
+        self,
+        task: Task,
+        activity_type: OrganisationActivityType,
+        title: str,
+        *,
+        preview: Optional[str] = None,
+        actor: Optional[dict] = None,
+        occurred_at: Optional[datetime] = None,
+        extra_metadata: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Persiste une activité dans la timeline si la tâche est liée à une organisation."""
+        if not task.organisation_id:
+            return
+
+        actor_id, actor_name, actor_avatar = self._extract_actor(actor)
+        metadata = self._task_metadata(task)
+        if extra_metadata:
+            metadata.update(extra_metadata)
+
+        activity_service = OrganisationActivityService(self.db)
+        await activity_service.record(
+            organisation_id=task.organisation_id,
+            activity_type=activity_type,
+            title=title,
+            occurred_at=occurred_at or datetime.utcnow(),
+            preview=preview,
+            actor_id=actor_id,
+            actor_name=actor_name,
+            actor_avatar_url=actor_avatar,
+            resource_type="task",
+            resource_id=task.id,
+            metadata=metadata,
+        )
 
     async def get_all(
         self,
@@ -112,6 +200,22 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
 
         return items, total
 
+    async def create(self, schema: TaskCreate, *, actor: Optional[dict] = None) -> Task:
+        """Créer une tâche et enregistrer l'activité associée."""
+        task = await super().create(schema)
+
+        await self._record_task_activity(
+            task,
+            OrganisationActivityType.TASK_CREATED,
+            title=f"Tâche créée • {task.title}",
+            preview=self._task_preview(task),
+            actor=actor,
+            extra_metadata={
+                "created_via": "automation" if schema.is_auto_created else "manual",
+            },
+        )
+        return task
+
     async def get_task_with_relations(self, task_id: int) -> Task:
         """Récupérer une tâche avec toutes ses relations"""
         task = (
@@ -131,7 +235,73 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
 
         return task
 
-    async def snooze_task(self, task_id: int, days: int) -> Task:
+    async def update(
+        self,
+        task_id: int,
+        schema: TaskUpdate,
+        *,
+        actor: Optional[dict] = None,
+    ) -> Task:
+        """Mettre à jour une tâche et tracer l'activité associée."""
+        task = await self.get_by_id(task_id)
+
+        update_data = schema.model_dump(exclude_unset=True)
+        if not update_data:
+            return task
+
+        previous_status = task.status
+        previous_due = task.due_date
+        previous_priority = task.priority
+        previous_title = task.title
+
+        for key, value in update_data.items():
+            setattr(task, key, value)
+
+        self.db.add(task)
+        self.db.commit()
+        self.db.refresh(task)
+
+        if task.organisation_id:
+            changes: List[str] = []
+            if "title" in update_data and task.title != previous_title:
+                changes.append("Titre mis à jour")
+            if "due_date" in update_data and task.due_date != previous_due:
+                changes.append(
+                    f"Échéance {task.due_date.strftime('%d/%m/%Y')}"
+                    if task.due_date
+                    else "Échéance supprimée"
+                )
+            if "priority" in update_data and task.priority != previous_priority:
+                changes.append(f"Priorité {task.priority.value}")
+            if "status" in update_data and task.status != previous_status:
+                changes.append(f"Statut {task.status.value}")
+
+            activity_type = (
+                OrganisationActivityType.TASK_COMPLETED
+                if task.status == TaskStatus.DONE
+                else OrganisationActivityType.TASK_UPDATED
+            )
+
+            await self._record_task_activity(
+                task,
+                activity_type,
+                title=f"Tâche mise à jour • {task.title}",
+                preview=" • ".join(changes) if changes else self._task_preview(task),
+                actor=actor,
+                extra_metadata={
+                    "changed_fields": list(update_data.keys()),
+                },
+            )
+
+        return task
+
+    async def snooze_task(
+        self,
+        task_id: int,
+        days: int,
+        *,
+        actor: Optional[dict] = None,
+    ) -> Task:
         """Snoozer une tâche de X jours"""
         task = await self.get_by_id(task_id)
 
@@ -146,10 +316,24 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
         self.db.commit()
         self.db.refresh(task)
 
+        await self._record_task_activity(
+            task,
+            OrganisationActivityType.TASK_UPDATED,
+            title=f"Tâche reportée • {task.title}",
+            preview=f"Nouvelle échéance {task.due_date.strftime('%d/%m/%Y')}" if task.due_date else None,
+            actor=actor,
+            extra_metadata={"snoozed_days": days},
+        )
+
         logger.info(f"Task {task_id} snoozed for {days} days until {task.due_date}")
         return task
 
-    async def mark_done(self, task_id: int) -> Task:
+    async def mark_done(
+        self,
+        task_id: int,
+        *,
+        actor: Optional[dict] = None,
+    ) -> Task:
         """Marquer une tâche comme terminée et créer une interaction associée"""
         task = await self.get_task_with_relations(task_id)
 
@@ -161,6 +345,15 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
 
         self.db.commit()
         self.db.refresh(task)
+
+        await self._record_task_activity(
+            task,
+            OrganisationActivityType.TASK_COMPLETED,
+            title=f"Tâche terminée • {task.title}",
+            preview=self._task_preview(task, ["Complétée"]),
+            actor=actor,
+            extra_metadata={"completed_at": task.completed_at.isoformat() if task.completed_at else None},
+        )
 
         logger.info(f"Task {task_id} marked as done and interaction created")
         return task
@@ -205,13 +398,19 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
         logger.info(f"Created interaction {interaction.id} from completed task {task.id}")
         return interaction
 
-    async def quick_action(self, task_id: int, action: str) -> Task:
+    async def quick_action(
+        self,
+        task_id: int,
+        action: str,
+        *,
+        actor: Optional[dict] = None,
+    ) -> Task:
         """Exécuter une action rapide sur une tâche"""
         actions_map = {
-            "snooze_1d": lambda: self.snooze_task(task_id, 1),
-            "snooze_1w": lambda: self.snooze_task(task_id, 7),
-            "mark_done": lambda: self.mark_done(task_id),
-            "next_day": lambda: self.snooze_task(task_id, 1),
+            "snooze_1d": lambda: self.snooze_task(task_id, 1, actor=actor),
+            "snooze_1w": lambda: self.snooze_task(task_id, 7, actor=actor),
+            "mark_done": lambda: self.mark_done(task_id, actor=actor),
+            "next_day": lambda: self.snooze_task(task_id, 1, actor=actor),
         }
 
         if action not in actions_map:
@@ -315,6 +514,12 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
             auto_creation_rule=rule_name,
         )
 
-        task = await self.create(task_data)
+        task = await self.create(
+            task_data,
+            actor={
+                "user_id": "system",
+                "full_name": "Automation Engine",
+            },
+        )
         logger.info(f"Auto-created task {task.id} with rule '{rule_name}'")
         return task

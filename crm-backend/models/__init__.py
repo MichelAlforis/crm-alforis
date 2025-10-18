@@ -42,6 +42,18 @@ from models.organisation import (
     InteractionPipeline,
     InteractionStatus,
 )
+from models.organisation_activity import (
+    OrganisationActivity,
+    OrganisationActivityType,
+)
+from models.workflow import (
+    Workflow,
+    WorkflowExecution,
+    WorkflowTriggerType,
+    WorkflowActionType,
+    WorkflowStatus,
+    WorkflowExecutionStatus,
+)
 
 __all__ = [
     # Base
@@ -78,6 +90,8 @@ __all__ = [
     "OrganisationInteraction",
     "InteractionPipeline",
     "InteractionStatus",
+    "OrganisationActivity",
+    "OrganisationActivityType",
 
     # People
     "Person",
@@ -92,6 +106,14 @@ __all__ = [
 
     # Webhooks
     "Webhook",
+
+    # Workflows
+    "Workflow",
+    "WorkflowExecution",
+    "WorkflowTriggerType",
+    "WorkflowActionType",
+    "WorkflowStatus",
+    "WorkflowExecutionStatus",
 ]
 
 # ---------- Imports API ----------

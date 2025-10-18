@@ -12,8 +12,11 @@ from schemas.organisation import (
     OrganisationResponse,
     OrganisationDetailResponse,
 )
+from schemas.organisation_activity import OrganisationActivityResponse
 from services.organisation import OrganisationService
 from services.person import PersonOrganizationLinkService
+from services.organisation_activity import OrganisationActivityService
+from models.organisation_activity import OrganisationActivityType
 
 router = APIRouter(prefix="/organisations", tags=["organisations"])
 
@@ -148,6 +151,56 @@ async def get_organisation(
 
     return OrganisationDetailResponse.model_validate(organisation)
 
+@router.get(
+    "/{organisation_id}/activity",
+    response_model=PaginatedResponse[OrganisationActivityResponse],
+)
+@cache_response(ttl=60, key_prefix="organisations:activity")
+async def get_organisation_activity(
+    organisation_id: int,
+    limit: int = Query(20, ge=1, le=100),
+    before_id: Optional[int] = Query(
+        None,
+        description="Cursor basé sur l'identifiant de l'activité précédente",
+    ),
+    types: Optional[List[str]] = Query(
+        None,
+        description="Filtrer par type d'activité (ex: interaction_created, task_completed)",
+    ),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """Timeline des activités pour une organisation."""
+    service = OrganisationActivityService(db)
+
+    type_filters: Optional[List[OrganisationActivityType]] = None
+    if types:
+        mapped_types = []
+        for raw_type in types:
+            try:
+                mapped_types.append(OrganisationActivityType(raw_type))
+            except ValueError:
+                continue
+        type_filters = mapped_types or None
+
+    items = await service.get_timeline(
+        organisation_id,
+        limit=limit,
+        before_id=before_id,
+        types=type_filters,
+    )
+    total = await service.count_for_organisation(
+        organisation_id,
+        types=type_filters,
+    )
+
+    return PaginatedResponse(
+        total=total,
+        skip=0,
+        limit=limit,
+        items=[OrganisationActivityResponse.model_validate(item) for item in items],
+    )
+
 
 # ============= POST ROUTES =============
 
@@ -175,7 +228,7 @@ async def create_organisation(
     - notes: Notes
     """
     service = OrganisationService(db)
-    new_organisation = await service.create(organisation)
+    new_organisation = await service.create(organisation, actor=current_user)
     invalidate_organisation_cache()
 
     await emit_event(
@@ -203,7 +256,7 @@ async def update_organisation(
 ):
     """Mettre à jour une organisation"""
     service = OrganisationService(db)
-    updated_organisation = await service.update(organisation_id, organisation)
+    updated_organisation = await service.update(organisation_id, organisation, actor=current_user)
     invalidate_organisation_cache()
 
     await emit_event(

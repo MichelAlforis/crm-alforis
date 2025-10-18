@@ -1,6 +1,7 @@
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Dict, Any
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import and_, or_, func
+from datetime import datetime
 from models.organisation import (
     Organisation,
     OrganisationContact,
@@ -25,10 +26,32 @@ from schemas.organisation import (
     InteractionUpdate,
 )
 from services.base import BaseService
+from services.organisation_activity import OrganisationActivityService
+from models.organisation_activity import OrganisationActivityType
 from core.exceptions import ResourceNotFound, ValidationError, DatabaseError
 import logging
 
 logger = logging.getLogger(__name__)
+
+
+def _normalize_actor(actor: Optional[dict]) -> Tuple[Optional[str], Optional[str], Optional[str]]:
+    """Normalise les informations acteur (id, nom, avatar)."""
+    if not actor:
+        return None, None, None
+
+    actor_id = actor.get("user_id")
+    if actor_id is not None:
+        actor_id = str(actor_id)
+
+    actor_name = (
+        actor.get("full_name")
+        or actor.get("name")
+        or actor.get("email")
+        or (str(actor.get("user_id")) if actor.get("user_id") is not None else None)
+    )
+
+    actor_avatar = actor.get("avatar_url")
+    return actor_id, actor_name, actor_avatar
 
 
 class OrganisationService(BaseService[Organisation, OrganisationCreate, OrganisationUpdate]):
@@ -36,6 +59,80 @@ class OrganisationService(BaseService[Organisation, OrganisationCreate, Organisa
 
     def __init__(self, db: Session):
         super().__init__(Organisation, db)
+
+    @staticmethod
+    def _extract_actor(actor: Optional[dict]) -> Tuple[Optional[str], Optional[str], Optional[str]]:
+        return _normalize_actor(actor)
+
+    @staticmethod
+    def _organisation_metadata(org: Organisation) -> Dict[str, Any]:
+        """Construit les métadonnées standard pour une organisation."""
+        return {
+            "organisation_id": org.id,
+            "name": org.name,
+            "category": org.category.value if getattr(org, "category", None) else None,
+            "country_code": getattr(org, "country_code", None),
+            "language": getattr(org, "language", None),
+            "is_active": getattr(org, "is_active", None),
+        }
+
+    async def _record_activity(
+        self,
+        organisation: Organisation,
+        activity_type: OrganisationActivityType,
+        title: str,
+        *,
+        actor: Optional[dict] = None,
+        preview: Optional[str] = None,
+        metadata: Optional[Dict[str, Any]] = None,
+        occurred_at: Optional[datetime] = None,
+    ) -> None:
+        """Centralise l'enregistrement d'une activité organisation."""
+        activity_service = OrganisationActivityService(self.db)
+        actor_id, actor_name, actor_avatar = self._extract_actor(actor)
+
+        base_metadata = self._organisation_metadata(organisation)
+        if metadata:
+            base_metadata.update(metadata)
+
+        await activity_service.record(
+            organisation_id=organisation.id,
+            activity_type=activity_type,
+            title=title,
+            preview=preview,
+            occurred_at=occurred_at or datetime.utcnow(),
+            actor_id=actor_id,
+            actor_name=actor_name,
+            actor_avatar_url=actor_avatar,
+            resource_type="organisation",
+            resource_id=organisation.id,
+            metadata=base_metadata,
+        )
+
+    async def create(
+        self,
+        schema: OrganisationCreate,
+        *,
+        actor: Optional[dict] = None,
+    ) -> Organisation:
+        """Créer une organisation et enregistrer l'activité associée."""
+        organisation = await super().create(schema)
+
+        preview_parts = [
+            organisation.category.value if getattr(organisation, "category", None) else None,
+            getattr(organisation, "country_code", None),
+        ]
+        preview = " • ".join([p for p in preview_parts if p])
+
+        await self._record_activity(
+            organisation,
+            OrganisationActivityType.ORGANISATION_CREATED,
+            title=f"Organisation créée • {organisation.name}",
+            actor=actor,
+            preview=preview or None,
+        )
+
+        return organisation
 
     async def get_all(
         self,
@@ -67,6 +164,62 @@ class OrganisationService(BaseService[Organisation, OrganisationCreate, Organisa
         except Exception as e:
             logger.error(f"Error fetching organisations with relations: {e}")
             raise DatabaseError("Failed to fetch organisations")
+
+    async def update(
+        self,
+        organisation_id: int,
+        schema: OrganisationUpdate,
+        *,
+        actor: Optional[dict] = None,
+    ) -> Organisation:
+        """Mettre à jour une organisation avec historisation timeline."""
+        organisation = await self.get_by_id(organisation_id)
+
+        update_data = schema.model_dump(exclude_unset=True)
+        if not update_data:
+            return organisation
+
+        previous_values = {
+            field: getattr(organisation, field, None)
+            for field in update_data.keys()
+        }
+
+        for key, value in update_data.items():
+            if hasattr(organisation, key):
+                setattr(organisation, key, value)
+
+        self.db.add(organisation)
+        self.db.commit()
+        self.db.refresh(organisation)
+
+        changes = []
+        for field, old_value in previous_values.items():
+            new_value = getattr(organisation, field, None)
+            serialized_old = getattr(old_value, "value", old_value)
+            serialized_new = getattr(new_value, "value", new_value)
+            if serialized_new != serialized_old:
+                changes.append(
+                    {
+                        "field": field,
+                        "old": serialized_old,
+                        "new": serialized_new,
+                    }
+                )
+
+        if changes:
+            preview = " • ".join(
+                f"{change['field']} → {change['new']}" for change in changes[:3]
+            )
+            await self._record_activity(
+                organisation,
+                OrganisationActivityType.ORGANISATION_UPDATED,
+                title=f"Organisation mise à jour • {organisation.name}",
+                actor=actor,
+                preview=preview,
+                metadata={"changes": changes},
+            )
+
+        return organisation
 
     async def get_by_category(
         self,
@@ -199,6 +352,138 @@ class MandatDistributionService(BaseService[MandatDistribution, MandatDistributi
 
     def __init__(self, db: Session):
         super().__init__(MandatDistribution, db)
+
+    async def create(
+        self,
+        schema: MandatDistributionCreate,
+        *,
+        actor: Optional[dict] = None,
+    ) -> MandatDistribution:
+        mandat = await super().create(schema)
+
+        status_display = mandat.status.value if getattr(mandat, "status", None) else "proposé"
+        preview_parts = []
+        if getattr(mandat, "date_debut", None):
+            preview_parts.append(f"Début {mandat.date_debut.strftime('%d/%m/%Y')}")
+        if getattr(mandat, "date_fin", None):
+            preview_parts.append(f"Fin {mandat.date_fin.strftime('%d/%m/%Y')}")
+
+        await self._record_activity(
+            mandat,
+            OrganisationActivityType.MANDAT_CREATED,
+            title=f"Mandat créé • {status_display}",
+            actor=actor,
+            preview=" • ".join(preview_parts) if preview_parts else None,
+        )
+
+        return mandat
+
+    async def update(
+        self,
+        mandat_id: int,
+        schema: MandatDistributionUpdate,
+        *,
+        actor: Optional[dict] = None,
+    ) -> MandatDistribution:
+        mandat = await self.get_by_id(mandat_id)
+
+        update_data = schema.model_dump(exclude_unset=True)
+        if not update_data:
+            return mandat
+
+        previous_values = {
+            field: getattr(mandat, field, None)
+            for field in update_data.keys()
+        }
+
+        for key, value in update_data.items():
+            if hasattr(mandat, key):
+                setattr(mandat, key, value)
+
+        self.db.add(mandat)
+        self.db.commit()
+        self.db.refresh(mandat)
+
+        changes = []
+        for field, old_value in previous_values.items():
+            new_value = getattr(mandat, field, None)
+            old_serialized = getattr(old_value, "value", old_value)
+            new_serialized = getattr(new_value, "value", new_value)
+            if new_serialized != old_serialized:
+                changes.append(
+                    {
+                        "field": field,
+                        "old": old_serialized,
+                        "new": new_serialized,
+                    }
+                )
+
+        if changes:
+            activity_type = (
+                OrganisationActivityType.MANDAT_STATUS_CHANGED
+                if any(change["field"] == "status" for change in changes)
+                else OrganisationActivityType.MANDAT_UPDATED
+            )
+
+            preview = " • ".join(
+                f"{change['field']} → {change['new']}" for change in changes[:3]
+            )
+
+            await self._record_activity(
+                mandat,
+                activity_type,
+                title=f"Mandat mis à jour • {mandat.status.value if getattr(mandat, 'status', None) else ''}",
+                actor=actor,
+                preview=preview,
+                metadata={"changes": changes},
+            )
+
+        return mandat
+
+    @staticmethod
+    def _mandat_metadata(mandat: MandatDistribution) -> Dict[str, Any]:
+        return {
+            "mandat_id": mandat.id,
+            "organisation_id": mandat.organisation_id,
+            "status": mandat.status.value if getattr(mandat, "status", None) else None,
+            "date_signature": mandat.date_signature.isoformat() if getattr(mandat, "date_signature", None) else None,
+            "date_debut": mandat.date_debut.isoformat() if getattr(mandat, "date_debut", None) else None,
+            "date_fin": mandat.date_fin.isoformat() if getattr(mandat, "date_fin", None) else None,
+            "organisation_name": getattr(getattr(mandat, "organisation", None), "name", None),
+        }
+
+    async def _record_activity(
+        self,
+        mandat: MandatDistribution,
+        activity_type: OrganisationActivityType,
+        title: str,
+        *,
+        actor: Optional[dict] = None,
+        preview: Optional[str] = None,
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        if not mandat.organisation_id:
+            return
+
+        activity_service = OrganisationActivityService(self.db)
+        actor_id, actor_name, actor_avatar = _normalize_actor(actor)
+
+        payload = self._mandat_metadata(mandat)
+        if metadata:
+            payload.update(metadata)
+
+        await activity_service.record(
+            organisation_id=mandat.organisation_id,
+            activity_type=activity_type,
+            title=title,
+            preview=preview,
+            actor_id=actor_id,
+            actor_name=actor_name,
+            actor_avatar_url=actor_avatar,
+            resource_type="mandat",
+            resource_id=mandat.id,
+            metadata=payload,
+        )
 
     async def get_by_organisation(
         self,
