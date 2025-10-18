@@ -21,7 +21,7 @@ Usage:
     )
 """
 
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Union
 from datetime import datetime, timedelta
 from fastapi import WebSocket, WebSocketDisconnect
 from sqlalchemy.orm import Session
@@ -474,7 +474,7 @@ async def notify_from_template(
 # WebSocket Endpoint Handler
 # ============================================
 
-async def websocket_endpoint(websocket: WebSocket, user_id: int):
+async def websocket_endpoint(websocket: WebSocket, user_id: Union[int, str]):
     """
     Handler pour l'endpoint WebSocket des notifications
 

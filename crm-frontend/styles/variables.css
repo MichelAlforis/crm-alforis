@@ -113,13 +113,48 @@
   }
 
 /* ============ DARK MODE ============ */
+/*
+ * Enhanced Dark Mode with WCAG AA Compliant Contrast Ratios
+ * All text/background combinations tested for accessibility
+ */
 .dark {
-    --color-background: 17 24 39;        /* Gray-900 */
-    --color-foreground: 31 41 55;        /* Gray-800 */
-    --color-border: 55 65 81;            /* Gray-700 */
-    --color-muted: 31 41 55;             /* Gray-800 */
+    /* Backgrounds - Darker for better contrast */
+    --color-background: 15 23 42;        /* Slate-900 - Main app background (deeper) */
+    --color-foreground: 30 41 59;        /* Slate-800 - Card backgrounds */
+    --color-border: 71 85 105;           /* Slate-600 - Borders (higher contrast) */
+    --color-muted: 51 65 85;             /* Slate-700 - Muted backgrounds */
 
-  --color-text-primary: 243 244 246;   /* Gray-100 */
-  --color-text-secondary: 156 163 175; /* Gray-400 */
-  --color-text-muted: 107 114 128;     /* Gray-500 */
+    /* Text Colors - Optimized for WCAG AA compliance */
+    --color-text-primary: 248 250 252;   /* Slate-50 - Main text (AA compliant on dark bg) */
+    --color-text-secondary: 203 213 225; /* Slate-300 - Secondary text (AA compliant) */
+    --color-text-muted: 148 163 184;     /* Slate-400 - Muted text (AA compliant) */
+
+    /* Brand Colors - Enhanced for dark mode visibility */
+    --color-primary: 96 165 250;         /* Blue-400 - Brighter for dark mode */
+    --color-primary-hover: 59 130 246;   /* Blue-500 */
+    --color-primary-light: 30 58 138;    /* Blue-900 - Dark mode variant */
+
+    /* Semantic Colors - Adjusted for dark mode */
+    --color-success: 74 222 128;         /* Green-400 - Brighter */
+    --color-success-light: 20 83 45;     /* Green-900 */
+    --color-warning: 251 191 36;         /* Amber-400 - Better visibility */
+    --color-warning-light: 120 53 15;    /* Amber-900 */
+    --color-danger: 248 113 113;         /* Red-400 - Softer but visible */
+    --color-danger-light: 127 29 29;     /* Red-900 */
+    --color-info: 96 165 250;            /* Blue-400 */
+    --color-info-light: 30 58 138;       /* Blue-900 */
+
+    /* Shadows - Adjusted for dark mode depth */
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.6);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.7);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.8);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.9);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.95);
+
+    /* Gradients - Dark mode variants */
+    --gradient-primary: linear-gradient(135deg, rgb(59 130 246) 0%, rgb(99 102 241) 100%);
+    --gradient-success: linear-gradient(135deg, rgb(74 222 128) 0%, rgb(34 197 94) 100%);
+    --gradient-warm: linear-gradient(135deg, rgb(251 191 36) 0%, rgb(251 146 60) 100%);
+    --gradient-dark: linear-gradient(135deg, rgb(15 23 42) 0%, rgb(30 41 59) 100%);
 }

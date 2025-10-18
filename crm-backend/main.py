@@ -14,6 +14,7 @@ from core.monitoring import (
     capture_exception,
 )
 from core.notifications import websocket_endpoint
+from core.security import decode_token
 from core.events import event_bus
 from core.permissions import init_default_permissions
 from core.database import SessionLocal
@@ -127,7 +128,36 @@ async def notifications_ws(websocket: WebSocket):
 
     Frontend se connecte: ws://localhost:8000/ws/notifications?token=<jwt_token>
     """
-    await websocket_endpoint(websocket)
+    token = websocket.query_params.get("token")
+    user_id_param = websocket.query_params.get("user_id")
+
+    resolved_user_id = None
+
+    if user_id_param:
+        try:
+            resolved_user_id = int(user_id_param)
+        except ValueError:
+            resolved_user_id = user_id_param
+
+    if resolved_user_id is None and token:
+        try:
+            payload = decode_token(token)
+            raw_user_id = payload.get("sub") or payload.get("user_id")
+            if raw_user_id is None:
+                raise ValueError("Missing subject in token")
+            try:
+                resolved_user_id = int(raw_user_id)
+            except (TypeError, ValueError):
+                resolved_user_id = raw_user_id
+        except Exception:
+            await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+            return
+
+    if resolved_user_id is None:
+        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+        return
+
+    await websocket_endpoint(websocket, resolved_user_id)
 
 # ============= ERROR HANDLERS =============
 

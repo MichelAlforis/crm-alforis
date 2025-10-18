@@ -26,6 +26,7 @@ import {
   Package,
 } from 'lucide-react'
 import { useTaskViews } from '@/hooks/useTasks'
+import ThemeToggle from '@/components/shared/ThemeToggle'
 
 interface SidebarProps {
   isOpen?: boolean
@@ -179,29 +180,35 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                   </div>
                 </div>
 
-                {/* Collapse button */}
-                <button
-                  onClick={() => setCollapsed(!collapsed)}
-                  className="hidden md:flex p-2 hover:bg-white/10 rounded-lg transition-all duration-200 group"
-                >
-                  <ChevronLeft className="w-4 h-4 text-slate-400 group-hover:text-white transition-colors" />
-                </button>
-
-                {/* Close button (mobile) */}
-                <button
-                  onClick={onClose}
-                  className="md:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
-                >
-                  <X className="w-4 h-4 text-slate-400" />
-                </button>
+                <div className="flex items-center gap-2">
+                  <ThemeToggle size="sm" className="inline-flex bg-white/10 text-white hover:bg-white/20" />
+                  <button
+                    onClick={() => setCollapsed(!collapsed)}
+                    className="hidden md:flex p-2 hover:bg-white/10 rounded-lg transition-all duration-200 group"
+                    aria-label="Réduire le menu"
+                  >
+                    <ChevronLeft className="w-4 h-4 text-slate-300 group-hover:text-white transition-colors" />
+                  </button>
+                  <button
+                    onClick={onClose}
+                    className="md:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
+                    aria-label="Fermer le menu"
+                  >
+                    <X className="w-4 h-4 text-slate-300" />
+                  </button>
+                </div>
               </>
             ) : (
-              <button
-                onClick={() => setCollapsed(false)}
-                className="mx-auto p-2 hover:bg-white/10 rounded-lg transition-all duration-200"
-              >
-                <ChevronRight className="w-5 h-5 text-slate-400" />
-              </button>
+              <div className="flex flex-col items-center gap-2">
+                <button
+                  onClick={() => setCollapsed(false)}
+                  className="mx-auto p-2 hover:bg-white/10 rounded-lg transition-all duration-200"
+                  aria-label="Étendre le menu"
+                >
+                  <ChevronRight className="w-5 h-5 text-slate-300" />
+                </button>
+                <ThemeToggle size="sm" className="bg-white/10 text-white hover:bg-white/20" />
+              </div>
             )}
           </div>
 

@@ -42,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="fr" className="antialiased">
+    <html lang="fr" className="antialiased" suppressHydrationWarning>
       <head>
         {/* Preconnect to speed up external resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -72,7 +72,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#E39F70" />
         <meta name="theme-color" content="#E39F70" />
       </head>
-      <body className="bg-gray-50 text-gray-900 min-h-screen">
+      <body className="bg-background text-text-primary min-h-screen transition-colors duration-300">
         {/* Skip to main content - Accessibility */}
         <a
           href="#main-content"
