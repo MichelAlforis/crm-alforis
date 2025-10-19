@@ -2,7 +2,7 @@ from pydantic import Field
 from typing import Optional
 from datetime import datetime
 from schemas.base import TimestampedSchema, BaseSchema
-# from models.investor import InteractionType
+
 
 class InteractionCreate(BaseSchema):
     """Création d'une interaction"""

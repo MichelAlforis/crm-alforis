@@ -22,7 +22,7 @@ except ImportError:  # pragma: no cover
     def get_task_logger(name):
         return logging.getLogger(name)
 from sqlalchemy.orm import Session
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from typing import Dict, Any, Optional
 
 from tasks.celery_app import celery_app
@@ -236,7 +236,7 @@ def check_inactivity_workflows(self):
                 from models.organisation import Organisation
                 from models.organisation_activity import OrganisationActivity
 
-                cutoff_date = datetime.utcnow() - timedelta(days=inactivity_days)
+                cutoff_date = datetime.now(timezone.utc) - timedelta(days=inactivity_days)
 
                 # Sous-requête pour trouver la dernière activité par organisation
                 from sqlalchemy import func, and_
@@ -361,7 +361,7 @@ def cleanup_old_executions(self, days_to_keep: int = 90):
     try:
         logger.info(f"Nettoyage exécutions > {days_to_keep} jours")
 
-        cutoff_date = datetime.utcnow() - timedelta(days=days_to_keep)
+        cutoff_date = datetime.now(timezone.utc) - timedelta(days=days_to_keep)
 
         # Compter les exécutions à supprimer
         count = (

@@ -1,6 +1,13 @@
 from sqlalchemy import Column, String, Integer, Text, Enum, ForeignKey, Boolean, JSON, DateTime
 from sqlalchemy.orm import relationship
 from models.base import BaseModel
+from models.constants import (
+    FK_USERS_ID,
+    FK_WORKFLOWS_ID,
+    ONDELETE_CASCADE,
+    ENUM_WORKFLOW_STATUS,
+    ENUM_WORKFLOW_TRIGGER,
+)
 import enum
 from datetime import datetime
 
@@ -87,7 +94,7 @@ class Workflow(BaseModel):
     actions = Column(JSON, nullable=False, comment="Liste des actions à exécuter (ex: [{type: 'send_email', config: {...}}])")
 
     # Métadonnées
-    created_by = Column(Integer, ForeignKey("users.id"), nullable=True)
+    created_by = Column(Integer, ForeignKey(FK_USERS_ID), nullable=True)
     is_template = Column(Boolean, default=False, comment="Workflow template prêt à l'emploi")
     execution_count = Column(Integer, default=0, comment="Nombre d'exécutions")
     last_executed_at = Column(DateTime(timezone=True), nullable=True)
@@ -112,7 +119,7 @@ class WorkflowExecution(BaseModel):
     """
     __tablename__ = "workflow_executions"
 
-    workflow_id = Column(Integer, ForeignKey("workflows.id", ondelete="CASCADE"), nullable=False, index=True)
+    workflow_id = Column(Integer, ForeignKey(FK_WORKFLOWS_ID, ondelete=ONDELETE_CASCADE), nullable=False, index=True)
     status = Column(Enum(WorkflowExecutionStatus), default=WorkflowExecutionStatus.PENDING, nullable=False, index=True)
 
     # Contexte d'exécution

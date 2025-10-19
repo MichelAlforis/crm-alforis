@@ -2,6 +2,15 @@
 // ============= UTILITY FUNCTIONS =============
 
 /**
+ * Classe name utility function - combine classnames conditionnellement
+ */
+export function cn(...classes: (string | undefined | null | boolean)[]): string {
+  return classes
+    .filter((c): c is string => typeof c === 'string' && c.length > 0)
+    .join(' ')
+}
+
+/**
  * Format une date en format français
  */
 export function formatDate(date: string | Date): string {

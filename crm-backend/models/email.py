@@ -18,6 +18,15 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from models.base import BaseModel
+from models.constants import (
+    FK_USERS_ID,
+    FK_EMAIL_TEMPLATES_ID,
+    FK_EMAIL_CAMPAIGNS_ID,
+    ONDELETE_SET_NULL,
+    ONDELETE_CASCADE,
+    ENUM_EMAIL_CAMPAIGN_STATUS,
+    ENUM_EMAIL_SEND_STATUS,
+)
 
 
 class EmailTemplateCategory(str, enum.Enum):
@@ -123,7 +132,7 @@ class EmailTemplate(BaseModel):
     is_active = Column(Boolean, nullable=False, default=True)
     is_default = Column(Boolean, nullable=False, default=False)
     tags = Column(JSON, nullable=True)
-    created_by = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    created_by = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True)
     last_used_at = Column(DateTime(timezone=True), nullable=True)
 
     steps = relationship(
@@ -185,7 +194,7 @@ class EmailCampaign(BaseModel):
     total_recipients = Column(Integer, nullable=True)
     total_sent = Column(Integer, nullable=False, default=0)
     last_sent_at = Column(DateTime(timezone=True), nullable=True)
-    owner_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    owner_id = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True)
 
     default_template = relationship("EmailTemplate")
     steps = relationship(

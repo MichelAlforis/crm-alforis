@@ -18,8 +18,6 @@ interface TaskFormProps {
   isOpen: boolean
   onClose: () => void
   initialData?: {
-    investor_id?: number
-    fournisseur_id?: number
     person_id?: number
     organisation_id?: number
     title?: string
@@ -122,8 +120,6 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
     due_date: new Date().toISOString().split('T')[0], // Today
     priority: 'moyenne',
     category: 'relance',
-    investor_id: initialData?.investor_id,
-    fournisseur_id: initialData?.fournisseur_id,
      organisation_id: initialData?.organisation_id,
     person_id: initialData?.person_id,
   })
@@ -184,8 +180,6 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
         ...prev,
         title: initialData.title || prev.title,
         description: initialData.description || prev.description,
-        investor_id: initialData.investor_id,
-        fournisseur_id: initialData.fournisseur_id,
         organisation_id: initialData.organisation_id,
         person_id: initialData.person_id,
       }))

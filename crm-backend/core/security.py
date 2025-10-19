@@ -1,5 +1,5 @@
 from passlib.context import CryptContext
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from core.config import settings
 from core.exceptions import UnauthorizedError, ForbiddenError
@@ -25,11 +25,11 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 def create_access_token(data: dict, expires_delta: timedelta = None) -> str:
     """Créer un token JWT"""
     to_encode = data.copy()
-    
+
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(hours=settings.jwt_expiration_hours)
+        expire = datetime.now(timezone.utc) + timedelta(hours=settings.jwt_expiration_hours)
     
     to_encode.update({"exp": expire})
     

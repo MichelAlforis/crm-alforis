@@ -10,8 +10,17 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 from models.base import BaseModel
+from models.constants import (
+    FK_USERS_ID,
+    FK_ORGANISATIONS_ID,
+    FK_PEOPLE_ID,
+    ONDELETE_SET_NULL,
+    ONDELETE_CASCADE,
+    ENUM_TASK_STATUS,
+    ENUM_TASK_PRIORITY,
+)
 import enum
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class TaskPriority(str, enum.Enum):
@@ -51,13 +60,13 @@ class Task(BaseModel):
     description = Column(Text, nullable=True)
 
     status = Column(
-        Enum(TaskStatus, name="taskstatus"),
+        Enum(TaskStatus, name=ENUM_TASK_STATUS),
         nullable=False,
         default=TaskStatus.TODO,
         index=True,
     )
     priority = Column(
-        Enum(TaskPriority, name="taskpriority"),
+        Enum(TaskPriority, name=ENUM_TASK_PRIORITY),
         nullable=False,
         default=TaskPriority.NORMAL,
         index=True,
@@ -66,18 +75,18 @@ class Task(BaseModel):
     due_date = Column(DateTime(timezone=True), nullable=True, index=True)
     completed_at = Column(DateTime(timezone=True), nullable=True)
 
-    assigned_to = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True)
-    created_by = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True)
+    assigned_to = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True, index=True)
+    created_by = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True, index=True)
 
     organisation_id = Column(
         Integer,
-        ForeignKey("organisations.id", ondelete="CASCADE"),
+        ForeignKey(FK_ORGANISATIONS_ID, ondelete=ONDELETE_CASCADE),
         nullable=True,
         index=True,
     )
     person_id = Column(
         Integer,
-        ForeignKey("people.id", ondelete="SET NULL"),
+        ForeignKey(FK_PEOPLE_ID, ondelete=ONDELETE_SET_NULL),
         nullable=True,
         index=True,
     )
@@ -98,4 +107,4 @@ class Task(BaseModel):
             return False
         if not self.due_date:
             return False
-        return self.due_date < datetime.utcnow()
+        return self.due_date < datetime.now(timezone.utc)

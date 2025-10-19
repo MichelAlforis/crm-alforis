@@ -8,7 +8,7 @@ from sqlalchemy import and_, func
 from typing import List, Optional, Dict, Any
 import logging
 
-from models.kpi import OrganisationKPI
+from models.kpi import DashboardKPI as OrganisationKPI
 from models.organisation import Organisation
 from core.exceptions import ValidationError, ResourceNotFound
 

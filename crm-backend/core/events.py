@@ -22,7 +22,7 @@ Usage:
 """
 
 from typing import Callable, Dict, List, Any, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 import enum
 import json
 import asyncio
@@ -110,7 +110,7 @@ class Event:
         self.type = type
         self.data = data
         self.user_id = user_id
-        self.timestamp = timestamp or datetime.utcnow()
+        self.timestamp = timestamp or datetime.now(timezone.utc)
 
     def to_dict(self) -> dict:
         """Convertit l'événement en dictionnaire"""

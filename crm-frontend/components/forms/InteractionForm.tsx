@@ -3,7 +3,7 @@
 
 'use client'
 
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import {
   Input,
@@ -13,18 +13,18 @@ import {
   SearchableMultiSelect,
 } from '@/components/shared'
 import {
-  Interaction,
-  InteractionCreate,
+  InteractionNew,
+  InteractionCreateNew,
   InteractionType,
-  Fournisseur,
+  Organisation,
 } from '@/lib/types'
 import { usePaginatedOptions, type PaginatedFetcherParams } from '@/hooks/usePaginatedOptions'
 import { apiClient } from '@/lib/api'
 import { useToast } from '@/components/ui/Toast'
 
 interface InteractionFormProps {
-  initialData?: Interaction
-  onSubmit: (data: InteractionCreate) => Promise<void>
+  initialData?: InteractionNew
+  onSubmit: (data: InteractionCreateNew) => Promise<void>
   isLoading?: boolean
   error?: string
 }
@@ -44,36 +44,36 @@ export function InteractionForm({
   error,
 }: InteractionFormProps) {
   const { showToast } = useToast()
-  const [selectedFournisseurs, setSelectedFournisseurs] = useState<number[]>(
-    initialData?.fournisseurs || []
+  const [selectedOrganisationId, setSelectedOrganisationId] = useState<number | undefined>(
+    initialData?.organisation_id
   )
 
-  const fetchFournisseurOptions = useCallback(
+  const fetchOrganisationOptions = useCallback(
     ({ query, skip, limit }: PaginatedFetcherParams) =>
-      apiClient.getFournisseurs(skip, limit, query),
+      apiClient.getOrganisations({ skip, limit, category: query }),
     []
   )
 
-  const mapFournisseurToOption = useCallback(
-    (fss: Fournisseur) => ({
-      id: fss.id,
-      label: fss.name,
-      sublabel: fss.activity || fss.company || undefined,
+  const mapOrganisationToOption = useCallback(
+    (org: Organisation) => ({
+      id: org.id,
+      label: org.name,
+      sublabel: org.category || undefined,
     }),
     []
   )
 
   const {
-    options: fournisseurOptions,
-    isLoading: isLoadingFournisseurs,
-    isLoadingMore: isLoadingMoreFournisseurs,
-    hasMore: hasMoreFournisseurs,
-    search: searchFournisseurs,
-    loadMore: loadMoreFournisseurs,
-    upsertOption: upsertFournisseurOption,
-  } = usePaginatedOptions<Fournisseur>({
-    fetcher: fetchFournisseurOptions,
-    mapItem: mapFournisseurToOption,
+    options: organisationOptions,
+    isLoading: isLoadingOrganisations,
+    isLoadingMore: isLoadingMoreOrganisations,
+    hasMore: hasMoreOrganisations,
+    search: searchOrganisations,
+    loadMore: loadMoreOrganisations,
+    upsertOption: upsertOrganisationOption,
+  } = usePaginatedOptions<Organisation>({
+    fetcher: fetchOrganisationOptions,
+    mapItem: mapOrganisationToOption,
     limit: 25,
   })
 
@@ -81,64 +81,56 @@ export function InteractionForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<InteractionCreate>({
+  } = useForm<InteractionCreateNew>({
     defaultValues: {
-      ...initialData,
-      fournisseurs: initialData?.fournisseurs || [],
+      organisation_id: initialData?.organisation_id || undefined,
+      personne_id: initialData?.personne_id,
+      produit_id: initialData?.produit_id,
+      date: initialData?.date || '',
+      type: initialData?.type || 'appel',
+      duration_minutes: initialData?.duration_minutes,
+      subject: initialData?.subject || '',
+      notes: initialData?.notes || '',
     },
     mode: 'onBlur',
   })
 
-  const preloadKeyRef = useRef<string | null>(null)
-
   useEffect(() => {
-    const ids = initialData?.fournisseurs ?? []
-    if (ids.length === 0) return
+    const orgId = initialData?.organisation_id
+    if (!orgId) return
 
-    const key = ids.slice().sort((a, b) => a - b).join(',')
-    if (preloadKeyRef.current === key) {
-      return
-    }
-    preloadKeyRef.current = key
-
-    const existingIds = new Set(fournisseurOptions.map((option) => option.id))
-    const missingIds = ids.filter((id) => !existingIds.has(id))
-
-    if (missingIds.length === 0) {
+    const existingIds = new Set(organisationOptions.map((option) => option.id))
+    if (existingIds.has(orgId)) {
       return
     }
 
     void (async () => {
       try {
-        const responses = await Promise.all(
-          missingIds.map((id) => apiClient.getFournisseur(id))
-        )
-        responses.forEach(({ fournisseur }) =>
-          upsertFournisseurOption({
-            id: fournisseur.id,
-            label: fournisseur.name,
-            sublabel: fournisseur.activity || fournisseur.company || undefined,
-          })
-        )
+        const org = await apiClient.getOrganisation(orgId)
+        upsertOrganisationOption({
+          id: org.id,
+          label: org.name,
+          sublabel: org.category || undefined,
+        })
       } catch (err) {
-        console.error('Impossible de pré-charger les fournisseurs sélectionnés', err)
+        console.error('Impossible de pré-charger l\'organisation sélectionnée', err)
       }
     })()
-  }, [fournisseurOptions, initialData?.fournisseurs, upsertFournisseurOption])
+  }, [organisationOptions, initialData?.organisation_id, upsertOrganisationOption])
 
-  const handleFormSubmit = async (data: InteractionCreate) => {
-    if (selectedFournisseurs.length === 0) {
+  const handleFormSubmit = async (data: InteractionCreateNew) => {
+    if (!selectedOrganisationId) {
       showToast({
         type: 'warning',
-        title: 'Fournisseur manquant',
-        message: 'Sélectionnez au moins un fournisseur pour enregistrer cette interaction.',
+        title: 'Organisation manquante',
+        message: 'Sélectionnez une organisation pour enregistrer cette interaction.',
       })
       return
     }
     try {
       await onSubmit({
         ...data,
-        fournisseurs: selectedFournisseurs,
+        organisation_id: selectedOrganisationId,
       })
       showToast({
         type: 'success',
@@ -162,20 +154,20 @@ export function InteractionForm({
         <Alert type="error" message={error} />
       )}
 
-      {/* Sélection des fournisseurs avec recherche */}
+      {/* Sélection de l'organisation */}
       <SearchableMultiSelect
-        label="Fournisseurs concernés"
-        options={fournisseurOptions}
-        value={selectedFournisseurs}
-        onChange={setSelectedFournisseurs}
-        placeholder="Rechercher et sélectionner des fournisseurs..."
+        label="Organisation"
+        options={organisationOptions}
+        value={selectedOrganisationId ? [selectedOrganisationId] : []}
+        onChange={(ids) => setSelectedOrganisationId(ids[0])}
+        placeholder="Rechercher et sélectionner une organisation..."
         required
-        error={selectedFournisseurs.length === 0 ? 'Sélectionnez au moins un fournisseur' : undefined}
-        isLoading={isLoadingFournisseurs}
-        onSearch={searchFournisseurs}
-        onLoadMore={loadMoreFournisseurs}
-        hasMore={hasMoreFournisseurs}
-        isLoadingMore={isLoadingMoreFournisseurs}
+        error={!selectedOrganisationId ? 'Sélectionnez une organisation' : undefined}
+        isLoading={isLoadingOrganisations}
+        onSearch={searchOrganisations}
+        onLoadMore={loadMoreOrganisations}
+        hasMore={hasMoreOrganisations}
+        isLoadingMore={isLoadingMoreOrganisations}
       />
 
       <Select

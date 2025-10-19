@@ -10,7 +10,7 @@ import asyncio
 import hashlib
 import hmac
 import json
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from decimal import Decimal
 from typing import Iterable, Optional
 
@@ -133,7 +133,7 @@ async def trigger_webhooks_for_event(
     if not webhooks:
         return
 
-    timestamp = datetime.utcnow().isoformat()
+    timestamp = datetime.now(timezone.utc).isoformat()
     payload = {
         "event": event,
         "data": data,

@@ -11,7 +11,7 @@ from datetime import datetime, timedelta, timezone
 import logging
 
 from models.organisation import Organisation
-from models.kpi import OrganisationKPI
+from models.kpi import DashboardKPI as OrganisationKPI, DashboardKPI
 from models.task import Task, TaskStatus
 from models.organisation_activity import OrganisationActivity, OrganisationActivityType
 from schemas.dashboard_stats import (
@@ -547,33 +547,37 @@ class DashboardStatsService:
             source=record.data_source or ("activity" if record.auto_generated else "manual"),
         )
 
+    def _update_kpi_fields(self, record: DashboardKPI, data: Dict[str, Any]) -> None:
+        """Met à jour les champs du KPI selon leur type."""
+        # Mapping: champ -> type de conversion
+        field_converters = {
+            "rdv_count": int,
+            "pitchs": int,
+            "due_diligences": int,
+            "closings": int,
+            "revenue": float,
+            "commission_rate": float,
+            "notes": str,
+            "auto_generated": bool,
+        }
+
+        for field, converter in field_converters.items():
+            if field in data and data[field] is not None:
+                setattr(record, field, converter(data[field]))
+
+        if "source" in data and data["source"]:
+            record.data_source = data["source"]
+
+        # Déterminer la source par défaut selon auto_generated
+        default_source = "activity" if record.auto_generated else "manual"
+        record.data_source = record.data_source or default_source
+
     async def update_kpi_by_id(self, kpi_id: int, data: Dict[str, Any]) -> OrganisationMonthlyKPI:
         record = self.db.query(DashboardKPI).filter(DashboardKPI.id == kpi_id).first()
         if not record:
             raise ValueError(f"KPI {kpi_id} not found")
 
-        int_fields = ("rdv_count", "pitchs", "due_diligences", "closings")
-        for field in int_fields:
-            if field in data and data[field] is not None:
-                setattr(record, field, int(data[field]))
-
-        if "revenue" in data and data["revenue"] is not None:
-            record.revenue = float(data["revenue"])
-        if "commission_rate" in data and data["commission_rate"] is not None:
-            record.commission_rate = float(data["commission_rate"])
-        if "notes" in data and data["notes"] is not None:
-            record.notes = data["notes"]
-
-        if "auto_generated" in data and data["auto_generated"] is not None:
-            record.auto_generated = bool(data["auto_generated"])
-
-        if "source" in data and data["source"]:
-            record.data_source = data["source"]
-
-        if record.auto_generated:
-            record.data_source = record.data_source or "activity"
-        else:
-            record.data_source = record.data_source or "manual"
+        self._update_kpi_fields(record, data)
 
         self.db.commit()
         self.db.refresh(record)

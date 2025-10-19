@@ -2,8 +2,6 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_, func, or_
 from typing import List, Tuple, Optional
 from datetime import datetime
-# from models.investor import Interaction, Investor, InteractionType
-# from schemas.interaction import InteractionCreate, InteractionUpdate, InteractionFilterParams
 from services.base import BaseService
 from core.exceptions import ValidationError, ResourceNotFound
 import logging

@@ -11,7 +11,7 @@ import { KPIForm } from '@/components/forms'
 import { KPI, KPICreate } from '@/lib/types'
 
 export default function KPIsPage() {
-  const { data: organisations, isLoading: orgsLoading } = useOrganisations({ limit: 1000 })
+  const { data: organisations } = useOrganisations({ limit: 1000 })
   const [selectedFournisseurId, setSelectedFournisseurId] = useState<number | null>(null)
   const [kpis, setKpis] = useState<KPI[]>([])
   const [kpisLoading, setKpisLoading] = useState(false)
@@ -170,10 +170,6 @@ export default function KPIsPage() {
             ))}
           </select>
         </div>
-
-        {orgsError && (
-          <Alert type="error" message={orgsError} />
-        )}
       </Card>
 
       {selectedFournisseurId && selectedFournisseur && (

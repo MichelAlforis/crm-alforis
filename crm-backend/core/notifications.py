@@ -23,7 +23,7 @@ Usage:
 
 import atexit
 from typing import Optional, List, Dict, Any, Union
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from fastapi import WebSocket, WebSocketDisconnect
 from sqlalchemy.orm import Session
 import asyncio
@@ -395,14 +395,14 @@ class NotificationService:
             )\
             .update({
                 "is_read": True,
-                "read_at": datetime.utcnow()
+                "read_at": datetime.now(timezone.utc)
             })
         db.commit()
 
     @staticmethod
     def cleanup_old_notifications(db: Session, days: int = 30) -> int:
         """Supprime les notifications archivées plus anciennes que ``days`` jours."""
-        cutoff_date = datetime.utcnow() - timedelta(days=days)
+        cutoff_date = datetime.now(timezone.utc) - timedelta(days=days)
 
         deleted_count = db.query(Notification)\
             .filter(
@@ -599,7 +599,7 @@ async def websocket_endpoint(websocket: WebSocket, user_id: Union[int, str]):
             "type": "connected",
             "data": {
                 "user_id": user_id,
-                "connected_at": datetime.utcnow().isoformat()
+                "connected_at": datetime.now(timezone.utc).isoformat()
             }
         })
 

@@ -72,23 +72,6 @@ __all__ = [
     "Base",
     "BaseModel",
 
-    # ❌ LEGACY - Investor (archivé)
-    # # "Investor",
-    # # "Contact",
-    # # "InvestorInteraction",
-    # # "KPI",
-    # "PipelineStage",
-    # # "ClientType",
-    # # "InteractionType",
-
-    # ❌ LEGACY - Fournisseur (archivé)
-    # # "Fournisseur",
-    # # "FournisseurContact",
-    # # "FournisseurInteraction",
-    # # "FournisseurKPI",
-    # # "StageFournisseur",
-    # # "TypeFournisseur",
-
     # Organisation (nouveau modèle unif ié)
     "Organisation",
     "OrganisationContact",
@@ -156,6 +139,4 @@ __all__ = [
     "EmailEventType",
 ]
 
-# ---------- Imports API ----------
-# Ce module centralise tous les modèles pour un import unique :
-# Exemple : from models import Investor, Fournisseur, Base
+# Backwards compatibility aliases (legacy spelling)

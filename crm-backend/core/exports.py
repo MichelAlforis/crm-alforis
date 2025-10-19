@@ -195,6 +195,43 @@ class ExportService:
         return output
 
     @staticmethod
+    def _get_enum_value(obj, attr_name: str, default="") -> str:
+        """Extrait la valeur d'un enum ou retourne une string."""
+        value = getattr(obj, attr_name, default)
+        return value.value if isinstance(value, enum.Enum) else (value or default)
+
+    @staticmethod
+    def _extract_org_row_data(org) -> List[Any]:
+        """Extrait les données d'une organisation pour une ligne Excel."""
+        created_at = getattr(org, "created_at", None)
+        return [
+            getattr(org, "id", None),
+            getattr(org, "name", ""),
+            ExportService._get_enum_value(org, "type"),
+            ExportService._get_enum_value(org, "category"),
+            ExportService._get_enum_value(org, "pipeline_stage"),
+            getattr(org, "email", "") or "",
+            getattr(org, "phone", "") or "",
+            getattr(org, "city", "") or "",
+            getattr(org, "annual_revenue", ""),
+            getattr(org, "employee_count", ""),
+            created_at.strftime('%Y-%m-%d') if created_at else '',
+            "Oui" if getattr(org, "is_active", False) else "Non"
+        ]
+
+    @staticmethod
+    def _setup_excel_headers(ws, headers: List[str]) -> None:
+        """Configure les en-têtes du fichier Excel."""
+        header_font = Font(bold=True, color="FFFFFF", size=11)
+        header_fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
+
+        for col_idx, header in enumerate(headers, 1):
+            cell = ws.cell(1, col_idx, header)
+            cell.font = header_font
+            cell.fill = header_fill
+            cell.alignment = Alignment(horizontal="center")
+
+    @staticmethod
     def export_organisations_excel(
         organisations: List[Organisation],
         filename: str = "organisations.xlsx",
@@ -216,8 +253,6 @@ class ExportService:
             BytesIO: Fichier Excel
         """
         wb = Workbook()
-
-        # === Feuille 1: Données ===
         ws_data = wb.active
         ws_data.title = "Organisations"
 
@@ -227,46 +262,13 @@ class ExportService:
             "Email", "Téléphone", "Ville", "Revenus Annuels",
             "Nb Employés", "Date Création", "Actif"
         ]
-
-        header_font = Font(bold=True, color="FFFFFF", size=11)
-        header_fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
-
-        for col_idx, header in enumerate(headers, 1):
-            cell = ws_data.cell(1, col_idx, header)
-            cell.font = header_font
-            cell.fill = header_fill
-            cell.alignment = Alignment(horizontal="center")
+        ExportService._setup_excel_headers(ws_data, headers)
 
         # Données
         for row_idx, org in enumerate(organisations, 2):
-            org_type = getattr(org, "type", "")
-            if isinstance(org_type, enum.Enum):
-                org_type = org_type.value
-            category = getattr(org, "category", "")
-            if isinstance(category, enum.Enum):
-                category = category.value
-            pipeline = getattr(org, "pipeline_stage", "")
-            if isinstance(pipeline, enum.Enum):
-                pipeline = pipeline.value
-            email = getattr(org, "email", "") or ""
-            phone = getattr(org, "phone", "") or ""
-            city = getattr(org, "city", "") or ""
-            annual_revenue = getattr(org, "annual_revenue", "")
-            employee_count = getattr(org, "employee_count", "")
-            created_at = getattr(org, "created_at", None)
-
-            ws_data.cell(row_idx, 1, getattr(org, "id", None))
-            ws_data.cell(row_idx, 2, getattr(org, "name", ""))
-            ws_data.cell(row_idx, 3, org_type)
-            ws_data.cell(row_idx, 4, category)
-            ws_data.cell(row_idx, 5, pipeline)
-            ws_data.cell(row_idx, 6, email)
-            ws_data.cell(row_idx, 7, phone)
-            ws_data.cell(row_idx, 8, city)
-            ws_data.cell(row_idx, 9, annual_revenue)
-            ws_data.cell(row_idx, 10, employee_count)
-            ws_data.cell(row_idx, 11, created_at.strftime('%Y-%m-%d') if created_at else '')
-            ws_data.cell(row_idx, 12, "Oui" if getattr(org, "is_active", False) else "Non")
+            row_data = ExportService._extract_org_row_data(org)
+            for col_idx, value in enumerate(row_data, 1):
+                ws_data.cell(row_idx, col_idx, value)
 
         # Auto-ajuster largeurs
         for col_idx in range(1, len(headers) + 1):

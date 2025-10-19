@@ -1,246 +1,232 @@
-from fastapi import FastAPI, Request, status, HTTPException, WebSocket, WebSocketDisconnect
-from fastapi.responses import JSONResponse
+import os
+import json
+import time
+import traceback
+from contextlib import asynccontextmanager
+from typing import AsyncIterator, Optional
+
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from datetime import datetime
+from fastapi.middleware.gzip import GZipMiddleware
+from fastapi.responses import JSONResponse
 
-from core import init_db, health_check, settings
-from core.exceptions import APIException
-from api import api_router
-from schemas.base import HealthCheckResponse
-from core.monitoring import (
-    init_sentry,
-    init_structured_logging,
-    get_logger,
-    capture_exception,
-)
-from core.notifications import websocket_endpoint
-from core.security import decode_token, get_password_hash
-from core.events import event_bus
-from core.permissions import init_default_permissions
-from core.database import SessionLocal
-from models.role import Role, UserRole
-from models.user import User
-from sqlalchemy.orm import Session
+# ============================================================
+# 🔧 Feature flags & ENV
+# ============================================================
 
-try:
-    from api.routes.auth import TEST_USERS
-except Exception:
-    TEST_USERS = {}
-
-# Initialiser monitoring (Sentry + structured logging)
-init_structured_logging()
-init_sentry()
-logger = get_logger(__name__)
-
-# Créer l'application FastAPI
-app = FastAPI(
-    title=settings.api_title,
-    version=settings.api_version,
-    description="CRM API for TPM Finance - Investment Pipeline Management",
-    debug=settings.debug,
-)
-
-# ============= MIDDLEWARE =============
+APP_TITLE = os.getenv("APP_TITLE", "Alforis CRM API")
+APP_VERSION = os.getenv("APP_VERSION", "0.1.0")
 
 # CORS
+_raw_origins = os.getenv("ALLOWED_ORIGINS", '["http://localhost:3010","http://127.0.0.1:3010"]')
+try:
+    ALLOWED_ORIGINS = json.loads(_raw_origins) if _raw_origins.strip().startswith("[") else [
+        o.strip() for o in _raw_origins.split(",") if o.strip()
+    ]
+except Exception:
+    ALLOWED_ORIGINS = ["http://localhost:3010", "http://127.0.0.1:3010"]
+
+# Sentry (optionnel)
+SENTRY_DSN = os.getenv("SENTRY_DSN", "")
+SENTRY_ENV = os.getenv("SENTRY_ENVIRONMENT", "development")
+
+# DB & Redis
+DATABASE_URL = os.getenv("DATABASE_URL")  # ex: postgresql+psycopg2://crm_user:crm_password@postgres:5432/crm_db
+REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
+ENABLE_REDIS_EVENTS = os.getenv("ENABLE_REDIS_EVENTS", "0").lower() in ("1", "true", "yes")
+
+# Reload à éviter dans Docker (géré par uvicorn CLI si besoin)
+ENABLE_METRICS_MIDDLEWARE = True
+
+
+# ============================================================
+# 🧰 Sentry (optionnel, non bloquant)
+# ============================================================
+
+def _init_sentry_if_available() -> None:
+    if not SENTRY_DSN:
+        return
+    try:
+        import sentry_sdk
+        from sentry_sdk.integrations.fastapi import FastApiIntegration
+        from sentry_sdk.integrations.logging import LoggingIntegration
+
+        sentry_sdk.init(
+            dsn=SENTRY_DSN,
+            environment=SENTRY_ENV,
+            integrations=[FastApiIntegration(), LoggingIntegration(level=None, event_level=None)],
+            traces_sample_rate=0.0,  # ajuste si tu veux le tracing
+        )
+    except Exception as e:
+        print("⚠️ Sentry init failed:", e)
+
+
+# ============================================================
+# 🧪 Readiness checks (DB + Redis) — non bloquants
+# ============================================================
+
+async def _check_db() -> bool:
+    if not DATABASE_URL:
+        return False
+    # Essaye en async si possible, sinon fallback "psycopg2" via simple test
+    try:
+        # si URL sync → transforme pour asyncpg (best effort)
+        dsn = DATABASE_URL.replace("+psycopg2", "+asyncpg")
+        import asyncpg  # type: ignore
+        conn = await asyncpg.connect(dsn)
+        await conn.execute("SELECT 1")
+        await conn.close()
+        return True
+    except Exception:
+        return False
+
+
+async def _check_redis() -> bool:
+    if not ENABLE_REDIS_EVENTS:
+        return False
+    try:
+        import redis.asyncio as aioredis  # type: ignore
+        r = aioredis.from_url(REDIS_URL, decode_responses=True)
+        pong = await r.ping()
+        await r.close()
+        return bool(pong)
+    except Exception:
+        return False
+
+
+# ============================================================
+# ♻️ Lifespan (start/stop) — rien de bloquant
+# ============================================================
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    _init_sentry_if_available()
+    # Ici tu peux init tes pools (optionnels et non-bloquants)
+    yield
+    # Ici tu peux fermer proprement tes pools
+
+
+# ============================================================
+# 🚀 App
+# ============================================================
+
+app = FastAPI(
+    title=APP_TITLE,
+    version=APP_VERSION,
+    lifespan=lifespan,
+    docs_url="/api/v1/docs",
+    openapi_url="/api/v1/openapi.json",
+    redoc_url="/api/v1/redoc",
+    swagger_ui_parameters={"defaultModelsExpandDepth": -1},
+)
+
+# --- Middleware CORS ---
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.allowed_origins,
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Exception handler global
-@app.exception_handler(APIException)
-async def api_exception_handler(request: Request, exc: APIException):
-    return JSONResponse(
-        status_code=exc.status_code,
-        content={
-            "detail": exc.message,
-            "status_code": exc.status_code,
-            "timestamp": datetime.utcnow().isoformat(),
-        },
-    )
+# --- GZip (utile pour grosses réponses JSON) ---
+app.add_middleware(GZipMiddleware, minimum_size=1024)
 
-# Exception handler for FastAPI HTTP exceptions (preserves original status/details)
-@app.exception_handler(HTTPException)
-async def http_exception_handler(request: Request, exc: HTTPException):
-    return JSONResponse(
-        status_code=exc.status_code,
-        content={"detail": exc.detail},
-        headers=getattr(exc, "headers", None),
-    )
-
-# ============= EVENTS =============
-
-def _ensure_test_users(db: Session) -> None:
-    """Seed default API users required by the legacy test suite."""
-    if not TEST_USERS:
-        return
-
-    roles_cache: dict[str, Role | None] = {}
-
-    def _get_role(name: UserRole | None) -> Role | None:
-        if name is None:
-            return None
-        key = name.value
-        if key not in roles_cache:
-            roles_cache[key] = db.query(Role).filter(Role.name == name).first()
-        return roles_cache[key]
-
-    for email, payload in TEST_USERS.items():
-        normalized_email = email.strip().lower()
-        existing = db.query(User).filter(User.email == normalized_email).first()
-        if existing:
-            continue
-
-        role = _get_role(UserRole.ADMIN if payload.get("is_admin") else UserRole.USER)
-        user = User(
-            email=normalized_email,
-            username=normalized_email.split("@")[0],
-            full_name=payload.get("name"),
-            hashed_password=get_password_hash(payload["password"]),
-            role=role,
-            is_active=True,
-        )
-        db.add(user)
-        logger.debug(
-            "seed_user_created",
-            email=normalized_email,
-            role=role.name if role else None,
-        )
-    db.commit()
-
-
-@app.on_event("startup")
-async def startup_event():
-    """Initialiser la base de données au démarrage"""
-    logger.info("app_startup", message="Démarrage de l'application CRM")
-    init_db()
-    logger.info("app_startup_complete", message="Base de données initialisée")
-
-    # Initialiser permissions par défaut
-    db = SessionLocal()
-    try:
-        init_default_permissions(db)
-        logger.info("permissions_initialized", message="Permissions RBAC initialisées")
-        _ensure_test_users(db)
-    finally:
-        db.close()
-
-    # Démarrer Event Bus (notifications)
-    await event_bus.start_listening()
-    logger.info("event_bus_started", message="Event Bus Redis démarré")
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    """Cleanup au shutdown"""
-    # Arrêter Event Bus
-    await event_bus.stop_listening()
-    logger.info("event_bus_stopped", message="Event Bus Redis arrêté")
-
-    logger.info("app_shutdown", message="Arrêt de l'application CRM")
-
-# ============= ROUTES =============
-
-# Inclure les routes API versionnées
-app.include_router(api_router)
-
-@app.get("/health", response_model=HealthCheckResponse)
-async def health_check_endpoint():
-    """Health check endpoint"""
-    db_status = health_check()
-    return HealthCheckResponse(
-        status="healthy" if db_status else "degraded",
-        database=db_status,
-        timestamp=datetime.utcnow(),
-    )
-
-@app.get("/")
-async def root():
-    """Root endpoint"""
-    return {
-        "name": settings.api_title,
-        "version": settings.api_version,
-        "status": "active",
-        "docs": "/docs",
-        "health": "/health",
-    }
-
-# WebSocket endpoint pour notifications temps réel
-@app.websocket("/ws/notifications")
-async def notifications_ws(websocket: WebSocket):
-    """
-    WebSocket endpoint pour notifications temps réel
-
-    Frontend se connecte: ws://localhost:8000/ws/notifications?token=<jwt_token>
-    """
-    token = websocket.query_params.get("token")
-    user_id_param = websocket.query_params.get("user_id")
-
-    resolved_user_id = None
-
-    if user_id_param:
+# --- Metrics simple (temps de réponse) ---
+if ENABLE_METRICS_MIDDLEWARE:
+    @app.middleware("http")
+    async def add_process_time_header(request: Request, call_next):
+        start = time.perf_counter()
         try:
-            resolved_user_id = int(user_id_param)
-        except ValueError:
-            resolved_user_id = user_id_param
+            response = await call_next(request)
+        except Exception as exc:
+            # Laisse aussi Sentry capter
+            if SENTRY_DSN:
+                try:
+                    import sentry_sdk  # type: ignore
+                    sentry_sdk.capture_exception(exc)
+                except Exception:
+                    pass
+            # Réponse JSON contrôlée
+            return JSONResponse(
+                status_code=500,
+                content={"detail": "Internal Server Error"},
+            )
+        finally:
+            process_time = time.perf_counter() - start
+            # Tu peux loguer si tu veux
+        return response
 
-    if resolved_user_id is None and token:
-        try:
-            payload = decode_token(token)
-            raw_user_id = payload.get("sub") or payload.get("user_id")
-            if raw_user_id is None:
-                raise ValueError("Missing subject in token")
-            try:
-                resolved_user_id = int(raw_user_id)
-            except (TypeError, ValueError):
-                resolved_user_id = raw_user_id
-        except Exception:
-            await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
-            return
 
-    if resolved_user_id is None:
-        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
-        return
+# ============================================================
+# ✅ Health & Ready
+# ============================================================
 
-    await websocket_endpoint(websocket, resolved_user_id)
+@app.get("/api/v1/health", include_in_schema=False)
+async def health():
+    """Health minimal → ne doit JAMAIS planter."""
+    return {"status": "ok"}
 
-# ============= ERROR HANDLERS =============
+@app.get("/api/v1/ready", include_in_schema=False)
+async def ready():
+    """Readiness plus profond : DB + Redis (non bloquant)."""
+    db_ok = await _check_db()
+    redis_ok = await _check_redis()
+    status = "ok" if (db_ok and (redis_ok or not ENABLE_REDIS_EVENTS)) else "degraded"
+    return {"status": status, "db": db_ok, "redis": redis_ok if ENABLE_REDIS_EVENTS else None}
 
-@app.exception_handler(404)
-async def not_found_handler(request: Request, exc):
-    return JSONResponse(
-        status_code=status.HTTP_404_NOT_FOUND,
-        content={
-            "detail": "Endpoint not found",
-            "path": str(request.url.path),
-        },
-    )
+
+# ============================================================
+# 📦 Inclusion des routers applicatifs
+# ============================================================
+
+# IMPORTANT :
+# On isole les imports pour éviter qu’un module optionnel (ex: events/redis) ne fasse planter tout le boot.
+# Ajoute/retire les lignes selon ce que tu as réellement.
+try:
+    from api import api_router  # ton APIRouter principal qui inclut people, organisations, kpis, auth, etc.
+    # api_router a déjà le prefix="/api/v1" dans api/__init__.py, ne pas le redoubler !
+    app.include_router(api_router)
+except Exception as e:
+    print("⚠️ Erreur lors du chargement des routes :", e)
+    traceback.print_exc()
+
+# Si tu préfères inclure router par router :
+# try:
+#     from api.routes import auth, people, organisations, kpis, products, system
+#     app.include_router(auth.router, prefix="/api/v1", tags=["auth"])
+#     app.include_router(people.router, prefix="/api/v1", tags=["people"])
+#     app.include_router(organisations.router, prefix="/api/v1", tags=["organisations"])
+#     app.include_router(kpis.router, prefix="/api/v1", tags=["kpis"])
+#     app.include_router(products.router, prefix="/api/v1", tags=["products"])
+#     # etc.
+# except Exception as e:
+#     print("⚠️ Erreur lors du chargement des sous-routers :", e)
+#     traceback.print_exc()
+
+
+# ============================================================
+# 🛡️ Handlers d'erreurs (facultatifs mais propres)
+# ============================================================
 
 @app.exception_handler(Exception)
-async def general_exception_handler(request: Request, exc: Exception):
-    capture_exception(exc)
-    logger.error(
-        "unhandled_exception",
-        error=str(exc),
-        path=str(request.url.path),
-        method=request.method,
-    )
-    return JSONResponse(
-        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        content={
-            "detail": "Internal server error",
-            "timestamp": datetime.utcnow().isoformat(),
-        },
-    )
+async def unhandled_exception_handler(request: Request, exc: Exception):
+    if SENTRY_DSN:
+        try:
+            import sentry_sdk  # type: ignore
+            sentry_sdk.capture_exception(exc)
+        except Exception:
+            pass
+    # Log console
+    print("❌ Unhandled exception:", exc)
+    traceback.print_exc()
+    return JSONResponse(status_code=500, content={"detail": "Internal Server Error"})
+
+
+# ============================================================
+# ▶️ Entrée locale (utile hors Docker)
+# ============================================================
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(
-        "main:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=settings.debug,
-    )
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False)

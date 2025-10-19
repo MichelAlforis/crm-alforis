@@ -16,6 +16,7 @@ from .security import (
     create_access_token,
     decode_token,
     get_current_user,
+    get_current_user_optional,
     verify_admin_user,
 )
 
@@ -39,5 +40,6 @@ __all__ = [
     "create_access_token",
     "decode_token",
     "get_current_user",
+    "get_current_user_optional",
     "verify_admin_user",
 ]

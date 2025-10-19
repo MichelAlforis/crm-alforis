@@ -9,8 +9,8 @@ from sqlalchemy.orm import Session
 import logging
 
 from models.task import Task, TaskPriority, TaskStatus  # TaskCategory n\'existe pas,
-# from models.investor import Investor, PipelineStage
-# from models.fournisseur import Fournisseur, StageFournisseur
+from models.organisation import Organisation, PipelineStage
+from models.person import Person, StagePerson
 from services.task import TaskService
 
 logger = logging.getLogger(__name__)
@@ -25,9 +25,9 @@ class TaskAutomationService:
 
     # ============= RÈGLES POUR INVESTISSEURS =============
 
-    async def on_investor_pipeline_change(
+    async def on_organisation_pipeline_change(
         self,
-        investor_id: int,
+        Organisation_id: int,
         old_stage: Optional[PipelineStage],
         new_stage: PipelineStage,
     ) -> Optional[Task]:
@@ -39,87 +39,87 @@ class TaskAutomationService:
         - en_negociation → Créer "Suivi négociation J+7"
         - client → Créer "Onboarding J+1"
         """
-        investor = self.db.query(Investor).filter(Investor.id == investor_id).first()
-        if not investor:
+        o = self.db.query(Organisation).filter(Organisation.id == Organisation_id).first()
+        if not Organisation:
             return None
 
         # Règle : Prospect Chaud → Relance J+3
         if new_stage == PipelineStage.PROSPECT_CHAUD:
             return await self.task_service.create_auto_task(
-                title=f"Relancer {investor.name}",
+                title=f"Relancer {Organisation.name}",
                 description=f"Le prospect est maintenant chaud. Faire un suivi pour maintenir l'intérêt.",
                 due_date=date.today() + timedelta(days=3),
                 priority=TaskPriority.HAUTE,
                 category=TaskCategory.RELANCE,
                 rule_name="prospect_chaud_j3",
-                investor_id=investor_id,
+                Organisation_id=Organisation_id,
             )
 
         # Règle : En Négociation → Suivi J+7
         elif new_stage == PipelineStage.EN_NEGOCIATION:
             return await self.task_service.create_auto_task(
-                title=f"Suivi négociation {investor.name}",
+                title=f"Suivi négociation {Organisation.name}",
                 description=f"Faire le point sur l'avancement de la négociation.",
                 due_date=date.today() + timedelta(days=7),
                 priority=TaskPriority.HAUTE,
                 category=TaskCategory.NEGOCIATION,
                 rule_name="negociation_j7",
-                investor_id=investor_id,
+                Organisation_id=Organisation_id,
             )
 
         # Règle : Client → Onboarding J+1
         elif new_stage == PipelineStage.CLIENT:
             return await self.task_service.create_auto_task(
-                title=f"Onboarding {investor.name}",
+                title=f"Onboarding {Organisation.name}",
                 description=f"Planifier la session d'onboarding et l'intégration du nouveau client.",
                 due_date=date.today() + timedelta(days=1),
                 priority=TaskPriority.CRITIQUE,
                 category=TaskCategory.RDV,
                 rule_name="client_onboarding_j1",
-                investor_id=investor_id,
+                Organisation_id=Organisation_id,
             )
 
         return None
 
-    # ============= RÈGLES POUR FOURNISSEURS =============
+    # ============= RÈGLES POUR personS =============
 
-    async def on_fournisseur_stage_change(
+    async def on_person_stage_change(
         self,
-        fournisseur_id: int,
-        old_stage: Optional[StageFournisseur],
-        new_stage: StageFournisseur,
+        person_id: int,
+        old_stage: Optional[StagePerson],
+        new_stage: StagePerson,
     ) -> Optional[Task]:
         """
-        Créer une tâche automatique quand le stage d'un fournisseur change
+        Créer une tâche automatique quand le stage d'un person change
 
         Règles similaires aux investisseurs
         """
-        fournisseur = self.db.query(Fournisseur).filter(Fournisseur.id == fournisseur_id).first()
-        if not fournisseur:
+        person = self.db.query(person).filter(person.id == person_id).first()
+        if not person:
             return None
 
         # Règle : Prospect Chaud → Relance J+3
-        if new_stage == StageFournisseur.PROSPECT_CHAUD:
+        if new_stage == StagePerson.PROSPECT_CHAUD:
             return await self.task_service.create_auto_task(
-                title=f"Relancer fournisseur {fournisseur.name}",
-                description=f"Le fournisseur est maintenant chaud. Faire un suivi pour finaliser le partenariat.",
+                title=f"Relancer person {person.name}",
+                description=f"Le person est maintenant chaud. Faire un suivi pour finaliser le partenariat.",
                 due_date=date.today() + timedelta(days=3),
                 priority=TaskPriority.HAUTE,
                 category=TaskCategory.RELANCE,
-                rule_name="fournisseur_prospect_chaud_j3",
-                fournisseur_id=fournisseur_id,
+                rule_name="person_prospect_chaud_j3",
+                person_id=person_id,
             )
 
         # Règle : En Négociation → Suivi J+5
-        elif new_stage == StageFournisseur.EN_NEGOCIATION:
+        elif new_stage == StagePerson.EN_NEGOCIATION:
             return await self.task_service.create_auto_task(
-                title=f"Suivi négociation {fournisseur.name}",
-                description=f"Faire le point sur les termes du contrat fournisseur.",
+                title=f"Suivi négociation {person.name}",
+                description=f"Faire le point sur les termes du contrat person.",
                 due_date=date.today() + timedelta(days=5),
                 priority=TaskPriority.HAUTE,
                 category=TaskCategory.NEGOCIATION,
-                rule_name="fournisseur_negociation_j5",
-                fournisseur_id=fournisseur_id,
+                rule_name="person_negociation_j5",
+                person_id=person_id,
             )
 
         return None
@@ -128,8 +128,8 @@ class TaskAutomationService:
 
     async def on_interaction_created(
         self,
-        investor_id: Optional[int] = None,
-        fournisseur_id: Optional[int] = None,
+        Organisation_id: Optional[int] = None,
+        person_id: Optional[int] = None,
         interaction_type: str = "autre",
         notes: Optional[str] = None,
     ) -> Optional[Task]:
@@ -142,21 +142,21 @@ class TaskAutomationService:
         - Interaction type "email" → Créer "Suivi email J+5"
         """
         entity_name = "Contact"
-        entity_id_investor = None
-        entity_id_fournisseur = None
+        entity_id_Organisation = None
+        entity_id_person = None
 
         # Déterminer l'entité concernée
-        if investor_id:
-            investor = self.db.query(Investor).filter(Investor.id == investor_id).first()
-            if investor:
-                entity_name = investor.name
-                entity_id_investor = investor_id
+        if Organisation_id:
+            Organisation = self.db.query(Organisation).filter(Organisation.id == Organisation_id).first()
+            if Organisation:
+                entity_name = Organisation.name
+                entity_id_Organisation = Organisation_id
 
-        if fournisseur_id:
-            fournisseur = self.db.query(Fournisseur).filter(Fournisseur.id == fournisseur_id).first()
-            if fournisseur:
-                entity_name = fournisseur.name
-                entity_id_fournisseur = fournisseur_id
+        if person_id:
+            person = self.db.query(person).filter(person.id == person_id).first()
+            if person:
+                entity_name = person.name
+                entity_id_person = person_id
 
         # Règle : Réunion → Compte-rendu J+1
         if interaction_type.lower() in ["reunion", "rdv", "meeting"]:
@@ -167,8 +167,8 @@ class TaskAutomationService:
                 priority=TaskPriority.HAUTE,
                 category=TaskCategory.ADMIN,
                 rule_name="reunion_cr_j1",
-                investor_id=entity_id_investor,
-                fournisseur_id=entity_id_fournisseur,
+                Organisation_id=entity_id_Organisation,
+                person_id=entity_id_person,
             )
 
         # Règle : Appel → Relance J+3
@@ -180,8 +180,8 @@ class TaskAutomationService:
                 priority=TaskPriority.MOYENNE,
                 category=TaskCategory.RELANCE,
                 rule_name="appel_relance_j3",
-                investor_id=entity_id_investor,
-                fournisseur_id=entity_id_fournisseur,
+                Organisation_id=entity_id_Organisation,
+                person_id=entity_id_person,
             )
 
         # Règle : Email → Suivi J+5
@@ -193,8 +193,8 @@ class TaskAutomationService:
                 priority=TaskPriority.BASSE,
                 category=TaskCategory.EMAIL,
                 rule_name="email_suivi_j5",
-                investor_id=entity_id_investor,
-                fournisseur_id=entity_id_fournisseur,
+                Organisation_id=entity_id_Organisation,
+                person_id=entity_id_person,
             )
 
         return None
@@ -208,8 +208,7 @@ class TaskAutomationService:
         days_from_now: int,
         priority: TaskPriority,
         category: str,  # TaskCategory
-        investor_id: Optional[int] = None,
-        fournisseur_id: Optional[int] = None,
+        Organisation_id: Optional[int] = None,
         person_id: Optional[int] = None,
     ) -> Task:
         """Créer une tâche de suivi personnalisée"""
@@ -220,7 +219,7 @@ class TaskAutomationService:
             priority=priority,
             category=category,
             rule_name="custom_followup",
-            investor_id=investor_id,
-            fournisseur_id=fournisseur_id,
+            Organisation_id=Organisation_id,
+            person_id=person_id,
             person_id=person_id,
         )

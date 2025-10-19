@@ -56,6 +56,7 @@ function highlight(text: string, q: string) {
 const LABELS: Record<SearchItem['type'], string> = {
   fournisseur: 'Fournisseurs',
   investisseur: 'Investisseurs',
+  organisation: 'Organisations',
   person: 'Personnes',
   contact: 'Contacts',
   opportunite: 'Opportunités',
@@ -66,6 +67,7 @@ const LABELS: Record<SearchItem['type'], string> = {
 const ICONS: Record<SearchItem['type'], React.ComponentType<any>> = {
   fournisseur: Factory,
   investisseur: Building2,
+  organisation: Building2,
   person: User,
   contact: User,
   opportunite: TrendingUp,
@@ -76,6 +78,7 @@ const ICONS: Record<SearchItem['type'], React.ComponentType<any>> = {
 const ORDER: SearchItem['type'][] = [
   'fournisseur',
   'investisseur',
+  'organisation',
   'person',
   'contact',
   'opportunite',

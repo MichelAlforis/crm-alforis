@@ -19,11 +19,17 @@ from sqlalchemy import (
     JSON,
 )
 from sqlalchemy.orm import relationship
-from datetime import datetime
+from datetime import datetime, timezone
 import enum
 from typing import Dict, Any, TYPE_CHECKING
 
 from models.base import BaseModel
+from models.constants import (
+    FK_USERS_ID,
+    ONDELETE_CASCADE,
+    ENUM_NOTIFICATION_TYPE,
+    ENUM_NOTIFICATION_PRIORITY,
+)
 
 if TYPE_CHECKING:
     from models.user import User
@@ -67,11 +73,11 @@ class Notification(BaseModel):
     __tablename__ = "notifications"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    user_id = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_CASCADE), nullable=False, index=True)
 
-    type = Column(SQLEnum(NotificationType, name="notificationtype"), nullable=False, index=True)
+    type = Column(SQLEnum(NotificationType, name=ENUM_NOTIFICATION_TYPE), nullable=False, index=True)
     priority = Column(
-        SQLEnum(NotificationPriority, name="notificationpriority"),
+        SQLEnum(NotificationPriority, name=ENUM_NOTIFICATION_PRIORITY),
         nullable=False,
         default=NotificationPriority.NORMAL,
     )
@@ -109,7 +115,7 @@ class Notification(BaseModel):
         """Marque la notification comme lue."""
         if not self.is_read:
             self.is_read = True
-            self.read_at = datetime.utcnow()
+            self.read_at = datetime.now(timezone.utc)
 
     def mark_as_unread(self) -> None:
         """Marque la notification comme non lue."""
@@ -120,7 +126,7 @@ class Notification(BaseModel):
         """Archive la notification."""
         if not self.is_archived:
             self.is_archived = True
-            self.archived_at = datetime.utcnow()
+            self.archived_at = datetime.now(timezone.utc)
 
     def restore(self) -> None:
         """Sort la notification des archives."""
@@ -130,7 +136,7 @@ class Notification(BaseModel):
 
     def is_expired(self) -> bool:
         """Indique si la notification est expirée."""
-        return self.expires_at is not None and self.expires_at < datetime.utcnow()
+        return self.expires_at is not None and self.expires_at < datetime.now(timezone.utc)
 
     def to_dict(self) -> Dict[str, Any]:
         """Convertit l'objet en dict sérialisable pour le frontend/WebSocket."""

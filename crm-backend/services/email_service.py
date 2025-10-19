@@ -307,27 +307,29 @@ class EmailDeliveryService:
             logger.exception("email_campaign_schedule_failed: %s", exc)
             raise DatabaseError("Failed to schedule email campaign") from exc
 
-    def _create_sends_for_recipient(
-        self,
-        campaign: EmailCampaign,
-        recipient: EmailRecipient,
-        scheduled_at: datetime,
-    ) -> List[EmailSend]:
-        sends: List[EmailSend] = []
-        assigned_variant = None
-        if campaign.is_ab_test:
-            split = campaign.ab_test_split_percentage or 50
-            token_source = (
-                (recipient.email or "").lower()
-                or f"{recipient.person_id or ''}:{recipient.organisation_id or ''}:{recipient.full_name or ''}"
-            )
-            digest = hashlib.sha1(token_source.encode("utf-8")).hexdigest()
-            bucket = int(digest[:2], 16) % 100
-            assigned_variant = EmailVariant.A if bucket < split else EmailVariant.B
+    def _assign_ab_test_variant(self, campaign: EmailCampaign, recipient: EmailRecipient) -> Optional[EmailVariant]:
+        """Détermine la variante A/B test pour un destinataire."""
+        if not campaign.is_ab_test:
+            return None
 
-        base_context = {
+        split = campaign.ab_test_split_percentage or 50
+        token_source = (
+            (recipient.email or "").lower()
+            or f"{recipient.person_id or ''}:{recipient.organisation_id or ''}:{recipient.full_name or ''}"
+        )
+        digest = hashlib.sha1(token_source.encode("utf-8")).hexdigest()
+        bucket = int(digest[:2], 16) % 100
+        return EmailVariant.A if bucket < split else EmailVariant.B
+
+    def _build_recipient_context(self, recipient: EmailRecipient) -> dict:
+        """Construit le contexte de variables pour le destinataire."""
+        first_name = recipient.first_name
+        if not first_name and recipient.full_name:
+            first_name = recipient.full_name.split(" ")[0]
+
+        return {
             "contact": {
-                "prenom": recipient.first_name or (recipient.full_name or "").split(" ")[0] if recipient.full_name else None,
+                "prenom": first_name,
                 "nom": recipient.last_name,
                 "email": recipient.email,
                 "full_name": recipient.full_name,
@@ -337,14 +339,35 @@ class EmailDeliveryService:
             },
             "recipient": recipient.custom_data or {},
         }
+
+    def _should_skip_step(self, step, campaign: EmailCampaign, assigned_variant: Optional[EmailVariant]) -> bool:
+        """Détermine si une étape doit être ignorée (A/B test filtering)."""
+        return (
+            step.variant
+            and campaign.is_ab_test
+            and assigned_variant
+            and step.variant != assigned_variant
+        )
+
+    def _create_sends_for_recipient(
+        self,
+        campaign: EmailCampaign,
+        recipient: EmailRecipient,
+        scheduled_at: datetime,
+    ) -> List[EmailSend]:
+        sends: List[EmailSend] = []
+        assigned_variant = self._assign_ab_test_variant(campaign, recipient)
+        base_context = self._build_recipient_context(recipient)
+
         for step in campaign.steps:
-            if step.variant and campaign.is_ab_test and assigned_variant and step.variant != assigned_variant:
+            if self._should_skip_step(step, campaign, assigned_variant):
                 continue
 
             delay = step.delay_hours or 0
             send_time = scheduled_at + timedelta(hours=delay)
             status = EmailSendStatus.QUEUED if send_time <= datetime.utcnow() else EmailSendStatus.SCHEDULED
             variant = step.variant or assigned_variant
+
             send = EmailSend(
                 campaign_id=campaign.id,
                 step_id=step.id,
@@ -363,6 +386,7 @@ class EmailDeliveryService:
             )
             self.db.add(send)
             sends.append(send)
+
         return sends
 
     def send_now(self, send_id: int) -> EmailSend:

@@ -4,9 +4,7 @@ from sqlalchemy import func, or_, and_
 from datetime import date, timedelta, datetime
 
 from models.task import Task, TaskStatus, TaskPriority  # TaskCategory n\'existe pas,
-# from models.investor import InteractionType
 from schemas.task import TaskCreate, TaskUpdate, TaskFilterParams
-# from schemas.interaction import InteractionCreate
 from services.base import BaseService
 from services.organisation_activity import OrganisationActivityService
 from models.organisation_activity import OrganisationActivityType
@@ -106,6 +104,51 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
             metadata=metadata,
         )
 
+    def _apply_basic_filters(self, query, filters: dict):
+        """Applique les filtres basiques (status, priority, etc.)"""
+        filter_map = {
+            "status": self.model.status,
+            "priority": self.model.priority,
+            "category": self.model.category,
+            "organisation_id": self.model.organisation_id,
+            "person_id": self.model.person_id,
+        }
+
+        for key, column in filter_map.items():
+            if key in filters and filters[key]:
+                query = query.filter(column == filters[key])
+
+        if "is_auto_created" in filters and filters["is_auto_created"] is not None:
+            query = query.filter(self.model.is_auto_created == filters["is_auto_created"])
+
+        return query
+
+    def _apply_view_filter(self, query, view: str):
+        """Applique les filtres de vue spéciale (overdue, today, next7)"""
+        today = date.today()
+        active_statuses = [TaskStatus.TODO, TaskStatus.DOING]
+
+        view_conditions = {
+            "overdue": and_(
+                self.model.due_date < today,
+                self.model.status.in_(active_statuses)
+            ),
+            "today": and_(
+                self.model.due_date == today,
+                self.model.status.in_(active_statuses)
+            ),
+            "next7": and_(
+                self.model.due_date > today,
+                self.model.due_date <= today + timedelta(days=7),
+                self.model.status.in_(active_statuses)
+            ),
+        }
+
+        if view in view_conditions:
+            query = query.filter(view_conditions[view])
+
+        return query
+
     async def get_all(
         self,
         *,
@@ -117,63 +160,16 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
     ) -> Tuple[List[Task], int]:
         """Récupérer toutes les tâches avec filtres et pagination"""
         query = self.db.query(self.model).options(
-            joinedload(Task.investor),
-            joinedload(Task.fournisseur),
             joinedload(Task.organisation),
             joinedload(Task.person),
         )
 
         # Appliquer les filtres
         if filters:
-            if "status" in filters and filters["status"]:
-                query = query.filter(self.model.status == filters["status"])
+            query = self._apply_basic_filters(query, filters)
 
-            if "priority" in filters and filters["priority"]:
-                query = query.filter(self.model.priority == filters["priority"])
-
-            if "category" in filters and filters["category"]:
-                query = query.filter(self.model.category == filters["category"])
-
-            if "investor_id" in filters and filters["investor_id"]:
-                query = query.filter(self.model.investor_id == filters["investor_id"])
-
-            if "fournisseur_id" in filters and filters["fournisseur_id"]:
-                query = query.filter(self.model.fournisseur_id == filters["fournisseur_id"])
-
-            if "person_id" in filters and filters["person_id"]:
-                query = query.filter(self.model.person_id == filters["person_id"])
-
-            if "is_auto_created" in filters and filters["is_auto_created"] is not None:
-                query = query.filter(self.model.is_auto_created == filters["is_auto_created"])
-
-            # Vues spéciales
             if "view" in filters:
-                view = filters["view"]
-                today = date.today()
-
-                if view == "overdue":
-                    query = query.filter(
-                        and_(
-                            self.model.due_date < today,
-                            self.model.status.in_([TaskStatus.TODO, TaskStatus.DOING]),
-                        )
-                    )
-                elif view == "today":
-                    query = query.filter(
-                        and_(
-                            self.model.due_date == today,
-                            self.model.status.in_([TaskStatus.TODO, TaskStatus.DOING]),
-                        )
-                    )
-                elif view == "next7":
-                    next_7_days = today + timedelta(days=7)
-                    query = query.filter(
-                        and_(
-                            self.model.due_date > today,
-                            self.model.due_date <= next_7_days,
-                            self.model.status.in_([TaskStatus.TODO, TaskStatus.DOING]),
-                        )
-                    )
+                query = self._apply_view_filter(query, filters["view"])
 
         # Compter le total
         total = query.count()
@@ -221,8 +217,6 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
         task = (
             self.db.query(self.model)
             .options(
-                joinedload(Task.investor),
-                joinedload(Task.fournisseur),
                 joinedload(Task.organisation),
                 joinedload(Task.person),
             )
@@ -386,8 +380,6 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
             type=interaction_type,
             date=datetime.now(),
             notes=notes,
-            investor_id=task.investor_id,
-            fournisseur_id=task.fournisseur_id,
             organisation_id=task.organisation_id,
             person_id=task.person_id,
         )
@@ -496,8 +488,7 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
         priority: TaskPriority,
         category: str,  # TaskCategory
         rule_name: str,
-        investor_id: Optional[int] = None,
-        fournisseur_id: Optional[int] = None,
+        organisation_id: Optional[int] = None,
         person_id: Optional[int] = None,
     ) -> Task:
         """Créer une tâche automatiquement (depuis un hook)"""
@@ -507,8 +498,7 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
             due_date=due_date,
             priority=priority,
             category=category,
-            investor_id=investor_id,
-            fournisseur_id=fournisseur_id,
+            organisation_id=organisation_id,
             person_id=person_id,
             is_auto_created=True,
             auto_creation_rule=rule_name,

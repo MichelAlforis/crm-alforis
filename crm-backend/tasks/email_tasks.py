@@ -3,7 +3,7 @@ Tâches Celery liées à l'automatisation email.
 """
 
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from celery import Task
@@ -23,7 +23,7 @@ def _get_db_session():
 
 
 def _dispatch_campaign_queue(db_session, campaign: EmailCampaign, override_batch_size: Optional[int] = None) -> int:
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     rate_limit = campaign.rate_limit_per_minute or settings.email_rate_limit_per_minute or 60
     batch_size = min(rate_limit, settings.email_batch_size)
     if override_batch_size is not None:

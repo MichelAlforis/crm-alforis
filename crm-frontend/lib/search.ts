@@ -1,4 +1,5 @@
 export type SearchItemType =
+  | 'organisation'
   | 'fournisseur'
   | 'investisseur'
   | 'person'

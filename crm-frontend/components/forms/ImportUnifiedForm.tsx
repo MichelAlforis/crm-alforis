@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useToast } from '@/hooks/useToast';
+import { useToast } from '@/components/ui/Toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface CSVRow {
@@ -63,7 +63,7 @@ export default function ImportUnifiedForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<UnifiedImportResult | null>(null);
   const [showResult, setShowResult] = useState(false);
-  const { toast } = useToast();
+  const { showToast } = useToast();
 
   const handleFileRead = (file: File, setter: (content: string) => void) => {
     const reader = new FileReader();
@@ -75,10 +75,10 @@ export default function ImportUnifiedForm() {
 
   const handleSubmit = async () => {
     if (!organisationsCSV.trim() || !peopleCSV.trim()) {
-      toast({
+      showToast({
+        type: 'error',
         title: 'Erreur',
-        description: 'Veuillez charger les deux fichiers CSV',
-        variant: 'destructive'
+        message: 'Veuillez charger les deux fichiers CSV'
       });
       return;
     }
@@ -90,10 +90,10 @@ export default function ImportUnifiedForm() {
       const peopleData = parseCSV(peopleCSV);
 
       if (orgsData.length === 0 || peopleData.length === 0) {
-        toast({
+        showToast({
+          type: 'error',
           title: 'Erreur',
-          description: 'Les fichiers CSV doivent contenir au moins une ligne de données',
-          variant: 'destructive'
+          message: 'Les fichiers CSV doivent contenir au moins une ligne de données'
         });
         return;
       }
@@ -141,26 +141,6 @@ export default function ImportUnifiedForm() {
       const peopleResult = await peopleRes.json();
 
       // Step 3: Create links based on organisation and person names
-      const links = [];
-      const createdOrgs = new Map<string, number>();
-      const createdPeople = new Map<string, number>();
-
-      // Build maps of created organisations and people by name
-      for (let i = 0; i < orgsData.length; i++) {
-        if (orgResult.created.includes(i)) {
-          const normName = (orgsData[i].name || '').toLowerCase();
-          // Note: we need org IDs from the result, which aren't included
-          // This is a limitation - we'd need to fetch created orgs
-        }
-      }
-
-      for (let i = 0; i < peopleData.length; i++) {
-        if (peopleResult.created.includes(i)) {
-          const fullName = `${peopleData[i]['first name'] || peopleData[i]['prenom'] || ''} ${peopleData[i]['last name'] || peopleData[i]['nom'] || ''}`.trim();
-          // Similarly, we need person IDs
-        }
-      }
-
       // For now, links creation is skipped - needs API enhancement
       const linkResult = {
         total: 0,
@@ -187,17 +167,18 @@ export default function ImportUnifiedForm() {
       setResult(finalResult);
       setShowResult(true);
 
-      toast({
+      showToast({
+        type: 'success',
         title: 'Succès',
-        description: `Import complété: ${finalResult.summary.created_organisations} organisations, ${finalResult.summary.created_people} personnes`,
+        message: `Import complété: ${finalResult.summary.created_organisations} organisations, ${finalResult.summary.created_people} personnes`
       });
 
     } catch (error) {
       console.error('Erreur:', error);
-      toast({
+      showToast({
+        type: 'error',
         title: 'Erreur',
-        description: error instanceof Error ? error.message : 'Une erreur est survenue',
-        variant: 'destructive'
+        message: error instanceof Error ? error.message : 'Une erreur est survenue'
       });
     } finally {
       setIsLoading(false);

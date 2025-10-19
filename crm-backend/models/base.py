@@ -8,15 +8,7 @@ class Base(DeclarativeBase):
     pass
 
 class BaseModel(Base):
-    """
-    Modèle de base avec timestamps et id
-    Tous les modèles hériteront de celui-ci
-    
-    Usage:
-        class Investor(BaseModel):
-            __tablename__ = "investors"
-            name = Column(String)
-    """
+
     __abstract__ = True
     
     id = Column(Integer, primary_key=True, index=True)

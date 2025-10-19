@@ -6,51 +6,6 @@ from schemas.base import (
     HealthCheckResponse,
 )
 
-# from schemas.investor import (
-#     ContactCreate,
-#     ContactUpdate,
-#     ContactResponse,
-#     InvestorCreate,
-#     InvestorUpdate,
-#     InvestorResponse,
-#     InvestorDetailResponse,
-#     InvestorStatsResponse,
-#     InvestorFilterParams,
-# )
-
-# from schemas.interaction import (
-#     InteractionCreate,
-#     InteractionUpdate,
-#     InteractionResponse,
-#     InteractionSummary,
-#     InteractionFilterParams,
-# )
-
-# from schemas.kpi import (
-#     KPICreate,
-#     KPIUpdate,
-#     KPIResponse,
-#     KPISummary,
-#     KPIFilterParams,
-# )
-
-# from schemas.fournisseur import (
-#     FournisseurContactCreate,
-#     FournisseurContactUpdate,
-#     FournisseurContactResponse,
-#     FournisseurInteractionCreate,
-#     FournisseurInteractionUpdate,
-#     FournisseurInteractionResponse,
-#     FournisseurKPICreate,
-#     FournisseurKPIUpdate,
-#     FournisseurKPIResponse,
-#     FournisseurCreate,
-#     FournisseurUpdate,
-#     FournisseurResponse,
-#     FournisseurDetailResponse,
-#     FournisseurStatsResponse,
-#     FournisseurFilterParams,
-# )
 from schemas.person import (
     PersonCreate,
     PersonUpdate,
@@ -70,12 +25,7 @@ from schemas.task import (
     TaskFilterParams,
     TaskQuickActionRequest,
 )
-# from schemas.webhook import (
-#     WebhookCreate,
-#     WebhookUpdate,
-#     WebhookResponse,
-#     WebhookRotateSecretRequest,
-# )
+
 from schemas.organisation_activity import (
     OrganisationActivityCreate,
     OrganisationActivityUpdate,
@@ -103,48 +53,6 @@ __all__ = [
     "PaginationParams",
     "PaginatedResponse",
     "HealthCheckResponse",
-
-    # ---------- Investor (LEGACY - commenté) ----------
-    # "ContactCreate",
-    # "ContactUpdate",
-    # "ContactResponse",
-    # "InvestorCreate",
-    # "InvestorUpdate",
-    # "InvestorResponse",
-    # "InvestorDetailResponse",
-    # "InvestorStatsResponse",
-    # "InvestorFilterParams",
-
-    # ---------- Interaction (LEGACY - commenté) ----------
-    # "InteractionCreate",
-    # "InteractionUpdate",
-    # "InteractionResponse",
-    # "InteractionSummary",
-    # "InteractionFilterParams",
-
-    # ---------- KPI (LEGACY - commenté) ----------
-    # "KPICreate",
-    # "KPIUpdate",
-    # "KPIResponse",
-    # "KPISummary",
-    # "KPIFilterParams",
-
-    # ---------- Fournisseur (LEGACY - commenté) ----------
-    # "FournisseurContactCreate",
-    # "FournisseurContactUpdate",
-    # "FournisseurContactResponse",
-    # "FournisseurInteractionCreate",
-    # "FournisseurInteractionUpdate",
-    # "FournisseurInteractionResponse",
-    # "FournisseurKPICreate",
-    # "FournisseurKPIUpdate",
-    # "FournisseurKPIResponse",
-    # "FournisseurCreate",
-    # "FournisseurUpdate",
-    # "FournisseurResponse",
-    # "FournisseurDetailResponse",
-    # "FournisseurStatsResponse",
-    # "FournisseurFilterParams",
 
     # ---------- Person ----------
     "PersonCreate",

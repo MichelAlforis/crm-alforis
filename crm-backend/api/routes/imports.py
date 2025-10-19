@@ -73,15 +73,6 @@ async def bulk_create_organisations(
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user_optional),
 ) -> Dict[str, Any]:
-    """
-    Créer plusieurs organisations en une seule requête (clients OU fournisseurs).
-
-    Ce endpoint remplace /investors/bulk et /fournisseurs/bulk.
-
-    Paramètres:
-    - type_org: "client" pour les anciens investors (CGPI, Wholesale)
-    - type_org: "fournisseur" pour les anciens fournisseurs (Asset Managers)
-    """
 
     total = len(organisations)
     resolved_type = _resolve_org_type(type_org)
@@ -190,31 +181,8 @@ async def bulk_create_organisations(
 
 # ============= NEW: BULK CREATE PEOPLE (PERSONNES PHYSIQUES) =============
 
-@router.post("/people/bulk")
-async def bulk_create_people(
-    people: List[PersonCreate],
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user_optional),
-) -> Dict[str, Any]:
-    """
-    Créer plusieurs personnes physiques en une seule requête.
-
-    Ce endpoint permet d'importer des personnes (contacts) sans les lier immédiatement
-    à une organisation. Utilisez /links/bulk pour créer les liens ensuite.
-    """
-
-    total = len(people)
-    result: Dict[str, Any] = {
-        "total": total,
-        "created": [],
-        "failed": 0,
-        "errors": []
-    }
-
-    if total == 0:
-        return result
-
-    # -------- Déduplication payload (sur email perso) --------
+def _detect_duplicate_emails(people: List[PersonCreate], result: Dict[str, Any]) -> Set[str]:
+    """Détecte les doublons d'email dans le payload et met à jour result."""
     seen_emails: Set[str] = set()
     for idx, person in enumerate(people):
         norm_email = _normalize_email(person.personal_email)
@@ -228,65 +196,113 @@ async def bulk_create_people(
                 })
             else:
                 seen_emails.add(norm_email)
+    return seen_emails
 
-    if result["failed"] == total:
-        return result
 
-    # -------- Précharger emails existants en base --------
+def _normalize_people_payload(people: List[PersonCreate]) -> List[dict]:
+    """Normalise les emails du payload."""
     payload_dicts = [p.dict() for p in people]
     for p in payload_dicts:
         p["personal_email"] = _normalize_email(p.get("personal_email"))
+    return payload_dicts
 
+
+def _get_existing_emails(db: Session, payload_dicts: List[dict]) -> Set[str]:
+    """Récupère les emails déjà présents en base."""
     payload_emails = {p["personal_email"] for p in payload_dicts if p.get("personal_email")}
-    existing_emails = set()
-    if payload_emails:
-        existing_emails = {
-            e[0]
-            for e in db.query(Person.personal_email).filter(
-                func.lower(Person.personal_email).in_(payload_emails)
-            ).all()
-        }
+    if not payload_emails:
+        return set()
+
+    return {
+        e[0] for e in db.query(Person.personal_email).filter(
+            func.lower(Person.personal_email).in_(payload_emails)
+        ).all()
+    }
+
+
+def _process_person_creation(
+    idx: int,
+    payload: dict,
+    db: Session,
+    existing_emails: Set[str],
+    result: Dict[str, Any]
+) -> None:
+    """Traite la création d'une personne avec gestion d'erreurs."""
+    # Skip si doublon payload déjà détecté
+    if any(e["index"] == idx for e in result["errors"]):
+        return
+
+    # Vérifier doublon base
+    email = payload.get("personal_email")
+    if email and email in existing_emails:
+        result["failed"] += 1
+        result["errors"].append({
+            "index": idx,
+            "row": _index_to_row(idx),
+            "error": f"Email déjà existant en base: {email}"
+        })
+        return
+
+    try:
+        new_person = Person(**payload)
+        db.add(new_person)
+        db.flush()
+        result["created"].append(new_person.id)
+        if email:
+            existing_emails.add(email)
+
+    except IntegrityError as ie:
+        db.rollback()
+        result["failed"] += 1
+        result["errors"].append({
+            "index": idx,
+            "row": _index_to_row(idx),
+            "error": f"Contrainte d'intégrité: {getattr(ie, 'orig', ie)}"
+        })
+    except Exception as e:
+        result["failed"] += 1
+        result["errors"].append({
+            "index": idx,
+            "row": _index_to_row(idx),
+            "error": str(e)
+        })
+
+
+@router.post("/people/bulk")
+async def bulk_create_people(
+    people: List[PersonCreate],
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user_optional),
+) -> Dict[str, Any]:
+    """
+    Créer plusieurs personnes physiques en une seule requête.
+
+    Ce endpoint permet d'importer des personnes (contacts) sans les lier immédiatement
+    à une organisation. Utilisez /links/bulk pour créer les liens ensuite.
+    """
+    total = len(people)
+    result: Dict[str, Any] = {
+        "total": total,
+        "created": [],
+        "failed": 0,
+        "errors": []
+    }
+
+    if total == 0:
+        return result
+
+    # Déduplication payload
+    _detect_duplicate_emails(people, result)
+    if result["failed"] == total:
+        return result
+
+    # Normalisation et préchargement
+    payload_dicts = _normalize_people_payload(people)
+    existing_emails = _get_existing_emails(db, payload_dicts)
 
     try:
         for idx, payload in enumerate(payload_dicts):
-            try:
-                # Skip si doublon payload déjà détecté
-                if any(e["index"] == idx for e in result["errors"]):
-                    continue
-
-                # Doublon base
-                email = payload.get("personal_email")
-                if email and email in existing_emails:
-                    result["failed"] += 1
-                    result["errors"].append({
-                        "index": idx,
-                        "row": _index_to_row(idx),
-                        "error": f"Email déjà existant en base: {email}"
-                    })
-                    continue
-
-                new_person = Person(**payload)
-                db.add(new_person)
-                db.flush()
-                result["created"].append(new_person.id)
-                if email:
-                    existing_emails.add(email)
-
-            except IntegrityError as ie:
-                db.rollback()
-                result["failed"] += 1
-                result["errors"].append({
-                    "index": idx,
-                    "row": _index_to_row(idx),
-                    "error": f"Contrainte d'intégrité: {getattr(ie, 'orig', ie)}"
-                })
-            except Exception as e:
-                result["failed"] += 1
-                result["errors"].append({
-                    "index": idx,
-                    "row": _index_to_row(idx),
-                    "error": str(e)
-                })
+            _process_person_creation(idx, payload, db, existing_emails, result)
 
         if result["created"]:
             db.commit()

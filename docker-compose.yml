@@ -52,11 +52,11 @@ services:
     networks:
       - crm-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-crm_user} -d ${POSTGRES_DB:-crm_db} -h 127.0.0.1 -p 5432"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -p 5432 -U ${POSTGRES_USER:-crm_user} -d postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 20s
     logging:
       driver: "json-file"
       options: { max-size: "10m", max-file: "3" }
@@ -100,7 +100,7 @@ services:
       - crm-network
     # Healthcheck sans curl/wget (utilise Python disponible dans l'image)
     healthcheck:
-      test: ["CMD-SHELL", "python -c 'import urllib.request,os;u=os.environ.get(\"API_PORT\",\"8000\");urllib.request.urlopen(f\"http://localhost:{u}/health\")' || exit 1"]
+      test: ["CMD-SHELL", "python -c 'import urllib.request,os;u=os.environ.get(\"API_PORT\",\"8000\");urllib.request.urlopen(f\"http://localhost:{u}/api/v1/health\")' || exit 1"]
       interval: 20s
       timeout: 5s
       retries: 10
@@ -153,3 +153,17 @@ services:
     logging:
       driver: "json-file"
       options: { max-size: "10m", max-file: "3" }
+
+  # ========================================
+  # REDIS (Cache)
+  # ========================================
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"        # optionnel en dev
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 10

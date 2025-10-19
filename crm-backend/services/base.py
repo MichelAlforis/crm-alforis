@@ -11,14 +11,6 @@ CreateSchemaType = TypeVar("CreateSchemaType")
 UpdateSchemaType = TypeVar("UpdateSchemaType")
 
 class BaseService(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
-    """
-    Service générique CRUD pour tous les modèles
-    
-    Usage:
-        class InvestorService(BaseService[Investor, InvestorCreate, InvestorUpdate]):
-            def __init__(self, db: Session):
-                super().__init__(Investor, db)
-    """
     
     def __init__(self, model: Type[ModelType], db: Session):
         self.model = model

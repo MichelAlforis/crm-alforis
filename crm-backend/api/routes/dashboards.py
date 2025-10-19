@@ -113,10 +113,7 @@ async def get_organisation_monthly_kpis(
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
-    """
-    Récupère les KPI mensuels (manuels + auto-générés) pour une organisation.
-    Compatible avec l'ancien système KPI (investor_id / fournisseur_id).
-    """
+
     service = DashboardStatsService(db)
     return await service.get_monthly_kpis(organisation_id, year, month)
 
@@ -218,9 +215,6 @@ async def get_yearly_aggregate_stats(
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
-    """
-    Agrège les KPIs d'une organisation pour une année complète.
-    Remplace l'ancien endpoint /kpis/summary/annual/{investor_id}/{year}.
-    """
+
     service = DashboardStatsService(db)
     return await service.get_yearly_aggregate(organisation_id, year)

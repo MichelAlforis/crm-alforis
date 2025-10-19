@@ -63,8 +63,6 @@ import {
   EmailSendFilters,
 } from './types'
 
-// Note: Legacy types (Investor, Fournisseur, Interaction, etc.) have been removed
-// Use Organisation endpoints instead
 
 import type { ApiError } from './types'
 
@@ -507,8 +505,7 @@ class ApiClient {
     priority?: TaskPriority
     category?: TaskCategory
     view?: 'today' | 'overdue' | 'next7' | 'all'
-    investor_id?: number
-    fournisseur_id?: number
+    oganisation_id?: number
     person_id?: number
   }): Promise<PaginatedResponse<Task>> {
     return this.request<PaginatedResponse<Task>>('/tasks', { params })
@@ -809,6 +806,59 @@ class ApiClient {
     // Agrège les KPIs d'une organisation pour une année complète
     return this.request(`/dashboards/stats/organisation/${organisationId}/year/${year}`)
   }
+  // ============= KPI ENDPOINTS =============
+
+  /**
+   * Liste paginée des KPI
+   * @param skip pagination
+   * @param limit pagination
+   * @param options filtres facultatifs (q / organisation_id / owner_id / type)
+   */
+  async getKPIs(
+    skip = 0,
+    limit = 50,
+    options?: {
+      q?: string
+      organisation_id?: number
+      owner_id?: number
+      type?: string
+    },
+  ): Promise<PaginatedResponse<KPI>> {
+    const params: Record<string, any> = { skip, limit }
+    if (options?.q) params.q = options.q
+    if (options?.organisation_id) params.organisation_id = options.organisation_id
+    if (options?.owner_id) params.owner_id = options.owner_id
+    if (options?.type) params.type = options.type
+
+    return this.request<PaginatedResponse<KPI>>('/kpis', { params })
+  }
+
+  /** Détail d’un KPI par id */
+  async getKPI(id: number): Promise<KPI> {
+    return this.request<KPI>(`/kpis/${id}`)
+  }
+
+  /** Création d’un KPI */
+  async createKPI(data: KPICreate): Promise<KPI> {
+    return this.request<KPI>('/kpis', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  /** Mise à jour d’un KPI */
+  async updateKPI(id: number, data: KPIUpdate): Promise<KPI> {
+    return this.request<KPI>(`/kpis/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  /** Suppression d’un KPI */
+  async deleteKPI(id: number): Promise<void> {
+    await this.request<void>(`/kpis/${id}`, { method: 'DELETE' })
+  }
+
 }
 
 // ============= SINGLETON EXPORT =============

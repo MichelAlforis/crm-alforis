@@ -2873,14 +2873,6 @@
               "autre"
             ]
           },
-          "investor_id": {
-            "type": "integer",
-            "nullable": true
-          },
-          "fournisseur_id": {
-            "type": "integer",
-            "nullable": true
-          },
           "organisation_id": {
             "type": "integer",
             "nullable": true
@@ -2907,14 +2899,6 @@
           },
           "days_until_due": {
             "type": "integer"
-          },
-          "investor_name": {
-            "type": "string",
-            "nullable": true
-          },
-          "fournisseur_name": {
-            "type": "string",
-            "nullable": true
           },
           "person_name": {
             "type": "string",
@@ -2998,14 +2982,6 @@
             ],
             "default": "autre"
           },
-          "investor_id": {
-            "type": "integer",
-            "nullable": true
-          },
-          "fournisseur_id": {
-            "type": "integer",
-            "nullable": true
-          },
           "organisation_id": {
             "type": "integer",
             "nullable": true
@@ -3077,14 +3053,6 @@
               "negociation",
               "autre"
             ],
-            "nullable": true
-          },
-          "investor_id": {
-            "type": "integer",
-            "nullable": true
-          },
-          "fournisseur_id": {
-            "type": "integer",
             "nullable": true
           },
           "organisation_id": {

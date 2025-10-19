@@ -1,13 +1,14 @@
 from fastapi import APIRouter
 from api.routes import (
     auth,
+    health,
     imports,
     people,
     org_links,
     tasks,
     organisations,
     mandats,
-    # produits,        # ⚠️ TEMPORAIRE - À revoir
+    # produits,        # ⚠️ TEMPORAIRE - À revoir (table produits pas encore créée)
     dashboards,
     workflows,
     email_campaigns,
@@ -15,8 +16,14 @@ from api.routes import (
 from routers import search, exports, webhooks
 from webhooks import sendgrid as inbound_sendgrid
 
+# ❌ SUPPRIMÉ (20 oct 2024): interactions, kpis
+#    → Migrés vers /dashboards/stats et /organisations/{id}/activity
+
 # Créer le routeur principal
 api_router = APIRouter(prefix="/api/v1")
+
+# 🏥 HEALTH CHECK (sans prefix, pour Docker)
+api_router.include_router(health.router, prefix="")
 
 # ⭐ AUTH ROUTES (sans authentification requise)
 api_router.include_router(auth.router)
@@ -28,12 +35,6 @@ api_router.include_router(org_links.router)      # Liens Person ↔ Organisation
 api_router.include_router(tasks.router)          # Tâches
 api_router.include_router(dashboards.router)     # Dashboards
 api_router.include_router(email_campaigns.router)  # Email automation
-
-# ❌ LEGACY ROUTES - Désactivées (utiliser architecture unifiée)
-# api_router.include_router(investors.router)     # → /organisations?type=client
-# api_router.include_router(fournisseurs.router)  # → /organisations?type=fournisseur
-# api_router.include_router(interactions.router)  # → /organisation_activities
-# api_router.include_router(kpis.router)          # → Stats dans dashboards
 
 # ⚠️ À REVOIR - Peut-être garder ou refondre
 api_router.include_router(mandats.router)

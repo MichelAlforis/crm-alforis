@@ -26,17 +26,6 @@ export interface AuthState {
   user?: UserInfo
 }
 
-// ============= LEGACY TYPES REMOVED =============
-// The following types have been removed as part of Phase 5 migration:
-// - Investor, InvestorCreate, InvestorUpdate
-// - Fournisseur, FournisseurCreate, FournisseurUpdate
-// - Interaction, InteractionCreate, InteractionUpdate
-// - InvestorDetail, FournisseurDetail, Contact, FournisseurContact
-// - PipelineStage, ClientType
-//
-// Use Organisation, OrganisationCreate, OrganisationUpdate instead
-// See: /crm-frontend/lib/types.ts for Organisation types
-
 // ============= PERSONNE PHYSIQUE =============
 
 export type OrganizationType = "investor" | "fournisseur"
@@ -776,6 +765,7 @@ export interface MandatProduitCreate {
 
 // ============= NOUVELLE INTERACTION (avec produit) =============
 
+export type InteractionType = "appel" | "email" | "reunion" | "webinaire" | "autre"
 export type InteractionPipeline = "fournisseur" | "vente"
 export type InteractionStatus = "prospect_froid" | "prospect_chaud" | "refus" | "en_discussion" | "validé"
 

@@ -15,6 +15,12 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship, validates
 from typing import TYPE_CHECKING
 from models.base import BaseModel
+from models.constants import (
+    FK_USERS_ID,
+    ONDELETE_SET_NULL,
+    ENUM_PIPELINE_STAGE,
+    ENUM_ORGANISATION_TYPE,
+)
 import enum
 from models.organisation_activity import OrganisationActivity
 
@@ -173,13 +179,13 @@ class Organisation(BaseModel):
     description = Column(Text, nullable=True)
     tags = Column(JSON, nullable=True)
     is_active = Column(Boolean, default=True, index=True)
-    created_by = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
-    assigned_to = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
-    owner_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True)
+    created_by = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True)
+    assigned_to = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True)
+    owner_id = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True, index=True)
 
     # Pipeline commercial
     pipeline_stage = Column(
-        Enum(PipelineStage, name="pipelinestage"),
+        Enum(PipelineStage, name=ENUM_PIPELINE_STAGE),
         nullable=False,
         default=PipelineStage.PROSPECT,
         index=True,

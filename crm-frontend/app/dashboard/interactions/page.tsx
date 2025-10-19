@@ -4,15 +4,14 @@
 
 'use client'
 
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 import { useOrganisations } from '@/hooks/useOrganisations'
 import { useOrganisationActivity, flattenActivities } from '@/hooks/useOrganisationActivity'
-import { Card, Button, Table, Modal, Alert } from '@/components/shared'
+import { Card, Table, Alert } from '@/components/shared'
 
 export default function InteractionsPage() {
-  const { data: organisations, isLoading: orgsLoading } = useOrganisations()
+  const { data: organisations } = useOrganisations()
   const [selectedOrgId, setSelectedOrgId] = useState<number | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const activityQuery = selectedOrgId 
     ? useOrganisationActivity(selectedOrgId)
