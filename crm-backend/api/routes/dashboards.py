@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, Query, Path
+from fastapi import APIRouter, Depends, Query, Path, Body, HTTPException
 from sqlalchemy.orm import Session
 
 from core import get_db, get_current_user
@@ -14,6 +14,7 @@ from schemas.dashboard_stats import (
     MonthlyAggregateStats,
     YearlyAggregateStats,
 )
+from schemas.kpi import KPICreate, KPIUpdate
 from services.organisation_activity import OrganisationActivityService
 from services.dashboard_stats import DashboardStatsService
 from models.organisation_activity import OrganisationActivityType
@@ -113,15 +114,79 @@ async def get_organisation_monthly_kpis(
     current_user: dict = Depends(get_current_user),
 ):
     """
-    Récupère les KPI mensuels pour une organisation.
+    Récupère les KPI mensuels (manuels + auto-générés) pour une organisation.
     Compatible avec l'ancien système KPI (investor_id / fournisseur_id).
-
-    NOTE: Pour l'instant retourne des données vides car la migration
-    de stockage KPI n'est pas complétée.
     """
     service = DashboardStatsService(db)
     return await service.get_monthly_kpis(organisation_id, year, month)
 
+
+@router.post(
+    "/stats/organisation/{organisation_id}/kpis",
+    response_model=OrganisationMonthlyKPI,
+    status_code=201,
+)
+async def upsert_organisation_monthly_kpi(
+    organisation_id: int = Path(..., gt=0),
+    payload: KPICreate = Body(...),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Crée (ou remplace) un KPI mensuel pour l'organisation.
+    """
+    service = DashboardStatsService(db)
+    try:
+        return await service.create_or_update_monthly_kpi(
+            organisation_id=organisation_id,
+            year=payload.year,
+            month=payload.month,
+            data=payload.model_dump(),
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+
+
+@router.put(
+    "/stats/kpis/{kpi_id}",
+    response_model=OrganisationMonthlyKPI,
+)
+async def update_dashboard_kpi(
+    kpi_id: int = Path(..., gt=0),
+    payload: KPIUpdate = Body(...),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Met à jour un KPI existant (identifié par son ID).
+    """
+    service = DashboardStatsService(db)
+    try:
+        return await service.update_kpi_by_id(
+            kpi_id,
+            data=payload.model_dump(exclude_unset=True),
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+
+
+@router.delete(
+    "/stats/kpis/{kpi_id}",
+    status_code=204,
+)
+async def delete_dashboard_kpi(
+    kpi_id: int = Path(..., gt=0),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Supprime un KPI.
+    """
+    service = DashboardStatsService(db)
+    try:
+        await service.delete_kpi(kpi_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
 
 @router.get(
     "/stats/month/{year}/{month}",

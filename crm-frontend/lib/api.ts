@@ -6,10 +6,6 @@
 import {
   LoginRequest,
   TokenResponse,
-  Investor,
-  InvestorCreate,
-  InvestorUpdate,
-  InvestorDetail,
   Person,
   PersonInput,
   PersonUpdateInput,
@@ -18,17 +14,10 @@ import {
   PersonOrganizationLinkInput,
   PersonOrganizationLinkUpdateInput,
   OrganizationType,
-  Interaction,
-  InteractionCreate,
-  InteractionUpdate,
   KPI,
   KPICreate,
   KPIUpdate,
   PaginatedResponse,
-  Fournisseur,
-  FournisseurCreate,
-  FournisseurUpdate,
-  FournisseurDetail,
   Newsletter,
   NewsletterCreate,
   NewsletterType,
@@ -504,27 +493,23 @@ class ApiClient {
 
   async createKPI(investorId: number, data: KPICreate): Promise<KPI> {
     // Migration: Utilise maintenant /dashboards/stats/organisation/{id}/kpis (POST)
-    const { year, month, ...kpiData } = data
     return this.request<KPI>(`/dashboards/stats/organisation/${investorId}/kpis`, {
       method: 'POST',
-      params: { year, month },
-      body: JSON.stringify(kpiData),
+      body: JSON.stringify(data),
     })
   }
 
   async updateKPI(kpiId: number, data: KPIUpdate): Promise<KPI> {
-    // Migration: Utilise maintenant /dashboards/stats/organisation/{id}/kpis/{kpi_id} (PUT)
-    // Note: Nous devons trouver l'organisation_id depuis le KPI existant
-    // Pour simplifier, on utilise un endpoint avec organisation_id=0 (le backend l'ignorera)
-    return this.request<KPI>(`/dashboards/stats/organisation/0/kpis/${kpiId}`, {
+    // Migration: Utilise maintenant /dashboards/stats/kpis/{kpi_id} (PUT)
+    return this.request<KPI>(`/dashboards/stats/kpis/${kpiId}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     })
   }
 
   async deleteKPI(kpiId: number): Promise<void> {
-    // Migration: Utilise maintenant /dashboards/stats/organisation/{id}/kpis/{kpi_id} (DELETE)
-    await this.request<void>(`/dashboards/stats/organisation/0/kpis/${kpiId}`, {
+    // Migration: Utilise maintenant /dashboards/stats/kpis/{kpi_id} (DELETE)
+    await this.request<void>(`/dashboards/stats/kpis/${kpiId}`, {
       method: 'DELETE',
     })
   }

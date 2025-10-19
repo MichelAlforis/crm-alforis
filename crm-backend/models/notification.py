@@ -23,8 +23,6 @@ from datetime import datetime
 import enum
 from typing import Dict, Any, TYPE_CHECKING
 
-from sqlalchemy.orm import synonym
-
 from models.base import BaseModel
 
 if TYPE_CHECKING:
@@ -159,10 +157,13 @@ class Notification(BaseModel):
     # ATTRIBUTE SHIMS
     # =====================================================
 
-    def __getattr__(self, item: str) -> Any:
+    def __getattribute__(self, item: str) -> Any:
         if item == "metadata":
-            return self.metadata_json
-        raise AttributeError(f"{self.__class__.__name__} object has no attribute '{item}'")
+            try:
+                return super().__getattribute__("metadata_json")
+            except AttributeError:
+                return None
+        return super().__getattribute__(item)
 
     def __setattr__(self, key: str, value: Any) -> None:
         if key == "metadata":

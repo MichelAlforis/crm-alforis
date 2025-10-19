@@ -9,7 +9,7 @@ import { useFournisseurs } from '@/hooks/useFournisseurs'
 import { useKPIsFournisseur } from '@/hooks/useKPIsFournisseur'
 import { Card, Button, Table, Modal, Alert } from '@/components/shared'
 import { KPIForm } from '@/components/forms'
-import { KPICreate } from '@/lib/types'
+import { KPI, KPICreate } from '@/lib/types'
 
 export default function KPIsPage() {
   const { fournisseurs, fetchFournisseurs } = useFournisseurs()
@@ -35,8 +35,9 @@ export default function KPIsPage() {
     }
   }
 
-  const handleDelete = async (kpiId: number) => {
-    if (kpis && confirm('Supprimer ce KPI?')) {
+  const handleDelete = async (kpiId: number | null) => {
+    if (!kpis || !kpiId) return
+    if (kpis && kpiId && confirm('Supprimer ce KPI?')) {
       await kpis.deleteKPI(kpiId)
     }
   }
@@ -69,23 +70,37 @@ export default function KPIsPage() {
     {
       header: 'Revenu',
       accessor: 'revenue',
-      render: (value: number) => `${value}€`,
+      render: (value: number) => `${value || 0}€`,
     },
     {
       header: 'Comm. %',
       accessor: 'commission_rate',
+      render: (value: number | null) => (value != null ? `${value}%` : '—'),
+    },
+    {
+      header: 'Source',
+      accessor: 'source',
+      render: (_: string | undefined, row: KPI) =>
+        row.auto_generated ? (
+          <span className="text-xs font-medium text-orange-500">Automatique</span>
+        ) : (
+          <span className="text-xs text-gray-500">Manuel</span>
+        ),
     },
     {
       header: 'Actions',
       accessor: 'id',
-      render: (id: number) => (
-        <button
-          onClick={() => handleDelete(id)}
-          className="text-rouge hover:underline text-sm"
-        >
-          Supprimer
-        </button>
-      ),
+      render: (id: number | null, row: KPI) =>
+        id && !row.auto_generated ? (
+          <button
+            onClick={() => handleDelete(id)}
+            className="text-rouge hover:underline text-sm"
+          >
+            Supprimer
+          </button>
+        ) : (
+          <span className="text-xs text-gray-400">—</span>
+        ),
     },
   ]
 

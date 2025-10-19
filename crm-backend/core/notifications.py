@@ -27,6 +27,7 @@ from datetime import datetime, timedelta
 from fastapi import WebSocket, WebSocketDisconnect
 from sqlalchemy.orm import Session
 import asyncio
+from anyio import from_thread as anyio_from_thread
 from anyio.from_thread import start_blocking_portal, BlockingPortal
 
 from models.notification import (
@@ -139,17 +140,42 @@ class ConnectionManager:
 # S'assurer qu'un portail AnyIO est disponible pour les appels from_thread (tests WS)
 _blocking_portal: Optional[BlockingPortal] = None
 _blocking_portal_cm = None
+_portal_shutdown_registered = False
+_original_anyio_run = anyio_from_thread.run
 
 
-def _ensure_blocking_portal():
+def _close_blocking_portal():
     global _blocking_portal, _blocking_portal_cm
+    if _blocking_portal_cm is not None:
+        try:
+            _blocking_portal_cm.__exit__(None, None, None)
+        finally:
+            _blocking_portal_cm = None
+            _blocking_portal = None
+
+
+def _ensure_blocking_portal() -> BlockingPortal:
+    global _blocking_portal, _blocking_portal_cm, _portal_shutdown_registered
     if _blocking_portal is None:
         _blocking_portal_cm = start_blocking_portal()
         _blocking_portal = _blocking_portal_cm.__enter__()
-        atexit.register(_blocking_portal_cm.__exit__, None, None, None)
+        if not _portal_shutdown_registered:
+            atexit.register(_close_blocking_portal)
+            _portal_shutdown_registered = True
+    return _blocking_portal
 
 
-_ensure_blocking_portal()
+def _run_with_portal_fallback(func, *args):
+    try:
+        return _original_anyio_run(func, *args)
+    except RuntimeError as exc:
+        if "AnyIO worker thread" not in str(exc):
+            raise
+        portal = _ensure_blocking_portal()
+        return portal.call(func, *args)
+
+
+anyio_from_thread.run = _run_with_portal_fallback
 
 # Instance globale du manager
 manager = ConnectionManager()

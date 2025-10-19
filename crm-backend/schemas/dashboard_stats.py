@@ -35,6 +35,7 @@ class OrganisationStatsResponse(BaseSchema):
 
 class OrganisationMonthlyKPI(BaseSchema):
     """KPI mensuels pour une organisation (compatible avec l'ancien système KPI)"""
+    id: Optional[int] = None
     organisation_id: int
     year: int = Field(..., ge=2020, le=2100)
     month: int = Field(..., ge=1, le=12)
@@ -53,6 +54,8 @@ class OrganisationMonthlyKPI(BaseSchema):
     notes: Optional[str] = None
     created_at: Optional[str] = None
     updated_at: Optional[str] = None
+    auto_generated: bool = False
+    source: Optional[str] = None
 
 
 # ============= STATISTIQUES GLOBALES =============

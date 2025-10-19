@@ -13,6 +13,8 @@ class KPICreate(BaseSchema):
     revenue: Optional[float] = Field(None, ge=0)
     commission_rate: Optional[float] = Field(None, ge=0, le=100)
     notes: Optional[str] = None
+    auto_generated: Optional[bool] = False
+    source: Optional[str] = None
 
 class KPIUpdate(BaseSchema):
     """Mise à jour d'un KPI"""
@@ -23,6 +25,8 @@ class KPIUpdate(BaseSchema):
     revenue: Optional[float] = Field(None, ge=0)
     commission_rate: Optional[float] = Field(None, ge=0, le=100)
     notes: Optional[str] = None
+    auto_generated: Optional[bool] = None
+    source: Optional[str] = None
 
 class KPIResponse(TimestampedSchema):
     """Réponse KPI"""

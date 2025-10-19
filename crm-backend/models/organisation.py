@@ -201,6 +201,13 @@ class Organisation(BaseModel):
         cascade="all, delete-orphan"
     )
 
+    kpis = relationship(
+        "DashboardKPI",
+        back_populates="organisation",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
+
     interactions = relationship(
         "OrganisationInteraction",
         back_populates="organisation",

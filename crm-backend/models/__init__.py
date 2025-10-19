@@ -1,24 +1,5 @@
 from models.base import Base, BaseModel
 
-# ❌ LEGACY - Models archivés dans legacy/models/
-# # from models.investor import (
-#     Investor,
-#     Contact,
-#     Interaction as InvestorInteraction,
-#     KPI,
-#     PipelineStage,
-#     ClientType,
-#     InteractionType,
-# )
-# # from models.fournisseur import (
-#     Fournisseur,
-#     FournisseurContact,
-#     FournisseurInteraction,
-#     FournisseurKPI,
-#     StageFournisseur,
-#     TypeFournisseur,
-# )
-
 from models.person import (
     Person,
     PersonOrganizationLink,
@@ -52,6 +33,7 @@ from models.organisation_activity import (
     OrganisationActivity,
     OrganisationActivityType,
 )
+from models.kpi import DashboardKPI
 from models.notification import (
     Notification,
     NotificationType,
@@ -124,6 +106,7 @@ __all__ = [
     "InteractionStatus",
     "OrganisationActivity",
     "OrganisationActivityType",
+    "DashboardKPI",
 
     # People
     "Person",

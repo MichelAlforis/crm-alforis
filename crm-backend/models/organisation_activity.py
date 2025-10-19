@@ -78,8 +78,27 @@ class OrganisationActivity(BaseModel):
 
     organisation = relationship("Organisation", back_populates="activities")
 
+    def __init__(self, **kwargs):
+        incoming_metadata = kwargs.pop("metadata", None)
+        super().__init__(**kwargs)
+        if incoming_metadata is not None:
+            object.__setattr__(self, "activity_metadata", incoming_metadata)
+
     def __repr__(self) -> str:
         return (
             f"<OrganisationActivity(id={self.id}, organisation_id={self.organisation_id}, "
             f"type={self.type})>"
         )
+
+    def __getattribute__(self, item: str):
+        if item == "metadata":
+            try:
+                return super().__getattribute__("activity_metadata")
+            except AttributeError:
+                return None
+        return super().__getattribute__(item)
+
+    def __setattr__(self, key: str, value):
+        if key == "metadata":
+            key = "activity_metadata"
+        super().__setattr__(key, value)

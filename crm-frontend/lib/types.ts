@@ -249,8 +249,8 @@ export interface InteractionUpdate extends Partial<InteractionCreate> {}
 // ============= KPI =============
 
 export interface KPI {
-  id: number
-  fournisseur_id: number // ✅ KPI par FSS
+  id: number | null
+  organisation_id: number
   year: number
   month: number
   rdv_count: number
@@ -258,10 +258,12 @@ export interface KPI {
   due_diligences: number
   closings: number
   revenue: number
-  commission_rate: number
+  commission_rate: number | null
   notes?: string
-  created_at: string
-  updated_at: string
+  created_at: string | null
+  updated_at: string | null
+  auto_generated?: boolean
+  source?: string | null
 }
 
 export interface KPICreate {
@@ -274,6 +276,8 @@ export interface KPICreate {
   revenue?: number
   commission_rate?: number
   notes?: string
+  auto_generated?: boolean
+  source?: string
 }
 
 export interface KPIUpdate extends Partial<Omit<KPICreate, "year" | "month">> {}

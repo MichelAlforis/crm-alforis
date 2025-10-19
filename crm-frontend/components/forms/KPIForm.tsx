@@ -23,12 +23,27 @@ export function KPIForm({
   error,
 }: KPIFormProps) {
   const { showToast } = useToast()
+
+  const defaultValues: Partial<KPICreate> | undefined = initialData
+    ? {
+        year: initialData.year,
+        month: initialData.month,
+        rdv_count: initialData.rdv_count,
+        pitchs: initialData.pitchs,
+        due_diligences: initialData.due_diligences,
+        closings: initialData.closings,
+        revenue: initialData.revenue,
+        commission_rate: initialData.commission_rate ?? undefined,
+        notes: initialData.notes,
+      }
+    : undefined
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<KPICreate>({
-    defaultValues: initialData,
+    defaultValues,
     mode: 'onBlur',
   })
 

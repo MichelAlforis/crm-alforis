@@ -889,10 +889,6 @@ Les endpoints suivants sont documentés mais **NON implémentés** dans le clien
 #### Email Templates
 - ❌ **DELETE** `/email/templates/{id}` - Suppression de templates
 
-#### Dashboards
-- ❌ **GET** `/dashboards/stats` - Statistiques générales du dashboard
-- ❌ Autres endpoints dashboards non spécifiés
-
 #### Exports/Imports
 - ❌ Endpoints d'export de données (si existants)
 - ❌ Endpoints d'import de données (si existants)
@@ -945,13 +941,13 @@ La **Phase 2** de migration a été implémentée avec succès ! Les méthodes K
 | Endpoint Legacy | Nouveau Endpoint | Statut Migration |
 |-----------------|------------------|------------------|
 | **GET** `/kpis/investor/{id}` | **GET** `/dashboards/stats/organisation/{id}/kpis` | ✅ **MIGRÉ** |
-| **POST** `/kpis/investor/{id}` | N/A | ⚠️ **DEPRECATED** - Retourne une erreur (KPIs calculés automatiquement) |
-| **PUT** `/kpis/{id}` | N/A | ⚠️ **DEPRECATED** - Retourne une erreur (KPIs en lecture seule) |
-| **DELETE** `/kpis/{id}` | N/A | ⚠️ **DEPRECATED** - Retourne une erreur (KPIs en lecture seule) |
+| **POST** `/kpis/investor/{id}` | **POST** `/dashboards/stats/organisation/{id}/kpis` | ✅ **MIGRÉ** |
+| **PUT** `/kpis/{id}` | **PUT** `/dashboards/stats/kpis/{kpi_id}` | ✅ **MIGRÉ** |
+| **DELETE** `/kpis/{id}` | **DELETE** `/dashboards/stats/kpis/{kpi_id}` | ✅ **MIGRÉ** |
 | **GET** `/fournisseurs/{id}/kpis` | **GET** `/dashboards/stats/organisation/{id}/kpis` | ✅ **MIGRÉ** |
-| **POST** `/fournisseurs/{id}/kpis` | N/A | ⚠️ **DEPRECATED** - Retourne une erreur (KPIs calculés automatiquement) |
-| **PUT** `/fournisseurs/{fid}/kpis/{kid}` | N/A | ⚠️ **DEPRECATED** - Retourne une erreur (KPIs en lecture seule) |
-| **DELETE** `/fournisseurs/{fid}/kpis/{kid}` | N/A | ⚠️ **DEPRECATED** - Retourne une erreur (KPIs en lecture seule) |
+| **POST** `/fournisseurs/{id}/kpis` | **POST** `/dashboards/stats/organisation/{id}/kpis` | ✅ **MIGRÉ** |
+| **PUT** `/fournisseurs/{fid}/kpis/{kid}` | **PUT** `/dashboards/stats/kpis/{kpi_id}` | ✅ **MIGRÉ** |
+| **DELETE** `/fournisseurs/{fid}/kpis/{kid}` | **DELETE** `/dashboards/stats/kpis/{kpi_id}` | ✅ **MIGRÉ** |
 
 #### 📊 Nouveaux endpoints Dashboard Stats créés
 
@@ -962,22 +958,32 @@ La **Phase 2** de migration a été implémentée avec succès ! Les méthodes K
 | **GET** | `/dashboards/stats/organisation/{id}/kpis` | KPIs mensuels d'une organisation |
 | **GET** | `/dashboards/stats/month/{year}/{month}` | Agrégation mensuelle tous comptes |
 | **GET** | `/dashboards/stats/organisation/{id}/year/{year}` | Agrégation annuelle par organisation |
+| **POST** | `/dashboards/stats/organisation/{id}/kpis` | Création d'un KPI mensuel |
+| **PUT** | `/dashboards/stats/kpis/{kpi_id}` | Mise à jour d'un KPI |
+| **DELETE** | `/dashboards/stats/kpis/{kpi_id}` | Suppression d'un KPI |
 
 #### 🔧 Nouveaux schémas et services créés
 
 **Backend:**
 - ✅ `/schemas/dashboard_stats.py` - Schémas Pydantic pour les statistiques
 - ✅ `/services/dashboard_stats.py` - Service de calcul des stats
+- ✅ `/models/kpi.py` - Modèle SQLAlchemy pour stocker les KPIs
 - ✅ `/api/routes/dashboards.py` - Endpoints REST (mis à jour)
 
 **Frontend:**
 - ✅ `lib/api.ts` - Méthodes `getGlobalDashboardStats()`, `getOrganisationStats()`, etc.
 - ✅ Migration KPI : `getKPIs()` et `getKPIsByFournisseur()` utilisent maintenant `/dashboards/stats`
 - ✅ Build réussi sans erreurs TypeScript
+- ✅ Support complet CRUD KPI (legacy wrappers => nouveaux endpoints)
 
-#### ⚠️ Note importante sur les KPIs
+#### ⚙️ Calcul automatique & structure de réponse
 
-Les KPIs ne sont **plus modifiables** dans le nouveau système. Ils sont destinés à être **calculés automatiquement** depuis les activités du CRM. Pour l'instant, les endpoints retournent des données vides car le système de calcul automatique n'est pas encore implémenté.
+- Les KPIs sont **persistés** via le modèle `dashboard_kpis` avec les champs : `id`, `organisation_id`, `year`, `month`, `rdv_count`, `pitchs`, `due_diligences`, `closings`, `revenue`, `commission_rate`, `notes`, `auto_generated`, `source`, `created_at`, `updated_at`.
+- Lors de la lecture (`GET /dashboards/stats/organisation/{id}/kpis`), le service renvoie :
+  - Les KPI saisis manuellement (`auto_generated=false`, `source='manual'`)
+  - Des propositions calculées automatiquement à partir des activités (`auto_generated=true`, `source='activity'`, `id=null`)
+- Le calcul automatique mappe les `OrganisationActivity` sur les indicateurs (reunion → RDV, mandat_signed → closings, etc.) et agrège aussi le revenu/commission lorsque ces valeurs sont présentes dans les métadonnées.
+- Les agrégations mensuelles et annuelles combinent les données enregistrées et les suggestions automatiques (sans double comptage).
 
 ### 🔄 Plan de migration (mis à jour)
 
@@ -989,20 +995,30 @@ Les KPIs ne sont **plus modifiables** dans le nouveau système. Ils sont destin�
 
 2. **Phase 2** - ✅ **COMPLÉTÉE** (2025-01-19)
    - ✅ Créé les nouveaux endpoints `/dashboards/stats` pour remplacer KPIs
-   - ✅ Migré les endpoints KPI vers le nouveau système (lecture seule)
+   - ✅ Migré les endpoints KPI vers le nouveau système (lecture seule initialement)
    - ✅ Build frontend réussi avec tous les changements
-   - ⚠️ KPIs retournent des données vides (calcul automatique à implémenter)
+   - ✅ Support lecture seule effectif via `/dashboards/stats/organisation/{id}/kpis`
 
-3. **Phase 3** - ⏳ **À VENIR**
-   - Implémenter le calcul automatique des KPIs depuis les activités
-   - Créer une table dédiée pour le stockage des KPIs si nécessaire
-   - Supprimer les wrappers legacy de `lib/api.ts`
-   - Mettre à jour les hooks pour utiliser directement les endpoints organisations
+3. **Phase 3** - ✅ **COMPLÉTÉE** (2025-01-19)
+   - ✅ Création du modèle `KPI` et service CRUD associé
+   - ✅ Endpoints `/dashboards/stats/...` enrichis avec création/mise à jour/suppression
+   - ✅ Legacy wrappers `createKPI*`, `updateKPI*`, `deleteKPI*` redirigent vers les nouveaux endpoints
+   - ✅ KPIs persistés et disponibles pour reporting
+
+4. **Phase 4** - ✅ **COMPLÉTÉE** (2025-01-19)
+   - ✅ Agrégation automatique des activités → KPI (`auto_generated=true`)
+   - ✅ Fusion lecture : données manuelles + suggestions calculées
+   - ✅ Colonnes supplémentaires (`auto_generated`, `source`) exposées côté API/Frontend
+   - ✅ UI adaptée : suppression possible uniquement sur les KPI manuels
+
+5. **Phase 5** - ⏳ **À VENIR**
+   - Supprimer les wrappers legacy restants dans `lib/api.ts`
+   - Mettre à jour les hooks pour consommer directement les endpoints organisations/dashboard
    - Nettoyer les types legacy (Investor, Fournisseur, Interaction)
-   - Supprimer les routes backend legacy
+   - Supprimer les routes backend legacy obsolètes
 
 ---
 
 **Version API:** v1
-**Dernière mise à jour:** 2025-01-19
-**État Frontend:** Build réussi - Phase 2 complétée le 2025-01-19
+**Dernière mise à jour:** 2025-01-19 (Phase 4)
+**État Frontend:** Build réussi - Phases 1 à 4 complétées le 2025-01-19
