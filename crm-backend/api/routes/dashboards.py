@@ -1,13 +1,21 @@
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Path
 from sqlalchemy.orm import Session
 
 from core import get_db, get_current_user
 from core.cache import cache_response
 from schemas.base import PaginatedResponse
 from schemas.organisation_activity import OrganisationActivityResponse
+from schemas.dashboard_stats import (
+    GlobalDashboardStats,
+    OrganisationStatsResponse,
+    OrganisationMonthlyKPI,
+    MonthlyAggregateStats,
+    YearlyAggregateStats,
+)
 from services.organisation_activity import OrganisationActivityService
+from services.dashboard_stats import DashboardStatsService
 from models.organisation_activity import OrganisationActivityType
 
 router = APIRouter(prefix="/dashboards", tags=["dashboards"])
@@ -56,3 +64,98 @@ async def get_activity_widget(
         limit=limit,
         items=[OrganisationActivityResponse.model_validate(item) for item in items],
     )
+
+
+# ============= STATISTIQUES DASHBOARD =============
+
+
+@router.get("/stats/global", response_model=GlobalDashboardStats)
+@cache_response(ttl=60, key_prefix="dashboards:global_stats")
+async def get_global_dashboard_stats(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Statistiques globales pour le dashboard principal.
+    Remplace les anciens endpoints KPI agrégés.
+    """
+    service = DashboardStatsService(db)
+    return await service.get_global_stats()
+
+
+@router.get("/stats/organisation/{organisation_id}", response_model=OrganisationStatsResponse)
+@cache_response(ttl=30, key_prefix="dashboards:org_stats")
+async def get_organisation_dashboard_stats(
+    organisation_id: int = Path(..., gt=0),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Statistiques pour une organisation spécifique.
+    Utile pour les pages de détail d'organisation.
+    """
+    service = DashboardStatsService(db)
+    return await service.get_organisation_stats(organisation_id)
+
+
+# ============= KPI MENSUELS (COMPATIBILITÉ LEGACY) =============
+
+
+@router.get(
+    "/stats/organisation/{organisation_id}/kpis",
+    response_model=List[OrganisationMonthlyKPI]
+)
+async def get_organisation_monthly_kpis(
+    organisation_id: int = Path(..., gt=0),
+    year: Optional[int] = Query(None, ge=2020, le=2100),
+    month: Optional[int] = Query(None, ge=1, le=12),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Récupère les KPI mensuels pour une organisation.
+    Compatible avec l'ancien système KPI (investor_id / fournisseur_id).
+
+    NOTE: Pour l'instant retourne des données vides car la migration
+    de stockage KPI n'est pas complétée.
+    """
+    service = DashboardStatsService(db)
+    return await service.get_monthly_kpis(organisation_id, year, month)
+
+
+@router.get(
+    "/stats/month/{year}/{month}",
+    response_model=MonthlyAggregateStats
+)
+@cache_response(ttl=300, key_prefix="dashboards:monthly_aggregate")
+async def get_monthly_aggregate_stats(
+    year: int = Path(..., ge=2020, le=2100),
+    month: int = Path(..., ge=1, le=12),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Agrège les KPIs de toutes les organisations pour un mois donné.
+    Remplace l'ancien endpoint /kpis/summary/month/{year}/{month}.
+    """
+    service = DashboardStatsService(db)
+    return await service.get_monthly_aggregate(year, month)
+
+
+@router.get(
+    "/stats/organisation/{organisation_id}/year/{year}",
+    response_model=YearlyAggregateStats
+)
+@cache_response(ttl=300, key_prefix="dashboards:yearly_aggregate")
+async def get_yearly_aggregate_stats(
+    organisation_id: int = Path(..., gt=0),
+    year: int = Path(..., ge=2020, le=2100),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Agrège les KPIs d'une organisation pour une année complète.
+    Remplace l'ancien endpoint /kpis/summary/annual/{investor_id}/{year}.
+    """
+    service = DashboardStatsService(db)
+    return await service.get_yearly_aggregate(organisation_id, year)
