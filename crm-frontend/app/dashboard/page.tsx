@@ -43,16 +43,16 @@ export default function DashboardPage() {
         <h2 className="text-lg font-semibold mb-4">Actions rapides</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <a 
-            href="/dashboard/investors/new"
+            href="/dashboard/organisations/new"
             className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-center"
           >
-            <p className="font-medium text-ardoise">Nouvel investisseur</p>
+            <p className="font-medium text-ardoise">Nouvelle organisation</p>
           </a>
           <a 
-            href="/dashboard/investors"
+            href="/dashboard/organisations"
             className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-center"
           >
-            <p className="font-medium text-ardoise">Voir tous les investisseurs</p>
+            <p className="font-medium text-ardoise">Voir toutes les organisations</p>
           </a>
           <a 
             href="/dashboard/kpis"

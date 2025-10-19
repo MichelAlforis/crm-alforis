@@ -201,9 +201,14 @@ export default function PeoplePage() {
             Annuaire centralisé des interlocuteurs et décisionnaires.
           </p>
         </div>
-        <Link href="/dashboard/people/new">
-          <Button variant="primary">+ Nouvelle personne</Button>
-        </Link>
+        <div className="flex gap-2">
+          <Link href="/dashboard/people/import">
+            <Button variant="secondary">📥 Importer</Button>
+          </Link>
+          <Link href="/dashboard/people/new">
+            <Button variant="primary">+ Nouvelle personne</Button>
+          </Link>
+        </div>
       </div>
 
       <Card>

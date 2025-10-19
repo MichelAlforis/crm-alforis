@@ -17,12 +17,12 @@ import {
   Settings,
   LogOut,
   HelpCircle,
-  FileUp,
   Bell,
   Briefcase,
   Package,
   Workflow,
   Link as LinkIcon,
+  Upload,
 } from 'lucide-react'
 import { useTaskViews } from '@/hooks/useTasks'
 import ThemeToggle from '@/components/shared/ThemeToggle'
@@ -87,18 +87,20 @@ const MENU_ITEMS = [
     gradient: 'from-indigo-500 to-purple-500',
   },
   {
-    label: 'Import',
-    href: '/dashboard/imports',
-    icon: FileUp,
-    description: 'Importer données',
-    badge: null,
-    gradient: 'from-yellow-500 to-orange-500',
+    label: 'Import Unifié',
+    href: '/dashboard/imports/unified',
+    icon: Upload,
+    description: 'Organisations + Personnes',
+    badge: 'NEW',
+    gradient: 'from-rose-500 to-pink-500',
   },
   // ❌ LEGACY ITEMS REMOVED (2025-10-18):
   // - Investisseurs → Organisations (type=client)
   // - Fournisseurs → Organisations (type=fournisseur)
   // - Interactions → Organisations Activity
   // - KPIs → Dashboards
+  // - Import → Split to /organisations/import + /people/import
+  // ✅ NEW (2025-10-18): Import Unifié → /dashboard/imports/unified
 ]
 
 export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {

@@ -256,9 +256,14 @@ export default function OrganisationsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-ardoise">Organisations</h1>
-        <Link href="/dashboard/organisations/new">
-          <Button variant="primary">+ Nouvelle organisation</Button>
-        </Link>
+        <div className="flex gap-2">
+          <Link href="/dashboard/organisations/import">
+            <Button variant="secondary">📥 Importer</Button>
+          </Link>
+          <Link href="/dashboard/organisations/new">
+            <Button variant="primary">+ Nouvelle organisation</Button>
+          </Link>
+        </div>
       </div>
 
       <Card>

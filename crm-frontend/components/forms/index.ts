@@ -1,16 +1,16 @@
-export { ImportForm } from './ImportForm'
-
 // components/forms/index.ts
 // ============= EXPORTS FORMULAIRES =============
 
 export { LoginForm } from './LoginForm'
-export { InvestorForm } from './InvestorForm'
-export { InteractionForm } from './InteractionForm'
-export { KPIForm } from './KPIForm'
-export { ImportInvestorsForm } from './ImportInvestorsForm'
-export { ImportFournisseursForm } from './ImportFournisseursForm'
-export { FournisseurForm } from './FournisseurForm'
 export { PersonForm } from './PersonForm'
 export { OrganisationForm } from './OrganisationForm'
 export { MandatForm } from './MandatForm'
 export { ProduitForm } from './ProduitForm'
+export { InteractionForm } from './InteractionForm'
+export { KPIForm } from './KPIForm'
+export { TaskForm } from './TaskForm'
+
+// NEW: Import forms (split by module)
+export { ImportOrganisationsForm } from './ImportOrganisationsForm'
+export { ImportPeopleForm } from './ImportPeopleForm'
+export { default as ImportUnifiedForm } from './ImportUnifiedForm'

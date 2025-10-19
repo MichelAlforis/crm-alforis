@@ -20,25 +20,14 @@ export async function GET(req: Request) {
 
   const resources = [
     {
-      key: 'fournisseurs',
-      url: `${API}/api/v1/fournisseurs/search?q=${encodeURIComponent(q)}&skip=0&limit=20`,
+      key: 'organisations',
+      url: `${API}/api/v1/organisations/search?q=${encodeURIComponent(q)}&skip=0&limit=20`,
       toItems: (rows: any[]): SearchItem[] => rows.map((r) => ({
         id: String(r.id ?? ''),
-        type: 'fournisseur' as const,
-        title: r.name || 'Fournisseur',
+        type: 'organisation' as const,
+        title: r.name || 'Organisation',
         subtitle: [r.activity, r.main_phone, r.email].filter(Boolean).join(' • '),
-        href: `/dashboard/fournisseurs/${r.id ?? ''}`,
-      })),
-    },
-    {
-      key: 'investisseurs',
-      url: `${API}/api/v1/investors/search?q=${encodeURIComponent(q)}&skip=0&limit=20`,
-      toItems: (rows: any[]): SearchItem[] => rows.map((r) => ({
-        id: String(r.id ?? ''),
-        type: 'investisseur' as const,
-        title: r.name || 'Investisseur',
-        subtitle: [r.company, r.main_phone, r.email].filter(Boolean).join(' • '),
-        href: `/dashboard/investors/${r.id ?? ''}`,
+        href: `/dashboard/organisations/${r.id ?? ''}`,
       })),
     },
     {

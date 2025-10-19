@@ -185,10 +185,10 @@ export default function KPIsPage() {
                 {selectedFournisseur.name}
               </h2>
               <Link 
-                href={`/dashboard/fournisseurs/${selectedFournisseurId}`}
+                href={`/dashboard/organisations/${selectedFournisseurId}`}
                 className="text-bleu hover:underline text-sm mt-1 inline-block"
               >
-                Voir détail du fournisseur →
+                Voir détail de l'organisation →
               </Link>
             </div>
             <Button variant="primary" onClick={() => setIsModalOpen(true)}>
