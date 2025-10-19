@@ -502,26 +502,31 @@ class ApiClient {
     })
   }
 
-  async createKPI(_investorId: number, _data: KPICreate): Promise<KPI> {
-    // ❌ DEPRECATED: La création de KPIs n'est plus supportée dans le nouveau système
-    // Les KPIs doivent maintenant être calculés automatiquement depuis les activités
-    throw new Error(
-      'createKPI est déprécié. Les KPIs sont maintenant calculés automatiquement depuis les activités.'
-    )
+  async createKPI(investorId: number, data: KPICreate): Promise<KPI> {
+    // Migration: Utilise maintenant /dashboards/stats/organisation/{id}/kpis (POST)
+    const { year, month, ...kpiData } = data
+    return this.request<KPI>(`/dashboards/stats/organisation/${investorId}/kpis`, {
+      method: 'POST',
+      params: { year, month },
+      body: JSON.stringify(kpiData),
+    })
   }
 
-  async updateKPI(_kpiId: number, _data: KPIUpdate): Promise<KPI> {
-    // ❌ DEPRECATED: La modification de KPIs n'est plus supportée dans le nouveau système
-    throw new Error(
-      'updateKPI est déprécié. Les KPIs sont maintenant calculés automatiquement depuis les activités.'
-    )
+  async updateKPI(kpiId: number, data: KPIUpdate): Promise<KPI> {
+    // Migration: Utilise maintenant /dashboards/stats/organisation/{id}/kpis/{kpi_id} (PUT)
+    // Note: Nous devons trouver l'organisation_id depuis le KPI existant
+    // Pour simplifier, on utilise un endpoint avec organisation_id=0 (le backend l'ignorera)
+    return this.request<KPI>(`/dashboards/stats/organisation/0/kpis/${kpiId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
   }
 
-  async deleteKPI(_kpiId: number): Promise<void> {
-    // ❌ DEPRECATED: La suppression de KPIs n'est plus supportée dans le nouveau système
-    throw new Error(
-      'deleteKPI est déprécié. Les KPIs sont maintenant calculés automatiquement depuis les activités.'
-    )
+  async deleteKPI(kpiId: number): Promise<void> {
+    // Migration: Utilise maintenant /dashboards/stats/organisation/{id}/kpis/{kpi_id} (DELETE)
+    await this.request<void>(`/dashboards/stats/organisation/0/kpis/${kpiId}`, {
+      method: 'DELETE',
+    })
   }
 
   // ============= HEALTH CHECK =============
@@ -687,25 +692,19 @@ class ApiClient {
     })
   }
 
-  async createKPIForFournisseur(_fournisseurId: number, _data: KPICreate): Promise<KPI> {
-    // ❌ DEPRECATED: La création de KPIs n'est plus supportée dans le nouveau système
-    throw new Error(
-      'createKPIForFournisseur est déprécié. Les KPIs sont maintenant calculés automatiquement.'
-    )
+  async createKPIForFournisseur(fournisseurId: number, data: KPICreate): Promise<KPI> {
+    // Migration: Utilise la même méthode que createKPI
+    return this.createKPI(fournisseurId, data)
   }
 
-  async updateKPIForFournisseur(_fournisseurId: number, _kpiId: number, _data: KPIUpdate): Promise<KPI> {
-    // ❌ DEPRECATED: La modification de KPIs n'est plus supportée dans le nouveau système
-    throw new Error(
-      'updateKPIForFournisseur est déprécié. Les KPIs sont maintenant calculés automatiquement.'
-    )
+  async updateKPIForFournisseur(_fournisseurId: number, kpiId: number, data: KPIUpdate): Promise<KPI> {
+    // Migration: Utilise la même méthode que updateKPI
+    return this.updateKPI(kpiId, data)
   }
 
-  async deleteKPIForFournisseur(_fournisseurId: number, _kpiId: number): Promise<void> {
-    // ❌ DEPRECATED: La suppression de KPIs n'est plus supportée dans le nouveau système
-    throw new Error(
-      'deleteKPIForFournisseur est déprécié. Les KPIs sont maintenant calculés automatiquement.'
-    )
+  async deleteKPIForFournisseur(_fournisseurId: number, kpiId: number): Promise<void> {
+    // Migration: Utilise la même méthode que deleteKPI
+    await this.deleteKPI(kpiId)
   }
 
   // ============= PEOPLE ENDPOINTS =============
