@@ -89,10 +89,8 @@ async def list_tasks(
     #     filters["category"] = category
     if view:
         filters["view"] = view
-    if investor_id:
-        filters["investor_id"] = investor_id
-    if fournisseur_id:
-        filters["fournisseur_id"] = fournisseur_id
+    if organisation_id:
+        filters["organisation_id"] = organisation_id
     if person_id:
         filters["person_id"] = person_id
 

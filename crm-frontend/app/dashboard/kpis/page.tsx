@@ -11,7 +11,7 @@ import { KPIForm } from '@/components/forms'
 import { KPI, KPICreate } from '@/lib/types'
 
 export default function KPIsPage() {
-  const { organisations, fetchOrganisations, isLoading: orgsLoading, error: orgsError } = useOrganisations()
+  const { data: organisations, isLoading: orgsLoading } = useOrganisations({ limit: 1000 })
   const [selectedFournisseurId, setSelectedFournisseurId] = useState<number | null>(null)
   const [kpis, setKpis] = useState<KPI[]>([])
   const [kpisLoading, setKpisLoading] = useState(false)
@@ -20,12 +20,8 @@ export default function KPIsPage() {
 
   // Filter for fournisseur type organisations only
   const fournisseurs = useMemo(() => {
-    return organisations.filter((org: any) => org.organisation_type === 'fournisseur')
+    return organisations?.items?.filter((org: any) => org.organisation_type === 'fournisseur') || []
   }, [organisations])
-
-  useEffect(() => {
-    fetchOrganisations(0, 1000)
-  }, [fetchOrganisations])
 
   useEffect(() => {
     if (selectedFournisseurId) {

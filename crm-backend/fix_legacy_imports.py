@@ -9,50 +9,6 @@ import re
 from pathlib import Path
 from typing import List, Tuple
 
-# Patterns à rechercher et commenter
-LEGACY_PATTERNS = [
-    # Models
-#     (r'from models\.investor import', '# # from models.investor import'),
-#     (r'from models\.fournisseur import', '# # from models.fournisseur import'),
-
-    # Schemas
-#     (r'from schemas\.investor import', '# # from schemas.investor import'),
-#     (r'from schemas\.fournisseur import', '# # from schemas.fournisseur import'),
-#     (r'from schemas\.interaction import', '# # from schemas.interaction import'),
-#     (r'from schemas\.kpi import', '# # from schemas.kpi import'),
-
-    # Services
-#     (r'from services\.investor import', '# # from services.investor import'),
-#     (r'from services\.fournisseur import', '# # from services.fournisseur import'),
-#     (r'from services\.interaction import', '# # from services.interaction import'),
-#     (r'from services\.kpi import', '# # from services.kpi import'),
-
-    # Dans les imports multiples (enlever OrganisationType de person)
-    (r'from models\.person import (.*), OrganisationType, (.*)', r'from models.person import \1, \2'),
-]
-
-# Patterns dans __all__
-ALL_PATTERNS = [
-#     (r'# "InvestorService"', '# # "InvestorService"'),
-#     (r'# "InteractionService"', '# # "InteractionService"'),
-#     (r'# "KPIService"', '# # "KPIService"'),
-#     (r'# "Investor"', '# # "Investor"'),
-    (r'# "InvestorCreate"', '# # "InvestorCreate"'),
-    (r'# "InvestorUpdate"', '# # "InvestorUpdate"'),
-    (r'# "InvestorDetail"', '# # "InvestorDetail"'),
-    (r'# "Contact"', '# # "Contact"'),
-    (r'# "InvestorInteraction"', '# # "InvestorInteraction"'),
-    (r'# "KPI"', '# # "KPI"'),
-    (r'# "ClientType"', '# # "ClientType"'),
-    (r'# "InteractionType"', '# # "InteractionType"'),
-    (r'# "Fournisseur"', '# # "Fournisseur"'),
-    (r'# "FournisseurContact"', '# # "FournisseurContact"'),
-    (r'# "FournisseurInteraction"', '# # "FournisseurInteraction"'),
-    (r'# "FournisseurKPI"', '# # "FournisseurKPI"'),
-    (r'# "StageFournisseur"', '# # "StageFournisseur"'),
-    (r'# "TypeFournisseur"', '# # "TypeFournisseur"'),
-]
-
 
 def fix_file(filepath: Path) -> Tuple[bool, int]:
     """

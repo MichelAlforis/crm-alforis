@@ -1,10 +1,6 @@
 from fastapi import APIRouter
 from api.routes import (
     auth,
-    # investors,        # ❌ LEGACY - Désactivé (utiliser /organisations?type=client)
-    # interactions,     # ❌ LEGACY - Désactivé (utiliser /organisation_activities)
-    # kpis,            # ❌ LEGACY - Désactivé
-    # fournisseurs,    # ❌ LEGACY - Désactivé (utiliser /organisations?type=fournisseur)
     imports,
     people,
     org_links,
@@ -26,7 +22,7 @@ api_router = APIRouter(prefix="/api/v1")
 api_router.include_router(auth.router)
 
 # ✅ ARCHITECTURE UNIFIÉE (Production)
-api_router.include_router(organisations.router)  # Remplace investors + fournisseurs
+api_router.include_router(organisations.router)  # Remplace 
 api_router.include_router(people.router)         # Personnes physiques
 api_router.include_router(org_links.router)      # Liens Person ↔ Organisation
 api_router.include_router(tasks.router)          # Tâches

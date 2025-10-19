@@ -11,12 +11,7 @@ from typing import List, Tuple
 
 def comment_multiline_import(content: str, module_name: str) -> str:
     """
-    Commente un bloc d'import multiligne complet
-#     Ex: from schemas.investor import (
-#            InvestorCreate,
-#            ...
-#         )
-    """
+
     # Pattern pour détecter un import multiligne
     pattern = rf'from {re.escape(module_name)} import \([^)]*\)'
 
@@ -43,18 +38,7 @@ def fix_file_v2(filepath: Path) -> Tuple[bool, int]:
         modified = False
         num_changes = 0
 
-        # Modules legacy à commenter
-        legacy_modules = [
-            'models.investor',
-            'models.fournisseur',
-            'schemas.investor',
-            'schemas.fournisseur',
-            'schemas.interaction',
-            'schemas.kpi',
-            'services.investor',
-            'services.fournisseur',
-            'services.interaction',
-            'services.kpi',
+
         ]
 
         # Traiter ligne par ligne
@@ -95,13 +79,9 @@ def fix_file_v2(filepath: Path) -> Tuple[bool, int]:
             # Commenter les références dans __all__
             if '__all__' in ''.join(lines[max(0, i-5):i+1]):  # Dans un bloc __all__
                 legacy_items = [
-#                     '"InvestorService"', '"InteractionService"', '"KPIService"',
-#                     '"Investor"', '"InvestorCreate"', '"InvestorUpdate"', '"InvestorDetail"',
-#                     '"Contact"', '"ContactCreate"', '"ContactUpdate"',
-#                     '"InvestorInteraction"', '"KPI"', '"KPICreate"',
+#
                     '"ClientType"', '"InteractionType"',
-                    '"Fournisseur"', '"FournisseurContact"', '"FournisseurCreate"',
-                    '"FournisseurInteraction"', '"FournisseurKPI"',
+
                     '"StageFournisseur"', '"TypeFournisseur"',
                     '"InteractionCreate"', '"InteractionUpdate"',
                 ]
