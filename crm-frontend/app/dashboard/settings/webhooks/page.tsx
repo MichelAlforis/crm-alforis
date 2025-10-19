@@ -237,7 +237,7 @@ export default function WebhookSettingsPage() {
     })
   }
 
-  const isSaving = createWebhook.isLoading || updateWebhook.isLoading
+  const isSaving = createWebhook.isPending || updateWebhook.isPending
 
   return (
     <div className="space-y-6">
@@ -320,7 +320,7 @@ export default function WebhookSettingsPage() {
               {
                 header: 'Secret',
                 accessor: 'secret',
-                render: (value: string, row: Webhook) => (
+                render: (value: string) => (
                   <div className="flex items-center gap-2">
                     <span className="font-mono text-sm text-gray-600">{maskSecret(value)}</span>
                     <Button
@@ -350,7 +350,7 @@ export default function WebhookSettingsPage() {
                       variant="ghost"
                       size="sm"
                       onClick={() => handleRotateSecret(row)}
-                      isLoading={rotateWebhookSecret.isLoading && actionWebhookId === row.id}
+                      isLoading={rotateWebhookSecret.isPending && actionWebhookId === row.id}
                     >
                       <RefreshCw className="w-4 h-4" />
                     </Button>
@@ -358,7 +358,7 @@ export default function WebhookSettingsPage() {
                       variant="danger"
                       size="sm"
                       onClick={() => handleDelete(row)}
-                      isLoading={deleteWebhook.isLoading && actionWebhookId === row.id}
+                      isLoading={deleteWebhook.isPending && actionWebhookId === row.id}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>

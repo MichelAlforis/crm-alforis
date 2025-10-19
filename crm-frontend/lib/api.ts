@@ -25,11 +25,9 @@ import {
   KPICreate,
   KPIUpdate,
   PaginatedResponse,
-  Contact,
   Fournisseur,
   FournisseurCreate,
   FournisseurUpdate,
-  FournisseurContact,
   FournisseurDetail,
   Newsletter,
   NewsletterCreate,
@@ -317,127 +315,214 @@ class ApiClient {
   // ============= INVESTOR ENDPOINTS (LEGACY - DEPRECATED) =============
   // ❌ LEGACY: Utiliser getOrganisations({ type: 'client' }) à la place
   // Migration: /investors → /organisations?type=client
+  // 🔄 MIGRATED: Ces méthodes utilisent maintenant les endpoints /organisations en interne
 
-  /* LEGACY - Deprecated: Use getOrganisations() instead
   async getInvestors(skip = 0, limit = 100, searchText = ''): Promise<PaginatedResponse<Investor>> {
-    return this.request<PaginatedResponse<Investor>>('/investors', {
-      params: { skip, limit, search: searchText },
-    })
+    // Migration: Utilise maintenant /organisations
+    // ⚠️ Note: Les catégories sont différentes entre legacy et nouveau système
+    let result: PaginatedResponse<Organisation>
+
+    if (searchText && searchText.trim()) {
+      result = await this.searchOrganisations(searchText, skip, limit)
+    } else {
+      result = await this.getOrganisations({
+        skip,
+        limit,
+      })
+    }
+
+    // Map Organisation → Investor pour compatibilité
+    return {
+      items: result.items.map(org => ({
+        id: org.id,
+        name: org.name,
+        email: org.email,
+        main_phone: org.main_phone,
+        website: org.website,
+        pipeline_stage: 'prospect_froid' as const, // Valeur par défaut pour compatibilité
+        is_active: org.is_active,
+        country_code: org.country_code,
+        language: org.language,
+        created_at: org.created_at,
+        updated_at: org.updated_at,
+      })) as unknown as Investor[],
+      total: result.total,
+      skip: result.skip,
+      limit: result.limit,
+    }
   }
 
   async getInvestor(id: number): Promise<InvestorDetail> {
-    const data = await this.request<{
-      investor: Investor
-      contacts: Contact[]
-      interaction_count: number
-      kpi_count: number
-      people?: PersonOrganizationLink[]
-    }>(`/investors/${id}`)
+    // Migration: Utilise maintenant /organisations/{id}
+    const orgDetail = await this.getOrganisation(id)
+
+    // Map OrganisationDetail → InvestorDetail pour compatibilité
+    const investor: Investor = {
+      id: orgDetail.id,
+      name: orgDetail.name,
+      email: orgDetail.email,
+      main_phone: orgDetail.main_phone,
+      website: orgDetail.website,
+      pipeline_stage: 'prospect_froid', // Valeur par défaut pour compatibilité
+      is_active: orgDetail.is_active,
+      country_code: orgDetail.country_code,
+      language: orgDetail.language,
+      created_at: orgDetail.created_at,
+      updated_at: orgDetail.updated_at,
+    }
 
     return {
-      investor: data.investor,
-      contacts: data.contacts ?? [],
-      interaction_count: data.interaction_count ?? 0,
-      kpi_count: data.kpi_count ?? 0,
-      people: data.people ?? [],
+      investor,
+      contacts: [], // Les contacts sont dans people maintenant
+      interaction_count: 0, // Legacy field
+      kpi_count: 0, // KPI deprecated
+      people: [], // People dans contacts maintenant
     }
   }
 
   async createInvestor(data: InvestorCreate): Promise<Investor> {
-    return this.request<Investor>('/investors', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    })
+    // Migration: Utilise maintenant /organisations
+    const orgData: OrganisationCreate = {
+      name: data.name,
+      category: 'DISTRIBUTEUR', // Catégorie par défaut pour les investisseurs
+      email: data.email,
+      main_phone: data.main_phone,
+      language: data.language || 'fr',
+      is_active: true, // Toujours actif par défaut
+    }
+
+    const org = await this.createOrganisation(orgData)
+
+    // Map Organisation → Investor
+    return {
+      id: org.id,
+      name: org.name,
+      email: org.email,
+      main_phone: org.main_phone,
+      website: org.website,
+      pipeline_stage: 'prospect_froid', // Valeur par défaut pour compatibilité
+      is_active: org.is_active,
+      country_code: org.country_code,
+      language: org.language,
+      created_at: org.created_at,
+      updated_at: org.updated_at,
+    }
   }
 
   async updateInvestor(id: number, data: InvestorUpdate): Promise<Investor> {
-    return this.request<Investor>(`/investors/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(data),
-    })
+    // Migration: Utilise maintenant /organisations/{id}
+    const orgData: OrganisationUpdate = {
+      name: data.name,
+      email: data.email,
+      main_phone: data.main_phone,
+      language: data.language,
+      // is_active n'est pas dans InvestorUpdate, donc on ne le passe pas
+    }
+
+    const org = await this.updateOrganisation(id, orgData)
+
+    // Map Organisation → Investor
+    return {
+      id: org.id,
+      name: org.name,
+      email: org.email,
+      main_phone: org.main_phone,
+      website: org.website,
+      pipeline_stage: 'prospect_froid', // Valeur par défaut pour compatibilité
+      is_active: org.is_active,
+      country_code: org.country_code,
+      language: org.language,
+      created_at: org.created_at,
+      updated_at: org.updated_at,
+    }
   }
 
   async deleteInvestor(id: number): Promise<void> {
-    await this.request<void>(`/investors/${id}`, {
-      method: 'DELETE',
-    })
+    // Migration: Utilise maintenant /organisations/{id}
+    await this.deleteOrganisation(id)
   }
-  */
 
   // ============= INTERACTION ENDPOINTS (LEGACY - DEPRECATED) =============
   // ❌ LEGACY: Utiliser getOrganisationActivity() à la place
   // Migration: /interactions → /organisations/{id}/activity
+  // 🔄 MIGRATED: Ces méthodes utilisent maintenant les endpoints /organisations/{id}/activity en interne
 
-  /* LEGACY - Deprecated: Use getOrganisationActivity() instead
   async getInteractions(investorId: number, skip = 0, limit = 50): Promise<PaginatedResponse<Interaction>> {
-    return this.request<PaginatedResponse<Interaction>>(`/interactions/investor/${investorId}`, {
-      params: { skip, limit },
-    })
+    // Migration: Utilise maintenant /organisations/{id}/activity
+    const activities = await this.getOrganisationActivity(investorId, { limit })
+
+    // Map OrganisationActivity → Interaction pour compatibilité
+    return {
+      items: activities.items.map(activity => ({
+        id: activity.id,
+        investor_id: activity.organisation_id || investorId,
+        type: activity.type,
+        notes: activity.preview || '',
+        date: activity.occurred_at,
+        created_at: activity.occurred_at,
+        updated_at: activity.occurred_at,
+      })) as unknown as Interaction[],
+      total: activities.total,
+      skip: skip,
+      limit: limit,
+    }
   }
 
-  async createInteraction(investorId: number, data: InteractionCreate): Promise<Interaction> {
-    return this.request<Interaction>(`/interactions/investor/${investorId}`, {
-      method: 'POST',
-      body: JSON.stringify(data),
-    })
+  async createInteraction(_investorId: number, _data: InteractionCreate): Promise<Interaction> {
+    // ⚠️ DEPRECATED: Les interactions sont maintenant créées automatiquement via les activités
+    // Cette méthode retourne une erreur car il n'y a pas d'équivalent direct
+    throw new Error(
+      'createInteraction est déprécié. Les activités sont créées automatiquement par le système.'
+    )
   }
 
-  async updateInteraction(interactionId: number, data: InteractionUpdate): Promise<Interaction> {
-    return this.request<Interaction>(`/interactions/${interactionId}`, {
-      method: 'PUT',
-      body: JSON.stringify(data),
-    })
+  async updateInteraction(_interactionId: number, _data: InteractionUpdate): Promise<Interaction> {
+    // ⚠️ DEPRECATED: Les interactions sont en lecture seule dans le nouveau système
+    throw new Error(
+      'updateInteraction est déprécié. Les activités sont en lecture seule.'
+    )
   }
 
-  async deleteInteraction(interactionId: number): Promise<void> {
-    await this.request<void>(`/interactions/${interactionId}`, {
-      method: 'DELETE',
-    })
+  async deleteInteraction(_interactionId: number): Promise<void> {
+    // ⚠️ DEPRECATED: Les interactions sont en lecture seule dans le nouveau système
+    throw new Error(
+      'deleteInteraction est déprécié. Les activités ne peuvent pas être supprimées.'
+    )
   }
-  */
 
   // ============= KPI ENDPOINTS (LEGACY - DEPRECATED) =============
   // ❌ LEGACY: Utiliser /dashboards/stats à la place
   // Migration: /kpis → /dashboards/*
+  // 🔄 MIGRATED: Ces méthodes utilisent maintenant les endpoints /dashboards/stats
 
-  /* LEGACY - Deprecated: Use dashboards endpoints instead
   async getKPIs(investorId: number, year?: number, month?: number): Promise<KPI[]> {
-    const targetYear = year ?? new Date().getFullYear()
-
-    if (month !== undefined) {
-      const kpi = await this.request<KPI>(
-        `/kpis/investor/${investorId}/month/${targetYear}/${month}`
-      )
-      return kpi ? [kpi] : []
-    }
-
-    return this.request<KPI[]>(`/kpis/investor/${investorId}`, {
-      params: { year: targetYear },
-    })
-  }
-
-  async createKPI(investorId: number, data: KPICreate): Promise<KPI> {
-    const { year, month, ...payload } = data
-    return this.request<KPI>(`/kpis/investor/${investorId}`, {
-      method: 'POST',
+    // Migration: Utilise maintenant /dashboards/stats/organisation/{id}/kpis
+    return this.request<KPI[]>(`/dashboards/stats/organisation/${investorId}/kpis`, {
       params: { year, month },
-      body: JSON.stringify(payload),
     })
   }
 
-  async updateKPI(kpiId: number, data: KPIUpdate): Promise<KPI> {
-    return this.request<KPI>(`/kpis/${kpiId}`, {
-      method: 'PUT',
-      body: JSON.stringify(data),
-    })
+  async createKPI(_investorId: number, _data: KPICreate): Promise<KPI> {
+    // ❌ DEPRECATED: La création de KPIs n'est plus supportée dans le nouveau système
+    // Les KPIs doivent maintenant être calculés automatiquement depuis les activités
+    throw new Error(
+      'createKPI est déprécié. Les KPIs sont maintenant calculés automatiquement depuis les activités.'
+    )
   }
 
-  async deleteKPI(kpiId: number): Promise<void> {
-    await this.request<void>(`/kpis/${kpiId}`, {
-      method: 'DELETE',
-    })
+  async updateKPI(_kpiId: number, _data: KPIUpdate): Promise<KPI> {
+    // ❌ DEPRECATED: La modification de KPIs n'est plus supportée dans le nouveau système
+    throw new Error(
+      'updateKPI est déprécié. Les KPIs sont maintenant calculés automatiquement depuis les activités.'
+    )
   }
-  */
+
+  async deleteKPI(_kpiId: number): Promise<void> {
+    // ❌ DEPRECATED: La suppression de KPIs n'est plus supportée dans le nouveau système
+    throw new Error(
+      'deleteKPI est déprécié. Les KPIs sont maintenant calculés automatiquement depuis les activités.'
+    )
+  }
 
   // ============= HEALTH CHECK =============
 
@@ -469,78 +554,159 @@ class ApiClient {
   // ============= FOURNISSEUR ENDPOINTS (LEGACY - DEPRECATED) =============
   // ❌ LEGACY: Utiliser getOrganisations({ type: 'fournisseur' }) à la place
   // Migration: /fournisseurs → /organisations?type=fournisseur
+  // 🔄 MIGRATED: Ces méthodes utilisent maintenant les endpoints /organisations en interne
 
-  /* LEGACY - Deprecated: Use getOrganisations() instead
   async getFournisseurs(skip = 0, limit = 100, searchText = ''): Promise<PaginatedResponse<Fournisseur>> {
-    return this.request<PaginatedResponse<Fournisseur>>('/fournisseurs', {
-      params: { skip, limit, search: searchText },
-    })
+    // Migration: Utilise maintenant /organisations
+    // ⚠️ Note: Les catégories sont différentes entre legacy et nouveau système
+    let result: PaginatedResponse<Organisation>
+
+    if (searchText && searchText.trim()) {
+      result = await this.searchOrganisations(searchText, skip, limit)
+    } else {
+      result = await this.getOrganisations({
+        skip,
+        limit,
+      })
+    }
+
+    // Map Organisation → Fournisseur pour compatibilité
+    return {
+      items: result.items.map(org => ({
+        id: org.id,
+        name: org.name,
+        email: org.email || '',
+        main_phone: org.main_phone || '',
+        company: org.name,
+        activity: org.category,
+        language: org.language || 'fr',
+        is_active: org.is_active,
+        created_at: org.created_at,
+        updated_at: org.updated_at,
+      })) as Fournisseur[],
+      total: result.total,
+      skip: result.skip,
+      limit: result.limit,
+    }
   }
 
   async getFournisseur(id: number): Promise<FournisseurDetail> {
-    const data = await this.request<{
-      fournisseur: Fournisseur
-      contacts: FournisseurContact[]
-      interaction_count: number
-      kpi_count: number
-      people?: PersonOrganizationLink[]
-    }>(`/fournisseurs/${id}`)
+    // Migration: Utilise maintenant /organisations/{id}
+    const orgDetail = await this.getOrganisation(id)
+
+    // Map OrganisationDetail → FournisseurDetail pour compatibilité
+    const fournisseur: Fournisseur = {
+      id: orgDetail.id,
+      name: orgDetail.name,
+      email: orgDetail.email || '',
+      main_phone: orgDetail.main_phone || '',
+      company: orgDetail.name,
+      activity: orgDetail.category,
+      language: orgDetail.language || 'fr',
+      is_active: orgDetail.is_active,
+      created_at: orgDetail.created_at,
+      updated_at: orgDetail.updated_at,
+    }
 
     return {
-      fournisseur: data.fournisseur,
-      contacts: data.contacts ?? [],
-      interaction_count: data.interaction_count ?? 0,
-      kpi_count: data.kpi_count ?? 0,
-      people: data.people ?? [],
+      fournisseur,
+      contacts: [] as any, // Les types OrganisationContact et FournisseurContact ne correspondent pas exactement
+      interaction_count: 0, // Pas de activity_count dans OrganisationDetail
+      kpi_count: 0, // KPI deprecated
+      people: [], // People séparé maintenant
     }
   }
 
   async createFournisseur(data: FournisseurCreate): Promise<Fournisseur> {
-    return this.request<Fournisseur>('/fournisseurs', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    })
+    // Migration: Utilise maintenant /organisations
+    const orgData: OrganisationCreate = {
+      name: data.name,
+      category: 'FOURNISSEUR_SERVICE', // Catégorie pour les fournisseurs
+      email: data.email,
+      main_phone: data.main_phone,
+      language: data.language || 'fr',
+      is_active: true, // Toujours actif par défaut
+    }
+
+    const org = await this.createOrganisation(orgData)
+
+    // Map Organisation → Fournisseur
+    return {
+      id: org.id,
+      name: org.name,
+      email: org.email || '',
+      main_phone: org.main_phone || '',
+      company: org.name,
+      activity: org.category,
+      language: org.language || 'fr',
+      is_active: org.is_active,
+      created_at: org.created_at,
+      updated_at: org.updated_at,
+    }
   }
 
   async updateFournisseur(id: number, data: FournisseurUpdate): Promise<Fournisseur> {
-    return this.request<Fournisseur>(`/fournisseurs/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(data),
-    })
+    // Migration: Utilise maintenant /organisations/{id}
+    const orgData: OrganisationUpdate = {
+      name: data.name,
+      email: data.email,
+      main_phone: data.main_phone,
+      language: data.language,
+      // is_active n'est pas dans FournisseurUpdate
+    }
+
+    const org = await this.updateOrganisation(id, orgData)
+
+    // Map Organisation → Fournisseur
+    return {
+      id: org.id,
+      name: org.name,
+      email: org.email || '',
+      main_phone: org.main_phone || '',
+      company: org.name,
+      activity: org.category,
+      language: org.language || 'fr',
+      is_active: org.is_active,
+      created_at: org.created_at,
+      updated_at: org.updated_at,
+    }
   }
 
   async deleteFournisseur(id: number): Promise<void> {
-    await this.request<void>(`/fournisseurs/${id}`, {
-      method: 'DELETE',
-    })
+    // Migration: Utilise maintenant /organisations/{id}
+    await this.deleteOrganisation(id)
   }
 
   // ============= KPI ENDPOINTS (UPDATED - PAR FOURNISSEUR) (LEGACY - DEPRECATED) =============
+  // 🔄 MIGRATED: Ces méthodes utilisent maintenant les endpoints /dashboards/stats
 
   async getKPIsByFournisseur(fournisseurId: number, year?: number, month?: number): Promise<KPI[]> {
-    return this.request<KPI[]>(`/fournisseurs/${fournisseurId}/kpis`, {
+    // Migration: Utilise maintenant /dashboards/stats/organisation/{id}/kpis
+    return this.request<KPI[]>(`/dashboards/stats/organisation/${fournisseurId}/kpis`, {
       params: { year, month },
     })
   }
 
-  async createKPIForFournisseur(fournisseurId: number, data: KPICreate): Promise<KPI> {
-    return this.request<KPI>(`/fournisseurs/${fournisseurId}/kpis`, {
-      method: 'POST',
-      body: JSON.stringify(data),
-    })
-  async updateKPIForFournisseur(fournisseurId: number, kpiId: number, data: KPIUpdate): Promise<KPI> {
-    return this.request<KPI>(`/fournisseurs/${fournisseurId}/kpis/${kpiId}`, {
-      method: 'PUT',
-      body: JSON.stringify(data),
-    })
+  async createKPIForFournisseur(_fournisseurId: number, _data: KPICreate): Promise<KPI> {
+    // ❌ DEPRECATED: La création de KPIs n'est plus supportée dans le nouveau système
+    throw new Error(
+      'createKPIForFournisseur est déprécié. Les KPIs sont maintenant calculés automatiquement.'
+    )
   }
 
-  async deleteKPIForFournisseur(fournisseurId: number, kpiId: number): Promise<void> {
-    await this.request<void>(`/fournisseurs/${fournisseurId}/kpis/${kpiId}`, {
-      method: 'DELETE',
-    })
+  async updateKPIForFournisseur(_fournisseurId: number, _kpiId: number, _data: KPIUpdate): Promise<KPI> {
+    // ❌ DEPRECATED: La modification de KPIs n'est plus supportée dans le nouveau système
+    throw new Error(
+      'updateKPIForFournisseur est déprécié. Les KPIs sont maintenant calculés automatiquement.'
+    )
   }
-  */
+
+  async deleteKPIForFournisseur(_fournisseurId: number, _kpiId: number): Promise<void> {
+    // ❌ DEPRECATED: La suppression de KPIs n'est plus supportée dans le nouveau système
+    throw new Error(
+      'deleteKPIForFournisseur est déprécié. Les KPIs sont maintenant calculés automatiquement.'
+    )
+  }
 
   // ============= PEOPLE ENDPOINTS =============
 
@@ -817,11 +983,12 @@ class ApiClient {
     })
   }
 
-  async getOrganisationStats(): Promise<{
+  async getOrganisationsStats(): Promise<{
     total: number
     by_category: Record<string, number>
     by_language: Record<string, number>
   }> {
+    // ⚠️ DEPRECATED: Utiliser getGlobalDashboardStats() à la place
     return this.request(`/organisations/stats`)
   }
 
@@ -995,6 +1162,29 @@ class ApiClient {
 
   async getWebhookEvents(): Promise<WebhookEventOption[]> {
     return this.request<WebhookEventOption[]>('/webhooks/events/available')
+  }
+
+  // ============= DASHBOARD STATS ENDPOINTS =============
+  // ✅ NEW: Endpoints pour les statistiques dashboard (remplace KPIs)
+
+  async getGlobalDashboardStats(): Promise<any> {
+    // Retourne les statistiques globales pour le dashboard principal
+    return this.request('/dashboards/stats/global')
+  }
+
+  async getOrganisationStats(organisationId: number): Promise<any> {
+    // Retourne les statistiques pour une organisation spécifique
+    return this.request(`/dashboards/stats/organisation/${organisationId}`)
+  }
+
+  async getMonthlyAggregateStats(year: number, month: number): Promise<any> {
+    // Agrège les KPIs de toutes les organisations pour un mois donné
+    return this.request(`/dashboards/stats/month/${year}/${month}`)
+  }
+
+  async getYearlyAggregateStats(organisationId: number, year: number): Promise<any> {
+    // Agrège les KPIs d'une organisation pour une année complète
+    return this.request(`/dashboards/stats/organisation/${organisationId}/year/${year}`)
   }
 }
 

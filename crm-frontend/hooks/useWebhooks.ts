@@ -1,11 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api'
 import type {
-  Webhook,
   WebhookCreateInput,
   WebhookUpdateInput,
   WebhookRotateSecretInput,
-  WebhookEventOption,
 } from '@/lib/types'
 
 // ============= QUERY KEYS =============

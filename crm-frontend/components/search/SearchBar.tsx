@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 import { Loader2, Search, Sparkles, X } from 'lucide-react'
 import { useDebounce } from '@/hooks/useDebounce'
@@ -237,7 +237,7 @@ export default function SearchBar({
               'md:min-w-[260px]'
             )}
             aria-autocomplete="list"
-            aria-expanded={showDropdown}
+            aria-expanded={!!showDropdown}
             aria-controls="searchbar-suggestions"
           />
 

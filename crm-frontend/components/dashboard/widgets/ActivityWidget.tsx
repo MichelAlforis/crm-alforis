@@ -4,7 +4,7 @@ import React from 'react'
 import { Card, CardBody, CardHeader } from '@/components/shared/Card'
 import { Alert } from '@/components/shared/Alert'
 import { useActivityWidget } from '@/hooks/useOrganisationActivity'
-import type { OrganisationActivity, OrganisationActivityType } from '@/lib/types'
+import type { OrganisationActivityType } from '@/lib/types'
 import {
   getActivityVisual,
   defaultVisual,

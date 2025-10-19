@@ -53,7 +53,7 @@ export function useOrganisationActivity(
     queryFn: ({ pageParam }) =>
       apiClient.getOrganisationActivity(organisationId, {
         limit: options?.limit ?? 20,
-        before_id: pageParam,
+        before_id: pageParam as number | undefined,
         types: options?.types,
       }),
     getNextPageParam: (lastPage) => {
@@ -83,7 +83,6 @@ export function useActivityWidget(params?: ActivityWidgetParams) {
         limit: params?.limit ?? 30,
       }),
     staleTime: 15000,
-    keepPreviousData: true,
   })
 }
 

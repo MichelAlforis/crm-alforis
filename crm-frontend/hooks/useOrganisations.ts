@@ -83,7 +83,7 @@ export function useOrganisationsByLanguage(
 export function useOrganisationStats() {
   return useQuery({
     queryKey: organisationKeys.stats(),
-    queryFn: () => apiClient.getOrganisationStats(),
+    queryFn: () => apiClient.getOrganisationsStats(), // Renamed method
     staleTime: 60000, // 1 minute
   })
 }

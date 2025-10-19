@@ -9,10 +9,8 @@ import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 import {
   LayoutDashboard,
-  Users,
   UserCircle2,
   Building2,
-  MessageSquare,
   ChevronLeft,
   ChevronRight,
   X,
@@ -21,10 +19,10 @@ import {
   HelpCircle,
   FileUp,
   Bell,
-  BarChart3,
   Briefcase,
   Package,
   Workflow,
+  Link as LinkIcon,
 } from 'lucide-react'
 import { useTaskViews } from '@/hooks/useTasks'
 import ThemeToggle from '@/components/shared/ThemeToggle'

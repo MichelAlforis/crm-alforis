@@ -229,7 +229,9 @@ export const AudienceSelector: React.FC<AudienceSelectorProps> = ({
                       onClick={() =>
                         updateState({
                           filters: {
+                            ...state.filters,
                             organisations: {
+                              ...state.filters.organisations,
                               pipeline_stages: active
                                 ? state.filters.organisations.pipeline_stages.filter((value) => value !== stage.value)
                                 : [...state.filters.organisations.pipeline_stages, stage.value],
@@ -259,7 +261,9 @@ export const AudienceSelector: React.FC<AudienceSelectorProps> = ({
                       onClick={() =>
                         updateState({
                           filters: {
+                            ...state.filters,
                             organisations: {
+                              ...state.filters.organisations,
                               categories: active
                                 ? state.filters.organisations.categories.filter((value) => value !== category.value)
                                 : [...state.filters.organisations.categories, category.value],
@@ -284,7 +288,9 @@ export const AudienceSelector: React.FC<AudienceSelectorProps> = ({
                 onChange={(event) =>
                   updateState({
                     filters: {
+                      ...state.filters,
                       organisations: {
+                        ...state.filters.organisations,
                         languages: event.target.value ? [event.target.value] : [],
                       },
                     },
@@ -309,7 +315,9 @@ export const AudienceSelector: React.FC<AudienceSelectorProps> = ({
                 onChange={(event) =>
                   updateState({
                     filters: {
+                      ...state.filters,
                       contacts: {
+                        ...state.filters.contacts,
                         last_interaction_days: event.target.value ? Number(event.target.value) : undefined,
                       },
                     },
@@ -343,7 +351,9 @@ export const AudienceSelector: React.FC<AudienceSelectorProps> = ({
                       onClick={() =>
                         updateState({
                           filters: {
+                            ...state.filters,
                             contacts: {
+                              ...state.filters.contacts,
                               tags: active
                                 ? state.filters.contacts.tags.filter((value) => value !== tag.value)
                                 : [...state.filters.contacts.tags, tag.value],
@@ -373,7 +383,9 @@ export const AudienceSelector: React.FC<AudienceSelectorProps> = ({
                       onClick={() =>
                         updateState({
                           filters: {
+                            ...state.filters,
                             contacts: {
+                              ...state.filters.contacts,
                               roles: active
                                 ? state.filters.contacts.roles.filter((value) => value !== role.value)
                                 : [...state.filters.contacts.roles, role.value],
@@ -397,7 +409,9 @@ export const AudienceSelector: React.FC<AudienceSelectorProps> = ({
               onChange={(event) =>
                 updateState({
                   filters: {
+                    ...state.filters,
                     contacts: {
+                      ...state.filters.contacts,
                       newsletter_opt_in: event.target.checked,
                     },
                   },
@@ -492,8 +506,8 @@ export const AudienceSelector: React.FC<AudienceSelectorProps> = ({
                       <td className="px-4 py-2 font-medium text-text-primary">{recipient.email}</td>
                       <td className="px-4 py-2 text-text-secondary">
                         {recipient.full_name ??
-                          [recipient.first_name, recipient.last_name].filter(Boolean).join(' ') ||
-                          '—'}
+                          ([recipient.first_name, recipient.last_name].filter(Boolean).join(' ') ||
+                          '—')}
                       </td>
                       <td className="px-4 py-2 text-text-secondary">
                         {recipient.organisation_name ?? '—'}

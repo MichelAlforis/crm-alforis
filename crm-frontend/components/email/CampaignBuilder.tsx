@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CalendarClock, Plus, Trash2 } from 'lucide-react'
 import { useEmailTemplates } from '@/hooks/useEmailAutomation'
 import type {
@@ -8,7 +8,6 @@ import type {
   EmailCampaignInput,
   EmailCampaignStepInput,
   EmailProvider,
-  EmailTemplate,
   EmailVariant,
 } from '@/lib/types'
 import { Card, CardBody, CardHeader } from '@/components/shared/Card'
@@ -36,7 +35,7 @@ interface CampaignFormState {
   is_ab_test: boolean
   ab_test_split_percentage: number
   rate_limit_per_minute?: number
-  schedule_type?: 'manual' | 'immediate' | 'scheduled'
+  schedule_type?: 'manual' | 'immediate' | 'scheduled' | 'recurring'
   steps: StepFormValue[]
 }
 
@@ -221,7 +220,6 @@ export const CampaignBuilder: React.FC<CampaignBuilderProps> = ({
     await onSubmit(payload)
   }
 
-  const templateOptions = useMemo(() => templates.map((tpl) => ({ value: tpl.id, label: tpl.name })), [templates])
   const atLeastOneTemplate = templates.length > 0
 
   return (
