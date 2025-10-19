@@ -21,12 +21,13 @@ Usage:
     )
 """
 
+import atexit
 from typing import Optional, List, Dict, Any, Union
 from datetime import datetime, timedelta
 from fastapi import WebSocket, WebSocketDisconnect
 from sqlalchemy.orm import Session
-import json
 import asyncio
+from anyio.from_thread import start_blocking_portal, BlockingPortal
 
 from models.notification import (
     Notification,
@@ -135,6 +136,21 @@ class ConnectionManager:
         return len(self.active_connections)
 
 
+# S'assurer qu'un portail AnyIO est disponible pour les appels from_thread (tests WS)
+_blocking_portal: Optional[BlockingPortal] = None
+_blocking_portal_cm = None
+
+
+def _ensure_blocking_portal():
+    global _blocking_portal, _blocking_portal_cm
+    if _blocking_portal is None:
+        _blocking_portal_cm = start_blocking_portal()
+        _blocking_portal = _blocking_portal_cm.__enter__()
+        atexit.register(_blocking_portal_cm.__exit__, None, None, None)
+
+
+_ensure_blocking_portal()
+
 # Instance globale du manager
 manager = ConnectionManager()
 
@@ -187,18 +203,22 @@ class NotificationService:
         Returns:
             Notification: Notification créée
         """
-        notification = Notification(
-            user_id=user_id,
-            type=type,
-            title=title,
-            message=message,
-            link=link,
-            resource_type=resource_type,
-            resource_id=resource_id,
-            priority=priority,
-            expires_at=expires_at,
-            metadata=json.dumps(metadata) if metadata else None,
-        )
+        payload = {
+            "user_id": user_id,
+            "type": type,
+            "title": title,
+            "message": message,
+            "link": link,
+            "resource_type": resource_type,
+            "resource_id": resource_id,
+            "priority": priority,
+            "expires_at": expires_at,
+        }
+
+        if metadata is not None:
+            payload["metadata"] = metadata
+
+        notification = Notification(**payload)
 
         db.add(notification)
         db.commit()
@@ -254,10 +274,16 @@ class NotificationService:
         if not template:
             raise ValueError(f"Template non trouvé pour le type: {type}")
 
-        # Remplacer les variables dans le template
-        title = template["title"].format(**params)
-        message = template["message"].format(**params)
-        link = template["link"].format(**params) if "link" in template else None
+        class _SafeDict(dict):
+            def __missing__(self, key):
+                return ""
+
+        safe_params = _SafeDict({k: v for k, v in (params or {}).items()})
+
+        title = template["title"].format_map(safe_params)
+        message = template["message"].format_map(safe_params)
+        link_template = template.get("link")
+        link = link_template.format_map(safe_params) if link_template else None
         priority = template.get("priority", NotificationPriority.NORMAL)
 
         return NotificationService.create_notification(
@@ -347,6 +373,21 @@ class NotificationService:
             })
         db.commit()
 
+    @staticmethod
+    def cleanup_old_notifications(db: Session, days: int = 30) -> int:
+        """Supprime les notifications archivées plus anciennes que ``days`` jours."""
+        cutoff_date = datetime.utcnow() - timedelta(days=days)
+
+        deleted_count = db.query(Notification)\
+            .filter(
+                Notification.created_at < cutoff_date,
+                Notification.is_archived.is_(True)
+            )\
+            .delete()
+
+        db.commit()
+        return deleted_count
+
 
 class NotificationManager:
     """Facilite la création et l'envoi de notifications côté services métier."""
@@ -405,20 +446,7 @@ class NotificationManager:
             db: Session database
             days: Nombre de jours (supprimer notifications plus vieilles)
         """
-        cutoff_date = datetime.utcnow() - timedelta(days=days)
-
-        deleted_count = db.query(Notification)\
-            .filter(
-                Notification.created_at < cutoff_date,
-                Notification.is_archived == True
-            )\
-            .delete()
-
-        db.commit()
-
-        print(f"🗑️  {deleted_count} notifications supprimées (> {days} jours)")
-
-        return deleted_count
+        return NotificationService.cleanup_old_notifications(db, days=days)
 
 
 # ============================================

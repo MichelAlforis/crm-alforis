@@ -191,7 +191,7 @@ NOTIFICATION_TEMPLATES: Dict[NotificationType, Dict[str, Any]] = {
     },
     NotificationType.MANDAT_EXPIRING_SOON: {
         "title": "Mandat à renouveler : {organisation_name}",
-        "message": "Le mandat {mandat_number} expire le {expiry_date}",
+        "message": "Le mandat {mandat_number} expire dans {days_left} jours",
         "link": "/dashboard/mandats/{mandat_id}",
         "priority": NotificationPriority.HIGH,
     },

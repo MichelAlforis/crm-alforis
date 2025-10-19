@@ -26,10 +26,11 @@ Usage:
     )
 """
 
-from typing import Optional, List, Dict, Any, BinaryIO
-from datetime import datetime
-from io import BytesIO
+from typing import Optional, List, Dict, Any
+from datetime import datetime, date
+from io import BytesIO, StringIO
 import csv
+import enum
 from sqlalchemy.orm import Session
 
 # Excel
@@ -54,6 +55,28 @@ from models.person import Person
 from models.mandat import Mandat
 
 
+def _normalize_value(value: Any) -> Any:
+    if isinstance(value, enum.Enum):
+        return value.value
+    if isinstance(value, (datetime, date)):
+        return value.isoformat()
+    return value
+
+
+def _row_from_item(item: Any) -> Dict[str, Any]:
+    if isinstance(item, dict):
+        source = item
+    elif hasattr(item, "to_dict"):
+        source = item.to_dict()
+    else:
+        source = {
+            key: value
+            for key, value in vars(item).items()
+            if not key.startswith("_")
+        }
+    return {key: _normalize_value(value) for key, value in source.items()}
+
+
 class ExportService:
     """
     Service d'export de données
@@ -68,33 +91,40 @@ class ExportService:
 
     @staticmethod
     def export_csv(
-        data: List[Dict[str, Any]],
-        columns: List[str],
-        filename: str,
+        data: List[Any],
+        filename: str = "export.csv",
+        columns: Optional[List[str]] = None,
+        headers: Optional[List[str]] = None,
     ) -> BytesIO:
         """
         Export CSV basique
 
         Args:
-            data: Liste de dictionnaires
-            columns: Colonnes à exporter
+            data: Liste de dictionnaires ou d'objets SQLAlchemy
+            columns: Colonnes à exporter (alias legacy)
+            headers: Colonnes à exporter (ordre d'affichage)
             filename: Nom du fichier
 
         Returns:
             BytesIO: Contenu CSV
         """
-        output = BytesIO()
-        output.write(b'\xef\xbb\xbf')  # UTF-8 BOM pour Excel
+        rows = [_row_from_item(item) for item in data]
+        fieldnames = headers or columns
+        if fieldnames is None:
+            if rows:
+                fieldnames = list(rows[0].keys())
+            else:
+                fieldnames = []
 
-        writer = csv.DictWriter(
-            output,
-            fieldnames=columns,
-            extrasaction='ignore'
-        )
+        text_buffer = StringIO()
+        writer = csv.DictWriter(text_buffer, fieldnames=fieldnames, extrasaction="ignore")
 
         writer.writeheader()
-        writer.writerows(data)
+        writer.writerows(rows)
 
+        output = BytesIO()
+        output.write(b'\xef\xbb\xbf')  # UTF-8 BOM pour Excel
+        output.write(text_buffer.getvalue().encode("utf-8"))
         output.seek(0)
         return output
 
@@ -104,9 +134,9 @@ class ExportService:
 
     @staticmethod
     def export_excel_simple(
-        data: List[Dict[str, Any]],
-        columns: Dict[str, str],  # {field: header}
+        data: List[Any],
         filename: str,
+        headers: Optional[List[str]] = None,
         sheet_name: str = "Données",
     ) -> BytesIO:
         """
@@ -114,13 +144,22 @@ class ExportService:
 
         Args:
             data: Données à exporter
-            columns: Mapping {field_name: column_header}
+            headers: Liste des colonnes à exporter (ordre)
             filename: Nom du fichier
             sheet_name: Nom de la feuille
 
         Returns:
             BytesIO: Fichier Excel
         """
+        rows = [_row_from_item(item) for item in data]
+        if headers is None:
+            if rows:
+                headers = list(rows[0].keys())
+            else:
+                headers = []
+
+        display_headers = {field: field.replace("_", " ").title() for field in headers}
+
         wb = Workbook()
         ws = wb.active
         ws.title = sheet_name
@@ -131,20 +170,20 @@ class ExportService:
         header_alignment = Alignment(horizontal="center", vertical="center")
 
         # Écrire en-têtes
-        for col_idx, (field, header) in enumerate(columns.items(), 1):
-            cell = ws.cell(1, col_idx, header)
+        for col_idx, field in enumerate(headers, 1):
+            cell = ws.cell(1, col_idx, display_headers[field])
             cell.font = header_font
             cell.fill = header_fill
             cell.alignment = header_alignment
 
         # Écrire données
-        for row_idx, row_data in enumerate(data, 2):
-            for col_idx, field in enumerate(columns.keys(), 1):
+        for row_idx, row_data in enumerate(rows, 2):
+            for col_idx, field in enumerate(headers, 1):
                 value = row_data.get(field, '')
                 ws.cell(row_idx, col_idx, value)
 
         # Auto-ajuster largeurs
-        for col_idx, field in enumerate(columns.keys(), 1):
+        for col_idx, field in enumerate(headers, 1):
             column_letter = get_column_letter(col_idx)
             ws.column_dimensions[column_letter].width = 20
 
@@ -200,18 +239,34 @@ class ExportService:
 
         # Données
         for row_idx, org in enumerate(organisations, 2):
-            ws_data.cell(row_idx, 1, org.id)
-            ws_data.cell(row_idx, 2, org.name)
-            ws_data.cell(row_idx, 3, org.type if hasattr(org, 'type') else '')
-            ws_data.cell(row_idx, 4, org.category if hasattr(org, 'category') else '')
-            ws_data.cell(row_idx, 5, org.pipeline_stage if hasattr(org, 'pipeline_stage') else '')
-            ws_data.cell(row_idx, 6, org.email if hasattr(org, 'email') else '')
-            ws_data.cell(row_idx, 7, org.phone if hasattr(org, 'phone') else '')
-            ws_data.cell(row_idx, 8, org.city if hasattr(org, 'city') else '')
-            ws_data.cell(row_idx, 9, org.annual_revenue if hasattr(org, 'annual_revenue') else '')
-            ws_data.cell(row_idx, 10, org.employee_count if hasattr(org, 'employee_count') else '')
-            ws_data.cell(row_idx, 11, org.created_at.strftime('%Y-%m-%d') if org.created_at else '')
-            ws_data.cell(row_idx, 12, "Oui" if org.is_active else "Non")
+            org_type = getattr(org, "type", "")
+            if isinstance(org_type, enum.Enum):
+                org_type = org_type.value
+            category = getattr(org, "category", "")
+            if isinstance(category, enum.Enum):
+                category = category.value
+            pipeline = getattr(org, "pipeline_stage", "")
+            if isinstance(pipeline, enum.Enum):
+                pipeline = pipeline.value
+            email = getattr(org, "email", "") or ""
+            phone = getattr(org, "phone", "") or ""
+            city = getattr(org, "city", "") or ""
+            annual_revenue = getattr(org, "annual_revenue", "")
+            employee_count = getattr(org, "employee_count", "")
+            created_at = getattr(org, "created_at", None)
+
+            ws_data.cell(row_idx, 1, getattr(org, "id", None))
+            ws_data.cell(row_idx, 2, getattr(org, "name", ""))
+            ws_data.cell(row_idx, 3, org_type)
+            ws_data.cell(row_idx, 4, category)
+            ws_data.cell(row_idx, 5, pipeline)
+            ws_data.cell(row_idx, 6, email)
+            ws_data.cell(row_idx, 7, phone)
+            ws_data.cell(row_idx, 8, city)
+            ws_data.cell(row_idx, 9, annual_revenue)
+            ws_data.cell(row_idx, 10, employee_count)
+            ws_data.cell(row_idx, 11, created_at.strftime('%Y-%m-%d') if created_at else '')
+            ws_data.cell(row_idx, 12, "Oui" if getattr(org, "is_active", False) else "Non")
 
         # Auto-ajuster largeurs
         for col_idx in range(1, len(headers) + 1):
@@ -224,8 +279,10 @@ class ExportService:
             # Compter par catégorie
             category_counts = {}
             for org in organisations:
-                cat = org.category if hasattr(org, 'category') else 'Autre'
-                category_counts[cat] = category_counts.get(cat, 0) + 1
+                cat = getattr(org, 'category', 'Autre')
+                if isinstance(cat, enum.Enum):
+                    cat = cat.value
+                category_counts[cat or 'Autre'] = category_counts.get(cat or 'Autre', 0) + 1
 
             # Écrire stats
             ws_stats.cell(1, 1, "Catégorie").font = Font(bold=True)
@@ -265,6 +322,7 @@ class ExportService:
         organisations: List[Organisation],
         filename: str = "organisations.pdf",
         title: str = "Rapport Organisations",
+        author: Optional[str] = None,
     ) -> BytesIO:
         """
         Export PDF organisations avec rapport professionnel
@@ -279,6 +337,8 @@ class ExportService:
         """
         output = BytesIO()
         doc = SimpleDocTemplate(output, pagesize=A4)
+        if author:
+            doc.author = author
         story = []
 
         # Styles
@@ -317,8 +377,13 @@ class ExportService:
         story.append(Spacer(1, 10))
 
         active_count = sum(1 for org in organisations if org.is_active)
+        if organisations:
+            active_ratio = active_count / len(organisations) * 100
+        else:
+            active_ratio = 0.0
+
         story.append(Paragraph(
-            f"Organisations actives: <b>{active_count}</b> ({active_count/len(organisations)*100:.1f}%)",
+            f"Organisations actives: <b>{active_count}</b> ({active_ratio:.1f}%)",
             styles['Normal']
         ))
         story.append(Spacer(1, 20))
@@ -330,12 +395,20 @@ class ExportService:
         table_data = [['Nom', 'Type', 'Catégorie', 'Email', 'Actif']]
 
         for org in organisations[:50]:  # Limiter à 50 pour PDF
+            org_type = getattr(org, 'type', '')
+            if isinstance(org_type, enum.Enum):
+                org_type = org_type.value
+            category = getattr(org, 'category', '')
+            if isinstance(category, enum.Enum):
+                category = category.value
+            email = getattr(org, 'email', '') or ''
+
             table_data.append([
-                org.name[:30],
-                org.type if hasattr(org, 'type') else '',
-                org.category if hasattr(org, 'category') else '',
-                org.email[:25] if hasattr(org, 'email') and org.email else '',
-                '✓' if org.is_active else '✗',
+                (getattr(org, 'name', '') or '')[:30],
+                org_type,
+                category,
+                email[:25],
+                '✓' if getattr(org, 'is_active', False) else '✗',
             ])
 
         # Créer table

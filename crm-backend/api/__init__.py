@@ -5,12 +5,12 @@ from api.routes import (
     # interactions,     # ❌ LEGACY - Désactivé (utiliser /organisation_activities)
     # kpis,            # ❌ LEGACY - Désactivé
     # fournisseurs,    # ❌ LEGACY - Désactivé (utiliser /organisations?type=fournisseur)
-    # imports,         # ⚠️ TEMPORAIRE - Erreur import OrganisationType
+    imports,
     people,
     org_links,
     tasks,
     organisations,
-    # mandats,         # ⚠️ TEMPORAIRE - À revoir (peut-être garder ou intégrer dans organisations)
+    mandats,
     # produits,        # ⚠️ TEMPORAIRE - À revoir
     dashboards,
     workflows,
@@ -40,7 +40,7 @@ api_router.include_router(email_campaigns.router)  # Email automation
 # api_router.include_router(kpis.router)          # → Stats dans dashboards
 
 # ⚠️ À REVOIR - Peut-être garder ou refondre
-# api_router.include_router(mandats.router)
+api_router.include_router(mandats.router)
 # api_router.include_router(produits.router)
 
 # 🔍 RECHERCHE & EXPORTS (Semaine 5)
@@ -52,7 +52,7 @@ api_router.include_router(inbound_sendgrid.router)
 # 🤖 WORKFLOWS & AUTOMATION (Phase 2.2)
 api_router.include_router(workflows.router)
 
-# ⚡ IMPORTS ROUTES (bulk operations) - TEMPORAIRE désactivé
-# api_router.include_router(imports.router)
+# ⚡ IMPORTS ROUTES (bulk operations)
+api_router.include_router(imports.router)
 
 __all__ = ["api_router"]

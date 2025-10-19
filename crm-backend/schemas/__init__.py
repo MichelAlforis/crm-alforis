@@ -70,12 +70,12 @@ from schemas.task import (
     TaskFilterParams,
     TaskQuickActionRequest,
 )
-from schemas.webhook import (
-    WebhookCreate,
-    WebhookUpdate,
-    WebhookResponse,
-    WebhookRotateSecretRequest,
-)
+# from schemas.webhook import (
+#     WebhookCreate,
+#     WebhookUpdate,
+#     WebhookResponse,
+#     WebhookRotateSecretRequest,
+# )
 from schemas.organisation_activity import (
     OrganisationActivityCreate,
     OrganisationActivityUpdate,
@@ -164,12 +164,6 @@ __all__ = [
     "TaskStatsResponse",
     "TaskFilterParams",
     "TaskQuickActionRequest",
-
-    # ---------- Webhook ----------
-    "WebhookCreate",
-    "WebhookUpdate",
-    "WebhookResponse",
-    "WebhookRotateSecretRequest",
 
     # ---------- Organisation Activity ----------
     "OrganisationActivityCreate",

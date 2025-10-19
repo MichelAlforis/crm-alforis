@@ -8,6 +8,7 @@
 
 from fastapi import APIRouter, HTTPException, Depends, status, Query
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 from typing import List, Optional, Dict, Any, Set
 import logging
@@ -16,13 +17,13 @@ import logging
 from core.database import get_db
 from core.security import get_current_user_optional
 from models.organisation import Organisation, OrganisationCategory, OrganisationType
-from models.person import Person, OrganizationType, PersonOrganizationLink
+from models.person import Person
 from schemas.organisation import OrganisationCreate
-from schemas.person import PersonCreate, PersonOrganizationLinkCreate
+from schemas.person import PersonCreate
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/api/v1/imports", tags=["imports"])
+router = APIRouter(prefix="/imports", tags=["imports"])
 
 
 # ---------- Utils communs ----------
@@ -47,10 +48,29 @@ def _collect_nonempty_emails(items: List[dict], key: str = "email") -> Set[str]:
 
 # ============= NEW: BULK CREATE ORGANISATIONS (UNIFIÉ) =============
 
+def _resolve_org_type(raw: Any) -> OrganisationType:
+    if isinstance(raw, OrganisationType):
+        return raw
+    if isinstance(raw, str):
+        lowered = raw.strip().lower()
+        # legacy aliases
+        if lowered in {"client", "investor"}:
+            return OrganisationType.CLIENT
+        if lowered in {"fournisseur", "provider"}:
+            return OrganisationType.FOURNISSEUR
+        if lowered in {"distributeur", "distributor"}:
+            return OrganisationType.DISTRIBUTEUR
+        if lowered in {"emetteur", "issuer"}:
+            return OrganisationType.EMETTEUR
+        if lowered in {"autre", "other"}:
+            return OrganisationType.AUTRE
+    return OrganisationType.AUTRE
+
+
 @router.post("/organisations/bulk")
 async def bulk_create_organisations(
     organisations: List[OrganisationCreate],
-    type_org: OrganizationType = Query(..., description="Type d'organisation: client ou fournisseur"),
+    type_org: str = Query(..., description="Type d'organisation: client ou fournisseur"),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user_optional),
 ) -> Dict[str, Any]:
@@ -65,12 +85,13 @@ async def bulk_create_organisations(
     """
 
     total = len(organisations)
+    resolved_type = _resolve_org_type(type_org)
     result: Dict[str, Any] = {
         "total": total,
         "created": [],
         "failed": 0,
         "errors": [],
-        "type": type_org.value
+        "type": resolved_type.value,
     }
 
     if total == 0:
@@ -95,12 +116,15 @@ async def bulk_create_organisations(
         return result
 
     # -------- Précharger noms existants en base --------
-    payload_dicts = [org.dict() for org in organisations]
-    payload_names = {p["name"] for p in payload_dicts if p.get("name")}
+    payload_dicts = [org.model_dump() for org in organisations]
+    payload_names = {p["name"].strip().lower() for p in payload_dicts if p.get("name")}
     existing_names = set()
     if payload_names:
         existing_names = {
-            n[0] for n in db.query(Organisation.name).filter(Organisation.name.in_(payload_names)).all()
+            n[0].strip().lower()
+            for n in db.query(Organisation.name).filter(
+                func.lower(Organisation.name).in_(payload_names)
+            ).all()
         }
 
     try:
@@ -112,7 +136,8 @@ async def bulk_create_organisations(
 
                 # Doublon base
                 name = payload.get("name")
-                if name and name in existing_names:
+                norm_name = name.strip().lower() if isinstance(name, str) else None
+                if norm_name and norm_name in existing_names:
                     result["failed"] += 1
                     result["errors"].append({
                         "index": idx,
@@ -124,10 +149,13 @@ async def bulk_create_organisations(
                 # Créer l'organisation avec le type spécifié
                 # Note: Le type n'est pas dans OrganisationCreate, on doit gérer ça différemment
                 # Pour l'instant, on utilise le payload tel quel
+                payload.setdefault("type", resolved_type)
                 new_org = Organisation(**payload)
                 db.add(new_org)
                 db.flush()
                 result["created"].append(new_org.id)
+                if norm_name:
+                    existing_names.add(norm_name)
 
             except IntegrityError as ie:
                 db.rollback()
@@ -214,7 +242,10 @@ async def bulk_create_people(
     existing_emails = set()
     if payload_emails:
         existing_emails = {
-            e[0] for e in db.query(Person.personal_email).filter(Person.personal_email.in_(payload_emails)).all()
+            e[0]
+            for e in db.query(Person.personal_email).filter(
+                func.lower(Person.personal_email).in_(payload_emails)
+            ).all()
         }
 
     try:
@@ -239,6 +270,8 @@ async def bulk_create_people(
                 db.add(new_person)
                 db.flush()
                 result["created"].append(new_person.id)
+                if email:
+                    existing_emails.add(email)
 
             except IntegrityError as ie:
                 db.rollback()
@@ -306,7 +339,7 @@ async def bulk_create_investors_deprecated(
     # Appeler le nouvel endpoint
     return await bulk_create_organisations(
         organisations=organisations,
-        type_org=OrganizationType.INVESTOR,  # Type "client"
+        type_org=OrganisationType.CLIENT,  # Type "client"
         db=db,
         current_user=current_user
     )
@@ -346,7 +379,7 @@ async def bulk_create_fournisseurs_deprecated(
     # Appeler le nouvel endpoint
     return await bulk_create_organisations(
         organisations=organisations,
-        type_org=OrganizationType.FOURNISSEUR,  # Type "fournisseur"
+        type_org=OrganisationType.FOURNISSEUR,  # Type "fournisseur"
         db=db,
         current_user=current_user
     )

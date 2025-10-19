@@ -33,6 +33,7 @@ class OrganisationCategory(str, enum.Enum):
     CGPI = "CGPI"
     AUTRES = "Autres"
     STARTUP = "Startup"
+    CORPORATION = "Corporation"
 
 
 class OrganisationType(str, enum.Enum):
@@ -48,6 +49,8 @@ class OrganisationType(str, enum.Enum):
 
 class PipelineStage(str, enum.Enum):
     """Pipeline commercial global"""
+    LEAD = "lead"
+    QUALIFIED = "qualified"
     PROSPECT = "prospect"
     QUALIFICATION = "qualification"
     PROPOSITION = "proposition"
@@ -167,6 +170,7 @@ class Organisation(BaseModel):
 
     # Métadonnées
     notes = Column(Text, nullable=True)
+    description = Column(Text, nullable=True)
     tags = Column(JSON, nullable=True)
     is_active = Column(Boolean, default=True, index=True)
     created_by = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
