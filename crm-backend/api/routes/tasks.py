@@ -44,10 +44,8 @@ def enrich_task_response(task) -> dict:
     data = response.model_dump()
 
     # Ajouter les noms des entités liées
-    if task.investor:
-        data["investor_name"] = task.investor.name
-    if task.fournisseur:
-        data["fournisseur_name"] = task.fournisseur.name
+    if task.organisation:
+        data["organisation_name"] = task.organisation.name
     if task.person:
         data["person_name"] = task.person.name
 
@@ -66,8 +64,7 @@ async def list_tasks(
     priority: Optional[TaskPriority] = Query(None),
     # category: Optional[str]  # TaskCategory = Query(None),  # TaskCategory n'existe pas
     view: Optional[str] = Query(None, description="Filter: 'today', 'overdue', 'next7', 'all'"),
-    investor_id: Optional[int] = Query(None),
-    fournisseur_id: Optional[int] = Query(None),
+    organisation_id: Optional[int] = Query(None),
     person_id: Optional[int] = Query(None),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),

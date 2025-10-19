@@ -1,16 +1,16 @@
 // app/dashboard/investors/[id]/page.tsx
-// ============= INVESTOR DETAIL PAGE - FIXED =============
+// ============= INVESTOR DETAIL PAGE - MIGRATED TO ORGANISATION API =============
 
 'use client'
 
 import React, { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
-import { useInvestors } from '@/hooks/useInvestors'
-import { useInteractions } from '@/hooks/useInteractions'
+import { useOrganisations } from '@/hooks/useOrganisations'
+import { useOrganisationActivity, flattenActivities } from '@/hooks/useOrganisationActivity'
 import { Card, Button, Table, Alert, Modal, Input } from '@/components/shared'
-import { InvestorForm, InteractionForm } from '@/components/forms'
-import { InvestorDetail, InteractionCreate, PersonOrganizationLink, PersonOrganizationLinkInput } from '@/lib/types'
+import { OrganisationForm } from '@/components/forms'
+import { PersonOrganizationLink, PersonOrganizationLinkInput } from '@/lib/types'
 import { usePeople } from '@/hooks/usePeople'
 import { SkeletonCard, SkeletonTable } from '@/components/ui/Skeleton'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
@@ -24,22 +24,18 @@ export default function InvestorDetailPage() {
     return Number.isNaN(parsed) ? null : parsed
   }, [params])
   
-  // Destructurer correctement les hooks
-  const { 
-    single: investor, 
-    fetchInvestor, 
-    updateInvestor, 
-    update: updateOp,
-    delete: deleteOp, 
-    deleteInvestor 
-  } = useInvestors()
+  const [investor, setInvestor] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isUpdating, setIsUpdating] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [updateError, setUpdateError] = useState<string>()
 
-  const { 
-    interactions, 
-    create: interactionCreate,
-    fetchInteractions, 
-    createInteraction 
-  } = useInteractions(investorId ?? 0)
+  const activityQuery = investorId ? useOrganisationActivity(investorId) : null
+  const activities = useMemo(() => 
+    flattenActivities(activityQuery?.data?.pages), 
+    [activityQuery?.data?.pages]
+  )
+  const activitiesLoading = activityQuery?.isLoading ?? false
   const {
     linkPersonToOrganization,
     deletePersonOrganizationLink,
@@ -47,7 +43,6 @@ export default function InvestorDetailPage() {
   } = usePeople()
   
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [isInteractionModalOpen, setIsInteractionModalOpen] = useState(false)
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
   const [linkError, setLinkError] = useState<string>()
   const [isLinkSubmitting, setIsLinkSubmitting] = useState(false)
@@ -57,6 +52,21 @@ export default function InvestorDetailPage() {
     organization_id: investorId ?? 0,
     is_primary: false,
   })
+
+  const fetchInvestor = async (id: number) => {
+    setIsLoading(true)
+    try {
+      const response = await fetch(`/api/organisations/${id}`)
+      if (!response.ok) throw new Error('Failed to fetch investor')
+      const data = await response.json()
+      setInvestor(data)
+    } catch (err) {
+      console.error('Error fetching investor:', err)
+      setInvestor(null)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   useEffect(() => {
     setLinkPayload((prev) => ({
@@ -70,31 +80,49 @@ export default function InvestorDetailPage() {
       router.replace('/dashboard/investors')
       return
     }
+    
     fetchInvestor(investorId)
-    fetchInteractions()
-  }, [investorId, fetchInvestor, fetchInteractions, router])
+  }, [investorId])
 
   const handleUpdate = async (data: any) => {
     if (investorId === null) return
-    await updateInvestor(investorId, data)
-    setIsEditModalOpen(false)
+    setIsUpdating(true)
+    setUpdateError(undefined)
+    try {
+      const response = await fetch(`/api/organisations/${investorId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      if (!response.ok) throw new Error('Failed to update investor')
+      const updated = await response.json()
+      setInvestor(updated)
+      setIsEditModalOpen(false)
+    } catch (err: any) {
+      setUpdateError(err.message || 'Erreur lors de la mise à jour')
+    } finally {
+      setIsUpdating(false)
+    }
   }
 
   const handleDelete = async () => {
     if (investorId === null) return
     if (confirm('Êtes-vous sûr de vouloir supprimer cet investisseur?')) {
-      await deleteInvestor(investorId)
-      router.push('/dashboard/investors')
+      setIsDeleting(true)
+      try {
+        const response = await fetch(`/api/organisations/${investorId}`, {
+          method: 'DELETE',
+        })
+        if (!response.ok) throw new Error('Failed to delete investor')
+        router.push('/dashboard/investors')
+      } catch (err) {
+        console.error('Error deleting investor:', err)
+        setIsDeleting(false)
+      }
     }
   }
 
-  const handleAddInteraction = async (data: InteractionCreate) => {
-    if (investorId === null) return
-    await createInteraction(data)
-    setIsInteractionModalOpen(false)
-  }
-
-  if (investor.isLoading) {
+  if (isLoading) {
     return (
       <div className="space-y-6">
         <SkeletonCard />
@@ -103,11 +131,10 @@ export default function InvestorDetailPage() {
       </div>
     )
   }
-  if (!investor.data) return <div className="text-center p-6">Non trouvé</div>
+  if (!investor) return <div className="text-center p-6">Non trouvé</div>
 
-  const details = investor.data as InvestorDetail
-  const data = details.investor
-  const peopleLinks = details.people || []
+  const data = investor
+  const peopleLinks = investor.people || []
   const countryValue = data.country_code || ''
   const countryLabel = countryValue
     ? COUNTRY_OPTIONS.find((option) => option.value === countryValue)?.label || countryValue
@@ -117,10 +144,10 @@ export default function InvestorDetailPage() {
     ? LANGUAGE_OPTIONS.find((option) => option.value === languageValue)?.label || languageValue
     : '-'
 
-  const interactionColumns = [
+  const activityColumns = [
     { 
       header: 'Type', 
-      accessor: 'type',
+      accessor: 'event_type',
       render: (value: string) => (
         <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium">
           {value}
@@ -129,11 +156,10 @@ export default function InvestorDetailPage() {
     },
     { 
       header: 'Date', 
-      accessor: 'date', 
+      accessor: 'created_at', 
       render: (d: string) => new Date(d).toLocaleDateString('fr-FR') 
     },
-    { header: 'Sujet', accessor: 'subject' },
-    { header: 'Durée (min)', accessor: 'duration_minutes' },
+    { header: 'Description', accessor: 'description' },
   ]
 
   const peopleColumns = [
@@ -246,7 +272,7 @@ export default function InvestorDetailPage() {
           <Button variant="secondary" onClick={() => setIsEditModalOpen(true)}>
             Éditer
           </Button>
-          <Button variant="danger" onClick={handleDelete} isLoading={deleteOp.isLoading}>
+          <Button variant="danger" onClick={handleDelete} isLoading={isDeleting}>
             Supprimer
           </Button>
         </div>
@@ -306,29 +332,22 @@ export default function InvestorDetailPage() {
               ? `${link.person.first_name} ${link.person.last_name}`
               : `Personne #${link.person_id}`,
           }))}
-          isLoading={investor.isLoading}
+          isLoading={isLoading}
           isEmpty={peopleLinks.length === 0}
         />
       </Card>
 
-      {/* Interactions Section */}
+      {/* Activity History Section */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-ardoise">Interactions</h2>
-        <Button variant="primary" onClick={() => setIsInteractionModalOpen(true)}>
-          + Ajouter interaction
-        </Button>
+        <h2 className="text-2xl font-bold text-ardoise">Historique d'activité</h2>
       </div>
-
-      {interactions.error && (
-        <Alert type="error" message={interactions.error} />
-      )}
 
       <Card>
         <Table
-          columns={interactionColumns}
-          data={interactions.data?.items || []}
-          isLoading={interactions.isLoading}
-          isEmpty={interactions.data?.items.length === 0}
+          columns={activityColumns}
+          data={activities}
+          isLoading={activitiesLoading}
+          isEmpty={activities.length === 0}
         />
       </Card>
 
@@ -338,25 +357,12 @@ export default function InvestorDetailPage() {
         onClose={() => setIsEditModalOpen(false)}
         title="Éditer l'investisseur"
       >
-        <InvestorForm
+        <OrganisationForm
           initialData={data}
           onSubmit={handleUpdate}
-          isLoading={updateOp.isLoading}
-          error={updateOp.error}
+          isLoading={isUpdating}
+          error={updateError}
           submitLabel="Mettre à jour"
-        />
-      </Modal>
-
-      {/* Add Interaction Modal */}
-      <Modal
-        isOpen={isInteractionModalOpen}
-        onClose={() => setIsInteractionModalOpen(false)}
-        title="Ajouter une interaction"
-      >
-        <InteractionForm
-          onSubmit={handleAddInteraction}
-          isLoading={interactionCreate.isLoading}
-          error={interactionCreate.error}
         />
       </Modal>
 

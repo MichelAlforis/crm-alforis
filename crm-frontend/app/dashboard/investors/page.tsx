@@ -1,30 +1,20 @@
 // app/dashboard/investors/page.tsx
 // ============= INVESTORS LIST PAGE =============
+// MIGRATED: Uses new Organisation API instead of legacy Investor hooks
 
 'use client'
 
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useInvestors } from '@/hooks/useInvestors'
+import { useOrganisations } from '@/hooks/useOrganisations'
 import { Card, Button, Table, Input, Alert, AdvancedFilters } from '@/components/shared'
-import { PipelineStage } from '@/lib/types'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 
-const PIPELINE_COLORS: Record<PipelineStage, string> = {
-  prospect_froid: 'bg-blue-100 text-blue-800',
-  prospect_tiede: 'bg-orange-100 text-orange-800',
-  prospect_chaud: 'bg-red-100 text-red-800',
-  en_negociation: 'bg-purple-100 text-purple-800',
-  client: 'bg-vert text-white',
-  inactif: 'bg-gray-100 text-gray-800',
-}
-
 export default function InvestorsPage() {
-  const { investors, fetchInvestors } = useInvestors()
+  const { data: organisations, isLoading } = useOrganisations()
   const [searchText, setSearchText] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const [filtersState, setFiltersState] = useState({
-    pipeline: '',
     country: '',
     language: '',
     createdFrom: '',
@@ -41,7 +31,6 @@ export default function InvestorsPage() {
 
   const resetFilters = () =>
     setFiltersState({
-      pipeline: '',
       country: '',
       language: '',
       createdFrom: '',
@@ -55,11 +44,6 @@ export default function InvestorsPage() {
     }, 300)
     return () => clearTimeout(timer)
   }, [searchText])
-
-  // Fetch investors
-  useEffect(() => {
-    fetchInvestors(0, 100, debouncedSearch)
-  }, [debouncedSearch, fetchInvestors])
 
   const getCountryLabel = (code?: string | null) => {
     if (!code) return '-'
@@ -124,18 +108,6 @@ export default function InvestorsPage() {
 
   const advancedFilterDefinitions = [
     {
-      key: 'pipeline',
-      label: 'Pipeline',
-      type: 'select' as const,
-      options: [
-        { value: '', label: 'Toutes les étapes' },
-        ...Object.keys(PIPELINE_COLORS).map((value) => ({
-          value,
-          label: value.replace(/_/g, ' '),
-        })),
-      ],
-    },
-    {
       key: 'country',
       label: 'Pays',
       type: 'select' as const,
@@ -171,26 +143,22 @@ export default function InvestorsPage() {
     },
   ]
 
-  const filteredInvestors = (investors.data?.items ?? []).filter((investor) => {
+  const filteredInvestors = (organisations?.items ?? []).filter((org: any) => {
     const search = searchText.trim().toLowerCase()
     const matchesSearch =
-      investor.name.toLowerCase().includes(search) ||
-      (investor.email ?? '').toLowerCase().includes(search) ||
-      (investor.company ?? '').toLowerCase().includes(search)
-
-    const matchesPipeline = filtersState.pipeline
-      ? investor.pipeline_stage === filtersState.pipeline
-      : true
+      org.name.toLowerCase().includes(search) ||
+      (org.email ?? '').toLowerCase().includes(search) ||
+      (org.company ?? '').toLowerCase().includes(search)
 
     const matchesCountry = filtersState.country
-      ? investor.country_code === filtersState.country
+      ? org.country_code === filtersState.country
       : true
 
     const matchesLanguage = filtersState.language
-      ? (investor.language || '').toUpperCase() === filtersState.language
+      ? (org.language || '').toUpperCase() === filtersState.language
       : true
 
-    const createdAt = investor.created_at ? new Date(investor.created_at) : null
+    const createdAt = org.created_at ? new Date(org.created_at) : null
     const matchesCreatedFrom = filtersState.createdFrom
       ? createdAt && createdAt >= new Date(filtersState.createdFrom)
       : true
@@ -200,7 +168,6 @@ export default function InvestorsPage() {
 
     return (
       matchesSearch &&
-      matchesPipeline &&
       matchesCountry &&
       matchesLanguage &&
       matchesCreatedFrom &&
@@ -233,26 +200,18 @@ export default function InvestorsPage() {
         </div>
       </Card>
 
-      {investors.error && (
-        <Alert type="error" message={investors.error} />
-      )}
-
       <Card>
         <Table
           columns={columns}
           data={filteredInvestors}
-          isLoading={investors.isLoading}
+          isLoading={isLoading}
           isEmpty={filteredInvestors.length === 0}
         />
       </Card>
 
-      {investors.data && (
+      {organisations && (
         <div className="flex items-center justify-between text-sm text-gray-600">
-          <p>Total: {investors.data.total} investisseurs</p>
-          <p>
-            Page {investors.data.skip / investors.data.limit + 1} sur{' '}
-            {Math.ceil(investors.data.total / investors.data.limit)}
-          </p>
+          <p>Total: {organisations.total} organisations</p>
         </div>
       )}
     </div>

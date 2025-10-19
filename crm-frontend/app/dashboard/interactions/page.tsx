@@ -1,69 +1,62 @@
 // app/dashboard/interactions/page.tsx
 // ============= INTERACTIONS PAGE =============
+// MIGRATED: Uses new Organisation activity API instead of legacy hooks
 
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { useInvestors } from '@/hooks/useInvestors'
-import { useInteractions } from '@/hooks/useInteractions'
+import React, { useEffect, useState, useMemo } from 'react'
+import { useOrganisations } from '@/hooks/useOrganisations'
+import { useOrganisationActivity, flattenActivities } from '@/hooks/useOrganisationActivity'
 import { Card, Button, Table, Modal, Alert } from '@/components/shared'
-import { InteractionForm } from '@/components/forms'
-import { InteractionCreate } from '@/lib/types'
 
 export default function InteractionsPage() {
-  const { investors, fetchInvestors } = useInvestors()
-  const [selectedInvestorId, setSelectedInvestorId] = useState<number | null>(null)
+  const { data: organisations, isLoading: orgsLoading } = useOrganisations()
+  const [selectedOrgId, setSelectedOrgId] = useState<number | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const interactions = selectedInvestorId 
-    ? useInteractions(selectedInvestorId)
+  const activityQuery = selectedOrgId 
+    ? useOrganisationActivity(selectedOrgId)
     : null
+  
+  const activities = useMemo(() => 
+    flattenActivities(activityQuery?.data?.pages),
+    [activityQuery?.data?.pages]
+  )
+  const activityLoading = activityQuery?.isLoading ?? false
+  const activityError = activityQuery?.error ? String(activityQuery.error) : undefined
 
-  useEffect(() => {
-    fetchInvestors(0, 1000)
-  }, [])
-
-  useEffect(() => {
-    if (selectedInvestorId && interactions) {
-      interactions.fetchInteractions()
-    }
-  }, [selectedInvestorId])
-
-  const handleAddInteraction = async (data: InteractionCreate) => {
-    if (interactions) {
-      await interactions.createInteraction(data)
-      setIsModalOpen(false)
-    }
-  }
-
-  const handleDelete = async (interactionId: number) => {
-    if (interactions && confirm('Supprimer cette interaction?')) {
-      await interactions.deleteInteraction(interactionId)
+  const handleDelete = async (activityId: number) => {
+    if (confirm('Supprimer cette activité?')) {
+      try {
+        // Call delete endpoint (implement based on your API)
+        await fetch(`/api/organisations/${selectedOrgId}/activity/${activityId}`, {
+          method: 'DELETE',
+        })
+        activityQuery?.refetch?.()
+      } catch (err) {
+        console.error('Error deleting activity:', err)
+      }
     }
   }
 
   const columns = [
     {
-      header: 'Type',
-      accessor: 'type',
+      header: 'Type d\'événement',
+      accessor: 'event_type',
       render: (value: string) => (
         <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium">
-          {value}
+          {value || 'Événement'}
         </span>
       ),
     },
     {
       header: 'Date',
-      accessor: 'date',
+      accessor: 'created_at',
       render: (value: string) => new Date(value).toLocaleDateString('fr-FR'),
     },
     {
-      header: 'Sujet',
-      accessor: 'subject',
-    },
-    {
-      header: 'Durée (min)',
-      accessor: 'duration_minutes',
+      header: 'Description',
+      accessor: 'description',
     },
     {
       header: 'Actions',
@@ -81,62 +74,47 @@ export default function InteractionsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-ardoise">Interactions</h1>
+      <h1 className="text-3xl font-bold text-ardoise">Activités et interactions</h1>
 
-      {/* Sélection d'investisseur */}
+      {/* Sélection d'organisation */}
       <Card>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Sélectionner un investisseur
+            Sélectionner une organisation
           </label>
           <select
-            value={selectedInvestorId || ''}
-            onChange={(e) => setSelectedInvestorId(e.target.value ? parseInt(e.target.value) : null)}
+            value={selectedOrgId || ''}
+            onChange={(e) => setSelectedOrgId(e.target.value ? parseInt(e.target.value) : null)}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg"
           >
-            <option value="">-- Choisir un investisseur --</option>
-            {investors.data?.items?.map((inv) => (
-              <option key={inv.id} value={inv.id}>
-                {inv.name}
+            <option value="">-- Choisir une organisation --</option>
+            {organisations?.items?.map((org) => (
+              <option key={org.id} value={org.id}>
+                {org.name}
               </option>
             ))}
           </select>
         </div>
       </Card>
 
-      {selectedInvestorId && interactions && (
+      {selectedOrgId && activityQuery && (
         <>
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold">Interactions</h2>
-            <Button variant="primary" onClick={() => setIsModalOpen(true)}>
-              + Ajouter
-            </Button>
+            <h2 className="text-xl font-bold">Historique d'activité</h2>
           </div>
 
-          {interactions.interactions.error && (
-            <Alert type="error" message={interactions.interactions.error} />
+          {activityError && (
+            <Alert type="error" message={activityError} />
           )}
 
           <Card>
             <Table
               columns={columns}
-              data={interactions.interactions.data?.items || []}
-              isLoading={interactions.interactions.isLoading}
-              isEmpty={interactions.interactions.data?.items.length === 0}
+              data={activities || []}
+              isLoading={activityLoading}
+              isEmpty={!activities || activities.length === 0}
             />
           </Card>
-
-          <Modal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            title="Ajouter une interaction"
-          >
-            <InteractionForm
-              onSubmit={handleAddInteraction}
-              isLoading={interactions.create.isLoading}
-              error={interactions.create.error}
-            />
-          </Modal>
         </>
       )}
     </div>

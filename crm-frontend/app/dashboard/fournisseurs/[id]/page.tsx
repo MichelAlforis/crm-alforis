@@ -1,18 +1,16 @@
 
 // app/dashboard/fournisseurs/[id]/page.tsx
 // ============= FOURNISSEUR DETAIL PAGE =============
+// MIGRATED: Uses new Organisation API instead of legacy Fournisseur hooks
 
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
-import { useFournisseurs } from '@/hooks/useFournisseurs'
-import { useKPIsFournisseur } from '@/hooks/useKPIsFournisseur'
+import { useOrganisationActivity, flattenActivities } from '@/hooks/useOrganisationActivity'
 import { Card, Button, Table, Alert, Modal, Input } from '@/components/shared'
-import { FournisseurForm } from '@/components/forms'
-import { KPIForm } from '@/components/forms'
-import { FournisseurDetail, KPICreate, PersonOrganizationLink, PersonOrganizationLinkInput } from '@/lib/types'
+import { OrganisationForm } from '@/components/forms'
 import { usePeople } from '@/hooks/usePeople'
 import { SkeletonCard, SkeletonTable } from '@/components/ui/Skeleton'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
@@ -20,14 +18,19 @@ import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 export default function FournisseurDetailPage() {
   const params = useParams<{ id?: string }>()
   const router = useRouter()
-  const fournisseurId = React.useMemo(() => {
+  const fournisseurId = useMemo(() => {
     const rawId = params?.id
     const parsed = rawId ? Number.parseInt(rawId, 10) : NaN
     return Number.isNaN(parsed) ? null : parsed
   }, [params])
 
-  const { single: fournisseur, fetchFournisseur, updateFournisseur, delete: deleteOp, deleteFournisseur, update: updateOp } = useFournisseurs()
-  const { kpis, fetchKPIs, createKPI, create: kpiCreate } = useKPIsFournisseur(fournisseurId ?? 0)
+  const activityQuery = fournisseurId ? useOrganisationActivity(fournisseurId) : null
+  const activities = useMemo(() => 
+    flattenActivities(activityQuery?.data?.pages), 
+    [activityQuery?.data?.pages]
+  )
+  const activityLoading = activityQuery?.isLoading ?? false
+  const activityError = activityQuery?.error ? String(activityQuery.error) : undefined
   const {
     linkPersonToOrganization,
     deletePersonOrganizationLink,
@@ -35,28 +38,31 @@ export default function FournisseurDetailPage() {
   } = usePeople()
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [isKPIModalOpen, setIsKPIModalOpen] = useState(false)
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
   const [linkError, setLinkError] = useState<string>()
   const [isLinkSubmitting, setIsLinkSubmitting] = useState(false)
-  const [linkPayload, setLinkPayload] = useState<PersonOrganizationLinkInput>({
+  const [linkPayload, setLinkPayload] = useState<any>({
     person_id: 0,
     organization_type: 'fournisseur',
     organization_id: fournisseurId ?? 0,
     is_primary: false,
   })
+  const [currentOrg, setCurrentOrg] = useState<any>(null)
 
   useEffect(() => {
     if (fournisseurId === null) {
       router.replace('/dashboard/fournisseurs')
       return
     }
-    fetchFournisseur(fournisseurId)
-    fetchKPIs()
-  }, [fournisseurId, fetchFournisseur, fetchKPIs, router])
+    // Fetch specific organisation by ID
+    fetch(`/api/organisations/${fournisseurId}`)
+      .then(r => r.json())
+      .then(data => setCurrentOrg(data))
+      .catch(err => console.error('Error fetching org:', err))
+  }, [fournisseurId, router])
 
   useEffect(() => {
-    setLinkPayload((prev) => ({
+    setLinkPayload((prev: any) => ({
       ...prev,
       organization_id: fournisseurId ?? 0,
     }))
@@ -64,26 +70,39 @@ export default function FournisseurDetailPage() {
 
   const handleUpdate = async (data: any) => {
     if (fournisseurId === null) return
-    await updateFournisseur(fournisseurId, data)
-    setIsEditModalOpen(false)
+    try {
+      const response = await fetch(`/api/organisations/${fournisseurId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      if (response.ok) {
+        setCurrentOrg(await response.json())
+        setIsEditModalOpen(false)
+      }
+    } catch (err) {
+      console.error('Error updating org:', err)
+    }
   }
 
   const handleDelete = async () => {
     if (fournisseurId === null) return
-    if (confirm('Êtes-vous sûr de vouloir supprimer ce fournisseur?')) {
-      await deleteFournisseur(fournisseurId)
-      router.push('/dashboard/fournisseurs')
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette organisation?')) {
+      try {
+        const response = await fetch(`/api/organisations/${fournisseurId}`, {
+          method: 'DELETE',
+        })
+        if (response.ok) {
+          router.push('/dashboard/fournisseurs')
+        }
+      } catch (err) {
+        console.error('Error deleting org:', err)
+      }
     }
   }
 
-  const handleAddKPI = async (data: KPICreate) => {
-    if (fournisseurId === null) return
-    await createKPI(data)
-    setIsKPIModalOpen(false)
-  }
-
-  if (fournisseurId === null) return <div className="text-center p-6">Fournisseur introuvable</div>
-  if (fournisseur.isLoading) {
+  if (fournisseurId === null) return <div className="text-center p-6">Organisation introuvable</div>
+  if (!currentOrg) {
     return (
       <div className="space-y-6">
         <SkeletonCard />
@@ -92,11 +111,9 @@ export default function FournisseurDetailPage() {
       </div>
     )
   }
-  if (!fournisseur.data) return <div className="text-center p-6">Non trouvé</div>
 
-  const details = fournisseur.data as FournisseurDetail
-  const data = details.fournisseur
-  const peopleLinks = details.people || []
+  const data = currentOrg
+  const peopleLinks = currentOrg.people || []
   const countryValue = data.country_code || ''
   const countryLabel = countryValue
     ? COUNTRY_OPTIONS.find((option) => option.value === countryValue)?.label || countryValue
@@ -106,30 +123,22 @@ export default function FournisseurDetailPage() {
     ? LANGUAGE_OPTIONS.find((option) => option.value === languageValue)?.label || languageValue
     : '-'
 
-  const primaryLink = details.people.find((p) => p.is_primary) ?? details.people[0]
+  const primaryLink = peopleLinks.find((p: any) => p.is_primary) ?? peopleLinks[0]
   const primaryContactName = primaryLink?.person
     ? `${primaryLink.person.first_name} ${primaryLink.person.last_name}`
     : '-'
 
-  const kpiColumns = [
-    { header: 'Année', accessor: 'year' },
-    { header: 'Mois', accessor: 'month' },
-    { header: 'RDV', accessor: 'rdv_count' },
-    { header: 'Closings', accessor: 'closings' },
-    { header: 'Revenu', accessor: 'revenue', render: (v: number) => `${v}€` },
-    { header: 'Comm. %', accessor: 'commission_rate' },
+  const activityColumns = [
+    { header: 'Type', accessor: 'event_type' },
+    { header: 'Date', accessor: 'created_at', render: (v: string) => new Date(v).toLocaleDateString('fr-FR') },
+    { header: 'Description', accessor: 'description' },
   ]
-
-  // Stats
-  const totalRevenue = kpis.data?.reduce((sum, k) => sum + (k.revenue || 0), 0) || 0
-  const totalClosings = kpis.data?.reduce((sum, k) => sum + (k.closings || 0), 0) || 0
-  const totalRDV = kpis.data?.reduce((sum, k) => sum + (k.rdv_count || 0), 0) || 0
 
   const peopleColumns = [
     {
       header: 'Personne',
       accessor: 'personLabel',
-      render: (_: string, row: PersonOrganizationLink & { personLabel: string }) => (
+      render: (_: string, row: any) => (
         <a href={`/dashboard/people/${row.person_id}`} className="text-bleu hover:underline">
           {row.personLabel}
         </a>
@@ -155,15 +164,18 @@ export default function FournisseurDetailPage() {
     {
       header: 'Actions',
       accessor: 'id',
-      render: (_: number, row: PersonOrganizationLink) => (
+      render: (_: number, row: any) => (
         <div className="flex gap-2">
           <Button
             variant="ghost"
             size="xs"
             onClick={() =>
-              updatePersonOrganizationLink(row.id, { is_primary: !row.is_primary }).then(() =>
-                fetchFournisseur(fournisseurId),
-              )
+              updatePersonOrganizationLink(row.id, { is_primary: !row.is_primary }).then(() => {
+                // Refresh organisation
+                fetch(`/api/organisations/${fournisseurId}`)
+                  .then(r => r.json())
+                  .then(data => setCurrentOrg(data))
+              })
             }
           >
             {row.is_primary ? 'Retirer principal' : 'Marquer principal'}
@@ -183,7 +195,7 @@ export default function FournisseurDetailPage() {
 
   const handleCreateLink = async () => {
     if (fournisseurId === null) {
-      setLinkError('Fournisseur invalide')
+      setLinkError('Organisation invalide')
       return
     }
     if (!linkPayload.person_id || linkPayload.person_id <= 0) {
@@ -201,7 +213,9 @@ export default function FournisseurDetailPage() {
         organization_id: fournisseurId,
         is_primary: false,
       })
-      await fetchFournisseur(fournisseurId)
+      // Refresh organisation
+      const response = await fetch(`/api/organisations/${fournisseurId}`)
+      setCurrentOrg(await response.json())
     } catch (err: any) {
       setLinkError(err?.detail || 'Erreur lors du rattachement')
     } finally {
@@ -213,7 +227,9 @@ export default function FournisseurDetailPage() {
     if (fournisseurId === null) return
     if (!confirm('Retirer ce rattachement ?')) return
     await deletePersonOrganizationLink(linkId)
-    await fetchFournisseur(fournisseurId)
+    // Refresh organisation
+    const response = await fetch(`/api/organisations/${fournisseurId}`)
+    setCurrentOrg(await response.json())
   }
 
   return (
@@ -230,7 +246,7 @@ export default function FournisseurDetailPage() {
           <Button variant="secondary" onClick={() => setIsEditModalOpen(true)}>
             Éditer
           </Button>
-          <Button variant="danger" onClick={handleDelete} isLoading={deleteOp.isLoading}>
+          <Button variant="danger" onClick={handleDelete}>
             Supprimer
           </Button>
         </div>
@@ -268,26 +284,6 @@ export default function FournisseurDetailPage() {
         </div>
       </Card>
 
-      {/* KPI Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="text-center">
-          <div className="text-2xl font-bold text-bleu">{totalRDV}</div>
-          <p className="text-gray-600 text-sm">RDV totaux</p>
-        </Card>
-        <Card className="text-center">
-          <div className="text-2xl font-bold text-vert">{totalClosings}</div>
-          <p className="text-gray-600 text-sm">Closings totaux</p>
-        </Card>
-        <Card className="text-center">
-          <div className="text-2xl font-bold text-orange-500">{totalRevenue}€</div>
-          <p className="text-gray-600 text-sm">Revenu total</p>
-        </Card>
-        <Card className="text-center">
-          <div className="text-2xl font-bold text-purple-500">{kpis.data?.length || 0}</div>
-          <p className="text-gray-600 text-sm">Mois saisies</p>
-        </Card>
-      </div>
-
       {/* People Section */}
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Personnes associées</h2>
@@ -299,33 +295,30 @@ export default function FournisseurDetailPage() {
       <Card>
         <Table
           columns={peopleColumns}
-          data={peopleLinks.map((link) => ({
+          data={peopleLinks.map((link: any) => ({
             ...link,
             personLabel: link.person
               ? `${link.person.first_name} ${link.person.last_name}`
               : `Personne #${link.person_id}`,
           }))}
-          isLoading={fournisseur.isLoading}
+          isLoading={false}
           isEmpty={peopleLinks.length === 0}
         />
       </Card>
 
-      {/* KPIs Table */}
+      {/* Activity Timeline */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">KPIs</h2>
-        <Button variant="primary" onClick={() => setIsKPIModalOpen(true)}>
-          + Ajouter KPI
-        </Button>
+        <h2 className="text-2xl font-bold">Historique d'activité</h2>
       </div>
 
-      {kpis.error && <Alert type="error" message={kpis.error} />}
+      {activityError && <Alert type="error" message={activityError} />}
 
       <Card>
         <Table
-          columns={kpiColumns}
-          data={kpis.data || []}
-          isLoading={kpis.isLoading}
-          isEmpty={kpis.data?.length === 0}
+          columns={activityColumns}
+          data={activities || []}
+          isLoading={activityLoading}
+          isEmpty={!activities || activities.length === 0}
         />
       </Card>
 
@@ -333,27 +326,13 @@ export default function FournisseurDetailPage() {
       <Modal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        title="Éditer le fournisseur"
+        title="Éditer l'organisation"
       >
-        <FournisseurForm
+        <OrganisationForm
           initialData={data}
           onSubmit={handleUpdate}
-          isLoading={updateOp.isLoading}
-          error={updateOp.error}
+          isLoading={false}
           submitLabel="Mettre à jour"
-        />
-      </Modal>
-
-      {/* Add KPI Modal */}
-      <Modal
-        isOpen={isKPIModalOpen}
-        onClose={() => setIsKPIModalOpen(false)}
-        title="Ajouter un KPI"
-      >
-        <KPIForm
-          onSubmit={handleAddKPI}
-          isLoading={kpiCreate.isLoading}
-          error={kpiCreate.error}
         />
       </Modal>
 
@@ -371,7 +350,7 @@ export default function FournisseurDetailPage() {
             type="number"
             value={linkPayload.person_id ? String(linkPayload.person_id) : ''}
             onChange={(e) =>
-              setLinkPayload((prev) => ({
+              setLinkPayload((prev: any) => ({
                 ...prev,
                 person_id: Number(e.target.value),
               }))
@@ -383,7 +362,7 @@ export default function FournisseurDetailPage() {
             label="Rôle / fonction"
             value={linkPayload.job_title || ''}
             onChange={(e) =>
-              setLinkPayload((prev) => ({ ...prev, job_title: e.target.value || undefined }))
+              setLinkPayload((prev: any) => ({ ...prev, job_title: e.target.value || undefined }))
             }
           />
 
@@ -391,7 +370,7 @@ export default function FournisseurDetailPage() {
             label="Email professionnel"
             value={linkPayload.work_email || ''}
             onChange={(e) =>
-              setLinkPayload((prev) => ({ ...prev, work_email: e.target.value || undefined }))
+              setLinkPayload((prev: any) => ({ ...prev, work_email: e.target.value || undefined }))
             }
           />
 
@@ -399,7 +378,7 @@ export default function FournisseurDetailPage() {
             label="Téléphone professionnel"
             value={linkPayload.work_phone || ''}
             onChange={(e) =>
-              setLinkPayload((prev) => ({ ...prev, work_phone: e.target.value || undefined }))
+              setLinkPayload((prev: any) => ({ ...prev, work_phone: e.target.value || undefined }))
             }
           />
 
@@ -409,7 +388,7 @@ export default function FournisseurDetailPage() {
               className="h-4 w-4 rounded border-gray-300"
               checked={linkPayload.is_primary ?? false}
               onChange={(e) =>
-                setLinkPayload((prev) => ({ ...prev, is_primary: e.target.checked }))
+                setLinkPayload((prev: any) => ({ ...prev, is_primary: e.target.checked }))
               }
             />
             Marquer comme contact principal

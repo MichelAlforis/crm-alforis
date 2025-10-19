@@ -1,8 +1,7 @@
 # ============= IMPORTS ROUTER =============
 # Bulk import organisations (clients/fournisseurs) et personnes
 # Endpoints:
-#   POST /api/v1/imports/investors/bulk (DEPRECATED: utilise /organisations/bulk?type=client)
-#   POST /api/v1/imports/fournisseurs/bulk (DEPRECATED: utilise /organisations/bulk?type=fournisseur)
+
 #   POST /api/v1/imports/organisations/bulk (NEW: import unifié)
 #   POST /api/v1/imports/people/bulk (NEW: import personnes physiques)
 
@@ -304,82 +303,3 @@ async def bulk_create_people(
 
     return result
 
-
-# ============= DEPRECATED: BULK CREATE INVESTORS =============
-# Conservé pour compatibilité, redirige vers le nouvel endpoint organisations
-
-@router.post("/investors/bulk")
-async def bulk_create_investors_deprecated(
-    investors: List[dict],  # Changé en dict pour accepter n'importe quel format
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user_optional),
-) -> Dict[str, Any]:
-    """
-    DEPRECATED: Utilisez /api/v1/imports/organisations/bulk?type_org=client
-
-    Créer plusieurs investisseurs (clients) en une seule requête.
-    Cet endpoint est conservé pour compatibilité mais sera supprimé dans une future version.
-    """
-    logger.warning("Using deprecated endpoint /investors/bulk, use /organisations/bulk?type_org=client instead")
-
-    # Convertir le format investors vers organisations
-    organisations = []
-    for inv in investors:
-        org_data = {
-            "name": inv.get("name"),
-            "category": inv.get("client_type", "CGPI"),  # Mapper client_type vers category
-            "website": inv.get("website"),
-            "country_code": inv.get("country_code"),
-            "language": inv.get("language", "FR"),
-            "notes": inv.get("notes"),
-            "is_active": inv.get("is_active", True),
-        }
-        organisations.append(OrganisationCreate(**org_data))
-
-    # Appeler le nouvel endpoint
-    return await bulk_create_organisations(
-        organisations=organisations,
-        type_org=OrganisationType.CLIENT,  # Type "client"
-        db=db,
-        current_user=current_user
-    )
-
-
-# ============= DEPRECATED: BULK CREATE FOURNISSEURS =============
-# Conservé pour compatibilité, redirige vers le nouvel endpoint organisations
-
-@router.post("/fournisseurs/bulk")
-async def bulk_create_fournisseurs_deprecated(
-    fournisseurs: List[dict],  # Changé en dict pour accepter n'importe quel format
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user_optional),
-) -> Dict[str, Any]:
-    """
-    DEPRECATED: Utilisez /api/v1/imports/organisations/bulk?type_org=fournisseur
-
-    Créer plusieurs fournisseurs (asset managers) en une seule requête.
-    Cet endpoint est conservé pour compatibilité mais sera supprimé dans une future version.
-    """
-    logger.warning("Using deprecated endpoint /fournisseurs/bulk, use /organisations/bulk?type_org=fournisseur instead")
-
-    # Convertir le format fournisseurs vers organisations
-    organisations = []
-    for fss in fournisseurs:
-        org_data = {
-            "name": fss.get("name"),
-            "category": fss.get("type_fournisseur", "AUTRES"),  # Mapper type_fournisseur vers category
-            "website": fss.get("website"),
-            "country_code": fss.get("country_code"),
-            "language": fss.get("language", "FR"),
-            "notes": fss.get("notes"),
-            "is_active": fss.get("is_active", True),
-        }
-        organisations.append(OrganisationCreate(**org_data))
-
-    # Appeler le nouvel endpoint
-    return await bulk_create_organisations(
-        organisations=organisations,
-        type_org=OrganisationType.FOURNISSEUR,  # Type "fournisseur"
-        db=db,
-        current_user=current_user
-    )

@@ -1,151 +1,74 @@
-from fastapi import APIRouter, Depends, status, HTTPException, Query
-from sqlalchemy.orm import Session
-from typing import List, Optional
+"""
+⚠️  DEPRECATED: Legacy Investors routes
+🔄 MIGRATION COMPLETE (Phase 5)
 
-from core import get_db, get_current_user
-# from schemas.investor import (
-    InvestorCreate,
-    InvestorUpdate,
-    InvestorResponse,
-    InvestorDetailResponse,
-    InvestorStatsResponse,
-    InvestorFilterParams,
-)
-from schemas.base import PaginatedResponse
-# from services.investor import InvestorService
-from services.person import PersonOrganizationLinkService
+These endpoints have been migrated to:
+- GET  /api/v1/organisations           → Use for listing
+- GET  /api/v1/organisations/{id}      → Use for details
+- POST /api/v1/organisations           → Use for creation
+- PUT  /api/v1/organisations/{id}      → Use for updates
+- DELETE /api/v1/organisations/{id}    → Use for deletion
+
+All investor data is now stored in the organisations table.
+See: /crm-backend/api/routes/organisations.py
+"""
+
+from fastapi import APIRouter, HTTPException, status
 
 router = APIRouter(prefix="/investors", tags=["investors"])
 
-# ============= GET ROUTES =============
-
-@router.get("", response_model=PaginatedResponse[InvestorResponse])
-async def list_investors(
-    skip: int = Query(0, ge=0),
-    limit: int = Query(100, ge=1, le=1000),
-    pipeline_stage: str = Query(None),
-    is_active: bool = Query(True),
-    country_code: Optional[str] = Query(None, min_length=2, max_length=2),
-    language: Optional[str] = Query(None, min_length=2, max_length=5),
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user),
-):
-    """Lister tous les investisseurs avec pagination"""
-    service = InvestorService(db)
-    
-    filters = {"is_active": is_active}
-    if pipeline_stage:
-        filters["pipeline_stage"] = pipeline_stage
-    if country_code:
-        filters["country_code"] = country_code.upper()
-    if language:
-        filters["language"] = language.lower()
-    
-    items, total = await service.get_all(skip=skip, limit=limit, filters=filters)
-    
-    return PaginatedResponse(
-        total=total,
-        skip=skip,
-        limit=limit,
-        items=[InvestorResponse.model_validate(item) for item in items]
+@router.get("")
+async def list_investors():
+    """❌ DEPRECATED - Use GET /organisations instead"""
+    raise HTTPException(
+        status_code=status.HTTP_410_GONE,
+        detail="This endpoint has been deprecated. Use GET /organisations instead."
     )
 
 @router.get("/search")
-async def search_investors(
-    q: str = Query(..., min_length=1),
-    skip: int = Query(0, ge=0),
-    limit: int = Query(100, ge=1, le=1000),
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user),
-):
-    """Rechercher des investisseurs"""
-    service = InvestorService(db)
-    items, total = await service.search(q, skip=skip, limit=limit)
-    
-    return PaginatedResponse(
-        total=total,
-        skip=skip,
-        limit=limit,
-        items=[InvestorResponse.model_validate(item) for item in items]
+async def search_investors():
+    """❌ DEPRECATED - Use GET /search/autocomplete instead"""
+    raise HTTPException(
+        status_code=status.HTTP_410_GONE,
+        detail="This endpoint has been deprecated. Use GET /search/autocomplete instead."
     )
 
 @router.get("/stats")
-async def get_investor_stats(
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user),
-):
-    """Obtenir les statistiques sur les investisseurs"""
-    service = InvestorService(db)
-    stats = await service.get_statistics()
-    return InvestorStatsResponse(**stats)
+async def get_investor_stats():
+    """❌ DEPRECATED - Use GET /dashboards/stats/global instead"""
+    raise HTTPException(
+        status_code=status.HTTP_410_GONE,
+        detail="This endpoint has been deprecated. Use GET /dashboards/stats/global instead."
+    )
 
 @router.get("/{investor_id}")
-async def get_investor(
-    investor_id: int,
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user),
-):
-    """Récupérer un investisseur avec tous ses détails"""
-    service = InvestorService(db)
-    link_service = PersonOrganizationLinkService(db)
-    details = await service.get_investor_with_details(investor_id)
-    people = link_service.serialize_links(details.get("people_links", []))
-    
-    return {
-        "investor": InvestorDetailResponse.model_validate(details["investor"]),
-        "contacts": details["contacts"],
-        "interaction_count": len(details["interactions"]),
-        "kpi_count": len(details["kpis"]),
-        "people": people,
-    }
+async def get_investor():
+    """❌ DEPRECATED - Use GET /organisations/{id} instead"""
+    raise HTTPException(
+        status_code=status.HTTP_410_GONE,
+        detail="This endpoint has been deprecated. Use GET /organisations/{id} instead."
+    )
 
-# ============= POST ROUTES =============
+@router.post("")
+async def create_investor():
+    """❌ DEPRECATED - Use POST /organisations instead"""
+    raise HTTPException(
+        status_code=status.HTTP_410_GONE,
+        detail="This endpoint has been deprecated. Use POST /organisations instead."
+    )
 
-@router.post("", response_model=InvestorResponse, status_code=status.HTTP_201_CREATED)
-async def create_investor(
-    investor_create: InvestorCreate,
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user),
-):
-    """Créer un nouvel investisseur"""
-    service = InvestorService(db)
-    investor = await service.create(investor_create)
-    return InvestorResponse.model_validate(investor)
+@router.put("/{investor_id}")
+async def update_investor():
+    """❌ DEPRECATED - Use PUT /organisations/{id} instead"""
+    raise HTTPException(
+        status_code=status.HTTP_410_GONE,
+        detail="This endpoint has been deprecated. Use PUT /organisations/{id} instead."
+    )
 
-# ============= PUT ROUTES =============
-
-@router.put("/{investor_id}", response_model=InvestorResponse)
-async def update_investor(
-    investor_id: int,
-    investor_update: InvestorUpdate,
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user),
-):
-    """Mettre à jour un investisseur"""
-    service = InvestorService(db)
-    investor = await service.update(investor_id, investor_update)
-    return InvestorResponse.model_validate(investor)
-
-@router.put("/{investor_id}/move-to-next-stage")
-async def move_to_next_stage(
-    investor_id: int,
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user),
-):
-    """Déplacer un investisseur à l'étape suivante du pipeline"""
-    service = InvestorService(db)
-    investor = await service.move_to_next_stage(investor_id)
-    return {"message": "Investor moved", "new_stage": investor.pipeline_stage}
-
-# ============= DELETE ROUTES =============
-
-@router.delete("/{investor_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_investor(
-    investor_id: int,
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user),
-):
-    """Supprimer un investisseur"""
-    service = InvestorService(db)
-    await service.delete(investor_id)
-    return None
+@router.delete("/{investor_id}")
+async def delete_investor():
+    """❌ DEPRECATED - Use DELETE /organisations/{id} instead"""
+    raise HTTPException(
+        status_code=status.HTTP_410_GONE,
+        detail="This endpoint has been deprecated. Use DELETE /organisations/{id} instead."
+    )

@@ -26,51 +26,16 @@ export interface AuthState {
   user?: UserInfo
 }
 
-// ============= INVESTOR =============
-
-export type PipelineStage =
-  | "prospect_froid"
-  | "prospect_tiede"
-  | "prospect_chaud"
-  | "en_negociation"
-  | "client"
-  | "inactif"
-
-export type ClientType = "cgpi" | "wholesale" | "institutionnel" | "autre"
-
-export interface Investor {
-  id: number
-  name: string
-  email?: string
-  main_phone?: string
-  website?: string
-  company?: string
-  industry?: string
-  pipeline_stage: PipelineStage
-  client_type?: ClientType
-  notes?: string
-  is_active: boolean
-  country_code?: string | null
-  language?: string | null
-  created_at: string
-  updated_at: string
-}
-
-export interface InvestorCreate {
-  name: string
-  email?: string
-  main_phone?: string
-  website?: string
-  company?: string
-  industry?: string
-  pipeline_stage?: PipelineStage
-  client_type?: ClientType
-  notes?: string
-  country_code?: string
-  language?: string
-}
-
-export interface InvestorUpdate extends Partial<InvestorCreate> {}
+// ============= LEGACY TYPES REMOVED =============
+// The following types have been removed as part of Phase 5 migration:
+// - Investor, InvestorCreate, InvestorUpdate
+// - Fournisseur, FournisseurCreate, FournisseurUpdate
+// - Interaction, InteractionCreate, InteractionUpdate
+// - InvestorDetail, FournisseurDetail, Contact, FournisseurContact
+// - PipelineStage, ClientType
+//
+// Use Organisation, OrganisationCreate, OrganisationUpdate instead
+// See: /crm-frontend/lib/types.ts for Organisation types
 
 // ============= PERSONNE PHYSIQUE =============
 
@@ -139,112 +104,6 @@ export type PersonOrganizationLinkUpdateInput = Partial<
 export interface PersonDetail extends Person {
   organizations: PersonOrganizationLink[]
 }
-
-// ============= FOURNISSEUR (FSS) =============
-
-export interface Fournisseur {
-  id: number
-  name: string
-  email?: string
-  main_phone?: string
-  website?: string
-  company?: string
-  activity?: string
-  stage?: string
-  type_fournisseur?: string
-  notes?: string
-  is_active: boolean
-  country_code?: string | null
-  language?: string | null
-  created_at: string
-  updated_at: string
-}
-
-export interface FournisseurCreate {
-  name: string
-  email?: string
-  main_phone?: string
-  website?: string
-  company?: string
-  activity?: string
-  stage?: string
-  type_fournisseur?: string
-  notes?: string
-  country_code?: string
-  language?: string
-}
-
-export interface FournisseurUpdate extends Partial<FournisseurCreate> {}
-
-// ============= CONTACT =============
-
-export interface Contact {
-  id: number
-  investor_id: number
-  name: string
-  email?: string
-  phone?: string
-  title?: string
-  notes?: string
-  created_at: string
-  updated_at: string
-}
-
-export interface InvestorDetail {
-  investor: Investor
-  contacts: Contact[]
-  interaction_count: number
-  kpi_count: number
-  people: PersonOrganizationLink[]
-}
-
-export interface FournisseurContact {
-  id: number
-  fournisseur_id: number
-  name: string
-  email?: string
-  phone?: string
-  title?: string
-  notes?: string
-  created_at: string
-  updated_at: string
-}
-
-export interface FournisseurDetail {
-  fournisseur: Fournisseur
-  contacts: FournisseurContact[]
-  interaction_count: number
-  kpi_count: number
-  people: PersonOrganizationLink[]
-}
-
-// ============= INTERACTION =============
-
-export type InteractionType = "appel" | "email" | "reunion" | "webinaire" | "autre"
-
-export interface Interaction {
-  id: number
-  investor_id: number
-  fournisseurs: number[] // ✅ Liste des IDs de fournisseurs
-  type: InteractionType
-  date: string
-  duration_minutes?: number
-  subject?: string
-  notes?: string
-  created_at: string
-  updated_at: string
-}
-
-export interface InteractionCreate {
-  fournisseurs: number[] // ✅ Required: au moins 1 fournisseur
-  type: InteractionType
-  date: string
-  duration_minutes?: number
-  subject?: string
-  notes?: string
-}
-
-export interface InteractionUpdate extends Partial<InteractionCreate> {}
 
 // ============= KPI =============
 

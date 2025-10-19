@@ -2,11 +2,14 @@
 // ============= EXPORTS HOOKS =============
 
 export { useAuth } from './useAuth'
-export { useInvestors } from './useInvestors'
-export { useInteractions } from './useInteractions'
-export { useKPIs } from './useKPIs'
-export { useFournisseurs } from './useFournisseurs'
 export { usePeople } from './usePeople'
+
+// Note: Legacy hooks have been removed (Phase 5 migration):
+// - useInvestors → Use useOrganisations instead
+// - useInteractions → Use useOrganisationActivity instead
+// - useKPIs → Use endpoints directly from /dashboards/stats
+// - useFournisseurs → Use useOrganisations instead
+// - useKPIsFournisseur → Use endpoints directly from /dashboards/stats
 export {
   useOrganisations,
   useOrganisation,
