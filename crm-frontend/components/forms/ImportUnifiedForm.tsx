@@ -173,11 +173,11 @@ export default function ImportUnifiedForm() {
   };
 
   const handleSubmit = async () => {
-    if (!organisationsCSV.trim() || !peopleCSV.trim()) {
+    if (!organisationsCSV.trim() && !peopleCSV.trim()) {
       showToast({
         type: 'error',
         title: 'Erreur',
-        message: 'Veuillez charger les deux fichiers CSV'
+        message: 'Veuillez charger au moins un fichier CSV'
       });
       return;
     }
@@ -185,10 +185,10 @@ export default function ImportUnifiedForm() {
     setIsLoading(true);
     try {
       // Parse CSVs
-      const orgsData = parseCSV(organisationsCSV);
-      const peopleData = parseCSV(peopleCSV);
+      const orgsData = organisationsCSV.trim() ? parseCSV(organisationsCSV) : [];
+      const peopleData = peopleCSV.trim() ? parseCSV(peopleCSV) : [];
 
-      if (orgsData.length === 0 || peopleData.length === 0) {
+      if (orgsData.length === 0 && peopleData.length === 0) {
         showToast({
           type: 'error',
           title: 'Erreur',
@@ -219,25 +219,31 @@ export default function ImportUnifiedForm() {
         language: row.language || row['langue'] || 'fr',
       }));
 
-      // Step 1: Import organisations
-      const orgRes = await fetch('/api/v1/imports/organisations/bulk?type_org=' + orgType, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(organisations)
-      });
+      // Step 1: Import organisations (if any)
+      let orgResult = { total: 0, created: [], failed: 0, errors: [] };
+      if (organisations.length > 0) {
+        const orgRes = await fetch('/api/v1/imports/organisations/bulk?type_org=' + orgType, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(organisations)
+        });
 
-      if (!orgRes.ok) throw new Error('Erreur import organisations');
-      const orgResult = await orgRes.json();
+        if (!orgRes.ok) throw new Error('Erreur import organisations');
+        orgResult = await orgRes.json();
+      }
 
-      // Step 2: Import people
-      const peopleRes = await fetch('/api/v1/imports/people/bulk', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(people)
-      });
+      // Step 2: Import people (if any)
+      let peopleResult = { total: 0, created: [], failed: 0, errors: [] };
+      if (people.length > 0) {
+        const peopleRes = await fetch('/api/v1/imports/people/bulk', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(people)
+        });
 
-      if (!peopleRes.ok) throw new Error('Erreur import personnes');
-      const peopleResult = await peopleRes.json();
+        if (!peopleRes.ok) throw new Error('Erreur import personnes');
+        peopleResult = await peopleRes.json();
+      }
 
       // Step 3: Create links based on organisation and person names
       // For now, links creation is skipped - needs API enhancement
@@ -456,7 +462,7 @@ export default function ImportUnifiedForm() {
       <div className="flex gap-3">
         <Button
           onClick={handleSubmit}
-          disabled={isLoading || !organisationsCSV || !peopleCSV}
+          disabled={isLoading || (!organisationsCSV && !peopleCSV)}
           className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? (
