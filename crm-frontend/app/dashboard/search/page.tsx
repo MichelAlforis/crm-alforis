@@ -28,7 +28,7 @@ function getBaseUrlFromHeaders() {
 }
 
 function buildApiUrl(q: string) {
-  const url = new URL('/api/search', getBaseUrlFromHeaders())
+  const url = new URL('/_api/search', getBaseUrlFromHeaders())
   url.searchParams.set('q', q)
   return url.toString()
 }

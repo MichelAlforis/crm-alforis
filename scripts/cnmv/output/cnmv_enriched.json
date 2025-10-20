@@ -1,0 +1,542 @@
+[
+  {
+    "name": "SANTANDER ASSET MANAGEMENT SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 185.0,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "SANTANDER ASSET MANAGEMENT SGIIC",
+      "register_number": "31",
+      "country": "ES",
+      "website": "https://www.santanderassetmanagement.com",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "CAIXABANK ASSET MANAGEMENT SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 85.0,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "CAIXABANK ASSET MANAGEMENT SGIIC",
+      "register_number": "6",
+      "country": "ES",
+      "website": "https://www.caixabankaম.es",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "BBVA ASSET MANAGEMENT SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 75.0,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "BBVA ASSET MANAGEMENT SGIIC",
+      "register_number": "5",
+      "country": "ES",
+      "website": "https://www.bbvaassetmanagement.com",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "BANKINTER GESTION DE ACTIVOS SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 28.5,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "BANKINTER GESTION DE ACTIVOS SGIIC",
+      "register_number": "69",
+      "country": "ES",
+      "website": "https://www.bankintergestiondeactivos.es",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "KUTXABANK GESTION SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 25.2,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "KUTXABANK GESTION SGIIC",
+      "register_number": "138",
+      "country": "ES",
+      "website": "https://www.kutxabankgestion.com",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "MUTUACTIVOS SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 20.8,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "MUTUACTIVOS SGIIC",
+      "register_number": "24",
+      "country": "ES",
+      "website": "https://www.mutuactivos.com",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "SABADELL ASSET MANAGEMENT SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 18.4,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "SABADELL ASSET MANAGEMENT SGIIC",
+      "register_number": "8",
+      "country": "ES",
+      "website": "https://www.sabadellam.com",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "MAPFRE ASSET MANAGEMENT SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 15.7,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "MAPFRE ASSET MANAGEMENT SGIIC",
+      "register_number": "33",
+      "country": "ES",
+      "website": "https://www.mapfream.com",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "IBERCAJA GESTION SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 12.3,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "IBERCAJA GESTION SGIIC",
+      "register_number": "7",
+      "country": "ES",
+      "website": "https://www.ibercajagestion.es",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "ALLIANZ POPULAR ASSET MANAGEMENT SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 10.5,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "ALLIANZ POPULAR ASSET MANAGEMENT SGIIC",
+      "register_number": "44",
+      "country": "ES",
+      "website": "https://www.allianzpopularam.es",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "BESTINVER GESTION SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 8.2,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "BESTINVER GESTION SGIIC",
+      "register_number": "14",
+      "country": "ES",
+      "website": "https://www.bestinver.es",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "UNICORP PATRIMONIO SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 7.1,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "UNICORP PATRIMONIO SGIIC",
+      "register_number": "137",
+      "country": "ES",
+      "website": "https://www.unicorppatrimonio.com",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "RENTA 4 GESTORA SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 6.8,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "RENTA 4 GESTORA SGIIC",
+      "register_number": "49",
+      "country": "ES",
+      "website": "https://www.r4.com",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "ABANTE ASESORES GESTION SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 5.4,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "ABANTE ASESORES GESTION SGIIC",
+      "register_number": "156",
+      "country": "ES",
+      "website": "https://www.abanteasesores.com",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "FONDITEL GESTION SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 4.9,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "FONDITEL GESTION SGIIC",
+      "register_number": "58",
+      "country": "ES",
+      "website": "https://www.fonditel.es",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "GVC GAESCO GESTION SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 3.2,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "GVC GAESCO GESTION SGIIC",
+      "register_number": "45",
+      "country": "ES",
+      "website": "https://www.gvcgaesco.es",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "AZVALOR ASSET MANAGEMENT SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 2.8,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "AZVALOR ASSET MANAGEMENT SGIIC",
+      "register_number": "157",
+      "country": "ES",
+      "website": "https://www.azvalor.com",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "COBAS ASSET MANAGEMENT SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 2.1,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "COBAS ASSET MANAGEMENT SGIIC",
+      "register_number": "159",
+      "country": "ES",
+      "website": "https://www.cobasam.com",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "TREA ASSET MANAGEMENT SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 1.9,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "TREA ASSET MANAGEMENT SGIIC",
+      "register_number": "144",
+      "country": "ES",
+      "website": "https://www.trea-am.com",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "MAGALLANES VALUE INVESTORS SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 1.5,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "MAGALLANES VALUE INVESTORS SGIIC",
+      "register_number": "235",
+      "country": "ES",
+      "website": "https://www.magallanesvalue.com",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "ANDBANK WEALTH MANAGEMENT SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 1.2,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 1",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "ANDBANK WEALTH MANAGEMENT SGIIC",
+      "register_number": "150",
+      "country": "ES",
+      "website": "https://www.andbank.es",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "GESIURIS ASSET MANAGEMENT SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 0.95,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 2",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "GESIURIS ASSET MANAGEMENT SGIIC",
+      "register_number": "50",
+      "country": "ES",
+      "website": "https://www.gesiuris.com",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "HOROS ASSET MANAGEMENT SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 0.87,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 2",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "HOROS ASSET MANAGEMENT SGIIC",
+      "register_number": "236",
+      "country": "ES",
+      "website": "https://www.horosam.com",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "DUNAS CAPITAL GESTION SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 0.75,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 2",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "DUNAS CAPITAL GESTION SGIIC",
+      "register_number": "143",
+      "country": "ES",
+      "website": "https://www.dunascapital.com",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "METAVALOR GESTION SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 0.68,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 2",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "METAVALOR GESTION SGIIC",
+      "register_number": "155",
+      "country": "ES",
+      "website": "https://www.metavalor.es",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "EDM GESTION SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 0.55,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 2",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "EDM GESTION SGIIC",
+      "register_number": "158",
+      "country": "ES",
+      "website": "https://www.edmgestion.com",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "ORIENTA CAPITAL SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 0.52,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 2",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "ORIENTA CAPITAL SGIIC",
+      "register_number": "141",
+      "country": "ES",
+      "website": "https://www.orientacapital.com",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "AURIGA GLOBAL INVESTORS SV",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 0.42,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 3",
+    "match_score": 0.9,
+    "original_data": {
+      "name": "AURIGA GLOBAL INVESTORS SV",
+      "register_number": "228",
+      "country": "ES",
+      "website": "https://www.aurigaglobal.com",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "TRUE VALUE SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 0.35,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 3",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "TRUE VALUE SGIIC",
+      "register_number": "160",
+      "country": "ES",
+      "website": "https://www.truevaluesis.com",
+      "source": "CNMV Registry"
+    }
+  },
+  {
+    "name": "ATTICA WEALTH MANAGEMENT SGIIC",
+    "category": "SGIIC",
+    "country": "Espagne",
+    "country_code": "ES",
+    "aum": 0.28,
+    "aum_date": "2024-12-31",
+    "aum_source": "INVERCO 2024",
+    "tier": "Tier 3",
+    "match_score": 1.0,
+    "original_data": {
+      "name": "ATTICA WEALTH MANAGEMENT SGIIC",
+      "register_number": "234",
+      "country": "ES",
+      "website": "https://www.atticafunds.com",
+      "source": "CNMV Registry"
+    }
+  }
+]

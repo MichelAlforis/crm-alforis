@@ -25,14 +25,17 @@ from pathlib import Path
 from difflib import SequenceMatcher
 
 # File paths
-BASE_DIR = Path(__file__).parent.parent.parent
-INPUT_SGIIC = BASE_DIR / "cnmv_sgiic_raw.json"
-INPUT_ENTITIES = BASE_DIR / "cnmv_entities_raw.json"
-INPUT_AUM = BASE_DIR / "cnmv_aum_raw.json"
-INPUT_AUM_INVERCO = BASE_DIR / "cnmv_aum_inverco.json"  # From INVERCO Excel parser
+BASE_DIR = Path(__file__).parent
+OUTPUT_DIR = BASE_DIR / "output"
+OUTPUT_DIR.mkdir(exist_ok=True)
 
-OUTPUT_JSON = BASE_DIR / "cnmv_enriched_with_aum.json"
-OUTPUT_CSV = BASE_DIR / "cnmv_enriched_with_aum.csv"
+INPUT_SGIIC = OUTPUT_DIR / "cnmv_sgiic.json"
+INPUT_ENTITIES = OUTPUT_DIR / "cnmv_entities.json"
+INPUT_AUM = OUTPUT_DIR / "cnmv_aum.json"
+INPUT_AUM_INVERCO = OUTPUT_DIR / "cnmv_aum_inverco.json"  # From INVERCO Excel parser
+
+OUTPUT_JSON = OUTPUT_DIR / "cnmv_enriched.json"
+OUTPUT_CSV = OUTPUT_DIR / "cnmv_enriched.csv"
 
 
 def normalize_name(name):

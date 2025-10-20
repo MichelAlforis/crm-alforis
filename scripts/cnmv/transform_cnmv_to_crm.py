@@ -21,14 +21,17 @@ from pathlib import Path
 from datetime import datetime
 
 # File paths
-BASE_DIR = Path(__file__).parent.parent.parent
-INPUT_ENRICHED = BASE_DIR / "cnmv_enriched_with_aum.json"
-INPUT_SGIIC = BASE_DIR / "cnmv_sgiic_raw.json"
-INPUT_ENTITIES = BASE_DIR / "cnmv_entities_raw.json"
-INPUT_CONTACTS = BASE_DIR / "cnmv_contacts_raw.json"
+BASE_DIR = Path(__file__).parent
+OUTPUT_DIR = BASE_DIR / "output"
+OUTPUT_DIR.mkdir(exist_ok=True)
 
-OUTPUT_ORGS = BASE_DIR / "cnmv_organisations.csv"
-OUTPUT_CONTACTS = BASE_DIR / "cnmv_contacts.csv"
+INPUT_ENRICHED = OUTPUT_DIR / "cnmv_enriched.json"
+INPUT_SGIIC = OUTPUT_DIR / "cnmv_sgiic.json"
+INPUT_ENTITIES = OUTPUT_DIR / "cnmv_entities.json"
+INPUT_CONTACTS = OUTPUT_DIR / "cnmv_contacts.json"
+
+OUTPUT_ORGS = OUTPUT_DIR / "cnmv_organisations.csv"
+OUTPUT_CONTACTS = OUTPUT_DIR / "cnmv_contacts.csv"
 
 
 def clean_phone(phone):
