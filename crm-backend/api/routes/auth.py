@@ -52,29 +52,6 @@ TEST_USERS = {
 # ============= ROUTES =============
 
 @router.post("/login", response_model=TokenResponse)
-async def login(
-    request: Request,
-    db: Session = Depends(get_db),
-    email: EmailStr = Form(...),
-    password: str = Form(...)
-):
-    user = db.query(User).filter(User.email == email).first()
-
-    if not user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
-
-    if not verify_password(password, user.password):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
-
-    return {
-        "access_token": create_access_token(
-            data={"sub": user.email, "is_admin": user.is_admin},
-            expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-        ),
-        "token_type": "bearer",
-        "expires_in": settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60
-    }
-@router.post("/login", response_model=TokenResponse)
 async def login(request: Request, db: Session = Depends(get_db)):
     
     """
@@ -146,9 +123,16 @@ async def login(request: Request, db: Session = Depends(get_db)):
             )
             .first()
         )
+
+        # Vérifier si username existe déjà
+        username = seed.get("email").split("@")[0]
+        existing_username = db.query(User).filter(User.username == username).first()
+        if existing_username:
+            username = f"{username}_{normalized_email.split('@')[0]}"
+
         user = User(
             email=normalized_email,
-            username=seed.get("email").split("@")[0],
+            username=username,
             full_name=seed.get("name"),
             hashed_password=get_password_hash(seed["password"]),
             role=role,

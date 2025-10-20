@@ -42,8 +42,8 @@ class Person(BaseModel):
 
     first_name = Column("prenom", String(100), nullable=True, index=True)
     last_name = Column("nom", String(100), nullable=True, index=True)
-    email = Column(String(255), unique=True, index=True, nullable=True)
-    personal_email = Column(String(255), unique=True, index=True, nullable=True)
+    email = Column(String(255), index=True, nullable=True)
+    personal_email = Column(String(255), index=True, nullable=True)
     phone = Column("telephone", String(50), nullable=True)
     personal_phone = Column(String(50), nullable=True)
     mobile = Column(String(50), nullable=True)

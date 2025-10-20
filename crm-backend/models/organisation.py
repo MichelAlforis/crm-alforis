@@ -163,7 +163,7 @@ class Organisation(BaseModel):
     strategies = Column(JSON, nullable=True)
 
     # Contact & localisation
-    email = Column(String(255), nullable=True, unique=True, index=True)
+    email = Column(String(255), nullable=True, index=True)
     phone = Column("telephone", String(50), nullable=True)
     website = Column(String(255), nullable=True)
     address = Column("adresse", Text, nullable=True)
