@@ -109,7 +109,7 @@ export default function GlobalSearchInputAdvanced({
 
     setIsLoading(true)
 
-    fetch(`/_api/search?q=${encodeURIComponent(debouncedValue)}`)
+    fetch(`/api/search?q=${encodeURIComponent(debouncedValue)}`)
       .then(res => {
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`)
