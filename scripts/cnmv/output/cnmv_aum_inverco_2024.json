@@ -1,0 +1,247 @@
+[
+  {
+    "name": "CAIXABANK ASSET MANAGEMENT",
+    "aum": 94.752,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "SANTANDER ASSET MANAGEMENT",
+    "aum": 61.1,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "BBVA ASSET MANAGEMENT",
+    "aum": 54.2,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "BANKINTER GESTION DE ACTIVOS",
+    "aum": 28.5,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "IBERCAJA GESTION",
+    "aum": 25.0,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "KUTXABANK GESTION",
+    "aum": 23.5,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "SABADELL ASSET MANAGEMENT",
+    "aum": 21.3,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "MUTUACTIVOS",
+    "aum": 20.8,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "UNIGEST",
+    "aum": 18.2,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "MAPFRE ASSET MANAGEMENT",
+    "aum": 15.7,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "ALLIANZ POPULAR ASSET MANAGEMENT",
+    "aum": 10.5,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "BESTINVER GESTION",
+    "aum": 8.2,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "UNICORP PATRIMONIO",
+    "aum": 7.1,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "RENTA 4 GESTORA",
+    "aum": 6.8,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "ABANTE ASESORES GESTION",
+    "aum": 5.4,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "FONDITEL GESTION",
+    "aum": 4.9,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "ABANCA GESTION DE ACTIVOS",
+    "aum": 4.2,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "GVC GAESCO GESTION",
+    "aum": 3.2,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "AZVALOR ASSET MANAGEMENT",
+    "aum": 2.8,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "COBAS ASSET MANAGEMENT",
+    "aum": 2.1,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "TREA ASSET MANAGEMENT",
+    "aum": 1.9,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "MAGALLANES VALUE INVESTORS",
+    "aum": 1.5,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "ANDBANK WEALTH MANAGEMENT",
+    "aum": 1.2,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "GESIURIS ASSET MANAGEMENT",
+    "aum": 0.95,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 2"
+  },
+  {
+    "name": "HOROS ASSET MANAGEMENT",
+    "aum": 0.87,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 2"
+  },
+  {
+    "name": "DUNAS CAPITAL GESTION",
+    "aum": 0.75,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 2"
+  },
+  {
+    "name": "METAVALOR GESTION",
+    "aum": 0.68,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 2"
+  },
+  {
+    "name": "EDM GESTION",
+    "aum": 0.55,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 2"
+  },
+  {
+    "name": "ORIENTA CAPITAL",
+    "aum": 0.52,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 2"
+  },
+  {
+    "name": "AMUNDI IBERIA",
+    "aum": 2.5,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "BNP PARIBAS ASSET MANAGEMENT",
+    "aum": 1.8,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "MEDIOLANUM GESTION",
+    "aum": 1.4,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "INVERSIS GESTION",
+    "aum": 1.1,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 1"
+  },
+  {
+    "name": "LABORAL KUTXA GESTION",
+    "aum": 0.95,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 2"
+  },
+  {
+    "name": "UNICAJA GESTION",
+    "aum": 0.85,
+    "aum_date": "2024-12-31",
+    "source": "INVERCO Dec 2024",
+    "tier": "Tier 2"
+  }
+]

@@ -1,0 +1,500 @@
+======================================================================
+🚀 EXTRACTION DIRIGEANTS - SELENIUM BATCH 100
+======================================================================
+
+⚙️  Configuration:
+   • Sauvegarde tous les 10 SDG
+   • Temps chargement page: 6s
+   • Délai entre requêtes: 3s
+
+📊 496 SDG avec SIREN
+
+🌐 Ouverture Chrome (fenêtre visible - NE PAS FERMER!)...
+
+📋 Visite initiale Infogreffe pour configuration cookies...
+
+======================================================================
+⚠️  ACTION REQUISE DANS LA FENÊTRE CHROME:
+   1. Cliquez sur 'Continuer sans accepter' ou 'Tout refuser'
+   2. Revenez ici et appuyez sur ENTRÉE pour continuer
+======================================================================
+
+⏳ Attente 15 secondes pour cliquer sur les cookies...
+
+✅ Configuration terminée - Démarrage extraction...
+
+[  1/496] NCI                                        (AUM: 2025.0 Md€)... ✅ 2
+[  2/496] IQ EQ Management                           (AUM: 750.0 Md€)... ❌
+[  3/496] HSBC REIM ( FRANCE )                       (AUM: 731.0 Md€)... ✅ 1
+[  4/496] CONSOLIDATION ET DEVELOPPEMENT GESTION     (AUM: 100.0 Md€)... ✅ 1
+[  5/496] AlTi Wealth Management (France)            (AUM: 60.0 Md€)... ✅ 1
+[  6/496] BNP PARIBAS REAL ESTATE INVESTMENT MANAGEM (AUM: 45.0 Md€)... ❌
+[  7/496] PRIVATE CORNER                             (AUM: 44.0 Md€)... ✅ 2
+[  8/496] IM GLOBAL PARTNER                          (AUM: 43.8 Md€)... ✅ 1
+[  9/496] LAZARD FRERES GESTION                      (AUM: 41.5 Md€)... ❌
+[ 10/496] PERIAL ASSET MANAGEMENT SAS                (AUM: 41.0 Md€)... ✅ 2
+      💾 Checkpoint sauvegardé: 10 contacts
+
+======================================================================
+✅ BATCH 1 TERMINÉ (10/496 SDG)
+   • 10 contacts total
+   • 7 sociétés enrichies dans ce batch
+======================================================================
+
+[ 11/496] DORVAL ASSET MANAGEMENT                    (AUM: 40.0 Md€)... ❌
+[ 12/496] OPTIGESTION                                (AUM: 40.0 Md€)... ✅ 1
+[ 13/496] ROTHSCHILD & CO ASSET MANAGEMENT           (AUM: 37.0 Md€)... ✅ 4
+[ 14/496] L CATTERTON EUROPE                         (AUM: 37.0 Md€)... ✅ 2
+[ 15/496] BNP PARIBAS ASSET MANAGEMENT Europe        (AUM: 35.7 Md€)... ❌
+[ 16/496] MIROVA                                     (AUM: 35.0 Md€)... ✅ 2
+[ 17/496] AXA IM SELECT FRANCE                       (AUM: 35.0 Md€)... ✅ 3
+[ 18/496] CARMIGNAC GESTION                          (AUM: 33.9 Md€)... ✅ 1
+[ 19/496] GROUPAMA ASSET MANAGEMENT                  (AUM: 32.7 Md€)... ✅ 2
+[ 20/496] BFT INVESTMENT MANAGERS                    (AUM: 31.7 Md€)... ✅ 1
+      💾 Checkpoint sauvegardé: 26 contacts
+
+======================================================================
+✅ BATCH 2 TERMINÉ (20/496 SDG)
+   • 26 contacts total
+   • 8 sociétés enrichies dans ce batch
+======================================================================
+
+[ 21/496] Société Générale Investment Solutions (Fra (AUM: 30.0 Md€)... ✅ 3
+[ 22/496] TIKEHAU INVESTMENT MANAGEMENT              (AUM: 27.1 Md€)... ✅ 2
+[ 23/496] ARKEA ASSET MANAGEMENT                     (AUM: 26.8 Md€)... ❌
+[ 24/496] DNCA FINANCE                               (AUM: 26.3 Md€)... ❌
+[ 25/496] CAPITAL FUND MANAGEMENT                    (AUM: 20.5 Md€)... ❌
+[ 26/496] ARDIAN FRANCE                              (AUM: 20.0 Md€)... ✅ 1
+[ 27/496] KORELYA CAPITAL                            (AUM: 18.5 Md€)... ✅ 2
+[ 28/496] INFRAVIA CAPITAL PARTNERS                  (AUM: 16.0 Md€)... ✅ 1
+[ 29/496] ELEVA CAPITAL                              (AUM: 13.0 Md€)... ✅ 2
+[ 30/496] CARTESIA                                   (AUM: 12.0 Md€)... ✅ 2
+      💾 Checkpoint sauvegardé: 39 contacts
+
+======================================================================
+✅ BATCH 3 TERMINÉ (30/496 SDG)
+   • 39 contacts total
+   • 7 sociétés enrichies dans ce batch
+======================================================================
+
+[ 31/496] 21 INVEST FRANCE                           (AUM: 12.0 Md€)... ❌
+[ 32/496] AEQUAM CAPITAL                             (AUM: 11.0 Md€)... ✅ 2
+[ 33/496] ADBIO PARTNERS                             (AUM: 10.7 Md€)... ✅ 1
+[ 34/496] Parametric                                 (AUM: 10.0 Md€)... ✅ 2
+[ 35/496] LGT PRIVATE DEBT (FRANCE) SAS              (AUM: 10.0 Md€)... ✅ 2
+[ 36/496] CoinShares Asset Management                (AUM: 10.0 Md€)... ✅ 1
+[ 37/496] ATALANTE                                   (AUM: 9.9 Md€)... ✅ 1
+[ 38/496] FINANCIERE DE L'ECHIQUIER                  (AUM: 9.5 Md€)... ✅ 2
+[ 39/496] SWEN CAPITAL PARTNERS                      (AUM: 9.5 Md€)... ❌
+[ 40/496] AEW                                        (AUM: 8.5 Md€)... ✅ 1
+      💾 Checkpoint sauvegardé: 51 contacts
+
+======================================================================
+✅ BATCH 4 TERMINÉ (40/496 SDG)
+   • 51 contacts total
+   • 8 sociétés enrichies dans ce batch
+======================================================================
+
+[ 41/496] ECOFI INVESTISSEMENTS                      (AUM: 8.2 Md€)... ✅ 1
+[ 42/496] ADVENIS  REAL ESTATE INVESTMENT MANAGEMENT (AUM: 8.0 Md€)... ❌
+[ 43/496] RIVAGE INVESTMENT                          (AUM: 8.0 Md€)... ✅ 2
+[ 44/496] CATHAY CAPITAL PRIVATE EQUITY              (AUM: 8.0 Md€)... ✅ 2
+[ 45/496] SYCOMORE ASSET MANAGEMENT                  (AUM: 7.8 Md€)... ❌
+[ 46/496] COVEA FINANCE                              (AUM: 7.5 Md€)... ✅ 3
+[ 47/496] KYOSEIL ASSET MANAGEMENT                   (AUM: 7.0 Md€)... ✅ 1
+[ 48/496] INOVALIS                                   (AUM: 7.0 Md€)... ✅ 4
+[ 49/496] O2 CAPITAL ASSET MANAGEMENT                (AUM: 7.0 Md€)... ❌
+[ 50/496] APICIL ASSET MANAGEMENT                    (AUM: 7.0 Md€)... ✅ 1
+      💾 Checkpoint sauvegardé: 65 contacts
+
+======================================================================
+✅ BATCH 5 TERMINÉ (50/496 SDG)
+   • 65 contacts total
+   • 7 sociétés enrichies dans ce batch
+======================================================================
+
+[ 51/496] ERES GESTION                               (AUM: 6.7 Md€)... ✅ 2
+[ 52/496] MANDARINE GESTION                          (AUM: 6.0 Md€)... ✅ 2
+[ 53/496] VERMEER CAPITAL PARTNERS                   (AUM: 6.0 Md€)... ✅ 2
+[ 54/496] AURIGA PARTNERS                            (AUM: 6.0 Md€)... ✅ 1
+[ 55/496] INTER GESTION REIM                         (AUM: 6.0 Md€)... ✅ 1
+[ 56/496] PALATINE ASSET MANAGEMENT                  (AUM: 5.8 Md€)... ✅ 1
+[ 57/496] ATLANTE GESTION                            (AUM: 5.4 Md€)... ✅ 2
+[ 58/496] MONTPENSIER ARBEVEL                        (AUM: 5.0 Md€)... ✅ 3
+[ 59/496] ALTER EQUITY SAS                           (AUM: 5.0 Md€)... ✅ 1
+[ 60/496] SOFIDY                                     (AUM: 5.0 Md€)... ✅ 3
+      💾 Checkpoint sauvegardé: 83 contacts
+
+======================================================================
+✅ BATCH 6 TERMINÉ (60/496 SDG)
+   • 83 contacts total
+   • 10 sociétés enrichies dans ce batch
+======================================================================
+
+[ 61/496] PRAEMIA REIM France                        (AUM: 5.0 Md€)... ✅ 1
+[ 62/496] EXTENDAM                                   (AUM: 4.8 Md€)... ❌
+[ 63/496] Allianz Immovalor                          (AUM: 4.7 Md€)... ✅ 1
+[ 64/496] ALTAROC PARTNERS SAS                       (AUM: 4.4 Md€)... ✅ 1
+[ 65/496] ELLIPSIS ASSET MANAGEMENT                  (AUM: 4.4 Md€)... ❌
+[ 66/496] AURIS GESTION                              (AUM: 4.3 Md€)... ✅ 2
+[ 67/496] LATOUR CAPITAL MANAGEMENT SAS              (AUM: 4.0 Md€)... ✅ 3
+[ 68/496] SOCIETE DE GESTION PREVOIR                 (AUM: 4.0 Md€)... ✅ 1
+[ 69/496] CIAM                                       (AUM: 4.0 Md€)... ✅ 2
+[ 70/496] Sienna AM France                           (AUM: 4.0 Md€)... ❌
+      💾 Checkpoint sauvegardé: 94 contacts
+
+======================================================================
+✅ BATCH 7 TERMINÉ (70/496 SDG)
+   • 94 contacts total
+   • 7 sociétés enrichies dans ce batch
+======================================================================
+
+[ 71/496] OMADA Investment Managers                  (AUM: 4.0 Md€)... ❌
+[ 72/496] IGEA FINANCE                               (AUM: 4.0 Md€)... ✅ 1
+[ 73/496] DELUBAC ASSET MANAGEMENT                   (AUM: 4.0 Md€)... ✅ 1
+[ 74/496] ALOE PRIVATE EQUITY                        (AUM: 4.0 Md€)... ✅ 4
+[ 75/496] TILT CAPITAL PARTNERS                      (AUM: 3.7 Md€)... ✅ 3
+[ 76/496] AMIRAL GESTION                             (AUM: 3.5 Md€)... ✅ 4
+[ 77/496] SYQUANT CAPITAL                            (AUM: 3.5 Md€)... ✅ 2
+[ 78/496] EURYALE                                    (AUM: 3.3 Md€)... ✅ 1
+[ 79/496] IRIS CAPITAL MANAGEMENT                    (AUM: 3.0 Md€)... ✅ 3
+[ 80/496] ALDERAN                                    (AUM: 3.0 Md€)... ✅ 1
+      💾 Checkpoint sauvegardé: 114 contacts
+
+======================================================================
+✅ BATCH 8 TERMINÉ (80/496 SDG)
+   • 114 contacts total
+   • 9 sociétés enrichies dans ce batch
+======================================================================
+
+[ 81/496] ATLAND VOISIN                              (AUM: 3.0 Md€)... ✅ 2
+[ 82/496] HOTEL INVESTISSEMENT CAPITAL               (AUM: 3.0 Md€)... ✅ 2
+[ 83/496] ANAXIS ASSET MANAGEMENT                    (AUM: 2.8 Md€)... ✅ 1
+[ 84/496] RGREEN INVEST SAS                          (AUM: 2.6 Md€)... ✅ 3
+[ 85/496] EURAZEO GLOBAL INVESTOR                    (AUM: 2.5 Md€)... ✅ 1
+[ 86/496] LBO FRANCE GESTION                         (AUM: 2.5 Md€)... ❌
+[ 87/496] AGRICA EPARGNE                             (AUM: 2.2 Md€)... ✅ 1
+[ 88/496] AMPLEGEST                                  (AUM: 2.2 Md€)... ✅ 1
+[ 89/496] WEINBERG CAPITAL PARTNERS                  (AUM: 2.1 Md€)... ✅ 1
+[ 90/496] QUALIUM INVESTISSEMENT                     (AUM: 2.1 Md€)... ❌
+      💾 Checkpoint sauvegardé: 126 contacts
+
+======================================================================
+✅ BATCH 9 TERMINÉ (90/496 SDG)
+   • 126 contacts total
+   • 8 sociétés enrichies dans ce batch
+======================================================================
+
+[ 91/496] BEX CAPITAL                                (AUM: 2.0 Md€)... ✅ 2
+[ 92/496] INCO VENTURES                              (AUM: 2.0 Md€)... ✅ 1
+[ 93/496] MY SHARE COMPANY                           (AUM: 2.0 Md€)... ✅ 2
+[ 94/496] RICHELIEU INVEST                           (AUM: 2.0 Md€)... ✅ 3
+[ 95/496] Flandrin Capital                           (AUM: 2.0 Md€)... ✅ 2
+[ 96/496] NIXEN PARTNERS                             (AUM: 2.0 Md€)... ✅ 2
+[ 97/496] ACA - ASSET MANAGEMENT COMPANY & ASSOCIES  (AUM: 2.0 Md€)... ✅ 1
+[ 98/496] WHITE STAR CAPITAL FRANCE SAS              (AUM: 2.0 Md€)... ✅ 4
+[ 99/496] MW GESTION                                 (AUM: 2.0 Md€)... ✅ 2
+[100/496] NOVAXIA INVESTISSEMENT                     (AUM: 2.0 Md€)... ✅ 3
+      💾 Checkpoint sauvegardé: 148 contacts
+
+======================================================================
+✅ BATCH 10 TERMINÉ (100/496 SDG)
+   • 148 contacts total
+   • 10 sociétés enrichies dans ce batch
+======================================================================
+
+[101/496] DAUPHINE AM                                (AUM: 2.0 Md€)... ✅ 1
+[102/496] MONTAGU PRIVATE EQUITY SAS                 (AUM: 2.0 Md€)... ✅ 3
+[103/496] Square Capital (Paris) SAS                 (AUM: 2.0 Md€)... ❌
+[104/496] CPR ASSET MANAGEMENT                       (AUM: 2.0 Md€)... ✅ 3
+[105/496] LLM & ASSOCIES                             (AUM: 2.0 Md€)... ❌
+[106/496] RAISE                                      (AUM: 2.0 Md€)... ✅ 4
+[107/496] Althéis                                    (AUM: 1.7 Md€)... ❌
+[108/496] IVO CAPITAL PARTNERS                       (AUM: 1.6 Md€)... ✅ 4
+[109/496] CEREA PARTNERS                             (AUM: 1.5 Md€)... ✅ 3
+[110/496] SERENA CAPITAL                             (AUM: 1.4 Md€)... ❌
+      💾 Checkpoint sauvegardé: 166 contacts
+
+======================================================================
+✅ BATCH 11 TERMINÉ (110/496 SDG)
+   • 166 contacts total
+   • 6 sociétés enrichies dans ce batch
+======================================================================
+
+[111/496] DEMETER INVESTMENT MANAGERS                (AUM: 1.3 Md€)... ✅ 2
+[112/496] TRUSTEAM FINANCE                           (AUM: 1.2 Md€)... ✅ 2
+[113/496] TRUFFLE CAPITAL S.A.S                      (AUM: 1.2 Md€)... ❌
+[114/496] CHEQUERS PARTENAIRES SA                    (AUM: 1.1 Md€)... ✅ 2
+[115/496] idiCo                                      (AUM: 1.0 Md€)... ✅ 1
+[116/496] ZENITH AM                                  (AUM: 1.0 Md€)... ✅ 2
+[117/496] MONETA ASSET MANAGEMENT                    (AUM: 1.0 Md€)... ✅ 2
+[118/496] EQUIGEST                                   (AUM: 1.0 Md€)... ✅ 1
+[119/496] UNIGESTION ASSET MANAGEMENT (FRANCE)       (AUM: 1.0 Md€)... ✅ 1
+[120/496] SLATE Venture Capital                      (AUM: 1.0 Md€)... ✅ 3
+      💾 Checkpoint sauvegardé: 182 contacts
+
+======================================================================
+✅ BATCH 12 TERMINÉ (120/496 SDG)
+   • 182 contacts total
+   • 9 sociétés enrichies dans ce batch
+======================================================================
+
+[121/496] ACER FINANCE                               (AUM: 1.0 Md€)... ✅ 1
+[122/496] ARGOS WITYU                                (AUM: 1.0 Md€)... ✅ 4
+[123/496] FIL GESTION                                (AUM: 1.0 Md€)... ✅ 2
+[124/496] SOFINNOVA PARTNERS                         (AUM: 1.0 Md€)... ❌
+[125/496] MBO+                                       (AUM: 1.0 Md€)... ✅ 5
+[126/496] IXO PRIVATE EQUITY                         (AUM: 1.0 Md€)... ✅ 1
+[127/496] CLARTAN ASSOCIES                           (AUM: 0.8 Md€)... ✅ 3
+[128/496] MONTSEGUR FINANCE                          (AUM: 0.8 Md€)... ✅ 1
+[129/496] ENTREPRENEUR INVEST                        (AUM: 0.8 Md€)... ❌
+[130/496] EQUALIS CAPITAL FRANCE                     (AUM: 0.7 Md€)... ✅ 2
+      💾 Checkpoint sauvegardé: 201 contacts
+
+======================================================================
+✅ BATCH 13 TERMINÉ (130/496 SDG)
+   • 201 contacts total
+   • 8 sociétés enrichies dans ce batch
+======================================================================
+
+[131/496] ESSLING CAPITAL                            (AUM: 0.7 Md€)... ❌
+[132/496] IRDI CAPITAL INVESTISSEMENT                (AUM: 0.6 Md€)... ✅ 1
+[133/496] EQUISTONE PARTNERS FRANCE SAS              (AUM: 0.5 Md€)... ✅ 2
+[134/496] 360 CAPITAL PARTNERS                       (AUM: 0.5 Md€)... ❌
+[135/496] M CAPITAL PARTNERS                         (AUM: 0.5 Md€)... ✅ 1
+[136/496] ACTIVA CAPITAL                             (AUM: 0.5 Md€)... ✅ 2
+[137/496] STARQUEST                                  (AUM: 0.4 Md€)... ✅ 1
+[138/496] FINANCIERE DE L'ARC                        (AUM: 0.4 Md€)... ✅ 1
+[139/496] CDC CROISSANCE                             (AUM: 0.4 Md€)... ✅ 1
+[140/496] GUTENBERG FINANCE                          (AUM: 0.2 Md€)... ✅ 1
+      💾 Checkpoint sauvegardé: 211 contacts
+
+======================================================================
+✅ BATCH 14 TERMINÉ (140/496 SDG)
+   • 211 contacts total
+   • 8 sociétés enrichies dans ce batch
+======================================================================
+
+[141/496] DÔM FINANCE                                (AUM: 0.2 Md€)... ✅ 3
+[142/496] PAREF GESTION                              (AUM: 0.2 Md€)... ✅ 2
+[143/496] CIC PRIVATE DEBT                           (AUM: 0.2 Md€)... ✅ 1
+[144/496] VENTECH SAS                                (AUM: 0.2 Md€)... ✅ 2
+[145/496] AESTIAM                                    (AUM: 0.2 Md€)... ❌
+[146/496] DELTA ALTERNATIVE MANAGEMENT               (AUM: 0.1 Md€)... ❌
+[147/496] AESOPE GESTION DE PORTEFEUILLES            (AUM: 0.1 Md€)... ✅ 2
+[148/496] BLUEIMVEST                                 (AUM: 0.1 Md€)... ❌
+[149/496] AQUITI GESTION                             (AUM: 0.1 Md€)... ✅ 1
+[150/496] TURENNE CAPITAL PARTENAIRES SA             (AUM: 0.1 Md€)... ✅ 2
+      💾 Checkpoint sauvegardé: 224 contacts
+
+======================================================================
+✅ BATCH 15 TERMINÉ (150/496 SDG)
+   • 224 contacts total
+   • 7 sociétés enrichies dans ce batch
+======================================================================
+
+[151/496] INNOVAFONDS                                (AUM: 0.1 Md€)... ✅ 1
+[152/496] MOMENTUM INVEST SAS                        (AUM: 0.1 Md€)... ✅ 2
+[153/496] Verto                                      (AUM: 0.1 Md€)... ✅ 2
+[154/496] RING                                       (AUM: 0.1 Md€)... ❌
+[155/496] RB CAPITAL                                 (AUM: 0.1 Md€)... ✅ 2
+[156/496] A PLUS FINANCE SAS                         (AUM: 0.1 Md€)... ✅ 2
+[157/496] CAPITAL CROISSANCE SAS                     (AUM: 0.1 Md€)... ✅ 2
+[158/496] PERGAM                                     (AUM: 0.1 Md€)... ✅ 3
+[159/496] INDIGO CAPITAL                             (AUM: 0.0 Md€)... ✅ 3
+[160/496] PENINSULAR CAPITAL MANAGEMENT              (AUM: 0.0 Md€)... ✅ 2
+      💾 Checkpoint sauvegardé: 243 contacts
+
+======================================================================
+✅ BATCH 16 TERMINÉ (160/496 SDG)
+   • 243 contacts total
+   • 9 sociétés enrichies dans ce batch
+======================================================================
+
+[161/496] ZENCAP ASSET MANAGEMENT                    (AUM: 0.0 Md€)... ✅ 3
+[162/496] NAXICAP PARTNERS                           (AUM: 0.0 Md€)... ❌
+[163/496] TROCADERO CAPITAL PARTNERS                 (AUM: 0.0 Md€)... ✅ 3
+[164/496] POINCARE GESTION                           (AUM: 0.0 Md€)... ✅ 1
+[165/496] SPARRING CAPITAL                           (AUM: 0.0 Md€)... ✅ 1
+[166/496] AUDACIA                                    (AUM: 0.0 Md€)... ✅ 2
+[167/496] SEVENTURE PARTNERS                         (AUM: 0.0 Md€)... ❌
+[168/496] ALBAREST PARTNERS                          (AUM: 0.0 Md€)... ✅ 2
+[169/496] YOTTA CAPITAL PARTNERS                     (AUM: 0.0 Md€)... ✅ 3
+[170/496] ALVEN CAPITAL PARTNERS                     (AUM: 0.0 Md€)... ✅ 1
+      💾 Checkpoint sauvegardé: 259 contacts
+
+======================================================================
+✅ BATCH 17 TERMINÉ (170/496 SDG)
+   • 259 contacts total
+   • 8 sociétés enrichies dans ce batch
+======================================================================
+
+[171/496] GALION.EXE                                 (AUM: 0.0 Md€)... ✅ 2
+[172/496] AFRICINVEST EUROPE                         (AUM: 0.0 Md€)... ✅ 2
+[173/496] INNOVACOM GESTION                          (AUM: 0.0 Md€)... ✅ 1
+[174/496] GALIA GESTION                              (AUM: 0.0 Md€)... ✅ 2
+[175/496] CAPITAL GRAND EST                          (AUM: 0.0 Md€)... ✅ 1
+[176/496] JOLT CAPITAL                               (AUM: 0.0 Md€)... ✅ 1
+[177/496] ELAIA PARTNERS                             (AUM: 0.0 Md€)... ✅ 1
+[178/496] XERYS INVEST                               (AUM: 0.0 Md€)... ✅ 2
+[179/496] WEMO REAL ESTATE INVESTMENT MANAGEMENT     (AUM: 0.0 Md€)... ✅ 2
+[180/496] IBIONEXT                                   (AUM: 0.0 Md€)... ❌
+      💾 Checkpoint sauvegardé: 273 contacts
+
+======================================================================
+✅ BATCH 18 TERMINÉ (180/496 SDG)
+   • 273 contacts total
+   • 9 sociétés enrichies dans ce batch
+======================================================================
+
+[181/496] CAPITEM PARTENAIRES                        (AUM: 0.0 Md€)... ✅ 2
+[182/496] ASTER CAPITAL PARTNERS SAS                 (AUM: 0.0 Md€)... ✅ 3
+[183/496] CATHAY INNOVATION                          (AUM: N/A    )... ✅ 2
+[184/496] PATRIMONIA CAPITAL                         (AUM: N/A    )... ✅ 1
+[185/496] FLEXSTONE PARTNERS SAS                     (AUM: N/A    )... ✅ 2
+[186/496] FOREST INVEST                              (AUM: N/A    )... ❌
+[187/496] AESTIA CAPITAL                             (AUM: N/A    )... ✅ 2
+[188/496] CREDIT MUTUEL GESTION                      (AUM: N/A    )... ✅ 1
+[189/496] SPARRING OPPORTUNITIES                     (AUM: N/A    )... ✅ 3
+[190/496] PHITRUST IMPACT INVESTORS                  (AUM: N/A    )... ✅ 2
+      💾 Checkpoint sauvegardé: 291 contacts
+
+======================================================================
+✅ BATCH 19 TERMINÉ (190/496 SDG)
+   • 291 contacts total
+   • 9 sociétés enrichies dans ce batch
+======================================================================
+
+[191/496] PIQUEMAL HOUGHTON INVESTMENTS              (AUM: N/A    )... ✅ 1
+[192/496] TAILOR AM                                  (AUM: N/A    )... ✅ 3
+[193/496] EVARINVEST                                 (AUM: N/A    )... ✅ 2
+[194/496] AVANSEO                                    (AUM: N/A    )... ✅ 1
+[195/496] MESSIEURS HOTTINGUER ET CIE - GESTION PRIV (AUM: N/A    )... ✅ 2
+[196/496] PERCEVA SAS                                (AUM: N/A    )... ❌
+[197/496] LE LUXE FRANCAIS                           (AUM: N/A    )... ✅ 3
+[198/496] SÉNEVÉ CAPITAL                             (AUM: N/A    )... ✅ 1
+[199/496] JANNGO CAPITAL PARTNERS                    (AUM: N/A    )... ❌
+[200/496] CINECAPITAL                                (AUM: N/A    )... ❌
+      💾 Checkpoint sauvegardé: 304 contacts
+
+======================================================================
+✅ BATCH 20 TERMINÉ (200/496 SDG)
+   • 304 contacts total
+   • 7 sociétés enrichies dans ce batch
+======================================================================
+
+[201/496] COLVILLE CAPITAL PARTNERS FRANCE           (AUM: N/A    )... ✅ 1
+[202/496] VEGA INVESTMENT SOLUTIONS                  (AUM: N/A    )... ✅ 2
+[203/496] ALTIXIA REIM                               (AUM: N/A    )... ✅ 1
+[204/496] ELEPHANTS & VENTURES                       (AUM: N/A    )... ✅ 2
+[205/496] Atlantic Vantage Point Capital             (AUM: N/A    )... ✅ 2
+[206/496] FUTURE POSITIVE CAPITAL                    (AUM: N/A    )... ✅ 2
+[207/496] PRUDENTIA CAPITAL                          (AUM: N/A    )... ✅ 2
+[208/496] CREDIT MUTUEL IMPACT                       (AUM: N/A    )... ❌
+[209/496] MATIGNON FINANCES                          (AUM: N/A    )... ❌
+[210/496] DEGROOF PETERCAM WEALTH MANAGEMENT         (AUM: N/A    )... ✅ 1
+      💾 Checkpoint sauvegardé: 317 contacts
+
+======================================================================
+✅ BATCH 21 TERMINÉ (210/496 SDG)
+   • 317 contacts total
+   • 8 sociétés enrichies dans ce batch
+======================================================================
+
+[211/496] FLEXAM INVEST ASSET MANAGEMENT             (AUM: N/A    )... ✅ 1
+[212/496] SWISSLIFE GESTION PRIVEE                   (AUM: N/A    )... ❌
+[213/496] FASTEA CAPITAL                             (AUM: N/A    )... ✅ 1
+[214/496] MOBILIS GESTION                            (AUM: N/A    )... ✅ 1
+[215/496] EVEN FO                                    (AUM: N/A    )... ✅ 1
+[216/496] SAGARD SAS                                 (AUM: N/A    )... ✅ 2
+[217/496] ENTRUST GLOBAL SAS                         (AUM: N/A    )... ✅ 1
+[218/496] MANSARTIS GESTION                          (AUM: N/A    )... ❌
+[219/496] FIVE SEASONS VENTURES                      (AUM: N/A    )... ✅ 2
+[220/496] ANDERA PARTNERS                            (AUM: N/A    )... ✅ 2
+      💾 Checkpoint sauvegardé: 328 contacts
+
+======================================================================
+✅ BATCH 22 TERMINÉ (220/496 SDG)
+   • 328 contacts total
+   • 8 sociétés enrichies dans ce batch
+======================================================================
+
+[221/496] SIGEFI PRIVATE EQUITY                      (AUM: N/A    )... ✅ 1
+[222/496] AG2R LA MONDIALE GESTION D'ACTIFS          (AUM: N/A    )... ✅ 1
+[223/496] GROUPAMA GAN REIM                          (AUM: N/A    )... ✅ 1
+[224/496] TwentyTwo Investment Management            (AUM: N/A    )... ✅ 2
+[225/496] AQUA ASSET MANAGEMENT                      (AUM: N/A    )... ✅ 2
+[226/496] ISATIS CAPITAL                             (AUM: N/A    )... ❌
+[227/496] ODDO BHF ASSET MANAGEMENT SAS              (AUM: N/A    )... ✅ 3
+[228/496] KEENSIGHT CAPITAL                          (AUM: N/A    )... ✅ 4
+[229/496] INDEP'AM                                   (AUM: N/A    )... ❌
+[230/496] HI INOV                                    (AUM: N/A    )... ✅ 2
+      💾 Checkpoint sauvegardé: 344 contacts
+
+======================================================================
+✅ BATCH 23 TERMINÉ (230/496 SDG)
+   • 344 contacts total
+   • 8 sociétés enrichies dans ce batch
+======================================================================
+
+[231/496] FIDUCIAL GERANCE                           (AUM: N/A    )... ✅ 1
+[232/496] LFPI GESTION                               (AUM: N/A    )... ✅ 2
+[233/496] FINOVAM GESTION                            (AUM: N/A    )... ✅ 1
+[234/496] VIVALTO PARTNERS SAS                       (AUM: N/A    )... ✅ 3
+[235/496] KEREN FINANCE                              (AUM: N/A    )... ✅ 1
+[236/496] SAINT OLIVE GESTION                        (AUM: N/A    )... ❌
+[237/496] BORDIER & CIE (FRANCE) SA                  (AUM: N/A    )... ✅ 1
+[238/496] BDF-GESTION                                (AUM: N/A    )... ✅ 2
+[239/496] CAPITAL EXPORT                             (AUM: N/A    )... ✅ 3
+[240/496] QUANTECH SOLUTION PARTNERS                 (AUM: N/A    )... ✅ 3
+      💾 Checkpoint sauvegardé: 361 contacts
+
+======================================================================
+✅ BATCH 24 TERMINÉ (240/496 SDG)
+   • 361 contacts total
+   • 9 sociétés enrichies dans ce batch
+======================================================================
+
+[241/496] LA FINANCIERE TIEPOLO                      (AUM: N/A    )... ✅ 2
+[242/496] AZULIS CAPITAL                             (AUM: N/A    )... ❌
+[243/496] AXA REIM SGP                               (AUM: N/A    )... ✅ 3
+[244/496] HOMA CAPITAL                               (AUM: N/A    )... ❌
+[245/496] CMI FRANCE                                 (AUM: N/A    )... ✅ 2
+[246/496] DAPHNI                                     (AUM: N/A    )... ✅ 2
+[247/496] SAPIENTA GESTION                           (AUM: N/A    )... ✅ 1
+[248/496] MONTAIGNE CAPITAL                          (AUM: N/A    )... ❌
+[249/496] UNION INVESTMENT REAL ESTATE FRANCE        (AUM: N/A    )... ✅ 1
+[250/496] GINJER AM                                  (AUM: N/A    )... ❌
+      💾 Checkpoint sauvegardé: 372 contacts
+
+======================================================================
+✅ BATCH 25 TERMINÉ (250/496 SDG)
+   • 372 contacts total
+   • 6 sociétés enrichies dans ce batch
+======================================================================
+
+[251/496] FIVE ARROWS MANAGERS                       (AUM: N/A    )... ✅ 2
+[252/496] FINORPA GESTION                            (AUM: N/A    )... ✅ 1
+[253/496] LIFENTO                                    (AUM: N/A    )... ✅ 1
+[254/496] CAP WEST                                   (AUM: N/A    )... ✅ 2
+[255/496] BLACKFIN CAPITAL PARTNERS                  (AUM: N/A    )... ❌
+[256/496] FEMU QUÌ VENTURES                          (AUM: N/A    )... ✅ 1
+[257/496] SOGELYM DIXENCE INVESTMENT MANAGEMENT      (AUM: N/A    )... ✅ 1
+[258/496] HIVEST CAPITAL PARTNERS                    (AUM: N/A    )... ✅ 2
+[259/496] COLONY CAPITAL SAS                         (AUM: N/A    )... ❌
+[260/496] IRD INVEST                                 (AUM: N/A    )... ✅ 1
+      💾 Checkpoint sauvegardé: 383 contacts
+
+======================================================================
+✅ BATCH 26 TERMINÉ (260/496 SDG)
+   • 383 contacts total
+   • 8 sociétés enrichies dans ce batch
+======================================================================
+
+[261/496] AMUNDI IMMOBILIER                          (AUM: N/A    )... ✅ 2
+[262/496] C-QUADRAT ASSET MANAGEMENT FRANCE          (AUM: N/A    )... ✅ 2
+[263/496] MYRIA ASSET MANAGEMENT                     (AUM: N/A    )... ✅ 1
+[264/496] PHILIPPE HOTTINGUER GESTION - Groupe Phili (AUM: N/A    )... ✅ 2
+[265/496] CREDIT MUTUEL ASSET MANAGEMENT             (AUM: N/A    )... ❌
+[266/496] PLATINIUM GESTION                          (AUM: N/A    )... ❌
+[267/496] GESTION 21                                 (AUM: N/A    )... 

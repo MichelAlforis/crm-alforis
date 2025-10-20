@@ -11,7 +11,7 @@ from difflib import SequenceMatcher
 # File paths
 OUTPUT_DIR = Path(__file__).parent / "output"
 INPUT_ALL_SGIIC = OUTPUT_DIR / "cnmv_all_sgiic_raw.json"
-INPUT_AUM = OUTPUT_DIR / "cnmv_aum_inverco.json"
+INPUT_AUM = OUTPUT_DIR / "cnmv_aum_inverco_2024.json"
 OUTPUT_ENRICHED = OUTPUT_DIR / "cnmv_all_sgiic_enriched.json"
 OUTPUT_CSV = OUTPUT_DIR / "cnmv_all_organisations.csv"
 

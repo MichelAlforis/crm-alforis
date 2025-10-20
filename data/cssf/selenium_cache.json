@@ -1,0 +1,557 @@
+{
+  "AXA Investment Managers": {
+    "website": "",
+    "email": "service.informationclient@axa.fr",
+    "phone": ""
+  },
+  "Abu Dhabi Investment Authority": {
+    "website": "",
+    "email": "Contact@tamm.abudhabi",
+    "phone": ""
+  },
+  "Allianz Global Investors": {
+    "website": "",
+    "email": "Info-Lux@allianzgi.com",
+    "phone": "+352 463 463 - 1"
+  },
+  "Amundi": {
+    "website": "",
+    "email": "info@amundibond.com",
+    "phone": "+352 26 86 8000"
+  },
+  "BNP Paribas Asset Management": {
+    "website": "",
+    "email": "",
+    "phone": "+352 26 46 30 01"
+  },
+  "BlackRock": {
+    "website": "",
+    "email": "belux@blackrock.com",
+    "phone": "+352 34 20 10 4201"
+  },
+  "CPP Investment Board": {
+    "website": "",
+    "email": "contact@cppib.com",
+    "phone": ""
+  },
+  "Caisse de dépôt et placement du Québec": {
+    "website": "",
+    "email": "info@espacecdpq.com",
+    "phone": ""
+  },
+  "Capital Group": {
+    "website": "",
+    "email": "contact@ccg.lu",
+    "phone": "+352 27 17 6237"
+  },
+  "China Investment Corporation": {
+    "website": "",
+    "email": "empty-light@2x.png",
+    "phone": ""
+  },
+  "Credit Suisse Asset Management": {
+    "website": "",
+    "email": "",
+    "phone": "+352 43 61 61 1"
+  },
+  "Credit Suisse Funds AG": {
+    "website": "",
+    "email": "cspb.lux@credit-suisse.com",
+    "phone": "+352 43 61 61 1"
+  },
+  "DWS": {
+    "website": "",
+    "email": "dws.lu@db.com",
+    "phone": "+352 421018710"
+  },
+  "Fidelity International": {
+    "website": "",
+    "email": "crm.benelux@fil.com",
+    "phone": "+352 24 51 49 99"
+  },
+  "Franklin Templeton": {
+    "website": "",
+    "email": "info.germany.franklintempleton@fisglobal.com",
+    "phone": "+352 46 66 67 1"
+  },
+  "GIC Private Limited": {
+    "website": "",
+    "email": "info@gic-cert.com",
+    "phone": ""
+  },
+  "Generali Investments": {
+    "website": "",
+    "email": "GILfundInfo@generali-invest.com",
+    "phone": "+352 22 30 26 1"
+  },
+  "Generali Investments Partners": {
+    "website": "",
+    "email": "contact@generali.lu",
+    "phone": "+352 22 30 26 1"
+  },
+  "Goldman Sachs Asset Management": {
+    "website": "",
+    "email": "Secretariat.Luxfunds@In.email",
+    "phone": ""
+  },
+  "HSBC Global Asset Management": {
+    "website": "",
+    "email": "lu.info@lu.hsbc.com",
+    "phone": "+352 48 88 96 1"
+  },
+  "Intermediate Capital Group": {
+    "website": "",
+    "email": "CapitalGroup_UKSales@capitalgroup.com",
+    "phone": "+352 27 17 6237"
+  },
+  "Invesco": {
+    "website": "",
+    "email": "Luxembourg-IFDS-MgtCustomerServicesManagers@statestreet.com",
+    "phone": "+352 27 11 80 00"
+  },
+  "J.P. Morgan Asset Management": {
+    "website": "",
+    "email": "investor.services@lux-email.jpmorgan.com",
+    "phone": "+352 34 10 30 60"
+  },
+  "Kuwait Investment Authority": {
+    "website": "",
+    "email": "information@kia.gov.kw",
+    "phone": ""
+  },
+  "Legal & General Investment Management": {
+    "website": "",
+    "email": "citiluxta.jupiter@citi.com",
+    "phone": "+352 451414328"
+  },
+  "Natixis Investment Managers": {
+    "website": "",
+    "email": "informations@lu.natixis.com",
+    "phone": "+352 46 38 16-1"
+  },
+  "Northern Trust Asset Management": {
+    "website": "",
+    "email": "info@ntrseurope.com",
+    "phone": "+352 27 62 72"
+  },
+  "Ontario Teachers' Pension Plan": {
+    "website": "",
+    "email": "clientservice@opb.ca",
+    "phone": ""
+  },
+  "PIMCO": {
+    "website": "",
+    "email": "PGAL@pimco.com",
+    "phone": "+352 28 22 92 48"
+  },
+  "Prudential": {
+    "website": "",
+    "email": "info@bcl.lu",
+    "phone": "+352 - 27623410"
+  },
+  "State Street Global Advisors": {
+    "website": "",
+    "email": "contact@statestreet.com",
+    "phone": ""
+  },
+  "T. Rowe Price": {
+    "website": "",
+    "email": "info@troweprice.com",
+    "phone": ""
+  },
+  "Temasek Holdings": {
+    "website": "",
+    "email": "info@luxtimes.lu",
+    "phone": "+352 27 44 48 1"
+  },
+  "UBS Asset Management": {
+    "website": "",
+    "email": "ubsfsinfo@ubs.com",
+    "phone": "+352 27 15 60 00"
+  },
+  "UBS Fund Management (Switzerland)": {
+    "website": "",
+    "email": "First.Last@ubs.com",
+    "phone": ""
+  },
+  "Vanguard": {
+    "website": "",
+    "email": "olivia.lu@vanguardascendglobal.com",
+    "phone": ""
+  },
+  "Wellington Management": {
+    "website": "",
+    "email": "infofunds@wellington.com",
+    "phone": "+352 28 48 27 001"
+  },
+  "Aberdeen Standard Investments": {
+    "website": "",
+    "email": "asi.luxembourg@abrdn.com",
+    "phone": "+352 26 43 30 00"
+  },
+  "AllianceBernstein": {
+    "website": "",
+    "email": "corporate_secretary@alliancebernstein.com",
+    "phone": "+352 46 39 36 151"
+  },
+  "Apax Digital": {
+    "website": "",
+    "email": "empty-light@2x.png",
+    "phone": "+352 27 47 81 50"
+  },
+  "Apax Partners": {
+    "website": "",
+    "email": "empty-light@2x.png",
+    "phone": "+352 27 47 81 50"
+  },
+  "Apollo Global Management": {
+    "website": "",
+    "email": "info@aipb.it",
+    "phone": "+352 20 88 13 01"
+  },
+  "Ares Management": {
+    "website": "",
+    "email": "empty-light@2x.png",
+    "phone": "+352 28 55 72 200"
+  },
+  "Bain Capital": {
+    "website": "",
+    "email": "empty-light@2x.png",
+    "phone": "+352 26 78 60"
+  },
+  "Blackstone": {
+    "website": "",
+    "email": "jonathan.gray@gmail.com",
+    "phone": "+352 661 389"
+  },
+  "British Columbia Investment Management": {
+    "website": "",
+    "email": "Luxoversight@columbiathreadneedle.com",
+    "phone": "+352 26 99 11 05"
+  },
+  "CVC Capital Partners": {
+    "website": "",
+    "email": "info@cvc.com",
+    "phone": "+352 26 47 8367"
+  },
+  "Carlyle Group": {
+    "website": "",
+    "email": "Investor.service@carlyle.com",
+    "phone": "+352 26 10 27 47"
+  },
+  "Columbia Threadneedle Investments": {
+    "website": "",
+    "email": "Luxoversight@columbiathreadneedle.com",
+    "phone": "+352 46 40 10 70 20"
+  },
+  "Commerzbank Asset Management": {
+    "website": "",
+    "email": "info@commerzbank.com",
+    "phone": "+352 47 79 11"
+  },
+  "Crédit Agricole Asset Management": {
+    "website": "",
+    "email": "support.ebanking@ca-indosuez.ch",
+    "phone": "+352 47 67 59 24"
+  },
+  "DEKA INTERNATIONAL": {
+    "website": "",
+    "email": "info@deka.lu",
+    "phone": "+352 34 09 35"
+  },
+  "DekaBank Deutsche Girozentrale": {
+    "website": "",
+    "email": "info@dekabank.lu",
+    "phone": "+352 34 09 35"
+  },
+  "Deutsche Asset Management": {
+    "website": "",
+    "email": "info@dws.com",
+    "phone": "+352 421221"
+  },
+  "EQT Partners": {
+    "website": "",
+    "email": "empty-light@2x.png",
+    "phone": "+352 26 73 26"
+  },
+  "EQT Ventures": {
+    "website": "",
+    "email": "jsmith@eqtgroup.com",
+    "phone": ""
+  },
+  "Janus Henderson Investors": {
+    "website": "",
+    "email": "emealatamclientgroupservices@janushenderson.com",
+    "phone": "+352 26 19 21 24"
+  },
+  "KKR": {
+    "website": "",
+    "email": "info@lei-luxembourg.lu",
+    "phone": "+352 270 243 100"
+  },
+  "MFS Investment Management": {
+    "website": "",
+    "email": "info@mfs-group.co.uk",
+    "phone": ""
+  },
+  "Neuberger Berman": {
+    "website": "",
+    "email": "nbaifmlux@nb.com",
+    "phone": "+352 27 36 55 38"
+  },
+  "Neuberger Berman Private Equity": {
+    "website": "",
+    "email": "nbaifmlux@nb.com",
+    "phone": "+352 27 36 55 38"
+  },
+  "Nordea Asset Management": {
+    "website": "",
+    "email": "clientservice.benelux@nordea.com",
+    "phone": "+352 2786 5100"
+  },
+  "Nuveen": {
+    "website": "",
+    "email": "infofrankfurt@nuveenglobal.com",
+    "phone": ""
+  },
+  "PGIM": {
+    "website": "",
+    "email": "empty-light@2x.png",
+    "phone": "+352 27 62 34 10"
+  },
+  "Permira": {
+    "website": "",
+    "email": "jane.doe@permira.com",
+    "phone": "+352 26 441 651"
+  },
+  "Principal Global Investors": {
+    "website": "",
+    "email": "info@dam-lux.com",
+    "phone": ""
+  },
+  "SEB Investment Management": {
+    "website": "",
+    "email": "contact@sebgroup.lu",
+    "phone": "+352 26 23 1"
+  },
+  "Schroders": {
+    "website": "",
+    "email": "SIMEUInfo@schroders.com",
+    "phone": "+352 341 342 202"
+  },
+  "Société Générale Asset Management": {
+    "website": "",
+    "email": "contact.sgpwm@socgen.com",
+    "phone": "+352 47 93 11 1"
+  },
+  "TPG Capital": {
+    "website": "",
+    "email": "empty-light@2x.png",
+    "phone": "+352 27 00 41 25 10"
+  },
+  "Union Investment": {
+    "website": "",
+    "email": "empty-light@2x.png",
+    "phone": "+352 26 401"
+  },
+  "3i Group": {
+    "website": "",
+    "email": "empty-light@2x.png",
+    "phone": "+352 26 29 01"
+  },
+  "ABN AMRO INVESTMENT SOLUTIONS": {
+    "website": "",
+    "email": "aais.contact@fr.abnamro.com",
+    "phone": ""
+  },
+  "AIMCo": {
+    "website": "",
+    "email": "info@aimco.ca",
+    "phone": ""
+  },
+  "APG Asset Management": {
+    "website": "",
+    "email": "sustainability@apg.nl",
+    "phone": ""
+  },
+  "AQR Capital Management": {
+    "website": "",
+    "email": "Axel.Weiss@aqr.com",
+    "phone": "+352 22 30 26 1"
+  },
+  "ARVE Fund Management S.A.": {
+    "website": "",
+    "email": "info@arve.lu",
+    "phone": "+352 26 70 11 12"
+  },
+  "ATP": {
+    "website": "",
+    "email": "atp@atp.etat.lu",
+    "phone": "+352 33 33 47-1"
+  },
+  "Accel": {
+    "website": "",
+    "email": "contact@accel.lu",
+    "phone": "+352-621 31 15 55"
+  },
+  "Achmea Investment Management": {
+    "website": "",
+    "email": "investors@achmea.com",
+    "phone": ""
+  },
+  "Advent International": {
+    "website": "",
+    "email": "empty-light@2x.png",
+    "phone": "+352 28 13 44 200"
+  },
+  "Aegon Asset Management": {
+    "website": "",
+    "email": "info@lei-luxembourg.lu",
+    "phone": ""
+  },
+  "Allan Gray": {
+    "website": "",
+    "email": "info@allangray.co.za",
+    "phone": ""
+  },
+  "AlpInvest Partners": {
+    "website": "",
+    "email": "info@alpinvest.com",
+    "phone": "+352 341 342 414"
+  },
+  "Andreessen Horowitz": {
+    "website": "",
+    "email": "menlopark-info@a16z.com",
+    "phone": ""
+  },
+  "Anima SGR": {
+    "website": "",
+    "email": "info@lei-luxembourg.lu",
+    "phone": ""
+  },
+  "Ardian": {
+    "website": "",
+    "email": "luxembourg.contact@ardian.com",
+    "phone": "+352 27 44 48 1"
+  },
+  "Ardian Infrastructure": {
+    "website": "",
+    "email": "luxembourg.contact@ardian.com",
+    "phone": "+352 27 44 48 1"
+  },
+  "Atomico": {
+    "website": "",
+    "email": "Contact@atomico.com",
+    "phone": "+352 621 218"
+  },
+  "Aviva Investors": {
+    "website": "",
+    "email": "empty-light@2x.png",
+    "phone": "+352 40 28 20"
+  },
+  "Azimut": {
+    "website": "",
+    "email": "info@azimutinvestments.com",
+    "phone": "+352 26 63 81 1"
+  },
+  "BC Partners": {
+    "website": "",
+    "email": "info@bank.lv",
+    "phone": "+352 26 99 11 05"
+  },
+  "BHF-BANK": {
+    "website": "",
+    "email": "lu.info@lu.hsbc.com",
+    "phone": "+352 48 88 96 1"
+  },
+  "BT Pension Scheme": {
+    "website": "",
+    "email": "csu@railpen.com",
+    "phone": ""
+  },
+  "Balderton Capital": {
+    "website": "",
+    "email": "info@lei-luxembourg.lu",
+    "phone": ""
+  },
+  "Bank J. Safra Sarasin": {
+    "website": "",
+    "email": "luxembourg@jsafrasarasin.com",
+    "phone": "+352 45 47 81 1"
+  },
+  "Bankhaus Lampe": {
+    "website": "",
+    "email": "info@hal-privatbank.com",
+    "phone": "+352 45 13 14 1"
+  },
+  "Banque Cantonale Vaudoise": {
+    "website": "",
+    "email": "info@bcv.ch",
+    "phone": ""
+  },
+  "Banque Cantonale de Genève": {
+    "website": "",
+    "email": "info@bcge.ch",
+    "phone": ""
+  },
+  "Baupost Group": {
+    "website": "",
+    "email": "contact.telecom@post.lu",
+    "phone": "+352 2424 8004"
+  },
+  "Bayern LB": {
+    "website": "",
+    "email": "info@thebanks.eu",
+    "phone": ""
+  },
+  "Belfius Investment Partners": {
+    "website": "",
+    "email": "info@belfiusIP.be",
+    "phone": ""
+  },
+  "Bellevue Asset Management": {
+    "website": "",
+    "email": "info@bellevue.ch",
+    "phone": "+352 22 99 99 57 63"
+  },
+  "Benchmark": {
+    "website": "",
+    "email": "info@ltb-test.org",
+    "phone": ""
+  },
+  "Berenberg": {
+    "website": "",
+    "email": "info@berenberg.de",
+    "phone": "+352 46 63 80-1"
+  },
+  "Bethmann Bank": {
+    "website": "",
+    "email": "",
+    "phone": ""
+  },
+  "Brevan Howard": {
+    "website": "",
+    "email": "info@lei-luxembourg.lu",
+    "phone": ""
+  },
+  "Bridgepoint": {
+    "website": "",
+    "email": "luxembourg@bridgepoint.eu",
+    "phone": "+352 27 86 56"
+  },
+  "Bridgewater Associates": {
+    "website": "",
+    "email": "john.smith@bwater.com",
+    "phone": ""
+  },
+  "Brookfield Asset Management": {
+    "website": "",
+    "email": "empty-light@2x.png",
+    "phone": ""
+  },
+  "CPR Asset Management": {
+    "website": "",
+    "email": "po@amundi.com",
+    "phone": ""
+  }
+}

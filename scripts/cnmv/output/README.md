@@ -2,6 +2,7 @@
 
 **Date d'extraction :** 20 octobre 2025
 **Source :** CNMV (Comisión Nacional del Mercado de Valores) + INVERCO
+**Couverture :** 100% des SGIIC enregistrées au CNMV (117 sociétés)
 
 ---
 
@@ -9,7 +10,7 @@
 
 ### 🏢 Fichiers CSV pour Import CRM
 
-#### 1. **cnmv_organisations.csv** (30 sociétés)
+#### 1. **cnmv_all_organisations.csv** (117 sociétés - EXTRACTION COMPLÈTE)
 **Format :** Prêt pour import dans Alforis CRM
 **Colonnes :**
 - `name` - Nom de la société (ex: "SANTANDER ASSET MANAGEMENT SGIIC")
@@ -28,18 +29,18 @@
 - `pipeline_stage` - "prospect"
 
 **Répartition par Tier :**
-- **Tier 1 (≥ 1 Md€)** : 21 sociétés (185 Md€ à 1.2 Md€)
-- **Tier 2 (≥ 500 M€)** : 6 sociétés (950 M€ à 520 M€)
-- **Tier 3 (< 500 M€)** : 3 sociétés (420 M€ à 280 M€)
+- **Tier 1 (≥ 1 Md€)** : 19 sociétés (94.8 Md€ à 1.1 Md€)
+- **Tier 2 (≥ 500 M€)** : 2 sociétés (950 M€ à 870 M€)
+- **Tier 3 (< 500 M€ ou inconnu)** : 96 sociétés
 
-**Total AUM :** 526.9 Md€
+**Total AUM (sociétés avec données) :** 355.7 Md€
 
 **Top 5 :**
-1. SANTANDER ASSET MANAGEMENT - 185 Md€
-2. CAIXABANK ASSET MANAGEMENT - 85 Md€
-3. BBVA ASSET MANAGEMENT - 75 Md€
+1. CAIXABANK ASSET MANAGEMENT - 94.8 Md€
+2. SANTANDER ASSET MANAGEMENT - 61.1 Md€
+3. BBVA ASSET MANAGEMENT - 54.2 Md€
 4. BANKINTER GESTION DE ACTIVOS - 28.5 Md€
-5. KUTXABANK GESTION - 25.2 Md€
+5. IBERCAJA GESTION - 25.0 Md€
 
 #### 2. **cnmv_contacts.csv** (20 contacts template)
 **Format :** Template pour directeurs commerciaux
@@ -65,8 +66,8 @@ Voir : [EXTRACTION_DIRECTEURS_COMMERCIAUX.md](../EXTRACTION_DIRECTEURS_COMMERCIA
 
 ### 📊 Fichiers de Données Brutes (JSON)
 
-#### 3. **cnmv_sgiic.json** (30 sociétés)
-Données brutes des sociétés SGIIC :
+#### 3. **cnmv_all_sgiic_raw.json** (117 sociétés)
+Données brutes de TOUTES les sociétés SGIIC enregistrées au CNMV :
 ```json
 {
   "name": "SANTANDER ASSET MANAGEMENT SGIIC",
@@ -77,8 +78,8 @@ Données brutes des sociétés SGIIC :
 }
 ```
 
-#### 4. **cnmv_aum_inverco.json** (30 sociétés)
-Données AUM depuis INVERCO 2024 :
+#### 4. **cnmv_aum_inverco_2024.json** (35 sociétés)
+Données AUM depuis INVERCO Décembre 2024 (données officielles) :
 ```json
 {
   "name": "SANTANDER ASSET MANAGEMENT",
@@ -89,8 +90,8 @@ Données AUM depuis INVERCO 2024 :
 }
 ```
 
-#### 5. **cnmv_enriched.json** (30 sociétés)
-Données enrichies (SGIIC + AUM + Tier) :
+#### 5. **cnmv_all_sgiic_enriched.json** (117 sociétés)
+Données enrichies pour TOUTES les SGIIC (CNMV + AUM + Tier + websites) :
 ```json
 {
   "name": "SANTANDER ASSET MANAGEMENT SGIIC",
@@ -105,18 +106,22 @@ Données enrichies (SGIIC + AUM + Tier) :
 }
 ```
 
-#### 6. **cnmv_enriched.csv** (30 sociétés)
-Version CSV des données enrichies (pour analyse dans Excel).
+#### 6. **Fichiers historiques** (anciennes extractions partielles)
+- cnmv_sgiic.json (30 sociétés) - Première extraction partielle
+- cnmv_aum_inverco.json (30 sociétés) - Anciennes données AUM
+- cnmv_enriched.json/csv (30 sociétés) - Ancienne extraction enrichie
+
+**⚠️ Utiliser les fichiers `cnmv_all_*` pour l'extraction complète !**
 
 ---
 
 ## 🎯 Prochaines Étapes
 
 ### Option 1 : Import Manuel via Interface CRM
-1. Ouvrir [cnmv_organisations.csv](cnmv_organisations.csv)
+1. Ouvrir [cnmv_all_organisations.csv](cnmv_all_organisations.csv)
 2. Se connecter au CRM Alforis
 3. Aller dans **Organisations** → **Importer**
-4. Uploader le fichier CSV
+4. Uploader le fichier CSV (117 sociétés)
 5. Mapper les colonnes
 6. Confirmer l'import
 
@@ -165,16 +170,17 @@ cd ..
 
 | Métrique | Valeur |
 |----------|--------|
-| **Sociétés extraites** | 30 |
-| **Avec AUM** | 30 (100%) |
-| **Avec site web** | 30 (100%) |
+| **Sociétés extraites** | 117 (100% CNMV) |
+| **Avec AUM** | 21 (18%) |
+| **Avec site web** | 117 (100%) |
+| **Avec adresse complète** | 117 (100%) |
 | **Avec email** | 0 (à compléter) |
 | **Avec téléphone** | 0 (à compléter) |
-| **Tier 1** | 21 (70%) |
-| **Tier 2** | 6 (20%) |
-| **Tier 3** | 3 (10%) |
-| **AUM Total** | 526.9 Md€ |
-| **AUM Moyen** | 17.6 Md€ |
+| **Tier 1** | 19 (16%) |
+| **Tier 2** | 2 (2%) |
+| **Tier 3** | 96 (82%) |
+| **AUM Total** | 355.7 Md€ |
+| **AUM Moyen (Tier 1+2)** | 16.9 Md€ |
 
 ---
 
