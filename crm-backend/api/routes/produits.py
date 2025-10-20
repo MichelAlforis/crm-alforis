@@ -19,7 +19,7 @@ router = APIRouter(prefix="/produits", tags=["produits"])
 # ============= GET ROUTES =============
 
 @router.get("", response_model=PaginatedResponse[ProduitResponse])
-def list_produits(
+async def list_produits(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     type: Optional[str] = Query(None),
@@ -42,7 +42,7 @@ def list_produits(
     if status:
         filters["status"] = status
 
-    items, total = service.get_all(skip=skip, limit=limit, filters=filters)
+    items, total = await service.get_all(skip=skip, limit=limit, filters=filters)
 
     return PaginatedResponse(
         total=total,
@@ -53,7 +53,7 @@ def list_produits(
 
 
 @router.get("/search", response_model=PaginatedResponse[ProduitResponse])
-def search_produits(
+async def search_produits(
     q: str = Query(..., min_length=1),
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
@@ -62,7 +62,7 @@ def search_produits(
 ):
     """Rechercher des produits par nom, ISIN ou notes"""
     service = ProduitService(db)
-    items, total = service.search(q, skip=skip, limit=limit)
+    items, total = await service.search(q, skip=skip, limit=limit)
 
     return PaginatedResponse(
         total=total,
@@ -73,14 +73,14 @@ def search_produits(
 
 
 @router.get("/by-isin/{isin}", response_model=ProduitResponse)
-def get_produit_by_isin(
+async def get_produit_by_isin(
     isin: str,
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
     """Récupérer un produit par son code ISIN"""
     service = ProduitService(db)
-    produit = service.get_by_isin(isin)
+    produit = await service.get_by_isin(isin)
 
     if not produit:
         raise HTTPException(
@@ -92,27 +92,27 @@ def get_produit_by_isin(
 
 
 @router.get("/by-mandat/{mandat_id}", response_model=List[ProduitResponse])
-def get_produits_by_mandat(
+async def get_produits_by_mandat(
     mandat_id: int,
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
     """Récupérer tous les produits associés à un mandat"""
     service = ProduitService(db)
-    produits = service.get_by_mandat(mandat_id)
+    produits = await service.get_by_mandat(mandat_id)
 
     return [ProduitResponse.model_validate(produit) for produit in produits]
 
 
 @router.get("/{produit_id}", response_model=ProduitDetailResponse)
-def get_produit(
+async def get_produit(
     produit_id: int,
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
     """Récupérer un produit avec ses mandats associés"""
     service = ProduitService(db)
-    produit = service.get_by_id(produit_id)
+    produit = await service.get_by_id(produit_id)
 
     return ProduitDetailResponse.model_validate(produit)
 
@@ -120,7 +120,7 @@ def get_produit(
 # ============= POST ROUTES =============
 
 @router.post("", response_model=ProduitResponse, status_code=status.HTTP_201_CREATED)
-def create_produit(
+async def create_produit(
     produit: ProduitCreate,
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
@@ -141,12 +141,12 @@ def create_produit(
     qu'après avoir été associé à un mandat actif
     """
     service = ProduitService(db)
-    new_produit = service.create(produit)
+    new_produit = await service.create(produit)
     return ProduitResponse.model_validate(new_produit)
 
 
 @router.post("/associate-to-mandat", response_model=MandatProduitResponse, status_code=status.HTTP_201_CREATED)
-def associate_produit_to_mandat(
+async def associate_produit_to_mandat(
     association: MandatProduitCreate,
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
@@ -168,14 +168,14 @@ def associate_produit_to_mandat(
     - L'association ne doit pas déjà exister
     """
     service = MandatProduitService(db)
-    new_association = service.create(association)
+    new_association = await service.create(association)
     return MandatProduitResponse.model_validate(new_association)
 
 
 # ============= PUT ROUTES =============
 
 @router.put("/{produit_id}", response_model=ProduitResponse)
-def update_produit(
+async def update_produit(
     produit_id: int,
     produit: ProduitUpdate,
     db: Session = Depends(get_db),
@@ -183,14 +183,14 @@ def update_produit(
 ):
     """Mettre à jour un produit"""
     service = ProduitService(db)
-    updated_produit = service.update(produit_id, produit)
+    updated_produit = await service.update(produit_id, produit)
     return ProduitResponse.model_validate(updated_produit)
 
 
 # ============= DELETE ROUTES =============
 
 @router.delete("/{produit_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_produit(
+async def delete_produit(
     produit_id: int,
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
@@ -202,17 +202,17 @@ def delete_produit(
     et les interactions liées (cascade delete)
     """
     service = ProduitService(db)
-    service.delete(produit_id)
+    await service.delete(produit_id)
     return None
 
 
 @router.delete("/association/{association_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_mandat_produit_association(
+async def delete_mandat_produit_association(
     association_id: int,
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
     """Supprimer une association mandat-produit"""
     service = MandatProduitService(db)
-    service.delete(association_id)
+    await service.delete(association_id)
     return None
