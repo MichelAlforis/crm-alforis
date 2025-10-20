@@ -200,11 +200,14 @@ export default function ImportUnifiedForm() {
       // Transform organisations
       const organisations = orgsData.map(row => ({
         name: row.name || row['organisation name'] || '',
+        type: orgType, // Add organization type from selector
         email: row.email || '',
         phone: row.phone || '',
         address: row.address || '',
         city: row.city || '',
         country: row.country || '',
+        country_code: row.country_code || row['country code'] || '',
+        language: row.language || row['langue'] || 'FR',
       }));
 
       // Transform people
