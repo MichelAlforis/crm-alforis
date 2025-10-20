@@ -551,7 +551,7 @@ class ProduitService(BaseService[Produit, ProduitCreate, ProduitUpdate]):
     def __init__(self, db: Session):
         super().__init__(Produit, db)
 
-    async def get_by_isin(self, isin: str) -> Optional[Produit]:
+    def get_by_isin(self, isin: str) -> Optional[Produit]:
         """Récupérer un produit par son code ISIN"""
         try:
             return self.db.query(Produit).filter(Produit.isin == isin).first()
@@ -559,7 +559,7 @@ class ProduitService(BaseService[Produit, ProduitCreate, ProduitUpdate]):
             logger.error(f"Error fetching produit by ISIN {isin}: {e}")
             raise
 
-    async def search(
+    def search(
         self,
         query: str,
         skip: int = 0,
@@ -581,7 +581,7 @@ class ProduitService(BaseService[Produit, ProduitCreate, ProduitUpdate]):
             logger.error(f"Error searching produits: {e}")
             raise
 
-    async def get_by_mandat(self, mandat_id: int) -> List[Produit]:
+    def get_by_mandat(self, mandat_id: int) -> List[Produit]:
         """Récupérer tous les produits associés à un mandat"""
         try:
             produits = (
@@ -602,7 +602,7 @@ class MandatProduitService(BaseService[MandatProduit, MandatProduitCreate, Manda
     def __init__(self, db: Session):
         super().__init__(MandatProduit, db)
 
-    async def create(self, schema: MandatProduitCreate) -> MandatProduit:
+    def create(self, schema: MandatProduitCreate) -> MandatProduit:
         """
         Créer une association mandat-produit
         Vérifie que le mandat est actif avant de créer l'association
@@ -657,7 +657,7 @@ class MandatProduitService(BaseService[MandatProduit, MandatProduitCreate, Manda
             logger.error(f"Error creating mandat-produit association: {e}")
             raise
 
-    async def get_by_mandat_and_produit(
+    def get_by_mandat_and_produit(
         self,
         mandat_id: int,
         produit_id: int
