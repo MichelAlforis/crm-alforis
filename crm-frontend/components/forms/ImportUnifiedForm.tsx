@@ -284,10 +284,13 @@ export default function ImportUnifiedForm() {
       setResult(finalResult);
       setShowResult(true);
 
+      const skipped = (finalResult.summary.total_organisations - finalResult.summary.created_organisations - orgResult.failed) +
+                       (finalResult.summary.total_people - finalResult.summary.created_people - peopleResult.failed);
+
       showToast({
-        type: 'success',
-        title: 'Succès',
-        message: `Import complété: ${finalResult.summary.created_organisations} organisations, ${finalResult.summary.created_people} personnes`
+        type: finalResult.summary.total_errors > 0 ? 'warning' : 'success',
+        title: finalResult.summary.total_errors > 0 ? 'Import terminé avec erreurs' : 'Succès',
+        message: `Créés: ${finalResult.summary.created_organisations} org., ${finalResult.summary.created_people} pers. | Doublons: ${skipped} | Erreurs: ${finalResult.summary.total_errors}`
       });
 
     } catch (error) {
