@@ -1,0 +1,177 @@
+[
+  {
+    "nom": "BlackRock Investment Management (Luxembourg) S.A.",
+    "aum": 9500000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.blackrock.com"
+  },
+  {
+    "nom": "Amundi Luxembourg S.A.",
+    "aum": 2100000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.amundi.lu"
+  },
+  {
+    "nom": "DWS Investment S.A.",
+    "aum": 902000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.dws.com"
+  },
+  {
+    "nom": "J.P. Morgan Asset Management (Europe) S.à r.l.",
+    "aum": 2800000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.jpmorganassetmanagement.lu"
+  },
+  {
+    "nom": "UBS Fund Management (Luxembourg) S.A.",
+    "aum": 1200000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.ubs.com"
+  },
+  {
+    "nom": "Allianz Global Investors GmbH, Luxembourg Branch",
+    "aum": 639000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.allianzgi.com"
+  },
+  {
+    "nom": "Goldman Sachs Asset Management Fund Services Limited",
+    "aum": 2400000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.gsam.com"
+  },
+  {
+    "nom": "Pictet Asset Management (Europe) S.A.",
+    "aum": 240000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.pictet.com"
+  },
+  {
+    "nom": "BNP Paribas Asset Management Luxembourg",
+    "aum": 578000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.bnpparibas-am.lu"
+  },
+  {
+    "nom": "AXA Investment Managers Luxembourg",
+    "aum": 850000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.axa-im.com"
+  },
+  {
+    "nom": "State Street Global Advisors Europe Limited",
+    "aum": 4200000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.ssga.com"
+  },
+  {
+    "nom": "Fidelity International",
+    "aum": 755000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.fidelityinternational.com"
+  },
+  {
+    "nom": "Vanguard Group (Ireland) Limited, Luxembourg Branch",
+    "aum": 8500000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.vanguard.com"
+  },
+  {
+    "nom": "Capital Group Luxembourg Branch",
+    "aum": 2600000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.capitalgroup.com"
+  },
+  {
+    "nom": "Invesco Management S.A.",
+    "aum": 1600000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.invesco.lu"
+  },
+  {
+    "nom": "PIMCO Europe Ltd, Luxembourg Branch",
+    "aum": 1900000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.pimco.com"
+  },
+  {
+    "nom": "Franklin Templeton International Services S.à r.l.",
+    "aum": 1500000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.franklintempleton.lu"
+  },
+  {
+    "nom": "T. Rowe Price (Luxembourg) Management S.à r.l.",
+    "aum": 1400000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.troweprice.com"
+  },
+  {
+    "nom": "Schroders Investment Management (Luxembourg) S.A.",
+    "aum": 800000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.schroders.com"
+  },
+  {
+    "nom": "Wellington Management Company LLP, Luxembourg Branch",
+    "aum": 1200000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.wellington.com"
+  },
+  {
+    "nom": "Natixis Investment Managers Luxembourg S.A.",
+    "aum": 1100000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.im.natixis.com"
+  },
+  {
+    "nom": "Northern Trust Global Investments Limited, Luxembourg Branch",
+    "aum": 1300000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.northerntrust.com"
+  },
+  {
+    "nom": "Legal & General Investment Management Limited, Luxembourg Branch",
+    "aum": 1500000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.lgim.com"
+  },
+  {
+    "nom": "Aberdeen Standard Investments Luxembourg S.A.",
+    "aum": 650000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.aberdeenstandard.com"
+  },
+  {
+    "nom": "M&G Luxembourg S.A.",
+    "aum": 380000,
+    "tier_strategique": "Tier 1",
+    "pays": "Luxembourg",
+    "website": "www.mandg.com"
+  }
+]
