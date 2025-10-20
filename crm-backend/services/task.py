@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func, or_, and_
 from datetime import date, timedelta, datetime, UTC
 
-from models.task import Task, TaskStatus, TaskPriority  # TaskCategory n\'existe pas,
+from models.task import Task, TaskStatus, TaskPriority, TaskCategory
 from schemas.task import TaskCreate, TaskUpdate, TaskFilterParams
 from services.base import BaseService
 from services.organisation_activity import OrganisationActivityService

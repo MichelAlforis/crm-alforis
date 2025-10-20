@@ -18,6 +18,7 @@ from models.constants import (
     ONDELETE_CASCADE,
     ENUM_TASK_STATUS,
     ENUM_TASK_PRIORITY,
+    ENUM_TASK_CATEGORY,
 )
 import enum
 from datetime import datetime, timezone
@@ -26,19 +27,32 @@ from datetime import datetime, timezone
 class TaskPriority(str, enum.Enum):
     """Niveaux de priorité alignés sur taskpriority."""
 
-    LOW = "low"
-    NORMAL = "normal"
-    HIGH = "high"
-    URGENT = "urgent"
+    BASSE = "basse"
+    MOYENNE = "moyenne"
+    HAUTE = "haute"
+    CRITIQUE = "critique"
 
 
 class TaskStatus(str, enum.Enum):
     """Statuts de workflow des tâches."""
 
     TODO = "todo"
-    IN_PROGRESS = "in_progress"
+    DOING = "doing"
     DONE = "done"
     CANCELLED = "cancelled"
+
+
+class TaskCategory(str, enum.Enum):
+    """Catégories de tâches."""
+
+    RELANCE = "relance"
+    RDV = "rdv"
+    EMAIL = "email"
+    DUE_DILIGENCE = "due_diligence"
+    PITCH = "pitch"
+    NEGOCIATION = "negociation"
+    ADMIN = "admin"
+    AUTRE = "autre"
 
 
 class Task(BaseModel):
@@ -68,7 +82,13 @@ class Task(BaseModel):
     priority = Column(
         Enum(TaskPriority, name=ENUM_TASK_PRIORITY),
         nullable=False,
-        default=TaskPriority.NORMAL,
+        default=TaskPriority.MOYENNE,
+        index=True,
+    )
+    category = Column(
+        Enum(TaskCategory, name=ENUM_TASK_CATEGORY),
+        nullable=False,
+        default=TaskCategory.AUTRE,
         index=True,
     )
 

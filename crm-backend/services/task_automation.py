@@ -8,7 +8,7 @@ from datetime import date, timedelta
 from sqlalchemy.orm import Session
 import logging
 
-from models.task import Task, TaskPriority, TaskStatus  # TaskCategory n\'existe pas,
+from models.task import Task, TaskPriority, TaskStatus, TaskCategory
 from models.organisation import Organisation, PipelineStage
 from models.person import Person, StagePerson
 from services.task import TaskService

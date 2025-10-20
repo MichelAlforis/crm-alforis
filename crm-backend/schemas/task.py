@@ -2,8 +2,7 @@ from pydantic import Field, field_validator
 from typing import Optional
 from datetime import date, timedelta
 from schemas.base import TimestampedSchema, BaseSchema
-from models.task import TaskPriority, TaskStatus
-# TaskCategory n'existe pas dans models.task
+from models.task import TaskPriority, TaskStatus, TaskCategory
 
 
 # =====================================================
@@ -15,9 +14,9 @@ class TaskCreate(BaseSchema):
     title: str = Field(..., min_length=1, max_length=255)
     description: Optional[str] = None
     due_date: date = Field(..., description="Date d'échéance (YYYY-MM-DD)")
-    priority: TaskPriority = TaskPriority.NORMAL  # Corrigé: MOYENNE → NORMAL
+    priority: TaskPriority = TaskPriority.MOYENNE
     status: TaskStatus = TaskStatus.TODO
-    # # category: TaskCategory = TaskCategory.AUTRE  # TaskCategory n'existe pas
+    category: TaskCategory = TaskCategory.AUTRE
 
     # Liens optionnels (peut en avoir plusieurs ou aucun)
     investor_id: Optional[int] = None
@@ -45,7 +44,7 @@ class TaskUpdate(BaseSchema):
     due_date: Optional[date] = None
     priority: Optional[TaskPriority] = None
     status: Optional[TaskStatus] = None
-    # category: Optional[str]  # TaskCategory = None
+    category: Optional[TaskCategory] = None
     investor_id: Optional[int] = None
     fournisseur_id: Optional[int] = None
     organisation_id: Optional[int] = None
@@ -70,7 +69,7 @@ class TaskResponse(TimestampedSchema):
     completed_at: Optional[date]
     priority: TaskPriority
     status: TaskStatus
-    # category: TaskCategory
+    category: TaskCategory
     investor_id: Optional[int]
     fournisseur_id: Optional[int]
     organisation_id: Optional[int]
@@ -115,7 +114,7 @@ class TaskFilterParams(BaseSchema):
     """Paramètres de filtrage pour les tâches"""
     status: Optional[TaskStatus] = None
     priority: Optional[TaskPriority] = None
-    # category: Optional[str]  # TaskCategory = None
+    category: Optional[TaskCategory] = None
     investor_id: Optional[int] = None
     fournisseur_id: Optional[int] = None
     person_id: Optional[int] = None
@@ -144,5 +143,5 @@ __all__ = [
     "TaskQuickActionRequest",
     "TaskPriority",
     "TaskStatus",
-    # "TaskCategory",
+    "TaskCategory",
 ]

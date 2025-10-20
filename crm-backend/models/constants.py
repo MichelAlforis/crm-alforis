@@ -50,6 +50,7 @@ ONDELETE_NO_ACTION = "NO ACTION"
 
 ENUM_TASK_STATUS = "taskstatus"
 ENUM_TASK_PRIORITY = "taskpriority"
+ENUM_TASK_CATEGORY = "taskcategory"
 ENUM_NOTIFICATION_TYPE = "notificationtype"
 ENUM_NOTIFICATION_PRIORITY = "notificationpriority"
 ENUM_PIPELINE_STAGE = "pipelinestage"
