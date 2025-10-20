@@ -301,6 +301,20 @@ class ApiClient {
     this.clearToken()
   }
 
+  async changePassword(data: { current_password: string; new_password: string }): Promise<{ message: string }> {
+    return this.request<{ message: string }>('/auth/change-password', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async updateProfile(data: { full_name?: string; email?: string }): Promise<{ message: string }> {
+    return this.request<{ message: string }>('/users/me', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  }
+
   // ============= HEALTH CHECK =============
 
   async healthCheck(): Promise<boolean> {

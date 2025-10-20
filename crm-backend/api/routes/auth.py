@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Request, Form
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from datetime import timedelta
 from sqlalchemy.orm import Session
 
@@ -30,6 +30,18 @@ class UserInfo(BaseModel):
     """Informations utilisateur"""
     email: str
     is_admin: bool = False
+
+class ChangePasswordRequest(BaseModel):
+    """Requête de changement de mot de passe"""
+    current_password: str = Field(..., description="Mot de passe actuel")
+    new_password: str = Field(..., min_length=6, max_length=100, description="Nouveau mot de passe (min 6 caractères)")
+
+    @field_validator('new_password')
+    @classmethod
+    def validate_new_password(cls, v: str) -> str:
+        if len(v) < 6:
+            raise ValueError('Le mot de passe doit contenir au moins 6 caractères')
+        return v
 
 # ============= UTILISATEURS DE TEST =============
 # TODO: Remplacer par une vraie table User en BD
@@ -252,3 +264,67 @@ async def logout():
     le client supprime juste le token.
     """
     return {"message": "Logged out successfully"}
+
+@router.put("/change-password")
+async def change_password(
+    request: ChangePasswordRequest,
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
+):
+    """
+    Changer le mot de passe de l'utilisateur connecté
+
+    **Header requis:**
+    ```
+    Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+    ```
+
+    **Body:**
+    ```json
+    {
+      "current_password": "ancien_mot_de_passe",
+      "new_password": "nouveau_mot_de_passe"
+    }
+    ```
+
+    **Réponse:**
+    ```json
+    {
+      "message": "Mot de passe mis à jour avec succès"
+    }
+    ```
+    """
+    try:
+        # Décoder le token pour obtenir l'ID utilisateur
+        payload = decode_token(credentials.credentials)
+        user_id = int(payload.get("sub"))
+
+        # Récupérer l'utilisateur
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Utilisateur non trouvé"
+            )
+
+        # Vérifier l'ancien mot de passe
+        if not verify_password(request.current_password, user.hashed_password):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Mot de passe actuel incorrect"
+            )
+
+        # Hasher et sauvegarder le nouveau mot de passe
+        user.hashed_password = get_password_hash(request.new_password)
+        db.commit()
+
+        return {"message": "Mot de passe mis à jour avec succès"}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erreur lors du changement de mot de passe: {str(e)}"
+        )

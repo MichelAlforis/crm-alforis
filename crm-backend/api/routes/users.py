@@ -1,15 +1,73 @@
 """Routes API pour la gestion des utilisateurs."""
 
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, Query, status, HTTPException
 from sqlalchemy.orm import Session
 from typing import Optional
+from pydantic import BaseModel, Field
 
 from core import get_db, get_current_user
 from core.permissions import require_permission, require_admin
 from schemas.user import UserCreate, UserUpdate, UserResponse, UserListResponse
 from services.user import UserService
+from models.user import User
 
 router = APIRouter(prefix="/users", tags=["users"])
+
+
+class UpdateProfileRequest(BaseModel):
+    """Requête de mise à jour du profil utilisateur."""
+    full_name: Optional[str] = Field(None, max_length=255, description="Nom complet")
+    email: Optional[str] = Field(None, description="Adresse email")
+
+
+@router.put("/me")
+async def update_my_profile(
+    payload: UpdateProfileRequest,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Mettre à jour son propre profil (utilisateur connecté).
+
+    Permet de modifier son nom complet et email.
+    """
+    user_id = int(current_user.get("sub"))
+
+    # Récupérer l'utilisateur
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Utilisateur non trouvé"
+        )
+
+    # Mettre à jour les champs fournis
+    if payload.full_name is not None:
+        user.full_name = payload.full_name
+
+    if payload.email is not None:
+        # Vérifier si l'email n'est pas déjà utilisé
+        existing = db.query(User).filter(
+            User.email == payload.email.lower(),
+            User.id != user_id
+        ).first()
+        if existing:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Cet email est déjà utilisé"
+            )
+        user.email = payload.email.lower()
+
+    try:
+        db.commit()
+        db.refresh(user)
+        return {"message": "Profil mis à jour avec succès"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erreur lors de la mise à jour: {str(e)}"
+        )
 
 
 @router.get("", response_model=UserListResponse, dependencies=[Depends(require_admin())])

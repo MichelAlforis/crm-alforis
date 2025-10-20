@@ -17,6 +17,17 @@ export interface TokenResponse {
 export interface UserInfo {
   email: string
   is_admin: boolean
+  name?: string
+}
+
+export interface ChangePasswordRequest {
+  current_password: string
+  new_password: string
+}
+
+export interface UpdateProfileRequest {
+  full_name?: string
+  email?: string
 }
 
 export interface AuthState {
