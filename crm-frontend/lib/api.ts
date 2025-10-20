@@ -13,7 +13,6 @@ import {
   PersonOrganizationLink,
   PersonOrganizationLinkInput,
   PersonOrganizationLinkUpdateInput,
-  OrganizationType,
   KPI,
   KPICreate,
   KPIUpdate,
@@ -334,11 +333,10 @@ class ApiClient {
   async getPeople(
     skip = 0,
     limit = 50,
-    options?: { q?: string; organizationType?: OrganizationType; organizationId?: number },
+    options?: { q?: string; organizationId?: number },  // ✅ MIGRATION: organizationType supprimé
   ): Promise<PaginatedResponse<Person>> {
     const params: Record<string, any> = { skip, limit }
     if (options?.q) params.q = options.q
-    if (options?.organizationType) params.organization_type = options.organizationType
     if (options?.organizationId) params.organization_id = options.organizationId
 
     return this.request<PaginatedResponse<Person>>('/people', { params })

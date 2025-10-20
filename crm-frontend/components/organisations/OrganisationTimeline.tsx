@@ -24,11 +24,38 @@ interface OrganisationTimelineProps {
   limit?: number
 }
 
+const ACTIVITY_FILTERS = [
+  { value: '', label: 'Tous les événements' },
+  { value: 'interaction', label: 'Interactions' },
+  { value: 'task', label: 'Tâches' },
+  { value: 'mandat', label: 'Mandats' },
+  { value: 'email', label: 'Emails' },
+  { value: 'document', label: 'Documents' },
+] as const
+
 export const OrganisationTimeline: React.FC<OrganisationTimelineProps> = ({
   organisationId,
-  types,
+  types: propTypes,
   limit = 20,
 }) => {
+  const [selectedFilter, setSelectedFilter] = React.useState('')
+
+  // Construire les types basés sur le filtre sélectionné
+  const types = React.useMemo(() => {
+    if (propTypes) return propTypes
+    if (!selectedFilter) return undefined
+
+    const filterMap: Record<string, OrganisationActivityType[]> = {
+      interaction: ['interaction_created', 'interaction_updated'],
+      task: ['task_created', 'task_completed', 'task_updated'],
+      mandat: ['mandat_created', 'mandat_status_changed', 'mandat_updated'],
+      email: ['email_sent'],
+      document: ['document_added'],
+    }
+
+    return filterMap[selectedFilter]
+  }, [selectedFilter, propTypes])
+
   const activityQuery = useOrganisationActivity(organisationId, { limit, types })
   const activities = flattenActivities(activityQuery.data?.pages ?? [])
 
@@ -41,7 +68,23 @@ export const OrganisationTimeline: React.FC<OrganisationTimelineProps> = ({
         title="Historique d'activités"
         subtitle="Timeline unifiée des actions"
         className="pb-spacing-sm"
-      />
+      >
+        {!propTypes && (
+          <div className="mt-3">
+            <select
+              value={selectedFilter}
+              onChange={(e) => setSelectedFilter(e.target.value)}
+              className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-bleu focus:border-transparent"
+            >
+              {ACTIVITY_FILTERS.map((filter) => (
+                <option key={filter.value} value={filter.value}>
+                  {filter.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+      </CardHeader>
       <CardBody className="space-y-spacing-md">
         {activityQuery.isError && (
           <Alert

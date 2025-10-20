@@ -1,4 +1,3 @@
-
 // app/dashboard/page.tsx
 // ============= DASHBOARD HOME PAGE =============
 
@@ -6,35 +5,69 @@
 
 import React from 'react'
 import { Card } from '@/components/shared'
+import { useOrganisations } from '@/hooks/useOrganisations'
+import { useMandats } from '@/hooks/useMandats'
+import { useTasks } from '@/hooks/useTasks'
+import { usePeople } from '@/hooks/usePeople'
 
 export default function DashboardPage() {
+  // Fetch counts (limit=1 to get only total count, minimal payload)
+  const { data: organisationsData, isLoading: loadingOrgs } = useOrganisations({ limit: 1 })
+  const { data: mandatsData, isLoading: loadingMandats } = useMandats({ limit: 1 })
+  const tasksHook = useTasks()
+  const peopleHook = usePeople()
+
+  // Extract counts
+  const organisationsCount = organisationsData?.total ?? 0
+  const mandatsCount = mandatsData?.total ?? 0
+  const tasksCount = tasksHook.tasks?.length ?? 0
+  const peopleCount = peopleHook.people?.data?.items?.length ?? 0
+
+  const isLoading = loadingOrgs || loadingMandats || tasksHook.isLoading || peopleHook.people.isLoading
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-ardoise mb-2">Bienvenue au CRM</h1>
-        <p className="text-gray-600">Gérez vos investisseurs et leurs interactions</p>
+        <p className="text-gray-600">Gérez vos organisations, mandats et relations clients</p>
       </div>
 
       {/* Stats cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="text-center">
-          <div className="text-3xl font-bold text-bleu">0</div>
-          <p className="text-gray-600 text-sm mt-1">Investisseurs</p>
+          {isLoading ? (
+            <div className="text-3xl font-bold text-gray-300 animate-pulse">-</div>
+          ) : (
+            <div className="text-3xl font-bold text-bleu">{organisationsCount}</div>
+          )}
+          <p className="text-gray-600 text-sm mt-1">Organisations</p>
         </Card>
-        
+
         <Card className="text-center">
-          <div className="text-3xl font-bold text-vert">0</div>
-          <p className="text-gray-600 text-sm mt-1">Interactions</p>
+          {isLoading ? (
+            <div className="text-3xl font-bold text-gray-300 animate-pulse">-</div>
+          ) : (
+            <div className="text-3xl font-bold text-vert">{mandatsCount}</div>
+          )}
+          <p className="text-gray-600 text-sm mt-1">Mandats</p>
         </Card>
-        
+
         <Card className="text-center">
-          <div className="text-3xl font-bold text-orange-500">0</div>
-          <p className="text-gray-600 text-sm mt-1">KPIs</p>
+          {isLoading ? (
+            <div className="text-3xl font-bold text-gray-300 animate-pulse">-</div>
+          ) : (
+            <div className="text-3xl font-bold text-orange-500">{tasksCount}</div>
+          )}
+          <p className="text-gray-600 text-sm mt-1">Tâches</p>
         </Card>
-        
+
         <Card className="text-center">
-          <div className="text-3xl font-bold text-purple-500">0€</div>
-          <p className="text-gray-600 text-sm mt-1">Revenu total</p>
+          {isLoading ? (
+            <div className="text-3xl font-bold text-gray-300 animate-pulse">-</div>
+          ) : (
+            <div className="text-3xl font-bold text-purple-500">{peopleCount}</div>
+          )}
+          <p className="text-gray-600 text-sm mt-1">Contacts</p>
         </Card>
       </div>
 
@@ -42,23 +75,23 @@ export default function DashboardPage() {
       <Card padding="lg">
         <h2 className="text-lg font-semibold mb-4">Actions rapides</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <a 
+          <a
             href="/dashboard/organisations/new"
             className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-center"
           >
-            <p className="font-medium text-ardoise">Nouvelle organisation</p>
+            <p className="font-medium text-ardoise">➕ Nouvelle organisation</p>
           </a>
-          <a 
-            href="/dashboard/organisations"
+          <a
+            href="/dashboard/mandats/new"
             className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-center"
           >
-            <p className="font-medium text-ardoise">Voir toutes les organisations</p>
+            <p className="font-medium text-ardoise">📋 Nouveau mandat</p>
           </a>
-          <a 
-            href="/dashboard/kpis"
+          <a
+            href="/dashboard/tasks"
             className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-center"
           >
-            <p className="font-medium text-ardoise">Saisir des KPIs</p>
+            <p className="font-medium text-ardoise">✓ Voir mes tâches</p>
           </a>
         </div>
       </Card>

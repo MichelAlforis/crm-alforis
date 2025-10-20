@@ -67,6 +67,19 @@ export default function GlobalSearchInputAdvanced({
     }
   }, [])
 
+  // Raccourci clavier Cmd+K ou Ctrl+K
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        inputRef.current?.focus()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
   // Sauvegarder une recherche dans l'historique
   const saveToHistory = useCallback((query: string) => {
     if (!query.trim()) return
@@ -227,6 +240,11 @@ export default function GlobalSearchInputAdvanced({
 
           {/* Raccourci clavier ou bouton effacer */}
           <div className="hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 items-center gap-1.5">
+            {!isFocused && !value && (
+              <kbd className="px-2 py-0.5 text-xs font-semibold text-gray-500 bg-gray-100 border border-gray-300 rounded shadow-sm">
+                {navigator.platform.toLowerCase().includes('mac') ? '⌘' : 'Ctrl'} K
+              </kbd>
+            )}
             {value ? (
               <button
                 type="button"

@@ -28,7 +28,9 @@ export interface AuthState {
 
 // ============= PERSONNE PHYSIQUE =============
 
-export type OrganizationType = "investor" | "fournisseur"
+// ✅ MIGRATION 2025-10-20: OrganizationType supprimé
+// Remplacé par OrganisationCategory dans le backend
+// export type OrganizationType = "investor" | "fournisseur"
 
 export interface Person {
   id: number
@@ -62,8 +64,7 @@ export type PersonUpdateInput = Partial<PersonInput>
 export interface PersonOrganizationLink {
   id: number
   person_id: number
-  organization_type: OrganizationType
-  organization_id: number
+  organization_id: number  // ✅ MIGRATION: organization_type supprimé (déduit depuis Organisation.category)
   job_title?: string
   work_email?: string
   work_phone?: string
@@ -77,8 +78,7 @@ export interface PersonOrganizationLink {
 
 export interface PersonOrganizationLinkInput {
   person_id: number
-  organization_type: OrganizationType
-  organization_id: number
+  organization_id: number  // ✅ MIGRATION: organization_type supprimé
   job_title?: string
   work_email?: string
   work_phone?: string
@@ -87,7 +87,7 @@ export interface PersonOrganizationLinkInput {
 }
 
 export type PersonOrganizationLinkUpdateInput = Partial<
-  Omit<PersonOrganizationLinkInput, "person_id" | "organization_type" | "organization_id">
+  Omit<PersonOrganizationLinkInput, "person_id" | "organization_id">
 >
 
 export interface PersonDetail extends Person {
@@ -161,8 +161,7 @@ export interface NewsletterCreate {
 export interface NewsletterRecipient {
   id: number
   newsletter_id: number
-  fournisseur_id?: number
-  investor_id?: number
+  organisation_id?: number  // ✅ MIGRATION: Remplace fournisseur_id & investor_id
   email: string
   sent_at?: string
 }
@@ -215,8 +214,7 @@ export interface Task {
   category: TaskCategory
 
   // Relations optionnelles
-  investor_id?: number
-  fournisseur_id?: number
+  organisation_id?: number  // ✅ MIGRATION: Remplace investor_id & fournisseur_id
   person_id?: number
 
   // Métadonnées
@@ -232,8 +230,7 @@ export interface Task {
 }
 
 export interface TaskWithRelations extends Task {
-  investor_name?: string
-  fournisseur_name?: string
+  organisation_name?: string  // ✅ MIGRATION: Remplace investor_name & fournisseur_name
   person_name?: string
 }
 
@@ -244,9 +241,7 @@ export interface TaskInput {
   priority?: TaskPriority
   status?: TaskStatus
   category?: TaskCategory
-  investor_id?: number
-  fournisseur_id?: number
-  organisation_id?: number
+  organisation_id?: number  // ✅ MIGRATION: Unifié
   person_id?: number
 }
 
@@ -257,9 +252,7 @@ export interface TaskUpdateInput {
   priority?: TaskPriority
   status?: TaskStatus
   category?: TaskCategory
-  investor_id?: number
-  fournisseur_id?: number
-  organisation_id?: number
+  organisation_id?: number  // ✅ MIGRATION: Unifié
   person_id?: number
 }
 
@@ -276,8 +269,7 @@ export interface TaskFilters {
   status?: TaskStatus
   priority?: TaskPriority
   category?: TaskCategory
-  investor_id?: number
-  fournisseur_id?: number
+  organisation_id?: number  // ✅ MIGRATION: Unifié
   person_id?: number
   view?: "today" | "overdue" | "next7" | "all"
 }
@@ -720,6 +712,7 @@ export interface Produit {
   description?: string
   created_at: string
   updated_at: string
+  mandat_produits?: MandatProduit[] // Associations avec allocations
   // Legacy fields
   isin?: string
   notes?: string
@@ -740,6 +733,7 @@ export interface ProduitUpdate extends Partial<ProduitCreate> {}
 
 export interface ProduitDetail extends Produit {
   mandats: MandatDistribution[]
+  mandat_produits?: MandatProduit[] // Associations avec allocations
 }
 
 // ============= MANDAT-PRODUIT (Association) =============
@@ -748,6 +742,7 @@ export interface MandatProduit {
   id: number
   mandat_id: number
   produit_id: number
+  allocation_pourcentage?: number // 0-100%
   date_ajout?: string // Format: YYYY-MM-DD
   notes?: string
   created_at: string
@@ -759,6 +754,7 @@ export interface MandatProduit {
 export interface MandatProduitCreate {
   mandat_id: number
   produit_id: number
+  allocation_pourcentage?: number // 0-100%
   date_ajout?: string
   notes?: string
 }

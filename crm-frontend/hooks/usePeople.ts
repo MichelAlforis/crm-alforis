@@ -12,7 +12,6 @@ import {
   PersonUpdateInput,
   PaginatedResponse,
   LoadingState,
-  OrganizationType,
   PersonOrganizationLink,
   PersonOrganizationLinkInput,
   PersonOrganizationLinkUpdateInput,
@@ -43,7 +42,7 @@ export function usePeople() {
     async (
       skip = 0,
       limit = 50,
-      options?: { q?: string; organizationType?: OrganizationType; organizationId?: number },
+      options?: { q?: string; organizationId?: number },  // ✅ MIGRATION: organizationType supprimé
     ) => {
       setPeople({ isLoading: true })
       try {

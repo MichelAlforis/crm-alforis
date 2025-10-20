@@ -23,6 +23,7 @@ import {
   Workflow,
   Link as LinkIcon,
   Upload,
+  Mail,
 } from 'lucide-react'
 import { useTaskViews } from '@/hooks/useTasks'
 import ThemeToggle from '@/components/shared/ThemeToggle'
@@ -80,11 +81,19 @@ const MENU_ITEMS = [
   },
   {
     label: 'Workflows',
-    href: '/workflows',
+    href: '/dashboard/workflows',
     icon: Workflow,
     description: 'Automatisations',
     badge: null,
     gradient: 'from-indigo-500 to-purple-500',
+  },
+  {
+    label: 'Campagnes Email',
+    href: '/dashboard/campaigns',
+    icon: Mail,
+    description: 'Marketing automation',
+    badge: null,
+    gradient: 'from-blue-500 to-cyan-500',
   },
   {
     label: 'Import Unifié',

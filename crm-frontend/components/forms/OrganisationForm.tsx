@@ -34,6 +34,7 @@ export function OrganisationForm({
   submitLabel = 'Créer',
 }: OrganisationFormProps) {
   const { showToast } = useToast()
+  const [showAdvanced, setShowAdvanced] = React.useState(false)
   const {
     register,
     handleSubmit,
@@ -161,6 +162,78 @@ export function OrganisationForm({
         <label htmlFor="is_active" className="text-sm text-gray-700">
           Organisation active
         </label>
+      </div>
+
+      {/* Champs avancés */}
+      <div className="pt-4 border-t border-gray-200">
+        <button
+          type="button"
+          onClick={() => setShowAdvanced(!showAdvanced)}
+          className="flex items-center gap-2 text-sm font-medium text-bleu hover:text-blue-700 transition-colors"
+        >
+          <svg
+            className={`w-4 h-4 transition-transform ${showAdvanced ? 'rotate-90' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+          {showAdvanced ? 'Masquer' : 'Afficher'} les champs avancés
+        </button>
+
+        {showAdvanced && (
+          <div className="mt-4 space-y-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <Input
+              label="AUM (Assets Under Management)"
+              type="number"
+              {...register('aum', { valueAsNumber: true })}
+              error={errors.aum?.message}
+              placeholder="Montant en millions €"
+            />
+
+            <Input
+              label="Date AUM"
+              type="date"
+              {...register('aum_date')}
+              error={errors.aum_date?.message}
+            />
+
+            <Input
+              label="Domicile fiscal"
+              {...register('domicile')}
+              error={errors.domicile?.message}
+              placeholder="ex: Luxembourg, France"
+            />
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Stratégies d'investissement
+              </label>
+              <textarea
+                {...register('strategies')}
+                placeholder="Une stratégie par ligne (ex: Actions Europe, Obligations, etc.)"
+                rows={4}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bleu focus:border-transparent"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Entrez une stratégie par ligne
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Notes internes
+              </label>
+              <textarea
+                {...register('notes')}
+                placeholder="Notes et commentaires internes..."
+                rows={4}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bleu focus:border-transparent"
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="flex justify-end gap-3 pt-4">

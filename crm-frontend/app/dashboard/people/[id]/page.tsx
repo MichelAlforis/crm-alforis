@@ -6,17 +6,19 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
-import { Card, Button, Alert, Table, Modal, Input, Select } from '@/components/shared'
+import { Card, Button, Alert, Table, Modal, Input } from '@/components/shared'
 import { PersonForm } from '@/components/forms'
 import { usePeople } from '@/hooks/usePeople'
-import { OrganizationType, PersonOrganizationLinkInput } from '@/lib/types'
+import { PersonOrganizationLinkInput } from '@/lib/types'
 import { SkeletonCard, SkeletonTable } from '@/components/ui/Skeleton'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 
-const ORGANIZATION_OPTIONS = [
-  { value: 'investor', label: 'Investisseur' },
-  { value: 'fournisseur', label: 'Fournisseur' },
-]
+// ✅ MIGRATION 2025-10-20: ORGANIZATION_OPTIONS supprimé
+// Le type d'organisation est maintenant stocké dans Organisation.category
+// const ORGANIZATION_OPTIONS = [
+//   { value: 'investor', label: 'Investisseur' },
+//   { value: 'fournisseur', label: 'Fournisseur' },
+// ]
 
 export default function PersonDetailPage() {
   const params = useParams<{ id?: string }>()
@@ -32,8 +34,7 @@ export default function PersonDetailPage() {
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
   const [linkPayload, setLinkPayload] = useState<PersonOrganizationLinkInput>({
     person_id: personId ?? 0,
-    organization_type: 'investor',
-    organization_id: 0,
+    organization_id: 0,  // ✅ MIGRATION: organization_type supprimé
     is_primary: false,
   })
   const [linkError, setLinkError] = useState<string>()
@@ -70,10 +71,7 @@ export default function PersonDetailPage() {
     return person?.organizations.map((link) => ({
       ...link,
       organizationLabel:
-        link.organization_name ||
-        (link.organization_type === 'investor'
-          ? `Investisseur #${link.organization_id}`
-          : `Fournisseur #${link.organization_id}`),
+        link.organization_name || `Organisation #${link.organization_id}`,  // ✅ MIGRATION: Unifié
       personLabel: link.person
         ? `${link.person.first_name} ${link.person.last_name}`
         : '',
@@ -117,8 +115,7 @@ export default function PersonDetailPage() {
       setIsLinkModalOpen(false)
       setLinkPayload({
         person_id: personId,
-        organization_type: linkPayload.organization_type,
-        organization_id: 0,
+        organization_id: 0,  // ✅ MIGRATION: organization_type supprimé
         is_primary: false,
       })
       await refresh()
@@ -305,17 +302,8 @@ export default function PersonDetailPage() {
         <div className="space-y-4">
           {linkError && <Alert type="error" message={linkError} />}
 
-          <Select
-            label="Type d'organisation"
-            value={linkPayload.organization_type}
-            onChange={(e) =>
-              setLinkPayload((prev) => ({
-                ...prev,
-                organization_type: e.target.value as OrganizationType,
-              }))
-            }
-            options={ORGANIZATION_OPTIONS}
-          />
+          {/* ✅ MIGRATION 2025-10-20: Type d'organisation supprimé */}
+          {/* Le type est maintenant stocké dans Organisation.category */}
 
           <Input
             label="Identifiant organisation"

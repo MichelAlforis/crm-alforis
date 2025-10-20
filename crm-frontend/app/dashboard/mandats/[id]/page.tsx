@@ -7,10 +7,12 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useMandat, useUpdateMandat, useDeleteMandat } from '@/hooks/useMandats'
-import { useProduitsByMandat } from '@/hooks/useProduits'
+import { useProduitsByMandat, useDeleteMandatProduitAssociation } from '@/hooks/useProduits'
 import { Card, Button, Table, Alert, Modal } from '@/components/shared'
 import { MandatForm } from '@/components/forms'
 import { SkeletonCard } from '@/components/ui/Skeleton'
+import MandatProduitAssociationModal from '@/components/mandats/MandatProduitAssociationModal'
+import { useToast } from '@/components/ui/Toast'
 import type { MandatDistributionUpdate } from '@/lib/types'
 
 const STATUS_LABELS: Record<string, string> = {
@@ -40,12 +42,15 @@ export default function MandatDetailPage() {
     return Number.isNaN(parsed) ? null : parsed
   }, [params])
 
-  const { data: mandat, isLoading, error } = useMandat(mandatId ?? 0)
-  const { data: produits } = useProduitsByMandat(mandatId ?? 0)
+  const { data: mandat, isLoading, error, refetch } = useMandat(mandatId ?? 0)
+  const { data: produits, refetch: refetchProduits } = useProduitsByMandat(mandatId ?? 0)
   const updateMutation = useUpdateMandat()
   const deleteMutation = useDeleteMandat()
+  const deleteAssociationMutation = useDeleteMandatProduitAssociation()
+  const { showToast } = useToast()
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isAssociationModalOpen, setIsAssociationModalOpen] = useState(false)
 
   const handleUpdate = async (data: MandatDistributionUpdate) => {
     if (!mandatId) return
@@ -63,6 +68,34 @@ export default function MandatDetailPage() {
       await deleteMutation.mutateAsync(mandatId)
       router.push('/dashboard/mandats')
     }
+  }
+
+  const handleDeleteAssociation = async (associationId: number, produitName: string) => {
+    if (!confirm(`Retirer le produit "${produitName}" de ce mandat ?`)) {
+      return
+    }
+
+    try {
+      await deleteAssociationMutation.mutateAsync(associationId)
+      showToast({
+        type: 'success',
+        title: 'Produit retiré',
+        message: 'Le produit a été dissocié du mandat.',
+      })
+      refetchProduits()
+      refetch()
+    } catch (err: any) {
+      showToast({
+        type: 'error',
+        title: 'Erreur',
+        message: err?.detail || 'Impossible de retirer le produit.',
+      })
+    }
+  }
+
+  const handleAssociationSuccess = () => {
+    refetchProduits()
+    refetch()
   }
 
   if (mandatId === null) {
@@ -88,6 +121,14 @@ export default function MandatDetailPage() {
 
   const isActif = ['SIGNE', 'ACTIF'].includes(mandat.status)
 
+  // Calculate total allocation
+  const totalAllocation = produits?.reduce((sum, p) => {
+    const association = p.mandat_produits?.find(
+      (mp: any) => mp.mandat_id === mandatId
+    )
+    return sum + (association?.allocation_pourcentage || 0)
+  }, 0) || 0
+
   const produitColumns = [
     {
       header: 'Nom',
@@ -102,6 +143,21 @@ export default function MandatDetailPage() {
       header: 'Code ISIN',
       accessor: 'isin_code',
       render: (value: string | null) => value || '-',
+    },
+    {
+      header: 'Allocation',
+      accessor: 'allocation_pourcentage',
+      render: (_: unknown, row: any) => {
+        const association = row.mandat_produits?.find(
+          (mp: any) => mp.mandat_id === mandatId
+        )
+        const allocation = association?.allocation_pourcentage
+        return allocation != null ? (
+          <span className="font-medium text-bleu">{allocation}%</span>
+        ) : (
+          <span className="text-gray-400">-</span>
+        )
+      },
     },
     {
       header: 'Statut',
@@ -123,11 +179,28 @@ export default function MandatDetailPage() {
     {
       header: 'Actions',
       accessor: 'id',
-      render: (id: number) => (
-        <Link href={`/dashboard/produits/${id}`} className="text-bleu hover:underline text-sm">
-          Voir
-        </Link>
-      ),
+      render: (id: number, row: any) => {
+        const association = row.mandat_produits?.find(
+          (mp: any) => mp.mandat_id === mandatId
+        )
+        return (
+          <div className="flex items-center gap-2">
+            <Link href={`/dashboard/produits/${id}`} className="text-bleu hover:underline text-sm">
+              Voir
+            </Link>
+            {association && (
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => handleDeleteAssociation(association.id, row.name)}
+                disabled={deleteAssociationMutation.isPending}
+              >
+                Retirer
+              </Button>
+            )}
+          </div>
+        )
+      },
     },
   ]
 
@@ -211,13 +284,38 @@ export default function MandatDetailPage() {
       {/* Produits associés */}
       <Card>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Produits associés ({produits?.length || 0})</h2>
-          <Link href={`/dashboard/produits/new?mandat_id=${mandatId}`}>
-            <Button variant="primary" size="sm">
-              + Associer un produit
-            </Button>
-          </Link>
+          <div>
+            <h2 className="text-xl font-semibold">Produits associés ({produits?.length || 0})</h2>
+            {produits && produits.length > 0 && (
+              <p className="text-sm text-gray-600 mt-1">
+                Total allocation:{' '}
+                <span className={`font-semibold ${totalAllocation === 100 ? 'text-green-600' : 'text-orange-600'}`}>
+                  {totalAllocation.toFixed(2)}%
+                </span>
+                {totalAllocation !== 100 && (
+                  <span className="ml-2 text-orange-600">
+                    ⚠️ Devrait être 100%
+                  </span>
+                )}
+              </p>
+            )}
+          </div>
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => setIsAssociationModalOpen(true)}
+            disabled={!isActif}
+          >
+            + Associer un produit
+          </Button>
         </div>
+
+        {!isActif && (
+          <Alert
+            type="warning"
+            message="Le mandat doit être signé ou actif pour associer des produits."
+          />
+        )}
 
         {produits && produits.length > 0 ? (
           <Table columns={produitColumns} data={produits} isLoading={false} isEmpty={false} />
@@ -242,6 +340,15 @@ export default function MandatDetailPage() {
           submitLabel="Enregistrer"
         />
       </Modal>
+
+      {/* Modal d'association produit */}
+      <MandatProduitAssociationModal
+        isOpen={isAssociationModalOpen}
+        onClose={() => setIsAssociationModalOpen(false)}
+        mandatId={mandatId}
+        mandatStatus={mandat.status}
+        onSuccess={handleAssociationSuccess}
+      />
     </div>
   )
 }
