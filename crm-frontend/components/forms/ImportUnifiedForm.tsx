@@ -197,16 +197,16 @@ export default function ImportUnifiedForm() {
         return;
       }
 
-      // Transform organisations
+      // Transform organisations - send null instead of empty strings for optional fields
       const organisations = orgsData.map(row => ({
         name: row.name || row['organisation name'] || '',
         type: orgType, // Add organization type from selector
-        email: row.email || '',
-        phone: row.phone || '',
-        address: row.address || '',
-        city: row.city || '',
-        country: row.country || '',
-        country_code: row.country_code || row['country code'] || '',
+        email: row.email || null, // null instead of '' for EmailStr validation
+        phone: row.phone || null,
+        address: row.address || null,
+        city: row.city || null,
+        country: row.country || null,
+        country_code: row.country_code || row['country code'] || null,
         language: row.language || row['langue'] || 'FR',
       }));
 
