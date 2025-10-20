@@ -204,11 +204,14 @@ export default function OrganisationsPage() {
     {
       header: 'Catégorie',
       accessor: 'category',
-      render: (value: OrganisationCategory) => (
-        <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
-          {CATEGORY_LABELS[value]}
-        </span>
-      ),
+      render: (value: OrganisationCategory | null) =>
+        value ? (
+          <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+            {CATEGORY_LABELS[value] || value}
+          </span>
+        ) : (
+          <span className="text-gray-400 text-xs">-</span>
+        ),
     },
     {
       header: 'Email',
