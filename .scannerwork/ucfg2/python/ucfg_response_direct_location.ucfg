@@ -1,0 +1,66 @@
+
+?pip._vendor.urllib3.response.HTTPResponse.get_redirect_locationê
+É/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/response.pyÜ Ü("2*Ù
+2
+á ç(|
+z
+
+é é(0
+%3"__id*`
+
+__unknown_file (D*B+
+)pip._vendor.urllib3.response.HTTPResponse"
+REDIRECT_STATUSESq
+o
+
+é é(
+%4"__id*U
+
+__unknown_file (9*7+
+)pip._vendor.urllib3.response.HTTPResponse"
+statusjh
+
+é é(0
+%5*"
+
+__unknown_file (
+
+%3*"
+
+__unknown_file (
+
+%42__contains__*
+4
+5*(
+4
+ë ë("
+
+ë ë(	
+
+False*Ç
+5
+è è(/r
+p
+
+è è(
+%1"__id*V
+
+__unknown_file (:*8+
+)pip._vendor.urllib3.response.HTTPResponse"	
+headersge
+
+è è(/
+%2*"
+
+__unknown_file (
+
+%1*(
+
+__unknown_file (
+
+location2get"
+
+è è(/
+
+%2B-+
+)pip._vendor.urllib3.response.HTTPResponseH

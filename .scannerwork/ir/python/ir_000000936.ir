@@ -1,0 +1,17 @@
+
+ÜÒ"Where the distribution is loaded from.
+
+        A string value is not necessarily a filesystem path, since distributions
+        can be loaded from other sources, e.g. arbitrary zip archives. ``None``
+        means the distribution is created in-memory.
+
+        Do not canonicalize this value with e.g. ``pathlib.Path.resolve()``. If
+        this is a symbolic link, we want to preserve the relative path between
+        it and files in the distribution.
+        "strself
+Ž Ž("S?
+=
+
+™ ™(#"NotImplementedError*BNotImplementedError2
+
+™ ™(#*‚/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/metadata/base.py

@@ -1,0 +1,14 @@
+
+É¿"Return a summary of me for display under the heading.
+
+        This default implementation simply prints a description of the
+        triggering requirement.
+
+        :param req: The InstallRequirement that provoked this error, with
+            its link already populated by the resolver's _populate_link().
+
+        "str
+) "    {self._requirement_name()}"strself
+Þ Þ("
+
+è è(0*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/exceptions.py

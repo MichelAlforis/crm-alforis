@@ -1,0 +1,14 @@
+
+/&":return: cache path tied to the user"strself
+Ê Ê(" 1
+/
+
+Ì Ì('"#get-field# user_cache_dir:.
+,
+
+Ì Ì('"?python-partial-apply?:)
+'
+
+Ì Ì(("Path:Bpathlib.Path
+
+Ì Ì((*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/api.py

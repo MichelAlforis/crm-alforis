@@ -1,0 +1,31 @@
+
+ÎÄ"
+        Delete all extracted resource files and directories, returning a list
+        of the file and directory names that could not be successfully removed.
+        This function does not have any concurrency protection, so it should
+        generally only be called when the extraction path is a temporary
+        directory exclusive to a single process.  This method is not
+        automatically called; you must call it explicitly or register it as an
+        ``atexit`` function if you wish to ensure cleanup of a temporary
+        directory used for extractions.
+        "str
+
+0intself
+ç ç(force
+ç  ç(3list"Ä)
+'
+
+ó ó("#unknown-value#Blist(
+&
+
+ó ó("
+#is-exact#:Bbool
+
+
+ó ó("
+#assume#::
+8
+
+ó ó(	"#set-field# __collection_size:Bint
+
+ó ó(*‰/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pkg_resources/__init__.py

@@ -1,0 +1,42 @@
+
+512int
+¿µ"Get the number of cells required to display text.
+
+    Args:
+        text (str): Text to display.
+
+    Returns:
+        int: Get the number of cells required to display text.
+    "strtext3 3(	_cell_len3 3(I"t*
+(
+< <("
+builtinslen*:Bint(
+&
+< <("	#binop <#2<:Bbool"
+< <( *< <("3
+
+= =("	_cell_len:
+= =("œ!
+
+> >("#unknown-value#,
+*
+> >(#	"_is_single_cell_widths:)
+'
+> >(#
+"
+__bool__*:	BboolH"
+> >(#
+ *> >(">*
+(
+? ?("
+builtinslen*:Bint
+? ?("‰!
+
+@ @(*"#unknown-value#+
+)
+@ @(1"
+builtinsmap*:Bmap%
+#
+@ @(2"
+builtinssum*:
+@ @(2*}/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/cells.py

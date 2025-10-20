@@ -1,0 +1,15 @@
+
+Qpip._internal.distributions.wheel.WheelDistribution.prepare_distribution_metadata“
+ˆ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/distributions/wheel.py& &(%"3*,
+3
+
+wheel.py"
+- -
+implicit return:!
+( ((6
+build_env_installer:
+) )(
+build_isolation:
+* *(
+check_build_depsB75
+3pip._internal.distributions.wheel.WheelDistributionH

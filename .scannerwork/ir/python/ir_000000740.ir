@@ -1,0 +1,96 @@
+
+≠£"Try to find a prefix scheme for the current platform.
+
+    This tries:
+
+    * A special ``osx_framework_library`` for Python distributed by Apple's
+      Command Line Tools, when not running in a virtual environment.
+    * Implementation + OS, used by PyPy on Windows (``pypy_nt``).
+    * Implementation without OS, used by PyPy on POSIX (``pypy``).
+    * OS + "prefix", used by CPython on POSIX (``posix_prefix``).
+    * Just the OS name, used by CPython on Windows (``nt``).
+
+    If none of the above works, fall back to ``posix_prefix``.
+    "str
+"{os.name}_prefix"str
+ "posix_prefix"str
+ 	"osx_framework_library"str
+.
+%"{sys.implementation.name}_{os.name}"str
+"prefix"str"l!
+
+F F("#unknown-value#)
+'
+F F("
+__bool__*:BboolH"
+F F( *F F("b!
+
+G G($"#unknown-value#+
+)
+G G(."_PREFERRED_SCHEME_API:
+G G(."£V
+T
+H H()"F
+"pip._internal.locations._sysconfig _should_use_osx_framework_prefix)
+'
+H H()"
+__bool__*:BboolH"
+H H() *H H("
+I I(&	"®7
+5
+J J(Dimplementation_suffixed"#id#:
+Bstr!
+
+K" K(4"#unknown-value#*
+(
+K K(4"
+#binop in#2in:Bbool"
+K K(4 *K K("
+L L(&"Í!
+
+M M(
+"#unknown-value#/
+-
+M M("#get-field# implementation:%
+#
+M M("#get-field# name:!
+
+M" M(4"#unknown-value#*
+(
+M M(4"
+#binop in#2in:Bbool"
+M M(4 *M M("ç!
+
+N N("#unknown-value#/
+-
+N N(!"#get-field# implementation:%
+#
+N N(&"#get-field# name:
+N N(&"ô(
+&
+O O("suffixed"#id#:Bstr!
+
+P P(%"#unknown-value#*
+(
+P P(%"
+#binop in#2in:Bbool"
+P P(%	 
+*P P("	
+Q Q("π
+!
+
+R R(	"#unknown-value#%
+#
+R R("#get-field# name:!
+
+R R($"#unknown-value#*
+(
+R R($"
+#binop in#2in:Bbool"
+R R($ *R R("\!
+
+S S("#unknown-value#%
+#
+S S("#get-field# name:
+S S("
+T T( *â/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/locations/_sysconfig.py

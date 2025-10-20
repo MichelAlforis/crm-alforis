@@ -1,0 +1,21 @@
+
+ÜÒ"A string representation of the Specifier that can be round-tripped.
+
+        >>> str(Specifier('>=1.0.0'))
+        '>=1.0.0'
+        >>> str(Specifier('>=1.0.0', prereleases=False))
+        '>=1.0.0'
+        "str
+"{}{}"strself
+¸ ¸("•(
+&
+
+À À(("#get-field# _spec:%
+#
+
+À À(("#unaryop *#2*:0
+.
+
+À À()"?python-unknown?*:Bstr
+
+À À()*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/packaging/specifiers.py

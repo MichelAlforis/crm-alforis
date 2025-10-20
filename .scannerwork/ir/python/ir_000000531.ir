@@ -1,0 +1,47 @@
+
+È¾"Move cursor to absolute position.
+
+        Args:
+            x (int): x offset (column)
+            y (int): y offset (row)
+
+        Returns:
+            ~Control: Control object.
+        "str
+
+0intcls
+„ „(x
+„ „(y
+„ „(#	tuple($pip._vendor.rich.segment.ControlType"“1
+/
+
+Ž Ž(."#get-field# CURSOR_MOVE_TO:*
+(
+
+Ž Ž(5"#unknown-value#Btuple(
+&
+
+Ž Ž(5	"
+#is-exact#:Bbool
+
+
+Ž Ž(5
+"
+#assume#:	:
+8
+
+Ž Ž(5"#set-field# __collection_size:Bint(
+&
+
+Ž Ž(5"#array-add-last#:(
+&
+
+Ž Ž(5"#array-add-last#:(
+&
+
+Ž Ž(5"#array-add-last#:
+
+
+Ž Ž(6"cls:
+
+Ž Ž(6*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/control.py

@@ -1,0 +1,116 @@
+
+:services.workflow_engine.WorkflowEngine._action_send_emaild
+X/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/services/workflow_engine.pyÃ Ã("2*å
+2
+Õ ◊(
+
+⁄ ‡(	
+%1"dictó
+î
+
+€ €("
+%2"__mapSet*"
+
+__unknown_file (
+
+%1*&
+
+__unknown_file (
+
+action**
+
+__unknown_file (
+
+send_emailec
+
+‹ ‹("
+%3*&
+
+__unknown_file (
+
+
+config*"
+
+__unknown_file (
+to2getã
+à
+
+‹ ‹("
+%4"__mapSet*"
+
+__unknown_file (
+
+%1*"
+
+__unknown_file (
+to*"
+
+__unknown_file (
+
+%3jh
+
+› ›(,
+%5*&
+
+__unknown_file (
+
+
+config*'
+
+__unknown_file (	
+subject2getê
+ç
+
+› ›(,
+%6"__mapSet*"
+
+__unknown_file (
+
+%1*'
+
+__unknown_file (	
+subject*"
+
+__unknown_file (
+
+%5è
+å
+
+ﬁ ﬁ(
+%7"__mapSet*"
+
+__unknown_file (
+
+%1*$
+
+__unknown_file (
+sent*$
+
+__unknown_file (
+
+True®
+•
+
+ﬂ ﬂ(2
+%8"__mapSet*"
+
+__unknown_file (
+
+%1*'
+
+__unknown_file (	
+message*:
+
+__unknown_file (
+Email envoy√© (simulation)"
+
+⁄ ‡(	
+
+%1:
+
+Ã! Ã(7
+config:
+
+Ã9 Ã(P	
+contextB+)
+'services.workflow_engine.WorkflowEngineH

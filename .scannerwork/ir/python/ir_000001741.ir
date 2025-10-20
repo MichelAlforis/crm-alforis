@@ -1,0 +1,22 @@
+
+èÞ"
+    Helper export Excel organisations
+
+    Args:
+        organisations: Liste d'organisations
+        filename: Nom du fichier
+        include_charts: Inclure graphiques
+
+    Returns:
+        BytesIO: Fichier Excel
+    "strorganisations
+“ “(%db
+” ”(filename
+• •((include_charts
+– –("cO
+M
+
+£ §("8
+core.exports.ExportServiceexport_organisations_excel:
+
+£ §(*L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/core/exports.py

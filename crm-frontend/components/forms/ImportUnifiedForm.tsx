@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/components/ui/Toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Upload, FileText, CheckCircle2, AlertCircle, Download } from 'lucide-react';
 
 interface CSVRow {
   [key: string]: string;
@@ -36,24 +37,76 @@ interface UnifiedImportResult {
   };
 }
 
+/**
+ * Parse CSV content with support for quoted values containing commas
+ */
 function parseCSV(content: string): CSVRow[] {
   const lines = content.trim().split('\n');
   if (lines.length < 2) return [];
 
-  const headers = lines[0]
-    .split(',')
-    .map(h => h.trim().toLowerCase());
+  // Parse headers
+  const headers = parseCSVLine(lines[0]).map(h => h.trim().toLowerCase());
 
+  // Parse data rows
   return lines.slice(1)
     .filter(line => line.trim())
     .map(line => {
-      const values = line.split(',').map(v => v.trim());
+      const values = parseCSVLine(line);
       const row: CSVRow = {};
       headers.forEach((header, idx) => {
-        row[header] = values[idx] || '';
+        row[header] = values[idx]?.trim() || '';
       });
       return row;
-    });
+    })
+    .filter(row => Object.values(row).some(val => val)); // Filter out completely empty rows
+}
+
+/**
+ * Parse a single CSV line handling quoted values
+ */
+function parseCSVLine(line: string): string[] {
+  const result: string[] = [];
+  let current = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+
+    if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === ',' && !inQuotes) {
+      result.push(current);
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  result.push(current);
+
+  return result;
+}
+
+/**
+ * Validate CSV structure and required fields
+ */
+function validateCSV(rows: CSVRow[], requiredFields: string[]): { valid: boolean; errors: string[] } {
+  const errors: string[] = [];
+
+  if (rows.length === 0) {
+    errors.push('Le fichier CSV est vide ou mal formaté');
+    return { valid: false, errors };
+  }
+
+  const headers = Object.keys(rows[0]);
+  const missingFields = requiredFields.filter(field =>
+    !headers.some(h => h.toLowerCase().includes(field.toLowerCase()))
+  );
+
+  if (missingFields.length > 0) {
+    errors.push(`Colonnes manquantes: ${missingFields.join(', ')}`);
+  }
+
+  return { valid: errors.length === 0, errors };
 }
 
 export default function ImportUnifiedForm() {
@@ -63,14 +116,60 @@ export default function ImportUnifiedForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<UnifiedImportResult | null>(null);
   const [showResult, setShowResult] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [orgFileName, setOrgFileName] = useState<string>('');
+  const [peopleFileName, setPeopleFileName] = useState<string>('');
   const { showToast } = useToast();
 
-  const handleFileRead = (file: File, setter: (content: string) => void) => {
+  const handleFileRead = (
+    file: File,
+    setter: (content: string) => void,
+    fileNameSetter: (name: string) => void,
+    requiredFields: string[]
+  ) => {
     const reader = new FileReader();
     reader.onload = (e) => {
-      setter(e.target?.result as string);
+      const content = e.target?.result as string;
+      const rows = parseCSV(content);
+      const validation = validateCSV(rows, requiredFields);
+
+      if (!validation.valid) {
+        setValidationErrors(prev => [...prev, ...validation.errors]);
+        showToast({
+          type: 'error',
+          title: 'Erreur de validation',
+          message: validation.errors.join(', ')
+        });
+        return;
+      }
+
+      setter(content);
+      fileNameSetter(file.name);
+      setValidationErrors([]);
+    };
+    reader.onerror = () => {
+      showToast({
+        type: 'error',
+        title: 'Erreur',
+        message: 'Impossible de lire le fichier'
+      });
     };
     reader.readAsText(file);
+  };
+
+  const downloadTemplate = (type: 'organisations' | 'people') => {
+    let csv = '';
+    if (type === 'organisations') {
+      csv = 'name,email,phone,address,city,country\n';
+    } else {
+      csv = 'first name,last name,personal email,email,personal phone,phone,country code,language,organisation\n';
+    }
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `template_${type}.csv`;
+    link.click();
   };
 
   const handleSubmit = async () => {
@@ -187,33 +286,152 @@ export default function ImportUnifiedForm() {
 
   return (
     <div className="space-y-6">
+      {/* Info Section */}
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
+        <div className="flex items-start gap-3">
+          <FileText className="w-5 h-5 text-blue-600 mt-0.5" />
+          <div className="flex-1">
+            <h3 className="font-semibold text-blue-900 mb-2">Import unifié - Mode recommandé</h3>
+            <p className="text-sm text-blue-700 mb-3">
+              Importez simultanément vos organisations et leurs contacts associés.
+              Les liens entre organisations et personnes seront créés automatiquement.
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => downloadTemplate('organisations')}
+                className="text-xs bg-white hover:bg-blue-50 text-blue-700 px-3 py-1.5 rounded border border-blue-300 transition-colors flex items-center gap-1"
+              >
+                <Download className="w-3 h-3" />
+                Template Organisations
+              </button>
+              <button
+                onClick={() => downloadTemplate('people')}
+                className="text-xs bg-white hover:bg-blue-50 text-blue-700 px-3 py-1.5 rounded border border-blue-300 transition-colors flex items-center gap-1"
+              >
+                <Download className="w-3 h-3" />
+                Template Personnes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Validation Errors */}
+      {validationErrors.length > 0 && (
+        <Alert className="border-red-500 bg-red-50">
+          <AlertDescription>
+            <div className="flex items-start gap-2">
+              <AlertCircle className="w-5 h-5 text-red-600 mt-0.5" />
+              <div>
+                <p className="font-semibold text-red-800 mb-1">Erreurs de validation:</p>
+                <ul className="list-disc list-inside text-sm text-red-700">
+                  {validationErrors.map((err, i) => (
+                    <li key={i}>{err}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </AlertDescription>
+        </Alert>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Organisations */}
         <div className="space-y-3">
-          <h3 className="font-semibold">📦 Organisations</h3>
-          <input
-            type="file"
-            accept=".csv"
-            onChange={(e) => e.target.files && handleFileRead(e.target.files[0], setOrganisationsCSV)}
-            className="block w-full text-sm border border-gray-300 rounded-lg p-2"
-          />
-          {organisationsCSV && (
-            <p className="text-sm text-green-600">✓ {parseCSV(organisationsCSV).length} organisations</p>
-          )}
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+              <FileText className="w-4 h-4" />
+              Organisations
+            </h3>
+            {organisationsCSV && (
+              <span className="text-xs text-green-600 flex items-center gap-1">
+                <CheckCircle2 className="w-3 h-3" />
+                {parseCSV(organisationsCSV).length} lignes
+              </span>
+            )}
+          </div>
+          <div className="border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 transition-colors">
+            <label className="cursor-pointer block p-6 text-center">
+              <input
+                type="file"
+                accept=".csv"
+                onChange={(e) =>
+                  e.target.files &&
+                  handleFileRead(
+                    e.target.files[0],
+                    setOrganisationsCSV,
+                    setOrgFileName,
+                    ['name']
+                  )
+                }
+                className="hidden"
+              />
+              <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+              {orgFileName ? (
+                <div className="text-sm">
+                  <p className="text-green-600 font-medium">{orgFileName}</p>
+                  <p className="text-xs text-gray-500 mt-1">Cliquez pour changer</p>
+                </div>
+              ) : (
+                <div className="text-sm text-gray-600">
+                  <p className="font-medium text-blue-600">Cliquez pour sélectionner</p>
+                  <p className="text-xs mt-1">ou glissez-déposez votre fichier CSV</p>
+                </div>
+              )}
+            </label>
+          </div>
+          <p className="text-xs text-gray-500">
+            Colonnes: name, email, phone, address, city, country
+          </p>
         </div>
 
         {/* People */}
         <div className="space-y-3">
-          <h3 className="font-semibold">👥 Personnes</h3>
-          <input
-            type="file"
-            accept=".csv"
-            onChange={(e) => e.target.files && handleFileRead(e.target.files[0], setPeopleCSV)}
-            className="block w-full text-sm border border-gray-300 rounded-lg p-2"
-          />
-          {peopleCSV && (
-            <p className="text-sm text-green-600">✓ {parseCSV(peopleCSV).length} personnes</p>
-          )}
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+              <FileText className="w-4 h-4" />
+              Personnes
+            </h3>
+            {peopleCSV && (
+              <span className="text-xs text-green-600 flex items-center gap-1">
+                <CheckCircle2 className="w-3 h-3" />
+                {parseCSV(peopleCSV).length} lignes
+              </span>
+            )}
+          </div>
+          <div className="border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 transition-colors">
+            <label className="cursor-pointer block p-6 text-center">
+              <input
+                type="file"
+                accept=".csv"
+                onChange={(e) =>
+                  e.target.files &&
+                  handleFileRead(
+                    e.target.files[0],
+                    setPeopleCSV,
+                    setPeopleFileName,
+                    ['first name', 'last name']
+                  )
+                }
+                className="hidden"
+              />
+              <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+              {peopleFileName ? (
+                <div className="text-sm">
+                  <p className="text-green-600 font-medium">{peopleFileName}</p>
+                  <p className="text-xs text-gray-500 mt-1">Cliquez pour changer</p>
+                </div>
+              ) : (
+                <div className="text-sm text-gray-600">
+                  <p className="font-medium text-blue-600">Cliquez pour sélectionner</p>
+                  <p className="text-xs mt-1">ou glissez-déposez votre fichier CSV</p>
+                </div>
+              )}
+            </label>
+          </div>
+          <p className="text-xs text-gray-500">
+            Colonnes: first name, last name, personal email, email, phone, country code, language, organisation
+          </p>
         </div>
       </div>
 
@@ -235,10 +453,40 @@ export default function ImportUnifiedForm() {
       </div>
 
       {/* Boutons */}
-      <div className="flex gap-2">
-        <Button onClick={handleSubmit} disabled={isLoading} className="w-full">
-          {isLoading ? '⏳ En cours...' : '🚀 Importer'}
+      <div className="flex gap-3">
+        <Button
+          onClick={handleSubmit}
+          disabled={isLoading || !organisationsCSV || !peopleCSV}
+          className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isLoading ? (
+            <>
+              <span className="animate-spin mr-2">⏳</span>
+              Import en cours...
+            </>
+          ) : (
+            <>
+              <Upload className="w-4 h-4 mr-2" />
+              Lancer l'import
+            </>
+          )}
         </Button>
+        {(organisationsCSV || peopleCSV) && !isLoading && (
+          <Button
+            onClick={() => {
+              setOrganisationsCSV('');
+              setPeopleCSV('');
+              setOrgFileName('');
+              setPeopleFileName('');
+              setResult(null);
+              setShowResult(false);
+              setValidationErrors([]);
+            }}
+            className="px-6 bg-gray-200 hover:bg-gray-300 text-gray-700"
+          >
+            Réinitialiser
+          </Button>
+        )}
       </div>
 
       {/* Résultats */}
@@ -285,11 +533,44 @@ export default function ImportUnifiedForm() {
       )}
 
       {/* Guide */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm">
-        <h4 className="font-semibold mb-2">📋 Format CSV attendu</h4>
-        <div className="space-y-2 text-xs">
-          <p><strong>Organisations:</strong> name, email, phone, address, city, country</p>
-          <p><strong>Personnes:</strong> first name, last name, personal email, email, personal phone, phone, country code, language</p>
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+          <FileText className="w-4 h-4" />
+          Format CSV attendu
+        </h4>
+        <div className="grid md:grid-cols-2 gap-4 text-xs">
+          <div className="bg-white rounded p-3 border">
+            <p className="font-semibold text-gray-800 mb-2">Organisations (requis):</p>
+            <ul className="space-y-1 text-gray-600">
+              <li><span className="font-medium text-red-600">name*</span> - Nom de l'organisation</li>
+              <li>email - Email principal</li>
+              <li>phone - Téléphone</li>
+              <li>address - Adresse complète</li>
+              <li>city - Ville</li>
+              <li>country - Pays (code ISO)</li>
+            </ul>
+          </div>
+          <div className="bg-white rounded p-3 border">
+            <p className="font-semibold text-gray-800 mb-2">Personnes (requis):</p>
+            <ul className="space-y-1 text-gray-600">
+              <li><span className="font-medium text-red-600">first name*</span> - Prénom</li>
+              <li><span className="font-medium text-red-600">last name*</span> - Nom</li>
+              <li>personal email - Email personnel</li>
+              <li>email - Email professionnel</li>
+              <li>personal phone - Tél. personnel</li>
+              <li>phone - Tél. professionnel</li>
+              <li>country code - Code pays</li>
+              <li>language - Langue (fr/en)</li>
+              <li><span className="font-medium text-blue-600">organisation</span> - Nom de l'org. associée</li>
+            </ul>
+          </div>
+        </div>
+        <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded text-xs">
+          <p className="font-semibold text-yellow-800 mb-1">💡 Conseil:</p>
+          <p className="text-yellow-700">
+            Pour lier automatiquement une personne à une organisation, assurez-vous que la colonne "organisation"
+            dans le CSV des personnes contient exactement le même nom que dans le CSV des organisations.
+          </p>
         </div>
       </div>
     </div>

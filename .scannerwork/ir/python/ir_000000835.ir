@@ -1,0 +1,67 @@
+
+
+0int
+!"paths must be relative"str
++""paths must be inside source tree"str
+ôê"Normalise and check a backend path.
+
+    Ensure that the requested backend path is specified as a relative path,
+    and resolves to a location under the given source tree.
+
+    Return an absolute version of the requested path.
+    "strsource_treef f(#	requestedf% f(3list"I)
+'
+n n("
+os.pathisabs:Bbool"
+n n( *n n("B.
+,
+o o(2"
+ValueError*:B
+ValueError2
+o o(2"î1
+/
+q q(-
+abs_source"
+os.pathabspath:#
+!
+r% r(H"
+os.pathjoin:5
+3
+r r(I	abs_requested"
+os.pathnormpath:3
+1
+v v(.
+norm_source"
+os.pathnormcase:6
+4
+w w(4norm_requested"
+os.pathnormcase:	'
+%
+x x(9"#unknown-value#Blist&
+$
+x x(9"
+#is-exact#:Bbool
+
+x x(9"
+#assume#:8
+6
+x x(9"#set-field# __collection_size:Bint&
+$
+x x(9"#array-add-last#:
+&
+$
+x x(9"#array-add-last#:*
+(
+x x(:"
+os.pathcommonprefix:*
+(
+x x(I"
+#binop !=#2!=:
+Bbool"
+x x(I *x x("B.
+,
+y y(<"
+ValueError*:B
+ValueError2
+y y(<"
+{ {(	*ˆ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_impl.py

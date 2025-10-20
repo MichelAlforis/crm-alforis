@@ -1,0 +1,14 @@
+
+"Authorization"strself^ ^(r^ ^("ø)
+'
+_5 _(B"#get-field# username:)
+'
+_D _(Q"#get-field# password:@
+>
+_% _(R",
+pip._vendor.requests.auth_basic_auth_str:(
+&
+_ _("#get-field# headers:$
+"
+_ _(R"#array-write#:
+` `(*€/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/requests/auth.py

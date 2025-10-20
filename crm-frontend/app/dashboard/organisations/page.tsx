@@ -150,7 +150,7 @@ export default function OrganisationsPage() {
     },
   ]
 
-  const filteredData = data?.items.filter((org) => {
+  const filteredData = data?.items?.filter((org) => {
     const search = searchText.toLowerCase()
     const matchesSearch =
       org.name.toLowerCase().includes(search) ||
@@ -194,7 +194,7 @@ export default function OrganisationsPage() {
       matchesCreatedFrom &&
       matchesCreatedTo
     )
-  })
+  }) || []
 
   const columns = [
     {

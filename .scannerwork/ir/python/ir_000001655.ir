@@ -1,0 +1,13 @@
+clsw  w(#timeoutw% w(,"†0
+.
+x1 x(D"#get-field# DEFAULT_TIMEOUT:*
+(
+x& x(D"
+#binop ==#2==:Bbool&"$
+x& x(D *x# x(%2xE x(I"?+
+)
+x x(""
+socketgetdefaulttimeout
+x x(Q"
+x x(Q"$*
+x x(Q*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/util/timeout.py

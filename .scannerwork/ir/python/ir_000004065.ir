@@ -1,0 +1,94 @@
+
+"expr-inside-fstring"str
+"\{"str
+	"[\'"\\]"str
+
+	0int
+"\}"str
+"[^\\\'"{}\n]+"strttypeU U(	tuple'list"Š!
+
+[ [("#unknown-value#)
+'
+[ [(#"#get-field# Interpol:(
+&
+[ [($"#unknown-value#Btuple&
+$
+[ [($"
+#is-exact#:Bbool
+
+[ [($"
+#assume#:8
+6
+[ [($
+"#set-field# __collection_size:	Bint&
+$
+[ [($"#array-add-last#:&
+$
+[ [($"#array-add-last#:!
+
+\ \("#unknown-value#)
+'
+\ \(#"#get-field# Interpol:(
+&
+\ \(;"#unknown-value#Btuple&
+$
+\ \(;"
+#is-exact#:Bbool
+
+\ \(;"
+#assume#:8
+6
+\ \(;"#set-field# __collection_size:	Bint&
+$
+\ \(;"#array-add-last#:&
+$
+\ \(;"#array-add-last#:&
+$
+\ \(;"#array-add-last#:(
+&
+^ ^(%"#unknown-value#Btuple&
+$
+^ ^(%"
+#is-exact#:Bbool
+
+^ ^(%"
+#assume#:8
+6
+^ ^(%"#set-field# __collection_size:	Bint&
+$
+^ ^(%"#array-add-last#:&
+$
+^ ^(%"#array-add-last#:(
+&
+_ _( "#unknown-value#Btuple&
+$
+_ _(!"
+#is-exact#: Bbool
+
+_ _(""
+#assume#:!8
+6
+_ _(#"#set-field# __collection_size: 	Bint&
+$
+_ _($"#array-add-last#: &
+$
+_ _(%"#array-add-last#: '
+%
+V a(	&"#unknown-value#Blist&
+$
+V a(	("
+#is-exact#:&'Bbool
+
+V a(	)"
+#assume#:(8
+6
+V a(	*"#set-field# __collection_size:&	Bint&
+$
+V a(	+"#array-add-last#:&&
+$
+V a(	,"#array-add-last#:&&
+$
+V a(	-"#array-add-last#:&&
+$
+V a(	."#array-add-last#:& 
+V a(	&*‰/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexers/python.py

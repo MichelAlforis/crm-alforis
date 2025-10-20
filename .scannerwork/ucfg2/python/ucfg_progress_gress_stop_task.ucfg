@@ -1,0 +1,110 @@
+
+,pip._vendor.rich.progress.Progress.stop_task
+€/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/progress.pyù
+ ù
+("2*‚
+2
+ú
+ €(i
+g
+
+ (
+%5"__id*M
+
+__unknown_file (1*/$
+"pip._vendor.rich.progress.Progress"
+_lock*
+3
+6*3
+3
+progress.py"
+ˆ ˆ(
+implicit return*o
+4
+† †()Y
+W
+
+† †()
+
+task"
+	stop_time"__id*,
+
+__unknown_file (
+
+current_time*
+3*p
+5
+… …(.Z
+X
+
+… …(.
+
+task"
+
+start_time"__id*,
+
+__unknown_file (
+
+current_time*
+4*¿
+6
+‚ ‚('j
+h
+
+‚ ‚(
+%1"__id*N
+
+__unknown_file (2*0$
+"pip._vendor.rich.progress.Progress"
+_tasksxv
+
+‚ ‚('
+%2"__mapGet*"
+
+__unknown_file (
+
+%1*'
+
+__unknown_file (
+	
+task_id2__getitem__@
+>
+
+‚ ‚('
+task"__id*"
+
+__unknown_file (
+
+%2b`
+
+ƒ ƒ(*
+%3*B
+
+__unknown_file (&$
+"pip._vendor.rich.progress.Progress2get_timeH
+F
+
+ƒ ƒ(*
+current_time"__id*"
+
+__unknown_file (
+
+%3P
+N
+
+„ „(
+%4"__id*4
+
+__unknown_file (*
+
+task"
+
+start_time*
+4
+5:
+
+ù
+ ù
+('	
+task_idB&$
+"pip._vendor.rich.progress.ProgressH

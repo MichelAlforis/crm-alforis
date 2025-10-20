@@ -1,0 +1,24 @@
+
+ÑÇ"Set the position of the cursor in the console screen
+
+    Args:
+        std_handle (wintypes.HANDLE): A handle to the console input buffer or the console screen buffer.
+        coords (WindowsCoordinates): The coordinates to move the cursor to.
+
+    Returns:
+        bool: True if the function succeeds, otherwise False.
+    "str
+std_handle
+ý ý(coords
+ý! ý(;"ž#
+!
+
+ˆ ˆ()"#unknown-value#2
+0
+
+ˆ ˆ(="_SetConsoleCursorPosition:1
+/
+
+ˆ ˆ(>"#dependent-value#*:Bbool
+
+ˆ ˆ(>*†/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/_win32_console.py

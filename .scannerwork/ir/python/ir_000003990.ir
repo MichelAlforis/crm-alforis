@@ -1,0 +1,12 @@
+
+*!"Get the current number of rows."strself
+³ ³("i'
+%
+
+µ µ("#get-field# rows:,
+*
+
+µ µ("
+builtinslen*:Bint
+
+µ µ(*}/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/table.py

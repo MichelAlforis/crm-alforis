@@ -1,0 +1,44 @@
+
+falseboolself
+´ ´(other
+´ ´(NJpip._internal.resolution.resolvelib.requirements.RequiresPythonRequirement"|+
+)
+
+µ µ(;"#is-instance#:Bbool+
+)
+
+µ µ(;"#unaryop !#2!:Bbool "
+
+µ µ(; *
+µ µ(
+"
+
+¶ ¶("²4
+2
+
+¸ ¸(""#get-field# _specifier_string:4
+2
+
+¸& ¸(="#get-field# _specifier_string:,
+*
+
+¸ ¸(=	"
+#binop ==#2==:Bbool"
+
+¸ ¸(=	 " -
++
+
+¹ ¹(
+"#get-field# _candidate:-
++
+
+¹# ¹(3"#get-field# _candidate:,
+*
+
+¹ ¹(3"
+#binop ==#2==:
+Bbool
+
+¸ ¹(3"&*	
+
+· º(	*—/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/resolution/resolvelib/requirements.py

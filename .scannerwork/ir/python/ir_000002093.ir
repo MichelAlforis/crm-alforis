@@ -1,0 +1,38 @@
+
+:1"R√©cup√®re les emails d√©j√† pr√©sents en base."str
+
+0intdb
+“ “($payload_dicts
+“& “(?"∫<
+:
+
+‘ ‘(\payload_emails"?python-unknown?:Bset+
+)
+
+’ ’("
+__bool__*:BboolH+
+)
+
+’ ’("#unaryop !#2!:Bbool "
+
+’ ’( *
+’ ’("§$
+"
+
+÷ ÷("?python-unknown?:
+8
+
+÷ ÷(	"#set-field# __collection_size:Bint,
+*
+
+÷ ÷(
+"
+builtinsset*:Bset
+
+÷ ÷(
+"C-
++
+
+ÿ ‹("?python-unknown?:Bset
+
+ÿ ‹(*R/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/api/routes/imports.py

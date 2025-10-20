@@ -1,0 +1,14 @@
+
+"resolvelib"str
+"legacy"str
+PG"Determines which resolver should be used, based on the given options."str
+"legacy-resolver"stroptionsZ# Z(2"ˆ<
+:
+\  \(C")'#get-field# deprecated_features_enabled:*
+(
+\ \(C"
+#binop in#2in:Bbool"
+\ \(C *\ \(
+"
+] ]("
+_ _(*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/cli/req_command.py

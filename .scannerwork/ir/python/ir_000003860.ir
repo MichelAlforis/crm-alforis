@@ -1,0 +1,40 @@
+
+C:"Payload minimal utilis√© lors de la g√©n√©ration de JWT."str
+"email"str
+falsebool
+
+"is_admin"str
+"sub"strselfZ Z(models.role.UserRole"·$
+"
+\ `(	"#new-object#Bdict#
+!
+] ]("#get-field# id:.
+,
+] ]("#dependent-value#*:Bstr 
+
+] ]("	#map-set#:&
+$
+^ ^(	"#get-field# email: 
+
+^ ^(
+"	#map-set#:	%
+#
+_< _(E"#get-field# role:)
+'
+_< _(E"
+__bool__*:BboolH&"$
+_< _(E *_9 _(;2_F _(J"¥%
+#
+_ _(!"#get-field# role:%
+#
+_ _(&"#get-field# name:&
+$
+_* _(8"#get-field# ADMIN:*
+(
+_ _(8"
+#binop ==#2==:Bbool
+_ _(P"
+_ _(P"F* 
+
+_ _(P"	#map-set#:
+\ `(	*K/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/user.py

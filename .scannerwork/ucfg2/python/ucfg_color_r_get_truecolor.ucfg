@@ -1,0 +1,353 @@
+
+*pip._vendor.rich.color.Color.get_truecolor‰
+}/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/color.pyÝ Ý("15"16* 
+13
+ð ð(*e
+c
+
+ð ð(
+%20"__id*H
+
+__unknown_file (,**
+pip._vendor.rich.color.Color"
+numbere
+c
+
+ñ% ñ(0
+%21"__id*H
+
+__unknown_file (,**
+pip._vendor.rich.color.Color"
+number¨
+¥
+
+ñ ñ(1
+%22"8pip._vendor.rich._palettes.EIGHT_BIT_PALETTE.__getitem__*1
+
+__unknown_file (
+
+EIGHT_BIT_PALETTE*#
+
+__unknown_file (
+
+%21"
+
+ñ ñ(1
+
+%22*ÿ
+14
+ï ï(-c
+a
+
+ï ï(
+%23"__id*F
+
+__unknown_file (**(
+pip._vendor.rich.color.Color"
+typel
+j
+
+ï ï(-
+%24"__id*O
+
+__unknown_file (3*1"
+ pip._vendor.rich.color.ColorType"
+	EIGHT_BIT
+Œ
+
+ï ï(-
+%25"	__compare*"
+
+__unknown_file (
+==*#
+
+__unknown_file (
+
+%23*#
+
+__unknown_file (
+
+%24*
+13
+12*þ
+15
+ì ì(+c
+a
+
+ì ì(
+%26"__id*F
+
+__unknown_file (**(
+pip._vendor.rich.color.Color"
+typel
+j
+
+ì ì(+
+%27"__id*O
+
+__unknown_file (3*1"
+ pip._vendor.rich.color.ColorType"
+	TRUECOLOR
+Œ
+
+ì ì(+
+%28"	__compare*"
+
+__unknown_file (
+==*#
+
+__unknown_file (
+
+%26*#
+
+__unknown_file (
+
+%27*
+14
+4*m
+16
+ë ë(*U
+S
+
+ë ë(*
+theme"__id*6
+
+__unknown_file (
+
+DEFAULT_TERMINAL_THEME*
+15*ó
+4
+í í(+e
+c
+
+í í(
+%1"__id*I
+
+__unknown_file (-*+
+pip._vendor.rich.color.Color"	
+triplete
+c
+
+î î(
+%2"__id*I
+
+__unknown_file (-*+
+pip._vendor.rich.color.Color"	
+triplet"
+
+î î(
+
+%2*}
+5
+ù ù(&d
+b
+
+ù ù(
+%3"__id*H
+
+__unknown_file (,**
+pip._vendor.rich.color.Color"
+number*
+6
+7*­
+6
+ú ú()W
+U
+
+ú ú()
+%5"__id*;
+
+__unknown_file (*
+
+theme"
+foreground_color>
+<
+
+ú ú()
+%4"__id*"
+
+__unknown_file (
+
+%5*
+8*­
+7
+ú= ú(SW
+U
+
+ú= ú(S
+%6"__id*;
+
+__unknown_file (*
+
+theme"
+background_color>
+<
+
+ú= ú(S
+%4"__id*"
+
+__unknown_file (
+
+%6*
+8*%
+8
+úC ú(S"
+
+ú ú(S
+
+%4*–
+9
+ö ö(*d
+b
+
+ö ö(
+%7"__id*H
+
+__unknown_file (,**
+pip._vendor.rich.color.Color"
+numberd
+b
+
+÷# ÷(.
+%8"__id*H
+
+__unknown_file (,**
+pip._vendor.rich.color.Color"
+number¢
+Ÿ
+
+÷ ÷(/
+%9"6pip._vendor.rich._palettes.WINDOWS_PALETTE.__getitem__*/
+
+__unknown_file (
+
+WINDOWS_PALETTE*"
+
+__unknown_file (
+
+%8"
+
+÷ ÷(/
+
+%9*û
+10
+õ õ(+c
+a
+
+õ õ(
+%10"__id*F
+
+__unknown_file (**(
+pip._vendor.rich.color.Color"
+typej
+h
+
+õ õ(+
+%11"__id*M
+
+__unknown_file (1*/"
+ pip._vendor.rich.color.ColorType"	
+WINDOWS
+Œ
+
+õ õ(+
+%12"	__compare*"
+
+__unknown_file (
+==*#
+
+__unknown_file (
+
+%10*#
+
+__unknown_file (
+
+%11*
+5
+9*Â
+11
+ó ó(*e
+c
+
+ó ó(
+%13"__id*H
+
+__unknown_file (,**
+pip._vendor.rich.color.Color"
+numberS
+Q
+
+ô ô($
+%14"__id*6
+
+__unknown_file (*
+
+theme"
+ansi_colorse
+c
+
+ô% ô(0
+%15"__id*H
+
+__unknown_file (,**
+pip._vendor.rich.color.Color"
+numbervt
+
+ô ô(1
+%16"__mapGet*#
+
+__unknown_file (
+
+%14*#
+
+__unknown_file (
+
+%152__getitem__"
+
+ô ô(1
+
+%16*þ
+12
+ò ò(,c
+a
+
+ò ò(
+%17"__id*F
+
+__unknown_file (**(
+pip._vendor.rich.color.Color"
+typek
+i
+
+ò ò(,
+%18"__id*N
+
+__unknown_file (2*0"
+ pip._vendor.rich.color.ColorType"
+
+STANDARD
+Œ
+
+ò ò(,
+%19"	__compare*"
+
+__unknown_file (
+==*#
+
+__unknown_file (
+
+%17*#
+
+__unknown_file (
+
+%18*
+10
+11:
+
+Þ Þ(5
+theme:
+
+Þ7 Þ(N
+
+foregroundB 
+pip._vendor.rich.color.ColorH

@@ -1,0 +1,7 @@
+
+KB":return: data directory shared by users, same as `user_data_dir`"strself ("n.
+,
+ (!"#get-field# user_data_dir:,
+*
+ (!"?python-partial-apply?:
+ (!*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/android.py

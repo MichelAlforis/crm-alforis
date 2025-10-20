@@ -1,0 +1,311 @@
+
+.services.task.TaskService._apply_basic_filtersW
+M/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/services/task.pyk k("2*´
+2l l(D
+m s(	
+%11"dict_
+]
+n n( 
+%12"__id*D
+
+__unknown_file ((*&
+services.task.TaskService"
+modelJ
+H
+n n('
+%13"__id*/
+
+__unknown_file (*
+
+%12"
+statusê
+ç
+n n('
+%14"__mapSet*#
+
+__unknown_file (
+
+%11*&
+
+__unknown_file (
+
+status*#
+
+__unknown_file (
+
+%13_
+]
+o o("
+%15"__id*D
+
+__unknown_file ((*&
+services.task.TaskService"
+modelL
+J
+o o(+
+%16"__id*1
+
+__unknown_file (*
+
+%15"
+
+priorityí
+è
+o o(+
+%17"__mapSet*#
+
+__unknown_file (
+
+%11*(
+
+__unknown_file (
+
+priority*#
+
+__unknown_file (
+
+%16_
+]
+p p("
+%18"__id*D
+
+__unknown_file ((*&
+services.task.TaskService"
+modelL
+J
+p p(+
+%19"__id*1
+
+__unknown_file (*
+
+%18"
+
+categoryí
+è
+p p(+
+%20"__mapSet*#
+
+__unknown_file (
+
+%11*(
+
+__unknown_file (
+
+category*#
+
+__unknown_file (
+
+%19_
+]
+q q()
+%21"__id*D
+
+__unknown_file ((*&
+services.task.TaskService"
+modelS
+Q
+q q(9
+%22"__id*8
+
+__unknown_file (*
+
+%21"
+organisation_idô
+ñ
+q q(9
+%23"__mapSet*#
+
+__unknown_file (
+
+%11*/
+
+__unknown_file (
+organisation_id*#
+
+__unknown_file (
+
+%22_
+]
+r r(#
+%24"__id*D
+
+__unknown_file ((*&
+services.task.TaskService"
+modelM
+K
+r r(-
+%25"__id*2
+
+__unknown_file (*
+
+%24"
+	person_idì
+ê
+r r(-
+%26"__mapSet*#
+
+__unknown_file (
+
+%11*)
+
+__unknown_file (
+	person_id*#
+
+__unknown_file (
+
+%25E
+C
+m s(	
+
+filter_map"__id*#
+
+__unknown_file (
+
+%11RP
+u u(-
+%27"
+dict.items**
+
+__unknown_file (
+
+
+filter_map2items*
+6
+8*$
+4| |("
+| |(	
+
+query*Å
+5z z(Z^
+\
+z! z(+
+%1"__id*D
+
+__unknown_file ((*&
+services.task.TaskService"
+modelQ
+O
+z! z(;
+%2"__id*7
+
+__unknown_file (*
+
+%1"
+is_auto_createdÑÅ
+z? z(Y
+%3"__mapGet*'
+
+__unknown_file (
+	
+filters*/
+
+__unknown_file (
+is_auto_created2__getitem__ä
+á
+z! z(Y
+%4"	__compare*"
+
+__unknown_file (
+==*"
+
+__unknown_file (
+
+%2*"
+
+__unknown_file (
+
+%3ec
+z z(Z
+%5*%
+
+__unknown_file (	
+
+query*"
+
+__unknown_file (
+
+%42filter?
+=
+z z(Z
+query"__id*"
+
+__unknown_file (
+
+%5*
+4*ë
+6y y(Rzx
+y y('
+%6*'
+
+__unknown_file (
+	
+filters*/
+
+__unknown_file (
+is_auto_created2__contains__*
+4
+5*â
+8v v(.om
+v v(
+%10*'
+
+__unknown_file (
+	
+filters*#
+
+__unknown_file (
+
+key2__contains__*	
+6
+8
+9*«
+9w w(<wu
+w/ w(;
+%7"__mapGet*'
+
+__unknown_file (
+	
+filters*#
+
+__unknown_file (
+
+key2__getitem__é
+ã
+w% w(;
+%8"	__compare*"
+
+__unknown_file (
+==*&
+
+__unknown_file (
+
+
+column*"
+
+__unknown_file (
+
+%7ec
+w w(<
+%9*%
+
+__unknown_file (	
+
+query*"
+
+__unknown_file (
+
+%82filter?
+=
+w w(<
+query"__id*"
+
+__unknown_file (
+
+%9*
+6
+8:
+k# k((
+query:
+k* k(7	
+filtersB
+services.task.TaskServiceH

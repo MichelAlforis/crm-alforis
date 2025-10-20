@@ -1,0 +1,134 @@
+
+
+0int
+
+1int
+	"Scripts"str
+
+2int
+
+"bin"str
+""darwin"str
+
+3int
+%"/System/Library/"str
+
+4int
+
+5int
+("/usr/local/bin"str"ö#
+!
+
+š š(!"#unknown-value#)
+'
+
+š š(("#get-field# prefix:0
+.
+
+š š()prefix"
+os.pathnormpath:#
+!
+
+› ›("#unknown-value#+
+)
+
+› ›("
+__bool__*:BboolH "
+
+› ›( *
+› ›("®-
++
+
+œ œ(0bin_py"
+os.pathjoin:,
+*
+
+ž ž(%"
+os.pathexists:Bbool+
+)
+
+ž ž(%	"#unaryop !#2!:Bbool "
+
+ž ž(%	 *
+ž ž(
+"£#
+!
+
+£ £(
+"#unknown-value#+
+)
+
+£ £("#get-field# platform:)
+'
+
+£ £("#unknown-value#Blist$
+"
+
+£ £("#array-read#:(
+&
+
+£ £("#array-add-last#:$
+"
+
+£ £("#array-read#:(
+&
+
+£ £("#array-add-last#:$
+"
+
+£ £("#array-read#:(
+&
+
+£ £("#array-add-last#:$
+"
+
+£ £("#array-read#:(
+&
+
+£ £("#array-add-last#:$
+"
+
+£ £("#array-read#:(
+&
+
+£ £("#array-add-last#:$
+"
+
+£ £( "#array-read#:(
+&
+
+£ £(!"#array-add-last#: ,
+*
+
+£ £(##"
+#binop ==#2==:"Bbool"
+
+£ £(## "7-
++
+
+Ÿ Ÿ(0bin_py"
+os.pathjoin:
+".*bin_py
+
+   ("g#
+!
+
+£( £(3$"#unknown-value#,
+*
+
+£( £(I&"
+#binop ==#2==:$%Bbool
+
+£ £(I"6*'#& "
+
+£ £(I' *
+£ £("
+
+¤ ¤((";%
+#
+
+¥ ¥(&)"
+os.pathjoin:
+
+
+¥ ¥(&)*‰/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/locations/_distutils.py

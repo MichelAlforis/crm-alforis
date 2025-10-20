@@ -1,0 +1,402 @@
+
+1.0PythonFrontend"1760943928234*py2.BÇ
+
+imports1
+
+extends2
+
+returns3
+
+	has param4
+
+module5
+
+
+class6
+
+function7
+,
+'crm-backend/services/workflow_engine.py9
+
+services.workflow_engine11
+
+typing12
+
+datetime14
+
+sqlalchemy.orm16
+
+
+sqlalchemy18
+
+re20
+
+
+json22
+
+models.workflow24
+
+models.organisation26
+
+models.task28
+
+models.notification30
+
+core.notifications32
+-
+'services.workflow_engine.WorkflowEngine34
+G
+Aservices.workflow_engine.WorkflowEngine._action_send_notification36
+
+
+dict38
+A
+;services.workflow_engine.WorkflowEngine._action_assign_user40
+<
+6services.workflow_engine.WorkflowEngine._build_context42
+	
+str44
+	
+int46
+A
+;services.workflow_engine.WorkflowEngine._action_create_task48
+@
+:services.workflow_engine.WorkflowEngine._replace_variables50
+?
+9services.workflow_engine.WorkflowEngine._get_nested_value52
+2
+,services.workflow_engine.WorkflowEngine._log54
+'
+!models.workflow.WorkflowExecution56
+B
+<services.workflow_engine.WorkflowEngine._action_update_field58
+@
+:services.workflow_engine.WorkflowEngine.get_workflow_stats60
+@
+:services.workflow_engine.WorkflowEngine._action_send_email62
+H
+Bservices.workflow_engine.WorkflowEngine.check_inactivity_workflows64
+G
+Aservices.workflow_engine.WorkflowEngine.find_workflows_by_trigger66
+
+
+list68
+)
+#models.workflow.WorkflowTriggerType70
+$
+models.workflow.WorkflowStatus72
+>
+8services.workflow_engine.WorkflowEngine.execute_workflow74
+
+models.workflow.Workflow76
+=
+7services.workflow_engine.WorkflowEngine._action_add_tag78
+=
+7services.workflow_engine.WorkflowEngine._execute_action80
+6
+0services.workflow_engine.WorkflowEngine.__init__82
+$
+sqlalchemy.orm.session.Session84
+B
+<services.workflow_engine.WorkflowEngine._evaluate_conditions86
+
+
+bool88
+=
+7services.workflow_engine.WorkflowEngine._compare_values90J
+
+8
+89jŒ
+ 
+10
+10115 *
+8 (
+
+13
+13125
+
+15
+15145
+
+17
+17165
+
+19
+19185
+
+21
+21205
+
+23
+23225
+
+25
+25245
+
+27
+27265
+
+29
+29285
+
+31
+31305
+
+33
+33325
+
+35
+35346 210
+
+37
+37367 235
+
+39
+39386
+
+41
+41407 235
+
+43
+43427 235
+
+45
+45446
+
+47
+47466
+
+49
+49487 235
+
+51
+51507 235
+
+53
+53527 235
+
+55
+55547 235
+
+57
+57566
+
+59
+59587 235
+
+61
+61607 235
+
+63
+63627 235
+
+65
+65647 235
+
+67
+67667 235
+
+69
+69686
+
+71
+71706
+
+73
+73726
+
+75
+75747 235
+
+77
+77766
+
+79
+79787 235
+
+81
+81807 235
+
+83
+83827 235
+
+85
+85846
+
+87
+87867 235
+
+89
+89886
+
+91
+91907 235r€
+
+10131*
+8 (-
+
+10151*
+8 ()
+
+10171*
+8 (#
+
+10191*
+8 (
+
+10211*
+8 (
+
+
+10231*
+8 (
+
+10251*
+8 (
+
+10271*
+8 (-
+
+10291*
+8 (7
+
+10311*
+8 (?
+
+10331*
+8 (3
+
+37393*
+8˜	 ˜("
+
+37394*
+8˜	 ˜("
+
+37394*
+8˜	 ˜("
+
+41393*
+8Þ	 Þ(
+
+41394*
+8Þ	 Þ(
+
+41394*
+8Þ	 Þ(
+
+43393*
+8‰	 ‰(
+
+43454*
+8‰	 ‰(
+
+43474*
+8‰	 ‰(
+
+49393*
+8â	 â(
+
+49394*
+8â	 â(
+
+49394*
+8â	 â(
+
+51394*
+8°	 °(
+
+53394*
+8â	 â(
+
+53454*
+8â	 â(
+
+55574*
+8ƒ	 ƒ(
+
+55454*
+8ƒ	 ƒ(
+
+55454*
+8ƒ	 ƒ(
+
+59393*
+8¾	 ¾(
+
+59394*
+8¾	 ¾(
+
+59394*
+8¾	 ¾(
+
+61393*
+8½	 ½(
+
+61474*
+8½	 ½(
+
+63393*
+8Ì	 Ì(
+
+63394*
+8Ì	 Ì(
+
+63394*
+8Ì	 Ì(
+
+65474*
+8¨	 ¨(#
+
+67693*
+8’	 ’("
+
+67714*
+8’	 ’("
+
+67734*
+8’	 ’("
+
+75573*
+8/	 /(
+
+75774*
+8/	 /(
+
+75454*
+8/	 /(
+
+75474*
+8/	 /(
+
+79393*
+8ð	 ð(
+
+79394*
+8ð	 ð(
+
+79394*
+8ð	 ð(
+
+81394*
+8	 (
+
+81394*
+8	 (
+
+83854*
+8+	 +(
+
+87893*
+8³	 ³(
+
+87394*
+8³	 ³(
+
+87394*
+8³	 ³(
+
+91893*
+8ó	 ó(
+
+91454*
+8ó	 ó(

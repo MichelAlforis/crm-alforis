@@ -1,0 +1,16 @@
+
+"get"str
+ðæ"Sends a GET request.
+
+    :param url: URL for the new :class:`Request` object.
+    :param params: (optional) Dictionary, list of tuples or bytes to send
+        in the query string for the :class:`Request`.
+    :param \*\*kwargs: Optional arguments that ``request`` takes.
+    :return: :class:`Response <Response>` object
+    :rtype: requests.Response
+    "strurl> >(params> >(kwargs> >(""dict"X%
+#
+I. I(6"#unaryop **#2**:
+
+I I(7"	request:
+I I(7*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/requests/api.py

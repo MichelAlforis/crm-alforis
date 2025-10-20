@@ -43,7 +43,7 @@ if docker ps | grep -q "crm-postgres\|postgres"; then
     # Trouver le nom du container postgres
     CONTAINER_NAME=$(docker ps --format '{{.Names}}' | grep -E 'crm-postgres|postgres' | head -1)
 
-    if [ -z "$CONTAINER_NAME" ]; then
+    if [[ -z "$CONTAINER_NAME" ]]; then
         echo -e "${RED}❌ Container PostgreSQL non trouvé${NC}"
         exit 1
     fi
@@ -71,7 +71,7 @@ else
 fi
 
 # Vérifier si le backup a réussi
-if [ -f "${BACKUP_DIR}/${BACKUP_FILE}" ]; then
+if [[ -f "${BACKUP_DIR}/${BACKUP_FILE}" ]]; then
     BACKUP_SIZE=$(du -h "${BACKUP_DIR}/${BACKUP_FILE}" | cut -f1)
     echo ""
     echo -e "${GREEN}✅ Backup créé avec succès!${NC}"

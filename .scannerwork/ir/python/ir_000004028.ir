@@ -1,0 +1,63 @@
+cls
+– –(regex
+– –(!rflags
+–# –()state
+–+ –(0$ pip._vendor.pygments.lexer.words"¥#
+!
+
+¦ ¦("#unknown-value##
+!
+
+¦ ¦("#unknown-value#+
+)
+
+— —(#"#is-instance#:Bbool,"*
+
+— —(# *
+— —(
+2
+š š("Ð(
+&
+
+˜ ˜('"#get-field# words:)
+'
+
+˜0 ˜(<"#get-field# prefix:)
+'
+
+™# ™(/	"#get-field# suffix:F
+D
+
+˜ ™(0
+rex"*
+pip._vendor.pygments.regexopt	regex_opt:	"* 
+
+
+› ›(rex"#id#:"Š*
+match_func*rex
+9
+7
+
+œ œ(*compiled"
+recompile:B
+re.Pattern*
+(
+
+ž ¦(%closure"#new-object#'
+%
+
+ž ¦("#set-field# cls:)
+'
+
+ž ¦("#set-field# state:'
+%
+
+ž ¦("#set-field# rex:,
+*
+
+ž ¦("#set-field# compiled:-
++
+
+ž ¦("?python-partial-apply?:
+
+¦ ¦(*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexer.py

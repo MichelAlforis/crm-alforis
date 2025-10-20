@@ -1,0 +1,10 @@
+
+¶ú"Get dependencies of a candidate.
+
+        This should return a collection of requirements that `candidate`
+        specifies as its dependencies.
+        "strself
+ä ä(	candidate
+ä ä(,NotImplementedError"2
+
+ê ê(!*á/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/resolvelib/providers.py

@@ -1,0 +1,50 @@
+
+3*"Network location including host and port"str
+"%s:%d"str
+
+0intself} }(		tuple"p%
+#
+ ("#get-field# port:)
+'
+ ("
+__bool__*:BboolH"
+ ( * (
+"ù'
+%
+
+Ä Ä('"#get-field# host:'
+%
+
+Ä) Ä(2"#get-field# port:*
+(
+
+Ä Ä(3"#unknown-value#Btuple(
+&
+
+Ä Ä(3
+"
+#is-exact#:	Bbool
+
+
+Ä Ä(3"
+#assume#:
+:
+8
+
+Ä Ä(3"#set-field# __collection_size:Bint(
+&
+
+Ä Ä(3"#array-add-last#:(
+&
+
+Ä Ä(3"#array-add-last#:.
+,
+
+Ä Ä(3"?python-str-format?*:
+
+Ä Ä(3"='
+%
+
+Å Å("#get-field# host:
+
+Å Å(*É/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/util/url.py

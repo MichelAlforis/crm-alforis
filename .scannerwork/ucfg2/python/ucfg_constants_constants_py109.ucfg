@@ -1,0 +1,358 @@
+
+^file:///Users/test/Documents/ALFORIS%20FINANCE/06.%20CRM/V1/crm-backend/models/constants.py109
+__unknown_file ("1*Ñ
+2
+constants.py"o
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.pyB B(
+implicit return*πF
+1X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (â
+Ü
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (
+TABLE_USERS"__id*
+ (	
+usersô
+ñ
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (%
+TABLE_ORGANISATIONS"__id*
+ (
+organisationsã
+à
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (
+TABLE_PEOPLE"__id*
+ (
+
+peopleâ
+Ü
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (
+TABLE_TASKS"__id*
+ (	
+tasksô
+ñ
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (%
+TABLE_NOTIFICATIONS"__id*
+ (
+notificationsù
+ö
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py ()
+TABLE_EMAIL_TEMPLATES"__id*
+ (
+email_templatesù
+ö
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py ()
+TABLE_EMAIL_CAMPAIGNS"__id*
+ (
+email_campaignsë
+é
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (
+TABLE_WORKFLOWS"__id*
+ (
+	workflowsç
+ä
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (
+TABLE_MANDATS"__id*
+ (	
+mandatsë
+é
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (
+TABLE_DOCUMENTS"__id*
+ (
+	documents≠
+™
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (9
+TABLE_ORGANISATION_ACTIVITIES"__id*'
+ (
+organisation_activities≈
+¬
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (!
+%1"__concat*m
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (
+
+TABLE_USERS*e
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py ( 
+.idÜ
+É
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (!
+FK_USERS_ID"__id*
+ (
+
+%1Õ
+ 
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (1
+%2"__concat*u
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (,
+
+TABLE_ORGANISATIONS*e
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py- (0
+.idé
+ã
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (1
+FK_ORGANISATIONS_ID"__id*
+ (
+
+%2∆
+√
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (#
+%3"__concat*n
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (
+
+TABLE_PEOPLE*e
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py ("
+.idá
+Ñ
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (#
+FK_PEOPLE_ID"__id*
+ (
+
+%3≈
+¬
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (!
+%4"__concat*m
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (
+
+TABLE_TASKS*e
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py ( 
+.idÜ
+É
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py (!
+FK_TASKS_ID"__id*
+ (
+
+%4œ
+Ã
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py   (5
+%5"__concat*w
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py   (0
+
+TABLE_EMAIL_TEMPLATES*e
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py 1  (4
+.idê
+ç
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py   (5
+FK_EMAIL_TEMPLATES_ID"__id*
+ (
+
+%5œ
+Ã
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py! !(5
+%6"__concat*w
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py! !(0
+
+TABLE_EMAIL_CAMPAIGNS*e
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py!1 !(4
+.idê
+ç
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py! !(5
+FK_EMAIL_CAMPAIGNS_ID"__id*
+ (
+
+%6…
+∆
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py" "()
+%7"__concat*q
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py" "($
+
+TABLE_WORKFLOWS*e
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py"% "((
+.idä
+á
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py" "()
+FK_WORKFLOWS_ID"__id*
+ (
+
+%7«
+ƒ
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py# #(%
+%8"__concat*o
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py# #( 
+
+TABLE_MANDATS*e
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py#! #($
+.idà
+Ö
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py# #(%
+FK_MANDATS_ID"__id*
+ (
+
+%8…
+∆
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py$ $()
+%9"__concat*q
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py$ $($
+
+TABLE_DOCUMENTS*e
+Z
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py$% $((
+.idä
+á
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py$ $()
+FK_DOCUMENTS_ID"__id*
+ (
+
+%9ê
+ç
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py* *(
+ONDELETE_CASCADE"__id*
+ (	
+CASCADEí
+è
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py+ +(
+ONDELETE_SET_NULL"__id*
+ (
+
+SET NULLí
+è
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py, ,(
+ONDELETE_RESTRICT"__id*
+ (
+
+RESTRICTî
+ë
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py- -( 
+ONDELETE_NO_ACTION"__id*
+ (
+	NO ACTIONì
+ê
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py3 3(
+ENUM_TASK_STATUS"__id*
+ (
+
+taskstatusó
+î
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py4 4(#
+ENUM_TASK_PRIORITY"__id*
+ (
+taskpriorityü
+ú
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py5 5(+
+ENUM_NOTIFICATION_TYPE"__id* 
+ (
+notificationtypeß
+§
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py6 6(3
+ENUM_NOTIFICATION_PRIORITY"__id*$
+ (
+notificationpriorityô
+ñ
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py7 7(%
+ENUM_PIPELINE_STAGE"__id*
+ (
+pipelinestageü
+ú
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py8 8(+
+ENUM_ORGANISATION_TYPE"__id* 
+ (
+organisationtypeì
+ê
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py9 9(
+ENUM_PERSON_ROLE"__id*
+ (
+
+personroleù
+ö
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py: :()
+ENUM_INTERACTION_TYPE"__id*
+ (
+interactiontypeß
+§
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py; ;(3
+ENUM_INTERACTION_DIRECTION"__id*$
+ (
+interactiondirection¶
+£
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py< <(2
+ENUM_EMAIL_CAMPAIGN_STATUS"__id*#
+ (
+emailcampaignstatusû
+õ
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py= =(*
+ENUM_EMAIL_SEND_STATUS"__id*
+ (
+emailsendstatusõ
+ò
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py> >('
+ENUM_WORKFLOW_STATUS"__id*
+ (
+workflowstatusù
+ö
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py? ?()
+ENUM_WORKFLOW_TRIGGER"__id*
+ (
+workflowtriggeró
+î
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.py@ @(#
+ENUM_MANDAT_STATUS"__id*
+ (
+mandatstatusó
+î
+X
+P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/constants.pyA A(#
+ENUM_DOCUMENT_TYPE"__id*
+ (
+documenttype*
+2B H

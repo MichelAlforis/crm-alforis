@@ -1,0 +1,88 @@
+
+ÚÐ"Tell if the target is newer than the source.
+
+        Returns true if 'source' exists and is more recently modified than
+        'target', or if 'source' exists and 'target' doesn't.
+
+        Returns false if both exist and 'target' is the same age or younger
+        than 'source'. Raise PackagingFileError if 'source' does not exist.
+
+        Note that this test is not very accurate: files created in the same
+        second will have the same "age".
+        "str
+truebool
+#"file '%r' does not exist"strself
+ö ö(source
+ö ö(target
+ö ö(""},
+*
+
+‚ ‚(%"
+os.pathexists:Bbool+
+)
+
+‚ ‚(%"#unaryop !#2!:Bbool "
+
+‚ ‚(% *
+‚ ‚(
+"¼'
+%
+
+ƒ@ ƒ(W"
+os.pathabspath:.
+,
+
+ƒ# ƒ(W	"?python-str-format?*:M
+K
+
+ƒ ƒ(X
+"DistlibException:	B$pip._vendor.distlib.DistlibException2
+
+ƒ ƒ(X
+",
+*
+
+„ „(%"
+os.pathexists:Bbool+
+)
+
+„ „(%"#unaryop !#2!:Bbool "
+
+„ „(% *
+„ „(
+"
+
+… …("Ž#
+!
+
+‡ ‡("#unknown-value#)
+'
+
+‡ ‡("#unknown-value#Bbool(
+&
+
+‡ ‡("
+
+osstat:Btuple+
+)
+
+‡ ‡('"#get-field# st_mtime:#
+!
+
+‡* ‡(9"#unknown-value#)
+'
+
+‡* ‡(9"#unknown-value#Bbool(
+&
+
+‡* ‡(9"
+
+osstat:Btuple+
+)
+
+‡* ‡(B"#get-field# st_mtime:*
+(
+
+‡ ‡(B"	#binop >#2>:Bbool
+
+‡ ‡(B*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/distlib/util.py

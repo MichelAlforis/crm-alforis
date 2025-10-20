@@ -1,0 +1,37 @@
+
+
+0inta" "(b" "(	tuple"T*
+(
+# #("
+#binop !=#2!=:Bbool&"$
+# #( *# #(2# #( "ç(
+&
+# #("#unknown-value#Btuple&
+$
+# #("
+#is-exact#:Bbool
+
+# #("
+#assume#:8
+6
+# #(	"#set-field# __collection_size:Bint&
+$
+# #(
+"#array-add-last#:&
+$
+# #("#array-add-last#:
+# #(%"Â(
+&
+#! #(%"#unknown-value#Btuple&
+$
+#! #(%"
+#is-exact#:Bbool
+
+#! #(%"
+#assume#:8
+6
+#! #(%"#set-field# __collection_size:Bint&
+$
+#! #(%"#array-add-last#:
+# #(%"$*
+# #(%*~/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/build_env.py

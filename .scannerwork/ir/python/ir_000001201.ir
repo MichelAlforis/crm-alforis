@@ -1,0 +1,25 @@
+
+·◊"
+    :param appname: See `appname <platformdirs.api.PlatformDirsABC.appname>`.
+    :param appauthor: See `appauthor <platformdirs.api.PlatformDirsABC.appauthor>`.
+    :param version: See `version <platformdirs.api.PlatformDirsABC.version>`.
+    :param multipath: See `roaming <platformdirs.api.PlatformDirsABC.multipath>`.
+    :param ensure_exists: See `ensure_exists <platformdirs.api.PlatformDirsABC.ensure_exists>`.
+    :returns: config path shared by the users
+    "strappname
+å å(	appauthor
+ç ç(1version
+é é(	multipath
+è è(ensure_exists
+ê ê("ñ#
+!
+
+ö ö("#unknown-value#(
+&
+
+ö †("PlatformDirs:3
+1
+
+ö †(	"#get-field# site_config_path:
+
+ö †(	*à/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/__init__.py

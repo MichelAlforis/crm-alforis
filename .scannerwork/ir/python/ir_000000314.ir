@@ -1,0 +1,5 @@
+
+i`"{self.name} {self.version} (from {self._link.file_path if self._link.is_file else self._link})"strself
+Ì Ì("
+
+Í Ð(	*•/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/resolution/resolvelib/candidates.py

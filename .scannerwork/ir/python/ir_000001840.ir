@@ -1,0 +1,58 @@
+
+0.0float
+"division by zero"bool
+100.0float
+"S3518"bool
+ZQ"float: Get progress of task as a percentage. If a None total was set, returns 0"str
+"a"bool
+
+
+0intself
+ö ö("¦(
+&
+
+ø ø("#get-field# total:+
+)
+
+ø ø("
+__bool__*:BboolH+
+)
+
+ø ø("#unaryop !#2!:Bbool "
+
+ø ø( *
+ø ø(
+"
+
+ù ù("’,
+*
+
+ú ú(#"#get-field# completed:(
+&
+
+ú& ú(0"#get-field# total:,
+*
+
+ú ú(0	"
+#binop !=#2!=:
+Bbool"
+ 
+
+ú ú(0"
+#assert#:	3
+1
+
+ú ú(0"#dependent-value#*:Bfloat>
+<
+
+ú ú(9	completed"#dependent-value#*:Bfloat(
+&
+
+û û(2"
+builtinsmax*:3
+1
+
+û û(3	completed"
+builtinsmin*:
+
+ü ü(*€/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/progress.py

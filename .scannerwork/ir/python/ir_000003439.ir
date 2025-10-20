@@ -1,0 +1,545 @@
+
+¥	"success"str
+"organisation"str
+A	"subject"str
+"entity_type"str
+!"PROPOSITION"str
+LtC"Processus automatisÃ© d'accueil pour les nouveaux clients signÃ©s"str
+a	"message"str
+„"bienvenue_client"str
+aHX"Le deal {{organisation.nom}} est inactif depuis 30 jours. Merci de relancer le client."str
+*³ "Alerte manager - Deal > 50kâ‚¬"str
+	"+3 days"str
+$s"Onboarding nouveau client"str
+Y
+"priority"str
+º50000int
+_	"user_id"str
+M"title"str
+"sales"str
+V
+"due_date"str
+"inactivity_days"str
+¹">"str
+e	"warning"str
+;˜1"PrÃ©parer et envoyer tous les documents signÃ©s"str
+>"to"str
+"€"{{organisation.email}}"str
+G"body"str
+"relance-deal-inactif"str
+H´>"Notifie automatiquement le manager pour les deals importants"str
+7£-"Nouveau client signÃ©: {{organisation.nom}}"str
+C9"Contacter le nouveau client pour confirmer la signature"str
+otruebool
+*¸ "organisation.montant_potentiel"str
+d"type"str
+{
+"to_stage"str
+Ò"info"str
+Z"high"str
+,‚""Bienvenue chez Alforis Finance !"str
+!²"alerte-deal-important"str
+."in"str
+
+T1int
+B–8"Envoyer documents contractuels Ã  {{organisation.nom}}"str
+W	"+7 days"str
+""QUALIFICATION"str
+Fµ<"Workflow dÃ©clenchÃ© Ã  la crÃ©ation d'un deal > 50 000â‚¬"str
+E"relance_deal"str
+`ÆV"Nouveau deal important: {{organisation.nom}} - {{organisation.montant_potentiel}}â‚¬"str
+0B'"Relancer le deal {{organisation.nom}}"str
+<b3"Deal {{organisation.nom}} inactif depuis 30 jours"str
+|"SIGNE"str
+{r"
+Schemas Pydantic pour les workflows
+
+GÃ¨re la validation des donnÃ©es entrantes/sortantes pour l'API workflows
+"str
+P"description"str
+QH"Envoie un email et crÃ©e une tÃ¢che pour les deals inactifs > 30 jours"str
+"urgent"str
+/N&"Relancer client {{organisation.nom}}"str
+y"from_stage"str
+`†V"Bienvenue {{organisation.nom}}, nous sommes ravis de vous compter parmi nos clients."str
+&-"organisation.pipeline_stage"str
+NoneNoneType
+Ä"manager@alforis.com"str
+30int
+!?"commercial@alforis.com"str
+XÊN"Un nouveau deal > 50kâ‚¬ vient d'Ãªtre crÃ©Ã© et nÃ©cessite votre attention."str
+,"AND"str
+S"assigned_to"str
+Du;"Workflow dÃ©clenchÃ© quand un deal passe en statut SIGNÃ‰"str
++""Relance automatique deal inactif"str
+=Q4"Deal inactif depuis 30 jours - contacter le client"str
+D
+"template"str
+ "pipeline_stages"str
+È"alerte_manager_deal"str
+r"onboarding-client"str
+_ĞU"Nouveau deal > 50kâ‚¬: {{organisation.nom}} ({{organisation.montant_potentiel}}â‚¬)"str
+
+'0int
+"Relance deal inactif"str
+e\"Workflow automatique pour relancer les deals en PROPOSITION sans activitÃ© depuis 30 jours"str
+›"+1 day"str
+3‹)"Appel de bienvenue {{organisation.nom}}"str$list"9+
+)
+ (6	BaseModel"?python-unknown?'
+%
+ (6Field"?python-unknown?1
+/
+ (6field_validator"?python-unknown?*
+(
+ (,Optional"?python-unknown?&
+$
+ (,List"?python-unknown?&
+$
+ (,Dict"?python-unknown?%
+#
+ (,Any"?python-unknown?*
+(
+	 	(	datetime"?python-unknown?&
+$
+
+ 
+(
+Enum"?python-unknown?,
+*
+ (6
+BaseSchema"?python-unknown?3
+1
+ (6TimestampedSchema"?python-unknown?5
+3
+ (WorkflowTriggerType"?python-unknown?4
+2
+ (WorkflowActionType"?python-unknown?0
+.
+ (WorkflowStatus"?python-unknown?9
+7
+ (WorkflowExecutionStatus"?python-unknown?(
+&
+
+ï ï('"#get-field# DRAFT:3
+1
+
+ğ ğ(="#get-field# INACTIVITY_DELAY:&
+$
+
+ñ õ("#new-object#Bdict"
+ 
+
+ò ò(%"	#map-set#:"
+ 
+
+ó ó(-"	#map-set#:)
+'
+
+ô# ô(C#"#unknown-value#Blist(
+&
+
+ô# ô(C%"
+#is-exact#:#$Bbool
+
+
+ô# ô(C&"
+#assume#:%:
+8
+
+ô# ô(C("#set-field# __collection_size:#'Bint(
+&
+
+ô# ô(C)"#array-add-last#:#!(
+&
+
+ô# ô(C*"#array-add-last#:#""
+ 
+
+ô ô(C+"	#map-set#: #)
+'
+
+ü ü(>/"#unknown-value#Blist(
+&
+
+ü ü(>0"
+#is-exact#:/$Bbool
+
+
+ü ü(>1"
+#assume#:0:
+8
+
+ü ü(>2"#set-field# __collection_size:/'Bint(
+&
+
+ü ü(>3"#array-add-last#:/!(
+&
+
+ü ü(>4"#array-add-last#:/"V
+T
+
+ù ı(5"WorkflowConditionRule:-./B&schemas.workflow.WorkflowConditionRule)
+'
+
+ø ş(6"#unknown-value#Blist(
+&
+
+ø ş(7"
+#is-exact#:6$Bbool
+
+
+ø ş(8"
+#assume#:7:
+8
+
+ø ş(9"#set-field# __collection_size:6'Bint(
+&
+
+ø ş(:"#array-add-last#:65O
+M
+
+ö ÿ(;"WorkflowConditions:,6B#schemas.workflow.WorkflowConditions-
++
+
+‚ ‚(6<"#get-field# SEND_EMAIL:&
+$
+
+ƒ ˆ(="#new-object#Bdict"
+ 
+
+„ „(6@"	#map-set#:=>?"
+ 
+
+… …(JC"	#map-set#:=AB"
+ 
+
+† †(2F"	#map-set#:=DE"
+ 
+
+‡ ‡(xI"	#map-set#:=GHS
+Q
+
+ ‰(J"WorkflowActionConfig:<=B%schemas.workflow.WorkflowActionConfig.
+,
+
+‹ ‹(7K"#get-field# CREATE_TASK:&
+$
+
+Œ ’(L"#new-object#Bdict"
+ 
+
+ (GO"	#map-set#:LMN"
+ 
+
+ ([R"	#map-set#:LPQ"
+ 
+
+ ((U"	#map-set#:LST"
+ 
+
+ (-X"	#map-set#:LVW"
+ 
+
+‘ ‘(*["	#map-set#:LYZS
+Q
+
+Š “(\"WorkflowActionConfig:KLB%schemas.workflow.WorkflowActionConfig4
+2
+
+• •(=]"#get-field# SEND_NOTIFICATION:&
+$
+
+– š(^"#new-object#Bdict"
+ 
+
+— —($`"	#map-set#:^_T"
+ 
+
+˜ ˜(Vc"	#map-set#:^ab"
+ 
+
+™ ™()f"	#map-set#:^deS
+Q
+
+” ›(g"WorkflowActionConfig:]^B%schemas.workflow.WorkflowActionConfig)
+'
+
+€ œ(h"#unknown-value#Blist(
+&
+
+€ œ(i"
+#is-exact#:h$Bbool
+
+
+€ œ(j"
+#assume#:i:
+8
+
+€ œ(k"#set-field# __collection_size:h'Bint(
+&
+
+€ œ(l"#array-add-last#:hJ(
+&
+
+€ œ(m"#array-add-last#:h\(
+&
+
+€ œ(n"#array-add-last#:hgM
+K
+
+ì (	p"WorkflowCreate:;hoBschemas.workflow.WorkflowCreateN
+L
+
+ç Ÿ(q"WorkflowTemplate:pB!schemas.workflow.WorkflowTemplate(
+&
+
+ª ª('v"#get-field# DRAFT:5
+3
+
+« «(?w" #get-field# DEAL_STAGE_CHANGED:&
+$
+
+¬ ¯(x"#new-object#Bdict"
+ 
+
+­ ­(+z"	#map-set#:xy!"
+ 
+
+® ®(#}"	#map-set#:x{|-
++
+
+³ ³(6~"#get-field# SEND_EMAIL:&
+$
+
+´ ¹("#new-object#Bdict$
+"
+
+µ µ(6"	#map-set#:>€$
+"
+
+¶ ¶(Eƒ"	#map-set#:A‚$
+"
+
+· ·(6…"	#map-set#:D„$
+"
+
+¸ ¸(v‡"	#map-set#:G†T
+R
+
+² º(ˆ"WorkflowActionConfig:~B%schemas.workflow.WorkflowActionConfig/
+-
+
+¼ ¼(7‰"#get-field# CREATE_TASK:'
+%
+
+½ Ã(Š"#new-object#Bdict%
+#
+
+¾ ¾(JŒ"	#map-set#:ŠM‹%
+#
+
+¿ ¿(`"	#map-set#:ŠP$
+"
+
+À À(("	#map-set#:ŠST%
+#
+
+Á Á(-‘"	#map-set#:ŠV$
+"
+
+Â Â(*’"	#map-set#:ŠYZV
+T
+
+» Ä(“"WorkflowActionConfig:‰ŠB%schemas.workflow.WorkflowActionConfig/
+-
+
+Æ Æ(7”"#get-field# CREATE_TASK:'
+%
+
+Ç Í(•"#new-object#Bdict%
+#
+
+È È(X—"	#map-set#:•M–%
+#
+
+É É(V™"	#map-set#:•P˜$
+"
+
+Ê Ê((š"	#map-set#:•ST%
+#
+
+Ë Ë(,œ"	#map-set#:•V›%
+#
+
+Ì Ì(,"	#map-set#:•YV
+T
+
+Å Î(Ÿ"WorkflowActionConfig:”•B%schemas.workflow.WorkflowActionConfig5
+3
+
+Ğ Ğ(= "#get-field# SEND_NOTIFICATION:'
+%
+
+Ñ Õ(¡"#new-object#Bdict$
+"
+
+Ò Ò($¢"	#map-set#:¡_T%
+#
+
+Ó Ó(O¤"	#map-set#:¡a£%
+#
+
+Ô Ô()¦"	#map-set#:¡d¥V
+T
+
+Ï Ö(§"WorkflowActionConfig: ¡B%schemas.workflow.WorkflowActionConfig*
+(
+
+± ×(¨"#unknown-value#Blist*
+(
+
+± ×(©"
+#is-exact#:¨$Bbool!
+
+
+± ×(ª"
+#assume#:©<
+:
+
+± ×(«"#set-field# __collection_size:¨'Bint+
+)
+
+± ×(¬"#array-add-last#:¨ˆ+
+)
+
+± ×(­"#array-add-last#:¨“+
+)
+
+± ×(®"#array-add-last#:¨Ÿ+
+)
+
+± ×(¯"#array-add-last#:¨§O
+M
+
+§ Ù(	°"WorkflowCreate:	suvwx ¨oBschemas.workflow.WorkflowCreateP
+N
+
+¢ Ú(±"WorkflowTemplate:rst°B!schemas.workflow.WorkflowTemplate)
+'
+
+å å('¶"#get-field# DRAFT:8
+6
+
+æ æ(A·"" #get-field# ORGANISATION_CREATED:Z
+X
+
+ë ï(»"WorkflowConditionRule:¸¹ºB&schemas.workflow.WorkflowConditionRule*
+(
+
+ê ğ(¼"#unknown-value#Blist*
+(
+
+ê ğ(½"
+#is-exact#:¼$Bbool!
+
+
+ê ğ(¾"
+#assume#:½<
+:
+
+ê ğ(¿"#set-field# __collection_size:¼'Bint+
+)
+
+ê ğ(À"#array-add-last#:¼»Q
+O
+
+è ñ(Á"WorkflowConditions:,¼B#schemas.workflow.WorkflowConditions.
+,
+
+ô ô(6Â"#get-field# SEND_EMAIL:'
+%
+
+õ ú(Ã"#new-object#Bdict%
+#
+
+ö ö(3Å"	#map-set#:Ã>Ä%
+#
+
+÷ ÷(wÇ"	#map-set#:ÃAÆ%
+#
+
+ø ø(9É"	#map-set#:ÃDÈ%
+#
+
+ù ù(hË"	#map-set#:ÃGÊV
+T
+
+ó û(Ì"WorkflowActionConfig:ÂÃB%schemas.workflow.WorkflowActionConfig5
+3
+
+ı ı(=Í"#get-field# SEND_NOTIFICATION:'
+%
+
+ş ‚(Î"#new-object#Bdict$
+"
+
+ÿ ÿ($Ï"	#map-set#:Î_T%
+#
+
+€ €(tÑ"	#map-set#:ÎaĞ%
+#
+
+ (&Ó"	#map-set#:ÎdÒV
+T
+
+ü ƒ(Ô"WorkflowActionConfig:ÍÎB%schemas.workflow.WorkflowActionConfig*
+(
+
+ò „(Õ"#unknown-value#Blist*
+(
+
+ò „(Ö"
+#is-exact#:Õ$Bbool!
+
+
+ò „(×"
+#assume#:Ö<
+:
+
+ò „(Ø"#set-field# __collection_size:Õ'Bint+
+)
+
+ò „(Ù"#array-add-last#:ÕÌ+
+)
+
+ò „(Ú"#array-add-last#:ÕÔT
+R
+
+â †(	Û"WorkflowCreate:³µ¶· ÁÕoBschemas.workflow.WorkflowCreateS
+Q
+
+İ ‡(Ü"WorkflowTemplate:	²³´ÛB!schemas.workflow.WorkflowTemplate>
+<
+
+å- ˆ(İWORKFLOW_TEMPLATES"#unknown-value#Blist*
+(
+
+å- ˆ(Ş"
+#is-exact#:İ$Bbool!
+
+
+å- ˆ(ß"
+#assume#:Ş<
+:
+
+å- ˆ(à"#set-field# __collection_size:İ'Bint*
+(
+
+å- ˆ(á"#array-add-last#:İq+
+)
+
+å- ˆ(â"#array-add-last#:İ±+
+)
+
+å- ˆ(ã"#array-add-last#:İÜ *P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/schemas/workflow.py

@@ -1,0 +1,61 @@
+
+:pip._internal.network.cache.SafeFileCache.set_body_from_io
+‚/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/network/cache.py‚ ‚("2*‚
+2
+ƒ ƒ(A–“
+
+„ „((
+%1*I
+
+__unknown_file (-+
+)pip._internal.network.cache.SafeFileCache*#
+
+__unknown_file (
+
+key2_get_cache_pathM
+K
+
+„ „(2
+%2"__concat*
+
+„ „((
+
+%1*
+
+„+ „(2	
+.body@
+>
+
+„ „(2
+path"__id*"
+
+__unknown_file (
+
+%2Á¾
+
+… …(,
+%3*I
+
+__unknown_file (-+
+)pip._internal.network.cache.SafeFileCache*$
+
+__unknown_file (
+
+path*)
+
+__unknown_file (
+
+	body_file2_write_from_io*
+3*.
+3
+
+cache.py"
+† †
+implicit return:
+
+‚ ‚('
+key:
+
+‚) ‚(<
+	body_fileB-+
+)pip._internal.network.cache.SafeFileCacheH

@@ -1,0 +1,129 @@
+
+"Will actually move:"str
+0'"Would not remove (outside of prefix):"str
+#""str
+!"y"str
+ "Proceed (Y/n)? "str
+
+	2int
+"Would remove:"str
+
+0int
+
+1int
+""n"str
+6-"Would not remove (might be manually added):"str
+KB"Display which files would be deleted and prompt for confirmation"strself
+˝ ˝( verbose
+˝" ˝(/	%tuple"à+
+)
+
+â â("
+__bool__*:BboolH+
+)
+
+â â("#unaryop !#2!:Bbool,"*
+
+â â( *
+â â(
+2
+ã ã("Å)
+'
+
+äA ä(L"#get-field# _paths:`
+^
+
+ä% ä(Mwill_remove">
+pip._internal.req.req_uninstallcompress_for_output_listing:5
+3
+
+ä ä(M
+will_remove"#python-unpack#:	3
+1
+
+ä ä(M	will_skip"#python-unpack#:	"â)
+'
+
+é é()"#get-field# _paths:9
+7
+
+é é(*will_remove"
+builtinsset*:Bset$
+"
+
+è è("?python-unknown?:
+8
+
+è è("#set-field# __collection_size:Bint7
+5
+
+è è(	will_skip"
+builtinsset*:Bset"Ò*	will_skip*will_remove
+f
+d
+
+ë ë(."P
+Dpip._internal.req.req_uninstall.UninstallPathSet._allowed_to_proceed_display:f
+d
+
+í í(J"P
+Dpip._internal.req.req_uninstall.UninstallPathSet._allowed_to_proceed_display:*
+(
+
+ì: ì(F"#get-field# _refuse:f
+d
+
+ì ì(G"P
+Dpip._internal.req.req_uninstall.UninstallPathSet._allowed_to_proceed_display:+
+)
+
+î î("
+__bool__*:BboolH "
+
+î î( *
+î î(
+"Ë)
+'
+
+ï@ ï(K"#get-field# _paths:K
+I
+
+ï, ï(L"6
+pip._internal.req.req_uninstallcompress_for_rename:f
+d
+
+ï ï(M"P
+Dpip._internal.req.req_uninstall.UninstallPathSet._allowed_to_proceed_display:"™*
+(
+
+ó& ó(4$"#unknown-value#Btuple(
+&
+
+ó& ó(4&"
+#is-exact#:$%Bbool
+
+
+ó& ó(4'"
+#assume#:&:
+8
+
+ó& ó(4("#set-field# __collection_size:$Bint(
+&
+
+ó& ó(4)"#array-add-last#:$!(
+&
+
+ó& ó(4*"#array-add-last#:$"(
+&
+
+ó& ó(4+"#array-add-last#:$#5
+3
+
+ó ó(5,"
+pip._internal.utils.miscask: $,
+*
+
+ó ó(<-"
+#binop !=#2!=:,"Bbool
+
+ó ó(<-*Ü/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/req/req_uninstall.py

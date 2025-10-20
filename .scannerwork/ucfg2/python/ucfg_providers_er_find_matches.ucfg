@@ -1,0 +1,15 @@
+
+>pip._vendor.resolvelib.providers.AbstractProvider.find_matches’
+‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/resolvelib/providers.py\ \("3*2
+3
+providers.py"
+ (
+implicit return:
+^ ^(
+
+identifier:
+_ _(/
+requirements:
+` `(4
+incompatibilitiesB53
+1pip._vendor.resolvelib.providers.AbstractProviderH

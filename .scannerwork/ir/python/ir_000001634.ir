@@ -1,0 +1,18 @@
+
+üò"
+        Returns an iterator over all the underlying :class:`Specifier` instances
+        in this specifier set.
+
+        >>> sorted(SpecifierSet(">=1.0.0,!=1.0.1"), key=str)
+        [<Specifier('!=1.0.1')>, <Specifier('>=1.0.0')>]
+        "strself
+Ö Ö("g)
+'
+
+Þ Þ("#get-field# _specs:(
+&
+
+Þ Þ( "
+builtinsiter*:
+
+Þ Þ( *‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/packaging/specifiers.py

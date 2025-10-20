@@ -1,0 +1,38 @@
+
+truebool
+"bdist_wheel"str
+	"-d"str
+falsebool
+
+0intsetup_py_pathO O(global_optionsP P(!build_optionsQ Q( destination_dirR R(list"ñ]
+[
+X Z(args"A
+$pip._internal.utils.setuptools_buildmake_setuptools_shim_args:-
++
+[ [(2
+args"#unknown-value#Blist&
+$
+[ [(2"
+#is-exact#:
+Bbool
+
+[ [(2"
+#assume#:8
+6
+[ [(2"#set-field# __collection_size:
+Bint&
+$
+[ [(2"#array-add-last#:
+&
+$
+[ [(2"#array-add-last#:
+	&
+$
+[ [(2"#array-add-last#:
++
+)
+[ [(2args"	#binop +#*2+:
++
+)
+\ \(args"	#binop +#*2+:
+] ](*‹/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/setuptools_build.py

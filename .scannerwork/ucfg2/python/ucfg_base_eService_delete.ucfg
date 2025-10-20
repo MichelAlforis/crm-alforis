@@ -1,0 +1,90 @@
+
+ services.base.BaseService.deleteW
+M/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/services/base.pyh h("9*–
+9k k(-|z
+k k(-
+%9*9
+
+__unknown_file (
+services.base.BaseService*"
+
+__unknown_file (
+
+id2	get_by_id@
+>
+k k(-
+db_obj"__id*"
+
+__unknown_file (
+
+%9\
+Z
+l l(
+%10"__id*A
+
+__unknown_file (%*#
+services.base.BaseService"
+dbhf
+l l("
+%11*#
+
+__unknown_file (
+
+%10*&
+
+__unknown_file (
+
+
+db_obj2delete\
+Z
+m m(
+%12"__id*A
+
+__unknown_file (%*#
+services.base.BaseService"
+db@>
+m m(
+%13*#
+
+__unknown_file (
+
+%122commitd
+b
+n# n(2
+%14"__id*I
+
+__unknown_file (-*+
+services.base.BaseService"
+
+model_name{
+y
+n n(A
+%15"__concat*
+n n("
+
+Deleted *
+n# n(2
+
+%14*
+n3 n(<
+	 with ID *
+n= n(?
+
+idfd
+n n(B
+%16*&
+
+__unknown_file (
+
+
+logger*#
+
+__unknown_file (
+
+%152info"
+o o(
+
+True:
+h h("
+idB
+services.base.BaseServiceH

@@ -1,0 +1,401 @@
+
+1.0PythonFrontend"1760943921851*py2.Bº
+
+imports1
+
+extends2
+
+returns3
+
+	has param4
+
+module5
+
+
+class6
+
+function7
+(
+#crm-backend/schemas/organisation.py9
+
+schemas.organisation11
+
+decimal12
+
+typing14
+
+datetime16
+
+
+json18
+
+pydantic20
+
+models.organisation22
+
+schemas.base24
+
+schemas.person26
+#
+schemas.organisation_activity28
+6
+0schemas.organisation.OrganisationContactResponse30
+2
+,schemas.organisation.OrganisationContactBase32
+$
+schemas.base.TimestampedSchema34
+.
+(schemas.organisation.InteractionResponse36
+*
+$schemas.organisation.InteractionBase38
+(
+"schemas.organisation.ProduitCreate40
+&
+ schemas.organisation.ProduitBase42
+
+pydantic.main.BaseModel44
+3
+-schemas.organisation.MandatDistributionCreate46
+1
++schemas.organisation.MandatDistributionBase48
+5
+/schemas.organisation.MandatDistributionResponse50
+4
+.schemas.organisation.ProduitBase.validate_type52
+6
+0schemas.organisation.ProduitBase.validate_status54
+0
+*schemas.organisation.MandatProduitResponse56
+,
+&schemas.organisation.MandatProduitBase58
+.
+(schemas.organisation.MandatProduitUpdate60
+4
+.schemas.organisation.OrganisationContactUpdate62
+,
+&schemas.organisation.InteractionCreate64
+4
+.schemas.organisation.InteractionDetailResponse66
++
+%schemas.organisation.OrganisationBase68
+>
+8schemas.organisation.OrganisationBase.normalize_language70
+	
+str72
+5
+/schemas.organisation.OrganisationDetailResponse74
+/
+)schemas.organisation.OrganisationResponse76
+3
+-schemas.organisation.MandatDistributionUpdate78
+<
+6schemas.organisation.InteractionBase.validate_pipeline80
+8
+2schemas.organisation.InteractionBase.validate_type82
+*
+$schemas.organisation.ProduitResponse84
+-
+'schemas.organisation.OrganisationUpdate86
+,
+&schemas.organisation.InteractionUpdate88
+=
+7schemas.organisation.OrganisationResponse._coerce_lists90
+A
+;schemas.organisation.MandatDistributionBase.validate_status92
+;
+5schemas.organisation.MandatDistributionDetailResponse94
+.
+(schemas.organisation.MandatProduitCreate96
+(
+"schemas.organisation.ProduitUpdate98
+1
+*schemas.organisation.ProduitDetailResponse100
+.
+'schemas.organisation.OrganisationCreate102
+5
+.schemas.organisation.OrganisationContactCreate104J
+
+8
+89jú
+ 
+10
+10115 *
+8 (
+
+13
+13125
+
+15
+15145
+
+17
+17165
+
+19
+19185
+
+21
+21205
+
+23
+23225
+
+25
+25245
+
+27
+27265
+
+29
+29285
+
+31
+31306 210
+
+33
+33326 210
+
+35
+35346
+
+37
+37366 210
+
+39
+39386 210
+
+41
+41406 210
+
+43
+43426 210
+
+45
+45446
+
+47
+47466 210
+
+49
+49486 210
+
+51
+51506 210
+
+53
+53527 243
+
+55
+55547 243
+
+57
+57566 210
+
+59
+59586 210
+
+61
+61606 210
+
+63
+63626 210
+
+65
+65646 210
+
+67
+67666 210
+
+69
+69686 210
+
+71
+71707 269
+
+73
+73726
+
+75
+75746 210
+
+77
+77766 210
+
+79
+79786 210
+
+81
+81807 239
+
+83
+83827 239
+
+85
+85846 210
+
+87
+87866 210
+
+89
+89886 210
+
+91
+91907 277
+
+93
+93927 249
+
+95
+95946 210
+
+97
+97966 210
+
+99
+99986 210
+
+101
+1011006 210
+
+103
+1031026 210
+
+105
+1051046 210rÍ	
+
+10131*
+8 (
+
+10151*
+8 ("
+
+10171*
+8 (
+
+10191*
+8 (
+
+10211*
+8 (A
+
+10231*
+8 (V
+
+10251*
+8	 	(+
+
+10271*
+8
+ 
+(J
+
+10291*
+8 (G
+
+31332*
+8¢ ¢("
+
+31352*
+8¢ ¢("
+
+37392*
+8ñ ñ(
+
+37352*
+8ñ ñ(
+
+41432*
+8ý ý(
+
+33452*
+8Š Š(
+
+47492*
+8À À(
+
+51492*
+8Î Î(!
+
+51352*
+8Î Î(!
+
+43452*
+8ä ä(
+
+57592*
+8² ²(
+
+57352*
+8² ²(
+
+61452*
+8¬ ¬(
+
+63452*
+8™ ™( 
+
+65392*
+8Þ Þ(
+
+67372*
+8ù ù( 
+
+59452*
+8Ÿ Ÿ(
+
+69452*
+8 (
+
+71733*
+8;	 ;(
+
+71734*
+8;	 ;(
+
+75772*
+8| |(!
+
+79452*
+8Å Å(
+
+39452*
+8À À(
+
+85432*
+8‹ ‹(
+
+85352*
+8‹ ‹(
+
+87452*
+8G G(
+
+89452*
+8ã ã(
+
+77692*
+8e e(
+
+77352*
+8e e(
+
+49452*
+8® ®(
+
+95512*
+8× ×('
+
+97592*
+8§ §(
+
+99452*
+8‚ ‚(
+
+101852*
+8“ “(
+
+103692*
+8? ?(
+
+105332*
+8” ”( 

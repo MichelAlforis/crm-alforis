@@ -1,0 +1,18 @@
+
+"fp"str
+“‰"
+        Checks if the underlying file-like object looks like a
+        :class:`http.client.HTTPResponse` object. We do this by testing for
+        the fp attribute. If it is present we assume it returns raw chunks as
+        processed by read_chunked().
+        "strself
+â â(#"n&
+$
+
+é é("#get-field# _fp:2
+0
+
+é é(&"
+builtinshasattr*:Bbool
+
+é é(&*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/response.py

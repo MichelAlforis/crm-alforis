@@ -13,7 +13,7 @@ import pytest
 import os
 import tempfile
 from io import BytesIO
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from sqlalchemy.orm import Session
 
 from models.organisation import Organisation, OrganisationCategory
@@ -267,8 +267,8 @@ def test_export_pdf_mandats(test_db: Session, admin_user: User):
             number=f"M-2025-{i:03d}",
             type=MandatType.VENTE,
             status=MandatStatus.ACTIVE,
-            start_date=datetime.utcnow(),
-            end_date=datetime.utcnow() + timedelta(days=365),
+            start_date=datetime.now(UTC),
+            end_date=datetime.now(UTC) + timedelta(days=365),
             owner_id=admin_user.id,
         )
         mandats.append(mandat)
@@ -300,8 +300,8 @@ def test_export_pdf_mandats_with_details(test_db: Session, admin_user: User):
         number="M-2025-001",
         type=MandatType.ACQUISITION,
         status=MandatStatus.ACTIVE,
-        start_date=datetime.utcnow(),
-        end_date=datetime.utcnow() + timedelta(days=365),
+        start_date=datetime.now(UTC),
+        end_date=datetime.now(UTC) + timedelta(days=365),
         description="Mandat d'acquisition stratégique",
         conditions="Conditions spéciales",
         owner_id=admin_user.id,

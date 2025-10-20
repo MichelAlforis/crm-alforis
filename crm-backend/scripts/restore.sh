@@ -5,7 +5,7 @@
 
 set -e
 
-if [ -z "$1" ]; then
+if [[ -z "$1" ]]; then
     echo "❌ Usage: ./scripts/restore.sh <backup_file>"
     echo "Fichiers disponibles:"
     ls -lh ./backups/crm_backup_*.sql.gz 2>/dev/null || echo "Aucune sauvegarde trouvée"
@@ -17,7 +17,7 @@ DB_USER="crm_user"
 DB_NAME="crm_db"
 DB_HOST="${DB_HOST:-postgres}"
 
-if [ ! -f "$BACKUP_FILE" ]; then
+if [[ ! -f "$BACKUP_FILE" ]]; then
     echo "❌ Fichier non trouvé: $BACKUP_FILE"
     exit 1
 fi

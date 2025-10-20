@@ -1,0 +1,73 @@
+
+
+3int
+„ú"
+    Convert a tuple of ints representing a Python version to one of length
+    three.
+
+    :param py_version_info: a tuple of ints representing a Python version,
+        or None to specify no version. The tuple can have any length.
+
+    :return: a tuple of length three if `py_version_info` is non-None.
+        Otherwise, return `py_version_info` unchanged (i.e. None).
+    "str
+
+1int
+
+2int
+
+0int
+"VersionInfo"strpy_version_infoM M(;	
+tuple"~*
+(
+X X("
+builtinslen*:Bint(
+&
+X X("	#binop <#2<:Bbool&"$
+X X( *X X(2Z Z("ž*
+(
+Y  Y(4"
+builtinslen*:Bint%
+#
+Y Y(4"	#binop -#*2-:(
+&
+Y8 Y(<	"#unknown-value#Btuple&
+$
+Y8 Y(<"
+#is-exact#:	
+Bbool
+
+Y8 Y(<"
+#assume#:8
+6
+Y8 Y(<"#set-field# __collection_size:	Bint&
+$
+Y8 Y(<"#array-add-last#:	6
+4
+Y Y(<py_version_info"	#binop *#*2*:	6
+4
+Y Y(<py_version_info"	#binop +#*2+:"v*
+(
+Z	 Z("
+builtinslen*:Bint(
+&
+Z	 Z(!"	#binop >#2>:Bbool"
+Z	 Z(! *Z Z("¦8
+6
+[ [(-py_version_info"#unknown-value#Blist"
+ 
+[ [(-"#array-read#:&
+$
+[ [(-"#array-add-last#:"
+ 
+[ [(-"#array-read#:&
+$
+[ [(-"#array-add-last#:"
+ 
+[ [(-"#array-read#:&
+$
+[ [(-"#array-add-last#:"_'*%py_version_info"
+ 
+] ](/"
+typingcast:
+] ](/*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/misc.py

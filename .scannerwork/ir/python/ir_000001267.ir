@@ -1,0 +1,8 @@
+
+	"~/Music"str
+F=":return: music directory tied to the user, e.g. ``~/Music``"strselfz z(":(
+&
+| |(,"
+os.path
+expanduser:
+| |(,*…/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/macos.py

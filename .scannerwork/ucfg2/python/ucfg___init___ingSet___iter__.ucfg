@@ -1,0 +1,127 @@
+
+-pip._vendor.pkg_resources.WorkingSet.__iter__–
+‰/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pkg_resources/__init__.pyí í("2*ä
+2
+î ò(
+
+ó ó(
+%9"set@
+>
+
+ó ó(
+seen"__id*"
+
+__unknown_file (
+
+%9n
+l
+
+ô ô( 
+%10"__id*Q
+
+__unknown_file (5*3&
+$pip._vendor.pkg_resources.WorkingSet"	
+entries*
+3
+5*3
+3
+__init__.py"
+þ þ(
+implicit return*¹
+5
+õ õ(*p
+n
+
+õ õ(*
+%6"__id*T
+
+__unknown_file (8*6&
+$pip._vendor.pkg_resources.WorkingSet"
+
+entry_keyslj
+
+õ õ(*
+%7*"
+
+__unknown_file (
+
+%6*$
+
+__unknown_file (
+
+item2__contains__=
+;
+
+õ õ(*
+%8"not*"
+
+__unknown_file (
+
+%7*	
+3
+5
+9*Ý
+7
+ú ú("}
+
+ú ú("
+%3"set.__contains__*$
+
+__unknown_file (
+
+seen*#
+
+__unknown_file (
+
+key2__contains__=
+;
+
+ú ú("
+%4"not*"
+
+__unknown_file (
+
+%3*
+3
+5
+7
+8*÷
+8
+û û(!mk
+
+û û(!
+%1"set.add*$
+
+__unknown_file (
+
+seen*#
+
+__unknown_file (
+
+key2addl
+j
+
+ü ü(%
+%2"__id*P
+
+__unknown_file (4*2&
+$pip._vendor.pkg_resources.WorkingSet"
+by_key*	
+3
+5
+7*Œ
+9
+ù ù(,p
+n
+
+ù ù(&
+%5"__id*T
+
+__unknown_file (8*6&
+$pip._vendor.pkg_resources.WorkingSet"
+
+entry_keys*	
+3
+5
+7B(&
+$pip._vendor.pkg_resources.WorkingSetH

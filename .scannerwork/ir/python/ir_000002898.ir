@@ -1,0 +1,11 @@
+
+˛Ù"The "project name" of a requirement.
+
+        This is different from ``name`` if this requirement contains extras,
+        in which case ``name`` would contain the ``[...]`` part, while this
+        refers to the name of the project.
+        "str
+#"Subclass should override"strselfA A("R@
+>
+H H(="NotImplementedError*:BNotImplementedError2
+H H(=*è/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/resolution/resolvelib/base.py

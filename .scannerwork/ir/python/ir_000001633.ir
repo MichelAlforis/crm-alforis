@@ -1,0 +1,12 @@
+
+B9"Returns the number of specifiers in this specifier set."strself
+Ò Ò("k)
+'
+
+Ô Ô("#get-field# _specs:,
+*
+
+Ô Ô("
+builtinslen*:Bint
+
+Ô Ô(*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/packaging/specifiers.py

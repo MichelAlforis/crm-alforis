@@ -1,0 +1,40 @@
+
+çÉ"Converts mask from /xx format to xxx.xxx.xxx.xxx
+
+    Example: if mask is 24 function returns 255.255.255.0
+
+    :rtype: str
+    "str
+
+1int
+32int
+
+">I"str
+
+4294967295intmask
+Ø Ø("∫'
+%
+
+∂ ∂('"	#binop -#*2-:#
+!
+
+∂ ∂('"#unknown-value#'
+%
+
+∂ ∂(,"	#binop -#*2-:)
+'
+
+∂ ∂(,	bits"#unknown-value##
+!
+
+∑ ∑(""#unknown-value#0
+.
+
+∑ ∑(3"?python-unknown?:
+	Bbytes-
++
+
+∑ ∑(4"
+socket	inet_ntoa:Bstr
+
+∑ ∑(4*Å/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/requests/utils.py

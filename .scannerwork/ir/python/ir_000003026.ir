@@ -1,0 +1,26 @@
+
+SJ"Returns a boolean, whether running in venv with no system site-packages."str
+falsebool"êE
+C
+c c("5
+pip._internal.utils.virtualenv_running_under_venv)
+'
+c c("
+__bool__*:BboolH"
+c c( *c c("[G
+E
+d d(&"7
+pip._internal.utils.virtualenv_no_global_under_venv
+d d(&"üR
+P
+f f()"B
+pip._internal.utils.virtualenv _running_under_legacy_virtualenv)
+'
+f f()"
+__bool__*:BboolH"
+f f() *f f("hT
+R
+g g(3"D
+pip._internal.utils.virtualenv"_no_global_under_legacy_virtualenv
+g g(3"
+i i(*Ö/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/virtualenv.py

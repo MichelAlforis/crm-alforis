@@ -1,0 +1,26 @@
+
+
+0intselfC C(	tuple"ê(
+&
+D D(!"#get-field# seconds:,
+*
+D# D(3"#get-field# nanoseconds:(
+&
+D D(4"#unknown-value#Btuple&
+$
+D D(4"
+#is-exact#:Bbool
+
+D D(4"
+#assume#:8
+6
+D D(4	"#set-field# __collection_size:Bint&
+$
+D D(4
+"#array-add-last#:&
+$
+D D(4"#array-add-last#:+
+)
+D D(5"
+builtinshash*:Bint
+D D(5*~/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/msgpack/ext.py

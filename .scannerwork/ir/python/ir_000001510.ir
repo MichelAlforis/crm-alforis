@@ -1,0 +1,29 @@
+
+5,"Create a CandidateEvaluator object to use."strself
+ò ò(project_name
+ó ó(	specifier
+ô ô(9hashes
+õ õ($"þD
+B
+
+ø ø(/candidate_prefs"#get-field# _candidate_prefs:)
+'
+
+ù €(	"#unknown-value#Btype1
+/
+
+û û(-"#get-field# _target_python:0
+.
+
+ü ü(7	"#get-field# prefer_binary:8
+6
+
+ý" ý(G
+"#!#get-field# allow_all_prereleases:Z
+X
+
+ù €(	"?
+5pip._internal.index.package_finder.CandidateEvaluatorcreate:	
+
+
+ù €(	*‰/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/index/package_finder.py

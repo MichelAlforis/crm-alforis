@@ -1,0 +1,23 @@
+
+"base_prefix"str
+yp"Checks if sys.base_prefix and sys.prefix match.
+
+    This handles PEP 405 compliant virtual environments.
+    "str"¤!
+
+ ("#unknown-value#'
+%
+ ("#get-field# prefix:!
+
+! ($"#unknown-value#!
+
+5 (8"#unknown-value#'
+%
+5 (?"#get-field# prefix:+
+)
+ (@"
+builtinsgetattr*:*
+(
+ (@	"
+#binop !=#2!=:Bbool
+ (@	*…/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/virtualenv.py

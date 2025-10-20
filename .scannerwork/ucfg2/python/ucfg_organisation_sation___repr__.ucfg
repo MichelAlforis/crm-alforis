@@ -1,0 +1,82 @@
+
+)models.organisation.Organisation.__repr___
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyä ä("2*Û
+2
+ã é(	d
+b
+
+å  å('
+%1"__id*H
+
+__unknown_file (,**"
+ models.organisation.Organisation"
+idf
+d
+
+å1 å(:
+%2"__id*J
+
+__unknown_file (.*,"
+ models.organisation.Organisation"
+namef
+d
+
+åD å(M
+%3"__id*J
+
+__unknown_file (.*,"
+ models.organisation.Organisation"
+typep
+n
+
+ç ç(1
+%4"__id*T
+
+__unknown_file (8*6"
+ models.organisation.Organisation"
+pipeline_stage£
+†
+
+å ç(5
+%5"__concat*#
+
+å å(
+<Organisation(id=*
+
+å  å('
+
+%1*
+
+å( å(0
+
+, name='*
+
+å1 å(:
+
+%2*
+
+å; å(C
+
+', type=*
+
+åD å(M
+
+%3*
+
+åN å(P
+, *!
+
+ç ç(
+pipeline_stage=*
+
+ç ç(1
+
+%4*
+
+ç2 ç(4
+)>"
+
+ã é(	
+
+%5B$"
+ models.organisation.OrganisationH

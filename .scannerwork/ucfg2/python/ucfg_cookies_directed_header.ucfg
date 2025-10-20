@@ -1,0 +1,36 @@
+
+@pip._vendor.requests.cookies.MockRequest.add_unredirected_headerŽ
+ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/requests/cookies.pyT T("2*®
+2U U('t
+r
+U U(
+%2"__id*Z
+
+__unknown_file (>*<*
+(pip._vendor.requests.cookies.MockRequest"
+_new_headers£ 
+U U('
+%1"dict.__setitem__*"
+
+__unknown_file (
+
+%2*$
+
+__unknown_file (
+
+name*%
+
+__unknown_file (	
+
+value2__setitem__*
+3*0
+3
+
+cookies.py"
+W W(
+implicit return:
+T& T(*
+name:
+T, T(1
+valueB,*
+(pip._vendor.requests.cookies.MockRequestH

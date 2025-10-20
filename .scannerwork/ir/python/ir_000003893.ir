@@ -1,0 +1,105 @@
+
+
+!0int
+H?"Retourne la liste des √©v√©nements √† surveiller par d√©faut."strlist"ˆ/
+-
+
+ù ù(%	EventType"?python-unknown?7
+5
+
+† †(&"" #get-field# ORGANISATION_CREATED:(
+&
+
+† †(,"#get-field# value:7
+5
+
+° °(&"" #get-field# ORGANISATION_UPDATED:(
+&
+
+° °(,"#get-field# value:7
+5
+
+¢ ¢(&"" #get-field# ORGANISATION_DELETED:(
+&
+
+¢ ¢(,"#get-field# value:1
+/
+
+£ £( 	"#get-field# PERSON_CREATED:(
+&
+
+£ £(&
+"#get-field# value:	1
+/
+
+§ §( "#get-field# PERSON_UPDATED:(
+&
+
+§ §(&"#get-field# value:1
+/
+
+• •( "#get-field# PERSON_DELETED:(
+&
+
+• •(&"#get-field# value:/
+-
+
+¶ ¶("#get-field# TASK_CREATED:(
+&
+
+¶ ¶($"#get-field# value:1
+/
+
+ß ß( "#get-field# TASK_COMPLETED:(
+&
+
+ß ß(&"#get-field# value:1
+/
+
+® ®( "#get-field# MANDAT_CREATED:(
+&
+
+® ®(&"#get-field# value:1
+/
+
+© ©( "#get-field# MANDAT_UPDATED:(
+&
+
+© ©(&"#get-field# value:0
+.
+
+™ ™("#get-field# MANDAT_SIGNED:(
+&
+
+™ ™(%"#get-field# value:6
+4
+
+´ ´(%"!#get-field# INTERACTION_CREATED:(
+&
+
+´ ´(+"#get-field# value:6
+4
+
+¨ ¨(%"!#get-field# INTERACTION_UPDATED:(
+&
+
+¨ ¨(+"#get-field# value:)
+'
+
+ü ≠("#unknown-value#Blist(
+&
+
+ü ≠("
+#is-exact#:Bbool
+
+
+ü ≠( "
+#assume#::
+8
+
+ü ≠(""#set-field# __collection_size:!Bint-
++
+
+ü ≠(#"?python-unknown?*Blist
+
+ü ≠(#*M/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/core/webhooks.py

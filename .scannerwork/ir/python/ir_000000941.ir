@@ -1,0 +1,52 @@
+
+".egg"str
+²¨"Whether this distribution is installed as an egg.
+
+        This usually indicates the distribution was installed by (older versions
+        of) easy_install.
+        "str
+falseboolself
+Ü Ü("Š5
+3
+
+â â( location"#get-field# location:.
+,
+
+â â( "?python-partial-apply?:%
+#
+
+â â( location"#id#:+
+)
+
+ã ã("
+__bool__*:BboolH+
+)
+
+ã ã("#unaryop !#2!:Bbool "
+
+ã ã( *
+ã ã(
+"
+
+ä ä("ú#
+!
+
+ç ç(	"#unknown-value#6
+4
+
+ç ç(%
+"?python-unknown?:	Bpathlib.Path)
+'
+
+ç ç(,"#get-field# suffix:
+.
+,
+
+ç ç(,"?python-partial-apply?:
+,
+*
+
+ç ç(6"
+#binop ==#2==:Bbool
+
+ç ç(6*‚/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/metadata/base.py

@@ -1,0 +1,43 @@
+
+≥©"
+        Return whether the current commit hash equals the given name.
+
+        Args:
+          dest: the repository directory.
+          name: a string name.
+        "str
+falseboolcls
+É É(dest
+É  É()name
+É+ É(;"|+
+)
+
+ã ã("
+__bool__*:BboolH+
+)
+
+ã ã("#unaryop !#2!:Bbool "
+
+ã ã( *
+ã ã(
+"
+
+ç ç("‘)
+'
+
+è è(%"#unknown-value#Btype#
+!
+
+è è(%	"#unknown-value#@
+>
+
+è è(%
+")
+pip._internal.vcs.git.Gitget_revision:	,
+*
+
+è è(-"
+#binop ==#2==:
+Bbool
+
+è è(-*|/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/vcs/git.py

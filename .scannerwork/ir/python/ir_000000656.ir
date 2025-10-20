@@ -1,0 +1,34 @@
+
+”Š"
+    Contrary to POSIX 2008, on Cygwin, getcwd (3) contains
+    symlink components. Using
+    os.path.abspath() works around this limitation. A fix in os.getcwd()
+    would probably better, in Cygwin even more so, except
+    that this seems to be by design...
+    "str
+"cygwin"strfilename
+° °(*"®#
+!
+
+¸( ¸(+"#unknown-value#+
+)
+
+¸( ¸(4"#get-field# platform:,
+*
+
+¸( ¸(@"
+#binop ==#2==:Bbool,"*
+
+¸( ¸(@ *
+¸% ¸('2
+¸A ¸(E"='
+%
+
+¸ ¸($"
+os.pathabspath:
+
+¸ ¸(N"
+
+¸ ¸(N"&*
+
+¸ ¸(N*‰/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pkg_resources/__init__.py

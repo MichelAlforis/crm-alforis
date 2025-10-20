@@ -1,0 +1,16 @@
+
+ﬂ’"
+    :param appname: See `appname <platformdirs.api.PlatformDirsABC.appname>`.
+    :param appauthor: See `appauthor <platformdirs.api.PlatformDirsABC.appauthor>`.
+    :param version: See `version <platformdirs.api.PlatformDirsABC.version>`.
+    :param roaming: See `roaming <platformdirs.api.PlatformDirsABC.roaming>`.
+    :param ensure_exists: See `ensure_exists <platformdirs.api.PlatformDirsABC.ensure_exists>`.
+    :returns: config directory tied to the user
+    "strappnamef f(	appauthorg g(1versionh h(roamingi i(ensure_existsj j("ç!
+
+t t("#unknown-value#&
+$
+t z("PlatformDirs:0
+.
+t z(	"#get-field# user_config_dir:
+t z(	*à/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/__init__.py

@@ -1,0 +1,53 @@
+
+
+0int
+	falsebool
+truebool	exc_class. .(8exc.: .(L
+OSError	tupleBrokenPipeError"J*
+(
+/ /(#"
+#binop ==#2==:Bbool"
+/ /(# */ /("
+0 0("™!
+
+5 5("#unknown-value#)
+'
+5 5("
+__bool__*:BboolH)
+'
+5 5("#unaryop !#2!:Bbool"
+5 5( *5 5("
+6 6(	"A)
+'
+8 8(#"#is-instance#:
+Bbool"
+8 8(# "ø&
+$
+8( 8(1"#get-field# errno:!
+
+86 8(;"#unknown-value#'
+%
+86 8(B"#get-field# EINVAL:!
+
+8D 8(I"#unknown-value#&
+$
+8D 8(O"#get-field# EPIPE:(
+&
+85 8(P"#unknown-value#Btuple&
+$
+85 8(P"
+#is-exact#:Bbool
+
+85 8(P"
+#assume#:8
+6
+85 8(P"#set-field# __collection_size:Bint&
+$
+85 8(P"#array-add-last#:&
+$
+85 8(P"#array-add-last#:*
+(
+8( 8(P"
+#binop in#2in:Bbool
+8 8(P"$*
+8 8(P*‚/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/logging.py

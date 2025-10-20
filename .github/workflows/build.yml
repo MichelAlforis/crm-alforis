@@ -17,3 +17,6 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+concurrency:
+  group: sonar-${{ github.ref }}
+  cancel-in-progress: true

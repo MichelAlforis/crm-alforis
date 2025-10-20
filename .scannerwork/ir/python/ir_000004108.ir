@@ -1,0 +1,598 @@
+
+ë"gi"str
+©"m"str
+µ"mi"str
+/"kp"str
+ƒ"sa"str
+Ú"cs"str
+2"kr"str
+¼"mo"str
+m"vc"str
+‰"sc"str
+5"kt"str
+â"ge"str
+W"fm"str
+)"kd"str
+ú"ges"str
+¡"sr"str
+P"ne"str
+"sx"str
+¤"s1"str
+î"go"str
+G"no"str
+M"ni"str
+#"k"str
+,"kn"str
+"w"str
+="nb"str
+’"s2"str
+›"si"str
+y"vm"str
+~"ld"str
+÷"gu"str
+Ü"g"str
+ô"gs"str
+&"kc"str
+{"l"str
+Ñ"cp"str
+ß"gd"str
+•"se"str
+q"vg"str
+È"c"str
+¾"o"str
+Ë"ch"str
+u"vi"str
+†"sb"str
+A"bp"str
+!"x"str
+Ô"cpf"str
+è"gh"str
+"esc"str
+×"c1"str
+]"nl"str
+"err"str
+¹"il"str
+Æ"pm"str
+J"nd"str
+§"ss"str
+¬"mb"str
+×Í"
+    pygments.token
+    ~~~~~~~~~~~~~~
+
+    Basic token types and the standard tokens.
+
+    :copyright: Copyright 2006-2025 by the Pygments team, see AUTHORS.
+    :license: BSD, see LICENSE for details.
+"str
+ñ"gp"str
+NoneNoneType
+""str
+S"nf"str
+¯"mf"str
+Œ"dl"str
+å"gr"str
+²"mh"str
+i"nv"str
+ı"gt"str
+D"nc"str
+Z"py"str
+7"n"str
+`"nn"str
+"sd"str
+Î"cm"str
+˜"sh"str
+Á"ow"str
+f"nt"str
+€"s"str
+Ã"p"str
+c"nx"str
+:"na"str"Ù8J
+H
+7 7(Token"
+_TokenTypeB%pip._vendor.pygments.token._TokenType+
+)
+: :(Text"#get-field# Text:7
+5
+; ;(
+Whitespace"#get-field# Whitespace:/
+-
+<	 <(Escape"#get-field# Escape:-
++
+= =(Error"#get-field# Error:-
++
+? ?(Other"#get-field# Other:1
+/
+B
+ B(Keyword"#get-field# Keyword:+
+)
+C C(	Name"#get-field# Name:1
+/
+D
+ D(
+Literal"#get-field# Literal:/
+-
+E	 E(String"#get-field# String:
+/
+-
+F	 F(Number"#get-field# Number:
+9
+7
+G G(Punctuation"#get-field# Punctuation:3
+1
+H H(Operator"#get-field# Operator:1
+/
+I
+ I(Comment"#get-field# Comment:1
+/
+L
+ L(Generic"#get-field# Generic:%
+#
+P P("#set-field# Token:&
+$
+Q Q("#set-field# String:&
+$
+R R("#set-field# Number:$
+"
+^ {%closure"#new-object##
+!
+^ {"#set-field# Token:'
+%
+^ {"?python-partial-apply?:5
+3
+	{ Ö(STANDARD_TYPES"#new-object#Bdict 
+
+| |(%"	#map-set#: 
+
+~ ~(%"	#map-set#: 
+
+ (&"	#map-set#:"
+ 
+
+€ €(("	#map-set#:"
+ 
+
+ (( "	#map-set#:"
+ 
+
+‚ ‚(&""	#map-set#:!"
+ 
+
+„ „(&$"	#map-set#:#+
+)
+
+… …(%"#get-field# Constant:"
+ 
+
+… …(''"	#map-set#:%&.
+,
+
+† †(("#get-field# Declaration:"
+ 
+
+† †('*"	#map-set#:(),
+*
+
+‡ ‡(+"#get-field# Namespace:"
+ 
+
+‡ ‡('-"	#map-set#:+,)
+'
+
+ˆ ˆ(."#get-field# Pseudo:"
+ 
+
+ˆ ˆ('0"	#map-set#:./+
+)
+
+‰ ‰(1"#get-field# Reserved:"
+ 
+
+‰ ‰('3"	#map-set#:12'
+%
+
+Š Š(4"#get-field# Type:"
+ 
+
+Š Š('6"	#map-set#:45"
+ 
+
+Œ Œ(&8"	#map-set#:	7,
+*
+
+ (9"#get-field# Attribute:	"
+ 
+
+ (';"	#map-set#:9:*
+(
+
+ (<"#get-field# Builtin:	"
+ 
+
+ ('>"	#map-set#:<=*
+(
+
+ (?"#get-field# Builtin:	)
+'
+
+ (@"#get-field# Pseudo:?"
+ 
+
+ ('B"	#map-set#:@A(
+&
+
+ (C"#get-field# Class:	"
+ 
+
+ ('E"	#map-set#:CD+
+)
+
+‘ ‘(F"#get-field# Constant:	"
+ 
+
+‘ ‘('H"	#map-set#:FG,
+*
+
+’ ’(I"#get-field# Decorator:	"
+ 
+
+’ ’('K"	#map-set#:IJ)
+'
+
+“ “(L"#get-field# Entity:	"
+ 
+
+“ “('N"	#map-set#:LM,
+*
+
+” ”(O"#get-field# Exception:	"
+ 
+
+” ”('Q"	#map-set#:OP+
+)
+
+• •(R"#get-field# Function:	"
+ 
+
+• •('T"	#map-set#:RS+
+)
+
+– –(U"#get-field# Function:	(
+&
+
+– –(V"#get-field# Magic:U"
+ 
+
+– –('X"	#map-set#:VW+
+)
+
+— —(Y"#get-field# Property:	"
+ 
+
+— —('["	#map-set#:YZ(
+&
+
+˜ ˜(\"#get-field# Label:	"
+ 
+
+˜ ˜('^"	#map-set#:\],
+*
+
+™ ™(_"#get-field# Namespace:	"
+ 
+
+™ ™('a"	#map-set#:_`(
+&
+
+š š(b"#get-field# Other:	"
+ 
+
+š š('d"	#map-set#:bc&
+$
+
+› ›(e"#get-field# Tag:	"
+ 
+
+› ›('g"	#map-set#:ef+
+)
+
+œ œ(h"#get-field# Variable:	"
+ 
+
+œ œ('j"	#map-set#:hi+
+)
+
+ (k"#get-field# Variable:	(
+&
+
+ (l"#get-field# Class:k"
+ 
+
+ ('n"	#map-set#:lm+
+)
+
+ (o"#get-field# Variable:	)
+'
+
+ (p"#get-field# Global:o"
+ 
+
+ ('r"	#map-set#:pq+
+)
+
+Ÿ Ÿ(s"#get-field# Variable:	+
+)
+
+Ÿ Ÿ(t"#get-field# Instance:s"
+ 
+
+Ÿ Ÿ('v"	#map-set#:tu+
+)
+
+   (w"#get-field# Variable:	(
+&
+
+   (x"#get-field# Magic:w"
+ 
+
+   ('z"	#map-set#:xy"
+ 
+
+¢ ¢(&|"	#map-set#:
+{'
+%
+
+£ £(}"#get-field# Date:
+"
+ 
+
+£ £('"	#map-set#:}~$
+"
+
+¥ ¥(&"	#map-set#:€)
+'
+
+¦ ¦(‚"#get-field# Affix:%
+#
+
+¦ ¦('„"	#map-set#:‚ƒ,
+*
+
+§ §(…"#get-field# Backtick:%
+#
+
+§ §('‡"	#map-set#:…†(
+&
+
+¨ ¨(ˆ"#get-field# Char:%
+#
+
+¨ ¨('Š"	#map-set#:ˆ‰-
++
+
+© ©(‹"#get-field# Delimiter:%
+#
+
+© ©('"	#map-set#:‹Œ'
+%
+
+ª ª("#get-field# Doc:%
+#
+
+ª ª('"	#map-set#:*
+(
+
+« «(‘"#get-field# Double:%
+#
+
+« «('“"	#map-set#:‘’*
+(
+
+¬ ¬(”"#get-field# Escape:%
+#
+
+¬ ¬('–"	#map-set#:”•+
+)
+
+­ ­(—"#get-field# Heredoc:%
+#
+
+­ ­('™"	#map-set#:—˜,
+*
+
+® ®(š"#get-field# Interpol:%
+#
+
+® ®('œ"	#map-set#:š›)
+'
+
+¯ ¯("#get-field# Other:%
+#
+
+¯ ¯('Ÿ"	#map-set#:)
+'
+
+° °( "#get-field# Regex:%
+#
+
+° °('¢"	#map-set#: ¡*
+(
+
+± ±(£"#get-field# Single:%
+#
+
+± ±('¥"	#map-set#:£¤*
+(
+
+² ²(¦"#get-field# Symbol:%
+#
+
+² ²('¨"	#map-set#:¦§$
+"
+
+´ ´(&ª"	#map-set#:©'
+%
+
+µ µ(«"#get-field# Bin:%
+#
+
+µ µ('­"	#map-set#:«¬)
+'
+
+¶ ¶(®"#get-field# Float:%
+#
+
+¶ ¶('°"	#map-set#:®¯'
+%
+
+· ·(±"#get-field# Hex:%
+#
+
+· ·('³"	#map-set#:±²+
+)
+
+¸ ¸(´"#get-field# Integer:%
+#
+
+¸ ¸('¶"	#map-set#:´µ+
+)
+
+¹ ¹(·"#get-field# Integer:)
+'
+
+¹ ¹(¸"#get-field# Long:·%
+#
+
+¹ ¹('º"	#map-set#:¸¹'
+%
+
+º º(»"#get-field# Oct:%
+#
+
+º º('½"	#map-set#:»¼$
+"
+
+¼ ¼(&¿"	#map-set#:¾(
+&
+
+½ ½(À"#get-field# Word:%
+#
+
+½ ½('Â"	#map-set#:ÀÁ$
+"
+
+¿ ¿(&Ä"	#map-set#:Ã*
+(
+
+À À(Å"#get-field# Marker:%
+#
+
+À À('Ç"	#map-set#:ÅÆ$
+"
+
+Â Â(&É"	#map-set#:È,
+*
+
+Ã Ã(Ê"#get-field# Hashbang:%
+#
+
+Ã Ã('Ì"	#map-set#:ÊË-
++
+
+Ä Ä(Í"#get-field# Multiline:%
+#
+
+Ä Ä('Ï"	#map-set#:ÍÎ+
+)
+
+Å Å(Ğ"#get-field# Preproc:%
+#
+
+Å Å('Ò"	#map-set#:ĞÑ/
+-
+
+Æ Æ(Ó"#get-field# PreprocFile:%
+#
+
+Æ Æ((Õ"	#map-set#:ÓÔ*
+(
+
+Ç Ç(Ö"#get-field# Single:%
+#
+
+Ç Ç('Ø"	#map-set#:Ö×+
+)
+
+È È(Ù"#get-field# Special:%
+#
+
+È È('Û"	#map-set#:ÙÚ$
+"
+
+Ê Ê(&İ"	#map-set#:Ü+
+)
+
+Ë Ë(Ş"#get-field# Deleted:%
+#
+
+Ë Ë('à"	#map-set#:Şß(
+&
+
+Ì Ì(á"#get-field# Emph:%
+#
+
+Ì Ì('ã"	#map-set#:áâ)
+'
+
+Í Í(ä"#get-field# Error:%
+#
+
+Í Í('æ"	#map-set#:äå+
+)
+
+Î Î(ç"#get-field# Heading:%
+#
+
+Î Î('é"	#map-set#:çè,
+*
+
+Ï Ï(ê"#get-field# Inserted:%
+#
+
+Ï Ï('ì"	#map-set#:êë*
+(
+
+Ğ Ğ(í"#get-field# Output:%
+#
+
+Ğ Ğ('ï"	#map-set#:íî*
+(
+
+Ñ Ñ(ğ"#get-field# Prompt:%
+#
+
+Ñ Ñ('ò"	#map-set#:ğñ*
+(
+
+Ò Ò(ó"#get-field# Strong:%
+#
+
+Ò Ò('õ"	#map-set#:óô.
+,
+
+Ó Ó(ö"#get-field# Subheading:%
+#
+
+Ó Ó('ø"	#map-set#:ö÷.
+,
+
+Ô Ô(ù"#get-field# EmphStrong:%
+#
+
+Ô Ô((û"	#map-set#:ùú-
++
+
+Õ Õ(ü"#get-field# Traceback:%
+#
+
+Õ Õ('ş"	#map-set#:üı */Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pygments/token.py

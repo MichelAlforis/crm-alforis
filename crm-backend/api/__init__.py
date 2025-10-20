@@ -8,6 +8,7 @@ from api.routes import (
     tasks,
     organisations,
     mandats,
+    users,
     # produits,        # ⚠️ TEMPORAIRE - À revoir (table produits pas encore créée)
     dashboards,
     workflows,
@@ -29,9 +30,10 @@ api_router.include_router(health.router, prefix="")
 api_router.include_router(auth.router)
 
 # ✅ ARCHITECTURE UNIFIÉE (Production)
-api_router.include_router(organisations.router)  # Remplace 
+api_router.include_router(organisations.router)  # Remplace
 api_router.include_router(people.router)         # Personnes physiques
 api_router.include_router(org_links.router)      # Liens Person ↔ Organisation
+api_router.include_router(users.router)          # Gestion utilisateurs
 api_router.include_router(tasks.router)          # Tâches
 api_router.include_router(dashboards.router)     # Dashboards
 api_router.include_router(email_campaigns.router)  # Email automation

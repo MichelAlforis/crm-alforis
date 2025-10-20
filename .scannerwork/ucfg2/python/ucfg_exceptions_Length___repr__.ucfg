@@ -1,0 +1,41 @@
+
+:pip._vendor.urllib3.exceptions.InvalidChunkLength.__repr__í
+Ö/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/exceptions.pyë ë("2*Æ
+2
+í ï(	y
+w
+
+ì ì(
+%1"__id*]
+
+__unknown_file (A*?3
+1pip._vendor.urllib3.exceptions.InvalidChunkLength"
+lengthz
+x
+
+î î(
+%2"__id*^
+
+__unknown_file (B*@3
+1pip._vendor.urllib3.exceptions.InvalidChunkLength"	
+partialè
+å
+
+í ï(	
+%3"__concat*B
+
+í í(A42
+0InvalidChunkLength(got length %r, %i bytes read)*
+
+ì ì(
+
+%1*
+
+î î(
+
+%2"
+
+í ï(	
+
+%3B53
+1pip._vendor.urllib3.exceptions.InvalidChunkLengthH

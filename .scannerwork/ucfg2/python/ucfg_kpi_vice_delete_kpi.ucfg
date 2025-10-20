@@ -1,0 +1,141 @@
+
+.services.kpi.OrganisationKPIService.delete_kpiX
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/services/kpi.py² ²("8*.
+3
+kpi.py"
+Ã Ã(
+implicit return*¸
+4
+½ ½(g
+e
+
+½ ½(
+%1"__id*K
+
+__unknown_file (/*-%
+#services.kpi.OrganisationKPIService"
+dbB@
+
+½ ½(
+%2*"
+
+__unknown_file (
+
+%12rollback‹
+ˆ
+
+¾ ¾(<
+%3"__concat*%
+
+¾ ¾(.
+Error deleting KPI *
+
+¾/ ¾(5
+
+
+kpi_id*
+
+¾6 ¾(8
+: *
+
+¾9 ¾(:
+
+ege
+
+¾ ¾(=
+%4*&
+
+__unknown_file (
+
+
+logger*"
+
+__unknown_file (
+
+%32error*
+3*¬
+8
+µ µ(2‘Ž
+
+µ µ(2
+%5*C
+
+__unknown_file ('%
+#services.kpi.OrganisationKPIService*&
+
+__unknown_file (
+
+
+kpi_id2get_kpi_by_id?
+=
+
+µ µ(2
+kpi"__id*"
+
+__unknown_file (
+
+%5g
+e
+
+¶ ¶(
+%6"__id*K
+
+__unknown_file (/*-%
+#services.kpi.OrganisationKPIService"
+dbec
+
+¶ ¶(
+%7*"
+
+__unknown_file (
+
+%6*#
+
+__unknown_file (
+
+kpi2deleteg
+e
+
+· ·(
+%8"__id*K
+
+__unknown_file (/*-%
+#services.kpi.OrganisationKPIService"
+db@>
+
+· ·(
+%9*"
+
+__unknown_file (
+
+%82commitY
+W
+
+¸ ¸(/
+%10"__concat*
+
+¸ ¸(&
+Deleted KPI *
+
+¸' ¸(-
+
+
+kpi_idhf
+
+¸ ¸(0
+%11*&
+
+__unknown_file (
+
+
+logger*#
+
+__unknown_file (
+
+%102info*
+3
+4:
+
+² ²(*
+kpi_idB'%
+#services.kpi.OrganisationKPIServiceH

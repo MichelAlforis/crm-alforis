@@ -1,0 +1,49 @@
+
+1.0PythonFrontend"1760943933596*py2.B•
+
+imports1
+
+extends2
+
+returns3
+
+	has param4
+
+module5
+
+
+class6
+
+function7
+(
+#crm-backend/tests/test_websocket.py9
+
+tests.test_websocket11
+
+anyio12
+
+core.notifications14
+D
+>tests.test_websocket.test_websocket_ping_and_push_notification16J
+
+8
+89ja
+ 
+10
+10115 *
+8 (
+
+13
+13125
+
+15
+15145
+
+17
+17167 210r4
+
+10131*
+8 (
+
+10151*
+8 ('

@@ -1,7 +1,7 @@
 from typing import Optional, List, Tuple, Dict, Any
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func, or_, and_
-from datetime import date, timedelta, datetime
+from datetime import date, timedelta, datetime, UTC
 
 from models.task import Task, TaskStatus, TaskPriority  # TaskCategory n\'existe pas,
 from schemas.task import TaskCreate, TaskUpdate, TaskFilterParams
@@ -94,7 +94,7 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
             organisation_id=task.organisation_id,
             activity_type=activity_type,
             title=title,
-            occurred_at=occurred_at or datetime.utcnow(),
+            occurred_at=occurred_at or datetime.now(UTC),
             preview=preview,
             actor_id=actor_id,
             actor_name=actor_name,

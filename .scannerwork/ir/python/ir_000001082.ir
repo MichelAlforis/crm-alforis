@@ -1,0 +1,12 @@
+
+øî"
+        Obtain the number of bytes pulled over the wire so far. May differ from
+        the amount of content returned by :meth:``urllib3.response.HTTPResponse.read``
+        if bytes are encoded on the wire (e.g, compressed).
+        "strself
+µ µ("E1
+/
+
+» »(""#get-field# _fp_bytes_read:
+
+» »("*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/response.py

@@ -1,0 +1,65 @@
+
+models.task.Task.__repr__U
+K/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/task.pya a("2*ƒ
+2b e(	R
+P
+c c(
+%1"__id*8
+
+__unknown_file (*
+models.task.Task"
+idU
+S
+c* c(4
+%2"__id*;
+
+__unknown_file (*
+models.task.Task"
+titleV
+T
+c@ c(K
+%3"__id*<
+
+__unknown_file ( *
+models.task.Task"
+statusX
+V
+d d(%
+%4"__id*>
+
+__unknown_file ("* 
+models.task.Task"
+
+priority‚
+ÿ
+c d()
+%5"__concat*
+c c(
+	<Task(id=*
+c c(
+
+%1*
+c  c()
+	, title='*
+c* c(4
+
+%2*
+c5 c(?
+
+', status=*
+c@ c(K
+
+%3*
+cL c(N
+, *
+d d(
+	priority=*
+d d(%
+
+%4*
+d& d((
+)>"
+b e(	
+
+%5B
+models.task.TaskH

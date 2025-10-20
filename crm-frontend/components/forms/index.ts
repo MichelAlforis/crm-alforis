@@ -8,6 +8,7 @@ export { MandatForm } from './MandatForm'
 export { ProduitForm } from './ProduitForm'
 export { InteractionForm } from './InteractionForm'
 export { KPIForm } from './KPIForm'
+export { UserForm } from './UserForm'
 export { default as TaskForm } from './TaskForm'
 
 // NEW: Import forms (split by module)

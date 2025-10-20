@@ -39,7 +39,7 @@ docker compose down -v --remove-orphans >/dev/null 2>&1 || true
 
 # ---- Création du .env si besoin
 ENV_FILE="./crm-backend/.env.local"
-if [ ! -f "$ENV_FILE" ]; then
+if [[ ! -f "$ENV_FILE" ]]; then
   echo "📝 Création de $ENV_FILE à partir de .env.example..."
   cp ./crm-backend/.env.example "$ENV_FILE" 2>/dev/null || touch "$ENV_FILE"
   echo -e "${GREEN}✅ $ENV_FILE créé${NC}"
@@ -57,7 +57,7 @@ MAX_ATTEMPTS=30
 ATTEMPT=0
 API_URL="http://localhost:8000/health"
 
-while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+while [[ $ATTEMPT -lt $MAX_ATTEMPTS ]]; do
   if curl -s "$API_URL" > /dev/null; then
     echo -e "${GREEN}✅ API est prête !${NC}"
     break
@@ -67,7 +67,7 @@ while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
   ATTEMPT=$((ATTEMPT + 1))
 done
 
-if [ $ATTEMPT -eq $MAX_ATTEMPTS ]; then
+if [[ $ATTEMPT -eq $MAX_ATTEMPTS ]]; then
   echo -e "${RED}❌ API non accessible après 60s${NC}"
   echo "   Logs: docker compose logs -f api"
   exit 1

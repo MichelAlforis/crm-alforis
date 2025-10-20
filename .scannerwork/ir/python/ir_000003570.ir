@@ -1,0 +1,56 @@
+
+	truebool
+"pyproject.toml"str
+Äˆ"Is path is a directory containing pyproject.toml or setup.py?
+
+    If pyproject.toml exists, this is a PEP 517 project. Otherwise we look for
+    a legacy setuptools layout by identifying setup.py. We don't check for the
+    setup.cfg because using it without setup.py is only available for PEP 517
+    projects, which are already covered by the pyproject.toml check.
+    "str
+falsebool
+
+
+"setup.py"strpath
+ù ù( "|+
+)
+
+• •("
+os.pathisdir:Bbool+
+)
+
+• •("#unaryop !#2!:Bbool "
+
+• •( *
+• •("
+
+¶ ¶("y%
+#
+
+ß ß(:"
+os.pathjoin:,
+*
+
+ß ß(;"
+os.pathisfile:Bbool "
+
+ß ß(; *
+ß ß("
+
+® ®(	"y%
+#
+
+© ©(4"
+os.pathjoin:
+,
+*
+
+© ©(5"
+os.pathisfile:Bbool "
+
+© ©(5 *
+© ©("
+
+™ ™(	"
+
+´ ´(*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/misc.py

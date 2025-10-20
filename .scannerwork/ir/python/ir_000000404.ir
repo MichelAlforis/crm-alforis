@@ -1,0 +1,71 @@
+
+
+0int
+	"startup"str
+"banque"str
+
+"tech"str
+"investissement"str
+«Ω"
+        Suggestions de recherche bas√©es sur l'historique
+
+        Retourne des termes de recherche populaires/r√©cents.
+
+        Args:
+            query: D√©but du terme
+            db: Session database
+            limit: Nombre de suggestions
+
+        Returns:
+            Liste de suggestions de termes
+        "str
+	"immobilier"str
+	"finance"str
+"assurance"strquery
+… …(db
+   (limit
+À À(list"‡7
+5
+
+‹ ‰(	common_terms"#unknown-value#Blist(
+&
+
+‹ ‰(	"
+#is-exact#:Bbool
+
+
+‹ ‰(	"
+#assume#::
+8
+
+‹ ‰(	"#set-field# __collection_size:Bint(
+&
+
+‹ ‰(	"#array-add-last#:(
+&
+
+‹ ‰(	"#array-add-last#:(
+&
+
+‹ ‰(	"#array-add-last#:(
+&
+
+‹ ‰(	"#array-add-last#:(
+&
+
+‹ ‰(	"#array-add-last#:	(
+&
+
+‹ ‰(	"#array-add-last#:
+(
+&
+
+‹ ‰(	"#array-add-last#:;
+9
+
+Á Í(	suggestions"?python-unknown?:Blist)
+'
+
+Ï Ï(""#unknown-value#Blist
+
+Ï Ï("*K/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/core/search.py

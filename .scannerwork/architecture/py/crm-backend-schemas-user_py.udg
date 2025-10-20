@@ -1,0 +1,134 @@
+
+1.0PythonFrontend"1760943906301*py2.B∞
+
+imports1
+
+extends2
+
+returns3
+
+	has param4
+
+module5
+
+
+class6
+
+function7
+ 
+crm-backend/schemas/user.py9
+
+schemas.user11
+
+typing12
+
+pydantic14
+
+schemas.base16
+
+models.role18
+
+schemas.user.UserResponse20
+
+schemas.user.UserBase22
+$
+schemas.base.TimestampedSchema24
+
+schemas.base.BaseSchema26
+
+schemas.user.UserUpdate28
+/
+)schemas.user.UserUpdate.validate_password30
+#
+schemas.user.UserListResponse32
+
+schemas.user.UserCreate34
+/
+)schemas.user.UserCreate.validate_password36
+	
+str38J
+
+8
+89j÷
+ 
+10
+10115 *
+8 (
+
+13
+13125
+
+15
+15145
+
+17
+17165
+
+19
+19185
+
+21
+21206 210
+
+23
+23226 210
+
+25
+25246
+
+27
+27266
+
+29
+29286 210
+
+31
+31307 229
+
+33
+33326 210
+
+35
+35346 210
+
+37
+37367 235
+
+39
+39386r∏
+
+10131*
+8 (
+
+10151*
+8 (6
+
+10171*
+8 (7
+
+10191*
+8 (!
+
+21232*
+86 6(
+
+21252*
+86 6(
+
+23272*
+8	 	(
+
+29272*
+8" "(
+
+33272*
+8C C(
+
+35232*
+8 (
+
+37393*
+8	 (
+
+37394*
+8	 (

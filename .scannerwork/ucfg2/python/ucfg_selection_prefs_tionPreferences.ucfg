@@ -1,0 +1,72 @@
+
+9pip._internal.models.selection_prefs.SelectionPreferencesñ
+ã/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/models/selection_prefs.py ("4"5*t
+3
+selection_prefs.pyIG
+6 6
+%1"9pip._internal.models.selection_prefs.SelectionPreferences"
+6 6
+
+%1*ù
+41 1((ê
+ç
+1 1((M;
+9pip._internal.models.selection_prefs.SelectionPreferences"
+allow_yanked"__id*,
+
+__unknown_file (
+
+allow_yanked¢
+ü
+2 2(:V;
+9pip._internal.models.selection_prefs.SelectionPreferences"
+allow_all_prereleases"__id*5
+
+__unknown_file (
+
+allow_all_prereleasesî
+ë
+3 3(,O;
+9pip._internal.models.selection_prefs.SelectionPreferences"
+format_control"__id*.
+
+__unknown_file (
+
+format_controlí
+è
+4 4(*N;
+9pip._internal.models.selection_prefs.SelectionPreferences"
+prefer_binary"__id*-
+
+__unknown_file (
+
+prefer_binary§
+°
+5 5(<W;
+9pip._internal.models.selection_prefs.SelectionPreferences"
+ignore_requires_python"__id*6
+
+__unknown_file (
+
+ignore_requires_python*
+3*g
+5/ /(*S
+Q
+/ /(*
+ignore_requires_python"__id*%
+
+__unknown_file (	
+
+False*
+4:
+ (
+allow_yanked:#
+ (+
+allow_all_prereleases:
+ (3
+format_control:
+ (#
+prefer_binary:$
+   (2
+ignore_requires_pythonB=;
+9pip._internal.models.selection_prefs.SelectionPreferencesH

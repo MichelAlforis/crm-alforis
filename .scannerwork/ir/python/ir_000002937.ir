@@ -1,0 +1,11 @@
+
+ZQ":return: documents directory tied to the user e.g. ``%USERPROFILE%\\Documents``"str
+"CSIDL_PERSONAL"strselfc c("Å!
+
+e  e(."#unknown-value#$
+"
+e  e(@"get_win_folder:&
+$
+e e(A"
+os.pathnormpath:
+e e(A*á/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/windows.py

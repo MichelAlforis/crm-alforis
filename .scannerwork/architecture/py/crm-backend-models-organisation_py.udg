@@ -1,0 +1,305 @@
+
+1.0PythonFrontend"1760943917810*py2.BÁ
+
+imports1
+
+extends2
+
+returns3
+
+	has param4
+
+module5
+
+
+class6
+
+function7
+'
+"crm-backend/models/organisation.py9
+
+models.organisation11
+
+
+sqlalchemy12
+
+sqlalchemy.orm14
+
+typing16
+
+models.base18
+
+models.constants20
+
+
+enum22
+"
+models.organisation_activity24
+
+models.user26
+)
+#models.organisation.InteractionType28
+	
+str30
+
+	enum.Enum32
+'
+!models.organisation.PipelineStage34
+1
++models.organisation.OrganisationInteraction36
+
+models.base.BaseModel38
+:
+4models.organisation.OrganisationInteraction.__repr__40
+!
+models.organisation.Produit42
+*
+$models.organisation.Produit.__repr__44
+'
+!models.organisation.ProduitStatus46
+&
+ models.organisation.MandatStatus48
+-
+'models.organisation.InteractionPipeline50
+%
+models.organisation.ProduitType52
+,
+&models.organisation.MandatDistribution54
+5
+/models.organisation.MandatDistribution.is_actif56
+
+
+bool58
+5
+/models.organisation.MandatDistribution.__repr__60
+.
+(models.organisation.OrganisationCategory62
+&
+ models.organisation.Organisation64
+/
+)models.organisation.Organisation.__repr__66
+7
+1models.organisation.Organisation._normalize_email68
+'
+!models.organisation.MandatProduit70
+0
+*models.organisation.MandatProduit.__repr__72
+*
+$models.organisation.OrganisationType74
+-
+'models.organisation.OrganisationContact76
+6
+0models.organisation.OrganisationContact.__repr__78
++
+%models.organisation.InteractionStatus80J
+
+8
+89jÅ
+ 
+10
+10115 *
+8 (
+
+13
+13125
+
+15
+15145
+
+17
+17165
+
+19
+19185
+
+21
+21205
+
+23
+23225
+
+25
+25245
+
+27
+27265
+
+29
+29286 210
+
+31
+31306
+
+33
+33326
+
+35
+35346 210
+
+37
+37366 210
+
+39
+39386
+
+41
+41407 237
+
+43
+43426 210
+
+45
+45447 243
+
+47
+47466 210
+
+49
+49486 210
+
+51
+51506 210
+
+53
+53526 210
+
+55
+55546 210
+
+57
+57567 255
+
+59
+59586
+
+61
+61607 255
+
+63
+63626 210
+
+65
+65646 210
+
+67
+67667 265
+
+69
+69687 265
+
+71
+71706 210
+
+73
+73727 271
+
+75
+75746 210
+
+77
+77766 210
+
+79
+79787 277
+
+81
+81806 210ræ
+
+10131*
+8 (	
+
+10151*
+8 (3
+
+10171*
+8 (!
+
+10191*
+8 ("
+
+10211*
+8 (
+
+10231*
+8 (
+
+10251*
+8 (>
+
+10271*
+8 (!
+
+29312*
+8^ ^(
+
+29332*
+8^ ^(
+
+35312*
+88 8(
+
+35332*
+88 8(
+
+37392*
+8• •(
+
+43392*
+8Ò Ò(
+
+47312*
+8M M(
+
+47332*
+8M M(
+
+49312*
+8E E(
+
+49332*
+8E E(
+
+51312*
+8g g(
+
+51332*
+8g g(
+
+53312*
+8T T(
+
+53332*
+8T T(
+
+55392*
+8§ §(
+
+57593*
+8Í	 Í(
+
+63312*
+8" "(
+
+63332*
+8" "(
+
+65392*
+8z z(
+
+71392*
+8ø ø(
+
+75312*
+8- -(
+
+75332*
+8- -(
+
+77392*
+8‘ ‘(
+
+81312*
+8m m(
+
+81332*
+8m m(

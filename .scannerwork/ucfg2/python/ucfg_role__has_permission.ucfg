@@ -1,0 +1,80 @@
+
+models.role.Role.has_permissionU
+K/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/role.pyK K("2*r
+2L U([
+Y
+V V(*
+%5"__id*A
+
+__unknown_file (%*#
+models.role.Role"
+permissions*
+4
+6*$
+4Y Y("
+Y Y(	
+
+False*‚
+6W W(NR
+P
+W W("
+%1"__id*8
+
+__unknown_file (*
+
+
+permission"
+
+resourceê
+ç
+W W(.
+%2"	__compare*"
+
+__unknown_file (
+==*"
+
+__unknown_file (
+
+%1*(
+
+__unknown_file (
+
+
+resourceP
+N
+W3 W(D
+%3"__id*6
+
+__unknown_file (*
+
+
+permission"
+actioné
+ã
+W3 W(N
+%4"	__compare*"
+
+__unknown_file (
+==*"
+
+__unknown_file (
+
+%3*&
+
+__unknown_file (
+
+
+action*	
+4
+6
+7*#
+7X X("
+X X(
+
+True:
+K K(*
+
+resource:
+K, K(7
+actionB
+models.role.RoleH

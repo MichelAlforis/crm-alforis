@@ -1,0 +1,36 @@
+
+
+
+0int
+WN"
+    Return true if the absolute path of target is within the directory
+    "str	directoryO O(&targetO( O(3list"Ó4
+2
+S S(.abs_directory"
+os.pathabspath:1
+/
+T T((
+abs_target"
+os.pathabspath:'
+%
+V" V(="#unknown-value#Blist&
+$
+V" V(="
+#is-exact#:Bbool
+
+V" V(=	"
+#assume#:8
+6
+V" V(="#set-field# __collection_size:
+Bint&
+$
+V" V(="#array-add-last#:&
+$
+V" V(="#array-add-last#:2
+0
+V V(>prefix"
+os.pathcommonprefix:*
+(
+W W(""
+#binop ==#2==:Bbool
+W W("*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/unpacking.py

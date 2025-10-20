@@ -1,0 +1,14 @@
+
+2)":return: pictures path tied to the user"strself
+è è("£4
+2
+
+ê ê(*"#get-field# user_pictures_dir:.
+,
+
+ê ê(*"?python-partial-apply?:)
+'
+
+ê ê(+"Path:Bpathlib.Path
+
+ê ê(+*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/api.py

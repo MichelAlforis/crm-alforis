@@ -1,0 +1,14 @@
+
+-$":return: data path shared by users"strself
+» »("Ÿ0
+.
+
+½ ½(&"#get-field# site_data_dir:.
+,
+
+½ ½(&"?python-partial-apply?:)
+'
+
+½ ½('"Path:Bpathlib.Path
+
+½ ½('*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/api.py

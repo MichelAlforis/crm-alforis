@@ -1,0 +1,14 @@
+
+›‘"Convert an arbitrary string to a standard distribution name
+
+    Any runs of non-alphanumeric/. characters are replaced with a single '-'.
+    "str
+"[^A-Za-z0-9.]+"str
+"-"strname
+ÿ ÿ("4 
+
+
+„ „(."	
+resub:
+
+„ „(.*‰/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pkg_resources/__init__.py

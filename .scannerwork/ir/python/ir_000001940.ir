@@ -1,0 +1,35 @@
+
++
+""Unknown character in unicodedata"str
+
+0intcp& &("«*
+(
+' '(%"
+builtinschr*:Bstr3
+1
+' '(&v"
+unicodedata	combining:Bint*
+(
+( (("
+#binop ==#2==:Bbool"
+( (( *( (("Ê*
+(
+)  )('"
+builtinschr*:Bstr&
+$
+) )(("
+unicodedataname:)
+'
+) )(("
+__bool__*:BboolH)
+'
+) )((	"#unaryop !#2!:Bbool"
+) )((	 *) )(
+"
++ +("B.
+,
+* *(@"
+ValueError*:
+B
+ValueError2
+* *(@"*|/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/idna/core.py

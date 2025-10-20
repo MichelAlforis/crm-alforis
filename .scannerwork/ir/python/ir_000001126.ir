@@ -1,0 +1,37 @@
+
+:1"IncompleteRead(%i bytes read, %i more expected)"str
+
+	0intself
+Ä Ä(	tuple"¢*
+(
+
+Ç Ç("#get-field# partial:+
+)
+
+É É("#get-field# expected:*
+(
+
+ÅC Ñ(	"#unknown-value#Btuple(
+&
+
+ÅC Ñ(	"
+#is-exact#:Bbool
+
+
+ÅC Ñ(	"
+#assume#::
+8
+
+ÅC Ñ(	
+"#set-field# __collection_size:	Bint(
+&
+
+ÅC Ñ(	"#array-add-last#:(
+&
+
+ÅC Ñ(	"#array-add-last#:.
+,
+
+Å Ñ(	"?python-str-format?*:
+
+Å Ñ(	*Ö/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/exceptions.py

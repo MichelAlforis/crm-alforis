@@ -1,0 +1,24 @@
+
+&"no-global-site-packages.txt"str
+ÑÇ"Check if "no-global-site-packages.txt" exists beside site.py
+
+    This mirrors logic in pypa/virtualenv for determining whether system
+    site-packages are visible in the virtual environment.
+    "str"©!
+
+W3 W(7"#unknown-value#)
+'
+W3 W(@"#get-field# __file__:%
+#
+W# W(A"
+os.pathabspath:3
+1
+W W(Bsite_mod_dir"
+os.pathdirname:A
+?
+X# [(no_global_site_packages_file"
+os.pathjoin:*
+(
+\ \(7"
+os.pathexists:Bbool
+\ \(7*…/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/virtualenv.py

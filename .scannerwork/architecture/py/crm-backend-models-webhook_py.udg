@@ -1,0 +1,82 @@
+
+1.0PythonFrontend"1760943925740*py2.Bç
+
+imports1
+
+extends2
+
+returns3
+
+	has param4
+
+module5
+
+
+class6
+
+function7
+"
+crm-backend/models/webhook.py9
+
+models.webhook11
+
+
+sqlalchemy12
+ 
+sqlalchemy.dialects.sqlite14
+$
+sqlalchemy.dialects.postgresql16
+
+models.base18
+!
+models.webhook._json_column20
+
+models.webhook.Webhook22
+
+models.base.BaseModel24J
+
+8
+89j³
+ 
+10
+10115 *
+8 (
+
+13
+13125
+
+15
+15145
+
+17
+17165
+
+19
+19185
+
+21
+21207 210
+
+23
+23226 210
+
+25
+25246rœ
+
+10131*
+8 (5
+
+10151*
+8 (;
+
+10171*
+8	 	(1
+
+10131*
+8	 ($
+
+10191*
+8 ("
+
+23252*
+8 (

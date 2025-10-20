@@ -1,0 +1,123 @@
+
+" "str
+çÝ"Aligns lines to top (adds extra lines to bottom as required).
+
+        Args:
+            lines (List[List[Segment]]): A list of lines.
+            width (int): Desired width.
+            height (int, optional): Desired height or None for no change.
+            style (Style): Style of any padding added.
+            new_lines (bool, optional): Padded lines should include "\n". Defaults to False.
+
+        Returns:
+            List[List[Segment]]: New list of lines.
+        "str
+
+0int
+"\n"strcls
+³ ³(lines
+´ ´($width
+µ µ(height
+¶ ¶(style
+· ·(	new_lines
+¸ ¸(list"à,
+*
+
+Æ Æ()"
+builtinslen*:Bint4
+2
+
+Æ Æ()	extra_lines"	#binop -#*2-:+
+)
+
+Ç Ç(
+"
+__bool__*:	BboolH+
+)
+
+Ç Ç("#unaryop !#2!:
+Bbool "
+
+Ç Ç( *
+Ç Ç(
+"i)
+'
+
+È È("#unknown-value#Blist(
+&
+
+È È("#array-add-all#:
+
+È È("‰*
+(
+
+É É(lines"#unknown-value#+
+)
+
+Ê2 Ê(;"
+__bool__*:BboolH,"*
+
+Ê2 Ê(; *
+Ê/ Ê(12
+Ê< Ê(@"'
+%
+
+Ê Ê("	#binop *#*2*:$
+"
+
+Ê Ê(&"	#binop +#2+:
+
+
+Ê Ê(."cls:
+
+Ê Ê(X"['
+%
+
+ÊE Ê(P"	#binop *#*2*:
+
+
+ÊA Ê(X"cls:
+
+Ê Ê(X"»*blank)
+'
+
+Ë Ë( "#unknown-value#Blist(
+&
+
+Ë Ë( "
+#is-exact#:Bbool
+
+
+Ë Ë( "
+#assume#::
+8
+
+Ë Ë( "#set-field# __collection_size:Bint(
+&
+
+Ë Ë( "#array-add-last#:)
+'
+
+Ë Ë(!"#unknown-value#Blist(
+&
+
+Ë Ë(! "
+#is-exact#:Bbool
+
+
+Ë Ë(!!"
+#assume#: :
+8
+
+Ë Ë(!""#set-field# __collection_size:Bint(
+&
+
+Ë Ë(!#"#array-add-last#:'
+%
+
+Ë Ë(/$"	#binop *#*2*:	+
+)
+
+Ë Ë(/%lines"	#binop +#2+:$
+
+Ì Ì(%*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/segment.py

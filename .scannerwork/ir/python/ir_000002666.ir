@@ -1,0 +1,26 @@
+
+£ô"Create a Timestamp from posix timestamp in nanoseconds.
+
+        :param int unix_ns: Posix timestamp in nanoseconds.
+        :rtype: Timestamp
+        "str
+10int
+
+9intunix_ns
+ä ä("÷)
+'
+
+ê* ê(/"
+#binop **#*2**:+
+)
+
+ê ê(0"
+builtinsdivmod*:%
+#
+
+ê ê(0"#unaryop *#2*:C
+A
+
+ê ê(1"	Timestamp:B!pip._vendor.msgpack.ext.Timestamp
+
+ê ê(1*~/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/msgpack/ext.py

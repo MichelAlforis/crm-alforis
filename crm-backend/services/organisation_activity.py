@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import Optional, Iterable, Tuple, List, Dict, Any
-from datetime import datetime
+from datetime import datetime, UTC
 
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_, func
@@ -53,7 +53,7 @@ class OrganisationActivityService(
         """
         schema = OrganisationActivityCreate(
             organisation_id=organisation_id,
-            occurred_at=occurred_at or datetime.utcnow(),
+            occurred_at=occurred_at or datetime.now(UTC),
             type=activity_type,
             title=title,
             preview=preview,

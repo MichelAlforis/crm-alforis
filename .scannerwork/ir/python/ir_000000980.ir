@@ -1,0 +1,47 @@
+selfK K(otherK K(""pip._vendor.packaging.tags.Tag"t)
+'
+L L(%"#is-instance#:Bbool)
+'
+L L(%"#unaryop !#2!:Bbool"
+L L(% *L L(
+"5!
+
+M M(!"#unknown-value#
+M M(!"í&
+$
+P P("#get-field# _hash:&
+$
+P P(&"#get-field# _hash:*
+(
+P P(&	"
+#binop ==#2==:Bbool"
+P P('	 "ñ*
+(
+Q Q(
+"#get-field# _platform:*
+(
+Q# Q(2"#get-field# _platform:*
+(
+Q Q(2"
+#binop ==#2==:
+Bbool
+P Q(3"(*	"
+P Q(3 "å%
+#
+R R("#get-field# _abi:%
+#
+R R(("#get-field# _abi:*
+(
+R R(("
+#binop ==#2==:Bbool
+P R()"(*"
+P R() "ú-
++
+S S(""#get-field# _interpreter:-
++
+S& S(8"#get-field# _interpreter:*
+(
+S S(8"
+#binop ==#2==:Bbool
+P S(9"$*
+O T(	*Å/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/packaging/tags.py

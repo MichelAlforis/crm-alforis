@@ -1,0 +1,86 @@
+
+?pip._internal.index.package_finder.PackageFinder.evaluate_linksñ
+â/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/index/package_finder.pyï ï("2*ô
+2
+ò ö(
+
+õ õ(
+%3"listF
+D
+
+õ õ(
+
+candidates"__id*"
+
+__unknown_file (
+
+%3õò
+
+ú ú(+
+%4*P
+
+__unknown_file (42
+0pip._internal.index.package_finder.PackageFinder*%
+
+__unknown_file (	
+
+links2_sort_links*
+4
+6*-
+4
+° °("
+
+° °(
+
+
+candidates*∏
+6
+ù ù(H‘—
+
+ù ù(H
+%2*P
+
+__unknown_file (42
+0pip._internal.index.package_finder.PackageFinder*.
+
+__unknown_file (
+
+link_evaluator*$
+
+__unknown_file (
+
+link2get_install_candidateE
+C
+
+ù ù(H
+	candidate"__id*"
+
+__unknown_file (
+
+%2*	
+4
+6
+7*ö
+7
+ü ü(,Ä~
+
+ü ü(,
+%1"list.append**
+
+__unknown_file (
+
+
+candidates*)
+
+__unknown_file (
+
+	candidate2append*
+4
+6:
+
+ñ ñ(+
+link_evaluator:
+
+ñ- ñ(B
+linksB42
+0pip._internal.index.package_finder.PackageFinderH

@@ -1,0 +1,1178 @@
+
+NoneNoneType
+) "IDNA Mapping Table from UTS46."str
+"15.1.0"str"ô«&
+$
+ (%List"?python-unknown?'
+%
+ (%Tuple"?python-unknown?'
+%
+ (%Union"?python-unknown?)
+'
+	 	(__version__"#id#:Bstr$
+"
+ u%closure"#new-object#"
+ 
+ u"#set-field# List:#
+!
+ u	"#set-field# Union:#
+!
+ u
+"#set-field# Tuple:'
+%
+ u"?python-partial-apply?:%
+#
+u Ş%closure"#new-object##
+!
+u Ş"#set-field# List:$
+"
+u Ş"#set-field# Union:$
+"
+u Ş"#set-field# Tuple:(
+&
+u Ş"?python-partial-apply?:&
+$
+Ş Ç%closure"#new-object#$
+"
+Ş Ç"#set-field# List:%
+#
+Ş Ç"#set-field# Union:%
+#
+Ş Ç"#set-field# Tuple:)
+'
+Ş Ç"?python-partial-apply?:&
+$
+Ç °%closure"#new-object#$
+"
+Ç °"#set-field# List:%
+#
+Ç °"#set-field# Union:%
+#
+Ç °"#set-field# Tuple:)
+'
+Ç °"?python-partial-apply?:&
+$
+° ™%closure"#new-object#$
+"
+° ™"#set-field# List:%
+#
+° ™"#set-field# Union:%
+#
+° ™"#set-field# Tuple:)
+'
+° ™"?python-partial-apply?:&
+$
+™ ‚ %closure"#new-object#$
+"
+™ ‚!"#set-field# List: %
+#
+™ ‚""#set-field# Union: %
+#
+™ ‚#"#set-field# Tuple: )
+'
+™ ‚$"?python-partial-apply?: &
+$
+‚ ë%%closure"#new-object#$
+"
+‚ ë&"#set-field# List:%%
+#
+‚ ë'"#set-field# Union:%%
+#
+‚ ë("#set-field# Tuple:%)
+'
+‚ ë)"?python-partial-apply?:%&
+$
+ë Ô*%closure"#new-object#$
+"
+ë Ô+"#set-field# List:*%
+#
+ë Ô,"#set-field# Union:*%
+#
+ë Ô-"#set-field# Tuple:*)
+'
+ë Ô."?python-partial-apply?:*&
+$
+Ô ½/%closure"#new-object#$
+"
+Ô ½0"#set-field# List:/%
+#
+Ô ½1"#set-field# Union:/%
+#
+Ô ½2"#set-field# Tuple:/)
+'
+Ô ½3"?python-partial-apply?:/&
+$
+½ ¦4%closure"#new-object#$
+"
+½ ¦5"#set-field# List:4%
+#
+½ ¦6"#set-field# Union:4%
+#
+½ ¦7"#set-field# Tuple:4)
+'
+½ ¦8"?python-partial-apply?:4&
+$
+¦ 	9%closure"#new-object#$
+"
+¦ 	:"#set-field# List:9%
+#
+¦ 	;"#set-field# Union:9%
+#
+¦ 	<"#set-field# Tuple:9)
+'
+¦ 	="?python-partial-apply?:9&
+$
+	 ø	>%closure"#new-object#$
+"
+	 ø	?"#set-field# List:>%
+#
+	 ø	@"#set-field# Union:>%
+#
+	 ø	A"#set-field# Tuple:>)
+'
+	 ø	B"?python-partial-apply?:>&
+$
+ø	 á
+C%closure"#new-object#$
+"
+ø	 á
+D"#set-field# List:C%
+#
+ø	 á
+E"#set-field# Union:C%
+#
+ø	 á
+F"#set-field# Tuple:C)
+'
+ø	 á
+G"?python-partial-apply?:C&
+$
+á
+ ÊH%closure"#new-object#$
+"
+á
+ ÊI"#set-field# List:H%
+#
+á
+ ÊJ"#set-field# Union:H%
+#
+á
+ ÊK"#set-field# Tuple:H)
+'
+á
+ ÊL"?python-partial-apply?:H&
+$
+Ê ³M%closure"#new-object#$
+"
+Ê ³N"#set-field# List:M%
+#
+Ê ³O"#set-field# Union:M%
+#
+Ê ³P"#set-field# Tuple:M)
+'
+Ê ³Q"?python-partial-apply?:M&
+$
+³ œR%closure"#new-object#$
+"
+³ œS"#set-field# List:R%
+#
+³ œT"#set-field# Union:R%
+#
+³ œU"#set-field# Tuple:R)
+'
+³ œV"?python-partial-apply?:R&
+$
+œ …W%closure"#new-object#$
+"
+œ …X"#set-field# List:W%
+#
+œ …Y"#set-field# Union:W%
+#
+œ …Z"#set-field# Tuple:W)
+'
+œ …["?python-partial-apply?:W&
+$
+… î\%closure"#new-object#$
+"
+… î]"#set-field# List:\%
+#
+… î^"#set-field# Union:\%
+#
+… î_"#set-field# Tuple:\)
+'
+… î`"?python-partial-apply?:\&
+$
+î ×a%closure"#new-object#$
+"
+î ×b"#set-field# List:a%
+#
+î ×c"#set-field# Union:a%
+#
+î ×d"#set-field# Tuple:a)
+'
+î ×e"?python-partial-apply?:a&
+$
+× Àf%closure"#new-object#$
+"
+× Àg"#set-field# List:f%
+#
+× Àh"#set-field# Union:f%
+#
+× Ài"#set-field# Tuple:f)
+'
+× Àj"?python-partial-apply?:f&
+$
+À ©k%closure"#new-object#$
+"
+À ©l"#set-field# List:k%
+#
+À ©m"#set-field# Union:k%
+#
+À ©n"#set-field# Tuple:k)
+'
+À ©o"?python-partial-apply?:k&
+$
+© ’p%closure"#new-object#$
+"
+© ’q"#set-field# List:p%
+#
+© ’r"#set-field# Union:p%
+#
+© ’s"#set-field# Tuple:p)
+'
+© ’t"?python-partial-apply?:p&
+$
+’ ûu%closure"#new-object#$
+"
+’ ûv"#set-field# List:u%
+#
+’ ûw"#set-field# Union:u%
+#
+’ ûx"#set-field# Tuple:u)
+'
+’ ûy"?python-partial-apply?:u&
+$
+û äz%closure"#new-object#$
+"
+û ä{"#set-field# List:z%
+#
+û ä|"#set-field# Union:z%
+#
+û ä}"#set-field# Tuple:z)
+'
+û ä~"?python-partial-apply?:z&
+$
+ä Í%closure"#new-object#%
+#
+ä Í€"#set-field# List:&
+$
+ä Í"#set-field# Union:&
+$
+ä Í‚"#set-field# Tuple:*
+(
+ä Íƒ"?python-partial-apply?:'
+%
+Í ¶„%closure"#new-object#&
+$
+Í ¶…"#set-field# List:„'
+%
+Í ¶†"#set-field# Union:„'
+%
+Í ¶‡"#set-field# Tuple:„+
+)
+Í ¶ˆ"?python-partial-apply?:„'
+%
+¶ Ÿ‰%closure"#new-object#&
+$
+¶ ŸŠ"#set-field# List:‰'
+%
+¶ Ÿ‹"#set-field# Union:‰'
+%
+¶ ŸŒ"#set-field# Tuple:‰+
+)
+¶ Ÿ"?python-partial-apply?:‰'
+%
+Ÿ ˆ%closure"#new-object#&
+$
+Ÿ ˆ"#set-field# List:'
+%
+Ÿ ˆ"#set-field# Union:'
+%
+Ÿ ˆ‘"#set-field# Tuple:+
+)
+Ÿ ˆ’"?python-partial-apply?:'
+%
+ˆ ñ“%closure"#new-object#&
+$
+ˆ ñ”"#set-field# List:“'
+%
+ˆ ñ•"#set-field# Union:“'
+%
+ˆ ñ–"#set-field# Tuple:“+
+)
+ˆ ñ—"?python-partial-apply?:“'
+%
+ñ Ú˜%closure"#new-object#&
+$
+ñ Ú™"#set-field# List:˜'
+%
+ñ Úš"#set-field# Union:˜'
+%
+ñ Ú›"#set-field# Tuple:˜+
+)
+ñ Úœ"?python-partial-apply?:˜'
+%
+Ú Ã%closure"#new-object#&
+$
+Ú Ã"#set-field# List:'
+%
+Ú ÃŸ"#set-field# Union:'
+%
+Ú Ã "#set-field# Tuple:+
+)
+Ú Ã¡"?python-partial-apply?:'
+%
+Ã ¬¢%closure"#new-object#&
+$
+Ã ¬£"#set-field# List:¢'
+%
+Ã ¬¤"#set-field# Union:¢'
+%
+Ã ¬¥"#set-field# Tuple:¢+
+)
+Ã ¬¦"?python-partial-apply?:¢'
+%
+¬ •§%closure"#new-object#&
+$
+¬ •¨"#set-field# List:§'
+%
+¬ •©"#set-field# Union:§'
+%
+¬ •ª"#set-field# Tuple:§+
+)
+¬ •«"?python-partial-apply?:§'
+%
+• ş¬%closure"#new-object#&
+$
+• ş­"#set-field# List:¬'
+%
+• ş®"#set-field# Union:¬'
+%
+• ş¯"#set-field# Tuple:¬+
+)
+• ş°"?python-partial-apply?:¬'
+%
+ş ç±%closure"#new-object#&
+$
+ş ç²"#set-field# List:±'
+%
+ş ç³"#set-field# Union:±'
+%
+ş ç´"#set-field# Tuple:±+
+)
+ş çµ"?python-partial-apply?:±'
+%
+ç Ğ¶%closure"#new-object#&
+$
+ç Ğ·"#set-field# List:¶'
+%
+ç Ğ¸"#set-field# Union:¶'
+%
+ç Ğ¹"#set-field# Tuple:¶+
+)
+ç Ğº"?python-partial-apply?:¶'
+%
+Ğ ¹»%closure"#new-object#&
+$
+Ğ ¹¼"#set-field# List:»'
+%
+Ğ ¹½"#set-field# Union:»'
+%
+Ğ ¹¾"#set-field# Tuple:»+
+)
+Ğ ¹¿"?python-partial-apply?:»'
+%
+¹ ¢À%closure"#new-object#&
+$
+¹ ¢Á"#set-field# List:À'
+%
+¹ ¢Â"#set-field# Union:À'
+%
+¹ ¢Ã"#set-field# Tuple:À+
+)
+¹ ¢Ä"?python-partial-apply?:À'
+%
+¢ ‹ Å%closure"#new-object#&
+$
+¢ ‹ Æ"#set-field# List:Å'
+%
+¢ ‹ Ç"#set-field# Union:Å'
+%
+¢ ‹ È"#set-field# Tuple:Å+
+)
+¢ ‹ É"?python-partial-apply?:Å'
+%
+‹  ô Ê%closure"#new-object#&
+$
+‹  ô Ë"#set-field# List:Ê'
+%
+‹  ô Ì"#set-field# Union:Ê'
+%
+‹  ô Í"#set-field# Tuple:Ê+
+)
+‹  ô Î"?python-partial-apply?:Ê'
+%
+ô  İ!Ï%closure"#new-object#&
+$
+ô  İ!Ğ"#set-field# List:Ï'
+%
+ô  İ!Ñ"#set-field# Union:Ï'
+%
+ô  İ!Ò"#set-field# Tuple:Ï+
+)
+ô  İ!Ó"?python-partial-apply?:Ï'
+%
+İ! Æ"Ô%closure"#new-object#&
+$
+İ! Æ"Õ"#set-field# List:Ô'
+%
+İ! Æ"Ö"#set-field# Union:Ô'
+%
+İ! Æ"×"#set-field# Tuple:Ô+
+)
+İ! Æ"Ø"?python-partial-apply?:Ô'
+%
+Æ" ¯#Ù%closure"#new-object#&
+$
+Æ" ¯#Ú"#set-field# List:Ù'
+%
+Æ" ¯#Û"#set-field# Union:Ù'
+%
+Æ" ¯#Ü"#set-field# Tuple:Ù+
+)
+Æ" ¯#İ"?python-partial-apply?:Ù'
+%
+¯# ˜$Ş%closure"#new-object#&
+$
+¯# ˜$ß"#set-field# List:Ş'
+%
+¯# ˜$à"#set-field# Union:Ş'
+%
+¯# ˜$á"#set-field# Tuple:Ş+
+)
+¯# ˜$â"?python-partial-apply?:Ş'
+%
+˜$ %ã%closure"#new-object#&
+$
+˜$ %ä"#set-field# List:ã'
+%
+˜$ %å"#set-field# Union:ã'
+%
+˜$ %æ"#set-field# Tuple:ã+
+)
+˜$ %ç"?python-partial-apply?:ã'
+%
+% ê%è%closure"#new-object#&
+$
+% ê%é"#set-field# List:è'
+%
+% ê%ê"#set-field# Union:è'
+%
+% ê%ë"#set-field# Tuple:è+
+)
+% ê%ì"?python-partial-apply?:è'
+%
+ê% Ó&í%closure"#new-object#&
+$
+ê% Ó&î"#set-field# List:í'
+%
+ê% Ó&ï"#set-field# Union:í'
+%
+ê% Ó&ğ"#set-field# Tuple:í+
+)
+ê% Ó&ñ"?python-partial-apply?:í'
+%
+Ó& ¼'ò%closure"#new-object#&
+$
+Ó& ¼'ó"#set-field# List:ò'
+%
+Ó& ¼'ô"#set-field# Union:ò'
+%
+Ó& ¼'õ"#set-field# Tuple:ò+
+)
+Ó& ¼'ö"?python-partial-apply?:ò'
+%
+¼' ¥(÷%closure"#new-object#&
+$
+¼' ¥(ø"#set-field# List:÷'
+%
+¼' ¥(ù"#set-field# Union:÷'
+%
+¼' ¥(ú"#set-field# Tuple:÷+
+)
+¼' ¥(û"?python-partial-apply?:÷'
+%
+¥( )ü%closure"#new-object#&
+$
+¥( )ı"#set-field# List:ü'
+%
+¥( )ş"#set-field# Union:ü'
+%
+¥( )ÿ"#set-field# Tuple:ü+
+)
+¥( )€"?python-partial-apply?:ü'
+%
+) ÷)%closure"#new-object#&
+$
+) ÷)‚"#set-field# List:'
+%
+) ÷)ƒ"#set-field# Union:'
+%
+) ÷)„"#set-field# Tuple:+
+)
+) ÷)…"?python-partial-apply?:'
+%
+÷) à*†%closure"#new-object#&
+$
+÷) à*‡"#set-field# List:†'
+%
+÷) à*ˆ"#set-field# Union:†'
+%
+÷) à*‰"#set-field# Tuple:†+
+)
+÷) à*Š"?python-partial-apply?:†'
+%
+à* É+‹%closure"#new-object#&
+$
+à* É+Œ"#set-field# List:‹'
+%
+à* É+"#set-field# Union:‹'
+%
+à* É+"#set-field# Tuple:‹+
+)
+à* É+"?python-partial-apply?:‹'
+%
+É+ ²,%closure"#new-object#&
+$
+É+ ²,‘"#set-field# List:'
+%
+É+ ²,’"#set-field# Union:'
+%
+É+ ²,“"#set-field# Tuple:+
+)
+É+ ²,”"?python-partial-apply?:'
+%
+², ›-•%closure"#new-object#&
+$
+², ›-–"#set-field# List:•'
+%
+², ›-—"#set-field# Union:•'
+%
+², ›-˜"#set-field# Tuple:•+
+)
+², ›-™"?python-partial-apply?:•'
+%
+›- „.š%closure"#new-object#&
+$
+›- „.›"#set-field# List:š'
+%
+›- „.œ"#set-field# Union:š'
+%
+›- „."#set-field# Tuple:š+
+)
+›- „."?python-partial-apply?:š'
+%
+„. í.Ÿ%closure"#new-object#&
+$
+„. í. "#set-field# List:Ÿ'
+%
+„. í.¡"#set-field# Union:Ÿ'
+%
+„. í.¢"#set-field# Tuple:Ÿ+
+)
+„. í.£"?python-partial-apply?:Ÿ'
+%
+í. Ö/¤%closure"#new-object#&
+$
+í. Ö/¥"#set-field# List:¤'
+%
+í. Ö/¦"#set-field# Union:¤'
+%
+í. Ö/§"#set-field# Tuple:¤+
+)
+í. Ö/¨"?python-partial-apply?:¤'
+%
+Ö/ ¿0©%closure"#new-object#&
+$
+Ö/ ¿0ª"#set-field# List:©'
+%
+Ö/ ¿0«"#set-field# Union:©'
+%
+Ö/ ¿0¬"#set-field# Tuple:©+
+)
+Ö/ ¿0­"?python-partial-apply?:©'
+%
+¿0 ¨1®%closure"#new-object#&
+$
+¿0 ¨1¯"#set-field# List:®'
+%
+¿0 ¨1°"#set-field# Union:®'
+%
+¿0 ¨1±"#set-field# Tuple:®+
+)
+¿0 ¨1²"?python-partial-apply?:®'
+%
+¨1 ‘2³%closure"#new-object#&
+$
+¨1 ‘2´"#set-field# List:³'
+%
+¨1 ‘2µ"#set-field# Union:³'
+%
+¨1 ‘2¶"#set-field# Tuple:³+
+)
+¨1 ‘2·"?python-partial-apply?:³'
+%
+‘2 ú2¸%closure"#new-object#&
+$
+‘2 ú2¹"#set-field# List:¸'
+%
+‘2 ú2º"#set-field# Union:¸'
+%
+‘2 ú2»"#set-field# Tuple:¸+
+)
+‘2 ú2¼"?python-partial-apply?:¸'
+%
+ú2 ã3½%closure"#new-object#&
+$
+ú2 ã3¾"#set-field# List:½'
+%
+ú2 ã3¿"#set-field# Union:½'
+%
+ú2 ã3À"#set-field# Tuple:½+
+)
+ú2 ã3Á"?python-partial-apply?:½'
+%
+ã3 Ì4Â%closure"#new-object#&
+$
+ã3 Ì4Ã"#set-field# List:Â'
+%
+ã3 Ì4Ä"#set-field# Union:Â'
+%
+ã3 Ì4Å"#set-field# Tuple:Â+
+)
+ã3 Ì4Æ"?python-partial-apply?:Â'
+%
+Ì4 µ5Ç%closure"#new-object#&
+$
+Ì4 µ5È"#set-field# List:Ç'
+%
+Ì4 µ5É"#set-field# Union:Ç'
+%
+Ì4 µ5Ê"#set-field# Tuple:Ç+
+)
+Ì4 µ5Ë"?python-partial-apply?:Ç'
+%
+µ5 6Ì%closure"#new-object#&
+$
+µ5 6Í"#set-field# List:Ì'
+%
+µ5 6Î"#set-field# Union:Ì'
+%
+µ5 6Ï"#set-field# Tuple:Ì+
+)
+µ5 6Ğ"?python-partial-apply?:Ì'
+%
+6 ‡7Ñ%closure"#new-object#&
+$
+6 ‡7Ò"#set-field# List:Ñ'
+%
+6 ‡7Ó"#set-field# Union:Ñ'
+%
+6 ‡7Ô"#set-field# Tuple:Ñ+
+)
+6 ‡7Õ"?python-partial-apply?:Ñ'
+%
+‡7 ğ7Ö%closure"#new-object#&
+$
+‡7 ğ7×"#set-field# List:Ö'
+%
+‡7 ğ7Ø"#set-field# Union:Ö'
+%
+‡7 ğ7Ù"#set-field# Tuple:Ö+
+)
+‡7 ğ7Ú"?python-partial-apply?:Ö'
+%
+ğ7 Ù8Û%closure"#new-object#&
+$
+ğ7 Ù8Ü"#set-field# List:Û'
+%
+ğ7 Ù8İ"#set-field# Union:Û'
+%
+ğ7 Ù8Ş"#set-field# Tuple:Û+
+)
+ğ7 Ù8ß"?python-partial-apply?:Û'
+%
+Ù8 Â9à%closure"#new-object#&
+$
+Ù8 Â9á"#set-field# List:à'
+%
+Ù8 Â9â"#set-field# Union:à'
+%
+Ù8 Â9ã"#set-field# Tuple:à+
+)
+Ù8 Â9ä"?python-partial-apply?:à'
+%
+Â9 «:å%closure"#new-object#&
+$
+Â9 «:æ"#set-field# List:å'
+%
+Â9 «:ç"#set-field# Union:å'
+%
+Â9 «:è"#set-field# Tuple:å+
+)
+Â9 «:é"?python-partial-apply?:å'
+%
+«: ”;ê%closure"#new-object#&
+$
+«: ”;ë"#set-field# List:ê'
+%
+«: ”;ì"#set-field# Union:ê'
+%
+«: ”;í"#set-field# Tuple:ê+
+)
+«: ”;î"?python-partial-apply?:ê'
+%
+”; ı;ï%closure"#new-object#&
+$
+”; ı;ğ"#set-field# List:ï'
+%
+”; ı;ñ"#set-field# Union:ï'
+%
+”; ı;ò"#set-field# Tuple:ï+
+)
+”; ı;ó"?python-partial-apply?:ï'
+%
+ı; æ<ô%closure"#new-object#&
+$
+ı; æ<õ"#set-field# List:ô'
+%
+ı; æ<ö"#set-field# Union:ô'
+%
+ı; æ<÷"#set-field# Tuple:ô+
+)
+ı; æ<ø"?python-partial-apply?:ô'
+%
+æ< Ï=ù%closure"#new-object#&
+$
+æ< Ï=ú"#set-field# List:ù'
+%
+æ< Ï=û"#set-field# Union:ù'
+%
+æ< Ï=ü"#set-field# Tuple:ù+
+)
+æ< Ï=ı"?python-partial-apply?:ù'
+%
+Ï= ¸>ş%closure"#new-object#&
+$
+Ï= ¸>ÿ"#set-field# List:ş'
+%
+Ï= ¸>€"#set-field# Union:ş'
+%
+Ï= ¸>"#set-field# Tuple:ş+
+)
+Ï= ¸>‚"?python-partial-apply?:ş'
+%
+¸> ¡?ƒ%closure"#new-object#&
+$
+¸> ¡?„"#set-field# List:ƒ'
+%
+¸> ¡?…"#set-field# Union:ƒ'
+%
+¸> ¡?†"#set-field# Tuple:ƒ+
+)
+¸> ¡?‡"?python-partial-apply?:ƒ'
+%
+¡? Š@ˆ%closure"#new-object#&
+$
+¡? Š@‰"#set-field# List:ˆ'
+%
+¡? Š@Š"#set-field# Union:ˆ'
+%
+¡? Š@‹"#set-field# Tuple:ˆ+
+)
+¡? Š@Œ"?python-partial-apply?:ˆ'
+%
+Š@ ó@%closure"#new-object#&
+$
+Š@ ó@"#set-field# List:'
+%
+Š@ ó@"#set-field# Union:'
+%
+Š@ ó@"#set-field# Tuple:+
+)
+Š@ ó@‘"?python-partial-apply?:'
+%
+ó@ ÜA’%closure"#new-object#&
+$
+ó@ ÜA“"#set-field# List:’'
+%
+ó@ ÜA”"#set-field# Union:’'
+%
+ó@ ÜA•"#set-field# Tuple:’+
+)
+ó@ ÜA–"?python-partial-apply?:’'
+%
+ÜA ÅB—%closure"#new-object#&
+$
+ÜA ÅB˜"#set-field# List:—'
+%
+ÜA ÅB™"#set-field# Union:—'
+%
+ÜA ÅBš"#set-field# Tuple:—+
+)
+ÜA ÅB›"?python-partial-apply?:—'
+%
+ÅB –Cœ%closure"#new-object#&
+$
+ÅB –C"#set-field# List:œ'
+%
+ÅB –C"#set-field# Union:œ'
+%
+ÅB –CŸ"#set-field# Tuple:œ+
+)
+ÅB –C "?python-partial-apply?:œ7
+5
+
+—C —C(¡"$
+pip._vendor.idna.uts46data_seg_07
+5
+
+˜C ˜C(¢"$
+pip._vendor.idna.uts46data_seg_17
+5
+
+™C ™C(£"$
+pip._vendor.idna.uts46data_seg_27
+5
+
+šC šC(¤"$
+pip._vendor.idna.uts46data_seg_37
+5
+
+›C ›C(¥"$
+pip._vendor.idna.uts46data_seg_47
+5
+
+œC œC(¦"$
+pip._vendor.idna.uts46data_seg_57
+5
+
+C C(§"$
+pip._vendor.idna.uts46data_seg_67
+5
+
+C C(¨"$
+pip._vendor.idna.uts46data_seg_77
+5
+
+ŸC ŸC(©"$
+pip._vendor.idna.uts46data_seg_87
+5
+
+ C  C(ª"$
+pip._vendor.idna.uts46data_seg_98
+6
+
+¡C ¡C(«"%
+pip._vendor.idna.uts46data_seg_108
+6
+
+¢C ¢C(¬"%
+pip._vendor.idna.uts46data_seg_118
+6
+
+£C £C(­"%
+pip._vendor.idna.uts46data_seg_128
+6
+
+¤C ¤C(®"%
+pip._vendor.idna.uts46data_seg_138
+6
+
+¥C ¥C(¯"%
+pip._vendor.idna.uts46data_seg_148
+6
+
+¦C ¦C(°"%
+pip._vendor.idna.uts46data_seg_158
+6
+
+§C §C(±"%
+pip._vendor.idna.uts46data_seg_168
+6
+
+¨C ¨C(²"%
+pip._vendor.idna.uts46data_seg_178
+6
+
+©C ©C(³"%
+pip._vendor.idna.uts46data_seg_188
+6
+
+ªC ªC(´"%
+pip._vendor.idna.uts46data_seg_198
+6
+
+«C «C(µ"%
+pip._vendor.idna.uts46data_seg_208
+6
+
+¬C ¬C(¶"%
+pip._vendor.idna.uts46data_seg_218
+6
+
+­C ­C(·"%
+pip._vendor.idna.uts46data_seg_228
+6
+
+®C ®C(¸"%
+pip._vendor.idna.uts46data_seg_238
+6
+
+¯C ¯C(¹"%
+pip._vendor.idna.uts46data_seg_248
+6
+
+°C °C(º"%
+pip._vendor.idna.uts46data_seg_258
+6
+
+±C ±C(»"%
+pip._vendor.idna.uts46data_seg_268
+6
+
+²C ²C(¼"%
+pip._vendor.idna.uts46data_seg_278
+6
+
+³C ³C(½"%
+pip._vendor.idna.uts46data_seg_288
+6
+
+´C ´C(¾"%
+pip._vendor.idna.uts46data_seg_298
+6
+
+µC µC(¿"%
+pip._vendor.idna.uts46data_seg_308
+6
+
+¶C ¶C(À"%
+pip._vendor.idna.uts46data_seg_318
+6
+
+·C ·C(Á"%
+pip._vendor.idna.uts46data_seg_328
+6
+
+¸C ¸C(Â"%
+pip._vendor.idna.uts46data_seg_338
+6
+
+¹C ¹C(Ã"%
+pip._vendor.idna.uts46data_seg_348
+6
+
+ºC ºC(Ä"%
+pip._vendor.idna.uts46data_seg_358
+6
+
+»C »C(Å"%
+pip._vendor.idna.uts46data_seg_368
+6
+
+¼C ¼C(Æ"%
+pip._vendor.idna.uts46data_seg_378
+6
+
+½C ½C(Ç"%
+pip._vendor.idna.uts46data_seg_388
+6
+
+¾C ¾C(È"%
+pip._vendor.idna.uts46data_seg_398
+6
+
+¿C ¿C(É"%
+pip._vendor.idna.uts46data_seg_408
+6
+
+ÀC ÀC(Ê"%
+pip._vendor.idna.uts46data_seg_418
+6
+
+ÁC ÁC(Ë"%
+pip._vendor.idna.uts46data_seg_428
+6
+
+ÂC ÂC(Ì"%
+pip._vendor.idna.uts46data_seg_438
+6
+
+ÃC ÃC(Í"%
+pip._vendor.idna.uts46data_seg_448
+6
+
+ÄC ÄC(Î"%
+pip._vendor.idna.uts46data_seg_458
+6
+
+ÅC ÅC(Ï"%
+pip._vendor.idna.uts46data_seg_468
+6
+
+ÆC ÆC(Ğ"%
+pip._vendor.idna.uts46data_seg_478
+6
+
+ÇC ÇC(Ñ"%
+pip._vendor.idna.uts46data_seg_488
+6
+
+ÈC ÈC(Ò"%
+pip._vendor.idna.uts46data_seg_498
+6
+
+ÉC ÉC(Ó"%
+pip._vendor.idna.uts46data_seg_508
+6
+
+ÊC ÊC(Ô"%
+pip._vendor.idna.uts46data_seg_518
+6
+
+ËC ËC(Õ"%
+pip._vendor.idna.uts46data_seg_528
+6
+
+ÌC ÌC(Ö"%
+pip._vendor.idna.uts46data_seg_538
+6
+
+ÍC ÍC(×"%
+pip._vendor.idna.uts46data_seg_548
+6
+
+ÎC ÎC(Ø"%
+pip._vendor.idna.uts46data_seg_558
+6
+
+ÏC ÏC(Ù"%
+pip._vendor.idna.uts46data_seg_568
+6
+
+ĞC ĞC(Ú"%
+pip._vendor.idna.uts46data_seg_578
+6
+
+ÑC ÑC(Û"%
+pip._vendor.idna.uts46data_seg_588
+6
+
+ÒC ÒC(Ü"%
+pip._vendor.idna.uts46data_seg_598
+6
+
+ÓC ÓC(İ"%
+pip._vendor.idna.uts46data_seg_608
+6
+
+ÔC ÔC(Ş"%
+pip._vendor.idna.uts46data_seg_618
+6
+
+ÕC ÕC(ß"%
+pip._vendor.idna.uts46data_seg_628
+6
+
+ÖC ÖC(à"%
+pip._vendor.idna.uts46data_seg_638
+6
+
+×C ×C(á"%
+pip._vendor.idna.uts46data_seg_648
+6
+
+ØC ØC(â"%
+pip._vendor.idna.uts46data_seg_658
+6
+
+ÙC ÙC(ã"%
+pip._vendor.idna.uts46data_seg_668
+6
+
+ÚC ÚC(ä"%
+pip._vendor.idna.uts46data_seg_678
+6
+
+ÛC ÛC(å"%
+pip._vendor.idna.uts46data_seg_688
+6
+
+ÜC ÜC(æ"%
+pip._vendor.idna.uts46data_seg_698
+6
+
+İC İC(ç"%
+pip._vendor.idna.uts46data_seg_708
+6
+
+ŞC ŞC(è"%
+pip._vendor.idna.uts46data_seg_718
+6
+
+ßC ßC(é"%
+pip._vendor.idna.uts46data_seg_728
+6
+
+àC àC(ê"%
+pip._vendor.idna.uts46data_seg_738
+6
+
+áC áC(ë"%
+pip._vendor.idna.uts46data_seg_748
+6
+
+âC âC(ì"%
+pip._vendor.idna.uts46data_seg_758
+6
+
+ãC ãC(í"%
+pip._vendor.idna.uts46data_seg_768
+6
+
+äC äC(î"%
+pip._vendor.idna.uts46data_seg_778
+6
+
+åC åC(ï"%
+pip._vendor.idna.uts46data_seg_788
+6
+
+æC æC(ğ"%
+pip._vendor.idna.uts46data_seg_798
+6
+
+çC çC(ñ"%
+pip._vendor.idna.uts46data_seg_808
+6
+
+èC èC(ò"%
+pip._vendor.idna.uts46data_seg_81É
+Æ
+
+—C èC(ó"	#binop +#2+:¤¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñò=
+;
+
+–C éC(ô	uts46data"
+builtinstuple*:óBtuple */Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/idna/uts46data.py

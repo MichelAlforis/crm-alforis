@@ -1,0 +1,63 @@
+
+*models.organisation.MandatProduit.__repr___
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py‘ ‘("2*Ê
+2
+’ ’(ie
+c
+
+’$ ’(+
+%1"__id*I
+
+__unknown_file (-*+#
+!models.organisation.MandatProduit"
+idl
+j
+
+’9 ’(G
+%2"__id*P
+
+__unknown_file (4*2#
+!models.organisation.MandatProduit"
+	mandat_idm
+k
+
+’V ’(e
+%3"__id*Q
+
+__unknown_file (5*3#
+!models.organisation.MandatProduit"
+
+produit_idÞ
+Û
+
+’ ’(i
+%4"__concat*$
+
+’ ’(#
+<MandatProduit(id=*
+
+’$ ’(+
+
+%1*
+
+’, ’(8
+, mandat_id=*
+
+’9 ’(G
+
+%2*
+
+’H ’(U
+, produit_id=*
+
+’V ’(e
+
+%3*
+
+’f ’(h
+)>"
+
+’ ’(i
+
+%4B%#
+!models.organisation.MandatProduitH

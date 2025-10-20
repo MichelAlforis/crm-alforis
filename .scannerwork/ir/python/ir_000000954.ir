@@ -1,0 +1,12 @@
+
+á×"Find distutils 'scripts' entries metadata.
+
+        If 'scripts' is supplied in ``setup.py``, distutils records those in the
+        installed distribution's ``scripts`` directory, a file for each script.
+        "strself
+ç$ ç(("S?
+=
+
+í í(#"NotImplementedError*BNotImplementedError2
+
+í í(#*‚/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/metadata/base.py

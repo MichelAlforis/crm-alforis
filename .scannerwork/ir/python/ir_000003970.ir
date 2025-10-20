@@ -1,0 +1,14 @@
+
+0'":return: config path tied to the user"strself
+À À("¡2
+0
+
+Â Â(("#get-field# user_config_dir:.
+,
+
+Â Â(("?python-partial-apply?:)
+'
+
+Â Â()"Path:Bpathlib.Path
+
+Â Â()*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/api.py

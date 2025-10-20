@@ -1,0 +1,66 @@
+
+
+0int
+falsebool
+H?"Determine if `int_` falls into one of the ranges in `ranges`."str
+
+1int
+
+2int
+trueboolint_* *(ranges*! *(8"ÆG
+E
+, ,(#tuple_"+
+pip._vendor.idna.intranges_encode_range:3
+1
+-
+ -(,pos"
+bisectbisect_left:Bint(
+&
+0 0("	#binop >#2>:Bbool"
+0 0( *0 0("°%
+#
+1+ 1(2	"	#binop -#*2-:"
+ 
+1$ 1(3
+"#array-read#:	D
+B
+1 1(4left"+
+pip._vendor.idna.intranges_decode_range:
+,
+*
+1 1(4left"#python-unpack#:-
++
+1 1(4right"#python-unpack#:*
+(
+2 2("
+#binop <=#2<=:Bbool"
+2 2( "v*
+(
+5 5("
+builtinslen*:Bint(
+&
+5 5("	#binop <#2<:Bbool"
+5 5( *5 5("2(
+&
+2 2("	#binop <#2<:Bbool"2*"
+2 2( *2 2(
+"
+3 3("""
+ 
+6  6(+"#array-read#:D
+B
+6 6(,left"+
+pip._vendor.idna.intranges_decode_range:,
+*
+6 6(,left"#python-unpack#:)
+'
+6 6(,_"#python-unpack#:*
+(
+7 7("
+#binop ==#2==:Bbool"
+7 7(	 
+*7 7(
+"
+9 9("	
+8 8("
+*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/idna/intranges.py

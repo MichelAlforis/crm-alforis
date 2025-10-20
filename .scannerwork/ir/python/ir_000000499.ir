@@ -1,0 +1,48 @@
+
+ßù"
+            This is called to create a connection instance. Normally you'd
+            pass a connection class to do_open, but it doesn't actually check for
+            a class, and just expects a callable. As long as we behave just as a
+            constructor would have, we should be OK. If it ever changes so that
+            we *must* pass a class, we'll create an UnsafeHTTPSConnection class
+            which just sets check_domain to False in the class definition, and
+            choose which one to pass to do_open.
+            "strself
+⁄ ⁄(args
+⁄ ⁄(#kwargs
+⁄% ⁄(-"dict"ß%
+#
+
+‰% ‰(*"#unaryop *#2*:'
+%
+
+‰, ‰(4"#unaryop **#2**:Y
+W
+
+‰ ‰(5result"HTTPSConnection:B(pip._vendor.distlib.util.HTTPSConnection+
+)
+
+Â Â("#get-field# ca_certs:+
+)
+
+Â Â(	"
+__bool__*:BboolH "
+
+Â Â(	 *
+Â Â("∆+
+)
+
+Ê" Ê(/
+"#get-field# ca_certs:,
+*
+
+Ê Ê("#set-field# ca_certs:
+/
+-
+
+Á& Á(7"#get-field# check_domain:0
+.
+
+Á Á(#"#set-field# check_domain:"
+
+Ë Ë(*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/distlib/util.py

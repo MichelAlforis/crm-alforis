@@ -1,0 +1,25 @@
+selfL L(pathL L($"….
+,
+N! N(*"#dependent-value#*:Bstr!
+
+N N("#unknown-value#=
+;
+N N(+"?python-unknown?:Bpathlib.PurePosixPath'
+%
+N/ N(:"#get-field# _files:*
+(
+N N(:"
+#binop in#2in:Bbool"
+N N(: *N N(
+"c'
+%
+O O(#"#get-field# _files:&
+$
+O O($	"
+builtinsiter*:
+O O($	"P<
+:
+P P(%
+"FileNotFoundError*:BFileNotFoundError2
+P P(%
+*Ž/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/metadata/importlib/_dists.py

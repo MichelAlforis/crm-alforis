@@ -1,0 +1,14 @@
+
+5,":return: documents a path tied to the user"strself
+Þ Þ( "¤5
+3
+
+à à(+" #get-field# user_documents_dir:.
+,
+
+à à(+"?python-partial-apply?:)
+'
+
+à à(,"Path:Bpathlib.Path
+
+à à(,*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/api.py

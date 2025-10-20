@@ -1,0 +1,11 @@
+
+{r"
+    This is the most high-level highlighting function. It combines `lex` and
+    `format` in one function.
+    "strcodeM M(lexerM M(	formatterM M($outfileM& M(2"i/
+-
+R R(""
+pip._vendor.pygmentslex:&
+$
+R R(7"#unknown-value#:
+R R(7*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pygments/__init__.py

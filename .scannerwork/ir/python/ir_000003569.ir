@@ -1,0 +1,29 @@
+
+ƒ∫"Return a list of formatted rows and a list of column sizes.
+
+    For example::
+
+    >>> tabulate([['foobar', 2000], [0xdeadbeef]])
+    (['foobar     2000', '3735928559'], [10, 4])
+    "strrows
+è è(*"¥3
+1
+
+ó ó(1rows"?python-unknown?:Blist4
+2
+
+ò ò(Lsizes"?python-unknown?:Blist5
+3
+
+ô ô(Ktable"?python-unknown?:Blist*
+(
+
+ö ö("#unknown-value#Btuple(
+&
+
+ö ö("#array-add-last#:(
+&
+
+ö ö("#array-add-last#:
+
+ö ö(*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/misc.py

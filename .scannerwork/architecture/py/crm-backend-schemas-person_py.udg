@@ -1,0 +1,153 @@
+
+1.0PythonFrontend"1760943919429*py2.B«
+
+imports1
+
+extends2
+
+returns3
+
+	has param4
+
+module5
+
+
+class6
+
+function7
+"
+crm-backend/schemas/person.py9
+
+schemas.person11
+
+typing12
+
+pydantic14
+
+models.person16
+
+schemas.base18
+/
+)schemas.person.PersonOrganizationLinkBase20
+
+schemas.base.BaseSchema22
+3
+-schemas.person.PersonOrganizationLinkResponse24
+$
+schemas.base.TimestampedSchema26
+)
+#schemas.person.PersonDetailResponse28
+#
+schemas.person.PersonResponse30
+1
++schemas.person.PersonOrganizationLinkUpdate32
+!
+schemas.person.PersonUpdate34
+
+schemas.person.PersonBase36
+!
+schemas.person.PersonCreate38
+1
++schemas.person.PersonOrganizationLinkCreate40J
+
+8
+89jõ
+ 
+10
+10115 *
+8 (
+
+13
+13125
+
+15
+15145
+
+17
+17165
+
+19
+19185
+
+21
+21206 210
+
+23
+23226
+
+25
+25246 210
+
+27
+27266
+
+29
+29286 210
+
+31
+31306 210
+
+33
+33326 210
+
+35
+35346 210
+
+37
+37366 210
+
+39
+39386 210
+
+41
+41406 210r 
+
+10131*
+8 ("
+
+10151*
+8 (3
+
+10151*
+8 ( 
+
+10171*
+8 (7
+
+10191*
+8 (7
+
+21232*
+8= =(!
+
+25272*
+8` `(%
+
+25212*
+8` `(%
+
+29312*
+8l l(
+
+33232*
+8R R(#
+
+35232*
+8$ $(
+
+37232*
+8
+ 
+(
+
+39372*
+8 (
+
+41212*
+8L L(#
+
+31372*
+84 4(
+
+31272*
+84 4(

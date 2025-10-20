@@ -1,0 +1,54 @@
+
+"Proxy-Authorization"str
+
+2int
+
+0int
+
+	1int
+”Š"Returns a dictionary of the headers to add to any request sent
+        through a proxy. This works with urllib3 magic to ensure that they are
+        correctly sent to the proxy, rather than in a tunnelled request if
+        CONNECT is being used.
+
+        This should not be called from user code, and is only exposed for use
+        when subclassing the
+        :class:`HTTPAdapter <requests.adapters.HTTPAdapter>`.
+
+        :param proxy: The url of the proxy being used for this request.
+        :rtype: dict
+        "strself
+Ð Ð(proxy
+Ð Ð(!"¸/
+-
+
+Ý Ý(headers"#new-object#BdictN
+L
+
+Þ Þ(5username"/
+pip._vendor.requests.utilsget_auth_from_url:2
+0
+
+Þ Þ(5username"#python-unpack#:2
+0
+
+Þ Þ(5
+password"#python-unpack#:	+
+)
+
+à à("
+__bool__*:BboolH "
+
+à à( *
+à à(
+"tB
+@
+
+á- á(P",
+pip._vendor.requests.auth_basic_auth_str:
+&
+$
+
+á á(P"#array-write#:"
+
+ã ã(*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/requests/adapters.py

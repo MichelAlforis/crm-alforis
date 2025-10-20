@@ -1,0 +1,117 @@
+
+5pip._internal.commands.cache.CacheCommand.handler_mapŽ
+ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/commands/cache.py4 4("2*å
+
+25 ;(	
+5 ;(	
+%1"dictv
+t
+6 6(%
+%2"__id*\
+
+__unknown_file (@*>+
+)pip._internal.commands.cache.CacheCommand"
+get_cache_dirŠ
+‡
+6 6(%
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*#
+
+__unknown_file (
+dir*"
+
+__unknown_file (
+
+%2w
+u
+7 7('
+%4"__id*]
+
+__unknown_file (A*?+
+)pip._internal.commands.cache.CacheCommand"
+get_cache_info‹
+ˆ
+7 7('
+%5"__mapSet*"
+
+__unknown_file (
+
+%1*$
+
+__unknown_file (
+info*"
+
+__unknown_file (
+
+%4y
+w
+8 8()
+%6"__id*_
+
+__unknown_file (C*A+
+)pip._internal.commands.cache.CacheCommand"
+list_cache_items‹
+ˆ
+8 8()
+%7"__mapSet*"
+
+__unknown_file (
+
+%1*$
+
+__unknown_file (
+list*"
+
+__unknown_file (
+
+%6{
+y
+9 9(-
+%8"__id*a
+
+__unknown_file (E*C+
+)pip._internal.commands.cache.CacheCommand"
+remove_cache_items
+Š
+9 9(-
+%9"__mapSet*"
+
+__unknown_file (
+
+%1*&
+
+__unknown_file (
+
+remove*"
+
+__unknown_file (
+
+%8u
+s
+: :(%
+%10"__id*Z
+
+__unknown_file (>*<+
+)pip._internal.commands.cache.CacheCommand"
+purge_cacheŽ
+‹
+: :(%
+%11"__mapSet*"
+
+__unknown_file (
+
+%1*%
+
+__unknown_file (	
+purge*#
+
+__unknown_file (
+
+%10"
+5 ;(	
+
+%1B-+
+)pip._internal.commands.cache.CacheCommandH

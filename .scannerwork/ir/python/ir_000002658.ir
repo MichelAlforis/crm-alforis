@@ -1,0 +1,4 @@
+
+.%"String representation of Timestamp."str
+LC"Timestamp(seconds={self.seconds}, nanoseconds={self.nanoseconds})"strself5 5("
+7 7(S*~/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/msgpack/ext.py

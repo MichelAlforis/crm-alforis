@@ -1,0 +1,14 @@
+
+Ypip._internal.distributions.installed.InstalledDistribution.prepare_distribution_metadata—
+Œ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/distributions/installed.py (%"3*0
+3
+installed.py"
+" "
+implicit return:!
+ (6
+build_env_installer:
+ (
+build_isolation:
+ (
+check_build_depsB?=
+;pip._internal.distributions.installed.InstalledDistributionH

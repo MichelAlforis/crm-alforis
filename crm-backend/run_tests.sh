@@ -52,19 +52,19 @@ done
 # Construire la commande pytest
 CMD="pytest"
 
-if [ "$VERBOSE" = true ]; then
+if [[ "$VERBOSE" = true ]]; then
     CMD="$CMD -v"
 fi
 
-if [ "$COVERAGE" = true ]; then
+if [[ "$COVERAGE" = true ]]; then
     CMD="$CMD --cov=. --cov-report=html --cov-report=term-missing"
 fi
 
-if [ "$PARALLEL" = true ]; then
+if [[ "$PARALLEL" = true ]]; then
     CMD="$CMD -n auto"
 fi
 
-if [ -n "$TEST_PATH" ]; then
+if [[ -n "$TEST_PATH" ]]; then
     CMD="$CMD $TEST_PATH"
 fi
 
@@ -81,7 +81,7 @@ echo -e "${GREEN}================================${NC}"
 echo -e "${GREEN}✅ Tests terminés!${NC}"
 echo -e "${GREEN}================================${NC}"
 
-if [ "$COVERAGE" = true ]; then
+if [[ "$COVERAGE" = true ]]; then
     echo ""
     echo -e "${BLUE}📊 Rapport coverage:${NC} htmlcov/index.html"
     echo -e "${YELLOW}Ouvrir: open htmlcov/index.html${NC}"

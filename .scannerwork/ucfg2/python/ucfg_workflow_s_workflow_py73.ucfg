@@ -1,0 +1,1489 @@
+
+\file:///Users/test/Documents/ALFORIS%20FINANCE/06.%20CRM/V1/crm-backend/models/workflow.py73
+__unknown_file ("1*Ñ
+2
+workflow.py"p
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyü ü(
+implicit return*ˇ‚
+1W
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py (_ä
+á
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py ((
+%1"__id*
+ (*
+
+enum"
+Enum¢
+ü
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py (1
+ORGANISATION_CREATED"__id*$
+ (
+organisation_created¢
+ü
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py (1
+ORGANISATION_UPDATED"__id*$
+ (
+organisation_updatedí
+è
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py (!
+DEAL_CREATED"__id*
+ (
+deal_createdí
+è
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py (!
+DEAL_UPDATED"__id*
+ (
+deal_updatedû
+õ
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py (-
+DEAL_STAGE_CHANGED"__id*"
+ (
+deal_stage_changedå
+â
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py (
+	SCHEDULED"__id*
+ (
+	scheduledö
+ó
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py ()
+INACTIVITY_DELAY"__id* 
+ (
+inactivity_delayö
+ó
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py ()
+WEBHOOK_RECEIVED"__id* 
+ (
+webhook_received¢
+ü
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py (1
+ORGANISATION_CREATED"__id*$
+ (
+organisation_created¢
+ü
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py (1
+ORGANISATION_UPDATED"__id*$
+ (
+organisation_updatedí
+è
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py (!
+DEAL_CREATED"__id*
+ (
+deal_createdí
+è
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py (!
+DEAL_UPDATED"__id*
+ (
+deal_updatedû
+õ
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py (-
+DEAL_STAGE_CHANGED"__id*"
+ (
+deal_stage_changedå
+â
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py (
+	SCHEDULED"__id*
+ (
+	scheduledö
+ó
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py ()
+INACTIVITY_DELAY"__id* 
+ (
+inactivity_delayö
+ó
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py ()
+WEBHOOK_RECEIVED"__id* 
+ (
+webhook_receivedä
+á
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py ('
+%2"__id*
+ (*
+
+enum"
+Enumé
+ã
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py   (
+
+SEND_EMAIL"__id*
+ (
+
+send_emailê
+ç
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py! !(
+CREATE_TASK"__id*
+ (
+create_taskí
+è
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py" "(!
+UPDATE_FIELD"__id*
+ (
+update_fieldú
+ô
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py# #(+
+SEND_NOTIFICATION"__id*!
+ (
+send_notificationê
+ç
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py$ $(
+ASSIGN_USER"__id*
+ (
+assign_userí
+è
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py% %(!
+CALL_WEBHOOK"__id*
+ (
+call_webhookà
+Ö
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py& &(	
+ADD_TAG"__id*
+ (	
+add_tagò
+ï
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py' '('
+CREATE_ACTIVITY"__id*
+ (
+create_activityé
+ã
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py   (
+
+SEND_EMAIL"__id*
+ (
+
+send_emailê
+ç
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py! !(
+CREATE_TASK"__id*
+ (
+create_taskí
+è
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py" "(!
+UPDATE_FIELD"__id*
+ (
+update_fieldú
+ô
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py# #(+
+SEND_NOTIFICATION"__id*!
+ (
+send_notificationê
+ç
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py$ $(
+ASSIGN_USER"__id*
+ (
+assign_userí
+è
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py% %(!
+CALL_WEBHOOK"__id*
+ (
+call_webhookà
+Ö
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py& &(	
+ADD_TAG"__id*
+ (	
+add_tagò
+ï
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py' '('
+CREATE_ACTIVITY"__id*
+ (
+create_activityä
+á
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py* *(#
+%3"__id*
+ (*
+
+enum"
+EnumÜ
+É
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py, ,(
+ACTIVE"__id*
+ (
+
+activeä
+á
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py- -(
+
+INACTIVE"__id*
+ (
+
+inactiveÑ
+Å
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py. .(
+DRAFT"__id*
+ (	
+draftÜ
+É
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py, ,(
+ACTIVE"__id*
+ (
+
+activeä
+á
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py- -(
+
+INACTIVE"__id*
+ (
+
+inactiveÑ
+Å
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py. .(
+DRAFT"__id*
+ (	
+draftä
+á
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py1# 1(,
+%4"__id*
+ (*
+
+enum"
+Enumà
+Ö
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py3 3(	
+PENDING"__id*
+ (	
+pendingà
+Ö
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py4 4(	
+RUNNING"__id*
+ (	
+runningà
+Ö
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py5 5(	
+SUCCESS"__id*
+ (	
+successÜ
+É
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py6 6(
+FAILED"__id*
+ (
+
+failedà
+Ö
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py7 7(	
+SKIPPED"__id*
+ (	
+skippedà
+Ö
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py3 3(	
+PENDING"__id*
+ (	
+pendingà
+Ö
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py4 4(	
+RUNNING"__id*
+ (	
+runningà
+Ö
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py5 5(	
+SUCCESS"__id*
+ (	
+successÜ
+É
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py6 6(
+FAILED"__id*
+ (
+
+failedà
+Ö
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py7 7(	
+SKIPPED"__id*
+ (	
+skippedê
+ç
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyO O(
+__tablename__"__id*
+ (
+	workflows…
+∆
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyR R(5
+%5"sqlalchemy.Column*
+ ( *
+ (
+
+
+String2
+nullable	
+
+False2
+index
+
+True
+}
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyR R(5
+name"__id*
+ (
+
+%5≥
+∞
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyS S(-
+%6"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueá
+Ñ
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyS S(-
+description"__id*
+ (
+
+%6•
+¢
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyT T((
+%7"sqlalchemy.Enum*
+ ( *
+ (
+
+WorkflowStatus•
+¢
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyT2 T(F
+%8"__id*9
+ (-*+ 
+models.workflow.WorkflowStatus"
+DRAFTÿ
+’
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyT T(c
+%9"sqlalchemy.Column*
+ ( *
+ (
+
+%72
+default
+
+%82
+nullable	
+
+False2
+index
+
+TrueÅ
+
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyT T(c
+status"__id*
+ (
+
+%9´
+®
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyW W(3
+%10"sqlalchemy.Enum*
+ ( *#
+ (
+
+WorkflowTriggerType«
+ƒ
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyW W(P
+%11"sqlalchemy.Column*
+ ( *
+ (
+
+%102
+nullable	
+
+False2
+index
+
+Trueâ
+Ü
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyW W(P
+trigger_type"__id*
+ (
+
+%11ê
+ç
+Z
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyX X(Ö
+%12"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+True2Y
+commentNL
+JConfiguration du d√©clencheur (ex: {stage: 'PROPOSITION', delay_days: 30})å
+â
+Z
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyX X(Ö
+trigger_config"__id*
+ (
+
+%12ì
+ê
+Z
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py[ [(É
+%13"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+True2\
+commentQO
+MConditions √† v√©rifier (ex: {field: 'montant', operator: '>', value: 50000})à
+Ö
+Z
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py[ [(É
+
+conditions"__id*
+ (
+
+%13ê
+ç
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py^ ^(~
+%14"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable	
+
+False2Y
+commentNL
+JListe des actions √† ex√©cuter (ex: [{type: 'send_email', config: {...}}])Ñ
+Å
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py^ ^(~	
+actions"__id*
+ (
+
+%14©
+¶
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pya! a(8
+%15"sqlalchemy.ForeignKey*
+ ( *
+ (
+
+FK_USERS_IDÃ
+…
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pya a(H
+%16"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%152
+nullable
+
+Trueá
+Ñ
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pya a(H
+
+created_by"__id*
+ (
+
+%16Î
+Ë
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyb b(]
+%17"sqlalchemy.Column*
+ ( *
+ (
+	
+Boolean2
+default	
+
+False22
+comment'%
+#Workflow template pr√™t √† l'emploià
+Ö
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyb b(]
+is_template"__id*
+ (
+
+%17’
+“
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyc c(O
+%18"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer2
+default 2#
+comment
+Nombre d'ex√©cutionså
+â
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyc c(O
+execution_count"__id*
+ (
+
+%18†
+ù
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyd d(5
+%19"sqlalchemy.DateTime*
+ ( 2
+timezone
+
+True≥
+∞
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyd d(E
+%20"sqlalchemy.Column*
+ ( *
+ (
+
+%192
+nullable
+
+Trueç
+ä
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyd d(E
+last_executed_at"__id*
+ (
+
+%20jh
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyg0 g(<
+%21"list≤
+Ø
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyg1 g(;
+%22"
+__arrayAdd*
+ (
+
+%21*
+ (: *
+ (
+
+
+created_by¡
+æ
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyg g(=
+%23"sqlalchemy.orm.relationship*
+ ( *
+ (
+User2
+foreign_keys
+
+%21Ñ
+Å
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyg g(=	
+creator"__id*
+ (
+
+%23¯
+ı
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyh h(k
+%24"sqlalchemy.orm.relationship*
+ ( *!
+ (
+WorkflowExecution2
+back_populates
+
+workflow2!
+cascade
+all, delete-orphaná
+Ñ
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyh h(k
+
+executions"__id*
+ (
+
+%24ê
+ç
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyO O(
+__tablename__"__id*
+ (
+	workflows 
+«
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyR R(5
+%25"sqlalchemy.Column*
+ ( *
+ (
+
+
+String2
+nullable	
+
+False2
+index
+
+TrueÄ
+~
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyR R(5
+name"__id*
+ (
+
+%25¥
+±
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyS S(-
+%26"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueà
+Ö
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyS S(-
+description"__id*
+ (
+
+%26¶
+£
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyT T((
+%27"sqlalchemy.Enum*
+ ( *
+ (
+
+WorkflowStatus¶
+£
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyT2 T(F
+%28"__id*9
+ (-*+ 
+models.workflow.WorkflowStatus"
+DRAFT€
+ÿ
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyT T(c
+%29"sqlalchemy.Column*
+ ( *
+ (
+
+%272
+default
+
+%282
+nullable	
+
+False2
+index
+
+TrueÉ
+Ä
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyT T(c
+status"__id*
+ (
+
+%29´
+®
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyW W(3
+%30"sqlalchemy.Enum*
+ ( *#
+ (
+
+WorkflowTriggerType«
+ƒ
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyW W(P
+%31"sqlalchemy.Column*
+ ( *
+ (
+
+%302
+nullable	
+
+False2
+index
+
+Trueâ
+Ü
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyW W(P
+trigger_type"__id*
+ (
+
+%31ê
+ç
+Z
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyX X(Ö
+%32"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+True2Y
+commentNL
+JConfiguration du d√©clencheur (ex: {stage: 'PROPOSITION', delay_days: 30})å
+â
+Z
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyX X(Ö
+trigger_config"__id*
+ (
+
+%32ì
+ê
+Z
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py[ [(É
+%33"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+True2\
+commentQO
+MConditions √† v√©rifier (ex: {field: 'montant', operator: '>', value: 50000})à
+Ö
+Z
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py[ [(É
+
+conditions"__id*
+ (
+
+%33ê
+ç
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py^ ^(~
+%34"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable	
+
+False2Y
+commentNL
+JListe des actions √† ex√©cuter (ex: [{type: 'send_email', config: {...}}])Ñ
+Å
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py^ ^(~	
+actions"__id*
+ (
+
+%34©
+¶
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pya! a(8
+%35"sqlalchemy.ForeignKey*
+ ( *
+ (
+
+FK_USERS_IDÃ
+…
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pya a(H
+%36"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%352
+nullable
+
+Trueá
+Ñ
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pya a(H
+
+created_by"__id*
+ (
+
+%36Î
+Ë
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyb b(]
+%37"sqlalchemy.Column*
+ ( *
+ (
+	
+Boolean2
+default	
+
+False22
+comment'%
+#Workflow template pr√™t √† l'emploià
+Ö
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyb b(]
+is_template"__id*
+ (
+
+%37’
+“
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyc c(O
+%38"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer2
+default 2#
+comment
+Nombre d'ex√©cutionså
+â
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyc c(O
+execution_count"__id*
+ (
+
+%38†
+ù
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyd d(5
+%39"sqlalchemy.DateTime*
+ ( 2
+timezone
+
+True≥
+∞
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyd d(E
+%40"sqlalchemy.Column*
+ ( *
+ (
+
+%392
+nullable
+
+Trueç
+ä
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyd d(E
+last_executed_at"__id*
+ (
+
+%40jh
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyg0 g(<
+%41"list≤
+Ø
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyg1 g(;
+%42"
+__arrayAdd*
+ (
+
+%41*
+ (: *
+ (
+
+
+created_by¡
+æ
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyg g(=
+%43"sqlalchemy.orm.relationship*
+ ( *
+ (
+User2
+foreign_keys
+
+%41Ñ
+Å
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyg g(=	
+creator"__id*
+ (
+
+%43¯
+ı
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyh h(k
+%44"sqlalchemy.orm.relationship*
+ ( *!
+ (
+WorkflowExecution2
+back_populates
+
+workflow2!
+cascade
+all, delete-orphaná
+Ñ
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyh h(k
+
+executions"__id*
+ (
+
+%44ö
+ó
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyx x()
+__tablename__"__id*#
+ (
+workflow_executionsœ
+Ã
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyz" z(X
+%45"sqlalchemy.ForeignKey*
+ ( *
+ (
+
+FK_WORKFLOWS_ID2 
+ondelete
+
+ONDELETE_CASCADE‡
+›
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyz z(u
+%46"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%452
+nullable	
+
+False2
+index
+
+Trueà
+Ö
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyz z(u
+workflow_id"__id*
+ (
+
+%46Ø
+¨
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py{ {(1
+%47"sqlalchemy.Enum*
+ ( *'
+ (
+
+WorkflowExecutionStatus±
+Æ
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py{; {(Z
+%48"__id*D
+ (8*6)
+'models.workflow.WorkflowExecutionStatus"	
+PENDING€
+ÿ
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py{ {(w
+%49"sqlalchemy.Column*
+ ( *
+ (
+
+%472
+default
+
+%482
+nullable	
+
+False2
+index
+
+TrueÉ
+Ä
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py{ {(w
+status"__id*
+ (
+
+%49
+Ì
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py~ ~(k
+%50"sqlalchemy.Column*
+ ( *
+ (
+
+
+String2
+nullable
+
+True28
+comment-+
+)Type d'entit√© (organisation, deal, etc.)ê
+ç
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py~ ~(k
+trigger_entity_type"__id*
+ (
+
+%50‰
+·
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py (\
+%51"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer2
+nullable
+
+True2+
+comment 
+ID de l'entit√© d√©clencheuré
+ã
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py (\
+trigger_entity_id"__id*
+ (
+
+%51¢
+ü
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyÇ Ç(/
+%52"sqlalchemy.DateTime*
+ ( 2
+timezone
+
+Trueµ
+≤
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyÇ Ç(?
+%53"sqlalchemy.Column*
+ ( *
+ (
+
+%522
+nullable
+
+Trueâ
+Ü
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyÇ Ç(?
+
+started_at"__id*
+ (
+
+%53¢
+ü
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyÉ É(1
+%54"sqlalchemy.DateTime*
+ ( 2
+timezone
+
+Trueµ
+≤
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyÉ É(A
+%55"sqlalchemy.Column*
+ ( *
+ (
+
+%542
+nullable
+
+Trueã
+à
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyÉ É(A
+completed_at"__id*
+ (
+
+%55Á
+‰
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyÑ Ñ(Y
+%56"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+True2/
+comment$"
+ Logs d√©taill√©s de l'ex√©cutionç
+ä
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyÑ Ñ(Y
+execution_logs"__id*
+ (
+
+%56∂
+≥
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyÖ Ö(/
+%57"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueå
+â
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyÖ Ö(/
+error_message"__id*
+ (
+
+%57˝
+˙
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyà à(p
+%58"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+True2E
+comment:8
+6D√©tails des actions ex√©cut√©es avec leurs r√©sultatsè
+å
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyà à(p
+actions_executed"__id*
+ (
+
+%58–
+Õ
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyã ã(D
+%59"sqlalchemy.orm.relationship*
+ ( *
+ (
+
+Workflow2 
+back_populates
+
+executionsá
+Ñ
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyã ã(D
+
+workflow"__id*
+ (
+
+%59ö
+ó
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyx x()
+__tablename__"__id*#
+ (
+workflow_executionsœ
+Ã
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyz" z(X
+%60"sqlalchemy.ForeignKey*
+ ( *
+ (
+
+FK_WORKFLOWS_ID2 
+ondelete
+
+ONDELETE_CASCADE‡
+›
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyz z(u
+%61"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%602
+nullable	
+
+False2
+index
+
+Trueà
+Ö
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyz z(u
+workflow_id"__id*
+ (
+
+%61Ø
+¨
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py{ {(1
+%62"sqlalchemy.Enum*
+ ( *'
+ (
+
+WorkflowExecutionStatus±
+Æ
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py{; {(Z
+%63"__id*D
+ (8*6)
+'models.workflow.WorkflowExecutionStatus"	
+PENDING€
+ÿ
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py{ {(w
+%64"sqlalchemy.Column*
+ ( *
+ (
+
+%622
+default
+
+%632
+nullable	
+
+False2
+index
+
+TrueÉ
+Ä
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py{ {(w
+status"__id*
+ (
+
+%64
+Ì
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py~ ~(k
+%65"sqlalchemy.Column*
+ ( *
+ (
+
+
+String2
+nullable
+
+True28
+comment-+
+)Type d'entit√© (organisation, deal, etc.)ê
+ç
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py~ ~(k
+trigger_entity_type"__id*
+ (
+
+%65‰
+·
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py (\
+%66"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer2
+nullable
+
+True2+
+comment 
+ID de l'entit√© d√©clencheuré
+ã
+Y
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.py (\
+trigger_entity_id"__id*
+ (
+
+%66¢
+ü
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyÇ Ç(/
+%67"sqlalchemy.DateTime*
+ ( 2
+timezone
+
+Trueµ
+≤
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyÇ Ç(?
+%68"sqlalchemy.Column*
+ ( *
+ (
+
+%672
+nullable
+
+Trueâ
+Ü
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyÇ Ç(?
+
+started_at"__id*
+ (
+
+%68¢
+ü
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyÉ É(1
+%69"sqlalchemy.DateTime*
+ ( 2
+timezone
+
+Trueµ
+≤
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyÉ É(A
+%70"sqlalchemy.Column*
+ ( *
+ (
+
+%692
+nullable
+
+Trueã
+à
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyÉ É(A
+completed_at"__id*
+ (
+
+%70Á
+‰
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyÑ Ñ(Y
+%71"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+True2/
+comment$"
+ Logs d√©taill√©s de l'ex√©cutionç
+ä
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyÑ Ñ(Y
+execution_logs"__id*
+ (
+
+%71∂
+≥
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyÖ Ö(/
+%72"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueå
+â
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyÖ Ö(/
+error_message"__id*
+ (
+
+%72˝
+˙
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyà à(p
+%73"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+True2E
+comment:8
+6D√©tails des actions ex√©cut√©es avec leurs r√©sultatsè
+å
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyà à(p
+actions_executed"__id*
+ (
+
+%73–
+Õ
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyã ã(D
+%74"sqlalchemy.orm.relationship*
+ ( *
+ (
+
+Workflow2 
+back_populates
+
+executionsá
+Ñ
+[
+O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyã ã(D
+
+workflow"__id*
+ (
+
+%74*
+2B H

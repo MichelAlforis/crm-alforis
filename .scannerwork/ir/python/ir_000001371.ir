@@ -1,0 +1,50 @@
+
+
+2int
+
+
+1int
+§"The second item of :attr:`release` or ``0`` if unavailable.
+
+        >>> Version("1.2.3").minor
+        2
+        >>> Version("1").minor
+        0
+        "str
+
+0intself
+° °("æ*
+(
+
+¸& ¸(2"#get-field# release:.
+,
+
+¸& ¸(2"?python-partial-apply?:,
+*
+
+¸" ¸(3"
+builtinslen*:Bint,
+*
+
+¸" ¸(8"
+#binop >=#2>=:Bbool,"*
+
+¸" ¸(8 *
+¸ ¸(!2
+¸9 ¸(="–*
+(
+
+¸ ¸("#get-field# release:.
+,
+
+¸ ¸(	"?python-partial-apply?:$
+"
+
+¸ ¸("#array-read#:	
+
+
+¸ ¸(?"
+
+¸ ¸(?"&*
+
+¸ ¸(?*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/packaging/version.py

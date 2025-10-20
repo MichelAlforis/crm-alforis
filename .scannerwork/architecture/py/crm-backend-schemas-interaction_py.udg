@@ -1,0 +1,110 @@
+
+1.0PythonFrontend"1760943931022*py2.B—
+
+imports1
+
+extends2
+
+returns3
+
+	has param4
+
+module5
+
+
+class6
+
+function7
+'
+"crm-backend/schemas/interaction.py9
+
+schemas.interaction11
+
+pydantic12
+
+typing14
+
+datetime16
+
+schemas.base18
+-
+'schemas.interaction.InteractionResponse20
+$
+schemas.base.TimestampedSchema22
+1
++schemas.interaction.InteractionFilterParams24
+
+schemas.base.BaseSchema26
++
+%schemas.interaction.InteractionCreate28
++
+%schemas.interaction.InteractionUpdate30
+,
+&schemas.interaction.InteractionSummary32J
+
+8
+89j‘
+ 
+10
+10115 *
+8 (
+
+13
+13125
+
+15
+15145
+
+17
+17165
+
+19
+19185
+
+21
+21206 210
+
+23
+23226
+
+25
+25246 210
+
+27
+27266
+
+29
+29286 210
+
+31
+31306 210
+
+33
+33326 210rê
+
+10131*
+8 (
+
+10151*
+8 (
+
+10171*
+8 (
+
+10191*
+8 (7
+
+21232*
+8 (
+
+25272*
+8' '(
+
+29272*
+8 (
+
+31272*
+8 (
+
+33272*
+8   (

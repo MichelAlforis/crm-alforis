@@ -1,0 +1,16 @@
+
+¼²"
+        Supprime les notifications anciennes
+
+        Args:
+            db: Session database
+            days: Nombre de jours (supprimer notifications plus vieilles)
+        "strdb
+Ñ Ñ(days
+Ò Ò("mY
+W
+
+Û Û(K"C
+&core.notifications.NotificationServicecleanup_old_notifications:
+
+Û Û(K*R/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/core/notifications.py

@@ -1,0 +1,16 @@
+
+ﬁ‘"
+        Return a dictionary containing key-value pairs for the information
+        items from the uname command data source of the OS distribution.
+
+        For details, see :func:`distro.uname_info`.
+        "strself
+è è("r.
+,
+
+ñ ñ("#get-field# _uname_info:.
+,
+
+ñ ñ("?python-partial-apply?:
+
+ñ ñ(*Ä/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/distro/distro.py

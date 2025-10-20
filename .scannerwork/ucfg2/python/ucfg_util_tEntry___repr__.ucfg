@@ -1,0 +1,65 @@
+
+-pip._vendor.distlib.util.ExportEntry.__repr__‹
+/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/distlib/util.py» »("2*ƒ
+2
+¼ ¼(`j
+h
+
+¼0 ¼(9
+%1"__id*N
+
+__unknown_file (2*0&
+$pip._vendor.distlib.util.ExportEntry"
+namel
+j
+
+¼; ¼(F
+%2"__id*P
+
+__unknown_file (4*2&
+$pip._vendor.distlib.util.ExportEntry"
+prefixl
+j
+
+¼H ¼(S
+%3"__id*P
+
+__unknown_file (4*2&
+$pip._vendor.distlib.util.ExportEntry"
+suffixk
+i
+
+¼U ¼(_
+%4"__id*O
+
+__unknown_file (3*1&
+$pip._vendor.distlib.util.ExportEntry"
+flags¦
+£
+
+¼ ¼(`
+%5"__concat*-
+
+¼ ¼(,
+<ExportEntry %s = %s:%s %s>*
+
+¼0 ¼(9
+
+%1*
+
+¼; ¼(F
+
+%2*
+
+¼H ¼(S
+
+%3*
+
+¼U ¼(_
+
+%4"
+
+¼ ¼(`
+
+%5B(&
+$pip._vendor.distlib.util.ExportEntryH

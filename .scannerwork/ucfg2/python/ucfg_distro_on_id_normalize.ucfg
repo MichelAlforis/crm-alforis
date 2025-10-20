@@ -1,0 +1,59 @@
+
+8pip._vendor.distro.distro.LinuxDistribution.id.normalizeç
+Ä/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/distro/distro.py« «("2*˚
+2
+» »(;QO
+
+» »()
+%1"	str.lower*)
+
+__unknown_file (
+
+	distro_id2lowerïí
+
+» »(;
+%2"str.replace*"
+
+__unknown_file (
+
+%1*!
+
+__unknown_file (
+ *!
+
+__unknown_file (
+_2replaceE
+C
+
+» »(;
+	distro_id"__id*"
+
+__unknown_file (
+
+%2°û
+
+… …(2
+%3"dict.get*%
+
+__unknown_file (	
+
+table*)
+
+__unknown_file (
+
+	distro_id*)
+
+__unknown_file (
+
+	distro_id2get"
+
+… …(2
+
+%3:
+
+« «($
+	distro_id:
+
+«& «(;
+tableB/-
++pip._vendor.distro.distro.LinuxDistributionH

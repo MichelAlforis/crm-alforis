@@ -1,0 +1,28 @@
+
+Š€"Get the timestamp as a unixtime in nanoseconds.
+
+        :returns: posix timestamp in nanoseconds
+        :rtype: int
+        "str
+10int
+
+9intself
+’ ’("è*
+(
+
+˜ ˜("#get-field# seconds:)
+'
+
+˜ ˜(#"
+#binop **#*2**:'
+%
+
+˜ ˜(#"	#binop *#*2*:.
+,
+
+˜& ˜(6"#get-field# nanoseconds:$
+"
+
+˜ ˜(6	"	#binop +#2+:
+
+˜ ˜(6	*~/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/msgpack/ext.py

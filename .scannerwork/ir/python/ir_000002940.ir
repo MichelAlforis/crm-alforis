@@ -1,0 +1,11 @@
+
+TK":return: videos directory tied to the user e.g. ``%USERPROFILE%\\Videos``"str
+"CSIDL_MYVIDEO"strselfr r("Å!
+
+t  t(."#unknown-value#$
+"
+t  t(?"get_win_folder:&
+$
+t t(@"
+os.pathnormpath:
+t t(@*á/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/windows.py

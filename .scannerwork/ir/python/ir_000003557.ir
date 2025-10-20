@@ -1,0 +1,15 @@
+
+".."str
+TK"pip {__version__} from {pip_pkg_dir} (python {get_major_minor_version()})"str"Á!
+
+G/ G(7"#unknown-value#%
+#
+G G(8"
+os.pathdirname:1
+/
+G G(Epip_pkg_dir"
+os.pathjoin:2
+0
+H H(.pip_pkg_dir"
+os.pathabspath:
+J J(W*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/misc.py

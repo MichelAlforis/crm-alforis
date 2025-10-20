@@ -1,0 +1,130 @@
+
+3pip._vendor.resolvelib.structs.DirectedGraph.remove
+…/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/resolvelib/structs.pyN N("2*Î
+2O O(Qu
+s
+P P(
+%9"__id*[
+
+__unknown_file (?*=.
+,pip._vendor.resolvelib.structs.DirectedGraph"
+	_verticesdb
+P P("
+%10*"
+
+__unknown_file (
+
+%9*#
+
+__unknown_file (
+
+key2removev
+t
+Q Q(
+%11"__id*[
+
+__unknown_file (?*=.
+,pip._vendor.resolvelib.structs.DirectedGraph"
+	_forwardsb`
+Q Q((
+%12*#
+
+__unknown_file (
+
+%11*#
+
+__unknown_file (
+
+key2pop*
+6
+8*0
+3
+
+structs.py"
+V V(
+implicit return*ã
+5T T()u
+s
+T T(
+%1"__id*[
+
+__unknown_file (?*=.
+,pip._vendor.resolvelib.structs.DirectedGraph"
+	_forwardspn
+T T(
+%2"__mapGet*"
+
+__unknown_file (
+
+%1*!
+
+__unknown_file (
+
+t2__getitem__ca
+T T()
+%3*"
+
+__unknown_file (
+
+%2*#
+
+__unknown_file (
+
+key2remove*
+3
+5*ï
+6S S()v
+t
+S S( 
+%4"__id*\
+
+__unknown_file (@*>.
+,pip._vendor.resolvelib.structs.DirectedGraph"
+
+_backwards`^
+S S()
+%5*"
+
+__unknown_file (
+
+%4*#
+
+__unknown_file (
+
+key2pop*
+3
+5*ä
+8R R(*v
+t
+R R(
+%6"__id*\
+
+__unknown_file (@*>.
+,pip._vendor.resolvelib.structs.DirectedGraph"
+
+_backwardspn
+R R(
+%7"__mapGet*"
+
+__unknown_file (
+
+%6*!
+
+__unknown_file (
+
+f2__getitem__ca
+R R(*
+%8*"
+
+__unknown_file (
+
+%7*#
+
+__unknown_file (
+
+key2remove*
+6
+8:
+N N(
+keyB0.
+,pip._vendor.resolvelib.structs.DirectedGraphH

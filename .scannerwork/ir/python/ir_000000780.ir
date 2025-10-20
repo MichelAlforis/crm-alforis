@@ -1,0 +1,11 @@
+
+^U"Prefer binary packages over source packages, even if the source packages are newer."str
+"store_true"str
+falsebool
+"prefer_binary"str
+"--prefer-binary"str"F2
+0
+
+¨ ±("Option:Boptparse.Option
+
+¨ ±(*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/cli/cmdoptions.py

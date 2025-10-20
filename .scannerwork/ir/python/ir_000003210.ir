@@ -1,0 +1,10 @@
+
+ïå"
+        Is the cache stale for the given resource?
+
+        :param resource: The :class:`Resource` being cached.
+        :param path: The path of the resource in the cache.
+        :return: True if the cache is stale.
+        "str
+trueboolself" "(resource" "(path"! "(%"
++ +(*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/distlib/resources.py

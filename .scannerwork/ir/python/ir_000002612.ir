@@ -1,0 +1,45 @@
+
+
+2int
+
+0int
+
+1int
+ri"For checking if the dependency graph would be consistent after \
+    installing given requirements
+    "str
+to_installj j(@	tuple"ò`
+^
+o o(8package_set"C
+pip._internal.operations.check!create_package_set_from_installed3
+1
+o o(8package_set"#python-unpack#:)
+'
+o o(8_"#python-unpack#:c
+a
+q q(K	would_be_installed";
+pip._internal.operations.check_simulate_installation_of:R
+P
+t t(B
+	whitelist"3
+pip._internal.operations.check_create_whitelist:	!
+
+y' y(I"#unknown-value#G
+E
+x z(	"3
+pip._internal.operations.checkcheck_package_set:(
+&
+v {("#unknown-value#Btuple&
+$
+v {("
+#is-exact#:Bbool
+
+v {("
+#assume#:8
+6
+v {("#set-field# __collection_size:Bint&
+$
+v {("#array-add-last#:&
+$
+v {("#array-add-last#:
+v {(*…/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/operations/check.py

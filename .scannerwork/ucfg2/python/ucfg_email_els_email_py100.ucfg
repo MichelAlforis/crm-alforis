@@ -1,0 +1,5520 @@
+
+Zfile:///Users/test/Documents/ALFORIS%20FINANCE/06.%20CRM/V1/crm-backend/models/email.py100
+__unknown_file ("1*~
+2
+
+email.py"m
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py÷ ÷(
+implicit return*ﬂ≠
+1T
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py (á
+Ñ
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py !  (*
+%1"__id*
+ (*
+
+enum"
+EnumÖ
+Ç
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py# #(	
+WELCOME"__id*
+ (	
+welcomeâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py$ $(
+	FOLLOW_UP"__id*
+ (
+	follow_upã
+à
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py% %(
+
+NEWSLETTER"__id*
+ (
+
+newsletterã
+à
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py& &(
+
+CASE_STUDY"__id*
+ (
+
+case_studyÄ
+~
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py' '(
+EVENT"__id*
+ (	
+eventã
+à
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py( ((
+
+ONBOARDING"__id*
+ (
+
+onboardingÉ
+Ä
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py) )(
+CUSTOM"__id*
+ (
+
+customÖ
+Ç
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py# #(	
+WELCOME"__id*
+ (	
+welcomeâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py$ $(
+	FOLLOW_UP"__id*
+ (
+	follow_upã
+à
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py% %(
+
+NEWSLETTER"__id*
+ (
+
+newsletterã
+à
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py& &(
+
+CASE_STUDY"__id*
+ (
+
+case_studyÄ
+~
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py' '(
+EVENT"__id*
+ (	
+eventã
+à
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py( ((
+
+ONBOARDING"__id*
+ (
+
+onboardingÉ
+Ä
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py) )(
+CUSTOM"__id*
+ (
+
+customá
+Ñ
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py, ,("
+%2"__id*
+ (*
+
+enum"
+Enumá
+Ñ
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py/ /(
+
+SENDGRID"__id*
+ (
+
+sendgridÖ
+Ç
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py0 0(	
+MAILGUN"__id*
+ (	
+mailguná
+Ñ
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py/ /(
+
+SENDGRID"__id*
+ (
+
+sendgridÖ
+Ç
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py0 0(	
+MAILGUN"__id*
+ (	
+mailguná
+Ñ
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py3 3((
+%3"__id*
+ (*
+
+enum"
+EnumÄ
+~
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py6 6(
+DRAFT"__id*
+ (	
+draftâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py7 7(
+	SCHEDULED"__id*
+ (
+	scheduledÖ
+Ç
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py8 8(	
+RUNNING"__id*
+ (	
+runningÉ
+Ä
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py9 9(
+PAUSED"__id*
+ (
+
+pausedâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py: :(
+	COMPLETED"__id*
+ (
+	completedâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py; ;(
+	CANCELLED"__id*
+ (
+	cancelledÄ
+~
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py6 6(
+DRAFT"__id*
+ (	
+draftâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py7 7(
+	SCHEDULED"__id*
+ (
+	scheduledÖ
+Ç
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py8 8(	
+RUNNING"__id*
+ (	
+runningÉ
+Ä
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py9 9(
+PAUSED"__id*
+ (
+
+pausedâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py: :(
+	COMPLETED"__id*
+ (
+	completedâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py; ;(
+	CANCELLED"__id*
+ (
+	cancelledá
+Ñ
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py> >(&
+%4"__id*
+ (*
+
+enum"
+EnumÉ
+Ä
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyA A(
+MANUAL"__id*
+ (
+
+manualâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyB B(
+	IMMEDIATE"__id*
+ (
+	immediateâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyC C(
+	SCHEDULED"__id*
+ (
+	scheduledâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyD D(
+	RECURRING"__id*
+ (
+	recurringÉ
+Ä
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyA A(
+MANUAL"__id*
+ (
+
+manualâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyB B(
+	IMMEDIATE"__id*
+ (
+	immediateâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyC C(
+	SCHEDULED"__id*
+ (
+	scheduledâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyD D(
+	RECURRING"__id*
+ (
+	recurringá
+Ñ
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyG G(!
+%5"__id*
+ (*
+
+enum"
+Enumx
+v
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyJ J(
+A"__id*
+ (
+Ax
+v
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyK K(
+B"__id*
+ (
+Bx
+v
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyJ J(
+A"__id*
+ (
+Ax
+v
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyK K(
+B"__id*
+ (
+Bá
+Ñ
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyN N($
+%6"__id*
+ (*
+
+enum"
+EnumÉ
+Ä
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyQ Q(
+QUEUED"__id*
+ (
+
+queuedâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyR R(
+	SCHEDULED"__id*
+ (
+	scheduledÖ
+Ç
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyS S(	
+SENDING"__id*
+ (	
+sending~
+|
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyT T(
+SENT"__id*
+ (
+sentâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyU U(
+	DELIVERED"__id*
+ (
+	deliveredÉ
+Ä
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyV V(
+OPENED"__id*
+ (
+
+openedÖ
+Ç
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyW W(	
+CLICKED"__id*
+ (	
+clickedÉ
+Ä
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyX X(
+FAILED"__id*
+ (
+
+failedÖ
+Ç
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyY Y(	
+BOUNCED"__id*
+ (	
+bouncedè
+å
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyZ Z(!
+UNSUBSCRIBED"__id*
+ (
+unsubscribedã
+à
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py[ [(
+
+COMPLAINED"__id*
+ (
+
+complainedÉ
+Ä
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyQ Q(
+QUEUED"__id*
+ (
+
+queuedâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyR R(
+	SCHEDULED"__id*
+ (
+	scheduledÖ
+Ç
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyS S(	
+SENDING"__id*
+ (	
+sending~
+|
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyT T(
+SENT"__id*
+ (
+sentâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyU U(
+	DELIVERED"__id*
+ (
+	deliveredÉ
+Ä
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyV V(
+OPENED"__id*
+ (
+
+openedÖ
+Ç
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyW W(	
+CLICKED"__id*
+ (	
+clickedÉ
+Ä
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyX X(
+FAILED"__id*
+ (
+
+failedÖ
+Ç
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyY Y(	
+BOUNCED"__id*
+ (	
+bouncedè
+å
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyZ Z(!
+UNSUBSCRIBED"__id*
+ (
+unsubscribedã
+à
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py[ [(
+
+COMPLAINED"__id*
+ (
+
+complainedá
+Ñ
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py^ ^(#
+%7"__id*
+ (*
+
+enum"
+Enumâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pya a(
+	PROCESSED"__id*
+ (
+	processedâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyb b(
+	DELIVERED"__id*
+ (
+	deliveredÉ
+Ä
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyc c(
+OPENED"__id*
+ (
+
+openedÖ
+Ç
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyd d(	
+CLICKED"__id*
+ (	
+clickedÖ
+Ç
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pye e(	
+BOUNCED"__id*
+ (	
+bouncedÖ
+Ç
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyf f(	
+DROPPED"__id*
+ (	
+droppedå
+â
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyg g(
+SPAM_REPORT"__id*
+ (
+
+spamreporté
+ã
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyh h( 
+UNSUBSCRIBED"__id*
+ (
+unsubscribeô
+ñ
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyi i(+
+GROUP_UNSUBSCRIBE"__id*!
+ (
+group_unsubscribeô
+ñ
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyj j(+
+GROUP_RESUBSCRIBE"__id*!
+ (
+group_resubscribeá
+Ñ
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyk k(
+
+DEFERRED"__id*
+ (
+
+deferredâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pya a(
+	PROCESSED"__id*
+ (
+	processedâ
+Ü
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyb b(
+	DELIVERED"__id*
+ (
+	deliveredÉ
+Ä
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyc c(
+OPENED"__id*
+ (
+
+openedÖ
+Ç
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyd d(	
+CLICKED"__id*
+ (	
+clickedÖ
+Ç
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pye e(	
+BOUNCED"__id*
+ (	
+bouncedÖ
+Ç
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyf f(	
+DROPPED"__id*
+ (	
+droppedå
+â
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyg g(
+SPAM_REPORT"__id*
+ (
+
+spamreporté
+ã
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyh h( 
+UNSUBSCRIBED"__id*
+ (
+unsubscribeô
+ñ
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyi i(+
+GROUP_UNSUBSCRIBE"__id*!
+ (
+group_unsubscribeô
+ñ
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyj j(+
+GROUP_RESUBSCRIBE"__id*!
+ (
+group_resubscribeá
+Ñ
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyk k(
+
+DEFERRED"__id*
+ (
+
+deferredì
+ê
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyq q(%
+__tablename__"__id*
+ (
+email_templatesge
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyr v(
+%8"tupleÀ
+»
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pys s(9
+%9"sqlalchemy.Index*
+ ( *,
+ ( 
+idx_email_templates_category*
+ (
+
+category¶
+£
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pys s(9
+%10"
+__arrayAdd*
+ (
+
+%8*
+ (: *
+ (
+
+%9ÿ
+’
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyt t(>
+%11"sqlalchemy.Index*
+ ( *(
+ (
+idx_email_templates_code*
+ (
+code2
+unique
+
+Trueß
+§
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyt t(>
+%12"
+__arrayAdd*
+ (
+
+%8*
+ (: *
+ (
+
+%11Œ
+À
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyu u(;
+%13"sqlalchemy.Index*
+ ( *-
+ (!
+idx_email_templates_is_active*
+ (
+	is_activeß
+§
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyu u(;
+%14"
+__arrayAdd*
+ (
+
+%8*
+ (: *
+ (
+
+%13á
+Ñ
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyr v(
+__table_args__"__id*
+ (
+
+%8ï
+í
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyx x(
+%15"sqlalchemy.String*
+ ( *
+ ( ƒ
+¡
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyx x(:
+%16"sqlalchemy.Column*
+ ( *
+ (
+
+%152
+nullable	
+
+False2
+index
+
+True}
+{
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyx x(:
+name"__id*
+ (
+
+%16ï
+í
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyy y(
+%17"sqlalchemy.String*
+ ( *
+ ( ƒ
+¡
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyy y(:
+%18"sqlalchemy.Column*
+ ( *
+ (
+
+%172
+nullable
+
+True2
+unique
+
+True}
+{
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyy y(:
+code"__id*
+ (
+
+%18ï
+í
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyz z($
+%19"sqlalchemy.String*
+ ( *
+ ( ∞
+≠
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyz z(4
+%20"sqlalchemy.Column*
+ ( *
+ (
+
+%192
+nullable
+
+TrueÖ
+Ç
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyz z(4
+description"__id*
+ (
+
+%20Õ
+ 
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py| |(A
+%21"sqlalchemy.Enum*
+ ( *%
+ (
+
+EmailTemplateCategory2!
+name
+emailtemplatecategory®
+•
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py~ ~(,
+%22"__id*>
+ (2*0$
+"models.email.EmailTemplateCategory"
+CUSTOM≈
+¬
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py{ (
+%23"sqlalchemy.Column*
+ ( *
+ (
+
+%212
+nullable	
+
+False2
+default
+
+%22Å
+
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py{ (
+
+category"__id*
+ (
+
+%23ó
+î
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÄ Ä( 
+%24"sqlalchemy.String*
+ ( *
+ ( ≥
+∞
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÄ Ä(1
+%25"sqlalchemy.Column*
+ ( *
+ (
+
+%242
+nullable	
+
+FalseÉ
+Ä
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÄ Ä(1	
+subject"__id*
+ (
+
+%25ó
+î
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÅ Å("
+%26"sqlalchemy.String*
+ ( *
+ ( ≤
+Ø
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÅ Å(2
+%27"sqlalchemy.Column*
+ ( *
+ (
+
+%262
+nullable
+
+TrueÖ
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÅ Å(2
+	preheader"__id*
+ (
+
+%27¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÇ Ç(/
+%28"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable	
+
+Falseà
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÇ Ç(/
+html_content"__id*
+ (
+
+%28≥
+∞
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÉ É(-
+%29"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+Trueá
+Ñ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÉ É(-
+design_json"__id*
+ (
+
+%29Ã
+…
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÑ Ñ(=
+%30"sqlalchemy.Column*
+ ( *
+ (
+	
+Boolean2
+nullable	
+
+False2
+default
+
+TrueÖ
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÑ Ñ(=
+	is_active"__id*
+ (
+
+%30Õ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÖ Ö(?
+%31"sqlalchemy.Column*
+ ( *
+ (
+	
+Boolean2
+nullable	
+
+False2
+default	
+
+FalseÜ
+É
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÖ Ö(?
+
+is_default"__id*
+ (
+
+%31≥
+∞
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÜ Ü(&
+%32"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+True
+}
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÜ Ü(&
+tags"__id*
+ (
+
+%32À
+»
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyá! á(T
+%33"sqlalchemy.ForeignKey*
+ ( *
+ (
+
+FK_USERS_ID2!
+ondelete
+
+ONDELETE_SET_NULLÀ
+»
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyá á(d
+%34"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%332
+nullable
+
+TrueÜ
+É
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyá á(d
+
+created_by"__id*
+ (
+
+%34ü
+ú
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyà à(1
+%35"sqlalchemy.DateTime*
+ ( 2
+timezone
+
+True≤
+Ø
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyà à(A
+%36"sqlalchemy.Column*
+ ( *
+ (
+
+%352
+nullable
+
+Trueà
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyà à(A
+last_used_at"__id*
+ (
+
+%36Ò
+Ó
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyä é(
+%37"sqlalchemy.orm.relationship*
+ ( *!
+ (
+EmailCampaignStep2
+back_populates
+
+template2
+passive_deletes
+
+TrueÄ
+~
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyä é(
+steps"__id*
+ (
+
+%37ì
+ê
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyq q(%
+__tablename__"__id*
+ (
+email_templateshf
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyr v(
+%38"tupleÃ
+…
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pys s(9
+%39"sqlalchemy.Index*
+ ( *,
+ ( 
+idx_email_templates_category*
+ (
+
+category®
+•
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pys s(9
+%40"
+__arrayAdd*
+ (
+
+%38*
+ (: *
+ (
+
+%39ÿ
+’
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyt t(>
+%41"sqlalchemy.Index*
+ ( *(
+ (
+idx_email_templates_code*
+ (
+code2
+unique
+
+True®
+•
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyt t(>
+%42"
+__arrayAdd*
+ (
+
+%38*
+ (: *
+ (
+
+%41Œ
+À
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyu u(;
+%43"sqlalchemy.Index*
+ ( *-
+ (!
+idx_email_templates_is_active*
+ (
+	is_active®
+•
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyu u(;
+%44"
+__arrayAdd*
+ (
+
+%38*
+ (: *
+ (
+
+%43à
+Ö
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyr v(
+__table_args__"__id*
+ (
+
+%38ï
+í
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyx x(
+%45"sqlalchemy.String*
+ ( *
+ ( ƒ
+¡
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyx x(:
+%46"sqlalchemy.Column*
+ ( *
+ (
+
+%452
+nullable	
+
+False2
+index
+
+True}
+{
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyx x(:
+name"__id*
+ (
+
+%46ï
+í
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyy y(
+%47"sqlalchemy.String*
+ ( *
+ ( ƒ
+¡
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyy y(:
+%48"sqlalchemy.Column*
+ ( *
+ (
+
+%472
+nullable
+
+True2
+unique
+
+True}
+{
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyy y(:
+code"__id*
+ (
+
+%48ï
+í
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyz z($
+%49"sqlalchemy.String*
+ ( *
+ ( ∞
+≠
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyz z(4
+%50"sqlalchemy.Column*
+ ( *
+ (
+
+%492
+nullable
+
+TrueÖ
+Ç
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyz z(4
+description"__id*
+ (
+
+%50Õ
+ 
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py| |(A
+%51"sqlalchemy.Enum*
+ ( *%
+ (
+
+EmailTemplateCategory2!
+name
+emailtemplatecategory®
+•
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py~ ~(,
+%52"__id*>
+ (2*0$
+"models.email.EmailTemplateCategory"
+CUSTOM≈
+¬
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py{ (
+%53"sqlalchemy.Column*
+ ( *
+ (
+
+%512
+nullable	
+
+False2
+default
+
+%52Å
+
+V
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py{ (
+
+category"__id*
+ (
+
+%53ó
+î
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÄ Ä( 
+%54"sqlalchemy.String*
+ ( *
+ ( ≥
+∞
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÄ Ä(1
+%55"sqlalchemy.Column*
+ ( *
+ (
+
+%542
+nullable	
+
+FalseÉ
+Ä
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÄ Ä(1	
+subject"__id*
+ (
+
+%55ó
+î
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÅ Å("
+%56"sqlalchemy.String*
+ ( *
+ ( ≤
+Ø
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÅ Å(2
+%57"sqlalchemy.Column*
+ ( *
+ (
+
+%562
+nullable
+
+TrueÖ
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÅ Å(2
+	preheader"__id*
+ (
+
+%57¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÇ Ç(/
+%58"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable	
+
+Falseà
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÇ Ç(/
+html_content"__id*
+ (
+
+%58≥
+∞
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÉ É(-
+%59"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+Trueá
+Ñ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÉ É(-
+design_json"__id*
+ (
+
+%59Ã
+…
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÑ Ñ(=
+%60"sqlalchemy.Column*
+ ( *
+ (
+	
+Boolean2
+nullable	
+
+False2
+default
+
+TrueÖ
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÑ Ñ(=
+	is_active"__id*
+ (
+
+%60Õ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÖ Ö(?
+%61"sqlalchemy.Column*
+ ( *
+ (
+	
+Boolean2
+nullable	
+
+False2
+default	
+
+FalseÜ
+É
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÖ Ö(?
+
+is_default"__id*
+ (
+
+%61≥
+∞
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÜ Ü(&
+%62"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+True
+}
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÜ Ü(&
+tags"__id*
+ (
+
+%62À
+»
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyá! á(T
+%63"sqlalchemy.ForeignKey*
+ ( *
+ (
+
+FK_USERS_ID2!
+ondelete
+
+ONDELETE_SET_NULLÀ
+»
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyá á(d
+%64"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%632
+nullable
+
+TrueÜ
+É
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyá á(d
+
+created_by"__id*
+ (
+
+%64ü
+ú
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyà à(1
+%65"sqlalchemy.DateTime*
+ ( 2
+timezone
+
+True≤
+Ø
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyà à(A
+%66"sqlalchemy.Column*
+ ( *
+ (
+
+%652
+nullable
+
+Trueà
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyà à(A
+last_used_at"__id*
+ (
+
+%66Ò
+Ó
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyä é(
+%67"sqlalchemy.orm.relationship*
+ ( *!
+ (
+EmailCampaignStep2
+back_populates
+
+template2
+passive_deletes
+
+TrueÄ
+~
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyä é(
+steps"__id*
+ (
+
+%67ï
+í
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyõ õ(%
+__tablename__"__id*
+ (
+email_campaignsjh
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyú †(
+%68"tuple…
+∆
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyù ù(4
+%69"sqlalchemy.Index*
+ ( *)
+ (
+idx_email_campaign_status*
+ (
+
+status™
+ß
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyù ù(4
+%70"
+__arrayAdd*
+ (
+
+%68*
+ (: *
+ (
+
+%69’
+“
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyû û(@
+%71"sqlalchemy.Index*
+ ( */
+ (#!
+idx_email_campaign_scheduled_at*
+ (
+scheduled_at™
+ß
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyû û(@
+%72"
+__arrayAdd*
+ (
+
+%68*
+ (: *
+ (
+
+%71Õ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyü ü(8
+%73"sqlalchemy.Index*
+ ( *+
+ (
+idx_email_campaign_provider*
+ (
+
+provider™
+ß
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyü ü(8
+%74"
+__arrayAdd*
+ (
+
+%68*
+ (: *
+ (
+
+%73ä
+á
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyú †(
+__table_args__"__id*
+ (
+
+%68ó
+î
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¢ ¢(
+%75"sqlalchemy.String*
+ ( *
+ ( ≥
+∞
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¢ ¢(.
+%76"sqlalchemy.Column*
+ ( *
+ (
+
+%752
+nullable	
+
+False
+}
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¢ ¢(.
+name"__id*
+ (
+
+%76≥
+∞
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py£ £(-
+%77"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueá
+Ñ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py£ £(-
+description"__id*
+ (
+
+%77À
+»
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py• •(=
+%78"sqlalchemy.Enum*
+ ( *#
+ (
+
+EmailCampaignStatus2
+name
+emailcampaignstatusß
+§
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyß ß()
+%79"__id*;
+ (/*-"
+ models.email.EmailCampaignStatus"
+DRAFT«
+ƒ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py§ ®(
+%80"sqlalchemy.Column*
+ ( *
+ (
+
+%782
+nullable	
+
+False2
+default
+
+%79Å
+
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py§ ®(
+status"__id*
+ (
+
+%80ø
+º
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py™ ™(1
+%81"sqlalchemy.Enum*
+ ( *
+ (
+
+EmailProvider2
+name
+emailprovider§
+°
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¨ ¨(&
+%82"__id*8
+ (,**
+models.email.EmailProvider"
+
+SENDGRID«
+ƒ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py© ≠(
+%83"sqlalchemy.Column*
+ ( *
+ (
+
+%812
+nullable	
+
+False2
+default
+
+%82Ñ
+Å
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py© ≠(
+
+provider"__id*
+ (
+
+%83«
+ƒ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyØ Ø(9
+%84"sqlalchemy.Enum*
+ ( *!
+ (
+
+EmailScheduleType2
+name
+emailscheduletype¶
+£
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py± ±((
+%85"__id*:
+ (.*, 
+models.email.EmailScheduleType"
+MANUAL«
+ƒ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÆ ≤(
+%86"sqlalchemy.Column*
+ ( *
+ (
+
+%842
+nullable	
+
+False2
+default
+
+%85â
+Ü
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÆ ≤(
+schedule_type"__id*
+ (
+
+%86ó
+î
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py≥ ≥("
+%87"sqlalchemy.String*
+ ( *
+ ( ≥
+∞
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py≥ ≥(3
+%88"sqlalchemy.Column*
+ ( *
+ (
+
+%872
+nullable	
+
+FalseÖ
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py≥ ≥(3
+	from_name"__id*
+ (
+
+%88ó
+î
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¥ ¥(#
+%89"sqlalchemy.String*
+ ( *
+ ( ∆
+√
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¥ ¥(@
+%90"sqlalchemy.Column*
+ ( *
+ (
+
+%892
+nullable	
+
+False2
+index
+
+TrueÜ
+É
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¥ ¥(@
+
+from_email"__id*
+ (
+
+%90ó
+î
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyµ µ(!
+%91"sqlalchemy.String*
+ ( *
+ ( ≤
+Ø
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyµ µ(1
+%92"sqlalchemy.Column*
+ ( *
+ (
+
+%912
+nullable
+
+TrueÑ
+Å
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyµ µ(1
+
+reply_to"__id*
+ (
+
+%92…
+∆
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∂* ∂(_
+%93"sqlalchemy.ForeignKey*
+ ( *"
+ (
+email_templates.id2
+ondelete
+
+SET NULLÀ
+»
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∂ ∂(o
+%94"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%932
+nullable
+
+Trueè
+å
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∂ ∂(o
+default_template_id"__id*
+ (
+
+%94ó
+î
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∑ ∑( 
+%95"sqlalchemy.String*
+ ( *
+ ( ≤
+Ø
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∑ ∑(0
+%96"sqlalchemy.Column*
+ ( *
+ (
+
+%952
+nullable
+
+TrueÉ
+Ä
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∑ ∑(0	
+subject"__id*
+ (
+
+%96ó
+î
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∏ ∏("
+%97"sqlalchemy.String*
+ ( *
+ ( ≤
+Ø
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∏ ∏(2
+%98"sqlalchemy.Column*
+ ( *
+ (
+
+%972
+nullable
+
+TrueÖ
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∏ ∏(2
+	preheader"__id*
+ (
+
+%98≥
+∞
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyπ π(2
+%99"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+Trueå
+â
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyπ π(2
+audience_filters"__id*
+ (
+
+%99¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∫ ∫(3
+%100"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+Trueé
+ã
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∫ ∫(3
+audience_snapshot"__id*
+ (
+
+%100†
+ù
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyª ª(1
+%101"sqlalchemy.DateTime*
+ ( 2
+timezone
+
+True¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyª ª(A
+%102"sqlalchemy.Column*
+ ( *
+ (
+
+%1012
+nullable
+
+Trueâ
+Ü
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyª ª(A
+scheduled_at"__id*
+ (
+
+%102ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyº º( 
+%103"sqlalchemy.String*
+ ( *
+ ( —
+Œ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyº º(H
+%104"sqlalchemy.Column*
+ ( *
+ (
+
+%1032
+nullable
+
+True2
+default
+Europe/ParisÖ
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyº º(H
+
+timezone"__id*
+ (
+
+%104Õ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyΩ Ω(?
+%105"sqlalchemy.Column*
+ ( *
+ (
+	
+Boolean2
+nullable	
+
+False2
+default
+
+Trueà
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyΩ Ω(?
+track_opens"__id*
+ (
+
+%105Õ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyæ æ(@
+%106"sqlalchemy.Column*
+ ( *
+ (
+	
+Boolean2
+nullable	
+
+False2
+default
+
+Trueâ
+Ü
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyæ æ(@
+track_clicks"__id*
+ (
+
+%106Œ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyø ø(?
+%107"sqlalchemy.Column*
+ ( *
+ (
+	
+Boolean2
+nullable	
+
+False2
+default	
+
+Falseá
+Ñ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyø ø(?
+
+is_ab_test"__id*
+ (
+
+%107«
+ƒ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¿ ¿(J
+%108"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer2
+nullable	
+
+False2
+default ï
+í
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¿ ¿(J
+ab_test_split_percentage"__id*
+ (
+
+%108∑
+¥
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¡ ¡(:
+%109"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer2
+nullable
+
+Trueí
+è
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¡ ¡(:
+rate_limit_per_minute"__id*
+ (
+
+%109∑
+¥
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¬ ¬(5
+%110"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer2
+nullable
+
+Trueç
+ä
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¬ ¬(5
+total_recipients"__id*
+ (
+
+%110«
+ƒ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py√ √(;
+%111"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer2
+nullable	
+
+False2
+default á
+Ñ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py√ √(;
+
+total_sent"__id*
+ (
+
+%111†
+ù
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyƒ ƒ(1
+%112"sqlalchemy.DateTime*
+ ( 2
+timezone
+
+True¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyƒ ƒ(A
+%113"sqlalchemy.Column*
+ ( *
+ (
+
+%1122
+nullable
+
+Trueâ
+Ü
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyƒ ƒ(A
+last_sent_at"__id*
+ (
+
+%113Ã
+…
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py≈ ≈(R
+%114"sqlalchemy.ForeignKey*
+ ( *
+ (
+
+FK_USERS_ID2!
+ondelete
+
+ONDELETE_SET_NULLÕ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py≈ ≈(b
+%115"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%1142
+nullable
+
+TrueÖ
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py≈ ≈(b
+
+owner_id"__id*
+ (
+
+%115±
+Æ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py« «(4
+%116"sqlalchemy.orm.relationship*
+ ( *
+ (
+EmailTemplateç
+ä
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py« «(4
+default_template"__id*
+ (
+
+%116ƒ
+¡
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py» Œ(
+%117"sqlalchemy.orm.relationship*
+ ( *!
+ (
+EmailCampaignStep2
+back_populates
+
+campaign2!
+cascade
+all, delete-orphan2
+passive_deletes
+
+True2-
+order_by!
+EmailCampaignStep.order_indexÅ
+
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py» Œ(
+steps"__id*
+ (
+
+%117ç
+ä
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyœ ‘(
+%118"sqlalchemy.orm.relationship*
+ ( *
+ (
+	EmailSend2
+back_populates
+
+campaign2!
+cascade
+all, delete-orphan2
+passive_deletes
+
+TrueÅ
+
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyœ ‘(
+sends"__id*
+ (
+
+%118ï
+í
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyõ õ(%
+__tablename__"__id*
+ (
+email_campaignski
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyú †(
+%119"tuple 
+«
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyù ù(4
+%120"sqlalchemy.Index*
+ ( *)
+ (
+idx_email_campaign_status*
+ (
+
+status≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyù ù(4
+%121"
+__arrayAdd*
+ (
+
+%119*
+ (: *
+ (
+
+%120÷
+”
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyû û(@
+%122"sqlalchemy.Index*
+ ( */
+ (#!
+idx_email_campaign_scheduled_at*
+ (
+scheduled_at≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyû û(@
+%123"
+__arrayAdd*
+ (
+
+%119*
+ (: *
+ (
+
+%122Œ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyü ü(8
+%124"sqlalchemy.Index*
+ ( *+
+ (
+idx_email_campaign_provider*
+ (
+
+provider≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyü ü(8
+%125"
+__arrayAdd*
+ (
+
+%119*
+ (: *
+ (
+
+%124ã
+à
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyú †(
+__table_args__"__id*
+ (
+
+%119ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¢ ¢(
+%126"sqlalchemy.String*
+ ( *
+ ( µ
+≤
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¢ ¢(.
+%127"sqlalchemy.Column*
+ ( *
+ (
+
+%1262
+nullable	
+
+FalseÄ
+~
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¢ ¢(.
+name"__id*
+ (
+
+%127¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py£ £(-
+%128"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueà
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py£ £(-
+description"__id*
+ (
+
+%128Ã
+…
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py• •(=
+%129"sqlalchemy.Enum*
+ ( *#
+ (
+
+EmailCampaignStatus2
+name
+emailcampaignstatus®
+•
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyß ß()
+%130"__id*;
+ (/*-"
+ models.email.EmailCampaignStatus"
+DRAFT 
+«
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py§ ®(
+%131"sqlalchemy.Column*
+ ( *
+ (
+
+%1292
+nullable	
+
+False2
+default
+
+%130É
+Ä
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py§ ®(
+status"__id*
+ (
+
+%131¿
+Ω
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py™ ™(1
+%132"sqlalchemy.Enum*
+ ( *
+ (
+
+EmailProvider2
+name
+emailprovider•
+¢
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¨ ¨(&
+%133"__id*8
+ (,**
+models.email.EmailProvider"
+
+SENDGRID 
+«
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py© ≠(
+%134"sqlalchemy.Column*
+ ( *
+ (
+
+%1322
+nullable	
+
+False2
+default
+
+%133Ö
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py© ≠(
+
+provider"__id*
+ (
+
+%134»
+≈
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyØ Ø(9
+%135"sqlalchemy.Enum*
+ ( *!
+ (
+
+EmailScheduleType2
+name
+emailscheduletypeß
+§
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py± ±((
+%136"__id*:
+ (.*, 
+models.email.EmailScheduleType"
+MANUAL 
+«
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÆ ≤(
+%137"sqlalchemy.Column*
+ ( *
+ (
+
+%1352
+nullable	
+
+False2
+default
+
+%136ä
+á
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÆ ≤(
+schedule_type"__id*
+ (
+
+%137ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py≥ ≥("
+%138"sqlalchemy.String*
+ ( *
+ ( µ
+≤
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py≥ ≥(3
+%139"sqlalchemy.Column*
+ ( *
+ (
+
+%1382
+nullable	
+
+FalseÜ
+É
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py≥ ≥(3
+	from_name"__id*
+ (
+
+%139ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¥ ¥(#
+%140"sqlalchemy.String*
+ ( *
+ ( »
+≈
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¥ ¥(@
+%141"sqlalchemy.Column*
+ ( *
+ (
+
+%1402
+nullable	
+
+False2
+index
+
+Trueá
+Ñ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¥ ¥(@
+
+from_email"__id*
+ (
+
+%141ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyµ µ(!
+%142"sqlalchemy.String*
+ ( *
+ ( ¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyµ µ(1
+%143"sqlalchemy.Column*
+ ( *
+ (
+
+%1422
+nullable
+
+TrueÖ
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyµ µ(1
+
+reply_to"__id*
+ (
+
+%143 
+«
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∂* ∂(_
+%144"sqlalchemy.ForeignKey*
+ ( *"
+ (
+email_templates.id2
+ondelete
+
+SET NULLÕ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∂ ∂(o
+%145"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%1442
+nullable
+
+Trueê
+ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∂ ∂(o
+default_template_id"__id*
+ (
+
+%145ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∑ ∑( 
+%146"sqlalchemy.String*
+ ( *
+ ( ¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∑ ∑(0
+%147"sqlalchemy.Column*
+ ( *
+ (
+
+%1462
+nullable
+
+TrueÑ
+Å
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∑ ∑(0	
+subject"__id*
+ (
+
+%147ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∏ ∏("
+%148"sqlalchemy.String*
+ ( *
+ ( ¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∏ ∏(2
+%149"sqlalchemy.Column*
+ ( *
+ (
+
+%1482
+nullable
+
+TrueÜ
+É
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∏ ∏(2
+	preheader"__id*
+ (
+
+%149¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyπ π(2
+%150"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+Trueç
+ä
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyπ π(2
+audience_filters"__id*
+ (
+
+%150¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∫ ∫(3
+%151"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+Trueé
+ã
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∫ ∫(3
+audience_snapshot"__id*
+ (
+
+%151†
+ù
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyª ª(1
+%152"sqlalchemy.DateTime*
+ ( 2
+timezone
+
+True¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyª ª(A
+%153"sqlalchemy.Column*
+ ( *
+ (
+
+%1522
+nullable
+
+Trueâ
+Ü
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyª ª(A
+scheduled_at"__id*
+ (
+
+%153ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyº º( 
+%154"sqlalchemy.String*
+ ( *
+ ( —
+Œ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyº º(H
+%155"sqlalchemy.Column*
+ ( *
+ (
+
+%1542
+nullable
+
+True2
+default
+Europe/ParisÖ
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyº º(H
+
+timezone"__id*
+ (
+
+%155Õ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyΩ Ω(?
+%156"sqlalchemy.Column*
+ ( *
+ (
+	
+Boolean2
+nullable	
+
+False2
+default
+
+Trueà
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyΩ Ω(?
+track_opens"__id*
+ (
+
+%156Õ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyæ æ(@
+%157"sqlalchemy.Column*
+ ( *
+ (
+	
+Boolean2
+nullable	
+
+False2
+default
+
+Trueâ
+Ü
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyæ æ(@
+track_clicks"__id*
+ (
+
+%157Œ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyø ø(?
+%158"sqlalchemy.Column*
+ ( *
+ (
+	
+Boolean2
+nullable	
+
+False2
+default	
+
+Falseá
+Ñ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyø ø(?
+
+is_ab_test"__id*
+ (
+
+%158«
+ƒ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¿ ¿(J
+%159"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer2
+nullable	
+
+False2
+default ï
+í
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¿ ¿(J
+ab_test_split_percentage"__id*
+ (
+
+%159∑
+¥
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¡ ¡(:
+%160"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer2
+nullable
+
+Trueí
+è
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¡ ¡(:
+rate_limit_per_minute"__id*
+ (
+
+%160∑
+¥
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¬ ¬(5
+%161"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer2
+nullable
+
+Trueç
+ä
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¬ ¬(5
+total_recipients"__id*
+ (
+
+%161«
+ƒ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py√ √(;
+%162"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer2
+nullable	
+
+False2
+default á
+Ñ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py√ √(;
+
+total_sent"__id*
+ (
+
+%162†
+ù
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyƒ ƒ(1
+%163"sqlalchemy.DateTime*
+ ( 2
+timezone
+
+True¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyƒ ƒ(A
+%164"sqlalchemy.Column*
+ ( *
+ (
+
+%1632
+nullable
+
+Trueâ
+Ü
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyƒ ƒ(A
+last_sent_at"__id*
+ (
+
+%164Ã
+…
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py≈ ≈(R
+%165"sqlalchemy.ForeignKey*
+ ( *
+ (
+
+FK_USERS_ID2!
+ondelete
+
+ONDELETE_SET_NULLÕ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py≈ ≈(b
+%166"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%1652
+nullable
+
+TrueÖ
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py≈ ≈(b
+
+owner_id"__id*
+ (
+
+%166±
+Æ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py« «(4
+%167"sqlalchemy.orm.relationship*
+ ( *
+ (
+EmailTemplateç
+ä
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py« «(4
+default_template"__id*
+ (
+
+%167ƒ
+¡
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py» Œ(
+%168"sqlalchemy.orm.relationship*
+ ( *!
+ (
+EmailCampaignStep2
+back_populates
+
+campaign2!
+cascade
+all, delete-orphan2
+passive_deletes
+
+True2-
+order_by!
+EmailCampaignStep.order_indexÅ
+
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py» Œ(
+steps"__id*
+ (
+
+%168ç
+ä
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyœ ‘(
+%169"sqlalchemy.orm.relationship*
+ ( *
+ (
+	EmailSend2
+back_populates
+
+campaign2!
+cascade
+all, delete-orphan2
+passive_deletes
+
+TrueÅ
+
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyœ ‘(
+sends"__id*
+ (
+
+%169ö
+ó
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py› ›(*
+__tablename__"__id*$
+ (
+email_campaign_stepski
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyﬁ ·(
+%170"tuple◊
+‘
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyﬂ ﬂ(A
+%171"sqlalchemy.Index*
+ ( *1
+ (%#
+!idx_email_campaign_steps_campaign*
+ (
+campaign_id≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyﬂ ﬂ(A
+%172"
+__arrayAdd*
+ (
+
+%170*
+ (: *
+ (
+
+%171Ò
+Ó
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py‡ ‡(M
+%173"sqlalchemy.Index*
+ ( *.
+ (" 
+idx_email_campaign_steps_order*
+ (
+campaign_id*
+ (
+order_index≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py‡ ‡(M
+%174"
+__arrayAdd*
+ (
+
+%170*
+ (: *
+ (
+
+%173ã
+à
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyﬁ ·(
+__table_args__"__id*
+ (
+
+%170…
+∆
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py„" „(V
+%175"sqlalchemy.ForeignKey*
+ ( *"
+ (
+email_campaigns.id2
+ondelete	
+CASCADEŒ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py„ „(g
+%176"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%1752
+nullable	
+
+Falseà
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py„ „(g
+campaign_id"__id*
+ (
+
+%176 
+«
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py‰" ‰(W
+%177"sqlalchemy.ForeignKey*
+ ( *"
+ (
+email_templates.id2
+ondelete
+
+SET NULLÕ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py‰ ‰(g
+%178"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%1772
+nullable
+
+Trueà
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py‰ ‰(g
+template_id"__id*
+ (
+
+%178ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÂ Â( 
+%179"sqlalchemy.String*
+ ( *
+ ( ¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÂ Â(0
+%180"sqlalchemy.Column*
+ ( *
+ (
+
+%1792
+nullable
+
+TrueÑ
+Å
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÂ Â(0	
+subject"__id*
+ (
+
+%180ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÊ Ê("
+%181"sqlalchemy.String*
+ ( *
+ ( ¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÊ Ê(2
+%182"sqlalchemy.Column*
+ ( *
+ (
+
+%1812
+nullable
+
+TrueÜ
+É
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÊ Ê(2
+	preheader"__id*
+ (
+
+%182«
+ƒ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÁ Á(<
+%183"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer2
+nullable	
+
+False2
+default à
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÁ Á(<
+order_index"__id*
+ (
+
+%183«
+ƒ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyË Ë(<
+%184"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer2
+nullable	
+
+False2
+default à
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyË Ë(<
+delay_hours"__id*
+ (
+
+%184Õ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÍ Í(>
+%185"sqlalchemy.Enum*
+ ( *
+ (
+
+EmailEventType2%
+name
+emailcampaigneventtrigger¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÈ Ï(
+%186"sqlalchemy.Column*
+ ( *
+ (
+
+%1852
+nullable
+
+Trueã
+à
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÈ Ï(
+wait_for_event"__id*
+ (
+
+%186æ
+ª
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÓ Ó(/
+%187"sqlalchemy.Enum*
+ ( *
+ (
+
+EmailVariant2
+name
+emailvariant¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÌ (
+%188"sqlalchemy.Column*
+ ( *
+ (
+
+%1872
+nullable
+
+TrueÑ
+Å
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÌ (	
+variant"__id*
+ (
+
+%188∑
+¥
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÒ Ò(6
+%189"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer2
+nullable
+
+Trueé
+ã
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÒ Ò(6
+send_window_hours"__id*
+ (
+
+%189Œ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÚ Ú(;
+%190"sqlalchemy.Column*
+ ( *
+ (
+
+metadata*
+ (
+
+JSON2
+nullable
+
+Trueä
+á
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÚ Ú(;
+step_metadata"__id*
+ (
+
+%190Œ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÙ Ù(D
+%191"sqlalchemy.orm.relationship*
+ ( *
+ (
+EmailCampaign2
+back_populates	
+stepsÖ
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÙ Ù(D
+
+campaign"__id*
+ (
+
+%191Œ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyı ı(D
+%192"sqlalchemy.orm.relationship*
+ ( *
+ (
+EmailTemplate2
+back_populates	
+stepsÖ
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyı ı(D
+
+template"__id*
+ (
+
+%192Ê
+„
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyˆ ˙(
+%193"sqlalchemy.orm.relationship*
+ ( *
+ (
+	EmailSend2
+back_populates
+step2
+passive_deletes
+
+TrueÅ
+
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyˆ ˙(
+sends"__id*
+ (
+
+%193ö
+ó
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py› ›(*
+__tablename__"__id*$
+ (
+email_campaign_stepski
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyﬁ ·(
+%194"tuple◊
+‘
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyﬂ ﬂ(A
+%195"sqlalchemy.Index*
+ ( *1
+ (%#
+!idx_email_campaign_steps_campaign*
+ (
+campaign_id≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyﬂ ﬂ(A
+%196"
+__arrayAdd*
+ (
+
+%194*
+ (: *
+ (
+
+%195Ò
+Ó
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py‡ ‡(M
+%197"sqlalchemy.Index*
+ ( *.
+ (" 
+idx_email_campaign_steps_order*
+ (
+campaign_id*
+ (
+order_index≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py‡ ‡(M
+%198"
+__arrayAdd*
+ (
+
+%194*
+ (: *
+ (
+
+%197ã
+à
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyﬁ ·(
+__table_args__"__id*
+ (
+
+%194…
+∆
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py„" „(V
+%199"sqlalchemy.ForeignKey*
+ ( *"
+ (
+email_campaigns.id2
+ondelete	
+CASCADEŒ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py„ „(g
+%200"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%1992
+nullable	
+
+Falseà
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py„ „(g
+campaign_id"__id*
+ (
+
+%200 
+«
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py‰" ‰(W
+%201"sqlalchemy.ForeignKey*
+ ( *"
+ (
+email_templates.id2
+ondelete
+
+SET NULLÕ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py‰ ‰(g
+%202"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2012
+nullable
+
+Trueà
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py‰ ‰(g
+template_id"__id*
+ (
+
+%202ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÂ Â( 
+%203"sqlalchemy.String*
+ ( *
+ ( ¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÂ Â(0
+%204"sqlalchemy.Column*
+ ( *
+ (
+
+%2032
+nullable
+
+TrueÑ
+Å
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÂ Â(0	
+subject"__id*
+ (
+
+%204ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÊ Ê("
+%205"sqlalchemy.String*
+ ( *
+ ( ¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÊ Ê(2
+%206"sqlalchemy.Column*
+ ( *
+ (
+
+%2052
+nullable
+
+TrueÜ
+É
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÊ Ê(2
+	preheader"__id*
+ (
+
+%206«
+ƒ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÁ Á(<
+%207"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer2
+nullable	
+
+False2
+default à
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÁ Á(<
+order_index"__id*
+ (
+
+%207«
+ƒ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyË Ë(<
+%208"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer2
+nullable	
+
+False2
+default à
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyË Ë(<
+delay_hours"__id*
+ (
+
+%208Õ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÍ Í(>
+%209"sqlalchemy.Enum*
+ ( *
+ (
+
+EmailEventType2%
+name
+emailcampaigneventtrigger¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÈ Ï(
+%210"sqlalchemy.Column*
+ ( *
+ (
+
+%2092
+nullable
+
+Trueã
+à
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÈ Ï(
+wait_for_event"__id*
+ (
+
+%210æ
+ª
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÓ Ó(/
+%211"sqlalchemy.Enum*
+ ( *
+ (
+
+EmailVariant2
+name
+emailvariant¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÌ (
+%212"sqlalchemy.Column*
+ ( *
+ (
+
+%2112
+nullable
+
+TrueÑ
+Å
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÌ (	
+variant"__id*
+ (
+
+%212∑
+¥
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÒ Ò(6
+%213"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer2
+nullable
+
+Trueé
+ã
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÒ Ò(6
+send_window_hours"__id*
+ (
+
+%213Œ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÚ Ú(;
+%214"sqlalchemy.Column*
+ ( *
+ (
+
+metadata*
+ (
+
+JSON2
+nullable
+
+Trueä
+á
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÚ Ú(;
+step_metadata"__id*
+ (
+
+%214Œ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÙ Ù(D
+%215"sqlalchemy.orm.relationship*
+ ( *
+ (
+EmailCampaign2
+back_populates	
+stepsÖ
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÙ Ù(D
+
+campaign"__id*
+ (
+
+%215Œ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyı ı(D
+%216"sqlalchemy.orm.relationship*
+ ( *
+ (
+EmailTemplate2
+back_populates	
+stepsÖ
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyı ı(D
+
+template"__id*
+ (
+
+%216Ê
+„
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyˆ ˙(
+%217"sqlalchemy.orm.relationship*
+ ( *
+ (
+	EmailSend2
+back_populates
+step2
+passive_deletes
+
+TrueÅ
+
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyˆ ˙(
+sends"__id*
+ (
+
+%217ë
+é
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÜ Ü(!
+__tablename__"__id*
+ (
+email_sendski
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyá å(
+%218"tupleŒ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyà à(8
+%219"sqlalchemy.Index*
+ ( *(
+ (
+idx_email_sends_campaign*
+ (
+campaign_id≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyà à(8
+%220"
+__arrayAdd*
+ (
+
+%218*
+ (: *
+ (
+
+%219«
+ƒ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyâ â(1
+%221"sqlalchemy.Index*
+ ( *&
+ (
+idx_email_sends_status*
+ (
+
+status≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyâ â(1
+%222"
+__arrayAdd*
+ (
+
+%218*
+ (: *
+ (
+
+%221’
+“
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyä ä(?
+%223"sqlalchemy.Index*
+ ( *'
+ (
+idx_email_sends_message*#
+ (
+provider_message_id≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyä ä(?
+%224"
+__arrayAdd*
+ (
+
+%218*
+ (: *
+ (
+
+%223”
+–
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyã ã(=
+%225"sqlalchemy.Index*
+ ( *)
+ (
+idx_email_sends_recipient*
+ (
+recipient_email≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyã ã(=
+%226"
+__arrayAdd*
+ (
+
+%218*
+ (: *
+ (
+
+%225ã
+à
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyá å(
+__table_args__"__id*
+ (
+
+%218…
+∆
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyé" é(V
+%227"sqlalchemy.ForeignKey*
+ ( *"
+ (
+email_campaigns.id2
+ondelete	
+CASCADEŒ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyé é(g
+%228"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2272
+nullable	
+
+Falseà
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyé é(g
+campaign_id"__id*
+ (
+
+%228œ
+Ã
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyè è(X
+%229"sqlalchemy.ForeignKey*
+ ( *'
+ (
+email_campaign_steps.id2
+ondelete
+
+SET NULLÕ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyè è(h
+%230"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2292
+nullable
+
+TrueÑ
+Å
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyè è(h	
+step_id"__id*
+ (
+
+%230 
+«
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyê" ê(W
+%231"sqlalchemy.ForeignKey*
+ ( *"
+ (
+email_templates.id2
+ondelete
+
+SET NULLÕ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyê ê(g
+%232"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2312
+nullable
+
+Trueà
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyê ê(g
+template_id"__id*
+ (
+
+%232ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyë ë((
+%233"sqlalchemy.String*
+ ( *
+ ( µ
+≤
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyë ë(9
+%234"sqlalchemy.Column*
+ ( *
+ (
+
+%2332
+nullable	
+
+Falseå
+â
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyë ë(9
+recipient_email"__id*
+ (
+
+%234ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyí í('
+%235"sqlalchemy.String*
+ ( *
+ ( ¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyí í(7
+%236"sqlalchemy.Column*
+ ( *
+ (
+
+%2352
+nullable
+
+Trueã
+à
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyí í(7
+recipient_name"__id*
+ (
+
+%236¡
+æ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyì* ì(V
+%237"sqlalchemy.ForeignKey*
+ ( *
+ (
+	people.id2
+ondelete
+
+SET NULLÕ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyì ì(f
+%238"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2372
+nullable
+
+Trueê
+ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyì ì(f
+recipient_person_id"__id*
+ (
+
+%238»
+≈
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyî& î(Y
+%239"sqlalchemy.ForeignKey*
+ ( * 
+ (
+organisations.id2
+ondelete
+
+SET NULLÕ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyî î(i
+%240"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2392
+nullable
+
+Trueå
+â
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyî î(i
+organisation_id"__id*
+ (
+
+%240æ
+ª
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyñ ñ(/
+%241"sqlalchemy.Enum*
+ ( *
+ (
+
+EmailVariant2
+name
+emailvariant¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyï ò(
+%242"sqlalchemy.Column*
+ ( *
+ (
+
+%2412
+nullable
+
+TrueÑ
+Å
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyï ò(	
+variant"__id*
+ (
+
+%242ƒ
+¡
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyö ö(5
+%243"sqlalchemy.Enum*
+ ( *
+ (
+
+EmailSendStatus2
+name
+emailsendstatus•
+¢
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyú ú(&
+%244"__id*8
+ (,**
+models.email.EmailSendStatus"
+QUEUED 
+«
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyô ù(
+%245"sqlalchemy.Column*
+ ( *
+ (
+
+%2432
+nullable	
+
+False2
+default
+
+%244É
+Ä
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyô ù(
+status"__id*
+ (
+
+%245†
+ù
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyû û(1
+%246"sqlalchemy.DateTime*
+ ( 2
+timezone
+
+True¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyû û(A
+%247"sqlalchemy.Column*
+ ( *
+ (
+
+%2462
+nullable
+
+Trueâ
+Ü
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyû û(A
+scheduled_at"__id*
+ (
+
+%247†
+ù
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyü ü(,
+%248"sqlalchemy.DateTime*
+ ( 2
+timezone
+
+True¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyü ü(<
+%249"sqlalchemy.Column*
+ ( *
+ (
+
+%2482
+nullable
+
+TrueÑ
+Å
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyü ü(<	
+sent_at"__id*
+ (
+
+%249ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py†! †(,
+%250"sqlalchemy.String*
+ ( *
+ ( ¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py† †(<
+%251"sqlalchemy.Column*
+ ( *
+ (
+
+%2502
+nullable
+
+Trueê
+ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py† †(<
+provider_message_id"__id*
+ (
+
+%251¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py° °(/
+%252"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueä
+á
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py° °(/
+error_message"__id*
+ (
+
+%252Œ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¢ ¢(;
+%253"sqlalchemy.Column*
+ ( *
+ (
+
+metadata*
+ (
+
+JSON2
+nullable
+
+Trueä
+á
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¢ ¢(;
+step_metadata"__id*
+ (
+
+%253Œ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py§ §(D
+%254"sqlalchemy.orm.relationship*
+ ( *
+ (
+EmailCampaign2
+back_populates	
+sendsÖ
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py§ §(D
+
+campaign"__id*
+ (
+
+%254“
+œ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py• •(D
+%255"sqlalchemy.orm.relationship*
+ ( *!
+ (
+EmailCampaignStep2
+back_populates	
+sendsÄ
+~
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py• •(D
+step"__id*
+ (
+
+%255±
+Æ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¶ ¶(,
+%256"sqlalchemy.orm.relationship*
+ ( *
+ (
+EmailTemplateÖ
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¶ ¶(,
+
+template"__id*
+ (
+
+%256jh
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyß; ß(P
+%257"listº
+π
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyß< ß(O
+%258"
+__arrayAdd*
+ (
+
+%257*
+ (: *#
+ (
+
+recipient_person_idƒ
+¡
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyß ß(Q
+%259"sqlalchemy.orm.relationship*
+ ( *
+ (
+
+Person2
+foreign_keys
+
+%257ç
+ä
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyß ß(Q
+recipient_person"__id*
+ (
+
+%259∞
+≠
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py® ®(/
+%260"sqlalchemy.orm.relationship*
+ ( *
+ (
+Organisationâ
+Ü
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py® ®(/
+organisation"__id*
+ (
+
+%260ä
+á
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py© Æ(
+%261"sqlalchemy.orm.relationship*
+ ( *
+ (
+
+EmailEvent2
+back_populates
+send2!
+cascade
+all, delete-orphan2
+passive_deletes
+
+TrueÉ
+Ä
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py© Æ(
+events"__id*
+ (
+
+%261ë
+é
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÜ Ü(!
+__tablename__"__id*
+ (
+email_sendski
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyá å(
+%262"tupleŒ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyà à(8
+%263"sqlalchemy.Index*
+ ( *(
+ (
+idx_email_sends_campaign*
+ (
+campaign_id≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyà à(8
+%264"
+__arrayAdd*
+ (
+
+%262*
+ (: *
+ (
+
+%263«
+ƒ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyâ â(1
+%265"sqlalchemy.Index*
+ ( *&
+ (
+idx_email_sends_status*
+ (
+
+status≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyâ â(1
+%266"
+__arrayAdd*
+ (
+
+%262*
+ (: *
+ (
+
+%265’
+“
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyä ä(?
+%267"sqlalchemy.Index*
+ ( *'
+ (
+idx_email_sends_message*#
+ (
+provider_message_id≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyä ä(?
+%268"
+__arrayAdd*
+ (
+
+%262*
+ (: *
+ (
+
+%267”
+–
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyã ã(=
+%269"sqlalchemy.Index*
+ ( *)
+ (
+idx_email_sends_recipient*
+ (
+recipient_email≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyã ã(=
+%270"
+__arrayAdd*
+ (
+
+%262*
+ (: *
+ (
+
+%269ã
+à
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyá å(
+__table_args__"__id*
+ (
+
+%262…
+∆
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyé" é(V
+%271"sqlalchemy.ForeignKey*
+ ( *"
+ (
+email_campaigns.id2
+ondelete	
+CASCADEŒ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyé é(g
+%272"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2712
+nullable	
+
+Falseà
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyé é(g
+campaign_id"__id*
+ (
+
+%272œ
+Ã
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyè è(X
+%273"sqlalchemy.ForeignKey*
+ ( *'
+ (
+email_campaign_steps.id2
+ondelete
+
+SET NULLÕ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyè è(h
+%274"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2732
+nullable
+
+TrueÑ
+Å
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyè è(h	
+step_id"__id*
+ (
+
+%274 
+«
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyê" ê(W
+%275"sqlalchemy.ForeignKey*
+ ( *"
+ (
+email_templates.id2
+ondelete
+
+SET NULLÕ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyê ê(g
+%276"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2752
+nullable
+
+Trueà
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyê ê(g
+template_id"__id*
+ (
+
+%276ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyë ë((
+%277"sqlalchemy.String*
+ ( *
+ ( µ
+≤
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyë ë(9
+%278"sqlalchemy.Column*
+ ( *
+ (
+
+%2772
+nullable	
+
+Falseå
+â
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyë ë(9
+recipient_email"__id*
+ (
+
+%278ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyí í('
+%279"sqlalchemy.String*
+ ( *
+ ( ¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyí í(7
+%280"sqlalchemy.Column*
+ ( *
+ (
+
+%2792
+nullable
+
+Trueã
+à
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyí í(7
+recipient_name"__id*
+ (
+
+%280¡
+æ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyì* ì(V
+%281"sqlalchemy.ForeignKey*
+ ( *
+ (
+	people.id2
+ondelete
+
+SET NULLÕ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyì ì(f
+%282"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2812
+nullable
+
+Trueê
+ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyì ì(f
+recipient_person_id"__id*
+ (
+
+%282»
+≈
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyî& î(Y
+%283"sqlalchemy.ForeignKey*
+ ( * 
+ (
+organisations.id2
+ondelete
+
+SET NULLÕ
+ 
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyî î(i
+%284"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2832
+nullable
+
+Trueå
+â
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyî î(i
+organisation_id"__id*
+ (
+
+%284æ
+ª
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyñ ñ(/
+%285"sqlalchemy.Enum*
+ ( *
+ (
+
+EmailVariant2
+name
+emailvariant¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyï ò(
+%286"sqlalchemy.Column*
+ ( *
+ (
+
+%2852
+nullable
+
+TrueÑ
+Å
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyï ò(	
+variant"__id*
+ (
+
+%286ƒ
+¡
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyö ö(5
+%287"sqlalchemy.Enum*
+ ( *
+ (
+
+EmailSendStatus2
+name
+emailsendstatus•
+¢
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyú ú(&
+%288"__id*8
+ (,**
+models.email.EmailSendStatus"
+QUEUED 
+«
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyô ù(
+%289"sqlalchemy.Column*
+ ( *
+ (
+
+%2872
+nullable	
+
+False2
+default
+
+%288É
+Ä
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyô ù(
+status"__id*
+ (
+
+%289†
+ù
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyû û(1
+%290"sqlalchemy.DateTime*
+ ( 2
+timezone
+
+True¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyû û(A
+%291"sqlalchemy.Column*
+ ( *
+ (
+
+%2902
+nullable
+
+Trueâ
+Ü
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyû û(A
+scheduled_at"__id*
+ (
+
+%291†
+ù
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyü ü(,
+%292"sqlalchemy.DateTime*
+ ( 2
+timezone
+
+True¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyü ü(<
+%293"sqlalchemy.Column*
+ ( *
+ (
+
+%2922
+nullable
+
+TrueÑ
+Å
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyü ü(<	
+sent_at"__id*
+ (
+
+%293ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py†! †(,
+%294"sqlalchemy.String*
+ ( *
+ ( ¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py† †(<
+%295"sqlalchemy.Column*
+ ( *
+ (
+
+%2942
+nullable
+
+Trueê
+ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py† †(<
+provider_message_id"__id*
+ (
+
+%295¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py° °(/
+%296"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueä
+á
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py° °(/
+error_message"__id*
+ (
+
+%296Œ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¢ ¢(;
+%297"sqlalchemy.Column*
+ ( *
+ (
+
+metadata*
+ (
+
+JSON2
+nullable
+
+Trueä
+á
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¢ ¢(;
+step_metadata"__id*
+ (
+
+%297Œ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py§ §(D
+%298"sqlalchemy.orm.relationship*
+ ( *
+ (
+EmailCampaign2
+back_populates	
+sendsÖ
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py§ §(D
+
+campaign"__id*
+ (
+
+%298“
+œ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py• •(D
+%299"sqlalchemy.orm.relationship*
+ ( *!
+ (
+EmailCampaignStep2
+back_populates	
+sendsÄ
+~
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py• •(D
+step"__id*
+ (
+
+%299±
+Æ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¶ ¶(,
+%300"sqlalchemy.orm.relationship*
+ ( *
+ (
+EmailTemplateÖ
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¶ ¶(,
+
+template"__id*
+ (
+
+%300jh
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyß; ß(P
+%301"listº
+π
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyß< ß(O
+%302"
+__arrayAdd*
+ (
+
+%301*
+ (: *#
+ (
+
+recipient_person_idƒ
+¡
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyß ß(Q
+%303"sqlalchemy.orm.relationship*
+ ( *
+ (
+
+Person2
+foreign_keys
+
+%301ç
+ä
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyß ß(Q
+recipient_person"__id*
+ (
+
+%303∞
+≠
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py® ®(/
+%304"sqlalchemy.orm.relationship*
+ ( *
+ (
+Organisationâ
+Ü
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py® ®(/
+organisation"__id*
+ (
+
+%304ä
+á
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py© Æ(
+%305"sqlalchemy.orm.relationship*
+ ( *
+ (
+
+EmailEvent2
+back_populates
+send2!
+cascade
+all, delete-orphan2
+passive_deletes
+
+TrueÉ
+Ä
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py© Æ(
+events"__id*
+ (
+
+%305í
+è
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyæ æ("
+__tablename__"__id*
+ (
+email_eventski
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyø √(
+%306"tuple«
+ƒ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¿ ¿(1
+%307"sqlalchemy.Index*
+ ( *%
+ (
+idx_email_events_send*
+ (	
+send_id≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¿ ¿(1
+%308"
+__arrayAdd*
+ (
+
+%306*
+ (: *
+ (
+
+%307 
+«
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¡ ¡(4
+%309"sqlalchemy.Index*
+ ( *%
+ (
+idx_email_events_type*
+ (
+
+event_type≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¡ ¡(4
+%310"
+__arrayAdd*
+ (
+
+%306*
+ (: *
+ (
+
+%309÷
+”
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¬ ¬(@
+%311"sqlalchemy.Index*
+ ( *(
+ (
+idx_email_events_message*#
+ (
+provider_message_id≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¬ ¬(@
+%312"
+__arrayAdd*
+ (
+
+%306*
+ (: *
+ (
+
+%311ã
+à
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyø √(
+__table_args__"__id*
+ (
+
+%306≈
+¬
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py≈ ≈(N
+%313"sqlalchemy.ForeignKey*
+ ( *
+ (
+email_sends.id2
+ondelete	
+CASCADEŒ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py≈ ≈(_
+%314"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%3132
+nullable	
+
+FalseÑ
+Å
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py≈ ≈(_	
+send_id"__id*
+ (
+
+%314¬
+ø
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py« «(3
+%315"sqlalchemy.Enum*
+ ( *
+ (
+
+EmailEventType2
+name
+emaileventtypeµ
+≤
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∆ …(
+%316"sqlalchemy.Column*
+ ( *
+ (
+
+%3152
+nullable	
+
+Falseá
+Ñ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∆ …(
+
+event_type"__id*
+ (
+
+%316†
+ù
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py   (-
+%317"sqlalchemy.DateTime*
+ ( 2
+timezone
+
+Trueé
+ã
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py N  (X
+%318"sqlalchemy.sql.func.now*
+ ( —
+Œ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py   (Y
+%319"sqlalchemy.Column*
+ ( *
+ (
+
+%3172
+nullable	
+
+False2
+server_default
+
+%318Ö
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py   (Y
+
+event_at"__id*
+ (
+
+%319ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÀ À(*
+%320"sqlalchemy.String*
+ ( *
+ ( ¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÀ À(:
+%321"sqlalchemy.Column*
+ ( *
+ (
+
+%3202
+nullable
+
+Trueé
+ã
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÀ À(:
+provider_event_id"__id*
+ (
+
+%321ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÃ! Ã(,
+%322"sqlalchemy.String*
+ ( *
+ ( ¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÃ Ã(<
+%323"sqlalchemy.Column*
+ ( *
+ (
+
+%3222
+nullable
+
+Trueê
+ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÃ Ã(<
+provider_message_id"__id*
+ (
+
+%323¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÕ Õ(-
+%324"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+Trueà
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÕ Õ(-
+raw_payload"__id*
+ (
+
+%324ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyŒ Œ("
+%325"sqlalchemy.String*
+ ( *
+ ( ¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyŒ Œ(2
+%326"sqlalchemy.Column*
+ ( *
+ (
+
+%3252
+nullable
+
+Trueá
+Ñ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyŒ Œ(2
+
+ip_address"__id*
+ (
+
+%326ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyœ œ(#
+%327"sqlalchemy.String*
+ ( *
+ ( ¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyœ œ(3
+%328"sqlalchemy.Column*
+ ( *
+ (
+
+%3272
+nullable
+
+Trueá
+Ñ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyœ œ(3
+
+user_agent"__id*
+ (
+
+%328¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py–
+ –(%
+%329"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+True
+}
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py– –(%
+url"__id*
+ (
+
+%329À
+»
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py“ “(=
+%330"sqlalchemy.orm.relationship*
+ ( *
+ (
+	EmailSend2
+back_populates
+
+eventsÄ
+~
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py“ “(=
+send"__id*
+ (
+
+%330í
+è
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyæ æ("
+__tablename__"__id*
+ (
+email_eventski
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyø √(
+%331"tuple«
+ƒ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¿ ¿(1
+%332"sqlalchemy.Index*
+ ( *%
+ (
+idx_email_events_send*
+ (	
+send_id≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¿ ¿(1
+%333"
+__arrayAdd*
+ (
+
+%331*
+ (: *
+ (
+
+%332 
+«
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¡ ¡(4
+%334"sqlalchemy.Index*
+ ( *%
+ (
+idx_email_events_type*
+ (
+
+event_type≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¡ ¡(4
+%335"
+__arrayAdd*
+ (
+
+%331*
+ (: *
+ (
+
+%334÷
+”
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¬ ¬(@
+%336"sqlalchemy.Index*
+ ( *(
+ (
+idx_email_events_message*#
+ (
+provider_message_id≠
+™
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py¬ ¬(@
+%337"
+__arrayAdd*
+ (
+
+%331*
+ (: *
+ (
+
+%336ã
+à
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyø √(
+__table_args__"__id*
+ (
+
+%331≈
+¬
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py≈ ≈(N
+%338"sqlalchemy.ForeignKey*
+ ( *
+ (
+email_sends.id2
+ondelete	
+CASCADEŒ
+À
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py≈ ≈(_
+%339"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%3382
+nullable	
+
+FalseÑ
+Å
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py≈ ≈(_	
+send_id"__id*
+ (
+
+%339¬
+ø
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py« «(3
+%340"sqlalchemy.Enum*
+ ( *
+ (
+
+EmailEventType2
+name
+emaileventtypeµ
+≤
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∆ …(
+%341"sqlalchemy.Column*
+ ( *
+ (
+
+%3402
+nullable	
+
+Falseá
+Ñ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py∆ …(
+
+event_type"__id*
+ (
+
+%341†
+ù
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py   (-
+%342"sqlalchemy.DateTime*
+ ( 2
+timezone
+
+Trueé
+ã
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py N  (X
+%343"sqlalchemy.sql.func.now*
+ ( —
+Œ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py   (Y
+%344"sqlalchemy.Column*
+ ( *
+ (
+
+%3422
+nullable	
+
+False2
+server_default
+
+%343Ö
+Ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py   (Y
+
+event_at"__id*
+ (
+
+%344ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÀ À(*
+%345"sqlalchemy.String*
+ ( *
+ ( ¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÀ À(:
+%346"sqlalchemy.Column*
+ ( *
+ (
+
+%3452
+nullable
+
+Trueé
+ã
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÀ À(:
+provider_event_id"__id*
+ (
+
+%346ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÃ! Ã(,
+%347"sqlalchemy.String*
+ ( *
+ ( ¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÃ Ã(<
+%348"sqlalchemy.Column*
+ ( *
+ (
+
+%3472
+nullable
+
+Trueê
+ç
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÃ Ã(<
+provider_message_id"__id*
+ (
+
+%348¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÕ Õ(-
+%349"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+Trueà
+Ö
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyÕ Õ(-
+raw_payload"__id*
+ (
+
+%349ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyŒ Œ("
+%350"sqlalchemy.String*
+ ( *
+ ( ¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyŒ Œ(2
+%351"sqlalchemy.Column*
+ ( *
+ (
+
+%3502
+nullable
+
+Trueá
+Ñ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyŒ Œ(2
+
+ip_address"__id*
+ (
+
+%351ò
+ï
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyœ œ(#
+%352"sqlalchemy.String*
+ ( *
+ ( ¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyœ œ(3
+%353"sqlalchemy.Column*
+ ( *
+ (
+
+%3522
+nullable
+
+Trueá
+Ñ
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyœ œ(3
+
+user_agent"__id*
+ (
+
+%353¥
+±
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py–
+ –(%
+%354"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+True
+}
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py– –(%
+url"__id*
+ (
+
+%354À
+»
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py“ “(=
+%355"sqlalchemy.orm.relationship*
+ ( *
+ (
+	EmailSend2
+back_populates
+
+eventsÄ
+~
+X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py“ “(=
+send"__id*
+ (
+
+%355*
+2B H

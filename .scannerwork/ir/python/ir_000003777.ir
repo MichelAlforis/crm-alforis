@@ -1,0 +1,86 @@
+
+"sentry"str
+"level"str
+truebool
+	"enabled"str
+
+"environment"str
+"structured"str
+"dsn_configured"str
+	"logging"str
+md"
+    VÃ©rifie l'Ã©tat du monitoring
+
+    Returns:
+        dict avec l'Ã©tat de chaque service
+    "str"—.
+,
+
+Â Ì(health"#new-object#Bdict&
+$
+
+Ã Ç(	"#new-object#Bdict#
+!
+
+Ä Ä($"#unknown-value#-
++
+
+Ä Ä(/"#get-field# sentry_dsn:1
+/
+
+Ä Ä(0"#dependent-value#*:Bbool"
+ 
+
+Ä Ä(0	"	#map-set#:#
+!
+
+Å Å(#"#unknown-value#.
+,
+
+Å Å(/"#get-field# environment:"
+ 
+
+Å Å(/"	#map-set#:
+#
+!
+
+Æ# Æ(+"#unknown-value#-
++
+
+Æ# Æ(6"#get-field# sentry_dsn:1
+/
+
+Æ Æ(7"#dependent-value#*:Bbool"
+ 
+
+Æ Æ(7"	#map-set#:"
+ 
+
+Ã Ç(	"	#map-set#:&
+$
+
+È Ë(	"#new-object#Bdict#
+!
+
+É* É(1"#unknown-value#'
+%
+
+É* É(6"#get-field# root:(
+&
+
+É* É(<"#get-field# level:,
+*
+
+É É(="
+logginggetLevelName:"
+ 
+
+É É(="	#map-set#:"
+ 
+
+Ê Ê("	#map-set#:"
+ 
+
+È Ë(	"	#map-set#:
+
+Î Î(*O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/core/monitoring.py

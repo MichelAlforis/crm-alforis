@@ -1,0 +1,169 @@
+
+" "str
+ÛÈ"Aligns lines to middle (adds extra lines to above and below as required).
+
+        Args:
+            lines (List[List[Segment]]): A list of lines.
+            width (int): Desired width.
+            height (int, optional): Desired height or None for no change.
+            style (Style): Style of any padding added.
+            new_lines (bool, optional): Padded lines should include "\n". Defaults to False.
+
+        Returns:
+            List[List[Segment]]: New list of lines.
+        "str
+
+2int
+
+0int
+"\n"strcls
+Ì Ì(lines
+Ó Ó($width
+Ô Ô(height
+ (style
+Ò Ò(	new_lines
+Ú Ú(list"‡,
+*
+
+Ä Ä()"
+builtinslen*:Bint4
+2
+
+Ä Ä()	extra_lines"	#binop -#*2-:+
+)
+
+Å Å(
+"
+__bool__*:	BboolH+
+)
+
+Å Å("#unaryop !#2!:
+Bbool "
+
+Å Å( *
+Å Å(
+"i)
+'
+
+Ç Ç("#unknown-value#Blist(
+&
+
+Ç Ç("#array-add-all#:
+
+Ç Ç("â*
+(
+
+É É(lines"#unknown-value#+
+)
+
+Ñ2 Ñ(;"
+__bool__*:BboolH,"*
+
+Ñ2 Ñ(; *
+Ñ/ Ñ(12
+Ñ< Ñ(@"Å'
+%
+
+Ñ Ñ("	#binop *#*2*:$
+"
+
+Ñ Ñ(&"	#binop +#2+:
+
+
+Ñ Ñ(."cls:
+
+Ñ Ñ(X"['
+%
+
+ÑE Ñ(P"	#binop *#*2*:
+
+
+ÑA Ñ(X"cls:
+
+Ñ Ñ(X"ä	*blank4
+2
+
+Ö Ö($	top_lines"
+#binop //#*2//:	5
+3
+
+Ü Ü(.bottom_lines"	#binop -#*2-:	)
+'
+
+á á("#unknown-value#Blist(
+&
+
+á á("
+#is-exact#:Bbool
+
+
+á á("
+#assume#::
+8
+
+á á( "#set-field# __collection_size:Bint(
+&
+
+á á(!"#array-add-last#:)
+'
+
+á á(""#unknown-value#Blist(
+&
+
+á á(#"
+#is-exact#:"Bbool
+
+
+á á($"
+#assume#:#:
+8
+
+á á(%"#set-field# __collection_size:"Bint(
+&
+
+á á(&"#array-add-last#:"'
+%
+
+á á(%'"	#binop *#*2*:")
+'
+
+á1 á(8("#unknown-value#Blist(
+&
+
+á1 á(8)"
+#is-exact#:(Bbool
+
+
+á1 á(8*"
+#assume#:):
+8
+
+á1 á(8+"#set-field# __collection_size:(Bint(
+&
+
+á1 á(8,"#array-add-last#:()
+'
+
+á0 á(9-"#unknown-value#Blist(
+&
+
+á0 á(9."
+#is-exact#:-Bbool
+
+
+á0 á(9/"
+#assume#:.:
+8
+
+á0 á(90"#set-field# __collection_size:-Bint(
+&
+
+á0 á(91"#array-add-last#:-('
+%
+
+á0 á(H2"	#binop *#*2*:-,
+*
+
+á á(H3lines"	#binop +#2+:'2
+
+à à(3*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/segment.py

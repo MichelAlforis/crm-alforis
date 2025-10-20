@@ -1,0 +1,49 @@
+
+models.mandat.Mandat.__repr__W
+M/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/mandat.pyH H("2*ô
+2I I(TV
+T
+I I($
+%1"__id*<
+
+__unknown_file ( *
+models.mandat.Mandat"
+idZ
+X
+I/ I(:
+%2"__id*@
+
+__unknown_file ($*"
+models.mandat.Mandat"
+numberZ
+X
+IE I(P
+%3"__id*@
+
+__unknown_file ($*"
+models.mandat.Mandat"
+statusÀ
+½
+I I(T
+%4"__concat*
+I I(
+<Mandat(id=*
+I I($
+
+%1*
+I% I(.
+	, number=*
+I/ I(:
+
+%2*
+I; I(D
+	, status=*
+IE I(P
+
+%3*
+IQ I(S
+)>"
+I I(T
+
+%4B
+models.mandat.MandatH

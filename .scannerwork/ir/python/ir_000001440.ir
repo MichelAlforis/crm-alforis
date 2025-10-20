@@ -1,0 +1,16 @@
+
+åÛ"
+        Return a dictionary containing key-value pairs for the information
+        items from the os-release file data source of the OS distribution.
+
+        For details, see :func:`distro.os_release_info`.
+        "strself
+ò ò("w3
+1
+
+ù ù($"#get-field# _os_release_info:.
+,
+
+ù ù($"?python-partial-apply?:
+
+ù ù($*€/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/distro/distro.py

@@ -1,0 +1,30 @@
+
+vm"Install a project in editable mode (i.e. setuptools "develop mode") from a local project path or a VCS url."str
+"--editable"str
+
+"path/url"str
+
+	0int
+"append"str
+"editables"str
+"-e"strlist"ú)
+'
+
+Ä Ä("#unknown-value#Blist(
+&
+
+Ä Ä("
+#is-exact#:Bbool
+
+
+Ä Ä("
+#assume#::
+8
+
+Ä Ä(
+"#set-field# __collection_size:	Bint4
+2
+
+¿ Ê("Option:Boptparse.Option
+
+¿ Ê(*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/cli/cmdoptions.py

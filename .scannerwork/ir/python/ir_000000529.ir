@@ -1,0 +1,29 @@
+
+Äº"Move cursor relative to current position.
+
+        Args:
+            x (int): X offset.
+            y (int): Y offset.
+
+        Returns:
+            ~Control: Control object.
+
+        "strclsO O(xO O(yO O(("½(
+&
+[ h(%closure"#new-object##
+!
+[ h("#set-field# x:#
+!
+[ h("#set-field# y:+
+)
+[ h("?python-partial-apply?:B
+@
+h h("	"2
+%pip._vendor.rich.control.Control.move	get_codes#
+!
+h h("
+"#unaryop *#2*:	!
+
+h h(#control"cls:
+
+i i(*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/control.py

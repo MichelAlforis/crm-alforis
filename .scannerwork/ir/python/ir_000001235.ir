@@ -1,0 +1,11 @@
+
+
+0int
+MD"Get the current umask which involves having to set it temporarily."str"`)
+'
+/ /(mask"
+osumask:Bint#
+!
+0 0("
+osumask:Bint
+1 1(*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/unpacking.py

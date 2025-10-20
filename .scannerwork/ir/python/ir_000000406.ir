@@ -1,0 +1,25 @@
+
+š"
+    Helper pour autocomplete rapide
+
+    Args:
+        query: DÃ©but du terme
+        db: Session database
+        current_user: Utilisateur courant
+        entity_type: Type d'entitÃ©
+        limit: Nombre de suggestions
+
+    Returns:
+        Liste de suggestions
+    "strquery
+‘ ‘(db
+’ ’(current_user
+“ “(entity_type
+” ”(&limit
+• •("VB
+@
+
+¤ ª(")
+core.search.SearchServiceautocomplete:
+
+¤ ª(*K/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/core/search.py

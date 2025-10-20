@@ -1,0 +1,8 @@
+
+_V"Returns a PreparedRequest for the next request in a redirect chain, if there is one."strself
+‘ ‘("<(
+&
+
+“ “("#get-field# _next:
+
+“ “(*‚/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/requests/models.py

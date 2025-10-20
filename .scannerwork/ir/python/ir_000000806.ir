@@ -1,0 +1,20 @@
+
+) "Helper pour les exports/tests."strselfK K(models.mandat.MandatStatus"¬'
+%
+M M("#get-field# status:#
+!
+M M(H"#new-object#Bset'
+%
+M M(2"#get-field# ACTIVE:&
+$
+M M(H"#array-add-last#:'
+%
+M4 M(G"#get-field# SIGNED:&
+$
+M M(H	"#array-add-last#:*
+(
+M M(H
+"
+#binop in#2in:Bbool
+M M(H
+*M/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/mandat.py

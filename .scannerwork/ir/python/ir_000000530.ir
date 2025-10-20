@@ -1,0 +1,92 @@
+
+ìâ"Move to the given column, optionally add offset to row.
+
+        Returns:
+            x (int): absolute x (column)
+            y (int): optional y offset (row)
+
+        Returns:
+            ~Control: Control object.
+        "str
+
+0intclsl l(xl l("yl$ l(.		tuple($pip._vendor.rich.segment.ControlType"U)
+'
+ ("
+__bool__*:BboolH("&
+ ( * (2
+€ €("‡6
+4
+y y(2"#!#get-field# CURSOR_MOVE_TO_COLUMN:(
+&
+y y(6"#unknown-value#Btuple&
+$
+y y(6
+"
+#is-exact#:	Bbool
+
+y y(6"
+#assume#:
+8
+6
+y y(6"#set-field# __collection_size:Bint&
+$
+y y(6"#array-add-last#:&
+$
+y y(6"#array-add-last#:(
+&
+{/ {(4"	#binop >#2>:Bbool&"$
+{/ {(4 *{, {(.2{5 {(9"ñ8
+6
+
+€ €(7"#!#get-field# CURSOR_MOVE_TO_COLUMN:*
+(
+
+€ €(;"#unknown-value#Btuple(
+&
+
+€ €(;"
+#is-exact#:	Bbool
+
+
+€ €(;"
+#assume#::
+8
+
+€ €(; "#set-field# __collection_size:Bint(
+&
+
+€ €(;!"#array-add-last#:(
+&
+
+€ €(;""#array-add-last#:
+
+
+€ €(<#"cls:
+	x €(<"%*$#
+	w (	$"@,
+*
+{ {(+"#get-field# CURSOR_DOWN:
+{ {(O">*
+(
+{: {(O"#get-field# CURSOR_UP:
+{ {(O"ã*%
+#
+| |("
+builtinsabs*:(
+&
+z }("#unknown-value#Btuple&
+$
+z }("
+#is-exact#:	Bbool
+
+z }("
+#assume#:8
+6
+z }("#set-field# __collection_size:Bint&
+$
+z }("#array-add-last#:&
+$
+z }("#array-add-last#:
+
+x ~("cls:
+	x €(<*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/control.py

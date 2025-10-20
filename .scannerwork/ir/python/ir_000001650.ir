@@ -1,0 +1,60 @@
+
+
+0int
+
+1intt
+¤ ¤(	tuple"ª$
+"
+
+ª ª("#array-read#:#
+!
+
+ª ª("#unknown-value#$
+"
+
+ª ª(""#array-read#:$
+"
+
+ª ª(#"#array-read#:$
+"
+
+ª% ª()"#array-read#:+
+)
+
+ª% ª(2	"#get-field# priority:$
+"
+
+ª4 ª(8
+"#array-read#:+
+)
+
+ª4 ª(A"#get-field# __name__:
+*
+(
+
+ª ª(B"#unknown-value#Btuple(
+&
+
+ª ª(B"
+#is-exact#:Bbool
+
+
+ª ª(B"
+#assume#::
+8
+
+ª ª(B"#set-field# __collection_size:Bint(
+&
+
+ª ª(B"#array-add-last#:(
+&
+
+ª ª(B"#array-add-last#:(
+&
+
+ª ª(B"#array-add-last#:	(
+&
+
+ª ª(B"#array-add-last#:
+
+ª ª(B*‹/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexers/__init__.py

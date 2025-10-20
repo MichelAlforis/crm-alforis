@@ -1,0 +1,16 @@
+
+öì"Extras provided by this distribution.
+
+        For modern .dist-info distributions, this is the collection of
+        "Provides-Extra:" entries in distribution metadata.
+
+        The return value of this function is expected to be normalised names,
+        per PEP 685, with the returned value being handled appropriately by
+        `iter_dependencies`.
+        "strself
+Á Á(!"S?
+=
+
+Ë Ë(#"NotImplementedError*BNotImplementedError2
+
+Ë Ë(#*‚/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/metadata/base.py

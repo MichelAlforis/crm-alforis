@@ -1,0 +1,22 @@
+
+„ú"This function determines the value of _USE_SYSCONFIG.
+
+    By default, pip uses sysconfig on Python 3.10+.
+    But Python distributors can override this decision by setting:
+        sysconfig._PIP_USE_SYSCONFIG = True / False
+    Rationale in https://github.com/pypa/pip/issues/10647
+
+    This is a function for testability, but should be constant during any one
+    run.
+    "str
+"_PIP_USE_SYSCONFIG"str"´!
+
+; ;(!"#unknown-value#!
+
+;9 ;(O"#unknown-value#+
+)
+; ;(P"
+builtinsgetattr*:/
+-
+; ;(Q"#dependent-value#*:Bbool
+; ;(Q*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/locations/__init__.py

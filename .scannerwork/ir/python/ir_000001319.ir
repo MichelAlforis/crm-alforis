@@ -1,0 +1,17 @@
+
+æÜ"
+        Return true if the commit hash checked out at dest matches
+        the revision in url.
+
+        Always return False, if the VCS does not support immutable commit
+        hashes.
+
+        This method does not check if there are local uncommitted changes
+        in dest after checkout, as pip currently has no use case for that.
+        "str
+falseboolself
+½" ½(&url
+½( ½(0dest
+½2 ½(;"
+
+È È(*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/vcs/versioncontrol.py

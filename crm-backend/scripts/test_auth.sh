@@ -35,7 +35,7 @@ RESPONSE=$(curl -s -X POST $BASE_URL/auth/login \
 
 ADMIN_TOKEN=$(echo $RESPONSE | jq -r '.access_token' 2>/dev/null || echo "null")
 
-if [ "$ADMIN_TOKEN" == "null" ] || [ -z "$ADMIN_TOKEN" ]; then
+if [[ "$ADMIN_TOKEN" == "null" ]] || [ -z "$ADMIN_TOKEN" ]; then
   echo -e "${RED}❌ Login failed!${NC}"
   echo "Response: $RESPONSE"
   exit 1
@@ -53,7 +53,7 @@ RESPONSE=$(curl -s -X POST $BASE_URL/auth/login \
 
 USER_TOKEN=$(echo $RESPONSE | jq -r '.access_token' 2>/dev/null || echo "null")
 
-if [ "$USER_TOKEN" == "null" ] || [ -z "$USER_TOKEN" ]; then
+if [[ "$USER_TOKEN" == "null" ]] || [ -z "$USER_TOKEN" ]; then
   echo -e "${RED}❌ User login failed!${NC}"
   exit 1
 fi
@@ -70,7 +70,7 @@ ME_RESPONSE=$(curl -s -H "Authorization: Bearer $ADMIN_TOKEN" \
 ADMIN_EMAIL=$(echo $ME_RESPONSE | jq -r '.email' 2>/dev/null)
 ADMIN_IS_ADMIN=$(echo $ME_RESPONSE | jq -r '.is_admin' 2>/dev/null)
 
-if [ "$ADMIN_EMAIL" != "admin@tpmfinance.com" ]; then
+if [[ "$ADMIN_EMAIL" != "admin@tpmfinance.com" ]]; then
   echo -e "${RED}❌ Failed to get user info${NC}"
   echo "Response: $ME_RESPONSE"
   exit 1
@@ -103,7 +103,7 @@ INVESTOR_RESPONSE=$(curl -s -X POST $BASE_URL/investors \
 
 INVESTOR_ID=$(echo $INVESTOR_RESPONSE | jq -r '.id' 2>/dev/null)
 
-if [ "$INVESTOR_ID" == "null" ] || [ -z "$INVESTOR_ID" ]; then
+if [[ "$INVESTOR_ID" == "null" ]] || [ -z "$INVESTOR_ID" ]; then
   echo -e "${RED}❌ Failed to create investor${NC}"
   echo "Response: $INVESTOR_RESPONSE"
   exit 1
@@ -131,7 +131,7 @@ REFRESH_RESPONSE=$(curl -s -X POST -H "Authorization: Bearer $ADMIN_TOKEN" \
 
 NEW_TOKEN=$(echo $REFRESH_RESPONSE | jq -r '.access_token' 2>/dev/null)
 
-if [ "$NEW_TOKEN" == "null" ] || [ -z "$NEW_TOKEN" ]; then
+if [[ "$NEW_TOKEN" == "null" ]] || [ -z "$NEW_TOKEN" ]; then
   echo -e "${RED}❌ Token refresh failed${NC}"
   exit 1
 fi

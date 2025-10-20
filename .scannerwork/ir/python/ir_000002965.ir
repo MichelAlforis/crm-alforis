@@ -1,0 +1,45 @@
+
+
+1intself
+§ §("²(
+&
+
+¨A ¨(K"#get-field# _dist:k
+i
+
+¨ ¨(L"V
+(pip._internal.metadata.importlib._compat*parse_name_and_version_from_info_directory:$
+"
+
+¨ ¨(O"#array-read#:$
+"
+
+¨ ¨(Oversion"#id#:+
+)
+
+¨ ¨(O"
+__bool__*:BboolH "
+
+¨ ¨(O *
+¨ ¨(
+"Q;
+9
+
+© ©()"&
+pip._vendor.packaging.versionparse:
+
+© ©()"§(
+&
+
+ª ª('	"#get-field# _dist:*
+(
+
+ª ª(/
+"#get-field# version:	;
+9
+
+ª ª(0"&
+pip._vendor.packaging.versionparse:
+
+
+ª ª(0*Ž/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/metadata/importlib/_dists.py

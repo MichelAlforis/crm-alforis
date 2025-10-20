@@ -1,0 +1,63 @@
+
+models.email.EmailSend.__repr__X
+L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.py· ·("2*ž
+2
+¸ ¸(^Z
+X
+
+¸  ¸('
+%1"__id*>
+
+__unknown_file ("* 
+models.email.EmailSend"
+idg
+e
+
+¸1 ¸(E
+%2"__id*K
+
+__unknown_file (/*-
+models.email.EmailSend"
+recipient_email^
+\
+
+¸P ¸([
+%3"__id*B
+
+__unknown_file (&*$
+models.email.EmailSend"
+statusÑ
+Î
+
+¸ ¸(^
+%4"__concat* 
+
+¸ ¸(
+<EmailSend id=*
+
+¸  ¸('
+
+%1*
+
+¸( ¸(0
+
+ email='*
+
+¸1 ¸(E
+
+%2*
+
+¸F ¸(O
+	' status=*
+
+¸P ¸([
+
+%3*
+
+¸\ ¸(]
+>"
+
+¸ ¸(^
+
+%4B
+models.email.EmailSendH

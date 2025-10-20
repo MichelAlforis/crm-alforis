@@ -1,0 +1,243 @@
+
+1.0PythonFrontend"1760943933332*py2.B™	
+
+imports1
+
+extends2
+
+returns3
+
+	has param4
+
+module5
+
+
+class6
+
+function7
+#
+crm-backend/core/monitoring.py9
+
+core.monitoring11
+%
+sentry_sdk.integrations.fastapi12
+(
+"sentry_sdk.integrations.sqlalchemy14
+%
+sentry_sdk.integrations.logging16
+
+logging18
+
+typing20
+
+core.config22
+(
+"core.monitoring.clear_user_context24
++
+%core.monitoring.filter_sensitive_data26
+-
+'core.monitoring.check_monitoring_health28
+
+
+dict30
+ 
+core.monitoring.get_logger32
+	
+str34
+&
+ core.monitoring.set_user_context36
+-
+'core.monitoring.set_transaction_context38
+%
+core.monitoring.capture_message40
+!
+core.monitoring.init_sentry42
+'
+!core.monitoring.capture_exception44
+
+	Exception46
+-
+'core.monitoring.init_structured_logging48
+,
+&core.monitoring.get_traces_sample_rate50
+
+float52
+$
+core.monitoring.add_breadcrumb54
+(
+"core.monitoring.PerformanceMonitor56
+1
++core.monitoring.PerformanceMonitor.__init__58
+2
+,core.monitoring.PerformanceMonitor.__enter__60
+1
++core.monitoring.PerformanceMonitor.__exit__62
+1
++core.monitoring.PerformanceMonitor.set_data64
+0
+*core.monitoring.PerformanceMonitor.set_tag66J
+
+8
+89j¢
+ 
+10
+10115 *
+8 (
+
+13
+13125
+
+15
+15145
+
+17
+17165
+
+19
+19185
+
+21
+21205
+
+23
+23225
+
+25
+25247 210
+
+27
+27267 210
+
+29
+29287 210
+
+31
+31306
+
+33
+33327 210
+
+35
+35346
+
+37
+37367 210
+
+39
+39387 210
+
+41
+41407 210
+
+43
+43427 210
+
+45
+45447 210
+
+47
+47466
+
+49
+49487 210
+
+51
+51507 210
+
+53
+53526
+
+55
+55547 210
+
+57
+57566 210
+
+59
+59587 257
+
+61
+61607 257
+
+63
+63627 257
+
+65
+65647 257
+
+67
+67667 257r’
+
+10131*
+8	 	(?
+
+10151*
+8
+ 
+(E
+
+10171*
+8 (?
+
+10191*
+8 (
+
+10211*
+8 (
+
+10231*
+8 (!
+
+29313*
+8» »(
+
+33354*
+8ÿ ÿ(
+
+39354*
+8œ œ(
+
+39354*
+8œ œ(
+
+41354*
+8» »(
+
+41354*
+8» »(
+
+41314*
+8» »(
+
+45474*
+8Ç Ç(
+
+45314*
+8Ç Ç(
+
+51533*
+8R R(
+
+55354*
+8© ©(
+
+55354*
+8© ©(
+
+55354*
+8© ©(
+
+55314*
+8© ©(
+
+59354*
+8ž	 ž(
+
+65314*
+8«	 «(
+
+67354*
+8±	 ±(
+
+67354*
+8±	 ±(

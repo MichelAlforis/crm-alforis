@@ -1,0 +1,13 @@
+
+ﬂ’"
+        This method should process the text and return an iterable of
+        ``(index, tokentype, value)`` tuples where ``index`` is the starting
+        position of the token within the input text.
+
+        It must be overridden by subclasses. It is recommended to
+        implement it as a generator to maximize effectiveness.
+        "strself
+ó ó(#text
+ó% ó()NotImplementedError"2
+
+† †(!*Å/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexer.py

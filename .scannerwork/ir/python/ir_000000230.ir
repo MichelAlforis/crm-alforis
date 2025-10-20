@@ -1,0 +1,14 @@
+
+-1int
+1("Get the Style at the top of the stack."str
+
+1intself
+‰ ‰("c)
+'
+
+‹ ‹("#get-field# _stack:$
+"
+
+‹ ‹("#array-read#:
+
+‹ ‹(*}/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/style.py

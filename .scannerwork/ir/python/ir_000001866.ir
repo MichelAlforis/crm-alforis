@@ -1,0 +1,93 @@
+
+truebool
+
+
+0int
+ìâ"Traverse object and generate a tree.
+
+    Args:
+        _object (Any): Object to be traversed.
+        max_length (int, optional): Maximum length of containers before abbreviating, or None for no abbreviation.
+            Defaults to None.
+        max_string (int, optional): Maximum length of string before truncating, or None to disable truncating.
+            Defaults to None.
+        max_depth (int, optional): Maximum depth of data structures, or None for no maximum.
+            Defaults to None.
+
+    Returns:
+        Node: The root of a tree structure which can be used to render a pretty repr.
+    "str_object
+Å Å(
+max_length
+Æ Æ($
+max_string
+Ç Ç($	max_depth
+È È(#"œ*
+(
+
+Ù é(%closure"#new-object#.
+,
+
+Ù é("#set-field# max_string:-
++
+
+Ù é("?python-partial-apply?:$
+"
+
+é é(!	"?python-unknown?:
+8
+
+é é(!"#set-field# __collection_size:	
+Bint9
+7
+
+é é(!visited_ids"
+builtinsset*:	Bset4
+2
+
+ê ê("push_visited"#get-field# add:.
+,
+
+ê ê(""?python-partial-apply?:)
+'
+
+ê ê("push_visited"#id#:6
+4
+
+ë ë($pop_visited"#get-field# remove:.
+,
+
+ë ë($"?python-partial-apply?:(
+&
+
+ë ë($pop_visited"#id#:*
+(
+
+í ê(%closure"#new-object#/
+-
+
+í ê("#set-field# visited_ids:-
++
+
+í ê("#set-field# max_depth:0
+.
+
+í ê("#set-field# push_visited:/
+-
+
+í ê("#set-field# pop_visited:.
+,
+
+í ê("#set-field# max_length:-
++
+
+í ê("?python-partial-apply?:#
+!
+
+ê ê(("#unknown-value#J
+H
+
+ê ê((node"-
+ pip._vendor.rich.pretty.traverse	_traverse:
+
+ë ë(*~/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/pretty.py

@@ -1,0 +1,2452 @@
+
+ú"Î·Î¹"str
+›" ÌˆÌ"str
+‚"á½¥Î¹"str
+à8143int
+å"á¿ "str
+³"Î¬"str
+¤8105int
+h"á¼£Î¹"str
+»8124int
+y8085int
+š"á¿†Î¹"str
+Ì8095int
+’8134int
+(8076int
+í8115int
+Î"Î¹"str
+Õ"á½ Î¹"str
+8075int
+"á¼Î¹"str
+ä8114int
+½"Ï‰Î¹"str
+÷"á½º"str
+;"á¼†Î¹"str
+Ä8159int
+×8142int
+¼8179int
+Õ8182int
+‘8173int
+Ô8163int
+¾"Î®"str
+”"á½§Î¹"str
+8153int
+ß" Í‚"str
+Ä8094int
+‹8133int
+£8175int
+³" Ì”Ì€"str
+ƒ"á¼¦Î¹"str
+¢8155int
+¬"Î­"str
+¡"á¾±"str
+î"Î±Î¹"str
+¤"`"str
+£"Î¯"str
+ª"á½°"str
+£"á½²"str
+€"Ï"str
+’" ÌˆÌ€"str
+ğ"á½£Î¹"str
+´8107int
+Ì8110int
+)"á¼„Î¹"str
+‘"á¿‘"str
+Õ"Î°"str
+Í8126int
+V"á¼¡Î¹"str
+¤8090int
+‹8087int
+¬8106int
+‚8086int
+š8174int
+İ8164int
+Ã8125int
+™8154int
+™8135int
+18077int
+ø8100int
+Ô8096int
+ö8116int
+Å" Ì”Í‚"str
+L8080int
+¼" Ì”Ì"str
+é8144int
+€8150int
+Ï" Ì“Ì€"str
+˜"á¾°"str
+«8137int
+C8079int
+Š8102int
+€"X"str
+æ8098int
+ 8121int
+"á¾¶Î¹"str
+^8082int
+ö8170int
+‡8118int
+"á¼‚Î¹"str
+ñ"á½´Î¹"str
+D"á¼‡Î¹"str
+ˆ"á¿"str
+q"á¼¤Î¹"str
+8073int
+Ş8128int
+Í8160int
+ğ8147int
+Å8180int
+å"á½°Î¹"str
+²8157int
+÷"Î¬Î¹"str
+Æ8140int
+ñ"Î"str
+_"á¼¢Î¹"str
+8072int
+Ş"á½¡Î¹"str
+Œ"á¼§Î¹"str
+:8078int
+¢8136int
+8101int
+İ8097int
+ÿ8117int
+‹"á½¦Î¹"str
+—8120int
+U8081int
+Ö8127int
+á" Ì“Í‚"str
+ğ8130int
+Ô8111int
+¼8108int
+”8088int
+¬8091int
+¬8176int
+"á¼€Î¹"str
+Ø" Ì“Ì"str
+«8156int
+2"á¼…Î¹"str
+¼8093int
+Å" Ì“"str
+‚8132int
+š"á½¶"str
+è" ÌˆÍ‚"str
+8074int
+ç8129int
+î"á¿¡"str
+´"á½¼Î¹"str
+ç"á½¢Î¹"str
+½8139int
+œ8104int
+²8123int
+Æ"ÏÎ¹"str
+p8084int
+ƒ"Î®Î¹"str
+
+0int
+ˆ8172int
+"M"str
+‡8152int
+í8169int
+ÿ8171int
+µ"á½´"str
+8119int
+Ä"3"str
+ä8168int
+œ8089int
+´8092int
+‰"á¿¥"str
+Ä8109int
+Ü8112int
+ù8131int
+Î8181int
+ù8148int
+ "á¼ƒÎ¹"str
+»8158int
+Î8141int
+³8178int
+M"á¼ Î¹"str
+´8138int
+“8103int
+z"á¼¥Î¹"str
+ù"á½¤Î¹"str
+©8122int
+ï8099int
+g8083int
+İ"V"str	İlist	tuple"Ìõ*
+(
+
+Â Â("#unknown-value#Btuple(
+&
+
+Â Â("
+#is-exact#:Bbool
+
+
+Â Â("
+#assume#::
+8
+
+Â Â(	"#set-field# __collection_size:Bint(
+&
+
+Â Â(
+"#array-add-last#:(
+&
+
+Â Â("#array-add-last#:(
+&
+
+Â Â("#array-add-last#:*
+(
+
+Ã Ã("#unknown-value#Btuple(
+&
+
+Ã Ã("
+#is-exact#:Bbool
+
+
+Ã Ã("
+#assume#::
+8
+
+Ã Ã("#set-field# __collection_size:Bint(
+&
+
+Ã Ã("#array-add-last#:(
+&
+
+Ã Ã("#array-add-last#:(
+&
+
+Ã Ã("#array-add-last#:*
+(
+
+Ä Ä("#unknown-value#Btuple(
+&
+
+Ä Ä("
+#is-exact#:Bbool
+
+
+Ä Ä("
+#assume#::
+8
+
+Ä Ä("#set-field# __collection_size:Bint(
+&
+
+Ä Ä("#array-add-last#:(
+&
+
+Ä Ä("#array-add-last#:(
+&
+
+Ä Ä("#array-add-last#:*
+(
+
+Å Å(!"#unknown-value#Btuple(
+&
+
+Å Å(""
+#is-exact#:!Bbool
+
+
+Å Å(#"
+#assume#:":
+8
+
+Å Å($"#set-field# __collection_size:!Bint(
+&
+
+Å Å(%"#array-add-last#:!(
+&
+
+Å Å(&"#array-add-last#:!(
+&
+
+Å Å('"#array-add-last#:! *
+(
+
+Æ Æ(*"#unknown-value#Btuple(
+&
+
+Æ Æ(+"
+#is-exact#:*Bbool
+
+
+Æ Æ(,"
+#assume#:+:
+8
+
+Æ Æ(-"#set-field# __collection_size:*Bint(
+&
+
+Æ Æ(."#array-add-last#:*((
+&
+
+Æ Æ(/"#array-add-last#:*(
+&
+
+Æ Æ(0"#array-add-last#:*)*
+(
+
+Ç Ç(3"#unknown-value#Btuple(
+&
+
+Ç Ç(4"
+#is-exact#:3Bbool
+
+
+Ç Ç(5"
+#assume#:4:
+8
+
+Ç Ç(6"#set-field# __collection_size:3Bint(
+&
+
+Ç Ç(7"#array-add-last#:31(
+&
+
+Ç Ç(8"#array-add-last#:3(
+&
+
+Ç Ç(9"#array-add-last#:32*
+(
+
+È È(<"#unknown-value#Btuple(
+&
+
+È È(="
+#is-exact#:<Bbool
+
+
+È È(>"
+#assume#:=:
+8
+
+È È(?"#set-field# __collection_size:<Bint(
+&
+
+È È(@"#array-add-last#:<:(
+&
+
+È È(A"#array-add-last#:<(
+&
+
+È È(B"#array-add-last#:<;*
+(
+
+É É(E"#unknown-value#Btuple(
+&
+
+É É(F"
+#is-exact#:EBbool
+
+
+É É(G"
+#assume#:F:
+8
+
+É É(H"#set-field# __collection_size:EBint(
+&
+
+É É(I"#array-add-last#:EC(
+&
+
+É É(J"#array-add-last#:E(
+&
+
+É É(K"#array-add-last#:ED*
+(
+
+Ê Ê(N"#unknown-value#Btuple(
+&
+
+Ê Ê(O"
+#is-exact#:NBbool
+
+
+Ê Ê(P"
+#assume#:O:
+8
+
+Ê Ê(Q"#set-field# __collection_size:NBint(
+&
+
+Ê Ê(R"#array-add-last#:NL(
+&
+
+Ê Ê(S"#array-add-last#:N(
+&
+
+Ê Ê(T"#array-add-last#:NM*
+(
+
+Ë Ë(W"#unknown-value#Btuple(
+&
+
+Ë Ë(X"
+#is-exact#:WBbool
+
+
+Ë Ë(Y"
+#assume#:X:
+8
+
+Ë Ë(Z"#set-field# __collection_size:WBint(
+&
+
+Ë Ë(["#array-add-last#:WU(
+&
+
+Ë Ë(\"#array-add-last#:W(
+&
+
+Ë Ë(]"#array-add-last#:WV*
+(
+
+Ì Ì(`"#unknown-value#Btuple(
+&
+
+Ì Ì(a"
+#is-exact#:`Bbool
+
+
+Ì Ì(b"
+#assume#:a:
+8
+
+Ì Ì(c"#set-field# __collection_size:`Bint(
+&
+
+Ì Ì(d"#array-add-last#:`^(
+&
+
+Ì Ì(e"#array-add-last#:`(
+&
+
+Ì Ì(f"#array-add-last#:`_*
+(
+
+Í Í(i"#unknown-value#Btuple(
+&
+
+Í Í(j"
+#is-exact#:iBbool
+
+
+Í Í(k"
+#assume#:j:
+8
+
+Í Í(l"#set-field# __collection_size:iBint(
+&
+
+Í Í(m"#array-add-last#:ig(
+&
+
+Í Í(n"#array-add-last#:i(
+&
+
+Í Í(o"#array-add-last#:ih*
+(
+
+Î Î(r"#unknown-value#Btuple(
+&
+
+Î Î(s"
+#is-exact#:rBbool
+
+
+Î Î(t"
+#assume#:s:
+8
+
+Î Î(u"#set-field# __collection_size:rBint(
+&
+
+Î Î(v"#array-add-last#:rp(
+&
+
+Î Î(w"#array-add-last#:r(
+&
+
+Î Î(x"#array-add-last#:rq*
+(
+
+Ï Ï({"#unknown-value#Btuple(
+&
+
+Ï Ï(|"
+#is-exact#:{Bbool
+
+
+Ï Ï(}"
+#assume#:|:
+8
+
+Ï Ï(~"#set-field# __collection_size:{Bint(
+&
+
+Ï Ï("#array-add-last#:{y)
+'
+
+Ï Ï(€"#array-add-last#:{)
+'
+
+Ï Ï("#array-add-last#:{z+
+)
+
+Ğ Ğ(„"#unknown-value#Btuple*
+(
+
+Ğ Ğ(…"
+#is-exact#:„Bbool!
+
+
+Ğ Ğ(†"
+#assume#:…<
+:
+
+Ğ Ğ(‡"#set-field# __collection_size:„Bint+
+)
+
+Ğ Ğ(ˆ"#array-add-last#:„‚*
+(
+
+Ğ Ğ(‰"#array-add-last#:„+
+)
+
+Ğ Ğ(Š"#array-add-last#:„ƒ+
+)
+
+Ñ Ñ("#unknown-value#Btuple*
+(
+
+Ñ Ñ("
+#is-exact#:Bbool!
+
+
+Ñ Ñ("
+#assume#:<
+:
+
+Ñ Ñ("#set-field# __collection_size:Bint+
+)
+
+Ñ Ñ(‘"#array-add-last#:‹*
+(
+
+Ñ Ñ(’"#array-add-last#:+
+)
+
+Ñ Ñ(“"#array-add-last#:Œ+
+)
+
+Ò Ò(•"#unknown-value#Btuple*
+(
+
+Ò Ò(–"
+#is-exact#:•Bbool!
+
+
+Ò Ò(—"
+#assume#:–<
+:
+
+Ò Ò(˜"#set-field# __collection_size:•Bint+
+)
+
+Ò Ò(™"#array-add-last#:•”*
+(
+
+Ò Ò(š"#array-add-last#:•*
+(
+
+Ò Ò(›"#array-add-last#:•M+
+)
+
+Ó Ó("#unknown-value#Btuple*
+(
+
+Ó Ó("
+#is-exact#:Bbool!
+
+
+Ó Ó(Ÿ"
+#assume#:<
+:
+
+Ó Ó( "#set-field# __collection_size:Bint+
+)
+
+Ó Ó(¡"#array-add-last#:œ*
+(
+
+Ó Ó(¢"#array-add-last#:*
+(
+
+Ó Ó(£"#array-add-last#:V+
+)
+
+Ô Ô(¥"#unknown-value#Btuple*
+(
+
+Ô Ô(¦"
+#is-exact#:¥Bbool!
+
+
+Ô Ô(§"
+#assume#:¦<
+:
+
+Ô Ô(¨"#set-field# __collection_size:¥Bint+
+)
+
+Ô Ô(©"#array-add-last#:¥¤*
+(
+
+Ô Ô(ª"#array-add-last#:¥*
+(
+
+Ô Ô(«"#array-add-last#:¥_+
+)
+
+Õ Õ(­"#unknown-value#Btuple*
+(
+
+Õ Õ(®"
+#is-exact#:­Bbool!
+
+
+Õ Õ(¯"
+#assume#:®<
+:
+
+Õ Õ(°"#set-field# __collection_size:­Bint+
+)
+
+Õ Õ(±"#array-add-last#:­¬*
+(
+
+Õ Õ(²"#array-add-last#:­*
+(
+
+Õ Õ(³"#array-add-last#:­h+
+)
+
+Ö Ö(µ"#unknown-value#Btuple*
+(
+
+Ö Ö(¶"
+#is-exact#:µBbool!
+
+
+Ö Ö(·"
+#assume#:¶<
+:
+
+Ö Ö(¸"#set-field# __collection_size:µBint+
+)
+
+Ö Ö(¹"#array-add-last#:µ´*
+(
+
+Ö Ö(º"#array-add-last#:µ*
+(
+
+Ö Ö(»"#array-add-last#:µq+
+)
+
+× ×(½"#unknown-value#Btuple*
+(
+
+× ×(¾"
+#is-exact#:½Bbool!
+
+
+× ×(¿"
+#assume#:¾<
+:
+
+× ×(À"#set-field# __collection_size:½Bint+
+)
+
+× ×(Á"#array-add-last#:½¼*
+(
+
+× ×(Â"#array-add-last#:½*
+(
+
+× ×(Ã"#array-add-last#:½z+
+)
+
+Ø Ø(Å"#unknown-value#Btuple*
+(
+
+Ø Ø(Æ"
+#is-exact#:ÅBbool!
+
+
+Ø Ø(Ç"
+#assume#:Æ<
+:
+
+Ø Ø(È"#set-field# __collection_size:ÅBint+
+)
+
+Ø Ø(É"#array-add-last#:ÅÄ*
+(
+
+Ø Ø(Ê"#array-add-last#:Å+
+)
+
+Ø Ø(Ë"#array-add-last#:Åƒ+
+)
+
+Ù Ù(Í"#unknown-value#Btuple*
+(
+
+Ù Ù(Î"
+#is-exact#:ÍBbool!
+
+
+Ù Ù(Ï"
+#assume#:Î<
+:
+
+Ù Ù(Ğ"#set-field# __collection_size:ÍBint+
+)
+
+Ù Ù(Ñ"#array-add-last#:ÍÌ*
+(
+
+Ù Ù(Ò"#array-add-last#:Í+
+)
+
+Ù Ù(Ó"#array-add-last#:ÍŒ+
+)
+
+Ú Ú(Ö"#unknown-value#Btuple*
+(
+
+Ú Ú(×"
+#is-exact#:ÖBbool!
+
+
+Ú Ú(Ø"
+#assume#:×<
+:
+
+Ú Ú(Ù"#set-field# __collection_size:ÖBint+
+)
+
+Ú Ú(Ú"#array-add-last#:ÖÔ*
+(
+
+Ú Ú(Û"#array-add-last#:Ö+
+)
+
+Ú Ú(Ü"#array-add-last#:ÖÕ+
+)
+
+Û Û(ß"#unknown-value#Btuple*
+(
+
+Û Û(à"
+#is-exact#:ßBbool!
+
+
+Û Û(á"
+#assume#:à<
+:
+
+Û Û(â"#set-field# __collection_size:ßBint+
+)
+
+Û Û(ã"#array-add-last#:ßİ*
+(
+
+Û Û(ä"#array-add-last#:ß+
+)
+
+Û Û(å"#array-add-last#:ßŞ+
+)
+
+Ü Ü(è"#unknown-value#Btuple*
+(
+
+Ü Ü(é"
+#is-exact#:èBbool!
+
+
+Ü Ü(ê"
+#assume#:é<
+:
+
+Ü Ü(ë"#set-field# __collection_size:èBint+
+)
+
+Ü Ü(ì"#array-add-last#:èæ*
+(
+
+Ü Ü(í"#array-add-last#:è+
+)
+
+Ü Ü(î"#array-add-last#:èç+
+)
+
+İ İ(ñ"#unknown-value#Btuple*
+(
+
+İ İ(ò"
+#is-exact#:ñBbool!
+
+
+İ İ(ó"
+#assume#:ò<
+:
+
+İ İ(ô"#set-field# __collection_size:ñBint+
+)
+
+İ İ(õ"#array-add-last#:ñï*
+(
+
+İ İ(ö"#array-add-last#:ñ+
+)
+
+İ İ(÷"#array-add-last#:ñğ+
+)
+
+Ş Ş(ú"#unknown-value#Btuple*
+(
+
+Ş Ş(û"
+#is-exact#:úBbool!
+
+
+Ş Ş(ü"
+#assume#:û<
+:
+
+Ş Ş(ı"#set-field# __collection_size:úBint+
+)
+
+Ş Ş(ş"#array-add-last#:úø*
+(
+
+Ş Ş(ÿ"#array-add-last#:ú+
+)
+
+Ş Ş(€"#array-add-last#:úù+
+)
+
+ß ß(ƒ"#unknown-value#Btuple*
+(
+
+ß ß(„"
+#is-exact#:ƒBbool!
+
+
+ß ß(…"
+#assume#:„<
+:
+
+ß ß(†"#set-field# __collection_size:ƒBint+
+)
+
+ß ß(‡"#array-add-last#:ƒ*
+(
+
+ß ß(ˆ"#array-add-last#:ƒ+
+)
+
+ß ß(‰"#array-add-last#:ƒ‚+
+)
+
+à à(Œ"#unknown-value#Btuple*
+(
+
+à à("
+#is-exact#:ŒBbool!
+
+
+à à("
+#assume#:<
+:
+
+à à("#set-field# __collection_size:ŒBint+
+)
+
+à à("#array-add-last#:ŒŠ*
+(
+
+à à(‘"#array-add-last#:Œ+
+)
+
+à à(’"#array-add-last#:Œ‹+
+)
+
+á á(•"#unknown-value#Btuple*
+(
+
+á á(–"
+#is-exact#:•Bbool!
+
+
+á á(—"
+#assume#:–<
+:
+
+á á(˜"#set-field# __collection_size:•Bint+
+)
+
+á á(™"#array-add-last#:•“*
+(
+
+á á(š"#array-add-last#:•+
+)
+
+á á(›"#array-add-last#:•”+
+)
+
+â â("#unknown-value#Btuple*
+(
+
+â â("
+#is-exact#:Bbool!
+
+
+â â(Ÿ"
+#assume#:<
+:
+
+â â( "#set-field# __collection_size:Bint+
+)
+
+â â(¡"#array-add-last#:œ*
+(
+
+â â(¢"#array-add-last#:+
+)
+
+â â(£"#array-add-last#:Õ+
+)
+
+ã ã(¥"#unknown-value#Btuple*
+(
+
+ã ã(¦"
+#is-exact#:¥Bbool!
+
+
+ã ã(§"
+#assume#:¦<
+:
+
+ã ã(¨"#set-field# __collection_size:¥Bint+
+)
+
+ã ã(©"#array-add-last#:¥¤*
+(
+
+ã ã(ª"#array-add-last#:¥+
+)
+
+ã ã(«"#array-add-last#:¥Ş+
+)
+
+ä ä(­"#unknown-value#Btuple*
+(
+
+ä ä(®"
+#is-exact#:­Bbool!
+
+
+ä ä(¯"
+#assume#:®<
+:
+
+ä ä(°"#set-field# __collection_size:­Bint+
+)
+
+ä ä(±"#array-add-last#:­¬*
+(
+
+ä ä(²"#array-add-last#:­+
+)
+
+ä ä(³"#array-add-last#:­ç+
+)
+
+å å(µ"#unknown-value#Btuple*
+(
+
+å å(¶"
+#is-exact#:µBbool!
+
+
+å å(·"
+#assume#:¶<
+:
+
+å å(¸"#set-field# __collection_size:µBint+
+)
+
+å å(¹"#array-add-last#:µ´*
+(
+
+å å(º"#array-add-last#:µ+
+)
+
+å å(»"#array-add-last#:µğ+
+)
+
+æ æ(½"#unknown-value#Btuple*
+(
+
+æ æ(¾"
+#is-exact#:½Bbool!
+
+
+æ æ(¿"
+#assume#:¾<
+:
+
+æ æ(À"#set-field# __collection_size:½Bint+
+)
+
+æ æ(Á"#array-add-last#:½¼*
+(
+
+æ æ(Â"#array-add-last#:½+
+)
+
+æ æ(Ã"#array-add-last#:½ù+
+)
+
+ç ç(Å"#unknown-value#Btuple*
+(
+
+ç ç(Æ"
+#is-exact#:ÅBbool!
+
+
+ç ç(Ç"
+#assume#:Æ<
+:
+
+ç ç(È"#set-field# __collection_size:ÅBint+
+)
+
+ç ç(É"#array-add-last#:ÅÄ*
+(
+
+ç ç(Ê"#array-add-last#:Å+
+)
+
+ç ç(Ë"#array-add-last#:Å‚+
+)
+
+è è(Í"#unknown-value#Btuple*
+(
+
+è è(Î"
+#is-exact#:ÍBbool!
+
+
+è è(Ï"
+#assume#:Î<
+:
+
+è è(Ğ"#set-field# __collection_size:ÍBint+
+)
+
+è è(Ñ"#array-add-last#:ÍÌ*
+(
+
+è è(Ò"#array-add-last#:Í+
+)
+
+è è(Ó"#array-add-last#:Í‹+
+)
+
+é é(Õ"#unknown-value#Btuple*
+(
+
+é é(Ö"
+#is-exact#:ÕBbool!
+
+
+é é(×"
+#assume#:Ö<
+:
+
+é é(Ø"#set-field# __collection_size:ÕBint+
+)
+
+é é(Ù"#array-add-last#:ÕÔ*
+(
+
+é é(Ú"#array-add-last#:Õ+
+)
+
+é é(Û"#array-add-last#:Õ”+
+)
+
+ê ê(Ş"#unknown-value#Btuple*
+(
+
+ê ê(ß"
+#is-exact#:ŞBbool!
+
+
+ê ê(à"
+#assume#:ß<
+:
+
+ê ê(á"#set-field# __collection_size:ŞBint+
+)
+
+ê ê(â"#array-add-last#:ŞÜ+
+)
+
+ê ê(ã"#array-add-last#:Şİ+
+)
+
+ë ë(æ"#unknown-value#Btuple*
+(
+
+ë ë(ç"
+#is-exact#:æBbool!
+
+
+ë ë(è"
+#assume#:ç<
+:
+
+ë ë(é"#set-field# __collection_size:æBint+
+)
+
+ë ë(ê"#array-add-last#:æä*
+(
+
+ë ë(ë"#array-add-last#:æ+
+)
+
+ë ë(ì"#array-add-last#:æå+
+)
+
+ì ì(ï"#unknown-value#Btuple*
+(
+
+ì ì(ğ"
+#is-exact#:ïBbool!
+
+
+ì ì(ñ"
+#assume#:ğ<
+:
+
+ì ì(ò"#set-field# __collection_size:ïBint+
+)
+
+ì ì(ó"#array-add-last#:ïí*
+(
+
+ì ì(ô"#array-add-last#:ï+
+)
+
+ì ì(õ"#array-add-last#:ïî+
+)
+
+í í(ø"#unknown-value#Btuple*
+(
+
+í í(ù"
+#is-exact#:øBbool!
+
+
+í í(ú"
+#assume#:ù<
+:
+
+í í(û"#set-field# __collection_size:øBint+
+)
+
+í í(ü"#array-add-last#:øö*
+(
+
+í í(ı"#array-add-last#:ø+
+)
+
+í í(ş"#array-add-last#:ø÷+
+)
+
+î î("#unknown-value#Btuple*
+(
+
+î î(‚"
+#is-exact#:Bbool!
+
+
+î î(ƒ"
+#assume#:‚<
+:
+
+î î(„"#set-field# __collection_size:Bint+
+)
+
+î î(…"#array-add-last#:ÿ+
+)
+
+î î(†"#array-add-last#:€+
+)
+
+ï ï(ˆ"#unknown-value#Btuple*
+(
+
+ï ï(‰"
+#is-exact#:ˆBbool!
+
+
+ï ï(Š"
+#assume#:‰<
+:
+
+ï ï(‹"#set-field# __collection_size:ˆBint+
+)
+
+ï ï(Œ"#array-add-last#:ˆ‡+
+)
+
+ï ï("#array-add-last#:ˆİ+
+)
+
+ğ ğ("#unknown-value#Btuple*
+(
+
+ğ ğ(‘"
+#is-exact#:Bbool!
+
+
+ğ ğ(’"
+#assume#:‘<
+:
+
+ğ ğ(“"#set-field# __collection_size:Bint+
+)
+
+ğ ğ(”"#array-add-last#:*
+(
+
+ğ ğ(•"#array-add-last#:+
+)
+
+ğ ğ(–"#array-add-last#:+
+)
+
+ñ ñ(™"#unknown-value#Btuple*
+(
+
+ñ ñ(š"
+#is-exact#:™Bbool!
+
+
+ñ ñ(›"
+#assume#:š<
+:
+
+ñ ñ(œ"#set-field# __collection_size:™Bint+
+)
+
+ñ ñ("#array-add-last#:™—*
+(
+
+ñ ñ("#array-add-last#:™+
+)
+
+ñ ñ(Ÿ"#array-add-last#:™˜+
+)
+
+ò ò(¢"#unknown-value#Btuple*
+(
+
+ò ò(£"
+#is-exact#:¢Bbool!
+
+
+ò ò(¤"
+#assume#:£<
+:
+
+ò ò(¥"#set-field# __collection_size:¢Bint+
+)
+
+ò ò(¦"#array-add-last#:¢ *
+(
+
+ò ò(§"#array-add-last#:¢+
+)
+
+ò ò(¨"#array-add-last#:¢¡+
+)
+
+ó ó(«"#unknown-value#Btuple*
+(
+
+ó ó(¬"
+#is-exact#:«Bbool!
+
+
+ó ó(­"
+#assume#:¬<
+:
+
+ó ó(®"#set-field# __collection_size:«Bint+
+)
+
+ó ó(¯"#array-add-last#:«©*
+(
+
+ó ó(°"#array-add-last#:«+
+)
+
+ó ó(±"#array-add-last#:«ª+
+)
+
+ô ô(´"#unknown-value#Btuple*
+(
+
+ô ô(µ"
+#is-exact#:´Bbool!
+
+
+ô ô(¶"
+#assume#:µ<
+:
+
+ô ô(·"#set-field# __collection_size:´Bint+
+)
+
+ô ô(¸"#array-add-last#:´²*
+(
+
+ô ô(¹"#array-add-last#:´+
+)
+
+ô ô(º"#array-add-last#:´³+
+)
+
+õ õ(¼"#unknown-value#Btuple*
+(
+
+õ õ(½"
+#is-exact#:¼Bbool!
+
+
+õ õ(¾"
+#assume#:½<
+:
+
+õ õ(¿"#set-field# __collection_size:¼Bint+
+)
+
+õ õ(À"#array-add-last#:¼»*
+(
+
+õ õ(Á"#array-add-last#:¼+
+)
+
+õ õ(Â"#array-add-last#:¼î+
+)
+
+ö ö(Æ"#unknown-value#Btuple*
+(
+
+ö ö(Ç"
+#is-exact#:ÆBbool!
+
+
+ö ö(È"
+#assume#:Ç<
+:
+
+ö ö(É"#set-field# __collection_size:ÆBint+
+)
+
+ö ö(Ê"#array-add-last#:ÆÃ+
+)
+
+ö ö(Ë"#array-add-last#:ÆÄ+
+)
+
+ö ö(Ì"#array-add-last#:ÆÅ+
+)
+
+÷ ÷(Ï"#unknown-value#Btuple*
+(
+
+÷ ÷(Ğ"
+#is-exact#:ÏBbool!
+
+
+÷ ÷(Ñ"
+#assume#:Ğ<
+:
+
+÷ ÷(Ò"#set-field# __collection_size:ÏBint+
+)
+
+÷ ÷(Ó"#array-add-last#:ÏÍ*
+(
+
+÷ ÷(Ô"#array-add-last#:Ï+
+)
+
+÷ ÷(Õ"#array-add-last#:ÏÎ+
+)
+
+ø ø(×"#unknown-value#Btuple*
+(
+
+ø ø(Ø"
+#is-exact#:×Bbool!
+
+
+ø ø(Ù"
+#assume#:Ø<
+:
+
+ø ø(Ú"#set-field# __collection_size:×Bint+
+)
+
+ø ø(Û"#array-add-last#:×Ö+
+)
+
+ø ø(Ü"#array-add-last#:×Ä+
+)
+
+ø ø(İ"#array-add-last#:×Å+
+)
+
+ù ù(à"#unknown-value#Btuple*
+(
+
+ù ù(á"
+#is-exact#:àBbool!
+
+
+ù ù(â"
+#assume#:á<
+:
+
+ù ù(ã"#set-field# __collection_size:àBint+
+)
+
+ù ù(ä"#array-add-last#:àŞ+
+)
+
+ù ù(å"#array-add-last#:àÄ+
+)
+
+ù ù(æ"#array-add-last#:àß+
+)
+
+ú ú(é"#unknown-value#Btuple*
+(
+
+ú ú(ê"
+#is-exact#:éBbool!
+
+
+ú ú(ë"
+#assume#:ê<
+:
+
+ú ú(ì"#set-field# __collection_size:éBint+
+)
+
+ú ú(í"#array-add-last#:éç+
+)
+
+ú ú(î"#array-add-last#:éÄ+
+)
+
+ú ú(ï"#array-add-last#:éè+
+)
+
+û û(ò"#unknown-value#Btuple*
+(
+
+û û(ó"
+#is-exact#:òBbool!
+
+
+û û(ô"
+#assume#:ó<
+:
+
+û û(õ"#set-field# __collection_size:òBint+
+)
+
+û û(ö"#array-add-last#:òğ*
+(
+
+û û(÷"#array-add-last#:ò+
+)
+
+û û(ø"#array-add-last#:òñ+
+)
+
+ü ü(û"#unknown-value#Btuple*
+(
+
+ü ü(ü"
+#is-exact#:ûBbool!
+
+
+ü ü(ı"
+#assume#:ü<
+:
+
+ü ü(ş"#set-field# __collection_size:ûBint+
+)
+
+ü ü(ÿ"#array-add-last#:ûù*
+(
+
+ü ü(€"#array-add-last#:û+
+)
+
+ü ü("#array-add-last#:ûú+
+)
+
+ı ı(„"#unknown-value#Btuple*
+(
+
+ı ı(…"
+#is-exact#:„Bbool!
+
+
+ı ı(†"
+#assume#:…<
+:
+
+ı ı(‡"#set-field# __collection_size:„Bint+
+)
+
+ı ı(ˆ"#array-add-last#:„‚*
+(
+
+ı ı(‰"#array-add-last#:„+
+)
+
+ı ı(Š"#array-add-last#:„ƒ+
+)
+
+ş ş(Œ"#unknown-value#Btuple*
+(
+
+ş ş("
+#is-exact#:ŒBbool!
+
+
+ş ş("
+#assume#:<
+:
+
+ş ş("#set-field# __collection_size:ŒBint+
+)
+
+ş ş("#array-add-last#:Œ‹+
+)
+
+ş ş(‘"#array-add-last#:Œ€+
+)
+
+ÿ ÿ(“"#unknown-value#Btuple*
+(
+
+ÿ ÿ(”"
+#is-exact#:“Bbool!
+
+
+ÿ ÿ(•"
+#assume#:”<
+:
+
+ÿ ÿ(–"#set-field# __collection_size:“Bint+
+)
+
+ÿ ÿ(—"#array-add-last#:“’+
+)
+
+ÿ ÿ(˜"#array-add-last#:“İ+
+)
+
+€ €(›"#unknown-value#Btuple*
+(
+
+€ €(œ"
+#is-exact#:›Bbool!
+
+
+€ €("
+#assume#:œ<
+:
+
+€ €("#set-field# __collection_size:›Bint+
+)
+
+€ €(Ÿ"#array-add-last#:›™*
+(
+
+€ €( "#array-add-last#:›+
+)
+
+€ €(¡"#array-add-last#:›š+
+)
+
+ (¤"#unknown-value#Btuple*
+(
+
+ (¥"
+#is-exact#:¤Bbool!
+
+
+ (¦"
+#assume#:¥<
+:
+
+ (§"#set-field# __collection_size:¤Bint+
+)
+
+ (¨"#array-add-last#:¤¢*
+(
+
+ (©"#array-add-last#:¤+
+)
+
+ (ª"#array-add-last#:¤£+
+)
+
+‚ ‚(­"#unknown-value#Btuple*
+(
+
+‚ ‚(®"
+#is-exact#:­Bbool!
+
+
+‚ ‚(¯"
+#assume#:®<
+:
+
+‚ ‚(°"#set-field# __collection_size:­Bint+
+)
+
+‚ ‚(±"#array-add-last#:­«*
+(
+
+‚ ‚(²"#array-add-last#:­+
+)
+
+‚ ‚(³"#array-add-last#:­¬+
+)
+
+ƒ ƒ(¶"#unknown-value#Btuple*
+(
+
+ƒ ƒ(·"
+#is-exact#:¶Bbool!
+
+
+ƒ ƒ(¸"
+#assume#:·<
+:
+
+ƒ ƒ(¹"#set-field# __collection_size:¶Bint+
+)
+
+ƒ ƒ(º"#array-add-last#:¶´*
+(
+
+ƒ ƒ(»"#array-add-last#:¶+
+)
+
+ƒ ƒ(¼"#array-add-last#:¶µ+
+)
+
+„ „(¿"#unknown-value#Btuple*
+(
+
+„ „(À"
+#is-exact#:¿Bbool!
+
+
+„ „(Á"
+#assume#:À<
+:
+
+„ „(Â"#set-field# __collection_size:¿Bint+
+)
+
+„ „(Ã"#array-add-last#:¿½*
+(
+
+„ „(Ä"#array-add-last#:¿+
+)
+
+„ „(Å"#array-add-last#:¿¾+
+)
+
+… …(Ç"#unknown-value#Btuple*
+(
+
+… …(È"
+#is-exact#:ÇBbool!
+
+
+… …(É"
+#assume#:È<
+:
+
+… …(Ê"#set-field# __collection_size:ÇBint+
+)
+
+… …(Ë"#array-add-last#:ÇÆ*
+(
+
+… …(Ì"#array-add-last#:Ç+
+)
+
+… …(Í"#array-add-last#:Çú+
+)
+
+† †(Ğ"#unknown-value#Btuple*
+(
+
+† †(Ñ"
+#is-exact#:ĞBbool!
+
+
+† †(Ò"
+#assume#:Ñ<
+:
+
+† †(Ó"#set-field# __collection_size:ĞBint+
+)
+
+† †(Ô"#array-add-last#:ĞÎ+
+)
+
+† †(Õ"#array-add-last#:ĞÄ+
+)
+
+† †(Ö"#array-add-last#:ĞÏ+
+)
+
+‡ ‡(Ù"#unknown-value#Btuple*
+(
+
+‡ ‡(Ú"
+#is-exact#:ÙBbool!
+
+
+‡ ‡(Û"
+#assume#:Ú<
+:
+
+‡ ‡(Ü"#set-field# __collection_size:ÙBint+
+)
+
+‡ ‡(İ"#array-add-last#:Ù×+
+)
+
+‡ ‡(Ş"#array-add-last#:ÙÄ+
+)
+
+‡ ‡(ß"#array-add-last#:ÙØ+
+)
+
+ˆ ˆ(â"#unknown-value#Btuple*
+(
+
+ˆ ˆ(ã"
+#is-exact#:âBbool!
+
+
+ˆ ˆ(ä"
+#assume#:ã<
+:
+
+ˆ ˆ(å"#set-field# __collection_size:âBint+
+)
+
+ˆ ˆ(æ"#array-add-last#:âà+
+)
+
+ˆ ˆ(ç"#array-add-last#:âÄ+
+)
+
+ˆ ˆ(è"#array-add-last#:âá+
+)
+
+‰ ‰(ê"#unknown-value#Btuple*
+(
+
+‰ ‰(ë"
+#is-exact#:êBbool!
+
+
+‰ ‰(ì"
+#assume#:ë<
+:
+
+‰ ‰(í"#set-field# __collection_size:êBint+
+)
+
+‰ ‰(î"#array-add-last#:êé+
+)
+
+‰ ‰(ï"#array-add-last#:êİ+
+)
+
+Š Š(ò"#unknown-value#Btuple*
+(
+
+Š Š(ó"
+#is-exact#:òBbool!
+
+
+Š Š(ô"
+#assume#:ó<
+:
+
+Š Š(õ"#set-field# __collection_size:òBint+
+)
+
+Š Š(ö"#array-add-last#:òğ*
+(
+
+Š Š(÷"#array-add-last#:ò+
+)
+
+Š Š(ø"#array-add-last#:òñ+
+)
+
+‹ ‹(ú"#unknown-value#Btuple*
+(
+
+‹ ‹(û"
+#is-exact#:úBbool!
+
+
+‹ ‹(ü"
+#assume#:û<
+:
+
+‹ ‹(ı"#set-field# __collection_size:úBint+
+)
+
+‹ ‹(ş"#array-add-last#:úù+
+)
+
+‹ ‹(ÿ"#array-add-last#:ú€+
+)
+
+Œ Œ("#unknown-value#Btuple*
+(
+
+Œ Œ(‚"
+#is-exact#:Bbool!
+
+
+Œ Œ(ƒ"
+#assume#:‚<
+:
+
+Œ Œ(„"#set-field# __collection_size:Bint+
+)
+
+Œ Œ(…"#array-add-last#:€+
+)
+
+Œ Œ(†"#array-add-last#:İ+
+)
+
+ (‰"#unknown-value#Btuple*
+(
+
+ (Š"
+#is-exact#:‰Bbool!
+
+
+ (‹"
+#assume#:Š<
+:
+
+ (Œ"#set-field# __collection_size:‰Bint+
+)
+
+ ("#array-add-last#:‰‡*
+(
+
+ ("#array-add-last#:‰+
+)
+
+ ("#array-add-last#:‰ˆ+
+)
+
+ (’"#unknown-value#Btuple*
+(
+
+ (“"
+#is-exact#:’Bbool!
+
+
+ (”"
+#assume#:“<
+:
+
+ (•"#set-field# __collection_size:’Bint+
+)
+
+ (–"#array-add-last#:’*
+(
+
+ (—"#array-add-last#:’+
+)
+
+ (˜"#array-add-last#:’‘+
+)
+
+ (›"#unknown-value#Btuple*
+(
+
+ (œ"
+#is-exact#:›Bbool!
+
+
+ ("
+#assume#:œ<
+:
+
+ ("#set-field# __collection_size:›Bint+
+)
+
+ (Ÿ"#array-add-last#:›™*
+(
+
+ ( "#array-add-last#:›+
+)
+
+ (¡"#array-add-last#:›š+
+)
+
+ (¤"#unknown-value#Btuple*
+(
+
+ (¥"
+#is-exact#:¤Bbool!
+
+
+ (¦"
+#assume#:¥<
+:
+
+ (§"#set-field# __collection_size:¤Bint+
+)
+
+ (¨"#array-add-last#:¤¢*
+(
+
+ (©"#array-add-last#:¤+
+)
+
+ (ª"#array-add-last#:¤£+
+)
+
+‘ ‘(¬"#unknown-value#Btuple*
+(
+
+‘ ‘(­"
+#is-exact#:¬Bbool!
+
+
+‘ ‘(®"
+#assume#:­<
+:
+
+‘ ‘(¯"#set-field# __collection_size:¬Bint+
+)
+
+‘ ‘(°"#array-add-last#:¬«+
+)
+
+‘ ‘(±"#array-add-last#:¬€+
+)
+
+’ ’(´"#unknown-value#Btuple*
+(
+
+’ ’(µ"
+#is-exact#:´Bbool!
+
+
+’ ’(¶"
+#assume#:µ<
+:
+
+’ ’(·"#set-field# __collection_size:´Bint+
+)
+
+’ ’(¸"#array-add-last#:´²+
+)
+
+’ ’(¹"#array-add-last#:´Ä+
+)
+
+’ ’(º"#array-add-last#:´³+
+)
+
+“ “(½"#unknown-value#Btuple*
+(
+
+“ “(¾"
+#is-exact#:½Bbool!
+
+
+“ “(¿"
+#assume#:¾<
+:
+
+“ “(À"#set-field# __collection_size:½Bint+
+)
+
+“ “(Á"#array-add-last#:½»+
+)
+
+“ “(Â"#array-add-last#:½Ä+
+)
+
+“ “(Ã"#array-add-last#:½¼+
+)
+
+” ”(Æ"#unknown-value#Btuple*
+(
+
+” ”(Ç"
+#is-exact#:ÆBbool!
+
+
+” ”(È"
+#assume#:Ç<
+:
+
+” ”(É"#set-field# __collection_size:ÆBint+
+)
+
+” ”(Ê"#array-add-last#:ÆÄ+
+)
+
+” ”(Ë"#array-add-last#:ÆÄ+
+)
+
+” ”(Ì"#array-add-last#:ÆÅ+
+)
+
+• •(Î"#unknown-value#Btuple*
+(
+
+• •(Ï"
+#is-exact#:ÎBbool!
+
+
+• •(Ğ"
+#assume#:Ï<
+:
+
+• •(Ñ"#set-field# __collection_size:ÎBint+
+)
+
+• •(Ò"#array-add-last#:ÎÍ+
+)
+
+• •(Ó"#array-add-last#:Îİ+
+)
+
+– –(Ö"#unknown-value#Btuple*
+(
+
+– –(×"
+#is-exact#:ÖBbool!
+
+
+– –(Ø"
+#assume#:×<
+:
+
+– –(Ù"#set-field# __collection_size:ÖBint+
+)
+
+– –(Ú"#array-add-last#:ÖÔ*
+(
+
+– –(Û"#array-add-last#:Ö+
+)
+
+– –(Ü"#array-add-last#:ÖÕ+
+)
+
+— —(Ş"#unknown-value#Btuple*
+(
+
+— —(ß"
+#is-exact#:ŞBbool!
+
+
+— —(à"
+#assume#:ß<
+:
+
+— —(á"#set-field# __collection_size:ŞBint+
+)
+
+— —(â"#array-add-last#:Şİ+
+)
+
+— —(ã"#array-add-last#:Şİ+
+)
+
+˜ ˜(æ"#unknown-value#Btuple*
+(
+
+˜ ˜(ç"
+#is-exact#:æBbool!
+
+
+˜ ˜(è"
+#assume#:ç<
+:
+
+˜ ˜(é"#set-field# __collection_size:æBint+
+)
+
+˜ ˜(ê"#array-add-last#:æä*
+(
+
+˜ ˜(ë"#array-add-last#:æ+
+)
+
+˜ ˜(ì"#array-add-last#:æå+
+)
+
+™ ™(ï"#unknown-value#Btuple*
+(
+
+™ ™(ğ"
+#is-exact#:ïBbool!
+
+
+™ ™(ñ"
+#assume#:ğ<
+:
+
+™ ™(ò"#set-field# __collection_size:ïBint+
+)
+
+™ ™(ó"#array-add-last#:ïí*
+(
+
+™ ™(ô"#array-add-last#:ï+
+)
+
+™ ™(õ"#array-add-last#:ïî+
+)
+
+š š(ø"#unknown-value#Btuple*
+(
+
+š š(ù"
+#is-exact#:øBbool!
+
+
+š š(ú"
+#assume#:ù<
+:
+
+š š(û"#set-field# __collection_size:øBint+
+)
+
+š š(ü"#array-add-last#:øö*
+(
+
+š š(ı"#array-add-last#:ø+
+)
+
+š š(ş"#array-add-last#:ø÷+
+)
+
+› ›("#unknown-value#Btuple*
+(
+
+› ›(‚"
+#is-exact#:Bbool!
+
+
+› ›(ƒ"
+#assume#:‚<
+:
+
+› ›(„"#set-field# __collection_size:Bint+
+)
+
+› ›(…"#array-add-last#:ÿ*
+(
+
+› ›(†"#array-add-last#:+
+)
+
+› ›(‡"#array-add-last#:€+
+)
+
+œ œ(Š"#unknown-value#Btuple*
+(
+
+œ œ(‹"
+#is-exact#:ŠBbool!
+
+
+œ œ(Œ"
+#assume#:‹<
+:
+
+œ œ("#set-field# __collection_size:ŠBint+
+)
+
+œ œ("#array-add-last#:Šˆ*
+(
+
+œ œ("#array-add-last#:Š+
+)
+
+œ œ("#array-add-last#:Š‰+
+)
+
+ (“"#unknown-value#Btuple*
+(
+
+ (”"
+#is-exact#:“Bbool!
+
+
+ (•"
+#assume#:”<
+:
+
+ (–"#set-field# __collection_size:“Bint+
+)
+
+ (—"#array-add-last#:“‘+
+)
+
+ (˜"#array-add-last#:“Ä+
+)
+
+ (™"#array-add-last#:“’+
+)
+
+ (œ"#unknown-value#Btuple*
+(
+
+ ("
+#is-exact#:œBbool!
+
+
+ ("
+#assume#:<
+:
+
+ (Ÿ"#set-field# __collection_size:œBint+
+)
+
+ ( "#array-add-last#:œš+
+)
+
+ (¡"#array-add-last#:œÄ+
+)
+
+ (¢"#array-add-last#:œ›+
+)
+
+Ÿ Ÿ(¥"#unknown-value#Btuple*
+(
+
+Ÿ Ÿ(¦"
+#is-exact#:¥Bbool!
+
+
+Ÿ Ÿ(§"
+#assume#:¦<
+:
+
+Ÿ Ÿ(¨"#set-field# __collection_size:¥Bint+
+)
+
+Ÿ Ÿ(©"#array-add-last#:¥£+
+)
+
+Ÿ Ÿ(ª"#array-add-last#:¥Ä+
+)
+
+Ÿ Ÿ(«"#array-add-last#:¥¤+
+)
+
+   (­"#unknown-value#Btuple*
+(
+
+   (®"
+#is-exact#:­Bbool!
+
+
+   (¯"
+#assume#:®<
+:
+
+   (°"#set-field# __collection_size:­Bint+
+)
+
+   (±"#array-add-last#:­¬+
+)
+
+   (²"#array-add-last#:­€+
+)
+
+¡ ¡(µ"#unknown-value#Btuple*
+(
+
+¡ ¡(¶"
+#is-exact#:µBbool!
+
+
+¡ ¡(·"
+#assume#:¶<
+:
+
+¡ ¡(¸"#set-field# __collection_size:µBint+
+)
+
+¡ ¡(¹"#array-add-last#:µ³*
+(
+
+¡ ¡(º"#array-add-last#:µ+
+)
+
+¡ ¡(»"#array-add-last#:µ´+
+)
+
+¢ ¢(¾"#unknown-value#Btuple*
+(
+
+¢ ¢(¿"
+#is-exact#:¾Bbool!
+
+
+¢ ¢(À"
+#assume#:¿<
+:
+
+¢ ¢(Á"#set-field# __collection_size:¾Bint+
+)
+
+¢ ¢(Â"#array-add-last#:¾¼*
+(
+
+¢ ¢(Ã"#array-add-last#:¾+
+)
+
+¢ ¢(Ä"#array-add-last#:¾½+
+)
+
+£ £(Ç"#unknown-value#Btuple*
+(
+
+£ £(È"
+#is-exact#:ÇBbool!
+
+
+£ £(É"
+#assume#:È<
+:
+
+£ £(Ê"#set-field# __collection_size:ÇBint+
+)
+
+£ £(Ë"#array-add-last#:ÇÅ*
+(
+
+£ £(Ì"#array-add-last#:Ç+
+)
+
+£ £(Í"#array-add-last#:ÇÆ+
+)
+
+¤ ¤(Ï"#unknown-value#Btuple*
+(
+
+¤ ¤(Ğ"
+#is-exact#:ÏBbool!
+
+
+¤ ¤(Ñ"
+#assume#:Ğ<
+:
+
+¤ ¤(Ò"#set-field# __collection_size:ÏBint+
+)
+
+¤ ¤(Ó"#array-add-last#:ÏÎ+
+)
+
+¤ ¤(Ô"#array-add-last#:Ï€+
+)
+
+¥ ¥(Ö"#unknown-value#Btuple*
+(
+
+¥ ¥(×"
+#is-exact#:ÖBbool!
+
+
+¥ ¥(Ø"
+#assume#:×<
+:
+
+¥ ¥(Ù"#set-field# __collection_size:ÖBint+
+)
+
+¥ ¥(Ú"#array-add-last#:ÖÕ+
+)
+
+¥ ¥(Û"#array-add-last#:Öİ*
+(
+
+Á ¦(Ü"#unknown-value#Blist+
+)
+
+Á ¦(Ş"
+#is-exact#:ÜİBbool!
+
+
+Á ¦(ß"
+#assume#:Ş<
+:
+
+Á ¦(à"#set-field# __collection_size:ÜBint.
+,
+
+Á ¦(á"?python-unknown?*Blist
+
+Á ¦(á*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/idna/uts46data.py

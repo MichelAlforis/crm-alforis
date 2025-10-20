@@ -1,0 +1,119 @@
+
+Bpip._internal.exceptions.ConfigurationFileCouldNotBeLoaded.__str__ã
+/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/exceptions.pyè è("2*õ
+2
+ê ê(!Å
+
+
+ê ê(
+%8"__id*e
+
+__unknown_file (I*G<
+:pip._internal.exceptions.ConfigurationFileCouldNotBeLoaded"
+fname*
+5
+6*®
+4
+ï ï(@É
+Ä
+
+ï% ï(0
+%1"__id*f
+
+__unknown_file (J*H<
+:pip._internal.exceptions.ConfigurationFileCouldNotBeLoaded"
+reason{
+y
+
+ï ï(@
+%2"__concat*%
+
+ï ï($
+Configuration file *
+
+ï% ï(0
+
+%1*
+
+ï2 ï(>
+
+message_part"
+
+ï ï(@
+
+%2*≈
+5
+ë ë(/Å
+
+
+ë" ë(,
+%3"__id*e
+
+__unknown_file (I*G<
+:pip._internal.exceptions.ConfigurationFileCouldNotBeLoaded"
+fnamea
+_
+
+ë ë(/
+%4"__concat*
+
+ë ë(!
+ in *
+
+ë" ë(,
+
+%3*
+
+ë- ë(.
+.H
+F
+
+ë ë(/
+message_part"__id*"
+
+__unknown_file (
+
+%4*
+4*…
+6
+ì ì()Å
+
+
+ì ì(
+%5"__id*e
+
+__unknown_file (I*G<
+:pip._internal.exceptions.ConfigurationFileCouldNotBeLoaded"
+errorÅ
+
+
+î! î(+
+%6"__id*e
+
+__unknown_file (I*G<
+:pip._internal.exceptions.ConfigurationFileCouldNotBeLoaded"
+errora
+_
+
+î î(/
+%7"__concat*
+
+î î( 
+.\n*
+
+î! î(+
+
+%6*
+
+î, î(.
+\nH
+F
+
+î î(/
+message_part"__id*"
+
+__unknown_file (
+
+%7*
+4B><
+:pip._internal.exceptions.ConfigurationFileCouldNotBeLoadedH

@@ -1,0 +1,61 @@
+
+"user"str
+"{os.name}_user"str
+"posix_user"str
+"osx_framework_user"str
+>5"Try to find a user scheme for the current platform."str"l!
+
+Y Y("#unknown-value#)
+'
+Y Y("
+__bool__*:BboolH"
+Y Y( *Y Y("b!
+
+Z Z($"#unknown-value#+
+)
+Z Z(,"_PREFERRED_SCHEME_API:
+Z Z(,"ƒ@
+>
+[ [("0
+pip._internal.locations.baseis_osx_framework)
+'
+[ [("
+__bool__*:BboolH"
+[ [( "´J
+H
+[" [(<	":
+pip._internal.utils.virtualenvrunning_under_virtualenv)
+'
+[ [(<
+"
+__bool__*:	BboolH)
+'
+[ [(<"#unaryop !#2!:
+Bbool
+[ [(<"g*)
+'
+[ [(<"
+__bool__*:BboolH&"$
+[ [(< *[ [(2] ]("2(
+&
+\ \('suffixed"#id#:Bstr"2(
+&
+^ ^($suffixed"#id#:Bstr"‹*suffixed!
+
+_ _(%"#unknown-value#*
+(
+_ _(%"
+#binop in#2in:Bbool"
+_ _(% 	*_ _("
+` `("w	!
+
+a a(-"#unknown-value#2
+0
+a a(-"#binop not in#2not in:Bbool"
+a a(-
+ *a a("o
+[
+Y
+b b('"UserInstallationInvalidB0pip._internal.exceptions.UserInstallationInvalid2
+b b('"
+c c(*‰/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/locations/_sysconfig.py

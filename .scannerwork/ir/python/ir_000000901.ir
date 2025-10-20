@@ -1,0 +1,40 @@
+
+falsebool
+|s"Show or hide the cursor.
+
+        Args:
+            show (bool, optional): Set visibility of the cursor.
+        "str
+
+trueboolself
+¬	 ¬	(show
+¬	 ¬	(+"¯.
+,
+
+²	 ²	("#get-field# is_terminal:.
+,
+
+²	 ²	("?python-partial-apply?:+
+)
+
+²	 ²	("
+__bool__*:BboolH "
+
+²	 ²	( *
+²	 ²	(
+"°)
+'
+
+³	 ³	(2"#unknown-value#BtypeE
+C
+
+³	 ³	(2"/
+ pip._vendor.rich.control.Controlshow_cursor:(
+&
+
+³	 ³	(3	"?python-unknown?:
+
+´	 ´	(
+"
+
+µ	 µ	(*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/console.py

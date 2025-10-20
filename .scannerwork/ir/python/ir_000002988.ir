@@ -1,0 +1,16 @@
+fn ("«!
+
+ !  (&"#unknown-value#!
+
+ ( "#unknown-value#(
+&
+ (%closure"#new-object#$
+"
+ ("#set-field# fn:+
+)
+ ("?python-partial-apply?:'
+%
+ ("#set-field# delay:-
++
+   ("#set-field# apply_async:
+! !(*P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/tasks/celery_app.py

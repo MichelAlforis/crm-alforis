@@ -1,0 +1,21 @@
+
+/&"Return a shallow copy of this graph."strself> >("õ)
+'
+@ @(other"?python-unknown?*
+(
+A A(,"#get-field# _vertices:*
+(
+A A(-"
+builtinsset*:Bset+
+)
+A A("#set-field# _vertices:+
+)
+B B(H"?python-unknown?:Bdict+
+)
+B B("#set-field# _forwards:+
+)
+C C(J	"?python-unknown?:Bdict,
+*
+C C(
+"#set-field# _backwards:	
+D D(*…/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/resolvelib/structs.py

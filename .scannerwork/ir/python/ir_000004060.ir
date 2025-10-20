@@ -1,0 +1,41 @@
+
+	truebool
+) "/usr/lib/python3/dist-packages"str
+falsebool
+Å˜"Check if the value is Debian's APT-controlled dist-packages.
+
+    Debian's ``distutils.sysconfig.get_python_lib()`` implementation returns the
+    default package path controlled by APT, but does not patch ``sysconfig`` to
+    do the same. This is similar to the bug worked around in ``get_scheme()``,
+    but here the default is ``deb_system`` instead of ``unix_local``. Ultimately
+    we can't do anything about this Debian bug, and this detection allows us to
+    skip the warning when needed.
+    "strvalue
+ç) ç(3"ƒF
+D
+
+ó ó(&"4
+pip._internal.locations_looks_like_debian_scheme+
+)
+
+ó ó(&"
+__bool__*:BboolH+
+)
+
+ó ó(&"#unaryop !#2!:Bbool "
+
+ó ó(& *
+ó ó("
+
+ò ò("R,
+*
+
+ô ô(0"
+#binop ==#2==:Bbool "
+
+ô ô(0 *
+ô ô("
+
+ö ö(	"
+
+õ õ(*á/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/locations/__init__.py

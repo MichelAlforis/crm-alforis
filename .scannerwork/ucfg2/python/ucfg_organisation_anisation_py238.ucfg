@@ -1,0 +1,4796 @@
+
+afile:///Users/test/Documents/ALFORIS%20FINANCE/06.%20CRM/V1/crm-backend/models/organisation.py238
+__unknown_file ("3*ºÂ
+3Y
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py" -é
+ã
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py"  "()
+%1"__id*
+ (*
+
+enum"
+Enumî
+ë
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py$ $(
+INSTITUTION"__id*
+ (
+Institutionê
+ç
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py% %(
+	WHOLESALE"__id*
+ (
+	WholesaleÑ
+Å
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py& &(
+SDG"__id*
+ (
+SDGÜ
+É
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py' '(
+CGPI"__id*
+ (
+CGPIä
+á
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py( ((
+AUTRES"__id*
+ (
+
+Autreså
+â
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py) )(	
+STARTUP"__id*
+ (	
+Startupî
+ë
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py* *(
+CORPORATION"__id*
+ (
+Corporationî
+ë
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py$ $(
+INSTITUTION"__id*
+ (
+Institutionê
+ç
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py% %(
+	WHOLESALE"__id*
+ (
+	WholesaleÑ
+Å
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py& &(
+SDG"__id*
+ (
+SDGÜ
+É
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py' '(
+CGPI"__id*
+ (
+CGPIä
+á
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py( ((
+AUTRES"__id*
+ (
+
+Autreså
+â
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py) )(	
+STARTUP"__id*
+ (	
+Startupî
+ë
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py* *(
+CORPORATION"__id*
+ (
+Corporationé
+ã
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py- -(%
+%2"__id*
+ (*
+
+enum"
+Enumé
+ã
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py/ /(
+
+INVESTOR"__id*
+ (
+
+investorä
+á
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py0 0(
+CLIENT"__id*
+ (
+
+clientî
+ë
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py1 1(
+FOURNISSEUR"__id*
+ (
+fournisseurë
+é
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py2 2(
+
+PROVIDER"__id*
+ (
+fournisseurñ
+ì
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py3 3(!
+DISTRIBUTEUR"__id*
+ (
+distributeuré
+ã
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py4 4(
+
+EMETTEUR"__id*
+ (
+
+emetteurà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py5 5(
+AUTRE"__id*
+ (	
+autreé
+ã
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py/ /(
+
+INVESTOR"__id*
+ (
+
+investorä
+á
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py0 0(
+CLIENT"__id*
+ (
+
+clientî
+ë
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py1 1(
+FOURNISSEUR"__id*
+ (
+fournisseurë
+é
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py2 2(
+
+PROVIDER"__id*
+ (
+fournisseurñ
+ì
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py3 3(!
+DISTRIBUTEUR"__id*
+ (
+distributeuré
+ã
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py4 4(
+
+EMETTEUR"__id*
+ (
+
+emetteurà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py5 5(
+AUTRE"__id*
+ (	
+autreé
+ã
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py8 8("
+%3"__id*
+ (*
+
+enum"
+EnumÜ
+É
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py: :(
+LEAD"__id*
+ (
+leadê
+ç
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py; ;(
+	QUALIFIED"__id*
+ (
+	qualifiedé
+ã
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py< <(
+
+PROSPECT"__id*
+ (
+
+prospectò
+ï
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py= =(#
+QUALIFICATION"__id*
+ (
+qualificationî
+ë
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py> >(
+PROPOSITION"__id*
+ (
+propositionî
+ë
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py? ?(
+NEGOCIATION"__id*
+ (
+negociationà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py@ @(
+SIGNE"__id*
+ (	
+signeà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyA A(
+PERDU"__id*
+ (	
+perduå
+â
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyB B(	
+INACTIF"__id*
+ (	
+inactifÜ
+É
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py: :(
+LEAD"__id*
+ (
+leadê
+ç
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py; ;(
+	QUALIFIED"__id*
+ (
+	qualifiedé
+ã
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py< <(
+
+PROSPECT"__id*
+ (
+
+prospectò
+ï
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py= =(#
+QUALIFICATION"__id*
+ (
+qualificationî
+ë
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py> >(
+PROPOSITION"__id*
+ (
+propositionî
+ë
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py? ?(
+NEGOCIATION"__id*
+ (
+negociationà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py@ @(
+SIGNE"__id*
+ (	
+signeà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyA A(
+PERDU"__id*
+ (	
+perduå
+â
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyB B(	
+INACTIF"__id*
+ (	
+inactifé
+ã
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyE E(!
+%4"__id*
+ (*
+
+enum"
+Enumç
+ä
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyG G(	
+PROPOSE"__id*
+ (
+
+propos√©â
+Ü
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyH H(
+SIGNE"__id*
+ (
+
+sign√©à
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyI I(
+ACTIF"__id*
+ (	
+actifç
+ä
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyJ J(	
+TERMINE"__id*
+ (
+
+termin√©ç
+ä
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyG G(	
+PROPOSE"__id*
+ (
+
+propos√©â
+Ü
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyH H(
+SIGNE"__id*
+ (
+
+sign√©à
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyI I(
+ACTIF"__id*
+ (	
+actifç
+ä
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyJ J(	
+TERMINE"__id*
+ (
+
+termin√©é
+ã
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyM M("
+%5"__id*
+ (*
+
+enum"
+Enumà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyO O(
+ACTIF"__id*
+ (	
+actifå
+â
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyP P(	
+INACTIF"__id*
+ (	
+inactifí
+è
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyQ Q(
+
+EN_ATTENTE"__id*
+ (
+
+en_attenteà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyO O(
+ACTIF"__id*
+ (	
+actifå
+â
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyP P(	
+INACTIF"__id*
+ (	
+inactifí
+è
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyQ Q(
+
+EN_ATTENTE"__id*
+ (
+
+en_attenteé
+ã
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyT T( 
+%6"__id*
+ (*
+
+enum"
+Enumà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyV V(
+OPCVM"__id*
+ (	
+OPCVMÑ
+Å
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyW W(
+FCP"__id*
+ (
+FCPà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyX X(
+SICAV"__id*
+ (	
+SICAVÑ
+Å
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyY Y(
+ETF"__id*
+ (
+ETFû
+õ
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyZ Z()
+FONDS_ALTERNATIF"__id* 
+ (
+Fonds Alternatifà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py[ [(
+AUTRE"__id*
+ (	
+Autreà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyV V(
+OPCVM"__id*
+ (	
+OPCVMÑ
+Å
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyW W(
+FCP"__id*
+ (
+FCPà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyX X(
+SICAV"__id*
+ (	
+SICAVÑ
+Å
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyY Y(
+ETF"__id*
+ (
+ETFû
+õ
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyZ Z()
+FONDS_ALTERNATIF"__id* 
+ (
+Fonds Alternatifà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py[ [(
+AUTRE"__id*
+ (	
+Autreé
+ã
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py^ ^($
+%7"__id*
+ (*
+
+enum"
+Enumà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py` `(
+APPEL"__id*
+ (	
+appelà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pya a(
+EMAIL"__id*
+ (	
+emailå
+â
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyb b(	
+REUNION"__id*
+ (	
+reunionê
+ç
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyc c(
+	WEBINAIRE"__id*
+ (
+	webinaireà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyd d(
+AUTRE"__id*
+ (	
+autreà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py` `(
+APPEL"__id*
+ (	
+appelà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pya a(
+EMAIL"__id*
+ (	
+emailå
+â
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyb b(	
+REUNION"__id*
+ (	
+reunionê
+ç
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyc c(
+	WEBINAIRE"__id*
+ (
+	webinaireà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyd d(
+AUTRE"__id*
+ (	
+autreé
+ã
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyg g((
+%8"__id*
+ (*
+
+enum"
+Enumî
+ë
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyi i(
+FOURNISSEUR"__id*
+ (
+fournisseurà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyj j(
+VENTE"__id*
+ (	
+venteî
+ë
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyi i(
+FOURNISSEUR"__id*
+ (
+fournisseurà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyj j(
+VENTE"__id*
+ (	
+venteé
+ã
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pym m(&
+%9"__id*
+ (*
+
+enum"
+Enumö
+ó
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyo o(%
+PROSPECT_FROID"__id*
+ (
+prospect_froidö
+ó
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyp p(%
+PROSPECT_CHAUD"__id*
+ (
+prospect_chaudà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyq q(
+REFUS"__id*
+ (	
+refusò
+ï
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyr r(#
+EN_DISCUSSION"__id*
+ (
+en_discussionã
+à
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pys s(
+VALIDE"__id*
+ (	
+valid√©ö
+ó
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyo o(%
+PROSPECT_FROID"__id*
+ (
+prospect_froidö
+ó
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyp p(%
+PROSPECT_CHAUD"__id*
+ (
+prospect_chaudà
+Ö
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyq q(
+REFUS"__id*
+ (	
+refusò
+ï
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyr r(#
+EN_DISCUSSION"__id*
+ (
+en_discussionã
+à
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pys s(
+VALIDE"__id*
+ (	
+valid√©ö
+ó
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyá á(#
+__tablename__"__id*
+ (
+organisationsqo
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyà è(
+%10"tuple„
+‡
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyâ â(9
+%11"sqlalchemy.Index*
+ ( *#
+ (
+idx_org_type_active*
+ (
+type*
+ (
+	is_active±
+Æ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyâ â(9
+%12"
+__arrayAdd*
+ (
+
+%10*
+ (: *
+ (
+
+%11Ω
+∫
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyä é(	
+%13"sqlalchemy.CheckConstraint*
+ ( *p
+ (db
+`(probabilite_signature IS NULL) OR (probabilite_signature >= 0 AND probabilite_signature <= 100)22
+name*(
+&ck_organisations_probabilite_signature±
+Æ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyä é(	
+%14"
+__arrayAdd*
+ (
+
+%10*
+ (: *
+ (
+
+%13ë
+é
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyà è(
+__table_args__"__id*
+ (
+
+%10û
+õ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyí í($
+%15"sqlalchemy.String*
+ ( *
+ ( ‚
+ﬂ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyí í(A
+%16"sqlalchemy.Column*
+ ( *
+ (
+nom*
+ (
+
+%152
+nullable	
+
+False2
+index
+
+Trueá
+Ñ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyí í(A
+name"__id*
+ (
+
+%16Ã
+…
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyî î(7
+%17"sqlalchemy.Enum*
+ ( * 
+ (
+
+OrganisationType2
+name
+organisationtype≤
+Ø
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyñ ñ(&
+%18"__id*?
+ (3*1&
+$models.organisation.OrganisationType"
+AUTRE·
+ﬁ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyì ò(
+%19"sqlalchemy.Column*
+ ( *
+ (
+
+%172
+nullable	
+
+False2
+default
+
+%182
+index
+
+Trueá
+Ñ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyì ò(
+type"__id*
+ (
+
+%19‘
+—
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyö ö(?
+%20"sqlalchemy.Enum*
+ ( *$
+ (
+
+OrganisationCategory2 
+name
+organisationcategoryÃ
+…
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyô ù(
+%21"sqlalchemy.Column*
+ ( *
+ (
+
+%202
+nullable
+
+True2
+index
+
+Trueã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyô ù(
+
+category"__id*
+ (
+
+%21∫
+∑
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyû û(/
+%22"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueê
+ç
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyû û(/
+search_vector"__id*
+ (
+
+%22Ø
+¨
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py° °(
+%23"sqlalchemy.Numeric*
+ ( *
+ ( *
+ ( π
+∂
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py°
+ °(/
+%24"sqlalchemy.Column*
+ ( *
+ (
+
+%232
+nullable
+
+TrueÜ
+É
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py° °(/
+aum"__id*
+ (
+
+%24∫
+∑
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¢ ¢(*
+%25"sqlalchemy.Column*
+ ( *
+ (
+
+Date2
+nullable
+
+Trueã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¢ ¢(*
+
+aum_date"__id*
+ (
+
+%25∫
+∑
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py£ £(,
+%26"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+Trueç
+ä
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py£ £(,
+
+strategies"__id*
+ (
+
+%26û
+õ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¶ ¶(
+%27"sqlalchemy.String*
+ ( *
+ ( Ã
+…
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¶ ¶(:
+%28"sqlalchemy.Column*
+ ( *
+ (
+
+%272
+nullable
+
+True2
+index
+
+Trueà
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¶ ¶(:
+email"__id*
+ (
+
+%28û
+õ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyß  ß(*
+%29"sqlalchemy.String*
+ ( *
+ ( ‘
+—
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyß ß(:
+%30"sqlalchemy.Column*
+ ( *
+ (
+	telephone*
+ (
+
+%292
+nullable
+
+Trueà
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyß ß(:
+phone"__id*
+ (
+
+%30û
+õ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py® ®( 
+%31"sqlalchemy.String*
+ ( *
+ ( π
+∂
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py® ®(0
+%32"sqlalchemy.Column*
+ ( *
+ (
+
+%312
+nullable
+
+Trueä
+á
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py® ®(0	
+website"__id*
+ (
+
+%32”
+–
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py© ©(4
+%33"sqlalchemy.Column*
+ ( *
+ (	
+adresse*
+ (
+
+Text2
+nullable
+
+Trueä
+á
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py© ©(4	
+address"__id*
+ (
+
+%33û
+õ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py™ ™(&
+%34"sqlalchemy.String*
+ ( *
+ ( –
+Õ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py™ ™(6
+%35"sqlalchemy.Column*
+ ( *
+ (	
+ville*
+ (
+
+%342
+nullable
+
+Trueá
+Ñ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py™ ™(6
+city"__id*
+ (
+
+%35û
+õ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py´( ´(2
+%36"sqlalchemy.String*
+ ( *
+ ( ÷
+”
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py´ ´(B
+%37"sqlalchemy.Column*
+ ( *
+ (
+code_postal*
+ (
+
+%362
+nullable
+
+Trueé
+ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py´ ´(B
+postal_code"__id*
+ (
+
+%37û
+õ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¨ ¨((
+%38"sqlalchemy.String*
+ ( *
+ ( œ
+Ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¨ ¨(8
+%39"sqlalchemy.Column*
+ ( *
+ (
+pays*
+ (
+
+%382
+nullable
+
+Trueä
+á
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¨ ¨(8	
+country"__id*
+ (
+
+%39û
+õ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≠ ≠(#
+%40"sqlalchemy.String*
+ ( *
+ ( Ã
+…
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≠ ≠(?
+%41"sqlalchemy.Column*
+ ( *
+ (
+
+%402
+nullable
+
+True2
+index
+
+Trueè
+å
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≠ ≠(?
+country_code"__id*
+ (
+
+%41û
+õ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÆ Æ(!
+%42"sqlalchemy.String*
+ ( *
+ ( π
+∂
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÆ Æ(1
+%43"sqlalchemy.Column*
+ ( *
+ (
+
+%422
+nullable
+
+Trueã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÆ Æ(1
+
+domicile"__id*
+ (
+
+%43û
+õ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyØ Ø(
+%44"sqlalchemy.String*
+ ( *
+ ( ‡
+›
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyØ Ø(J
+%45"sqlalchemy.Column*
+ ( *
+ (
+
+%442
+nullable	
+
+False2
+default
+FR2
+index
+
+Trueã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyØ Ø(J
+
+language"__id*
+ (
+
+%45∫
+∑
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≤ ≤('
+%46"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueà
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≤ ≤('
+notes"__id*
+ (
+
+%46∫
+∑
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≥ ≥(-
+%47"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueé
+ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≥ ≥(-
+description"__id*
+ (
+
+%47∫
+∑
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¥ ¥(&
+%48"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+Trueá
+Ñ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¥ ¥(&
+tags"__id*
+ (
+
+%48œ
+Ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyµ µ(9
+%49"sqlalchemy.Column*
+ ( *
+ (
+	
+Boolean2
+default
+
+True2
+index
+
+Trueå
+â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyµ µ(9
+	is_active"__id*
+ (
+
+%49“
+œ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∂! ∂(T
+%50"sqlalchemy.ForeignKey*
+ ( *
+ (
+
+FK_USERS_ID2!
+ondelete
+
+ONDELETE_SET_NULL“
+œ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∂ ∂(d
+%51"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%502
+nullable
+
+Trueç
+ä
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∂ ∂(d
+
+created_by"__id*
+ (
+
+%51“
+œ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∑" ∑(U
+%52"sqlalchemy.ForeignKey*
+ ( *
+ (
+
+FK_USERS_ID2!
+ondelete
+
+ONDELETE_SET_NULL“
+œ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∑ ∑(e
+%53"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%522
+nullable
+
+Trueé
+ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∑ ∑(e
+assigned_to"__id*
+ (
+
+%53“
+œ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∏ ∏(R
+%54"sqlalchemy.ForeignKey*
+ ( *
+ (
+
+FK_USERS_ID2!
+ondelete
+
+ONDELETE_SET_NULLÂ
+‚
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∏ ∏(n
+%55"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%542
+nullable
+
+True2
+index
+
+Trueã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∏ ∏(n
+
+owner_id"__id*
+ (
+
+%55Ã
+…
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyº º(5
+%56"sqlalchemy.Enum*
+ ( *
+ (
+
+PipelineStage2
+name
+
+ENUM_PIPELINE_STAGE≤
+Ø
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyæ æ(&
+%57"__id*?
+ (3*1#
+!models.organisation.PipelineStage"
+
+PROSPECT·
+ﬁ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyª ¿(
+%58"sqlalchemy.Column*
+ ( *
+ (
+
+%562
+nullable	
+
+False2
+default
+
+%572
+index
+
+Trueë
+é
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyª ¿(
+pipeline_stage"__id*
+ (
+
+%58Ø
+¨
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¡3 ¡(A
+%59"sqlalchemy.Numeric*
+ ( *
+ ( *
+ ( ‹
+Ÿ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¡ ¡(Q
+%60"sqlalchemy.Column*
+ ( *!
+ (
+montant_potentiel*
+ (
+
+%592
+nullable
+
+Trueì
+ê
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¡ ¡(Q
+potential_amount"__id*
+ (
+
+%60⁄
+◊
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¬ ¬(B
+%61"sqlalchemy.Column*
+ ( *
+ (
+date_signature*
+ (
+
+Date2
+nullable
+
+Trueë
+é
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¬ ¬(B
+signature_date"__id*
+ (
+
+%61‰
+·
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py√ √(S
+%62"sqlalchemy.Column*
+ ( *%
+ (
+probabilite_signature*
+ (
+	
+Integer2
+nullable
+
+Trueò
+ï
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py√ √(S
+signature_probability"__id*
+ (
+
+%62É
+Ä
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∆  (
+%63"sqlalchemy.orm.relationship*
+ ( *"
+ (
+MandatDistribution2"
+back_populates
+organisation2!
+cascade
+all, delete-orphanä
+á
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∆  (	
+mandats"__id*
+ (
+
+%63Ñ
+Å
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÃ –(
+%64"sqlalchemy.orm.relationship*
+ ( *#
+ (
+OrganisationContact2"
+back_populates
+organisation2!
+cascade
+all, delete-orphanã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÃ –(
+
+contacts"__id*
+ (
+
+%64ì
+ê
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py“ ◊(
+%65"sqlalchemy.orm.relationship*
+ ( *
+ (
+DashboardKPI2"
+back_populates
+organisation2!
+cascade
+all, delete-orphan2
+lazy
+
+selectiná
+Ñ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py“ ◊(
+kpis"__id*
+ (
+
+%65à
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyŸ ›(
+%66"sqlalchemy.orm.relationship*
+ ( *'
+ (
+OrganisationInteraction2"
+back_populates
+organisation2!
+cascade
+all, delete-orphanè
+å
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyŸ ›(
+interactions"__id*
+ (
+
+%66Ö
+Ç
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyﬂ „(
+%67"sqlalchemy.orm.relationship*
+ ( *$
+ (
+OrganisationActivity2"
+back_populates
+organisation2!
+cascade
+all, delete-orphanç
+ä
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyﬂ „(
+
+activities"__id*
+ (
+
+%67ù
+ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÂ Í(
+%68"sqlalchemy.orm.relationship*
+ ( *&
+ (
+PersonOrganizationLink2"
+back_populates
+organisation2!
+cascade
+all, delete-orphan2
+lazy
+
+selectinè
+å
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÂ Í(
+people_links"__id*
+ (
+
+%68ã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÏ Ò(
+%69"sqlalchemy.orm.relationship*
+ ( *
+ (
+Task2"
+back_populates
+organisation2!
+cascade
+all, delete-orphan2
+lazy
+
+selectinà
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÏ Ò(
+tasks"__id*
+ (
+
+%69˜
+Ù
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÛ ˜(
+%70"sqlalchemy.orm.relationship*
+ ( *
+ (
+
+Mandat2"
+back_populates
+organisation2!
+cascade
+all, delete-orphanë
+é
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÛ ˜(
+legacy_mandats"__id*
+ (
+
+%70pn
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˘. ˘(8
+%71"list∂
+≥
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˘/ ˘(7
+%72"
+__arrayAdd*
+ (
+
+%71*
+ (: *
+ (
+
+
+owner_idÚ
+Ô
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˘ ˘(_
+%73"sqlalchemy.orm.relationship*
+ ( *
+ (
+User2
+foreign_keys
+
+%712)
+back_populates
+organisations_ownedà
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˘ ˘(_
+owner"__id*
+ (
+
+%73pn
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˙8 ˙(D
+%74"list∏
+µ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˙9 ˙(C
+%75"
+__arrayAdd*
+ (
+
+%74*
+ (: *
+ (
+
+
+created_byÙ
+Ò
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˙ ˙(m
+%76"sqlalchemy.orm.relationship*
+ ( *
+ (
+User2
+foreign_keys
+
+%742+
+back_populates
+organisations_createdí
+è
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˙ ˙(m
+created_by_user"__id*
+ (
+
+%76pn
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˚6 ˚(C
+%77"listπ
+∂
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˚7 ˚(B
+%78"
+__arrayAdd*
+ (
+
+%77*
+ (: *
+ (
+
+assigned_toı
+Ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˚ ˚(m
+%79"sqlalchemy.orm.relationship*
+ ( *
+ (
+User2
+foreign_keys
+
+%772,
+back_populates
+organisations_assignedê
+ç
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˚ ˚(m
+assigned_user"__id*
+ (
+
+%79om
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˝ ˝(1
+%80"set¡
+æ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˝ ˝(0
+%81"
+__arrayAdd*
+ (
+
+%80*
+ (: *#
+ (
+default@company.comñ
+ì
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˝ ˝(1
+_PLACEHOLDER_EMAILS"__id*
+ (
+
+%80ö
+ó
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyá á(#
+__tablename__"__id*
+ (
+organisationsqo
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyà è(
+%82"tuple„
+‡
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyâ â(9
+%83"sqlalchemy.Index*
+ ( *#
+ (
+idx_org_type_active*
+ (
+type*
+ (
+	is_active±
+Æ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyâ â(9
+%84"
+__arrayAdd*
+ (
+
+%82*
+ (: *
+ (
+
+%83Ω
+∫
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyä é(	
+%85"sqlalchemy.CheckConstraint*
+ ( *p
+ (db
+`(probabilite_signature IS NULL) OR (probabilite_signature >= 0 AND probabilite_signature <= 100)22
+name*(
+&ck_organisations_probabilite_signature±
+Æ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyä é(	
+%86"
+__arrayAdd*
+ (
+
+%82*
+ (: *
+ (
+
+%85ë
+é
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyà è(
+__table_args__"__id*
+ (
+
+%82û
+õ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyí í($
+%87"sqlalchemy.String*
+ ( *
+ ( ‚
+ﬂ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyí í(A
+%88"sqlalchemy.Column*
+ ( *
+ (
+nom*
+ (
+
+%872
+nullable	
+
+False2
+index
+
+Trueá
+Ñ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyí í(A
+name"__id*
+ (
+
+%88Ã
+…
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyî î(7
+%89"sqlalchemy.Enum*
+ ( * 
+ (
+
+OrganisationType2
+name
+organisationtype≤
+Ø
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyñ ñ(&
+%90"__id*?
+ (3*1&
+$models.organisation.OrganisationType"
+AUTRE·
+ﬁ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyì ò(
+%91"sqlalchemy.Column*
+ ( *
+ (
+
+%892
+nullable	
+
+False2
+default
+
+%902
+index
+
+Trueá
+Ñ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyì ò(
+type"__id*
+ (
+
+%91‘
+—
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyö ö(?
+%92"sqlalchemy.Enum*
+ ( *$
+ (
+
+OrganisationCategory2 
+name
+organisationcategoryÃ
+…
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyô ù(
+%93"sqlalchemy.Column*
+ ( *
+ (
+
+%922
+nullable
+
+True2
+index
+
+Trueã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyô ù(
+
+category"__id*
+ (
+
+%93∫
+∑
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyû û(/
+%94"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueê
+ç
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyû û(/
+search_vector"__id*
+ (
+
+%94Ø
+¨
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py° °(
+%95"sqlalchemy.Numeric*
+ ( *
+ ( *
+ ( π
+∂
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py°
+ °(/
+%96"sqlalchemy.Column*
+ ( *
+ (
+
+%952
+nullable
+
+TrueÜ
+É
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py° °(/
+aum"__id*
+ (
+
+%96∫
+∑
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¢ ¢(*
+%97"sqlalchemy.Column*
+ ( *
+ (
+
+Date2
+nullable
+
+Trueã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¢ ¢(*
+
+aum_date"__id*
+ (
+
+%97∫
+∑
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py£ £(,
+%98"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+Trueç
+ä
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py£ £(,
+
+strategies"__id*
+ (
+
+%98û
+õ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¶ ¶(
+%99"sqlalchemy.String*
+ ( *
+ ( Õ
+ 
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¶ ¶(:
+%100"sqlalchemy.Column*
+ ( *
+ (
+
+%992
+nullable
+
+True2
+index
+
+Trueâ
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¶ ¶(:
+email"__id*
+ (
+
+%100ü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyß  ß(*
+%101"sqlalchemy.String*
+ ( *
+ ( ÷
+”
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyß ß(:
+%102"sqlalchemy.Column*
+ ( *
+ (
+	telephone*
+ (
+
+%1012
+nullable
+
+Trueâ
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyß ß(:
+phone"__id*
+ (
+
+%102ü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py® ®( 
+%103"sqlalchemy.String*
+ ( *
+ ( ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py® ®(0
+%104"sqlalchemy.Column*
+ ( *
+ (
+
+%1032
+nullable
+
+Trueã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py® ®(0	
+website"__id*
+ (
+
+%104‘
+—
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py© ©(4
+%105"sqlalchemy.Column*
+ ( *
+ (	
+adresse*
+ (
+
+Text2
+nullable
+
+Trueã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py© ©(4	
+address"__id*
+ (
+
+%105ü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py™ ™(&
+%106"sqlalchemy.String*
+ ( *
+ ( “
+œ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py™ ™(6
+%107"sqlalchemy.Column*
+ ( *
+ (	
+ville*
+ (
+
+%1062
+nullable
+
+Trueà
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py™ ™(6
+city"__id*
+ (
+
+%107ü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py´( ´(2
+%108"sqlalchemy.String*
+ ( *
+ ( ÿ
+’
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py´ ´(B
+%109"sqlalchemy.Column*
+ ( *
+ (
+code_postal*
+ (
+
+%1082
+nullable
+
+Trueè
+å
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py´ ´(B
+postal_code"__id*
+ (
+
+%109ü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¨ ¨((
+%110"sqlalchemy.String*
+ ( *
+ ( —
+Œ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¨ ¨(8
+%111"sqlalchemy.Column*
+ ( *
+ (
+pays*
+ (
+
+%1102
+nullable
+
+Trueã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¨ ¨(8	
+country"__id*
+ (
+
+%111ü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≠ ≠(#
+%112"sqlalchemy.String*
+ ( *
+ ( Œ
+À
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≠ ≠(?
+%113"sqlalchemy.Column*
+ ( *
+ (
+
+%1122
+nullable
+
+True2
+index
+
+Trueê
+ç
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≠ ≠(?
+country_code"__id*
+ (
+
+%113ü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÆ Æ(!
+%114"sqlalchemy.String*
+ ( *
+ ( ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÆ Æ(1
+%115"sqlalchemy.Column*
+ ( *
+ (
+
+%1142
+nullable
+
+Trueå
+â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÆ Æ(1
+
+domicile"__id*
+ (
+
+%115ü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyØ Ø(
+%116"sqlalchemy.String*
+ ( *
+ ( ‚
+ﬂ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyØ Ø(J
+%117"sqlalchemy.Column*
+ ( *
+ (
+
+%1162
+nullable	
+
+False2
+default
+FR2
+index
+
+Trueå
+â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyØ Ø(J
+
+language"__id*
+ (
+
+%117ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≤ ≤('
+%118"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueâ
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≤ ≤('
+notes"__id*
+ (
+
+%118ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≥ ≥(-
+%119"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueè
+å
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≥ ≥(-
+description"__id*
+ (
+
+%119ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¥ ¥(&
+%120"sqlalchemy.Column*
+ ( *
+ (
+
+JSON2
+nullable
+
+Trueà
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¥ ¥(&
+tags"__id*
+ (
+
+%120–
+Õ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyµ µ(9
+%121"sqlalchemy.Column*
+ ( *
+ (
+	
+Boolean2
+default
+
+True2
+index
+
+Trueç
+ä
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyµ µ(9
+	is_active"__id*
+ (
+
+%121”
+–
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∂! ∂(T
+%122"sqlalchemy.ForeignKey*
+ ( *
+ (
+
+FK_USERS_ID2!
+ondelete
+
+ONDELETE_SET_NULL‘
+—
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∂ ∂(d
+%123"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%1222
+nullable
+
+Trueé
+ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∂ ∂(d
+
+created_by"__id*
+ (
+
+%123”
+–
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∑" ∑(U
+%124"sqlalchemy.ForeignKey*
+ ( *
+ (
+
+FK_USERS_ID2!
+ondelete
+
+ONDELETE_SET_NULL‘
+—
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∑ ∑(e
+%125"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%1242
+nullable
+
+Trueè
+å
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∑ ∑(e
+assigned_to"__id*
+ (
+
+%125”
+–
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∏ ∏(R
+%126"sqlalchemy.ForeignKey*
+ ( *
+ (
+
+FK_USERS_ID2!
+ondelete
+
+ONDELETE_SET_NULLÁ
+‰
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∏ ∏(n
+%127"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%1262
+nullable
+
+True2
+index
+
+Trueå
+â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∏ ∏(n
+
+owner_id"__id*
+ (
+
+%127Õ
+ 
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyº º(5
+%128"sqlalchemy.Enum*
+ ( *
+ (
+
+PipelineStage2
+name
+
+ENUM_PIPELINE_STAGE≥
+∞
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyæ æ(&
+%129"__id*?
+ (3*1#
+!models.organisation.PipelineStage"
+
+PROSPECT‰
+·
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyª ¿(
+%130"sqlalchemy.Column*
+ ( *
+ (
+
+%1282
+nullable	
+
+False2
+default
+
+%1292
+index
+
+Trueí
+è
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyª ¿(
+pipeline_stage"__id*
+ (
+
+%130∞
+≠
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¡3 ¡(A
+%131"sqlalchemy.Numeric*
+ ( *
+ ( *
+ ( ﬁ
+€
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¡ ¡(Q
+%132"sqlalchemy.Column*
+ ( *!
+ (
+montant_potentiel*
+ (
+
+%1312
+nullable
+
+Trueî
+ë
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¡ ¡(Q
+potential_amount"__id*
+ (
+
+%132€
+ÿ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¬ ¬(B
+%133"sqlalchemy.Column*
+ ( *
+ (
+date_signature*
+ (
+
+Date2
+nullable
+
+Trueí
+è
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¬ ¬(B
+signature_date"__id*
+ (
+
+%133Â
+‚
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py√ √(S
+%134"sqlalchemy.Column*
+ ( *%
+ (
+probabilite_signature*
+ (
+	
+Integer2
+nullable
+
+Trueô
+ñ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py√ √(S
+signature_probability"__id*
+ (
+
+%134Ñ
+Å
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∆  (
+%135"sqlalchemy.orm.relationship*
+ ( *"
+ (
+MandatDistribution2"
+back_populates
+organisation2!
+cascade
+all, delete-orphanã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∆  (	
+mandats"__id*
+ (
+
+%135Ö
+Ç
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÃ –(
+%136"sqlalchemy.orm.relationship*
+ ( *#
+ (
+OrganisationContact2"
+back_populates
+organisation2!
+cascade
+all, delete-orphanå
+â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÃ –(
+
+contacts"__id*
+ (
+
+%136î
+ë
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py“ ◊(
+%137"sqlalchemy.orm.relationship*
+ ( *
+ (
+DashboardKPI2"
+back_populates
+organisation2!
+cascade
+all, delete-orphan2
+lazy
+
+selectinà
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py“ ◊(
+kpis"__id*
+ (
+
+%137â
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyŸ ›(
+%138"sqlalchemy.orm.relationship*
+ ( *'
+ (
+OrganisationInteraction2"
+back_populates
+organisation2!
+cascade
+all, delete-orphanê
+ç
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyŸ ›(
+interactions"__id*
+ (
+
+%138Ü
+É
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyﬂ „(
+%139"sqlalchemy.orm.relationship*
+ ( *$
+ (
+OrganisationActivity2"
+back_populates
+organisation2!
+cascade
+all, delete-orphané
+ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyﬂ „(
+
+activities"__id*
+ (
+
+%139û
+õ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÂ Í(
+%140"sqlalchemy.orm.relationship*
+ ( *&
+ (
+PersonOrganizationLink2"
+back_populates
+organisation2!
+cascade
+all, delete-orphan2
+lazy
+
+selectinê
+ç
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÂ Í(
+people_links"__id*
+ (
+
+%140å
+â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÏ Ò(
+%141"sqlalchemy.orm.relationship*
+ ( *
+ (
+Task2"
+back_populates
+organisation2!
+cascade
+all, delete-orphan2
+lazy
+
+selectinâ
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÏ Ò(
+tasks"__id*
+ (
+
+%141¯
+ı
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÛ ˜(
+%142"sqlalchemy.orm.relationship*
+ ( *
+ (
+
+Mandat2"
+back_populates
+organisation2!
+cascade
+all, delete-orphaní
+è
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÛ ˜(
+legacy_mandats"__id*
+ (
+
+%142qo
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˘. ˘(8
+%143"list∏
+µ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˘/ ˘(7
+%144"
+__arrayAdd*
+ (
+
+%143*
+ (: *
+ (
+
+
+owner_idÙ
+Ò
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˘ ˘(_
+%145"sqlalchemy.orm.relationship*
+ ( *
+ (
+User2
+foreign_keys
+
+%1432)
+back_populates
+organisations_ownedâ
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˘ ˘(_
+owner"__id*
+ (
+
+%145qo
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˙8 ˙(D
+%146"list∫
+∑
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˙9 ˙(C
+%147"
+__arrayAdd*
+ (
+
+%146*
+ (: *
+ (
+
+
+created_byˆ
+Û
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˙ ˙(m
+%148"sqlalchemy.orm.relationship*
+ ( *
+ (
+User2
+foreign_keys
+
+%1462+
+back_populates
+organisations_createdì
+ê
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˙ ˙(m
+created_by_user"__id*
+ (
+
+%148qo
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˚6 ˚(C
+%149"listª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˚7 ˚(B
+%150"
+__arrayAdd*
+ (
+
+%149*
+ (: *
+ (
+
+assigned_to˜
+Ù
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˚ ˚(m
+%151"sqlalchemy.orm.relationship*
+ ( *
+ (
+User2
+foreign_keys
+
+%1492,
+back_populates
+organisations_assignedë
+é
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˚ ˚(m
+assigned_user"__id*
+ (
+
+%151pn
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˝ ˝(1
+%152"set√
+¿
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˝ ˝(0
+%153"
+__arrayAdd*
+ (
+
+%152*
+ (: *#
+ (
+default@company.comó
+î
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py˝ ˝(1
+_PLACEHOLDER_EMAILS"__id*
+ (
+
+%152≠
+™
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyˇ ˇ(
+%154"sqlalchemy.orm.validates*
+ ( *
+ (	
+email¢
+ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyñ ñ(+
+__tablename__"__id*%
+ (
+organisation_contactsµ
+≤
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyò& ò(D
+%155"sqlalchemy.ForeignKey*
+ ( * 
+ (
+organisations.idË
+Â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyò ò(a
+%156"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%1552
+nullable	
+
+False2
+index
+
+Trueì
+ê
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyò ò(a
+organisation_id"__id*
+ (
+
+%156ü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyö ö(
+%157"sqlalchemy.String*
+ ( *
+ ( º
+π
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyö ö(.
+%158"sqlalchemy.Column*
+ ( *
+ (
+
+%1572
+nullable	
+
+Falseà
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyö ö(.
+name"__id*
+ (
+
+%158ü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyõ õ(
+%159"sqlalchemy.String*
+ ( *
+ ( •
+¢
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyõ õ(
+%160"sqlalchemy.Column*
+ ( *
+ (
+
+%159â
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyõ õ(
+email"__id*
+ (
+
+%160ü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyú ú(
+%161"sqlalchemy.String*
+ ( *
+ ( •
+¢
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyú ú(
+%162"sqlalchemy.Column*
+ ( *
+ (
+
+%161â
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyú ú(
+phone"__id*
+ (
+
+%162ü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyù ù(
+%163"sqlalchemy.String*
+ ( *
+ ( •
+¢
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyù ù(
+%164"sqlalchemy.Column*
+ ( *
+ (
+
+%163â
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyù ù(
+title"__id*
+ (
+
+%164•
+¢
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyû û(
+%165"sqlalchemy.Column*
+ ( *
+ (
+
+Textâ
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyû û(
+notes"__id*
+ (
+
+%165◊
+‘
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py° °(J
+%166"sqlalchemy.orm.relationship*
+ ( *
+ (
+Organisation2
+back_populates
+
+contactsê
+ç
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py° °(J
+organisation"__id*
+ (
+
+%166¢
+ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyñ ñ(+
+__tablename__"__id*%
+ (
+organisation_contactsµ
+≤
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyò& ò(D
+%167"sqlalchemy.ForeignKey*
+ ( * 
+ (
+organisations.idË
+Â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyò ò(a
+%168"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%1672
+nullable	
+
+False2
+index
+
+Trueì
+ê
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyò ò(a
+organisation_id"__id*
+ (
+
+%168ü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyö ö(
+%169"sqlalchemy.String*
+ ( *
+ ( º
+π
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyö ö(.
+%170"sqlalchemy.Column*
+ ( *
+ (
+
+%1692
+nullable	
+
+Falseà
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyö ö(.
+name"__id*
+ (
+
+%170ü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyõ õ(
+%171"sqlalchemy.String*
+ ( *
+ ( •
+¢
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyõ õ(
+%172"sqlalchemy.Column*
+ ( *
+ (
+
+%171â
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyõ õ(
+email"__id*
+ (
+
+%172ü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyú ú(
+%173"sqlalchemy.String*
+ ( *
+ ( •
+¢
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyú ú(
+%174"sqlalchemy.Column*
+ ( *
+ (
+
+%173â
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyú ú(
+phone"__id*
+ (
+
+%174ü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyù ù(
+%175"sqlalchemy.String*
+ ( *
+ ( •
+¢
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyù ù(
+%176"sqlalchemy.Column*
+ ( *
+ (
+
+%175â
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyù ù(
+title"__id*
+ (
+
+%176•
+¢
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyû û(
+%177"sqlalchemy.Column*
+ ( *
+ (
+
+Textâ
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyû û(
+notes"__id*
+ (
+
+%177◊
+‘
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py° °(J
+%178"sqlalchemy.orm.relationship*
+ ( *
+ (
+Organisation2
+back_populates
+
+contactsê
+ç
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py° °(J
+organisation"__id*
+ (
+
+%178°
+û
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∑ ∑(*
+__tablename__"__id*$
+ (
+mandats_distributionµ
+≤
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyπ& π(D
+%179"sqlalchemy.ForeignKey*
+ ( * 
+ (
+organisations.idË
+Â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyπ π(a
+%180"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%1792
+nullable	
+
+False2
+index
+
+Trueì
+ê
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyπ π(a
+organisation_id"__id*
+ (
+
+%180´
+®
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyª ª(&
+%181"sqlalchemy.Enum*
+ ( *
+ (
+
+MandatStatus±
+Æ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyª@ ª(T
+%182"__id*=
+ (1*/"
+ models.organisation.MandatStatus"	
+PROPOSE‰
+·
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyª ª(a
+%183"sqlalchemy.Column*
+ ( *
+ (
+
+%1812
+nullable	
+
+False2
+default
+
+%1822
+index
+
+Trueä
+á
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyª ª(a
+status"__id*
+ (
+
+%183ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyº º(0
+%184"sqlalchemy.Column*
+ ( *
+ (
+
+Date2
+nullable
+
+Trueí
+è
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyº º(0
+date_signature"__id*
+ (
+
+%184ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyΩ Ω(,
+%185"sqlalchemy.Column*
+ ( *
+ (
+
+Date2
+nullable
+
+Trueé
+ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyΩ Ω(,
+
+date_debut"__id*
+ (
+
+%185ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyæ æ(*
+%186"sqlalchemy.Column*
+ ( *
+ (
+
+Date2
+nullable
+
+Trueå
+â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyæ æ(*
+
+date_fin"__id*
+ (
+
+%186ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyø ø('
+%187"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueâ
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyø ø('
+notes"__id*
+ (
+
+%187÷
+”
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¬ ¬(I
+%188"sqlalchemy.orm.relationship*
+ ( *
+ (
+Organisation2
+back_populates	
+mandatsê
+ç
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¬ ¬(I
+organisation"__id*
+ (
+
+%188˘
+ˆ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py√ «(
+%189"sqlalchemy.orm.relationship*
+ ( *
+ (
+MandatProduit2
+back_populates
+
+mandat2!
+cascade
+all, delete-orphanå
+â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py√ «(
+
+produits"__id*
+ (
+
+%189°
+û
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∑ ∑(*
+__tablename__"__id*$
+ (
+mandats_distributionµ
+≤
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyπ& π(D
+%190"sqlalchemy.ForeignKey*
+ ( * 
+ (
+organisations.idË
+Â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyπ π(a
+%191"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%1902
+nullable	
+
+False2
+index
+
+Trueì
+ê
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyπ π(a
+organisation_id"__id*
+ (
+
+%191´
+®
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyª ª(&
+%192"sqlalchemy.Enum*
+ ( *
+ (
+
+MandatStatus±
+Æ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyª@ ª(T
+%193"__id*=
+ (1*/"
+ models.organisation.MandatStatus"	
+PROPOSE‰
+·
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyª ª(a
+%194"sqlalchemy.Column*
+ ( *
+ (
+
+%1922
+nullable	
+
+False2
+default
+
+%1932
+index
+
+Trueä
+á
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyª ª(a
+status"__id*
+ (
+
+%194ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyº º(0
+%195"sqlalchemy.Column*
+ ( *
+ (
+
+Date2
+nullable
+
+Trueí
+è
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyº º(0
+date_signature"__id*
+ (
+
+%195ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyΩ Ω(,
+%196"sqlalchemy.Column*
+ ( *
+ (
+
+Date2
+nullable
+
+Trueé
+ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyΩ Ω(,
+
+date_debut"__id*
+ (
+
+%196ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyæ æ(*
+%197"sqlalchemy.Column*
+ ( *
+ (
+
+Date2
+nullable
+
+Trueå
+â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyæ æ(*
+
+date_fin"__id*
+ (
+
+%197ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyø ø('
+%198"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueâ
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyø ø('
+notes"__id*
+ (
+
+%198÷
+”
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¬ ¬(I
+%199"sqlalchemy.orm.relationship*
+ ( *
+ (
+Organisation2
+back_populates	
+mandatsê
+ç
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¬ ¬(I
+organisation"__id*
+ (
+
+%199˘
+ˆ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py√ «(
+%200"sqlalchemy.orm.relationship*
+ ( *
+ (
+MandatProduit2
+back_populates
+
+mandat2!
+cascade
+all, delete-orphanå
+â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py√ «(
+
+produits"__id*
+ (
+
+%200ï
+í
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py‡ ‡(
+__tablename__"__id*
+ (
+
+produitsü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py‚ ‚(
+%201"sqlalchemy.String*
+ ( *
+ ( œ
+Ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py‚ ‚(:
+%202"sqlalchemy.Column*
+ ( *
+ (
+
+%2012
+nullable	
+
+False2
+index
+
+Trueà
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py‚ ‚(:
+name"__id*
+ (
+
+%202ü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py„ „(
+%203"sqlalchemy.String*
+ ( *
+ ( ‚
+ﬂ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py„ „(E
+%204"sqlalchemy.Column*
+ ( *
+ (
+
+%2032
+unique
+
+True2
+nullable
+
+True2
+index
+
+Trueà
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py„ „(E
+isin"__id*
+ (
+
+%204™
+ß
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py‰ ‰(#
+%205"sqlalchemy.Enum*
+ ( *
+ (
+
+ProduitTypeœ
+Ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py‰ ‰(@
+%206"sqlalchemy.Column*
+ ( *
+ (
+
+%2052
+nullable	
+
+False2
+index
+
+Trueà
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py‰ ‰(@
+type"__id*
+ (
+
+%206¨
+©
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÂ Â('
+%207"sqlalchemy.Enum*
+ ( *
+ (
+
+ProduitStatusµ
+≤
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÂA Â(Y
+%208"__id*A
+ (5*3#
+!models.organisation.ProduitStatus"
+
+EN_ATTENTE‰
+·
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÂ Â(f
+%209"sqlalchemy.Column*
+ ( *
+ (
+
+%2072
+nullable	
+
+False2
+default
+
+%2082
+index
+
+Trueä
+á
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÂ Â(f
+status"__id*
+ (
+
+%209ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÊ Ê('
+%210"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueâ
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÊ Ê('
+notes"__id*
+ (
+
+%210˙
+˜
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÈ Ì(
+%211"sqlalchemy.orm.relationship*
+ ( *
+ (
+MandatProduit2
+back_populates	
+produit2!
+cascade
+all, delete-orphanã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÈ Ì(	
+mandats"__id*
+ (
+
+%211·
+ﬁ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÔ Ú(
+%212"sqlalchemy.orm.relationship*
+ ( *'
+ (
+OrganisationInteraction2
+back_populates	
+produitê
+ç
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÔ Ú(
+interactions"__id*
+ (
+
+%212ï
+í
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py‡ ‡(
+__tablename__"__id*
+ (
+
+produitsü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py‚ ‚(
+%213"sqlalchemy.String*
+ ( *
+ ( œ
+Ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py‚ ‚(:
+%214"sqlalchemy.Column*
+ ( *
+ (
+
+%2132
+nullable	
+
+False2
+index
+
+Trueà
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py‚ ‚(:
+name"__id*
+ (
+
+%214ü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py„ „(
+%215"sqlalchemy.String*
+ ( *
+ ( ‚
+ﬂ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py„ „(E
+%216"sqlalchemy.Column*
+ ( *
+ (
+
+%2152
+unique
+
+True2
+nullable
+
+True2
+index
+
+Trueà
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py„ „(E
+isin"__id*
+ (
+
+%216™
+ß
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py‰ ‰(#
+%217"sqlalchemy.Enum*
+ ( *
+ (
+
+ProduitTypeœ
+Ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py‰ ‰(@
+%218"sqlalchemy.Column*
+ ( *
+ (
+
+%2172
+nullable	
+
+False2
+index
+
+Trueà
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py‰ ‰(@
+type"__id*
+ (
+
+%218¨
+©
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÂ Â('
+%219"sqlalchemy.Enum*
+ ( *
+ (
+
+ProduitStatusµ
+≤
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÂA Â(Y
+%220"__id*A
+ (5*3#
+!models.organisation.ProduitStatus"
+
+EN_ATTENTE‰
+·
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÂ Â(f
+%221"sqlalchemy.Column*
+ ( *
+ (
+
+%2192
+nullable	
+
+False2
+default
+
+%2202
+index
+
+Trueä
+á
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÂ Â(f
+status"__id*
+ (
+
+%221ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÊ Ê('
+%222"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueâ
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÊ Ê('
+notes"__id*
+ (
+
+%222˙
+˜
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÈ Ì(
+%223"sqlalchemy.orm.relationship*
+ ( *
+ (
+MandatProduit2
+back_populates	
+produit2!
+cascade
+all, delete-orphanã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÈ Ì(	
+mandats"__id*
+ (
+
+%223·
+ﬁ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÔ Ú(
+%224"sqlalchemy.orm.relationship*
+ ( *'
+ (
+OrganisationInteraction2
+back_populates	
+produitê
+ç
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÔ Ú(
+interactions"__id*
+ (
+
+%224ú
+ô
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÖ Ö(%
+__tablename__"__id*
+ (
+mandat_produitsº
+π
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyá  á(E
+%225"sqlalchemy.ForeignKey*
+ ( *'
+ (
+mandats_distribution.idË
+Â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyá á(b
+%226"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2252
+nullable	
+
+False2
+index
+
+Trueç
+ä
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyá á(b
+	mandat_id"__id*
+ (
+
+%226∞
+≠
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyà! à(:
+%227"sqlalchemy.ForeignKey*
+ ( *
+ (
+produits.idË
+Â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyà à(W
+%228"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2272
+nullable	
+
+False2
+index
+
+Trueé
+ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyà à(W
+
+produit_id"__id*
+ (
+
+%228ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyä ä(,
+%229"sqlalchemy.Column*
+ ( *
+ (
+
+Date2
+nullable
+
+Trueé
+ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyä ä(,
+
+date_ajout"__id*
+ (
+
+%229ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyã ã('
+%230"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueâ
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyã ã('
+notes"__id*
+ (
+
+%230›
+⁄
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyé é(J
+%231"sqlalchemy.orm.relationship*
+ ( *"
+ (
+MandatDistribution2
+back_populates
+
+produitsä
+á
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyé é(J
+mandat"__id*
+ (
+
+%231—
+Œ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyè è(?
+%232"sqlalchemy.orm.relationship*
+ ( *
+ (	
+Produit2
+back_populates	
+mandatsã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyè è(?	
+produit"__id*
+ (
+
+%232ú
+ô
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÖ Ö(%
+__tablename__"__id*
+ (
+mandat_produitsº
+π
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyá  á(E
+%233"sqlalchemy.ForeignKey*
+ ( *'
+ (
+mandats_distribution.idË
+Â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyá á(b
+%234"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2332
+nullable	
+
+False2
+index
+
+Trueç
+ä
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyá á(b
+	mandat_id"__id*
+ (
+
+%234∞
+≠
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyà! à(:
+%235"sqlalchemy.ForeignKey*
+ ( *
+ (
+produits.idË
+Â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyà à(W
+%236"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2352
+nullable	
+
+False2
+index
+
+Trueé
+ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyà à(W
+
+produit_id"__id*
+ (
+
+%236ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyä ä(,
+%237"sqlalchemy.Column*
+ ( *
+ (
+
+Date2
+nullable
+
+Trueé
+ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyä ä(,
+
+date_ajout"__id*
+ (
+
+%237ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyã ã('
+%238"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueâ
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyã ã('
+notes"__id*
+ (
+
+%238›
+⁄
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyé é(J
+%239"sqlalchemy.orm.relationship*
+ ( *"
+ (
+MandatDistribution2
+back_populates
+
+produitsä
+á
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyé é(J
+mandat"__id*
+ (
+
+%239—
+Œ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyè è(?
+%240"sqlalchemy.orm.relationship*
+ ( *
+ (	
+Produit2
+back_populates	
+mandatsã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyè è(?	
+produit"__id*
+ (
+
+%240¶
+£
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py´ ´(/
+__tablename__"__id*)
+ (
+organisation_interactionsµ
+≤
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≠& ≠(D
+%241"sqlalchemy.ForeignKey*
+ ( * 
+ (
+organisations.idË
+Â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≠ ≠(a
+%242"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2412
+nullable	
+
+False2
+index
+
+Trueì
+ê
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≠ ≠(a
+organisation_id"__id*
+ (
+
+%242Æ
+´
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÆ" Æ(9
+%243"sqlalchemy.ForeignKey*
+ ( *
+ (
+	people.idÁ
+‰
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÆ Æ(U
+%244"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2432
+nullable
+
+True2
+index
+
+Trueè
+å
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÆ Æ(U
+personne_id"__id*
+ (
+
+%244∞
+≠
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyØ! Ø(:
+%245"sqlalchemy.ForeignKey*
+ ( *
+ (
+produits.idÁ
+‰
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyØ Ø(V
+%246"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2452
+nullable
+
+True2
+index
+
+Trueé
+ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyØ Ø(V
+
+produit_id"__id*
+ (
+
+%246œ
+Ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py± ±(3
+%247"sqlalchemy.Column*
+ ( *
+ (
+
+Date2
+nullable	
+
+False2
+index
+
+Trueà
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py± ±(3
+date"__id*
+ (
+
+%247Æ
+´
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≤ ≤('
+%248"sqlalchemy.Enum*
+ ( *
+ (
+
+InteractionTypeœ
+Ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≤ ≤(D
+%249"sqlalchemy.Column*
+ ( *
+ (
+
+%2482
+nullable	
+
+False2
+index
+
+Trueà
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≤ ≤(D
+type"__id*
+ (
+
+%249≤
+Ø
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≥ ≥(/
+%250"sqlalchemy.Enum*
+ ( *#
+ (
+
+InteractionPipelineœ
+Ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≥ ≥(L
+%251"sqlalchemy.Column*
+ ( *
+ (
+
+%2502
+nullable	
+
+False2
+index
+
+Trueå
+â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≥ ≥(L
+
+pipeline"__id*
+ (
+
+%251∞
+≠
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¥ ¥(+
+%252"sqlalchemy.Enum*
+ ( *!
+ (
+
+InteractionStatusŒ
+À
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¥ ¥(G
+%253"sqlalchemy.Column*
+ ( *
+ (
+
+%2522
+nullable
+
+True2
+index
+
+Trueä
+á
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¥ ¥(G
+status"__id*
+ (
+
+%253æ
+ª
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∂ ∂(5
+%254"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer2
+nullable
+
+Trueî
+ë
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∂ ∂(5
+duration_minutes"__id*
+ (
+
+%254ü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∑ ∑( 
+%255"sqlalchemy.String*
+ ( *
+ ( ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∑ ∑(0
+%256"sqlalchemy.Column*
+ ( *
+ (
+
+%2552
+nullable
+
+Trueã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∑ ∑(0	
+subject"__id*
+ (
+
+%256ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∏ ∏('
+%257"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueâ
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∏ ∏('
+notes"__id*
+ (
+
+%257€
+ÿ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyª ª(N
+%258"sqlalchemy.orm.relationship*
+ ( *
+ (
+Organisation2"
+back_populates
+interactionsê
+ç
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyª ª(N
+organisation"__id*
+ (
+
+%258±
+Æ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyº º(%
+%259"sqlalchemy.orm.relationship*
+ ( *
+ (
+
+Personå
+â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyº º(%
+
+personne"__id*
+ (
+
+%259÷
+”
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyΩ Ω(D
+%260"sqlalchemy.orm.relationship*
+ ( *
+ (	
+Produit2"
+back_populates
+interactionsã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyΩ Ω(D	
+produit"__id*
+ (
+
+%260¶
+£
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py´ ´(/
+__tablename__"__id*)
+ (
+organisation_interactionsµ
+≤
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≠& ≠(D
+%261"sqlalchemy.ForeignKey*
+ ( * 
+ (
+organisations.idË
+Â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≠ ≠(a
+%262"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2612
+nullable	
+
+False2
+index
+
+Trueì
+ê
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≠ ≠(a
+organisation_id"__id*
+ (
+
+%262Æ
+´
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÆ" Æ(9
+%263"sqlalchemy.ForeignKey*
+ ( *
+ (
+	people.idÁ
+‰
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÆ Æ(U
+%264"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2632
+nullable
+
+True2
+index
+
+Trueè
+å
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÆ Æ(U
+personne_id"__id*
+ (
+
+%264∞
+≠
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyØ! Ø(:
+%265"sqlalchemy.ForeignKey*
+ ( *
+ (
+produits.idÁ
+‰
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyØ Ø(V
+%266"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer*
+ (
+
+%2652
+nullable
+
+True2
+index
+
+Trueé
+ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyØ Ø(V
+
+produit_id"__id*
+ (
+
+%266œ
+Ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py± ±(3
+%267"sqlalchemy.Column*
+ ( *
+ (
+
+Date2
+nullable	
+
+False2
+index
+
+Trueà
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py± ±(3
+date"__id*
+ (
+
+%267Æ
+´
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≤ ≤('
+%268"sqlalchemy.Enum*
+ ( *
+ (
+
+InteractionTypeœ
+Ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≤ ≤(D
+%269"sqlalchemy.Column*
+ ( *
+ (
+
+%2682
+nullable	
+
+False2
+index
+
+Trueà
+Ö
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≤ ≤(D
+type"__id*
+ (
+
+%269≤
+Ø
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≥ ≥(/
+%270"sqlalchemy.Enum*
+ ( *#
+ (
+
+InteractionPipelineœ
+Ã
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≥ ≥(L
+%271"sqlalchemy.Column*
+ ( *
+ (
+
+%2702
+nullable	
+
+False2
+index
+
+Trueå
+â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py≥ ≥(L
+
+pipeline"__id*
+ (
+
+%271∞
+≠
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¥ ¥(+
+%272"sqlalchemy.Enum*
+ ( *!
+ (
+
+InteractionStatusŒ
+À
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¥ ¥(G
+%273"sqlalchemy.Column*
+ ( *
+ (
+
+%2722
+nullable
+
+True2
+index
+
+Trueä
+á
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¥ ¥(G
+status"__id*
+ (
+
+%273æ
+ª
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∂ ∂(5
+%274"sqlalchemy.Column*
+ ( *
+ (
+	
+Integer2
+nullable
+
+Trueî
+ë
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∂ ∂(5
+duration_minutes"__id*
+ (
+
+%274ü
+ú
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∑ ∑( 
+%275"sqlalchemy.String*
+ ( *
+ ( ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∑ ∑(0
+%276"sqlalchemy.Column*
+ ( *
+ (
+
+%2752
+nullable
+
+Trueã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∑ ∑(0	
+subject"__id*
+ (
+
+%276ª
+∏
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∏ ∏('
+%277"sqlalchemy.Column*
+ ( *
+ (
+
+Text2
+nullable
+
+Trueâ
+Ü
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py∏ ∏('
+notes"__id*
+ (
+
+%277€
+ÿ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyª ª(N
+%278"sqlalchemy.orm.relationship*
+ ( *
+ (
+Organisation2"
+back_populates
+interactionsê
+ç
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyª ª(N
+organisation"__id*
+ (
+
+%278±
+Æ
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyº º(%
+%279"sqlalchemy.orm.relationship*
+ ( *
+ (
+
+Personå
+â
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyº º(%
+
+personne"__id*
+ (
+
+%279÷
+”
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyΩ Ω(D
+%280"sqlalchemy.orm.relationship*
+ ( *
+ (	
+Produit2"
+back_populates
+interactionsã
+à
+_
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyΩ Ω(D	
+produit"__id*
+ (
+
+%280*
+4*å
+4
+organisation.py"t
+]
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyƒ ƒ(
+implicit returnB H

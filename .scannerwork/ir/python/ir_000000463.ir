@@ -1,0 +1,78 @@
+
+falseboolself
+¾ ¾(other
+¾ ¾(($pip._vendor.distlib.util.ExportEntry"ˆ+
+)
+
+¿ ¿(-"#is-instance#:Bbool+
+)
+
+¿ ¿(-"#unaryop !#2!:Bbool,"*
+
+¿ ¿(- *
+¿ ¿(
+2
+Á Á("3)
+'
+
+À À(result"#id#:Bbool	"˜'
+%
+
+Â Â("#get-field# name:'
+%
+
+Â# Â(-	"#get-field# name:,
+*
+
+Â Â(-
+"
+#binop ==#2==:	Bbool"
+
+Â Â(-
+ "˜)
+'
+
+Â2 Â(="#get-field# prefix:)
+'
+
+ÂA Â(M"#get-field# prefix:,
+*
+
+Â2 Â(M"
+#binop ==#2==:Bbool
+
+Â Â(M"**
+"
+
+Â Â(M "˜)
+'
+
+ÂR Â(]"#get-field# suffix:)
+'
+
+Âa Â(m"#get-field# suffix:,
+*
+
+ÂR Â(m"
+#binop ==#2==:Bbool
+
+Â Â(m"**"
+
+Â Â(m "–(
+&
+
+Ã Ã( "#get-field# flags:(
+&
+
+Ã$ Ã(/"#get-field# flags:,
+*
+
+Ã Ã(/"
+#binop ==#2==:Bbool
+
+Â Ã(/"E*)
+'
+
+Â Ã(0result"#id#:Bbool	".	*result
+
+Ä Ä(*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/distlib/util.py

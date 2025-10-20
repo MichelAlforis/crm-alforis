@@ -1,0 +1,9 @@
+
+îä"Return the list of requirements that need to be installed.
+
+        TODO remove this property together with the legacy resolver, since the new
+             resolver only returns requirements that need to be installed.
+        "strselfG  G($"=+
+)
+M Q(	"?python-unknown?:Blist
+M Q(	*€/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/req/req_set.py

@@ -1,0 +1,62 @@
+
+/models.organisation.MandatDistribution.__repr___
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyÉ É("2*â
+2
+Ê Ê(rj
+h
+
+Ê) Ê(0
+%1"__id*N
+
+__unknown_file (2*0(
+&models.organisation.MandatDistribution"
+idw
+u
+
+ÊD Ê(X
+%2"__id*[
+
+__unknown_file (?*=(
+&models.organisation.MandatDistribution"
+organisation_idn
+l
+
+Êc Ê(n
+%3"__id*R
+
+__unknown_file (6*4(
+&models.organisation.MandatDistribution"
+statuså
+â
+
+Ê Ê(r
+%4"__concat*)
+
+Ê Ê((
+<MandatDistribution(id=*
+
+Ê) Ê(0
+
+%1*$
+
+Ê1 Ê(C
+, organisation_id=*
+
+ÊD Ê(X
+
+%2*
+
+ÊY Ê(b
+	, status=*
+
+Êc Ê(n
+
+%3*
+
+Êo Ê(q
+)>"
+
+Ê Ê(r
+
+%4B*(
+&models.organisation.MandatDistributionH

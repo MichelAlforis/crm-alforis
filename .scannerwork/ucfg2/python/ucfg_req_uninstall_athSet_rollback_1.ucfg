@@ -1,0 +1,145 @@
+
+9pip._internal.req.req_uninstall.UninstallPathSet.rollback“
+†/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/req/req_uninstall.py™ ™("2*ì
+2
+š š(?
+}
+
+› ›( 
+%12"__id*b
+
+__unknown_file (F*D2
+0pip._internal.req.req_uninstall.UninstallPathSet"
+_moved_pathsR
+P
+
+› ›(-
+%13"__id*5
+
+__unknown_file (*
+
+%12"
+can_rollback*
+6
+7*8
+3
+req_uninstall.py"
+¦ ¦(
+implicit return*\
+5
+¤ ¤(CA
+
+¤ ¤(
+%1*#
+
+__unknown_file (
+
+pth2rollback*
+3
+5*„
+6
+¡ ¡(Hw
+u
+
+¡4 ¡(>
+%2"__id*[
+
+__unknown_file (?*=2
+0pip._internal.req.req_uninstall.UninstallPathSet"
+_distL
+J
+
+¡4 ¡(G
+%3"__id*0
+
+__unknown_file (*
+
+%2"
+
+raw_name¥¢
+
+¡ ¡(H
+%4*&
+
+__unknown_file (
+
+
+logger*<
+
+__unknown_file ( 
+Rolling back uninstall of %s*"
+
+__unknown_file (
+
+%32info~
+|
+
+¢ ¢(
+%5"__id*b
+
+__unknown_file (F*D2
+0pip._internal.req.req_uninstall.UninstallPathSet"
+_moved_pathsB@
+
+¢ ¢($
+%6*"
+
+__unknown_file (
+
+%52rollbackv
+t
+
+£ £(
+%7"__id*Z
+
+__unknown_file (>*<2
+0pip._internal.req.req_uninstall.UninstallPathSet"
+_pth@>
+
+£ £(%
+%8*"
+
+__unknown_file (
+
+%72values*
+3
+5*¥
+7
+œ Ÿ(w
+u
+
+ž ž(
+%9"__id*[
+
+__unknown_file (?*=2
+0pip._internal.req.req_uninstall.UninstallPathSet"
+_distM
+K
+
+ž ž(#
+%10"__id*0
+
+__unknown_file (*
+
+%9"
+
+raw_name³°
+
+œ Ÿ(
+%11*&
+
+__unknown_file (
+
+
+logger*G
+
+__unknown_file (+)
+'Can't roll back %s; was not uninstalled*#
+
+__unknown_file (
+
+%102error"
+
+   (
+voidB42
+0pip._internal.req.req_uninstall.UninstallPathSetH

@@ -9,7 +9,7 @@ Ce module contient la logique métier pour:
 """
 
 from typing import Dict, Any, List, Optional
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
 import re
@@ -69,7 +69,7 @@ class WorkflowEngine:
             trigger_entity_type=trigger_entity_type,
             trigger_entity_id=trigger_entity_id,
             status=WorkflowExecutionStatus.RUNNING,
-            started_at=datetime.utcnow(),
+            started_at=datetime.now(UTC),
             execution_logs=[],
             actions_executed=[]
         )
@@ -88,7 +88,7 @@ class WorkflowEngine:
 
                 if not conditions_met:
                     execution.status = WorkflowExecutionStatus.SKIPPED
-                    execution.completed_at = datetime.utcnow()
+                    execution.completed_at = datetime.now(UTC)
                     self._log(execution, "info", "Workflow ignoré (conditions non remplies)")
                     self.db.commit()
                     return execution
@@ -117,18 +117,18 @@ class WorkflowEngine:
 
             execution.actions_executed = actions_results
             execution.status = WorkflowExecutionStatus.SUCCESS
-            execution.completed_at = datetime.utcnow()
+            execution.completed_at = datetime.now(UTC)
 
             # Mettre à jour les stats du workflow
             workflow.execution_count = workflow.execution_count + 1
-            workflow.last_executed_at = datetime.utcnow()
+            workflow.last_executed_at = datetime.now(UTC)
 
             self.db.commit()
             return execution
 
         except Exception as e:
             execution.status = WorkflowExecutionStatus.FAILED
-            execution.completed_at = datetime.utcnow()
+            execution.completed_at = datetime.now(UTC)
             execution.error_message = str(e)
             self._log(execution, "error", f"Échec workflow: {str(e)}")
             self.db.commit()
@@ -155,7 +155,7 @@ class WorkflowEngine:
             "trigger_entity_type": entity_type,
             "trigger_entity_id": entity_id,
             "trigger_data": trigger_data or {},
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.now(UTC).isoformat()
         }
 
         # Charger l'entité en fonction du type
@@ -371,7 +371,7 @@ class WorkflowEngine:
             if due_date_str.startswith("+"):
                 # Format relatif: "+7 days"
                 days = int(due_date_str.replace("+", "").replace("days", "").strip())
-                due_date = datetime.utcnow() + timedelta(days=days)
+                due_date = datetime.now(UTC) + timedelta(days=days)
             else:
                 # Format absolu: "2025-12-31"
                 due_date = datetime.fromisoformat(due_date_str)
@@ -518,7 +518,7 @@ class WorkflowEngine:
             execution.execution_logs = []
 
         execution.execution_logs.append({
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "level": level,
             "message": message
         })

@@ -1,0 +1,18 @@
+
+ùï"Return a compiled regex that matches any string in the given list.
+
+    The strings to match must be literal strings, not regexes.  They will be
+    regex-escaped.
+
+    *prefix* and *suffix* are pre- and appended to the final regex.
+    "str
+"("strstringsR R(prefixR R( suffixR" R(+"´7
+5
+Z Z(strings"
+builtinssorted*:BlistD
+B
+[ [(1"0
+pip._vendor.pygments.regexoptregex_opt_inner:#
+!
+[ [(:"	#binop +#2+:
+[ [(:*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pygments/regexopt.py

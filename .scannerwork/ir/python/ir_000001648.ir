@@ -1,0 +1,47 @@
+
+.%"no lexer for filename {_fn!r} found"str
+¢˜"Get a lexer for a filename.
+
+    Return a `Lexer` subclass instance that has a filename pattern
+    matching `fn`. The lexer is given the `options` at its
+    instantiation.
+
+    Raise :exc:`pygments.util.ClassNotFound` if no lexer for that filename
+    is found.
+
+    If multiple lexers match the filename pattern, use their ``analyse_text()``
+    methods to figure out which one is more appropriate.
+    "str_fn
+Ô Ô(code
+Ô  Ô()options
+Ô+ Ô(4"dict"ÕW
+U
+
+á
+ á(2res"<
+pip._vendor.pygments.lexersfind_lexer_class_for_filename:+
+)
+
+â â("
+__bool__*:BboolH+
+)
+
+â â("#unaryop !#2!:Bbool "
+
+â â( *
+â â("cM
+K
+
+ã ã(C	"ClassNotFound:B'pip._vendor.pygments.util.ClassNotFound2
+
+ã ã(C	"Y'
+%
+
+ä ä(
+"#unaryop **#2**:
+
+
+ä ä("res:
+
+
+ä ä(*‹/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexers/__init__.py

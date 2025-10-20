@@ -1,0 +1,80 @@
+
+	truebool
+falsebool
+ÚË"
+    V√©rifie si un utilisateur peut modifier une ressource
+
+    Args:
+        user: L'utilisateur
+        resource_owner_id: ID du propri√©taire de la ressource
+
+    Returns:
+        bool: True si l'utilisateur peut modifier
+    "struser
+∫ ∫(!resource_owner_id
+∫  ∫(6models.role.UserRole"Ã'
+%
+
+∆ ∆("#get-field# role:'
+%
+
+∆ ∆("#get-field# name:(
+&
+
+∆ ∆('"#get-field# ADMIN:,
+*
+
+∆ ∆('"
+#binop ==#2==:Bbool "
+
+∆ ∆(' *
+∆ ∆("
+
+« «(	"–'
+%
+
+   (
+"#get-field# role:'
+%
+
+   ("#get-field# name:
+*
+(
+
+   ()"#get-field# MANAGER:,
+*
+
+   ()"
+#binop ==#2==:Bbool "
+
+   () *
+   ("
+
+Õ Õ(	"Õ'
+%
+
+– –("#get-field# role:'
+%
+
+– –("#get-field# name:'
+%
+
+– –(&"#get-field# USER:,
+*
+
+– –(&"
+#binop ==#2==:Bbool "
+
+– –(& *
+– –("i%
+#
+
+—$ —(+"#get-field# id:,
+*
+
+— —(+"
+#binop ==#2==:Bbool
+
+— —(+"
+
+‘ ‘(*P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/core/permissions.py

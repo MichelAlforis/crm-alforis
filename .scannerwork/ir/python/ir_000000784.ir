@@ -1,0 +1,767 @@
+
+É
+"settings"str
+©
+"--source"str
+¸"--no-use-pep517"str
+√"truststore"str
+Ÿ…Œ"Only use wheels compatible with Python abi <abi>, e.g. 'pypy_41'. If not specified, then the current interpreter abi tag is used. Use this option multiple times to specify multiple abis supported by the target interpreter. Generally you will need to specify --implementation, --platform, and --python-version when using this option."str
+L"--progress-bar"str
+
+;0int
+!"debug_mode"str
+ 	"--debug"str
+:ñ0"Output data in a machine-readable JSON format."str
+"help"str
+4"python"str
+®"--src"str
+√"implementation"str
+I"quiet"str
+Ö"--resume-retries"str
+Ü"resume_retries"str
+€"--use-deprecated"str
+Ï"name"str
+PÈF"Enable deprecated functionality, that will be removed in the future."str
+Ä"--config-settings"str
+=ˆ3"Check the build dependencies when PEP517 is used."str
+èJÖ"Give less output. Option is additive, and can be used up to 3 times (corresponding to WARNING, ERROR, and CRITICAL logging levels)."str
+±"--require-hashes"str
+|""str
+^(U"Run pip in an isolated mode, ignoring environment variables and user configuration."str
+'¿"--no-python-version-warning"str
+˘"use_pep517"str
+O"auto"str
+9	"verbose"str
+M"progress_bar"str
+l
+"disabled"str
+Õ	"feature"str
+∏
+"platform"str
+Ω"python_version"str
+á"build_options"str
+ï"--json"str
+$Í"--ignore-requires-python"str
+5æ+"Exclude specified package from the output"str
+sØi"Verify that the package's archive matches this hash before installing. Example: --hash=sha256:abcdef..."str
+z"proxy"str
+g
+"no_input"str
+wôm"Path to SSL client certificate, a single file containing the private key and the certificate in PEM format."str
+Ä	"retries"str
+«"abis"str
+§Úô"Disable isolation when building a modern source distribution. Build dependencies specified by PEP 518 must be already installed if this option is used."str
+ù"root_user_action"str
+Ôƒ‰"Only use wheels compatible with Python implementation <implementation>, e.g. 'pp', 'jy', 'cp',  or 'ip'. If not specified, then the current interpreter implementation is used.  Use 'py' to force implementation-agnostic wheels."str
+oçe"Extra global options to be supplied to the setup.py call before the install or bdist_wheel command."str
+8"--verbose"str
+ò"client_cert"str
+≠"dir"str
+≤"require_hashes"str
+∫"--exclude"str
+'‹"deprecated_features_enabled"str
+*"--require-virtualenv"str
+∂"--platform"str
+π"append"str
+"store_false"str
+m$d"Let unhandled exceptions propagate outside the main subroutine, instead of logging them to stderr."str
+í"--pre"str
+œ≈"
+shared options and groups
+
+The principle here is to define options once, but *not* instantiate them
+globally. One reason being that options with action='append' can carry state
+between parses. pip parses general options twice internally, and shouldn't
+pass on state. To be consistent, all options will follow this design.
+"str
+X-O"Allow pip to only run in a virtual environment; exit with an error otherwise."str
+Eâ;"Extra arguments to be supplied to 'setup.py bdist_wheel'."str
+êøÖ"\
+    The Python interpreter version to use for wheel and "Requires-Python"
+    compatibility checks. Defaults to a version derived from the running
+    interpreter. The version can be specified using up to three dot-separated
+    integers (e.g. "3" for 3.0.0, "3.7" for 3.7.0, or "3.7.3"). A major-minor
+    version can also be given as a string without dots (e.g. "37" for 3.7.0).
+    "str
+f"--no-input"str
+£"--no-index"str
+ ∫ø"Only use wheels compatible with <platform>. Defaults to the platform of the running system. Use this option multiple times to specify multiple platforms supported by the target interpreter."str
+3Ï)"Ignore the Requires-Python information."str
+"--retries"str
+HŸ>"Enable new functionality, that may be backward incompatible."str
+D	"version"str
+a"--local-log"str
+!E"Show version and exit."str
+*‘ "Store the cache data in <dir>."str
+‡"dependency_groups"str
+·"legacy-resolver"str
+"/"--break-system-packages"str
+M•C"Ignore package index (only looking at --find-links URLs instead)."str
+-ê#"Don't clean up build directories."str
+≥w©"Enable the credential lookup via the keyring library if user input is allowed. Specify which mechanism to use [auto, disabled, import, subprocess]. (default: %default)"str
+>è4"Set the socket timeout (default %default seconds)."str
+7"-v"str
+%ô"disable_pip_version_check"str
+O<F"Give more output. Option is additive, and can be used up to 3 times."str
+Ì"General Options"str
+ı"check_build_deps"str
+Ø
+"callback"str
+å"global_options"str
+C"--version"str
+‹"ignore_dependencies"str
+ Ó"--no-build-isolation"str
+?
+"no_color"str
+!¯"Package Index Options"str
+é15int
+Ç5int
+¬"--implementation"str
+`"--log-file"str
+º"--python-version"str
+#falsebool
+m"import"str
+/›%"Don't install package dependencies."str
+B"-V"str
+j∑`"Restrict to the specified installation path for listing packages (can be used multiple times)."str
+â"--timeout"str
+"Î"ignore_requires_python"str
+´"--source-directory"str
+k"keyring_provider"str
+Ã"features_enabled"str
+º	"package"str
+Ω"package_name"str
+ú"--root-user-action"str
+{"str"str
+ö\ê"Specify whether the progress bar should be used. In 'auto' mode, --quiet will suppress all progress bars. [auto, on, off, raw] (default: auto)"str
+Æ"string"str
+ú"--index-url"str
+P}G"Specify a proxy in the form scheme://[user:passwd@]proxy.server:port."str
+'ò"--disable-pip-version-check"str
+eì["Include pre-release and development versions. By default, pip only finds stable versions."str
+∂"--path"str
+c"path"str
+å	"timeout"str
+ì"cert"str
+õ"-i"str
+Á"[path:]group"str
+•±ö"Directory to check out editable projects into. The default in a virtualenv is "<venv path>/src". The default for global installs is "<current dir>/src"."str
+€"--no-dependencies"str
+í"--cert"str
+÷"--no-cache-dir"str
++d""Path to a verbose appending log."str
+ã"sec"str
+&Ù"--check-build-dependencies"str
+""store_true"str
+&"--isolated"str
+è"--no-clean"str
+⁄"--no-deps"str
+¨"hashes"str
++"--require-venv"str
+ÿ"Disable the cache."str
+H1?"Allow pip to modify an EXTERNALLY-MANAGED Python installation"str
+û"index_url"str
+Q"off"str
+ª
+"excludes"str
+¯"--use-pep517"str
+Ü"--build-option"str
+Å"config_settings"str
+Ô"build_isolation"str
+,"require_venv"str
+950"Run pip with the specified Python interpreter."str
+#@"Suppress colored output."str
+ˇ"-C"str
+"-h"str
+H	"--quiet"str
+¨	"src_dir"str
+j˙`"Use PEP 517 for building source distributions (use --no-use-pep517 to force legacy behaviour)."str
+>"--no-color"str
+n"subprocess"str
+“"--cache-dir"str
+"Show help."str
+‚"legacy-certs"str
+(ƒ"no-binary-enable-wheel-cache"str
+ç"float"str
+G"-q"str
+à	"options"str
+"--help"str
+N¶D"Action if pip is run as a root user [warn, ignore] (default: warn)"str
+´≥†"Require a hash to check each requirement against, for repeatable installs. This option is implied when any package in a requirements file has a --hash option."str
+ü"ignore"str
+”"cache_dir"str
+´"--hash"str
+Ã°¡"Base URL of the Python Package Index (default %default). This should point to a repository compliant with PEP 503 (the simple repository API) or a local directory laid out in the same format."str
+ü"URL"str
+TÉJ"Maximum attempts to establish a new HTTP connection. (default: %default)"str
+™"--source-dir"str
+áö}"Don't periodically check PyPI to determine whether a new version of pip is available for download. Implied with --no-index."str
+À"--use-feature"str
+ã"--global-option"str
+:"count"str
+]áS"Maximum attempts to resume or restart an incomplete download. (default: %default)"str
+Òtruebool
+P"on"str
+§
+"no_index"str
+©îû"Path to PEM-encoded CA certificate bundle. If provided, overrides the default. See 'SSL Certificate Verification' in pip documentation for more information."str
+b"log"str
+ÀË¿"Install a named dependency-group from a "pyproject.toml" file. If a path is given, the name of the file must be "pyproject.toml". Defaults to using "pyproject.toml" in the current directory."str
+'"isolated_mode"str
+R"raw"str
+ù"--pypi-url"str
+“"fast-deps"str
+û"warn"str
+'h"Disable prompting for input."str
+NoneNoneType
+ä"--default-timeout"str
+&0"override_externally_managed"str
+ﬂ	"--group"str
+∑"platforms"str
+∆"--abi"str
+»"abi"str
+3
+"--python"str
+Å"int"str
+_"--log"str
+ΩÑ≤"Configuration settings to be passed to the PEP 517 build backend. Settings take the form KEY=VALUE. Use multiple --config-settings options to pass multiple keys to the backend."str
+ó"--client-cert"str
+y	"--proxy"str
+N"choice"str
+%¡"no_python_version_warning"str
+j"--keyring-provider"strÂstrTlist"¢J$
+"
+
+ (˚"#unknown-value#$
+"
+
+Ó Ó(˙"#unknown-value#$
+"
+
+‹ ‹("#unknown-value#$
+"
+
+€ €(Ô"#unknown-value#$
+"
+
+ê ê(π"#unknown-value#$
+"
+
+Ä Ä(µ"#unknown-value#$
+"
+
+Ï Ï(≠"#unknown-value#$
+"
+
+Ü Ü($Ç"#unknown-value#$
+"
+
+Ê Ê("˝"#unknown-value#$
+"
+
+ê ê(%Ê"#unknown-value#$
+"
+
+· ·(!◊"#unknown-value#$
+"
+
+µ µ(—"#unknown-value#$
+"
+
+‰ ‰(#æ"#unknown-value#$
+"
+
+› ›(∞"#unknown-value#$
+"
+
+” ”(ß"#unknown-value#$
+"
+
+ÿ ÿ(ñ"#unknown-value#$
+"
+
+   (ë"#unknown-value##
+!
+
+Ò Ò(^"#unknown-value#-
++
+ ("annotations"?python-unknown?)
+'
+ (partial"?python-unknown?/
+-
+ (MSUPPRESS_HELP"?python-unknown?(
+&
+ (MOption"?python-unknown?-
++
+ (MOptionGroup"?python-unknown?.
+,
+ (MOptionParser"?python-unknown?(
+&
+ (MValues"?python-unknown?(
+&
+ (	dedent"?python-unknown?%
+#
+ ( 
+Any"?python-unknown?*
+(
+ ( Callable"?python-unknown?3
+1
+ (9canonicalize_name"?python-unknown?4
+2
+ (7ConfigOptionParser"?python-unknown?.
+,
+ (1CommandError"?python-unknown?0
+.
+ (BUSER_CACHE_DIR"?python-unknown?0
+.
+ (Bget_src_prefix"?python-unknown?/
+-
+ (=FormatControl"?python-unknown?&
+$
+ (+PyPI"?python-unknown?.
+,
+ (;TargetPython"?python-unknown?/
+-
+   (4STRONG_HASHES"?python-unknown?+
+)
+! !(.	strtobool"?python-unknown?!
+
+# #(#"#unknown-value#?
+=
+#	 #($logger"
+logging	getLogger:Blogging.Logger$
+"
+4 @%closure"#new-object#!
+
+4 @"#set-field# Any:
+'
+%
+4 @"?python-partial-apply?:<
+:
+	{ Ç(help_"	partial:Bfunctools.partialB
+@
+
+Ñ$ é(%
+debug_mode"	partial: !"#$Bfunctools.partialE
+C
+
+ê' ö()isolated_mode"	partial:&'"#(Bfunctools.partialK
+I
+
+ú, ß(.require_virtualenv"	partial:*+,"#-Bfunctools.partialR
+P
+
+©5 Ø(2override_externally_managed"	partial:/0"1Bfunctools.partial<
+:
+
+±  ∂(6python"	partial:345Bfunctools.partial@
+>
+
+∏! ¿(=verbose"	partial:789:;<Bfunctools.partial@
+>
+
+¬" …(Ano_color"	partial:>?"#@Bfunctools.partial?
+=
+
+À! “(Fversion"	partial:BCD"EBfunctools.partial>
+<
+
+‘ ‡(Kquiet"	partial:GHI:;JBfunctools.partial)
+'
+
+Á Á((S"#unknown-value#Blist(
+&
+
+Á Á((U"
+#is-exact#:STBbool
+
+
+Á Á((V"
+#assume#:U:
+8
+
+Á Á((W"#set-field# __collection_size:S;Bint(
+&
+
+Á Á((X"#array-add-last#:SO(
+&
+
+Á Á((Y"#array-add-last#:SP(
+&
+
+Á Á((Z"#array-add-last#:SQ(
+&
+
+Á Á((["#array-add-last#:SRE
+C
+
+‚& Ó(]progress_bar"	partial:LMNSO\Bfunctools.partial=
+;
+
+ ˘(elog"	partial:^_`abccdBfunctools.partial@
+>
+
+˚" É(ino_input"	partial:fg"#hBfunctools.partial)
+'
+
+â â(8o"#unknown-value#Blist(
+&
+
+â â(8p"
+#is-exact#:oTBbool
+
+
+â â(8q"
+#assume#:p:
+8
+
+â â(8r"#set-field# __collection_size:o;Bint(
+&
+
+â â(8s"#array-add-last#:oO(
+&
+
+â â(8t"#array-add-last#:ol(
+&
+
+â â(8u"#array-add-last#:om(
+&
+
+â â(8v"#array-add-last#:onH
+F
+
+Ö* ê(xkeyring_provider"	partial:jkoOwBfunctools.partial=
+;
+
+í ô(~proxy"	partial:yz{|}Bfunctools.partialD
+B
+
+õ! ¢(Ñretries"	partial:
+ÄÅÇÉBfunctools.partialL
+J
+
+§( ¨(àresume_retries"	partial:ÖÜÅÇáBfunctools.partialI
+G
+
+Æ! ∑(êtimeout"	partial:âäãåçéèBfunctools.partialA
+?
+
+… ’(ïcert"	partial:
+ëíìccîBfunctools.partialI
+G
+
+◊% ‡(öclient_cert"	partial:ñóòc côBfunctools.partial.
+,
+
+È È(†"#get-field# simple_url:K
+I
+
+‚# Ó(¢	index_url"	partial:õúùûü†°Bfunctools.partialD
+B
+
+˛" Ö(¶no_index"	partial:	£§"#•Bfunctools.partial$
+"
+
+€ €(Æ"#unknown-value#M
+K
+
+“ ·(≤src"	partial:ß®©™´¨c≠ÆØ∞±Bfunctools.partial'
+%
+‰ È≥%closure"#new-object#%
+#
+‰ È¥"#set-field# Any:≥
++
+)
+‰ Èµ"?python-partial-apply?:≥H
+F
+
+£# Ø(ª	platforms"	partial:∂∑∏π ∫Bfunctools.partial.
+,
+
+Á	 Ô(¿"
+textwrapdedent:øBstrP
+N
+
+ﬁ( (¡python_version"	partial:ºΩΩØæ{ ¿Bfunctools.partialK
+I
+
+Û( Ä(≈implementation"	partial:
+¬√√ ƒBfunctools.partialC
+A
+
+É í( abis"	partial:∆«»π …Bfunctools.partial'
+%
+ï úÀ%closure"#new-object#,
+*
+ï úÃ"#set-field# platforms:Àª1
+/
+ï úÕ"#set-field# python_version:À¡1
+/
+ï úŒ"#set-field# implementation:À≈'
+%
+ï úœ"#set-field# abis:À +
+)
+ï ú–"?python-partial-apply?:ÀH
+F
+
+¥# º(’	cache_dir"	partial:—“”≠c‘Bfunctools.partialF
+D
+
+‹" „(Ÿno_cache"	partial:÷”Ø◊ÿBfunctools.partialE
+C
+
+Â! Ì(ﬁno_deps"	partial:⁄€‹"#›Bfunctools.partial*
+(
+
+ç ç(·"#unknown-value#Blist*
+(
+
+ç ç(‚"
+#is-exact#:·TBbool!
+
+
+ç ç(„"
+#assume#:‚<
+:
+
+ç ç(‰"#set-field# __collection_size:·;BintU
+S
+
+â+ ï(Èdependency_groups"	partial:ﬂ‡·ÂØÊÁËBfunctools.partialQ
+O
+
+ó0 ù(Ìignore_requires_python"	partial:ÍÎ"ÏBfunctools.partialP
+N
+
+ü, ®(Ûno_build_isolation"	partial:ÓÔÒÚBfunctools.partialL
+J
+
+™* ±(˜check_build_deps"	partial:	Ùı"#ˆBfunctools.partialF
+D
+
+◊ ﬂ(˚
+use_pep517"	partial:	¯˘" ˙Bfunctools.partialK
+I
+
+· È(˛no_use_pep517"	partial:¸˘Ø˝ Bfunctools.partialS
+Q
+
+ˇ) ã(Öconfig_settings"	partial:ˇÄÅÂØÇÉÑBfunctools.partialK
+I
+
+ç' î(äbuild_options"	partial:ÜáàπâBfunctools.partialL
+J
+
+ñ( û(églobal_options"	partial:ãåπàçBfunctools.partialB
+@
+
+†" ¶(ëno_clean"	partial:è"#êBfunctools.partial=
+;
+
+® Ø(îpre"	partial:í"#ìBfunctools.partial>
+<
+
+± ∑(ójson"	partial:ï"#ñBfunctools.partialU
+S
+
+π3 ¡(õdisable_pip_version_check"	partial:	òô"#öBfunctools.partial*
+(
+
+» »(†"#unknown-value#Blist*
+(
+
+» »(°"
+#is-exact#:†TBbool!
+
+
+» »(¢"
+#assume#:°<
+:
+
+» »(£"#set-field# __collection_size:†;Bint+
+)
+
+» »(§"#array-add-last#:†û+
+)
+
+» »(•"#array-add-last#:†üN
+L
+
+√*  (ßroot_user_action"	partial:úùû†¶Bfunctools.partial'
+%
+Õ Â®%closure"#new-object#/
+-
+Õ Â©"#set-field# STRONG_HASHES:®+
+)
+Õ Â™"?python-partial-apply?:®D
+B
+
+Â (∞hash"	partial:´¨Ø≠ÆØBfunctools.partialJ
+H
+
+Û( ¸(¥require_hashes"	partial:	±≤"#≥Bfunctools.partialF
+D
+
+ˇ# á(∏	list_path"	partial:
+µ∂ccπ∑Bfunctools.partialM
+K
+
+è& ó(ølist_exclude"	partial:π∫ªπºΩæBfunctools.partialT
+R
+
+ö3 °(¬no_python_version_warning"	partial:¿¡"#Bfunctools.partialC
+A
+
+• ®(≈ALWAYS_ENABLED_FEATURES"#unknown-value#Blist*
+(
+
+• ®(∆"
+#is-exact#:≈TBbool!
+
+
+• ®(«"
+#assume#:∆<
+:
+
+• ®(»"#set-field# __collection_size:≈;Bint+
+)
+
+• ®(…"#array-add-last#:≈√+
+)
+
+• ®( "#array-add-last#:≈ƒ*
+(
+
+∞ ∞(Œ"#unknown-value#Blist*
+(
+
+∞ ∞(œ"
+#is-exact#:ŒTBbool!
+
+
+∞ ∞(–"
+#assume#:œ<
+:
+
+∞ ∞(—"#set-field# __collection_size:Œ;Bint*
+(
+
+± ≥(”"#unknown-value#Blist*
+(
+
+± ≥(‘"
+#is-exact#:”TBbool!
+
+
+± ≥(’"
+#assume#:‘<
+:
+
+± ≥(÷"#set-field# __collection_size:”;Bint+
+)
+
+± ≥(◊"#array-add-last#:”“'
+%
+
+± ¥(ÿ"	#binop +#2+:”≈Q
+O
+
+™) ∂(⁄use_new_feature"	partial:ÀÃÕπŒÿŸBfunctools.partial*
+(
+
+æ æ(›"#unknown-value#Blist*
+(
+
+æ æ(ﬁ"
+#is-exact#:›TBbool!
+
+
+æ æ(ﬂ"
+#assume#:ﬁ<
+:
+
+æ æ(‡"#set-field# __collection_size:›;Bint*
+(
+
+ø ¬(„"#unknown-value#Blist*
+(
+
+ø ¬(‰"
+#is-exact#:„TBbool!
+
+
+ø ¬(Â"
+#assume#:‰<
+:
+
+ø ¬(Ê"#set-field# __collection_size:„;Bint+
+)
+
+ø ¬(Á"#array-add-last#:„·+
+)
+
+ø ¬(Ë"#array-add-last#:„‚X
+V
+
+∏0 ƒ(Íuse_deprecated_feature"	partial:€‹Õπ›„ÈBfunctools.partial6
+4
+
+   Ë(Îgeneral_group"#new-object#Bdict&
+$
+
+À À(Ó"	#map-set#:ÎÏÌ*
+(
+
+Ã Á(Ò"#unknown-value#Blist*
+(
+
+Ã Á(Ú"
+#is-exact#:ÒTBbool!
+
+
+Ã Á(Û"
+#assume#:Ú<
+:
+
+Ã Á(Ù"#set-field# __collection_size:Ò;Bint.
+,
+
+Ã Á(ı"?python-unknown?*Blist&
+$
+
+Ã Á(ˆ"	#map-set#:Îàı4
+2
+
+Í Ú(˜index_group"#new-object#Bdict&
+$
+
+Î Î(#˘"	#map-set#:˜Ï¯*
+(
+
+Ï Ò(¸"#unknown-value#Blist*
+(
+
+Ï Ò(˝"
+#is-exact#:¸TBbool!
+
+
+Ï Ò(˛"
+#assume#:˝<
+:
+
+Ï Ò(ˇ"#set-field# __collection_size:¸;Bint+
+)
+
+Ï Ò(Ä"#array-add-last#:¸¢+
+)
+
+Ï Ò(Å"#array-add-last#:¸˙+
+)
+
+Ï Ò(Ç"#array-add-last#:¸¶+
+)
+
+Ï Ò(É"#array-add-last#:¸˚&
+$
+
+Ï Ò(Ñ"	#map-set#:˜à¸ *É/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/cli/cmdoptions.py

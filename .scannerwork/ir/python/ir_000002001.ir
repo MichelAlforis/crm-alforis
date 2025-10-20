@@ -1,0 +1,30 @@
+
+æÜ"
+    Given a function that parses an Iterable[Link] from an IndexContent, cache the
+    function's result (keyed by CacheablePageContent), unless the IndexContent
+    `page` has `page.cache_link_parsing == False`.
+    "strfn
+Æ Æ(,"½#
+!
+
+× ×(	"#unknown-value#*
+(
+
+Í Ñ(%closure"#new-object#&
+$
+
+Í Ñ("#set-field# fn:-
++
+
+Í Ñ("?python-partial-apply?:*
+(
+
+Ñ ×(%closure"#new-object#&
+$
+
+Ñ ×("#set-field# fn:-
++
+
+Ñ ×("?python-partial-apply?:
+
+× ×(	*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/index/collector.py

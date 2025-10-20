@@ -1,0 +1,14 @@
+
+ˆ"
+        Switch the repo at ``dest`` to point to ``URL``.
+
+        Args:
+          rev_options: a RevOptions object.
+        "strself
+Ç Ç(dest
+È È(url
+É É(rev_options
+Ê Ê(	verbosity
+Ë Ë(NotImplementedError"2
+
+Ó Ó(!*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/vcs/versioncontrol.py

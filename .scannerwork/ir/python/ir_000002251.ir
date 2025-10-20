@@ -1,0 +1,54 @@
+
+falsebool
+
+0int
+4+"Retourne True si la t√¢che est en retard."strselfh h(datetime.timezone	tuplemodels.task.TaskStatus"¡'
+%
+j j("#get-field# status:%
+#
+j j(*"#get-field# DONE:*
+(
+j, j(@"#get-field# CANCELLED:(
+&
+j j(A"#unknown-value#Btuple&
+$
+j j(A	"
+#is-exact#:Bbool
+
+j j(A
+"
+#assume#:	8
+6
+j j(A"#set-field# __collection_size:Bint&
+$
+j j(A"#array-add-last#:&
+$
+j j(A"#array-add-last#:*
+(
+j j(A"
+#binop in#2in:Bbool"
+j j(A *j j(
+"
+k k("°)
+'
+l l("#get-field# due_date:)
+'
+l l("
+__bool__*:BboolH)
+'
+l l("#unaryop !#2!:Bbool"
+l l( *l l(
+"
+m m("‰)
+'
+n n("#get-field# due_date:'
+%
+n n(9"#unknown-value#Btype$
+"
+n, n(8"#get-field# utc:,
+*
+n n(9"
+datetime.datetimenow:(
+&
+n n(9"	#binop <#2<:Bbool
+n n(9*K/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/task.py

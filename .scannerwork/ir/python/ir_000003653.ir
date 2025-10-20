@@ -1,0 +1,21 @@
+
+ÎÄ"Sets the title of the current console window
+
+    Args:
+        title (str): The new title of the console window.
+
+    Returns:
+        bool: True if the function succeeds, otherwise False.
+    "strtitle
+¿ ¿("”#
+!
+
+È È( "#unknown-value#(
+&
+
+È È('"_SetConsoleTitle:1
+/
+
+È È(("#dependent-value#*:Bbool
+
+È È((*†/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/_win32_console.py

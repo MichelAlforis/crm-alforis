@@ -1,0 +1,1397 @@
+
+""update"str
+%◊"Consulter les permissions"str
+G"Cr√©er des contacts"str
+±"admin"str
+ﬁ"reports:read"str
+÷"permissions"str
+="import"str
+&„"T√©l√©verser des documents"str
+Ω"reports:*"str
+Ê"user"str
+!_"Supprimer les contacts"str
+%>"Importer les organisations"str
+µ"interactions:*"str
+w	"mandats"str
+ÿ"documents:create"str
+&ú"Supprimer les utilisateurs"str
+x"Cr√©er des mandats"str
+ »"organisations:export"str
+ "people:read"str
+≤"organisations:*"str
+’"tasks:read"str
+∑"documents:*"str
+ à"Modifier les mandats"str
+"read"str
+!Ä"Consulter les mandats"str
+∂	"tasks:*"str
+ “"Modifier les t√¢ches"str
+”"interactions:update"str
+"ö"Consulter les rapports"str
+Ë"Cr√©er des √©quipes"str
+%â"Consulter les param√®tres"str
+&π"Supprimer les interactions"str
+–"mandats:export"str
+Á"teams"str
+Ã"people:export"str
+ g"Exporter les contacts"str
+‘"tasks:create"str
+¬"Cr√©er des t√¢ches"str
+#Ñ"Cr√©er des utilisateurs"str
+∆"organisations:read"str
+%±"Modifier les interactions"str
+4"export"str
+≥
+"people:*"str
+! "Consulter les t√¢ches"str
+F"people"str
+ô	"reports"str
+Ÿ"documents:read"str
+†"interactions"str
+€"documents:delete"str
+¥"mandats:*"str
+ ∆"Supprimer les r√¥les"str
+#˚"Supprimer les documents"str
+ﬂ"reports:export"str
+"ﬂ"G√©rer les permissions"str
+%5"Exporter les organisations"str
+""Consulter les √©quipes"str
+#Î"Consulter les documents"str
+÷"tasks:update"str
+ o"Importer les contacts"str
+à
+"settings"str
+&©"Consulter les interactions"str
+!¯"Modifier les √©quipes"str
+$ë"Modifier les param√®tres"str
+ª	"teams:*"str
+∫"permissions:*"str
+‚"documents"str
+≠"roles"str
+π	"roles:*"str
++"delete"str
+#°"Cr√©er des interactions"str
+&,"Supprimer les organisations"str
+&"Consulter les organisations"str
+À"people:update"str
+ «"organisations:update"str
+‹"users:read"str
+Œ"G√©rer les r√¥les"str
+!O"Consulter les contacts"str
+“"interactions:read"str
+ ò"Exporter les mandats"str
+"Û"Modifier les documents"str
+#•"G√©rer les utilisateurs"str
+Œ"mandats:read"str
+¡"tasks"str
+∏	"users:*"str
+…"people:create"str
+"create"str
+!¢"Exporter les rapports"str
+NoneNoneType
+Õ"mandats:create"str
+#"Cr√©er des organisations"str
+¡∑"
+Mod√®le Permission - Gestion des permissions granulaires
+
+Permissions CRUD par ressource:
+- CREATE: Cr√©er une nouvelle entit√©
+- READ: Lire/consulter les donn√©es
+- UPDATE: Modifier les donn√©es
+- DELETE: Supprimer les donn√©es
+
+Resources:
+- organisations, people, mandats, interactions, tasks, users, etc.
+"str
+—"interactions:create"str
+Ì"viewer"str
+›"teams:read"str
+%#"Modifier les organisations"str
+!⁄"Supprimer les t√¢ches"str
+%î"Modifier les utilisateurs"str
+"Ä"Supprimer les √©quipes"str
+
+0int
+É"users"str
+§"manage"str
+ ∂"Consulter les r√¥les"str
+◊"tasks:delete"str
+ƒ	"manager"str
+ ≈"organisations:create"str
+ W"Modifier les contacts"str
+&å"Consulter les utilisateurs"str
+œ"mandats:update"str
+"organisations"str
+æ"Modifier les r√¥les"str
+⁄"documents:update"str
+º"settings:*"str
+!ê"Supprimer les mandats"str
+Æ"Cr√©er des r√¥les"str	tuple	´list"Üä(
+&
+ (XColumn"?python-unknown?)
+'
+ (XInteger"?python-unknown?(
+&
+ (XString"?python-unknown?)
+'
+ (XBoolean"?python-unknown?*
+(
+ (XDateTime"?python-unknown?&
+$
+ (XText"?python-unknown?&
+$
+ (XEnum"?python-unknown?.
+,
+ ('	relationship"?python-unknown?*
+(
+ (
+datetime"?python-unknown?&
+$
+ (Base"?python-unknown?2
+0
+ ((role_permissions"?python-unknown?*
+(
+
+à à(:"#unknown-value#Btuple(
+&
+
+à à(:"
+#is-exact#:Bbool
+
+
+à à(:"
+#assume#::
+8
+
+à à(:"#set-field# __collection_size:Bint(
+&
+
+à à(:"#array-add-last#:(
+&
+
+à à(:"#array-add-last#:(
+&
+
+à à(:"#array-add-last#:*
+(
+
+â â(<"#unknown-value#Btuple(
+&
+
+â â(<"
+#is-exact#:Bbool
+
+
+â â(<"
+#assume#::
+8
+
+â â(<"#set-field# __collection_size:Bint(
+&
+
+â â(<"#array-add-last#:(
+&
+
+â â(< "#array-add-last#:(
+&
+
+â â(<!"#array-add-last#:*
+(
+
+ä ä(=$"#unknown-value#Btuple(
+&
+
+ä ä(=%"
+#is-exact#:$Bbool
+
+
+ä ä(=&"
+#assume#:%:
+8
+
+ä ä(='"#set-field# __collection_size:$Bint(
+&
+
+ä ä(=("#array-add-last#:$(
+&
+
+ä ä(=)"#array-add-last#:$"(
+&
+
+ä ä(=*"#array-add-last#:$#*
+(
+
+ã ã(>-"#unknown-value#Btuple(
+&
+
+ã ã(>."
+#is-exact#:-Bbool
+
+
+ã ã(>/"
+#assume#:.:
+8
+
+ã ã(>0"#set-field# __collection_size:-Bint(
+&
+
+ã ã(>1"#array-add-last#:-(
+&
+
+ã ã(>2"#array-add-last#:-+(
+&
+
+ã ã(>3"#array-add-last#:-,*
+(
+
+å å(=6"#unknown-value#Btuple(
+&
+
+å å(=7"
+#is-exact#:6Bbool
+
+
+å å(=8"
+#assume#:7:
+8
+
+å å(=9"#set-field# __collection_size:6Bint(
+&
+
+å å(=:"#array-add-last#:6(
+&
+
+å å(=;"#array-add-last#:64(
+&
+
+å å(=<"#array-add-last#:65*
+(
+
+ç ç(=?"#unknown-value#Btuple(
+&
+
+ç ç(=@"
+#is-exact#:?Bbool
+
+
+ç ç(=A"
+#assume#:@:
+8
+
+ç ç(=B"#set-field# __collection_size:?Bint(
+&
+
+ç ç(=C"#array-add-last#:?(
+&
+
+ç ç(=D"#array-add-last#:?=(
+&
+
+ç ç(=E"#array-add-last#:?>*
+(
+
+ê ê(.H"#unknown-value#Btuple(
+&
+
+ê ê(.I"
+#is-exact#:HBbool
+
+
+ê ê(.J"
+#assume#:I:
+8
+
+ê ê(.K"#set-field# __collection_size:HBint(
+&
+
+ê ê(.L"#array-add-last#:HF(
+&
+
+ê ê(.M"#array-add-last#:H(
+&
+
+ê ê(.N"#array-add-last#:HG*
+(
+
+ë ë(0P"#unknown-value#Btuple(
+&
+
+ë ë(0Q"
+#is-exact#:PBbool
+
+
+ë ë(0R"
+#assume#:Q:
+8
+
+ë ë(0S"#set-field# __collection_size:PBint(
+&
+
+ë ë(0T"#array-add-last#:PF(
+&
+
+ë ë(0U"#array-add-last#:P(
+&
+
+ë ë(0V"#array-add-last#:PO*
+(
+
+í í(1X"#unknown-value#Btuple(
+&
+
+í í(1Y"
+#is-exact#:XBbool
+
+
+í í(1Z"
+#assume#:Y:
+8
+
+í í(1["#set-field# __collection_size:XBint(
+&
+
+í í(1\"#array-add-last#:XF(
+&
+
+í í(1]"#array-add-last#:X"(
+&
+
+í í(1^"#array-add-last#:XW*
+(
+
+ì ì(2`"#unknown-value#Btuple(
+&
+
+ì ì(2a"
+#is-exact#:`Bbool
+
+
+ì ì(2b"
+#assume#:a:
+8
+
+ì ì(2c"#set-field# __collection_size:`Bint(
+&
+
+ì ì(2d"#array-add-last#:`F(
+&
+
+ì ì(2e"#array-add-last#:`+(
+&
+
+ì ì(2f"#array-add-last#:`_*
+(
+
+î î(1h"#unknown-value#Btuple(
+&
+
+î î(1i"
+#is-exact#:hBbool
+
+
+î î(1j"
+#assume#:i:
+8
+
+î î(1k"#set-field# __collection_size:hBint(
+&
+
+î î(1l"#array-add-last#:hF(
+&
+
+î î(1m"#array-add-last#:h4(
+&
+
+î î(1n"#array-add-last#:hg*
+(
+
+ï ï(1p"#unknown-value#Btuple(
+&
+
+ï ï(1q"
+#is-exact#:pBbool
+
+
+ï ï(1r"
+#assume#:q:
+8
+
+ï ï(1s"#set-field# __collection_size:pBint(
+&
+
+ï ï(1t"#array-add-last#:pF(
+&
+
+ï ï(1u"#array-add-last#:p=(
+&
+
+ï ï(1v"#array-add-last#:po*
+(
+
+ò ò(.y"#unknown-value#Btuple(
+&
+
+ò ò(.z"
+#is-exact#:yBbool
+
+
+ò ò(.{"
+#assume#:z:
+8
+
+ò ò(.|"#set-field# __collection_size:yBint(
+&
+
+ò ò(.}"#array-add-last#:yw(
+&
+
+ò ò(.~"#array-add-last#:y(
+&
+
+ò ò(."#array-add-last#:yx+
+)
+
+ô ô(0Å"#unknown-value#Btuple*
+(
+
+ô ô(0Ç"
+#is-exact#:ÅBbool!
+
+
+ô ô(0É"
+#assume#:Ç<
+:
+
+ô ô(0Ñ"#set-field# __collection_size:ÅBint*
+(
+
+ô ô(0Ö"#array-add-last#:Åw*
+(
+
+ô ô(0Ü"#array-add-last#:Å+
+)
+
+ô ô(0á"#array-add-last#:ÅÄ+
+)
+
+ö ö(1â"#unknown-value#Btuple*
+(
+
+ö ö(1ä"
+#is-exact#:âBbool!
+
+
+ö ö(1ã"
+#assume#:ä<
+:
+
+ö ö(1å"#set-field# __collection_size:âBint*
+(
+
+ö ö(1ç"#array-add-last#:âw*
+(
+
+ö ö(1é"#array-add-last#:â"+
+)
+
+ö ö(1è"#array-add-last#:âà+
+)
+
+õ õ(2ë"#unknown-value#Btuple*
+(
+
+õ õ(2í"
+#is-exact#:ëBbool!
+
+
+õ õ(2ì"
+#assume#:í<
+:
+
+õ õ(2î"#set-field# __collection_size:ëBint*
+(
+
+õ õ(2ï"#array-add-last#:ëw*
+(
+
+õ õ(2ñ"#array-add-last#:ë++
+)
+
+õ õ(2ó"#array-add-last#:ëê+
+)
+
+ú ú(1ô"#unknown-value#Btuple*
+(
+
+ú ú(1ö"
+#is-exact#:ôBbool!
+
+
+ú ú(1õ"
+#assume#:ö<
+:
+
+ú ú(1ú"#set-field# __collection_size:ôBint*
+(
+
+ú ú(1ù"#array-add-last#:ôw*
+(
+
+ú ú(1û"#array-add-last#:ô4+
+)
+
+ú ú(1ü"#array-add-last#:ôò+
+)
+
+ü ü(8¢"#unknown-value#Btuple*
+(
+
+ü ü(8£"
+#is-exact#:¢Bbool!
+
+
+ü ü(8§"
+#assume#:£<
+:
+
+ü ü(8•"#set-field# __collection_size:¢Bint+
+)
+
+ü ü(8¶"#array-add-last#:¢†*
+(
+
+ü ü(8ß"#array-add-last#:¢+
+)
+
+ü ü(8®"#array-add-last#:¢°+
+)
+
+† †(:™"#unknown-value#Btuple*
+(
+
+† †(:´"
+#is-exact#:™Bbool!
+
+
+† †(:¨"
+#assume#:´<
+:
+
+† †(:≠"#set-field# __collection_size:™Bint+
+)
+
+† †(:Æ"#array-add-last#:™†*
+(
+
+† †(:Ø"#array-add-last#:™+
+)
+
+† †(:∞"#array-add-last#:™©+
+)
+
+° °(;≤"#unknown-value#Btuple*
+(
+
+° °(;≥"
+#is-exact#:≤Bbool!
+
+
+° °(;¥"
+#assume#:≥<
+:
+
+° °(;µ"#set-field# __collection_size:≤Bint+
+)
+
+° °(;∂"#array-add-last#:≤†*
+(
+
+° °(;∑"#array-add-last#:≤"+
+)
+
+° °(;∏"#array-add-last#:≤±+
+)
+
+¢ ¢(<∫"#unknown-value#Btuple*
+(
+
+¢ ¢(<ª"
+#is-exact#:∫Bbool!
+
+
+¢ ¢(<º"
+#assume#:ª<
+:
+
+¢ ¢(<Ω"#set-field# __collection_size:∫Bint+
+)
+
+¢ ¢(<æ"#array-add-last#:∫†*
+(
+
+¢ ¢(<ø"#array-add-last#:∫++
+)
+
+¢ ¢(<¿"#array-add-last#:∫π+
+)
+
+• •(+√"#unknown-value#Btuple*
+(
+
+• •(+ƒ"
+#is-exact#:√Bbool!
+
+
+• •(+≈"
+#assume#:ƒ<
+:
+
+• •(+∆"#set-field# __collection_size:√Bint+
+)
+
+• •(+«"#array-add-last#:√¡*
+(
+
+• •(+»"#array-add-last#:√+
+)
+
+• •(+…"#array-add-last#:√¬+
+)
+
+¶ ¶(-À"#unknown-value#Btuple*
+(
+
+¶ ¶(-Ã"
+#is-exact#:ÀBbool!
+
+
+¶ ¶(-Õ"
+#assume#:Ã<
+:
+
+¶ ¶(-Œ"#set-field# __collection_size:ÀBint+
+)
+
+¶ ¶(-œ"#array-add-last#:À¡*
+(
+
+¶ ¶(-–"#array-add-last#:À+
+)
+
+¶ ¶(-—"#array-add-last#:À +
+)
+
+ß ß(.”"#unknown-value#Btuple*
+(
+
+ß ß(.‘"
+#is-exact#:”Bbool!
+
+
+ß ß(.’"
+#assume#:‘<
+:
+
+ß ß(.÷"#set-field# __collection_size:”Bint+
+)
+
+ß ß(.◊"#array-add-last#:”¡*
+(
+
+ß ß(.ÿ"#array-add-last#:”"+
+)
+
+ß ß(.Ÿ"#array-add-last#:”“+
+)
+
+® ®(/€"#unknown-value#Btuple*
+(
+
+® ®(/‹"
+#is-exact#:€Bbool!
+
+
+® ®(/›"
+#assume#:‹<
+:
+
+® ®(/ﬁ"#set-field# __collection_size:€Bint+
+)
+
+® ®(/ﬂ"#array-add-last#:€¡*
+(
+
+® ®(/‡"#array-add-last#:€++
+)
+
+® ®(/·"#array-add-last#:€⁄+
+)
+
+´ ´(7‰"#unknown-value#Btuple*
+(
+
+´ ´(7Â"
+#is-exact#:‰Bbool!
+
+
+´ ´(7Ê"
+#assume#:Â<
+:
+
+´ ´(7Á"#set-field# __collection_size:‰Bint+
+)
+
+´ ´(7Ë"#array-add-last#:‰‚*
+(
+
+´ ´(7È"#array-add-last#:‰+
+)
+
+´ ´(7Í"#array-add-last#:‰„+
+)
+
+¨ ¨(4Ï"#unknown-value#Btuple*
+(
+
+¨ ¨(4Ì"
+#is-exact#:ÏBbool!
+
+
+¨ ¨(4Ó"
+#assume#:Ì<
+:
+
+¨ ¨(4Ô"#set-field# __collection_size:ÏBint+
+)
+
+¨ ¨(4"#array-add-last#:Ï‚*
+(
+
+¨ ¨(4Ò"#array-add-last#:Ï+
+)
+
+¨ ¨(4Ú"#array-add-last#:ÏÎ+
+)
+
+≠ ≠(5Ù"#unknown-value#Btuple*
+(
+
+≠ ≠(5ı"
+#is-exact#:ÙBbool!
+
+
+≠ ≠(5ˆ"
+#assume#:ı<
+:
+
+≠ ≠(5˜"#set-field# __collection_size:ÙBint+
+)
+
+≠ ≠(5¯"#array-add-last#:Ù‚*
+(
+
+≠ ≠(5˘"#array-add-last#:Ù"+
+)
+
+≠ ≠(5˙"#array-add-last#:ÙÛ+
+)
+
+Æ Æ(6¸"#unknown-value#Btuple*
+(
+
+Æ Æ(6˝"
+#is-exact#:¸Bbool!
+
+
+Æ Æ(6˛"
+#assume#:˝<
+:
+
+Æ Æ(6ˇ"#set-field# __collection_size:¸Bint+
+)
+
+Æ Æ(6Ä"#array-add-last#:¸‚*
+(
+
+Æ Æ(6Å"#array-add-last#:¸++
+)
+
+Æ Æ(6Ç"#array-add-last#:¸˚+
+)
+
+± ±(1Ö"#unknown-value#Btuple*
+(
+
+± ±(1Ü"
+#is-exact#:ÖBbool!
+
+
+± ±(1á"
+#assume#:Ü<
+:
+
+± ±(1à"#set-field# __collection_size:ÖBint+
+)
+
+± ±(1â"#array-add-last#:ÖÉ*
+(
+
+± ±(1ä"#array-add-last#:Ö+
+)
+
+± ±(1ã"#array-add-last#:ÖÑ+
+)
+
+≤ ≤(3ç"#unknown-value#Btuple*
+(
+
+≤ ≤(3é"
+#is-exact#:çBbool!
+
+
+≤ ≤(3è"
+#assume#:é<
+:
+
+≤ ≤(3ê"#set-field# __collection_size:çBint+
+)
+
+≤ ≤(3ë"#array-add-last#:çÉ*
+(
+
+≤ ≤(3í"#array-add-last#:ç+
+)
+
+≤ ≤(3ì"#array-add-last#:çå+
+)
+
+≥ ≥(4ï"#unknown-value#Btuple*
+(
+
+≥ ≥(4ñ"
+#is-exact#:ïBbool!
+
+
+≥ ≥(4ó"
+#assume#:ñ<
+:
+
+≥ ≥(4ò"#set-field# __collection_size:ïBint+
+)
+
+≥ ≥(4ô"#array-add-last#:ïÉ*
+(
+
+≥ ≥(4ö"#array-add-last#:ï"+
+)
+
+≥ ≥(4õ"#array-add-last#:ïî+
+)
+
+¥ ¥(5ù"#unknown-value#Btuple*
+(
+
+¥ ¥(5û"
+#is-exact#:ùBbool!
+
+
+¥ ¥(5ü"
+#assume#:û<
+:
+
+¥ ¥(5†"#set-field# __collection_size:ùBint+
+)
+
+¥ ¥(5°"#array-add-last#:ùÉ*
+(
+
+¥ ¥(5¢"#array-add-last#:ù++
+)
+
+¥ ¥(5£"#array-add-last#:ùú+
+)
+
+µ µ(1¶"#unknown-value#Btuple*
+(
+
+µ µ(1ß"
+#is-exact#:¶Bbool!
+
+
+µ µ(1®"
+#assume#:ß<
+:
+
+µ µ(1©"#set-field# __collection_size:¶Bint+
+)
+
+µ µ(1™"#array-add-last#:¶É+
+)
+
+µ µ(1´"#array-add-last#:¶§+
+)
+
+µ µ(1¨"#array-add-last#:¶•+
+)
+
+∏ ∏(*Ø"#unknown-value#Btuple*
+(
+
+∏ ∏(*∞"
+#is-exact#:ØBbool!
+
+
+∏ ∏(*±"
+#assume#:∞<
+:
+
+∏ ∏(*≤"#set-field# __collection_size:ØBint+
+)
+
+∏ ∏(*≥"#array-add-last#:Ø≠*
+(
+
+∏ ∏(*¥"#array-add-last#:Ø+
+)
+
+∏ ∏(*µ"#array-add-last#:ØÆ+
+)
+
+π π(,∑"#unknown-value#Btuple*
+(
+
+π π(,∏"
+#is-exact#:∑Bbool!
+
+
+π π(,π"
+#assume#:∏<
+:
+
+π π(,∫"#set-field# __collection_size:∑Bint+
+)
+
+π π(,ª"#array-add-last#:∑≠*
+(
+
+π π(,º"#array-add-last#:∑+
+)
+
+π π(,Ω"#array-add-last#:∑∂+
+)
+
+∫ ∫(-ø"#unknown-value#Btuple*
+(
+
+∫ ∫(-¿"
+#is-exact#:øBbool!
+
+
+∫ ∫(-¡"
+#assume#:¿<
+:
+
+∫ ∫(-¬"#set-field# __collection_size:øBint+
+)
+
+∫ ∫(-√"#array-add-last#:ø≠*
+(
+
+∫ ∫(-ƒ"#array-add-last#:ø"+
+)
+
+∫ ∫(-≈"#array-add-last#:øæ+
+)
+
+ª ª(.«"#unknown-value#Btuple*
+(
+
+ª ª(.»"
+#is-exact#:«Bbool!
+
+
+ª ª(.…"
+#assume#:»<
+:
+
+ª ª(. "#set-field# __collection_size:«Bint+
+)
+
+ª ª(.À"#array-add-last#:«≠*
+(
+
+ª ª(.Ã"#array-add-last#:«++
+)
+
+ª ª(.Õ"#array-add-last#:«∆+
+)
+
+º º(*œ"#unknown-value#Btuple*
+(
+
+º º(*–"
+#is-exact#:œBbool!
+
+
+º º(*—"
+#assume#:–<
+:
+
+º º(*“"#set-field# __collection_size:œBint+
+)
+
+º º(*”"#array-add-last#:œ≠+
+)
+
+º º(*‘"#array-add-last#:œ§+
+)
+
+º º(*’"#array-add-last#:œŒ+
+)
+
+æ æ(8ÿ"#unknown-value#Btuple*
+(
+
+æ æ(8Ÿ"
+#is-exact#:ÿBbool!
+
+
+æ æ(8⁄"
+#assume#:Ÿ<
+:
+
+æ æ(8€"#set-field# __collection_size:ÿBint+
+)
+
+æ æ(8‹"#array-add-last#:ÿ÷*
+(
+
+æ æ(8›"#array-add-last#:ÿ+
+)
+
+æ æ(8ﬁ"#array-add-last#:ÿ◊+
+)
+
+ø ø(6‡"#unknown-value#Btuple*
+(
+
+ø ø(6·"
+#is-exact#:‡Bbool!
+
+
+ø ø(6‚"
+#assume#:·<
+:
+
+ø ø(6„"#set-field# __collection_size:‡Bint+
+)
+
+ø ø(6‰"#array-add-last#:‡÷+
+)
+
+ø ø(6Â"#array-add-last#:‡§+
+)
+
+ø ø(6Ê"#array-add-last#:‡ﬂ+
+)
+
+¬ ¬(,È"#unknown-value#Btuple*
+(
+
+¬ ¬(,Í"
+#is-exact#:ÈBbool!
+
+
+¬ ¬(,Î"
+#assume#:Í<
+:
+
+¬ ¬(,Ï"#set-field# __collection_size:ÈBint+
+)
+
+¬ ¬(,Ì"#array-add-last#:ÈÁ*
+(
+
+¬ ¬(,Ó"#array-add-last#:È+
+)
+
+¬ ¬(,Ô"#array-add-last#:ÈË+
+)
+
+√ √(.Ò"#unknown-value#Btuple*
+(
+
+√ √(.Ú"
+#is-exact#:ÒBbool!
+
+
+√ √(.Û"
+#assume#:Ú<
+:
+
+√ √(.Ù"#set-field# __collection_size:ÒBint+
+)
+
+√ √(.ı"#array-add-last#:ÒÁ*
+(
+
+√ √(.ˆ"#array-add-last#:Ò+
+)
+
+√ √(.˜"#array-add-last#:Ò+
+)
+
+ƒ ƒ(/˘"#unknown-value#Btuple*
+(
+
+ƒ ƒ(/˙"
+#is-exact#:˘Bbool!
+
+
+ƒ ƒ(/˚"
+#assume#:˙<
+:
+
+ƒ ƒ(/¸"#set-field# __collection_size:˘Bint+
+)
+
+ƒ ƒ(/˝"#array-add-last#:˘Á*
+(
+
+ƒ ƒ(/˛"#array-add-last#:˘"+
+)
+
+ƒ ƒ(/ˇ"#array-add-last#:˘¯+
+)
+
+≈ ≈(0Å"#unknown-value#Btuple*
+(
+
+≈ ≈(0Ç"
+#is-exact#:ÅBbool!
+
+
+≈ ≈(0É"
+#assume#:Ç<
+:
+
+≈ ≈(0Ñ"#set-field# __collection_size:ÅBint+
+)
+
+≈ ≈(0Ö"#array-add-last#:ÅÁ*
+(
+
+≈ ≈(0Ü"#array-add-last#:Å++
+)
+
+≈ ≈(0á"#array-add-last#:ÅÄ+
+)
+
+» »(4ä"#unknown-value#Btuple*
+(
+
+» »(4ã"
+#is-exact#:äBbool!
+
+
+» »(4å"
+#assume#:ã<
+:
+
+» »(4ç"#set-field# __collection_size:äBint+
+)
+
+» »(4é"#array-add-last#:äà*
+(
+
+» »(4è"#array-add-last#:ä+
+)
+
+» »(4ê"#array-add-last#:äâ+
+)
+
+… …(5í"#unknown-value#Btuple*
+(
+
+… …(5ì"
+#is-exact#:íBbool!
+
+
+… …(5î"
+#assume#:ì<
+:
+
+… …(5ï"#set-field# __collection_size:íBint+
+)
+
+… …(5ñ"#array-add-last#:íà*
+(
+
+… …(5ó"#array-add-last#:í"+
+)
+
+… …(5ò"#array-add-last#:íë+
+)
+
+Ã Ã(1õ"#unknown-value#Btuple*
+(
+
+Ã Ã(1ú"
+#is-exact#:õBbool!
+
+
+Ã Ã(1ù"
+#assume#:ú<
+:
+
+Ã Ã(1û"#set-field# __collection_size:õBint+
+)
+
+Ã Ã(1ü"#array-add-last#:õô*
+(
+
+Ã Ã(1†"#array-add-last#:õ+
+)
+
+Ã Ã(1°"#array-add-last#:õö+
+)
+
+Õ Õ(2£"#unknown-value#Btuple*
+(
+
+Õ Õ(2§"
+#is-exact#:£Bbool!
+
+
+Õ Õ(2•"
+#assume#:§<
+:
+
+Õ Õ(2¶"#set-field# __collection_size:£Bint+
+)
+
+Õ Õ(2ß"#array-add-last#:£ô*
+(
+
+Õ Õ(2®"#array-add-last#:£4+
+)
+
+Õ Õ(2©"#array-add-last#:£¢?
+=
+
+Ü Œ(™DEFAULT_PERMISSIONS"#unknown-value#Blist+
+)
+
+Ü Œ(¨"
+#is-exact#:™´Bbool!
+
+
+Ü Œ(≠"
+#assume#:¨<
+:
+
+Ü Œ(Æ"#set-field# __collection_size:™BintC
+A
+
+Ü Œ(ØDEFAULT_PERMISSIONS"?python-unknown?*Blist=
+;
+
+“ ˛(∞ROLE_PERMISSIONS_MAP"#new-object#Bdict*
+(
+
+” ÿ(æ"#unknown-value#Blist+
+)
+
+” ÿ(ø"
+#is-exact#:æ´Bbool!
+
+
+” ÿ(¿"
+#assume#:ø<
+:
+
+” ÿ(¡"#set-field# __collection_size:æBint.
+,
+
+” ÿ(¬"?python-unknown?*Blist&
+$
+
+” ÿ(√"	#map-set#:∞±¬*
+(
+
+⁄ Ê(‡"#unknown-value#Blist+
+)
+
+⁄ Ê(·"
+#is-exact#:‡´Bbool!
+
+
+⁄ Ê(‚"
+#assume#:·<
+:
+
+⁄ Ê(„"#set-field# __collection_size:‡Bint.
+,
+
+⁄ Ê(‰"?python-unknown?*Blist&
+$
+
+⁄ Ê(Â"	#map-set#:∞ƒ‰*
+(
+
+Ë Ú(Á"#unknown-value#Blist+
+)
+
+Ë Ú(Ë"
+#is-exact#:Á´Bbool!
+
+
+Ë Ú(È"
+#assume#:Ë<
+:
+
+Ë Ú(Í"#set-field# __collection_size:ÁBint.
+,
+
+Ë Ú(Î"?python-unknown?*Blist&
+$
+
+Ë Ú(Ï"	#map-set#:∞ÊÎ*
+(
+
+Ù ˝(Ó"#unknown-value#Blist+
+)
+
+Ù ˝(Ô"
+#is-exact#:Ó´Bbool!
+
+
+Ù ˝("
+#assume#:Ô<
+:
+
+Ù ˝(Ò"#set-field# __collection_size:ÓBint+
+)
+
+Ù ˝(Ú"#array-add-last#:Ó∆+
+)
+
+Ù ˝(Û"#array-add-last#:Ó +
+)
+
+Ù ˝(Ù"#array-add-last#:ÓŒ+
+)
+
+Ù ˝(ı"#array-add-last#:Ó“+
+)
+
+Ù ˝(ˆ"#array-add-last#:Ó’+
+)
+
+Ù ˝(˜"#array-add-last#:ÓŸ+
+)
+
+Ù ˝(¯"#array-add-last#:Óﬁ&
+$
+
+Ù ˝(˘"	#map-set#:∞ÌÓ *Q/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/permission.py

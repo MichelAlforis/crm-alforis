@@ -1,7 +1,7 @@
 import hashlib
 import logging
 import re
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
 from sqlalchemy import case, distinct, func
@@ -268,8 +268,8 @@ class EmailDeliveryService:
         if not recipients:
             raise ValidationError("Aucun destinataire fourni pour la campagne")
 
-        scheduled_at = payload.scheduled_at or datetime.utcnow()
-        now = datetime.utcnow()
+        scheduled_at = payload.scheduled_at or datetime.now(UTC)
+        now = datetime.now(UTC)
         campaign.scheduled_at = scheduled_at
         campaign.timezone = payload.timezone or campaign.timezone
         campaign.rate_limit_per_minute = payload.rate_limit_per_minute or campaign.rate_limit_per_minute
@@ -365,7 +365,7 @@ class EmailDeliveryService:
 
             delay = step.delay_hours or 0
             send_time = scheduled_at + timedelta(hours=delay)
-            status = EmailSendStatus.QUEUED if send_time <= datetime.utcnow() else EmailSendStatus.SCHEDULED
+            status = EmailSendStatus.QUEUED if send_time <= datetime.now(UTC) else EmailSendStatus.SCHEDULED
             variant = step.variant or assigned_variant
 
             send = EmailSend(
@@ -517,9 +517,9 @@ class EmailDeliveryService:
             if message_id:
                 send.provider_message_id = message_id
             send.status = EmailSendStatus.SENT
-            send.sent_at = datetime.utcnow()
+            send.sent_at = datetime.now(UTC)
             send.campaign.total_sent = (send.campaign.total_sent or 0) + 1
-            send.campaign.last_sent_at = datetime.utcnow()
+            send.campaign.last_sent_at = datetime.now(UTC)
             logger.info(
                 "email_sendgrid_sent",
                 extra={
@@ -553,7 +553,7 @@ class EmailDeliveryService:
             "html": html_content,
             "o:tracking": "yes" if send.campaign.track_opens or send.campaign.track_clicks else "no",
             "o:tag": [f"campaign:{send.campaign_id}"],
-            "o:deliverytime": send.scheduled_at.isoformat() if send.scheduled_at and send.scheduled_at > datetime.utcnow() else None,
+            "o:deliverytime": send.scheduled_at.isoformat() if send.scheduled_at and send.scheduled_at > datetime.now(UTC) else None,
             "o:tracking-clicks": "yes" if send.campaign.track_clicks else "no",
             "o:tracking-opens": "yes" if send.campaign.track_opens else "no",
             "v:campaign_id": str(send.campaign_id),
@@ -571,9 +571,9 @@ class EmailDeliveryService:
             message_id = resp_json.get("id")
             send.provider_message_id = message_id
             send.status = EmailSendStatus.SENT
-            send.sent_at = datetime.utcnow()
+            send.sent_at = datetime.now(UTC)
             send.campaign.total_sent = (send.campaign.total_sent or 0) + 1
-            send.campaign.last_sent_at = datetime.utcnow()
+            send.campaign.last_sent_at = datetime.now(UTC)
             logger.info(
                 "email_mailgun_sent",
                 extra={"send_id": send.id, "message_id": message_id},
@@ -736,7 +736,7 @@ class EmailEventIngestionService:
                 event_time = (
                     datetime.utcfromtimestamp(event_ts)
                     if isinstance(event_ts, (int, float))
-                    else datetime.utcnow()
+                    else datetime.now(UTC)
                 )
                 emailevent = EmailEvent(
                     send_id=send.id,

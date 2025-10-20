@@ -1,5 +1,5 @@
 import enum
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Optional
 
 from sqlalchemy import (
@@ -143,7 +143,7 @@ class EmailTemplate(BaseModel):
 
     def mark_used(self):
         """Mettre à jour le timestamp d'utilisation."""
-        self.last_used_at = datetime.utcnow()
+        self.last_used_at = datetime.now(UTC)
 
     def __repr__(self) -> str:
         return f"<EmailTemplate id={self.id} name='{self.name}'>"
@@ -304,7 +304,7 @@ class EmailSend(BaseModel):
     def mark_sent(self, message_id: Optional[str] = None):
         """Mettre à jour l'état suite à l'envoi."""
         self.status = EmailSendStatus.SENT
-        self.sent_at = datetime.utcnow()
+        self.sent_at = datetime.now(UTC)
         if message_id:
             self.provider_message_id = message_id
 

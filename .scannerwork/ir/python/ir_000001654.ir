@@ -1,0 +1,37 @@
+
+,#"%s(connect=%r, read=%r, total=%r)"str
+
+0intselfk k(		tuple"à/
+-
+m m("#dependent-value#*:Btype)
+'
+m m("#get-field# __name__:)
+'
+n n("#get-field# _connect:&
+$
+o o("#get-field# _read:&
+$
+p p("#get-field# total:(
+&
+l5 q(	"#unknown-value#Btuple&
+$
+l5 q(	
+"
+#is-exact#:	Bbool
+
+l5 q(	"
+#assume#:
+8
+6
+l5 q(	"#set-field# __collection_size:Bint&
+$
+l5 q(	"#array-add-last#:&
+$
+l5 q(	"#array-add-last#:&
+$
+l5 q(	"#array-add-last#:&
+$
+l5 q(	"#array-add-last#:,
+*
+l q(	"?python-str-format?*:
+l q(	*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/util/timeout.py

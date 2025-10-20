@@ -1,0 +1,15 @@
+
+;pip._vendor.pyproject_hooks._impl.SubprocessRunner.__call__“
+ˆ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_impl.py ("3*,
+3
+
+_impl.py"
+ 
+implicit return:
+ (
+cmd:
+ (%
+cwd:
+ (=
+extra_environB64
+2pip._vendor.pyproject_hooks._impl.SubprocessRunnerH

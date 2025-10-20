@@ -1,0 +1,10 @@
+
+Ž„"
+    Return True if ``ttype`` is a subtype of ``other``.
+
+    exists for backwards compatibility. use ``ttype in other`` now.
+    "strttypeU U(otherU U(!"<*
+(
+[ [("
+#binop in#2in:Bbool
+[ [(*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pygments/token.py

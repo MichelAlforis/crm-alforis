@@ -1,7 +1,7 @@
 from typing import List, Optional, Tuple, Dict, Any
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import and_, or_, func
-from datetime import datetime
+from datetime import datetime, UTC
 from models.organisation import (
     Organisation,
     OrganisationContact,
@@ -100,7 +100,7 @@ class OrganisationService(BaseService[Organisation, OrganisationCreate, Organisa
             activity_type=activity_type,
             title=title,
             preview=preview,
-            occurred_at=occurred_at or datetime.utcnow(),
+            occurred_at=occurred_at or datetime.now(UTC),
             actor_id=actor_id,
             actor_name=actor_name,
             actor_avatar_url=actor_avatar,

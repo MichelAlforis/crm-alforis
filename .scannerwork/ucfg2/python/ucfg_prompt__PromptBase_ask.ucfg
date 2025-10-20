@@ -1,0 +1,27 @@
+
+&pip._vendor.rich.prompt.PromptBase.askˆ
+~/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/prompt.pyP P("3*/
+3
+	prompt.py"
+_ _(
+implicit return:
+R R(
+prompt:
+T T()	
+console:
+U U(
+
+password:
+V V(+	
+choices:
+W W(#
+case_sensitive:
+X X(!
+show_default:
+Y Y(!
+show_choices:
+Z Z(	
+default:
+[ [('
+streamB&$
+"pip._vendor.rich.prompt.PromptBaseH

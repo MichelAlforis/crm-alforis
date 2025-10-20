@@ -24,8 +24,10 @@ import {
   Link as LinkIcon,
   Upload,
   Mail,
+  Users,
 } from 'lucide-react'
 import { useTaskViews } from '@/hooks/useTasks'
+import { useAuth } from '@/hooks/useAuth'
 import ThemeToggle from '@/components/shared/ThemeToggle'
 
 interface SidebarProps {
@@ -103,6 +105,14 @@ const MENU_ITEMS = [
     badge: 'NEW',
     gradient: 'from-rose-500 to-pink-500',
   },
+  {
+    label: 'Utilisateurs',
+    href: '/dashboard/users',
+    icon: Users,
+    description: 'Gestion des comptes',
+    badge: null,
+    gradient: 'from-gray-500 to-slate-600',
+  },
   // ❌ LEGACY ITEMS REMOVED (2025-10-18):
   // - Investisseurs → Organisations (type=client)
   // - Fournisseurs → Organisations (type=fournisseur)
@@ -117,7 +127,9 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
   const { todayCount } = useTaskViews()
+  const { user } = useAuth()
   const tasksDueToday = todayCount
+  const isAdmin = user?.is_admin || false
 
   const isActive = (href: string): boolean => {
     if (!pathname) return false
@@ -249,7 +261,13 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
 
           {/* Navigation */}
           <nav className="flex-1 px-3 py-2 space-y-1.5 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
-            {MENU_ITEMS.map((item) => {
+            {MENU_ITEMS.filter((item) => {
+              // Filtrer "Utilisateurs" si pas admin
+              if (item.href === '/dashboard/users' && !isAdmin) {
+                return false
+              }
+              return true
+            }).map((item) => {
               const Icon = item.icon
               const active = isActive(item.href)
               const isHovered = hoveredItem === item.href

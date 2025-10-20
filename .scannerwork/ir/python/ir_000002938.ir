@@ -1,0 +1,11 @@
+
+ZQ":return: downloads directory tied to the user e.g. ``%USERPROFILE%\\Downloads``"str
+"CSIDL_DOWNLOADS"strselfh h("Å!
+
+j  j(."#unknown-value#$
+"
+j  j(A"get_win_folder:&
+$
+j j(B"
+os.pathnormpath:
+j j(B*á/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/windows.py

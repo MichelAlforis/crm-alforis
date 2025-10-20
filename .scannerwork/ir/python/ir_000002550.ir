@@ -1,0 +1,75 @@
+
+
+8int
+
+3int
+
+0int
+512int
+
+4int
+
+1int
+
+
+2int
+767int
+'"Get the distance to a color."strindex: :()"±!
+
+<" <(+"#unknown-value#%
+#
+<" <(2red2"	get_color:,
+*
+< <(2red2"#python-unpack#:.
+,
+< <(2	green2"#python-unpack#:-
++
+< <(2blue2"#python-unpack#:
+!
+
+= =("#unknown-value#"
+ 
+= =(#"	#binop +#2+:1
+/
+= =()red_mean"
+#binop //#*2//:
+!
+
+> >("#unknown-value#*
+(
+> >(red"	#binop -#*2-:!
+
+? ?("#unknown-value#,
+*
+? ?(#green"	#binop -#*2-:	!
+
+@ @("#unknown-value#+
+)
+@ @( blue"	#binop -#*2-:"
+ 
+B B(!"	#binop +#2+:%
+#
+B B(("	#binop *#*2*:%
+#
+B B(."	#binop *#*2*:!
+
+B B(4"#unknown-value#%
+#
+C C("	#binop *#*2*:%
+#
+C C(#"	#binop *#*2*:%
+#
+D D(#"	#binop -#*2-:%
+#
+D D(+ "	#binop *#*2*:%
+#
+D D(2!"	#binop *#*2*: !
+
+D D(8""#unknown-value##
+!
+B D(9#"	#binop +#2+:"!
+
+A A($"#unknown-value#
+
+A E(%"_sqrt:$#
+A E(%*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/palette.py

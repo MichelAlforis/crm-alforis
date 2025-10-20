@@ -1,0 +1,47 @@
+
+1023int
+55232int
+10int
+56320int
+zq"Given a unicode character code with length greater than 16 bits,
+    return the two 16 bit surrogate pair.
+    "str
+
+0intc
+Ý Ý(	tuple"¯#
+!
+
+ã ã("#unknown-value#$
+"
+
+ã ã("	#binop +#2+:#
+!
+
+ã+ ã(4	"#unknown-value#$
+"
+
+ã! ã(5
+"	#binop +#2+:	*
+(
+
+ã ã(7"#unknown-value#Btuple(
+&
+
+ã ã(7"
+#is-exact#:Bbool
+
+
+ã ã(7"
+#assume#::
+8
+
+ã ã(7"#set-field# __collection_size:Bint(
+&
+
+ã ã(7"#array-add-last#:(
+&
+
+ã ã(7"#array-add-last#:
+
+
+ã ã(7*€/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pygments/util.py

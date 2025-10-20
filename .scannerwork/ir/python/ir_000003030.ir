@@ -1,0 +1,39 @@
+
+""bool
+®¤"Loads the metadata from the wheel file into memory and returns a
+        Distribution that uses it, not relying on the wheel file or
+        requirement.
+        "strself" (&"Œ$
+"
+! !("#get-field# req:0
+.
+! !('"#get-field# local_file_path:)
+'
+! !(U"#built-in-assert#:$
+"
+" "("#get-field# req:%
+#
+" "("#get-field# name:)
+'
+" "(8	"#built-in-assert#:$
+"
+#  #((
+"#get-field# req:0
+.
+#  #(8"#get-field# local_file_path:
++
+)
+# #(9wheel"#unknown-value#:$
+"
+$? $(G"#get-field# req:%
+#
+$? $(L"#get-field# name:!
+
+$- $(M"#unknown-value#D
+B
+$- $(M"0
+pip._vendor.packaging.utilscanonicalize_name:D
+B
+$ $(N"0
+pip._internal.metadataget_wheel_distribution:
+$ $(N*ˆ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/distributions/wheel.py

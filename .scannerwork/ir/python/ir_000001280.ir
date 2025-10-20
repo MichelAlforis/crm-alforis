@@ -1,0 +1,10 @@
+
+ûñ"Update the response headers with any new headers.
+
+        NOTE: This SHOULD always include some Warning header to
+              signify that the response was cached by the client, not
+              by way of the provided headers.
+        "strself' '(response' '(3"6$
+"
+. .("#new-object#Bdict
+. .(*Š/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/cachecontrol/heuristics.py

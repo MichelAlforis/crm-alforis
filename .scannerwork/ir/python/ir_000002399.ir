@@ -1,0 +1,22 @@
+
+Ã¹"Decorator to automatically retry a function on error.
+
+    If the function raises, the function is recalled with the same arguments
+    until it returns or the time limit is reached. When the time limit is
+    surpassed, the last exception raised is reraised.
+
+    :param wait: The time to wait after an error before retrying, in seconds.
+    :param stop_after_delay: The time limit after which retries will cease,
+        in seconds.
+    "strwait (stop_after_delay (("æ!
+
+- -("#unknown-value#(
+&
+ -(%closure"#new-object#2
+0
+ -("#set-field# stop_after_delay:&
+$
+ -("#set-field# wait:+
+)
+ -("?python-partial-apply?:
+- -(*€/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/retry.py

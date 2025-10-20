@@ -1,0 +1,81 @@
+
+4models.organisation.OrganisationInteraction.__repr___
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py¿ ¿("2*²
+2
+À Ã(	o
+m
+
+Á+ Á(2
+%1"__id*S
+
+__unknown_file (7*5-
++models.organisation.OrganisationInteraction"
+id|
+z
+
+ÁF Á(Z
+%2"__id*`
+
+__unknown_file (D*B-
++models.organisation.OrganisationInteraction"
+organisation_idq
+o
+
+Â Â(
+%3"__id*U
+
+__unknown_file (9*7-
++models.organisation.OrganisationInteraction"
+typeu
+s
+
+Â* Â(7
+%4"__id*Y
+
+__unknown_file (=*;-
++models.organisation.OrganisationInteraction"
+
+pipeline±
+®
+
+Á Â(;
+%5"__concat*.
+
+Á Á(* 
+<OrganisationInteraction(id=*
+
+Á+ Á(2
+
+%1*$
+
+Á3 Á(E
+, organisation_id=*
+
+ÁF Á(Z
+
+%2*
+
+Á[ Á(]
+, *
+
+Â Â(	
+type=*
+
+Â Â(
+
+%3*
+
+Â Â()
+, pipeline=*
+
+Â* Â(7
+
+%4*
+
+Â8 Â(:
+)>"
+
+À Ã(	
+
+%5B/-
++models.organisation.OrganisationInteractionH

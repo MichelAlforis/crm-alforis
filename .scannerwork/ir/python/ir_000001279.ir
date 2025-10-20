@@ -1,0 +1,11 @@
+
+$"110 - "Response is Stale""str
+­£"
+        Return a valid 1xx warning header value describing the cache
+        adjustments.
+
+        The response is provided too allow warnings like 113
+        http://tools.ietf.org/html/rfc7234#section-5.5.4 where we need
+        to explicitly say response is over 24 hours old.
+        "strself (response (,"
+% %(**Š/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/cachecontrol/heuristics.py

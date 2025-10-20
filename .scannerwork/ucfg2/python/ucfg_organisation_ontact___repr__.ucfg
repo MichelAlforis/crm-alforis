@@ -1,0 +1,63 @@
+
+0models.organisation.OrganisationContact.__repr___
+S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py£ £("2*ä
+2
+¤ ¤(qk
+i
+
+¤* ¤(1
+%1"__id*O
+
+__unknown_file (3*1)
+'models.organisation.OrganisationContact"
+idm
+k
+
+¤; ¤(D
+%2"__id*Q
+
+__unknown_file (5*3)
+'models.organisation.OrganisationContact"
+namex
+v
+
+¤Y ¤(m
+%3"__id*\
+
+__unknown_file (@*>)
+'models.organisation.OrganisationContact"
+organisation_idæ
+ã
+
+¤ ¤(q
+%4"__concat**
+
+¤ ¤()
+<OrganisationContact(id=*
+
+¤* ¤(1
+
+%1*
+
+¤2 ¤(:
+
+, name='*
+
+¤; ¤(D
+
+%2*%
+
+¤E ¤(X
+', organisation_id=*
+
+¤Y ¤(m
+
+%3*
+
+¤n ¤(p
+)>"
+
+¤ ¤(q
+
+%4B+)
+'models.organisation.OrganisationContactH

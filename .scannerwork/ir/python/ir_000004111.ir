@@ -1,0 +1,6 @@
+
+7."IDNA 2008 does not utilise nameprep protocol"strs ("R@
+>
+
+ (M"NotImplementedError*:BNotImplementedError2
+ (M*~/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/idna/compat.py

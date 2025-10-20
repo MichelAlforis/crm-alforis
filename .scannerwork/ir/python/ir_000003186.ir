@@ -1,0 +1,37 @@
+
+	
+"assigned"str
+‡÷"
+        Assigne une entit√© √† un utilisateur
+
+        Config:
+            {
+                "entity_type": "organisation",
+                "entity_id": 123,
+                "user_id": 456
+            }
+        "str
+"Assignment simul√©"str
+"action"str
+	"message"str
+
+truebool
+"assign_user"strself
+ﬁ ﬁ( config
+ﬁ" ﬁ(8context
+ﬁ: ﬁ(Q"¶&
+$
+
+Í Ó(	"#new-object#Bdict"
+ 
+
+Î Î(#"	#map-set#:"
+ 
+
+Ï Ï("	#map-set#:	
+"
+ 
+
+Ì Ì(*"	#map-set#:
+
+Í Ó(	*X/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/services/workflow_engine.py

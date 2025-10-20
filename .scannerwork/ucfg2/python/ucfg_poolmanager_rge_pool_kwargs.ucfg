@@ -1,0 +1,80 @@
+
+>pip._vendor.urllib3.poolmanager.PoolManager._merge_pool_kwargs“
+†/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/poolmanager.py¯ ¯("2*§
+2
+° ¶(
+}
+
+· ·(2
+%3"__id*c
+
+__unknown_file (G*E-
++pip._vendor.urllib3.poolmanager.PoolManager"
+connection_pool_kw><
+
+· ·(9
+%4*"
+
+__unknown_file (
+
+%32copyL
+J
+
+· ·(9
+base_pool_kwargs"__id*"
+
+__unknown_file (
+
+%4*
+4
+11*6
+3
+poolmanager.py"
+Ã Ã(
+implicit return*3
+4
+Á Á(""
+
+Á Á(
+
+base_pool_kwargs*Ñ
+10
+À À(1²¯
+
+À À(1
+%1"dict.__setitem__*0
+
+__unknown_file (
+
+base_pool_kwargs*#
+
+__unknown_file (
+
+key*%
+
+__unknown_file (	
+
+value2__setitem__*
+
+3
+4
+10*c
+11
+¹ ¹(.EC
+
+¹ ¹(.
+%2*(
+
+__unknown_file (
+
+
+override2items*
+
+3
+4
+10:
+
+¯! ¯()
+
+overrideB/-
++pip._vendor.urllib3.poolmanager.PoolManagerH

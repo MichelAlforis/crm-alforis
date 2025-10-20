@@ -303,7 +303,8 @@ const { data: stats } = useGlobalDashboardStats()
 | **Phase 1** | Association mandat-produit + Stats dashboard | 6-8h | 🔴 Critique | ⭐⭐⭐⭐⭐ | ✅ 100% |
 | **Phase 2** | Recherche + Workflows + Campaigns | 22-27h | 🟡 Important | ⭐⭐⭐⭐ | ✅ 100% |
 | **Phase 3** | Polish (Form + Timeline + SearchBar) | 6h | 🟢 Nice-to-have | ⭐⭐⭐ | ✅ 100% |
-| **TOTAL RÉALISÉ** | | **34-41h** | | | ✅ **100%** |
+| **Phase 4** | Gestion Utilisateurs (RBAC Admin) | 3h | 🔴 Critique | ⭐⭐⭐⭐⭐ | ✅ 100% |
+| **TOTAL RÉALISÉ** | | **37-44h** | | | ✅ **100%** |
 
 ---
 
@@ -334,6 +335,21 @@ const { data: stats } = useGlobalDashboardStats()
 - Backup code créé
 - Cleanup types legacy effectué
 
+#### Phase 4 - Gestion Utilisateurs (21 Oct 2024) ✅
+- **Backend** : Routes `/users` CRUD complètes avec protection RBAC ADMIN
+  - Service `UserService` avec validation unicité email/username
+  - Schemas `UserCreate`, `UserUpdate`, `UserResponse` avec role/team
+  - Soft delete (is_active=False) par défaut + hard delete optionnel
+- **Frontend** : Page `/dashboard/users` complète
+  - Hook `useUsers` avec filtres (search, role, team, include_inactive)
+  - Composant `UserForm` (240 lignes) avec tous les champs
+  - Modal création/édition avec validation react-hook-form
+  - Table avec actions (modifier, désactiver, supprimer définitif)
+- **Sécurité** : Accès restreint aux admins uniquement
+  - Décorateur `require_admin()` sur toutes les routes backend
+  - Sidebar conditionnelle (lien visible uniquement si is_admin)
+  - Protection 403 Forbidden pour utilisateurs non-admin
+
 ---
 
 ## 📝 Notes Importantes
@@ -351,33 +367,39 @@ const { data: stats } = useGlobalDashboardStats()
 - Composants shared réutilisables (Card, Button, Table, Modal)
 
 ### Prêt pour Production
-Le CRM est **déjà utilisable en production** pour:
+Le CRM est **100% production-ready** pour:
 - ✅ Gestion organisations (CRUD complet)
 - ✅ Gestion personnes + liens organisation-personne
 - ✅ Gestion mandats (CRUD complet)
 - ✅ Gestion produits (CRUD complet)
-- ✅ Association **lecture** mandat-produit (affichage liste)
+- ✅ Association mandat-produit avec modal + allocation %
 - ✅ Gestion tâches avec kanban
+- ✅ Gestion utilisateurs (ADMIN uniquement)
 - ✅ Imports massifs (organisations, personnes, unifié)
-- ✅ Recherche autocomplete
-- ✅ Timeline activités
+- ✅ Recherche autocomplete multi-critères
+- ✅ Timeline activités avec filtres
+- ✅ Workflows automatisés (liste + détail + toggle)
+- ✅ Campagnes email (liste + détail + création)
+- ✅ Dashboard stats temps réel
 - ✅ Webhooks complets
 
-**Ce qui bloque vraiment**: Seulement **association mandat-produit UI** (4h)
+**Aucun blocage** : Toutes les fonctionnalités core sont implémentées ✅
 
 ---
 
 ## 🚀 Prochaines Étapes Recommandées
 
 ### Option 1: Déploiement Production ✅ PRÊT
-Le CRM est **production-ready** avec:
-- ✅ CRUD complet (Organisations, Personnes, Mandats, Produits, Tâches)
+Le CRM est **100% production-ready** avec:
+- ✅ CRUD complet (Organisations, Personnes, Mandats, Produits, Tâches, Utilisateurs)
 - ✅ Associations mandat-produit avec allocations
 - ✅ Workflows & Campaigns automatisés
 - ✅ Recherche avancée multi-critères
 - ✅ Timeline activités + infinite scroll
 - ✅ Dashboard stats temps réel
+- ✅ Gestion utilisateurs RBAC (Admin uniquement)
 - ✅ TypeScript 0 erreurs
+- ✅ Protection sécurité RBAC backend + frontend
 
 ### Option 2: Email Automation Avancée (Semaine 5)
 Si besoin d'email marketing intensif:
@@ -388,10 +410,21 @@ Si besoin d'email marketing intensif:
 - Webhooks SendGrid/Mailgun
 - Tracking ouvertures/clics détaillé
 
+### Option 2: Qualité Code - SonarQube Backend (6h30)
+Corrections des 237 issues projet (hors dépendances):
+- **49 issues CRITICAL** : `datetime.utcnow()` deprecated → `datetime.now(UTC)`
+- **20 issues** : Complexité cognitive > 15 → Refactoring fonctions
+- **21 issues** : Tests bash `[` → Remplacer par `[[`
+- **27 issues** : Async features non utilisées
+- Script de correction automatique disponible dans [SONARQUBE_ANALYSIS_BACKEND.md](SONARQUBE_ANALYSIS_BACKEND.md)
+
 ### Option 3: Tests E2E (3-5h)
 Si besoin de garanties qualité:
 - Playwright tests
 - Flow: création organisation → mandat → produit → association
 - CI/CD integration
 
-**RECOMMANDATION**: Déployer maintenant, itérer ensuite selon usage réel.
+**RECOMMANDATION**:
+1. ✅ Déployer en production maintenant (100% fonctionnel)
+2. 🟡 Corrections SonarQube en parallèle (amélioration maintenabilité)
+3. ⚪ Tests E2E selon besoins qualité

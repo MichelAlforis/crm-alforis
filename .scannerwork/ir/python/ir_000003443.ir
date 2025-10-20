@@ -1,0 +1,9 @@
+
+,#"Align a renderable to the center."str
+	"center"strclsW W(
+renderableX X($styleY Y()vertical[ [(6pad\ \(width] ](#height^ ^($"1
+
+a i(	
+"cls:	
+a i(	
+*}/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/align.py

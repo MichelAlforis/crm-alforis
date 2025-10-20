@@ -10,7 +10,7 @@ Tests pour:
 """
 
 import pytest
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from sqlalchemy.orm import Session
 
 from models.notification import (
@@ -104,7 +104,7 @@ def test_notification_is_expired(test_db: Session, test_user: User):
         user_id=test_user.id,
         type=NotificationType.SYSTEM,
         title="Expired",
-        expires_at=datetime.utcnow() - timedelta(hours=1),
+        expires_at=datetime.now(UTC) - timedelta(hours=1),
     )
 
     # Notification valide
@@ -112,7 +112,7 @@ def test_notification_is_expired(test_db: Session, test_user: User):
         user_id=test_user.id,
         type=NotificationType.SYSTEM,
         title="Valid",
-        expires_at=datetime.utcnow() + timedelta(hours=1),
+        expires_at=datetime.now(UTC) + timedelta(hours=1),
     )
 
     # Notification sans expiration
@@ -294,7 +294,7 @@ def test_service_cleanup_old_notifications(test_db: Session, test_user: User):
         type=NotificationType.SYSTEM,
         title="Old",
         is_archived=True,
-        created_at=datetime.utcnow() - timedelta(days=60),
+        created_at=datetime.now(UTC) - timedelta(days=60),
     )
 
     # Créer notification récente
@@ -302,7 +302,7 @@ def test_service_cleanup_old_notifications(test_db: Session, test_user: User):
         user_id=test_user.id,
         type=NotificationType.SYSTEM,
         title="Recent",
-        created_at=datetime.utcnow() - timedelta(days=10),
+        created_at=datetime.now(UTC) - timedelta(days=10),
     )
 
     test_db.add_all([old_notif, recent_notif])

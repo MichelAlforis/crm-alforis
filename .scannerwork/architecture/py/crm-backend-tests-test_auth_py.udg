@@ -1,0 +1,56 @@
+
+1.0PythonFrontend"1760943929896*py2.Bš
+
+imports1
+
+extends2
+
+returns3
+
+	has param4
+
+module5
+
+
+class6
+
+function7
+#
+crm-backend/tests/test_auth.py9
+
+tests.test_auth11
+
+core.security12
+8
+2tests.test_auth.test_me_endpoint_returns_user_info14
+=
+7tests.test_auth.test_refresh_endpoint_returns_new_token16
+.
+(tests.test_auth.test_login_returns_token18
+<
+6tests.test_auth.test_login_rejects_invalid_credentials20J
+
+8
+89j™
+ 
+10
+10115 *
+8 (
+
+13
+13125
+
+15
+15147 210
+
+17
+17167 210
+
+19
+19187 210
+
+21
+21207 210r
+
+10131*
+8 ('

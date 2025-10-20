@@ -1,0 +1,40 @@
+
+
+	0intself
+² ²(	tuple"Õ,
+*
+
+³ ³(#"#get-field# __class__:+
+)
+
+³ ³(,"#get-field# __name__:0
+.
+
+³. ³(7"#dependent-value#*:Bstr*
+(
+
+³ ³(8"#unknown-value#Btuple(
+&
+
+³ ³(8"
+#is-exact#:Bbool
+
+
+³ ³(8"
+#assume#::
+8
+
+³ ³(8
+"#set-field# __collection_size:	Bint(
+&
+
+³ ³(8"#array-add-last#:(
+&
+
+³ ³(8"#array-add-last#:-
++
+
+³ ³(9"
+builtinshash*:Bint
+
+³ ³(9*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/packaging/markers.py

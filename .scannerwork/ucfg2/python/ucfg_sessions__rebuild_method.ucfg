@@ -1,0 +1,235 @@
+
+Apip._vendor.requests.sessions.SessionRedirectMixin.rebuild_method‘
+„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/requests/sessions.pyÍ Í("2*ˆ
+2
+Î Ð(X
+V
+
+Ñ Ñ((
+%9"__id*<
+
+__unknown_file ( *
+
+prepared_request"
+methodB
+@
+
+Ñ Ñ((
+method"__id*"
+
+__unknown_file (
+
+%9V
+T
+
+Ô Ô(
+%10"__id*9
+
+__unknown_file (*
+
+
+response"
+status_codeQ
+O
+
+Ô# Ô(2
+%11"__id*4
+
+__unknown_file (*
+
+codes"
+	see_other
+Œ
+
+Ô Ô(2
+%12"	__compare*"
+
+__unknown_file (
+==*#
+
+__unknown_file (
+
+%10*#
+
+__unknown_file (
+
+%11“
+
+
+Ô7 Ô(G
+%13"	__compare*"
+
+__unknown_file (
+!=*&
+
+__unknown_file (
+
+
+method*$
+
+__unknown_file (
+HEAD*
+8
+9*1
+3
+sessions.py"
+ä ä
+implicit return*r
+4
+á á((\
+Z
+
+á á((
+
+prepared_request"
+method"__id*&
+
+__unknown_file (
+
+
+method*
+3*Y
+5
+ß ß(C
+A
+
+ß ß(
+method"__id*#
+
+__unknown_file (
+GET*
+4*à
+6
+Þ Þ(CU
+S
+
+Þ Þ(
+%1"__id*9
+
+__unknown_file (*
+
+
+response"
+status_codeL
+J
+
+Þ# Þ(.
+%2"__id*0
+
+__unknown_file (*
+
+codes"
+movedŒ
+‰
+
+Þ Þ(.
+%3"	__compare*"
+
+__unknown_file (
+==*"
+
+__unknown_file (
+
+%1*"
+
+__unknown_file (
+
+%2’
+
+
+Þ3 Þ(C
+%4"	__compare*"
+
+__unknown_file (
+==*&
+
+__unknown_file (
+
+
+method*$
+
+__unknown_file (
+POST*
+4
+5*Y
+7
+Ú Ú(C
+A
+
+Ú Ú(
+method"__id*#
+
+__unknown_file (
+GET*
+6*à
+8
+Ù Ù(CU
+S
+
+Ù Ù(
+%5"__id*9
+
+__unknown_file (*
+
+
+response"
+status_codeL
+J
+
+Ù# Ù(.
+%6"__id*0
+
+__unknown_file (*
+
+codes"
+foundŒ
+‰
+
+Ù Ù(.
+%7"	__compare*"
+
+__unknown_file (
+==*"
+
+__unknown_file (
+
+%5*"
+
+__unknown_file (
+
+%6’
+
+
+Ù3 Ù(C
+%8"	__compare*"
+
+__unknown_file (
+!=*&
+
+__unknown_file (
+
+
+method*$
+
+__unknown_file (
+HEAD*
+6
+7*Y
+9
+Õ Õ(C
+A
+
+Õ Õ(
+method"__id*#
+
+__unknown_file (
+GET*
+8: 
+
+Í Í(-
+prepared_request:
+
+Í/ Í(7
+
+responseB64
+2pip._vendor.requests.sessions.SessionRedirectMixinH

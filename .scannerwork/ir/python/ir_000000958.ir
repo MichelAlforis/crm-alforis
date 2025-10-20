@@ -1,0 +1,21 @@
+
+§"PEP 566 compliant JSON-serializable representation of METADATA or PKG-INFO.
+
+        This should return an empty dict if the metadata file is unavailable.
+
+        :raises NoneMetadataError: If the metadata file is available, but does
+            not contain valid metadata.
+        "strself
+Œ Œ("±+
+)
+
+” ”(("#get-field# metadata:.
+,
+
+” ”(("?python-partial-apply?:@
+>
+
+” ”()"+
+pip._internal.metadata._jsonmsg_to_json:
+
+” ”()*‚/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/metadata/base.py

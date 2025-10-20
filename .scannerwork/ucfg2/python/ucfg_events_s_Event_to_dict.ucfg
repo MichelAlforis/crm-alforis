@@ -1,0 +1,100 @@
+
+core.events.Event.to_dictU
+K/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/core/events.pys s("2*£
+2t t(3
+u z(	
+%1"dictU
+S
+v v(
+%2"__id*;
+
+__unknown_file (*
+core.events.Event"
+type‹
+ˆ
+v v(
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*$
+
+__unknown_file (
+type*"
+
+__unknown_file (
+
+%2U
+S
+w w(
+%4"__id*;
+
+__unknown_file (*
+core.events.Event"
+data‹
+ˆ
+w w(
+%5"__mapSet*"
+
+__unknown_file (
+
+%1*$
+
+__unknown_file (
+data*"
+
+__unknown_file (
+
+%4X
+V
+x x(#
+%6"__id*>
+
+__unknown_file ("* 
+core.events.Event"	
+user_idŽ
+‹
+x x(#
+%7"__mapSet*"
+
+__unknown_file (
+
+%1*'
+
+__unknown_file (	
+user_id*"
+
+__unknown_file (
+
+%6Z
+X
+y y('
+%8"__id*@
+
+__unknown_file ($*"
+core.events.Event"
+	timestampA?
+y y(3
+%9*"
+
+__unknown_file (
+
+%82	isoformat‘
+Ž
+y y(3
+%10"__mapSet*"
+
+__unknown_file (
+
+%1*)
+
+__unknown_file (
+	timestamp*"
+
+__unknown_file (
+
+%9"
+u z(	
+
+%1B
+core.events.EventH

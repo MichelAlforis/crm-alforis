@@ -1,0 +1,126 @@
+
+@pip._internal.configuration.Configuration._load_environment_varsè
+Ç/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/configuration.py∑ ∑("2*À
+
+2
+∏ ∏(<r
+p
+
+π π(
+%1"__id*V
+
+__unknown_file (:*8+
+)pip._internal.configuration.Configuration"	
+_configN
+L
+
+π π("
+%2"__id*2
+
+__unknown_file (*
+
+kinds"	
+ENV_VARsq
+
+π π(#
+%3"__mapGet*"
+
+__unknown_file (
+
+%1*"
+
+__unknown_file (
+
+%22__getitem__
+
+π8 π(:
+%4"dictêç
+
+π π(;
+%5*"
+
+__unknown_file (
+
+%3*%
+
+__unknown_file (	
+:env:*"
+
+__unknown_file (
+
+%42
+setdefaultr
+p
+
+∫ ∫(
+%6"__id*V
+
+__unknown_file (:*8+
+)pip._internal.configuration.Configuration"	
+_configN
+L
+
+∫ ∫("
+%7"__id*2
+
+__unknown_file (*
+
+kinds"	
+ENV_VARsq
+
+∫ ∫(#
+%8"__mapGet*"
+
+__unknown_file (
+
+%6*"
+
+__unknown_file (
+
+%72__getitem__vt
+
+∫ ∫(,
+%9"__mapGet*"
+
+__unknown_file (
+
+%8*%
+
+__unknown_file (	
+:env:2__getitem__rp
+
+ª+ ª(B
+%10*I
+
+__unknown_file (-+
+)pip._internal.configuration.Configuration2get_environ_varsøº
+
+ª ª(C
+%11*I
+
+__unknown_file (-+
+)pip._internal.configuration.Configuration*%
+
+__unknown_file (	
+:env:*#
+
+__unknown_file (
+
+%102_normalized_keysfd
+
+∫ º(	
+%12*"
+
+__unknown_file (
+
+%9*#
+
+__unknown_file (
+
+%112update*
+3*8
+3
+configuration.py"
+æ æ(
+implicit returnB-+
+)pip._internal.configuration.ConfigurationH

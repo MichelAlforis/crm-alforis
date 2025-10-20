@@ -1,0 +1,44 @@
+
+B9"Check if the color is ultimately defined by the system."str
+
+0intself
+Ô Ô(		tuple&"pip._vendor.rich.color.ColorSystem"†)
+'
+
+Ö Ö("#get-field# system:.
+,
+
+Ö Ö("?python-partial-apply?:,
+*
+
+Ö# Ö(8"#get-field# EIGHT_BIT:,
+*
+
+Ö: Ö(O"#get-field# TRUECOLOR:*
+(
+
+Ö" Ö(P"#unknown-value#Btuple(
+&
+
+Ö" Ö(P
+"
+#is-exact#:	Bbool
+
+
+Ö" Ö(P"
+#assume#:
+:
+8
+
+Ö" Ö(P"#set-field# __collection_size:Bint(
+&
+
+Ö" Ö(P"#array-add-last#:(
+&
+
+Ö" Ö(P"#array-add-last#:4
+2
+
+Ö Ö(P"#binop not in#2not in:Bbool
+
+Ö Ö(P*}/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/color.py

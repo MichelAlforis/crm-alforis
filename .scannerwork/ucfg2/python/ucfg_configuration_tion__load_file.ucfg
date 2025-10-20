@@ -1,0 +1,183 @@
+
+4pip._internal.configuration.Configuration._load_fileè
+Ç/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/configuration.pyó ó("2*¶
+2
+ò ò(Q‡›
+
+ò ò(Q
+%11*&
+
+__unknown_file (
+
+
+logger*G
+
+__unknown_file (+)
+'For variant '%s', will try loading '%s'*'
+
+__unknown_file (
+	
+variant*%
+
+__unknown_file (	
+
+fname2verboseõò
+
+ô ô(.
+%12*I
+
+__unknown_file (-+
+)pip._internal.configuration.Configuration*%
+
+__unknown_file (	
+
+fname2_construct_parserC
+A
+
+ô ô(.
+parser"__id*#
+
+__unknown_file (
+
+%12GE
+
+õ õ((
+%13*&
+
+__unknown_file (
+
+
+parser2sections*
+4
+6*)
+4
+† †("
+
+† †(
+
+
+parser*˜	
+6
+ú ú()lj
+
+ú ú()
+%1*&
+
+__unknown_file (
+
+
+parser*'
+
+__unknown_file (
+	
+section2itemsA
+?
+
+ú ú()
+items"__id*"
+
+__unknown_file (
+
+%1r
+p
+
+ù ù(
+%2"__id*V
+
+__unknown_file (:*8+
+)pip._internal.configuration.Configuration"	
+_configxv
+
+ù ù(!
+%3"__mapGet*"
+
+__unknown_file (
+
+%2*'
+
+__unknown_file (
+	
+variant2__getitem__
+
+ù4 ù(6
+%4"dictêç
+
+ù ù(7
+%5*"
+
+__unknown_file (
+
+%3*%
+
+__unknown_file (	
+
+fname*"
+
+__unknown_file (
+
+%42
+setdefaultr
+p
+
+û û(
+%6"__id*V
+
+__unknown_file (:*8+
+)pip._internal.configuration.Configuration"	
+_configxv
+
+û û(!
+%7"__mapGet*"
+
+__unknown_file (
+
+%6*'
+
+__unknown_file (
+	
+variant2__getitem__vt
+
+û û((
+%8"__mapGet*"
+
+__unknown_file (
+
+%7*%
+
+__unknown_file (	
+
+fname2__getitem__¬ø
+
+û0 û(U
+%9*I
+
+__unknown_file (-+
+)pip._internal.configuration.Configuration*'
+
+__unknown_file (
+	
+section*%
+
+__unknown_file (	
+
+items2_normalized_keysec
+
+û û(V
+%10*"
+
+__unknown_file (
+
+%8*"
+
+__unknown_file (
+
+%92update*
+4
+6:
+
+ó ó(&	
+variant:
+
+ó( ó(2
+fnameB-+
+)pip._internal.configuration.ConfigurationH

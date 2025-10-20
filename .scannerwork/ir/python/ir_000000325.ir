@@ -1,0 +1,44 @@
+
+
+
+0intself
+ü ü(	tuple"ý'
+%
+
+ý ý("#get-field# name:.
+,
+
+ý ý("?python-partial-apply?:*
+(
+
+ý  ý(,"#get-field# version:.
+,
+
+ý  ý(,"?python-partial-apply?:*
+(
+
+ý ý(-"#unknown-value#Btuple(
+&
+
+ý ý(-"
+#is-exact#:Bbool
+
+
+ý ý(-	"
+#assume#::
+8
+
+ý ý(-"#set-field# __collection_size:
+Bint(
+&
+
+ý ý(-"#array-add-last#:(
+&
+
+ý ý(-"#array-add-last#:-
++
+
+ý ý(."
+builtinshash*:Bint
+
+ý ý(.*•/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/resolution/resolvelib/candidates.py

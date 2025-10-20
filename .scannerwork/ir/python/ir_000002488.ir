@@ -1,0 +1,36 @@
+
+
+0int
+µ«"Key function used to sort install requirements for installation.
+
+    Based on the "weight" mapping calculated in ``get_installation_order()``.
+    The canonical package name is returned as the second member as a tie-
+    breaker to ensure the result is predictable, which is useful in tests.
+    "stritem
+Æ Æ((weights
+Ç Ç(""Ñ$
+"
+
+Ï Ï($"#array-read#:#
+!
+
+Ï Ï(%"#unknown-value#L
+J
+
+Ï Ï(%name"0
+pip._vendor.packaging.utilscanonicalize_name:*
+(
+
+Ð Ð("#unknown-value#Btuple$
+"
+
+Ð Ð(	"#array-read#:(
+&
+
+Ð Ð(
+"#array-add-last#:	(
+&
+
+Ð Ð("#array-add-last#:
+
+Ð Ð(*“/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/resolution/resolvelib/resolver.py

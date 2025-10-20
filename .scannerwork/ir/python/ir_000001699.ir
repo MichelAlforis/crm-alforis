@@ -1,0 +1,13 @@
+
+üò"
+    Returns the MRO of an object's class as full qualified names, or of the object itself if it's a class.
+
+    Examples:
+        `object_types_mro_as_strings(JSONDecoder)` will return `['json.decoder.JSONDecoder', 'builtins.object']`
+    "strobj
+õ$ õ(/"A-
++
+
+ü ÿ("?python-unknown?:Blist
+
+ü ÿ(*€/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/_inspect.py

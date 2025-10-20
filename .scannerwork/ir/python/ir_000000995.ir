@@ -1,0 +1,54 @@
+
+D;"
+    Returns the version of the running interpreter.
+    "str
+
+
+0int
+"py_version_nodot"str
+
+1intwarn
+ì ì(-"©L
+J
+
+ð ð(<version"-
+pip._vendor.packaging.tags_get_config_var:+
+)
+
+ñ ñ("
+__bool__*:BboolH,"*
+
+ñ ñ( *
+ñ ñ(2
+ó ó("C9
+7
+
+ò ò(version"#dependent-value#*:Bstr"õ#
+!
+
+ô! ô($"#unknown-value#/
+-
+
+ô! ô(1"#get-field# version_info:)
+'
+
+ô! ô(5	"#unknown-value#Blist$
+"
+
+ô! ô(5"#array-read#:
+(
+&
+
+ô! ô(5"#array-add-last#:	$
+"
+
+ô! ô(5"#array-read#:(
+&
+
+ô! ô(5"#array-add-last#:	J
+H
+
+ô ô(6version",
+pip._vendor.packaging.tags_version_nodot:	"/*version
+
+õ õ(*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/packaging/tags.py
