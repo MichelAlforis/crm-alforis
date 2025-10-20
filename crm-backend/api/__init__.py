@@ -9,7 +9,7 @@ from api.routes import (
     organisations,
     mandats,
     users,
-    # produits,        # ⚠️ TEMPORAIRE - À revoir (table produits pas encore créée)
+    produits,
     dashboards,
     workflows,
     email_campaigns,
@@ -40,7 +40,7 @@ api_router.include_router(email_campaigns.router)  # Email automation
 
 # ⚠️ À REVOIR - Peut-être garder ou refondre
 api_router.include_router(mandats.router)
-# api_router.include_router(produits.router)
+api_router.include_router(produits.router)
 
 # 🔍 RECHERCHE & EXPORTS (Semaine 5)
 api_router.include_router(search.router)
