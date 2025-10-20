@@ -6,5 +6,8 @@
     "docker": "bash ./scripts/dev.sh docker",
     "rebuild": "bash ./scripts/dev.sh rebuild",
     "devc": "bash ./crm-frontend/scripts/dev-clean.sh"
+  },
+  "dependencies": {
+    "puppeteer": "^24.25.0"
   }
 }

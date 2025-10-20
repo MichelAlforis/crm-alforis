@@ -161,10 +161,13 @@ async def login(request: Request, db: Session = Depends(get_db)):
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    is_admin_flag = bool(
-        getattr(user.role, "name", None) in {UserRole.ADMIN, UserRole.ADMIN.value, "admin"}
-    )
-    if normalized_email in TEST_USERS:
+    # Déterminer is_admin : utiliser le rôle si disponible, sinon is_superuser
+    is_admin_flag = False
+    if user.role and getattr(user.role, "name", None) in {UserRole.ADMIN, UserRole.ADMIN.value, "admin"}:
+        is_admin_flag = True
+    elif user.is_superuser:
+        is_admin_flag = True
+    elif normalized_email in TEST_USERS:
         is_admin_flag = bool(TEST_USERS[normalized_email].get("is_admin"))
 
     # Créer le token JWT

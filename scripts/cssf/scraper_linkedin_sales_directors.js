@@ -27,31 +27,20 @@ const OUTPUT_FILE = path.join(PROJECT_ROOT, 'data/cssf/cssf_sales_directors_link
 const LINKEDIN_EMAIL = process.env.LINKEDIN_EMAIL;
 const LINKEDIN_PASSWORD = process.env.LINKEDIN_PASSWORD;
 
-// Job titles to search for (French, English, German)
+// Job titles to search for (English primary - Luxembourg = international)
 const SALES_TITLES = [
-  // French (primary)
-  'Directeur Commercial',
-  'Directrice Commerciale',
-  'Responsable Commercial',
-  'Directeur Développement',
+  // English (primary)
   'Head of Sales',
   'Sales Director',
-  'Business Development Director',
-
-  // German (common in Luxembourg)
-  'Vertriebsleiter',
-  'Vertriebsdirektor',
-
-  // Senior roles
-  'Chief Commercial Officer',
-  'CCO',
-  'VP Sales',
+  'Business Development',
+  'Client Director',
+  'Relationship Manager',
 ];
 
-// Rate limiting
-const DELAY_BETWEEN_SEARCHES = 5000; // 5 seconds
-const DELAY_BETWEEN_COMPANIES = 10000; // 10 seconds
-const MAX_RESULTS_PER_COMPANY = 3;
+// Rate limiting (optimisé pour vitesse)
+const DELAY_BETWEEN_SEARCHES = 2000; // 2 seconds
+const DELAY_BETWEEN_COMPANIES = 3000; // 3 seconds
+const MAX_RESULTS_PER_COMPANY = 5;
 
 /**
  * Main scraper class
@@ -99,34 +88,75 @@ class LinkedInSalesScraper {
   }
 
   /**
+   * Wait for manual login
+   */
+  async waitForManualLogin() {
+    console.log('\n🔐 CONNEXION MANUELLE LINKEDIN');
+    console.log('═'.repeat(70));
+    console.log('1. Une fenêtre Chrome va s\'ouvrir sur LinkedIn');
+    console.log('2. Connectez-vous manuellement à LinkedIn');
+    console.log('3. Une fois connecté, revenez ici et appuyez sur ENTRÉE');
+    console.log('═'.repeat(70));
+    console.log('\nOuverture du navigateur...\n');
+
+    // Open LinkedIn
+    try {
+      await this.page.goto('https://www.linkedin.com/login', {
+        waitUntil: 'domcontentloaded',
+        timeout: 60000
+      });
+    } catch (e) {
+      console.log('⚠️  Page took time to load, but continuing...\n');
+    }
+
+    // Wait for user confirmation
+    const readline = require('readline').createInterface({
+      input: process.stdin,
+      output: process.stdout
+    });
+
+    await new Promise(resolve => {
+      readline.question('\n✋ Appuyez sur ENTRÉE quand vous êtes connecté à LinkedIn... ', () => {
+        readline.close();
+        resolve();
+      });
+    });
+
+    console.log('\n✅ Connexion confirmée, début du scraping...\n');
+    return true;
+  }
+
+  /**
    * Login to LinkedIn (if credentials provided)
    */
   async login() {
     if (!LINKEDIN_EMAIL || !LINKEDIN_PASSWORD) {
-      console.log('⚠️  No LinkedIn credentials - using anonymous mode');
-      console.log('   Limited to ~3 results per search\n');
-      return false;
+      console.log('⚠️  No LinkedIn credentials - mode connexion manuelle');
+      return this.waitForManualLogin();
     }
 
     console.log('🔐 Logging into LinkedIn...');
 
     try {
       await this.page.goto('https://www.linkedin.com/login', {
-        waitUntil: 'networkidle2',
-        timeout: 30000
+        waitUntil: 'domcontentloaded',
+        timeout: 60000
       });
 
+      // Wait for form to be ready
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
       // Fill login form
-      await this.page.type('#username', LINKEDIN_EMAIL);
-      await this.page.type('#password', LINKEDIN_PASSWORD);
+      await this.page.type('#username', LINKEDIN_EMAIL, {delay: 100});
+      await this.page.type('#password', LINKEDIN_PASSWORD, {delay: 100});
 
       // Click login button
       await this.page.click('button[type="submit"]');
 
       // Wait for navigation
       await this.page.waitForNavigation({
-        waitUntil: 'networkidle2',
-        timeout: 30000
+        waitUntil: 'domcontentloaded',
+        timeout: 60000
       });
 
       console.log('✅ Logged in successfully\n');
@@ -134,8 +164,8 @@ class LinkedInSalesScraper {
 
     } catch (error) {
       console.error('❌ Login failed:', error.message);
-      console.log('   Continuing in anonymous mode\n');
-      return false;
+      console.log('   Trying manual login instead...\n');
+      return this.waitForManualLogin();
     }
   }
 
@@ -171,20 +201,44 @@ class LinkedInSalesScraper {
   }
 
   /**
+   * Extract short company name for LinkedIn search
+   */
+  getShortCompanyName(fullName) {
+    // Remove legal suffixes and branches
+    let short = fullName
+      .replace(/\s+\(Luxembourg\)\s*S\.A\./gi, '')
+      .replace(/\s+S\.A\./gi, '')
+      .replace(/\s+S\.à\s*r\.l\./gi, '')
+      .replace(/,?\s+Luxembourg\s+Branch/gi, '')
+      .replace(/\s+GmbH/gi, '')
+      .replace(/\s+Limited/gi, '')
+      .replace(/\s+\(Europe\)/gi, '')
+      .replace(/\s+Fund\s+Services/gi, '')
+      .replace(/\s+Investment\s+Management/gi, '')
+      .replace(/\s+Asset\s+Management/gi, '')
+      .trim();
+
+    return short;
+  }
+
+  /**
    * Search for sales directors at a company
    */
   async searchCompany(company) {
     const companyName = company.nom || company.name || '';
+    const shortName = this.getShortCompanyName(companyName);
+
     console.log(`\n${'─'.repeat(70)}`);
     console.log(`🏢 ${companyName}`);
+    console.log(`   Short: "${shortName}"`);
     console.log(`   AUM: ${(company.aum || 0).toLocaleString()}M€`);
     console.log(`${'─'.repeat(70)}`);
 
     const contacts = [];
 
-    // Build search queries
+    // Build search queries with short name
     const searchQueries = SALES_TITLES.slice(0, 3).map(title =>
-      `${title} ${companyName} Luxembourg`
+      `${title} ${shortName} Luxembourg`
     );
 
     for (const query of searchQueries) {
@@ -200,7 +254,7 @@ class LinkedInSalesScraper {
         });
 
         // Wait for results
-        await this.page.waitForTimeout(3000);
+        await new Promise(resolve => setTimeout(resolve, 3000));
 
         // Extract profile cards
         const profiles = await this.page.evaluate(() => {
@@ -260,7 +314,7 @@ class LinkedInSalesScraper {
         }
 
         // Rate limiting
-        await this.page.waitForTimeout(DELAY_BETWEEN_SEARCHES);
+        await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_SEARCHES));
 
       } catch (error) {
         console.error(`   ❌ Error searching: ${error.message}`);
@@ -287,7 +341,7 @@ class LinkedInSalesScraper {
       this.results.push(...contacts);
 
       // Rate limiting between companies
-      await this.page.waitForTimeout(DELAY_BETWEEN_COMPANIES);
+      await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_COMPANIES));
 
       // Progress
       console.log(`\n📊 Progress: ${this.stats.companies_processed}/${this.stats.total_companies}`);
