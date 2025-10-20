@@ -1,0 +1,6 @@
+name,email,phone,website,address,city,country,country_code,category,type,notes,aum,aum_date,tier,pipeline_stage,priority,aum_source
+idiCo,,,www.idico.fr,,,France,FR,SDG,fournisseur,Forme juridique: Société par actions simplifiée | SIRET: 89951507600011 | LEI: 969500PVFFZ6ZN3CHG63,1.00,2024-12-31,Tier 2,lead,LOW,scraped
+RE-SOURCES CAPITAL,,,www.re-sources-capital.fr,,,France,FR,SDG,fournisseur,Forme juridique: Société par actions simplifiée | LEI: 969500GVOE4BKZWJBF69,1.00,2024-12-31,Tier 2,lead,LOW,scraped
+ZENITH AM,,0180980050,www.zenith-am.com,,,France,FR,SDG,fournisseur,Forme juridique: Société par actions simplifiée | SIRET: 53375693800015 | LEI: 549300BBGZCVGWMMRP23,1.00,2024-12-31,Tier 2,lead,LOW,scraped
+OUEST CROISSANCE GESTION,,,https://www.ouest-croissance.com/,,,France,FR,SDG,fournisseur,Forme juridique: Société anonyme,1.00,2024-12-31,Tier 2,lead,LOW,scraped
+EQUIGEST,,0143126100,www.equigest.fr,,,France,FR,SDG,fournisseur,Forme juridique: Société anonyme | SIRET: 42370086300024 | LEI: 969500DJGG2I7E58AR31,1.00,2024-12-31,Tier 2,lead,LOW,scraped

@@ -55,7 +55,8 @@ RUN mkdir -p /app/uploads /app/backups \
 USER appuser
 
 EXPOSE 8000
-HEALTHCHECK --interval=30s --timeout=5s --retries=5 CMD curl -fsS http://localhost:8000/health || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --retries=5 --start-period=40s \
+  CMD python -c 'import urllib.request; urllib.request.urlopen("http://localhost:8000/api/v1/health")' || exit 1
 
 # Mode développement avec auto-reload
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
@@ -78,7 +79,8 @@ RUN mkdir -p /app/uploads /app/backups \
 USER appuser
 
 EXPOSE 8000
-HEALTHCHECK --interval=30s --timeout=10s --retries=5 CMD curl -fsS http://localhost:8000/health || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --retries=5 --start-period=60s \
+  CMD python -c 'import urllib.request; urllib.request.urlopen("http://localhost:8000/api/v1/health")' || exit 1
 
 # Mode production avec workers multiples, sans reload
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]

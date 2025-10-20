@@ -19,13 +19,10 @@ backups/
 .vscode/
 .idea/
 
-# Build / caches
+# Build / caches / Env
 .env
 .env.*
 *.env
-.env.production
-crm-backend/.env.*
-crm-frontend/.env.*
 
 # Mac system files
 *.swp
@@ -33,6 +30,6 @@ docker-compose.override.local.yml
 docker-compose.yml
 nginx/*.local.conf
 
+# Autoriser les exemples
 !.env.example
-!crm-backend/.env.production.example
-!crm-frontend/.env.production.example
+!.env.sonar

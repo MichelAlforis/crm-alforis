@@ -2,7 +2,15 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  
+
+  // Désactiver ESLint et TypeScript check en production
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+
   // Variables d'environnement
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1',

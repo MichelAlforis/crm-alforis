@@ -17,41 +17,38 @@ Script de déploiement Docker automatisé pour le CRM Alforis.
 
 ## 🔧 Configuration Initiale
 
-### 1. Créer les fichiers d'environnement
+### 1. Créer le fichier d'environnement
 
-**⚠️ IMPORTANT : 3 fichiers `.env.production` sont nécessaires**
+**⚠️ Docker Compose charge automatiquement `.env` à la racine (comportement natif)**
 
-**1. Racine** : `.env.production` (pour docker-compose.prod.yml)
+**Fichier unique** : `.env` (racine)
 ```bash
-cp .env.production.example .env.production
-nano .env.production
+cp .env.example .env
+nano .env
 ```
 
-Variables importantes :
-- `POSTGRES_PASSWORD` : Mot de passe PostgreSQL (32+ caractères)
-- `POSTGRES_USER` : Utilisateur DB (défaut: crm_user)
-- `POSTGRES_DB` : Nom de la base (défaut: crm_db)
+**Variables importantes :**
 
-**2. Backend** : `crm-backend/.env.production`
-```bash
-cp crm-backend/.env.production.example crm-backend/.env.production
-nano crm-backend/.env.production
-```
+**PostgreSQL :**
+- `POSTGRES_USER=crm_user`
+- `POSTGRES_PASSWORD` : Mot de passe fort (32+ caractères)
+- `POSTGRES_DB=crm_db`
+- `POSTGRES_EXTERNAL_PORT=5433`
 
-Variables importantes :
-- `DATABASE_URL` : Connexion PostgreSQL (doit correspondre au .env racine)
+**Backend API :**
 - `SECRET_KEY` : Générer avec `python3 -c "import secrets; print(secrets.token_urlsafe(64))"`
-- `ALLOWED_ORIGINS` : Votre domaine HTTPS
+- `DATABASE_URL=postgresql://crm_user:PASSWORD@postgres:5432/crm_db`
+- `ALLOWED_ORIGINS=["https://crm.votre-domaine.com"]`
 - `SENDGRID_API_KEY` : Pour les emails
+- `API_PORT=8000`
 
-**3. Frontend** : `crm-frontend/.env.production`
-```bash
-cp crm-frontend/.env.production.example crm-frontend/.env.production
-nano crm-frontend/.env.production
-```
+**Frontend :**
+- `NEXT_PUBLIC_API_URL=https://api.votre-domaine.com/api/v1`
+- `FRONTEND_PORT=3010`
 
-Variables importantes :
-- `NEXT_PUBLIC_API_URL` : URL de votre API (https://api.votre-domaine.com/api/v1)
+**Autres :**
+- `REDIS_URL=redis://redis:6379/0`
+- `SENTRY_DSN` : Monitoring (optionnel)
 
 ### 2. Configuration SSH
 
@@ -67,7 +64,7 @@ Personnaliser le script :
 ```bash
 export SSH_KEY="$HOME/.ssh/id_rsa_hetzner"
 export SERVER="root@159.69.108.234"
-export REMOTE_DIR="/opt/alforis-crm"
+export REMOTE_DIR="/srv/crm-alforis"
 export COMPOSE_FILE="docker-compose.prod.yml"
 ```
 

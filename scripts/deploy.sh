@@ -10,7 +10,7 @@ set -euo pipefail
 # -------------------- CONFIG --------------------
 SSH_KEY="${SSH_KEY:-$HOME/.ssh/id_rsa_hetzner}"
 SERVER="${SERVER:-root@159.69.108.234}"
-REMOTE_DIR="${REMOTE_DIR:-/opt/alforis-crm}"
+REMOTE_DIR="${REMOTE_DIR:-/srv/crm-alforis}"
 LOGFILE="${LOGFILE:-deploy.log}"
 COMPOSE_FILE="${COMPOSE_FILE:-docker-compose.prod.yml}"
 
@@ -109,6 +109,7 @@ ${GREEN}Options:${NC}
 
 ${GREEN}Actions:${NC}
   setup           Configuration initiale du serveur (Docker, nginx, SSL)
+  setup-ssl       Configure Nginx + SSL Let's Encrypt (après deploy)
   deploy          Déploiement complet (copie + build + migrate + restart)
   deploy-backend  Déploiement backend uniquement (rebuild API)
   deploy-frontend Déploiement frontend uniquement (rebuild frontend)
@@ -124,6 +125,7 @@ ${GREEN}Actions:${NC}
   restore-db      Restaure la dernière sauvegarde
   rollback        Rollback vers la version précédente (git)
   update          Mise à jour depuis git (pull + rebuild + migrate)
+  clean-docker    Nettoie les images/volumes Docker non utilisés
 
 ${GREEN}Variables d'environnement:${NC}
   SSH_KEY       Clé SSH (défaut: ~/.ssh/id_rsa_hetzner)
@@ -170,46 +172,23 @@ create_backup() {
   fi
 }
 
-copy_env_files() {
-  log "Copie des fichiers .env (exclus de git)"
+copy_env_file() {
+  log "Copie du fichier .env (exclus de git)"
 
-  # Racine .env.production (pour docker-compose.prod.yml)
-  if [[ -f .env.production ]]; then
-    print_info "Copie .env.production (racine)..."
-    if scp -i "$SSH_KEY" .env.production "$SERVER:$REMOTE_DIR/.env.production" >> "$LOGFILE" 2>&1; then
-      print_success "Racine .env copié"
+  # .env racine (chargé nativement par Docker Compose)
+  if [[ -f .env ]]; then
+    print_info "Copie .env (racine)..."
+    if scp -i "$SSH_KEY" .env "$SERVER:$REMOTE_DIR/.env" >> "$LOGFILE" 2>&1; then
+      print_success ".env copié"
     else
-      print_error "Échec copie racine .env"
+      print_error "Échec copie .env"
       return 1
     fi
   else
-    print_warning ".env.production (racine) introuvable - docker-compose pourrait échouer!"
-  fi
-
-  # Backend .env.production
-  if [[ -f crm-backend/.env.production ]]; then
-    print_info "Copie crm-backend/.env.production..."
-    if scp -i "$SSH_KEY" crm-backend/.env.production "$SERVER:$REMOTE_DIR/crm-backend/.env.production" >> "$LOGFILE" 2>&1; then
-      print_success "Backend .env copié"
-    else
-      print_error "Échec copie backend .env"
-      return 1
-    fi
-  else
-    print_warning "crm-backend/.env.production introuvable (ignoré)"
-  fi
-
-  # Frontend .env.production
-  if [[ -f crm-frontend/.env.production ]]; then
-    print_info "Copie crm-frontend/.env.production..."
-    if scp -i "$SSH_KEY" crm-frontend/.env.production "$SERVER:$REMOTE_DIR/crm-frontend/.env.production" >> "$LOGFILE" 2>&1; then
-      print_success "Frontend .env copié"
-    else
-      print_error "Échec copie frontend .env"
-      return 1
-    fi
-  else
-    print_warning "crm-frontend/.env.production introuvable (ignoré)"
+    print_error ".env introuvable à la racine!"
+    print_info "Docker Compose requiert .env pour les variables (POSTGRES_PASSWORD, SECRET_KEY, etc.)"
+    print_info "Créez-le depuis: cp .env.example .env"
+    return 1
   fi
 
   return 0
@@ -285,7 +264,7 @@ case "$ACTION" in
     print_success "Serveur configuré"
     print_info "Prochaines étapes:"
     print_info "1. Configurez vos DNS (A records)"
-    print_info "2. Créez les fichiers .env.production (backend + frontend)"
+    print_info "2. Créez le fichier .env à la racine: cp .env.example .env"
     print_info "3. Lancez: $0 deploy"
     ;;
 
@@ -293,19 +272,23 @@ case "$ACTION" in
     print_info "Déploiement complet Docker"
     log "📤 Déploiement complet"
 
-    # Vérifier fichiers .env
-    local missing_envs=()
-    [[ ! -f .env.production ]] && missing_envs+=(".env.production (racine)")
-    [[ ! -f crm-backend/.env.production ]] && missing_envs+=("crm-backend/.env.production")
-    [[ ! -f crm-frontend/.env.production ]] && missing_envs+=("crm-frontend/.env.production")
-
-    if [[ ${#missing_envs[@]} -gt 0 ]]; then
-      print_error "Fichiers .env.production manquants!"
-      print_info "Créez:"
-      for env in "${missing_envs[@]}"; do
-        print_info "  - $env"
-      done
+    # Vérifier fichier .env
+    if [[ ! -f .env ]]; then
+      print_error "Fichier .env manquant à la racine!"
+      print_info "Docker Compose charge automatiquement .env"
+      print_info "Créez-le: cp .env.example .env"
       exit 20
+    fi
+
+    # Vérifier espace disque
+    print_info "Vérification espace disque..."
+    disk_usage=$(ssh_cmd "df / | tail -1 | awk '{print \$5}' | sed 's/%//'")
+    if [[ $disk_usage -gt 85 ]]; then
+      print_warning "Disque à ${disk_usage}% - Nettoyage Docker..."
+      ssh_quiet "docker system prune -af --volumes" || print_warning "Nettoyage échoué"
+      print_success "Nettoyage terminé"
+    else
+      print_success "Espace disque OK (${disk_usage}%)"
     fi
 
     # Backup
@@ -322,9 +305,9 @@ case "$ACTION" in
     fi
     print_success "Fichiers copiés"
 
-    # Copie des fichiers .env (séparément, exclus de git)
-    if ! copy_env_files; then
-      print_error "Échec copie fichiers .env"
+    # Copie du fichier .env (séparément, exclus de git)
+    if ! copy_env_file; then
+      print_error "Échec copie .env"
       exit 13
     fi
 
@@ -368,16 +351,9 @@ case "$ACTION" in
 
     print_info "Copie backend..."
     if command -v rsync &> /dev/null; then
-      run_quiet rsync -az --exclude='.git' --exclude='__pycache__' --exclude='*.pyc' --exclude='.venv*' --exclude='.env.production' -e "ssh -i $SSH_KEY" ./crm-backend/ "$SERVER:$REMOTE_DIR/crm-backend/"
+      run_quiet rsync -az --exclude='.git' --exclude='__pycache__' --exclude='*.pyc' --exclude='.venv*' -e "ssh -i $SSH_KEY" ./crm-backend/ "$SERVER:$REMOTE_DIR/crm-backend/"
     fi
     print_success "Backend copié"
-
-    # Copie .env backend
-    if [[ -f crm-backend/.env.production ]]; then
-      print_info "Copie backend .env.production..."
-      scp -i "$SSH_KEY" crm-backend/.env.production "$SERVER:$REMOTE_DIR/crm-backend/.env.production" >> "$LOGFILE" 2>&1
-      print_success "Backend .env copié"
-    fi
 
     print_info "Rebuild + restart API..."
     if ssh_quiet "cd '$REMOTE_DIR' && docker compose -f $COMPOSE_FILE build api && docker compose -f $COMPOSE_FILE up -d --no-deps api"; then
@@ -399,16 +375,9 @@ case "$ACTION" in
 
     print_info "Copie frontend..."
     if command -v rsync &> /dev/null; then
-      run_quiet rsync -az --exclude='.git' --exclude='node_modules' --exclude='.next' --exclude='.env.production' -e "ssh -i $SSH_KEY" ./crm-frontend/ "$SERVER:$REMOTE_DIR/crm-frontend/"
+      run_quiet rsync -az --exclude='.git' --exclude='node_modules' --exclude='.next' -e "ssh -i $SSH_KEY" ./crm-frontend/ "$SERVER:$REMOTE_DIR/crm-frontend/"
     fi
     print_success "Frontend copié"
-
-    # Copie .env frontend
-    if [[ -f crm-frontend/.env.production ]]; then
-      print_info "Copie frontend .env.production..."
-      scp -i "$SSH_KEY" crm-frontend/.env.production "$SERVER:$REMOTE_DIR/crm-frontend/.env.production" >> "$LOGFILE" 2>&1
-      print_success "Frontend .env copié"
-    fi
 
     print_info "Rebuild + restart frontend..."
     if ssh_quiet "cd '$REMOTE_DIR' && docker compose -f $COMPOSE_FILE build frontend && docker compose -f $COMPOSE_FILE up -d --no-deps frontend"; then
@@ -563,6 +532,49 @@ case "$ACTION" in
     ssh_quiet "cd '$REMOTE_DIR' && docker compose -f $COMPOSE_FILE exec -T api alembic upgrade head" || print_warning "Migrations échouées"
 
     print_success "Mise à jour terminée"
+    ;;
+
+  setup-ssl)
+    print_info "Configuration Nginx + SSL Let's Encrypt"
+    log "🔒 Setup SSL"
+
+    if [[ -z "${1:-}" ]]; then
+      print_error "Usage: $0 setup-ssl <domain> <email>"
+      print_info "Exemple: $0 setup-ssl crm.alforis.fr contact@alforis.fr"
+      exit 24
+    fi
+
+    DOMAIN="$1"
+    EMAIL="${2:-admin@$DOMAIN}"
+
+    print_info "Copie du script setup-nginx-ssl.sh..."
+    if ! scp -i "$SSH_KEY" scripts/setup-nginx-ssl.sh "$SERVER:/tmp/setup-nginx-ssl.sh" >> "$LOGFILE" 2>&1; then
+      print_error "Échec copie script"
+      exit 25
+    fi
+
+    print_info "Exécution sur le serveur..."
+    if ssh_cmd "chmod +x /tmp/setup-nginx-ssl.sh && /tmp/setup-nginx-ssl.sh '$DOMAIN' '$EMAIL'"; then
+      print_success "Nginx + SSL configurés"
+      print_info "Votre CRM est accessible sur: https://$DOMAIN"
+    else
+      print_error "Échec configuration SSL"
+      exit 26
+    fi
+    ;;
+
+  clean-docker)
+    print_info "Nettoyage Docker (images, volumes, cache)"
+    ssh_cmd "docker system df"
+
+    read -rp "Confirmer le nettoyage ? (y/N): " confirm
+    if [[ "$confirm" =~ ^[Yy]$ ]]; then
+      ssh_quiet "docker system prune -af --volumes"
+      print_success "Nettoyage effectué"
+      ssh_cmd "docker system df"
+    else
+      print_info "Nettoyage annulé"
+    fi
     ;;
 
   *)
