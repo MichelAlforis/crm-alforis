@@ -48,11 +48,11 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
 
           {/* Right Section: Actions + User */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* Search Icon - Mobile */}
+            {/* Search Icon - Mobile - redirects to search page */}
             <div className="md:hidden">
-              <button className="p-2 rounded-xl hover:bg-muted active:bg-muted/80 transition-colors dark:hover:bg-slate-700 dark:active:bg-slate-600" aria-label="Rechercher">
+              <Link href="/dashboard/search" className="p-2 rounded-xl hover:bg-muted active:bg-muted/80 transition-colors dark:hover:bg-slate-700 dark:active:bg-slate-600" aria-label="Rechercher">
                 <Search className="w-5 h-5 text-text-secondary dark:text-slate-300" />
-              </button>
+              </Link>
             </div>
 
             <ThemeToggle size="sm" />
@@ -133,12 +133,16 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
                     </div>
 
                     <div className="py-2">
-                      <button className="w-full px-4 py-2.5 flex items-center gap-3 hover:bg-muted transition-colors group dark:hover:bg-slate-700">
+                      <Link
+                        href="/dashboard/settings"
+                        className="w-full px-4 py-2.5 flex items-center gap-3 hover:bg-muted transition-colors group dark:hover:bg-slate-700"
+                        onClick={() => setShowUserMenu(false)}
+                      >
                         <div className="w-8 h-8 flex items-center justify-center bg-muted rounded-lg group-hover:bg-primary/10 transition-colors dark:bg-slate-700 dark:group-hover:bg-blue-500/20">
                           <User className="w-4 h-4 text-text-muted group-hover:text-primary transition-colors dark:text-slate-300 dark:group-hover:text-blue-400" />
                         </div>
                         <span className="text-sm font-medium text-text-secondary group-hover:text-text-primary dark:text-slate-300 dark:group-hover:text-slate-100">Mon profil</span>
-                      </button>
+                      </Link>
                       <Link
                         href="/dashboard/tasks"
                         className="w-full px-4 py-2.5 flex items-center gap-3 hover:bg-muted transition-colors group dark:hover:bg-slate-700"

@@ -127,7 +127,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
   const { todayCount } = useTaskViews()
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const tasksDueToday = todayCount
   const isAdmin = user?.is_admin || false
 
@@ -433,6 +433,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                   </p>
                 </div>
                 <button
+                  onClick={logout}
                   className="p-2 hover:bg-white/20 rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110"
                   title="Déconnexion"
                 >
@@ -440,7 +441,11 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                 </button>
               </div>
             ) : (
-              <button className="mx-auto w-11 h-11 rounded-xl bg-gradient-to-br from-green-400 via-emerald-500 to-blue-500 flex items-center justify-center relative group shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300">
+              <button
+                onClick={logout}
+                className="mx-auto w-11 h-11 rounded-xl bg-gradient-to-br from-green-400 via-emerald-500 to-blue-500 flex items-center justify-center relative group shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
+                title="Déconnexion"
+              >
                 <span className="text-white font-bold text-sm">A</span>
                 <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-slate-900 animate-pulse" />
               </button>
