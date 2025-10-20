@@ -649,12 +649,17 @@ class MandatProduitService(BaseService[MandatProduit, MandatProduitCreate, Manda
                 )
 
             # Créer l'association
-            return await super().create(schema)
+            association = MandatProduit(**schema.model_dump())
+            self.db.add(association)
+            self.db.commit()
+            self.db.refresh(association)
+            return association
 
         except (ResourceNotFound, ValidationError):
             raise
         except Exception as e:
             logger.error(f"Error creating mandat-produit association: {e}")
+            self.db.rollback()
             raise
 
     def get_by_mandat_and_produit(
