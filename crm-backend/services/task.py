@@ -187,7 +187,6 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
             TaskPriority.HAUTE: 1,
             TaskPriority.MOYENNE: 2,
             TaskPriority.BASSE: 3,
-            TaskPriority.NON_PRIORITAIRE: 4,
         }
         # Note: Pour un tri complexe, on peut utiliser case() de SQLAlchemy
         # Ici on trie juste par due_date puis on laisse le client trier par priorité si besoin
