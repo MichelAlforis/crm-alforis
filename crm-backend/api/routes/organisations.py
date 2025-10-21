@@ -285,3 +285,63 @@ async def delete_organisation(
         user_id=_extract_user_id(current_user),
     )
     return None
+
+
+# ============= ACTIVITY ROUTES =============
+
+@router.get("/{organisation_id}/activity", response_model=List[OrganisationActivityResponse])
+async def get_organisation_activities(
+    organisation_id: int,
+    limit: int = Query(20, ge=1, le=100),
+    before_id: Optional[int] = Query(None),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Récupérer l'historique d'activité d'une organisation
+
+    Paramètres:
+    - limit: Nombre d'activités à retourner (défaut: 20)
+    - before_id: Pour la pagination, récupérer les activités avant cet ID
+    """
+    activity_service = OrganisationActivityService(db)
+    activities = await activity_service.get_timeline(
+        organisation_id=organisation_id,
+        limit=limit,
+        before_id=before_id
+    )
+    return [OrganisationActivityResponse.model_validate(a) for a in activities]
+
+
+@router.delete("/{organisation_id}/activity/{activity_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_organisation_activity(
+    organisation_id: int,
+    activity_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Supprimer une activité spécifique d'une organisation
+
+    Paramètres:
+    - organisation_id: ID de l'organisation
+    - activity_id: ID de l'activité à supprimer
+    """
+    activity_service = OrganisationActivityService(db)
+
+    # Vérifier que l'activité existe et appartient bien à cette organisation
+    activity = await activity_service.get(activity_id)
+    if not activity:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Activity {activity_id} not found"
+        )
+
+    if activity.organisation_id != organisation_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Activity {activity_id} does not belong to organisation {organisation_id}"
+        )
+
+    await activity_service.delete(activity_id)
+    return None

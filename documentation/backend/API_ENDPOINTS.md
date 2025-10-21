@@ -97,6 +97,8 @@ Authorization: Bearer {access_token}
 | **GET** | `/organisations/{id}` | Détails d'une organisation |
 | **PUT** | `/organisations/{id}` | Mettre à jour une organisation |
 | **DELETE** | `/organisations/{id}` | Supprimer une organisation |
+| **GET** | `/organisations/{id}/activity` | Historique d'activité d'une organisation |
+| **DELETE** | `/organisations/{id}/activity/{activity_id}` | Supprimer une activité |
 
 ### Détails d'une organisation
 

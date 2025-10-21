@@ -34,7 +34,13 @@ export default function KPIsPage() {
     setKpisLoading(true)
     setKpisError(undefined)
     try {
-      const response = await fetch(`/api/organisations/${selectedFournisseurId}/kpis`)
+      const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+      const token = localStorage.getItem('access_token')
+      const response = await fetch(`${API_BASE}/api/v1/stats/organisation/${selectedFournisseurId}/kpis`, {
+        headers: {
+          'Authorization': token ? `Bearer ${token}` : '',
+        }
+      })
       if (!response.ok) throw new Error('Failed to fetch KPIs')
       const data = await response.json()
       setKpis(Array.isArray(data) ? data : data.items || [])
@@ -49,9 +55,14 @@ export default function KPIsPage() {
   const handleAddKPI = async (data: KPICreate) => {
     if (!selectedFournisseurId) return
     try {
-      const response = await fetch(`/api/organisations/${selectedFournisseurId}/kpis`, {
+      const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+      const token = localStorage.getItem('access_token')
+      const response = await fetch(`${API_BASE}/api/v1/stats/organisation/${selectedFournisseurId}/kpis`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token ? `Bearer ${token}` : '',
+        },
         body: JSON.stringify(data),
       })
       if (!response.ok) throw new Error('Failed to create KPI')
@@ -66,8 +77,13 @@ export default function KPIsPage() {
     if (!selectedFournisseurId || !kpiId) return
     if (confirm('Supprimer ce KPI?')) {
       try {
-        const response = await fetch(`/api/organisations/${selectedFournisseurId}/kpis/${kpiId}`, {
+        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+        const token = localStorage.getItem('access_token')
+        const response = await fetch(`${API_BASE}/api/v1/stats/kpis/${kpiId}`, {
           method: 'DELETE',
+          headers: {
+            'Authorization': token ? `Bearer ${token}` : '',
+          }
         })
         if (!response.ok) throw new Error('Failed to delete KPI')
         await fetchKPIs()

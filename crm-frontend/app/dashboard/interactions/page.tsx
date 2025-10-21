@@ -27,9 +27,13 @@ export default function InteractionsPage() {
   const handleDelete = async (activityId: number) => {
     if (confirm('Supprimer cette activité?')) {
       try {
-        // Call delete endpoint (implement based on your API)
-        await fetch(`/api/organisations/${selectedOrgId}/activity/${activityId}`, {
+        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+        const token = localStorage.getItem('access_token')
+        await fetch(`${API_BASE}/api/v1/organisations/${selectedOrgId}/activity/${activityId}`, {
           method: 'DELETE',
+          headers: {
+            'Authorization': token ? `Bearer ${token}` : '',
+          }
         })
         activityQuery?.refetch?.()
       } catch (err) {
