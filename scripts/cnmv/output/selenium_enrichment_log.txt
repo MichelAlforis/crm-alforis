@@ -1,0 +1,743 @@
+[22:35:45] ======================================================================
+[22:35:45] 🚀 Starting Selenium Google Enrichment - Spanish SGIIC
+[22:35:45] ======================================================================
+[22:35:45] Target: 99% enrichment rate (like Luxembourg)
+[22:35:45] 
+[22:35:45] Loaded 117 companies to enrich
+[22:35:45] 
+[22:35:45] 🌐 Setting up Chrome driver...
+[22:35:47] ✓ Chrome driver ready
+[22:35:47] 
+[22:35:47] 
+[1/117] Processing: CAIXABANK ASSET MANAGEMENT SGIIC, S.A.
+[22:35:47]   🔍 Searching website...
+[22:35:49]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:35:49]   ✗ Website not found
+[22:35:50]   🔍 Searching contact info...
+[22:35:51]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:35:51]   ✗ Email not found
+[22:35:51]   ✗ Phone not found
+[22:35:52]   → Result: ✓ Web
+[22:35:54] 
+[2/117] Processing: SANTANDER ASSET MANAGEMENT, S.A., SGIIC
+[22:35:54]   🔍 Searching website...
+[22:35:55]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:35:55]   ✗ Website not found
+[22:35:56]   🔍 Searching contact info...
+[22:35:58]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:35:58]   ✗ Email not found
+[22:35:58]   ✗ Phone not found
+[22:35:59]   → Result: ✓ Web
+[22:36:01] 
+[3/117] Processing: BBVA ASSET MANAGEMENT, S.A., SGIIC
+[22:36:01]   🔍 Searching website...
+[22:36:02]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:36:02]   ✗ Website not found
+[22:36:03]   🔍 Searching contact info...
+[22:36:05]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:36:05]   ✗ Email not found
+[22:36:05]   ✗ Phone not found
+[22:36:06]   → Result: ✓ Web
+[22:36:08] 
+[4/117] Processing: BANKINTER GESTION DE ACTIVOS, S.A., S.G.I.I.C.
+[22:36:08]   🔍 Searching website...
+[22:36:09]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:36:09]   ✗ Website not found
+[22:36:10]   🔍 Searching contact info...
+[22:36:11]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:36:11]   ✗ Email not found
+[22:36:11]   ✗ Phone not found
+[22:36:12]   → Result: ✓ Web
+[22:36:14] 
+[5/117] Processing: IBERCAJA GESTION, SGIIC, S.A.
+[22:36:14]   🔍 Searching website...
+[22:36:15]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:36:15]   ✗ Website not found
+[22:36:17]   🔍 Searching contact info...
+[22:36:18]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:36:18]   ✗ Email not found
+[22:36:18]   ✗ Phone not found
+[22:36:19]   → Result: ✓ Web
+[22:36:21] 
+[6/117] Processing: KUTXABANK GESTION, SGIIC, S.A.
+[22:36:21]   🔍 Searching website...
+[22:36:22]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:36:22]   ✗ Website not found
+[22:36:23]   🔍 Searching contact info...
+[22:36:24]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:36:24]   ✗ Email not found
+[22:36:24]   ✗ Phone not found
+[22:36:25]   → Result: ✓ Web
+[22:36:27] 
+[7/117] Processing: MUTUACTIVOS, S.A., S.G.I.I.C.
+[22:36:27]   🔍 Searching website...
+[22:36:29]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:36:29]   ✗ Website not found
+[22:36:30]   🔍 Searching contact info...
+[22:36:31]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:36:31]   ✗ Email not found
+[22:36:31]   ✗ Phone not found
+[22:36:32]   → Result: ✓ Web
+[22:36:34] 
+[8/117] Processing: MAPFRE ASSET MANAGEMENT, SGIIC, S.A.
+[22:36:34]   🔍 Searching website...
+[22:36:35]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:36:35]   ✗ Website not found
+[22:36:36]   🔍 Searching contact info...
+[22:36:38]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:36:38]   ✗ Email not found
+[22:36:38]   ✗ Phone not found
+[22:36:39]   → Result: ✓ Web
+[22:36:41] 
+[9/117] Processing: ABANTE ASESORES GESTION, SGIIC, S.A.
+[22:36:41]   🔍 Searching website...
+[22:36:42]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:36:42]   ✗ Website not found
+[22:36:43]   🔍 Searching contact info...
+[22:36:44]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:36:44]   ✗ Email not found
+[22:36:44]   ✗ Phone not found
+[22:36:45]   → Result: ✓ Web
+[22:36:48] 
+[10/117] Processing: FONDITEL GESTION, SGIIC, SA
+[22:36:48]   🔍 Searching website...
+[22:36:49]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:36:49]   ✗ Website not found
+[22:36:50]   🔍 Searching contact info...
+[22:36:51]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:36:51]   ✗ Email not found
+[22:36:51]   ✗ Phone not found
+[22:36:52]   → Result: ✓ Web
+[22:36:52] 
+💾 Progress saved (10/117)
+[22:36:52]    Websites: 10/10 (100.0%)
+[22:36:52]    Emails: 0/10 (0.0%)
+[22:36:52]    Phones: 0/10 (0.0%)
+[22:36:54] 
+[11/117] Processing: ABANCA GESTION DE ACTIVOS, SGIIC, SA
+[22:36:54]   🔍 Searching website...
+[22:36:56]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:36:56]   ✗ Website not found
+[22:36:57]   🔍 Searching contact info...
+[22:36:58]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:36:58]   ✗ Email not found
+[22:36:58]   ✗ Phone not found
+[22:36:59]   → Result: ✓ Web
+[22:37:01] 
+[12/117] Processing: GVC GAESCO GESTIÓN, SGIIC, S.A.
+[22:37:01]   🔍 Searching website...
+[22:37:02]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:37:02]   ✗ Website not found
+[22:37:03]   🔍 Searching contact info...
+[22:37:05]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:37:05]   ✗ Email not found
+[22:37:05]   ✗ Phone not found
+[22:37:06]   → Result: ✓ Web
+[22:37:08] 
+[13/117] Processing: AZVALOR ASSET MANAGEMENT, SGIIC, S.A.
+[22:37:08]   🔍 Searching website...
+[22:37:09]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:37:09]   ✗ Website not found
+[22:37:10]   🔍 Searching contact info...
+[22:37:12]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:37:12]   ✗ Email not found
+[22:37:12]   ✗ Phone not found
+[22:37:13]   → Result: ✓ Web
+[22:37:15] 
+[14/117] Processing: AMUNDI IBERIA, SGIIC, S.A.
+[22:37:15]   🔍 Searching website...
+[22:37:16]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:37:16]   ✗ Website not found
+[22:37:17]   🔍 Searching contact info...
+[22:37:19]   ⚠ Google search error: Message: element not interactable
+  (Session info: chrome=141.0.7390.108); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+0   chromedriver                        0x00000001049d35f0 cxxbridge1$str$ptr + 2894960
+1   chromedriver                        0x00000001049cb52c cxxbridge1$str$ptr + 2861996
+2   chromedriver                        0x00000001044f1458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73920
+3   chromedriver                        0x0000000104533b2c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 346004
+4   chromedriver                        0x0000000104532938 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 341408
+5   chromedriver                        0x000000010452e74c _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324532
+6   chromedriver                        0x000000010457a458 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635072
+7   chromedriver                        0x000000010452d178 _RNvCs47EqcsrPRmA_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318944
+8   chromedriver                        0x000000010499733c cxxbridge1$str$ptr + 2648508
+9   chromedriver                        0x000000010499a918 cxxbridge1$str$ptr + 2662296
+10  chromedriver                        0x0000000104977dbc cxxbridge1$str$ptr + 2520124
+11  chromedriver                        0x000000010499b200 cxxbridge1$str$ptr + 2664576
+12  chromedriver                        0x000000010496952c cxxbridge1$str$ptr + 2460588
+13  chromedriver                        0x00000001049babec cxxbridge1$str$ptr + 2794092
+14  chromedriver                        0x00000001049bad70 cxxbridge1$str$ptr + 2794480
+15  chromedriver                        0x00000001049cb178 cxxbridge1$str$ptr + 2861048
+16  libsystem_pthread.dylib             0x000000019b7802e4 _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019b77b0fc thread_start + 8
+
+[22:37:19]   ✗ Email not found
+[22:37:19]   ✗ Phone not found
+[22:37:20]   → Result: ✓ Web

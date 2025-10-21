@@ -1,0 +1,370 @@
+================================================================================
+  EXTRACTION DIRIGEANTS CNMV - SOCIÉTÉS <1Mds
+================================================================================
+
+🎯 Target: 98 sociétés (Tier 2 + Tier 3)
+
+
+[1/98] 🏢 GESIURIS ASSET MANAGEMENT, SGIIC, S.A.
+   Tier: Tier 2 | Register: #37
+   🔍 Fetching CNMV page for register #37...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[2/98] 🏢 HOROS ASSET MANAGEMENT, SGIIC, S.A.
+   Tier: Tier 2 | Register: #263
+   🔍 Fetching CNMV page for register #263...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[3/98] 🏢 A&G FONDOS, SGIIC, SA
+   Tier: Tier 3 | Register: #195
+   🔍 Fetching CNMV page for register #195...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[4/98] 🏢 ABACO CAPITAL, SGIIC, S.A.
+   Tier: Tier 3 | Register: #238
+   🔍 Fetching CNMV page for register #238...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[5/98] 🏢 ACACIA INVERSION, SGIIC, S.A.
+   Tier: Tier 3 | Register: #234
+   🔍 Fetching CNMV page for register #234...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[6/98] 🏢 ACCI CAPITAL INVESTMENTS, SGIIC, S.A.
+   Tier: Tier 3 | Register: #253
+   🔍 Fetching CNMV page for register #253...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[7/98] 🏢 ACTYUS PRIVATE EQUITY SGIIC, S.A.
+   Tier: Tier 3 | Register: #286
+   🔍 Fetching CNMV page for register #286...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[8/98] 🏢 AFI INVERSIONES GLOBALES, SGIIC, S.A.
+   Tier: Tier 3 | Register: #274
+   🔍 Fetching CNMV page for register #274...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[9/98] 🏢 ALALUZ CAPITAL, SGIIC, S.A.
+   Tier: Tier 3 | Register: #254
+   🔍 Fetching CNMV page for register #254...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[10/98] 🏢 ALANTRA EQMC ASSET MANAGEMENT, SGIIC, S.A.
+   Tier: Tier 3 | Register: #260
+   🔍 Fetching CNMV page for register #260...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[11/98] 🏢 ALANTRA MULTI ASSET, SGIIC, S.A.
+   Tier: Tier 3 | Register: #230
+   🔍 Fetching CNMV page for register #230...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[12/98] 🏢 ALTAMAR PRIVATE EQUITY, S.G.I.I.C., S.A.
+   Tier: Tier 3 | Register: #247
+   🔍 Fetching CNMV page for register #247...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[13/98] 🏢 ALTAN CAPITAL, SGIIC, S.A.
+   Tier: Tier 3 | Register: #219
+   🔍 Fetching CNMV page for register #219...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[14/98] 🏢 ALTERNA INVERSIONES Y VALORES, S.G.I.I.C., S.A.
+   Tier: Tier 3 | Register: #282
+   🔍 Fetching CNMV page for register #282...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[15/98] 🏢 ALTEX ASSET MANAGEMENT SGIIC, S.A.
+   Tier: Tier 3 | Register: #215
+   🔍 Fetching CNMV page for register #215...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[16/98] 🏢 AMCHOR INVESTMENT STRATEGIES, SGIIC, S.A.
+   Tier: Tier 3 | Register: #273
+   🔍 Fetching CNMV page for register #273...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[17/98] 🏢 AMISTRA, SGIIC, S.A.
+   Tier: Tier 3 | Register: #232
+   🔍 Fetching CNMV page for register #232...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[18/98] 🏢 ANTA ASSET MANAGEMENT SGIIC, SOCIEDAD ANÓNIMA
+   Tier: Tier 3 | Register: #288
+   🔍 Fetching CNMV page for register #288...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[19/98] 🏢 ARCANO CAPITAL, SGIIC, S.A.
+   Tier: Tier 3 | Register: #240
+   🔍 Fetching CNMV page for register #240...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[20/98] 🏢 ARQUIGEST, S.A., S.G.I.I.C.
+   Tier: Tier 3 | Register: #36
+   🔍 Fetching CNMV page for register #36...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[21/98] 🏢 ATL 12 CAPITAL GESTION S.G.I.I.C, S.A.
+   Tier: Tier 3 | Register: #210
+   🔍 Fetching CNMV page for register #210...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[22/98] 🏢 ATTITUDE GESTION, SGIIC, S.A.
+   Tier: Tier 3 | Register: #246
+   🔍 Fetching CNMV page for register #246...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[23/98] 🏢 AUGUSTUS CAPITAL ASSET MANAGEMENT, SGIIC, S.A.
+   Tier: Tier 3 | Register: #270
+   🔍 Fetching CNMV page for register #270...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[24/98] 🏢 AZORA GESTION, SGIIC, S.A.
+   Tier: Tier 3 | Register: #236
+   🔍 Fetching CNMV page for register #236...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[25/98] 🏢 BEKA ASSET MANAGEMENT, SGIIC, S.A.
+   Tier: Tier 3 | Register: #268
+   🔍 Fetching CNMV page for register #268...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[26/98] 🏢 BESTINVER GESTION, S.A., S.G.I.I.C.
+   Tier: Tier 3 | Register: #103
+   🔍 Fetching CNMV page for register #103...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[27/98] 🏢 BRIGHTGATE CAPITAL, S.G.I.I.C., S.A.
+   Tier: Tier 3 | Register: #226
+   🔍 Fetching CNMV page for register #226...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[28/98] 🏢 BUY & HOLD CAPITAL, SGIIC, S.A.
+   Tier: Tier 3 | Register: #256
+   🔍 Fetching CNMV page for register #256...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[29/98] 🏢 CAAN ALTERNATIVE ASSET MANAGEMENT, SGIIC, S.A.
+   Tier: Tier 3 | Register: #294
+   🔍 Fetching CNMV page for register #294...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[30/98] 🏢 CAJA INGENIEROS GESTION, S.G.I.I.C., S.A.
+   Tier: Tier 3 | Register: #193
+   🔍 Fetching CNMV page for register #193...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[31/98] 🏢 CAJA LABORAL GESTION, S.G.I.I.C., S.A.
+   Tier: Tier 3 | Register: #161
+   🔍 Fetching CNMV page for register #161...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[32/98] 🏢 CARTESIO INVERSIONES, SGIIC, S.A.
+   Tier: Tier 3 | Register: #221
+   🔍 Fetching CNMV page for register #221...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[33/98] 🏢 CBNK GESTION DE ACTIVOS, S.G.I.I.C., S.A.
+   Tier: Tier 3 | Register: #126
+   🔍 Fetching CNMV page for register #126...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[34/98] 🏢 CRESCENTA INVESTMENTS, SGIIC, S.A.
+   Tier: Tier 3 | Register: #289
+   🔍 Fetching CNMV page for register #289...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[35/98] 🏢 DEUTSCHE WEALTH MANAGEMENT SGIIC, S.A.
+   Tier: Tier 3 | Register: #142
+   🔍 Fetching CNMV page for register #142...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[36/98] 🏢 DIAGONAL ASSET MANAGEMENT SGIIC, S.A.
+   Tier: Tier 3 | Register: #285
+   🔍 Fetching CNMV page for register #285...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[37/98] 🏢 DUNAS CAPITAL ASSET MANAGEMENT S.G.I.I.C., S.A.
+   Tier: Tier 3 | Register: #98
+   🔍 Fetching CNMV page for register #98...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[38/98] 🏢 DUX INVERSORES, SGIIC, S.A.
+   Tier: Tier 3 | Register: #206
+   🔍 Fetching CNMV page for register #206...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[39/98] 🏢 EDM GESTION, SOCIEDAD ANONIMA, S.G.I.I.C.
+   Tier: Tier 3 | Register: #49
+   🔍 Fetching CNMV page for register #49...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[40/98] 🏢 FINLETIC CAPITAL SGIIC SA.
+   Tier: Tier 3 | Register: #257
+   🔍 Fetching CNMV page for register #257...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[41/98] 🏢 G.I.I.C. FINECO, S.A., S.G.I.I.C.
+   Tier: Tier 3 | Register: #132
+   🔍 Fetching CNMV page for register #132...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[42/98] 🏢 GESALCALA, S.A., S.G.I.I.C.
+   Tier: Tier 3 | Register: #137
+   🔍 Fetching CNMV page for register #137...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[43/98] 🏢 GESBUSA, S.A., S.G.I.I.C.
+   Tier: Tier 3 | Register: #133
+   🔍 Fetching CNMV page for register #133...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[44/98] 🏢 GESCONSULT, S.A., S.G.I.I.C.
+   Tier: Tier 3 | Register: #57
+   🔍 Fetching CNMV page for register #57...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[45/98] 🏢 GESCOOPERATIVO, S.A., S.G.I.I.C.
+   Tier: Tier 3 | Register: #140
+   🔍 Fetching CNMV page for register #140...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[46/98] 🏢 GESINTER, S.G.I.I.C., S.A.
+   Tier: Tier 3 | Register: #152
+   🔍 Fetching CNMV page for register #152...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[47/98] 🏢 GESNORTE, S.A., S.G.I.I.C.
+   Tier: Tier 3 | Register: #9
+   🔍 Fetching CNMV page for register #9...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[48/98] 🏢 GESPROFIT, S.A., S.G.I.I.C.
+   Tier: Tier 3 | Register: #139
+   🔍 Fetching CNMV page for register #139...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[49/98] 🏢 GINVEST ASSET MANAGEMENT, SGIIC, S.A.
+   Tier: Tier 3 | Register: #261
+   🔍 Fetching CNMV page for register #261...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[50/98] 🏢 GLOBAL SOCIAL IMPACT INVESTMENTS SGIIC, S.A.
+   Tier: Tier 3 | Register: #279
+   🔍 Fetching CNMV page for register #279...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[51/98] 🏢 GREENSIDE ASSET MANAGEMENT SGIIC, S.A.
+   Tier: Tier 3 | Register: #278
+   🔍 Fetching CNMV page for register #278...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[52/98] 🏢 GRUPO CATALANA OCCIDENTE GESTION DE ACTIVOS, S.A., SGIIC
+   Tier: Tier 3 | Register: #45
+   🔍 Fetching CNMV page for register #45...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[53/98] 🏢 HAMCO AM, SGIIC, S.A.
+   Tier: Tier 3 | Register: #293
+   🔍 Fetching CNMV page for register #293...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[54/98] 🏢 IMPACT BRIDGE ASSET MANAGEMENT SGIIC, S.A.
+   Tier: Tier 3 | Register: #281
+   🔍 Fetching CNMV page for register #281...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[55/98] 🏢 INTERMONEY GESTION, S.G.I.I.C., S.A.
+   Tier: Tier 3 | Register: #69
+   🔍 Fetching CNMV page for register #69...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[56/98] 🏢 JULIUS BAER GESTION, SGIIC, S.A.
+   Tier: Tier 3 | Register: #229
+   🔍 Fetching CNMV page for register #229...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[57/98] 🏢 LORETO INVERSIONES, SGIIC, SA
+   Tier: Tier 3 | Register: #264
+   🔍 Fetching CNMV page for register #264...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[58/98] 🏢 MACROFLOW PARTNERS SGIIC, S.L.
+   Tier: Tier 3 | Register: #295
+   🔍 Fetching CNMV page for register #295...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[59/98] 🏢 MARCH ASSET MANAGEMENT, S.G.I.I.C., S.A.U.
+   Tier: Tier 3 | Register: #190
+   🔍 Fetching CNMV page for register #190...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[60/98] 🏢 MARKET PORTFOLIO ASSET MANAGEMENT, S.G.I.I.C., S.A.
+   Tier: Tier 3 | Register: #269
+   🔍 Fetching CNMV page for register #269...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[61/98] 🏢 MDEF GESTEFIN, S.A.U., SGIIC (SOCIEDAD UNIPERSONAL)
+   Tier: Tier 3 | Register: #46
+   🔍 Fetching CNMV page for register #46...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[62/98] 🏢 METAGESTION, S.A., SGIIC
+   Tier: Tier 3 | Register: #40
+   🔍 Fetching CNMV page for register #40...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[63/98] 🏢 MIRALTA ASSET MANAGEMENT SGIIC, SAU
+   Tier: Tier 3 | Register: #252
+   🔍 Fetching CNMV page for register #252...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[64/98] 🏢 MUZA GESTIÓN DE ACTIVOS, SGIIC, S.A.
+   Tier: Tier 3 | Register: #265
+   🔍 Fetching CNMV page for register #265...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[65/98] 🏢 NAO ASSET MANAGEMENT, E.S.G. SGIIC, S.A.
+   Tier: Tier 3 | Register: #267
+   🔍 Fetching CNMV page for register #267...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[66/98] 🏢 OLEA GESTION DE ACTIVOS, SGIIC, S.A.
+   Tier: Tier 3 | Register: #277
+   🔍 Fetching CNMV page for register #277...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[67/98] 🏢 OMEGA GESTION DE INVERSIONES, SGIIC, S.A.
+   Tier: Tier 3 | Register: #220
+   🔍 Fetching CNMV page for register #220...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[68/98] 🏢 PACTIO GESTION, SGIIC, S.A.
+   Tier: Tier 3 | Register: #209
+   🔍 Fetching CNMV page for register #209...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[69/98] 🏢 PANZA CAPITAL, SGIIC, S.A.
+   Tier: Tier 3 | Register: #284
+   🔍 Fetching CNMV page for register #284...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[70/98] 🏢 PATRIVALOR, SGIIC, S.A.
+   Tier: Tier 3 | Register: #241
+   🔍 Fetching CNMV page for register #241...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[71/98] 🏢 PRISMA GLOBAL ASSET MANAGEMENT, SGIIC, S.A.
+   Tier: Tier 3 | Register: #34
+   🔍 Fetching CNMV page for register #34...
+      ❌ Error: 403 Client Error: Forbidden for url: https://www.cnmv.es/portal/Error?errorcode=CVFE
+
+[72/98] 🏢 PROALTUS CAPITAL AM SGIIC, S.A.
+   Tier: Tier 3 | Register: #283
+   🔍 Fetching CNMV page for register #283...
+      ❌ Error: HTTPSConnectionPool(host='www.cnmv.es', port=443): Read timed out.
+
+[73/98] 🏢 QUADRIGA ASSET MANAGERS, SGIIC, S.A.
+   Tier: Tier 3 | Register: #242
+   🔍 Fetching CNMV page for register #242...

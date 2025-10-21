@@ -1,9 +1,0 @@
-first_name,last_name,personal_email,work_email,personal_phone,work_phone,job_title,organisation_name,role,is_primary,country_code,language
-Valérie,Baudson,,valerie.baudson@amundi.com,,+33176333030,CEO - Directeur Général,AMUNDI ASSET MANAGEMENT,contact_principal,true,FR,FR
-Fannie,Wurtz,,fannie.wurtz@amundi.com,,+33176333030,Directeur Distribution & Banques Privées,AMUNDI ASSET MANAGEMENT,contact_secondaire,false,FR,FR
-François-Marc,Durand,,fm.durand@lazard.fr,,+33144130461,Président,LAZARD FRERES GESTION,contact_principal,true,FR,FR
-Frédéric,Janbon,,frederic.janbon@bnpparibas.com,,+33158977000,CEO,BNP PARIBAS ASSET MANAGEMENT,contact_principal,true,FR,FR
-Edouard,Carmignac,,edouard.carmignac@carmignac.com,,+33142861010,Fondateur,CARMIGNAC GESTION,contact_principal,true,FR,FR
-Guillaume,Rigeade,,grigeade@mandarine-gestion.com,,+33153402020,Président,MANDARINE GESTION,contact_principal,true,FR,FR
-Eric,Franc,,efranc@dnca-investments.com,,+33158621560,Président,DNCA FINANCE,contact_principal,true,FR,FR
-Imen,Hazgui,,ihazgui@elevacapital.com,,+33146702000,Managing Partner,ELEVA CAPITAL,contact_principal,true,FR,FR

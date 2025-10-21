@@ -1,0 +1,93 @@
+{
+  "https://www.allianzgi.com": {
+    "address": "",
+    "email": "",
+    "phone": "",
+    "exec_first": "",
+    "exec_last": ""
+  },
+  "https://www.generali-invest.com": {
+    "address": "",
+    "email": "",
+    "phone": "",
+    "exec_first": "",
+    "exec_last": ""
+  },
+  "https://www.generali.lu": {
+    "address": "1 rue Peternelchen L-2370 Hesperange",
+    "email": "client_services@generali.lu",
+    "phone": "+352 27 86 26",
+    "exec_first": "",
+    "exec_last": ""
+  },
+  "https://www.troweprice.com": {
+    "address": "",
+    "email": "",
+    "phone": "",
+    "exec_first": "",
+    "exec_last": ""
+  },
+  "https://www.luxtimes.lu": {
+    "address": "31, rue de Hollerich L-1741 Luxembourg",
+    "email": "info@luxtimes.lu",
+    "phone": "",
+    "exec_first": "Donald",
+    "exec_last": "Trump"
+  },
+  "https://www.abrdn.com": {
+    "address": "",
+    "email": "",
+    "phone": "",
+    "exec_first": "",
+    "exec_last": ""
+  },
+  "https://www.deka.lu": {
+    "address": "",
+    "email": "info@deka.lu",
+    "phone": "(+352) 3409-3500",
+    "exec_first": "",
+    "exec_last": ""
+  },
+  "https://www.dekabank.lu": {
+    "address": "",
+    "email": "info@deka.lu",
+    "phone": "(+352) 3409-3500",
+    "exec_first": "",
+    "exec_last": ""
+  },
+  "https://www.eqtgroup.com": {
+    "address": "",
+    "email": "",
+    "phone": "",
+    "exec_first": "",
+    "exec_last": ""
+  },
+  "https://www.janushenderson.com": {
+    "address": "78, Avenue de la Liberté L-1930 Luxembourg",
+    "email": "JanusHenderson-MEACA@janushenderson.com",
+    "phone": "+352 26 43 77",
+    "exec_first": "Alex",
+    "exec_last": "Ng"
+  },
+  "https://www.permira.com": {
+    "address": "488, Route de Longwy L-1940 Luxembourg",
+    "email": "",
+    "phone": "+352 26 441 651",
+    "exec_first": "",
+    "exec_last": ""
+  },
+  "https://www.sebgroup.lu": {
+    "address": "",
+    "email": "",
+    "phone": "",
+    "exec_first": "",
+    "exec_last": ""
+  },
+  "https://www.aimco.ca": {
+    "address": "11, Rue Aldringen (Le Conti) L-1118 Luxembourg",
+    "email": "info@aimco.ca",
+    "phone": "",
+    "exec_first": "",
+    "exec_last": ""
+  }
+}

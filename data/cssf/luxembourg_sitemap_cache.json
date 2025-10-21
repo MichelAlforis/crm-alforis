@@ -1,0 +1,76 @@
+{
+  "https://www.axa.fr": {
+    "emails": [],
+    "phones": [],
+    "address": "",
+    "luxembourg_sitemaps_found": 0,
+    "pages_scraped": 0
+  },
+  "https://www.blackrock.com": {
+    "emails": [
+      "belux@blackrock.com"
+    ],
+    "phones": [
+      "+352 34 20 10"
+    ],
+    "address": "",
+    "luxembourg_sitemaps_found": 2,
+    "pages_scraped": 5
+  },
+  "https://www.cppib.com": {
+    "emails": [],
+    "phones": [],
+    "address": "",
+    "luxembourg_sitemaps_found": 0,
+    "pages_scraped": 0
+  },
+  "https://www.espacecdpq.com": {
+    "emails": [],
+    "phones": [],
+    "address": "",
+    "luxembourg_sitemaps_found": 0,
+    "pages_scraped": 0
+  },
+  "https://www.credit-suisse.com": {
+    "emails": [],
+    "phones": [],
+    "address": "",
+    "luxembourg_sitemaps_found": 0,
+    "pages_scraped": 0
+  },
+  "https://www.db.com": {
+    "emails": [],
+    "phones": [],
+    "address": "",
+    "luxembourg_sitemaps_found": 0,
+    "pages_scraped": 0
+  },
+  "https://www.fil.com": {
+    "emails": [],
+    "phones": [],
+    "address": "",
+    "luxembourg_sitemaps_found": 0,
+    "pages_scraped": 0
+  },
+  "https://www.fisglobal.com": {
+    "emails": [],
+    "phones": [],
+    "address": "",
+    "luxembourg_sitemaps_found": 0,
+    "pages_scraped": 0
+  },
+  "https://www.gic-cert.com": {
+    "emails": [],
+    "phones": [],
+    "address": "",
+    "luxembourg_sitemaps_found": 0,
+    "pages_scraped": 0
+  },
+  "https://www.capitalgroup.com": {
+    "emails": [],
+    "phones": [],
+    "address": "",
+    "luxembourg_sitemaps_found": 0,
+    "pages_scraped": 0
+  }
+}

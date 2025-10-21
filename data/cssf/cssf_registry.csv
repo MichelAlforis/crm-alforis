@@ -1,0 +1,486 @@
+﻿ID_TYPE_ENTITE	ID_ENTITE 	NOM_COURRIER                                                                              	ID_STATUT_SURV
+--------------	----------	------------------------------------------------------------------------------------------	--------------
+S             	       101	GS&P KAPITALANLAGEGESELLSCHAFT S.A.                                                       	C15           
+S             	       112	BNY MELLON FUND MANAGEMENT (LUXEMBOURG) S.A.                                              	C15           
+S             	       113	EURIZON CAPITAL S.A.                                                                      	C15           
+S             	       117	MC SQUARE S.A.                                                                            	C15           
+S             	       120	CI FUND SERVICES S.A.                                                                     	C15           
+S             	       130	ERSEL GESTION INTERNATIONALE S.A.                                                         	C15           
+S             	       174	T. ROWE PRICE (LUXEMBOURG) MANAGEMENT S.A R.L.                                            	C15           
+S             	       178	BLACKROCK FUND MANAGEMENT COMPANY S.A.                                                    	C16           
+S             	       234	BAYERNINVEST LUXEMBOURG S.A.                                                              	C15           
+S             	       246	ALLIANCEBERNSTEIN (LUXEMBOURG) S.A R.L.                                                   	C15           
+S             	       268	CAPITAL INTERNATIONAL MANAGEMENT COMPANY                                                  	C15           
+S             	       273	HANSAINVEST LUX S.A.                                                                      	C16           
+S             	       300	CAIXABANK ASSET MANAGEMENT LUXEMBOURG, S.A.                                               	C15           
+S             	       306	WELLINGTON LUXEMBOURG S.A R.L.                                                            	C15           
+S             	       333	MUFG LUX MANAGEMENT COMPANY S.A.                                                          	C15           
+S             	       337	GLOBAL FUNDS MANAGEMENT S.A.                                                              	C15           
+S             	       342	PICTET ASSET MANAGEMENT (EUROPE) S.A.                                                     	C15           
+S             	       353	ÖKOWORLD LUX S.A.                                                                         	C15           
+S             	       356	QUINT:ESSENCE CAPITAL S.A.                                                                	C15           
+S             	       360	C WORLDWIDE FUND MANAGEMENT S.A.                                                          	C15           
+S             	       363	HAUCK & AUFHÄUSER FUND SERVICES S.A.                                                      	C15           
+S             	       364	SMBC NIKKO INVESTMENT FUND MANAGEMENT COMPANY S.A.                                        	C16           
+S             	       366	JAPAN FUND MANAGEMENT (LUXEMBOURG) S.A.                                                   	C16           
+S             	       370	ODDO BHF ASSET MANAGEMENT LUX                                                             	C15           
+S             	       385	DWS INVESTMENT S.A.                                                                       	C15           
+S             	       386	UNION INVESTMENT LUXEMBOURG S.A.                                                          	C15           
+S             	       388	DEKA INTERNATIONAL S.A.                                                                   	C15           
+S             	       404	SANTANDER ASSET MANAGEMENT LUXEMBOURG S.A.                                                	C15           
+S             	       406	AMUNDI LUXEMBOURG S.A.                                                                    	C15           
+S             	       410	AGALUX MANAGEMENT COMPANY S.A.                                                            	C16           
+S             	       420	MORGAN STANLEY ASSET MANAGEMENT S.A.                                                      	C16           
+S             	       427	SOCIÉTÉ GÉNÉRALE INVESTMENT SOLUTIONS (EUROPE)                                            	C15           
+S             	       500	BLACKROCK (LUXEMBOURG) S.A.                                                               	C15           
+S             	       504	NORD EST ASSET MANAGEMENT                                                                 	C15           
+S             	       519	AZIMUT INVESTMENTS S.A.                                                                   	C15           
+S             	       522	GERIFONDS (LUXEMBOURG) S.A.                                                               	C15           
+S             	       526	UNIVERSAL-INVESTMENT-LUXEMBOURG S.A.                                                      	C15           
+S             	       527	NORAMCO ASSET MANAGEMENT S.A.                                                             	C15           
+S             	       533	MFS INVESTMENT MANAGEMENT COMPANY (LUX) S.A R.L.                                          	C15           
+S             	       534	FEDERALE MANAGEMENT S.A.                                                                  	C16           
+S             	       535	BTG PACTUAL EUROPE MANAGEMENT COMPANY S.A.                                                	C15           
+S             	       552	PRADERA MANAGEMENT S.A R.L.                                                               	C16           
+S             	       566	WWK INVESTMENT S.A.                                                                       	C15           
+S             	       571	IPCONCEPT (LUXEMBURG) S.A.                                                                	C15           
+S             	       572	AXXION S.A.                                                                               	C15           
+S             	       592	BLUEBAY FUNDS MANAGEMENT COMPANY S.A.                                                     	C15           
+S             	       593	FIL INVESTMENT MANAGEMENT (LUXEMBOURG) S.A R.L.                                           	C15           
+S             	       598	DJE INVESTMENT S.A.                                                                       	C15           
+S             	       604	EDMOND DE ROTHSCHILD ASSET MANAGEMENT (LUXEMBOURG)                                        	C15           
+S             	       608	BNP PARIBAS ASSET MANAGEMENT LUXEMBOURG                                                   	C15           
+S             	       615	SPUERKEESS ASSET MANAGEMENT                                                               	C15           
+S             	       617	HSBC INVESTMENT FUNDS (LUXEMBOURG) S.A.                                                   	C15           
+S             	       619	NUVEEN MANAGEMENT COMPANY (LUXEMBOURG) NO 1 SARL                                          	C16           
+S             	       620	NORDEA INVESTMENT FUNDS S.A.                                                              	C15           
+S             	       622	MULTICONCEPT FUND MANAGEMENT S.A.                                                         	C15           
+S             	       625	INTER FUND MANAGEMENT S.A.                                                                	C16           
+S             	       626	CANDRIAM                                                                                  	C15           
+S             	       630	IM GLOBAL PARTNER ASSET MANAGEMENT S.A.                                                   	C15           
+S             	       632	AVIVA INVESTORS LUXEMBOURG                                                                	C15           
+S             	       633	CIGOGNE MANAGEMENT S.A.                                                                   	C15           
+S             	       641	FUNDROCK MANAGEMENT COMPANY S.A.                                                          	C15           
+S             	       645	BLI - BANQUE DE LUXEMBOURG INVESTMENTS                                                    	C15           
+S             	       646	CA INDOSUEZ FUND SOLUTIONS                                                                	C15           
+S             	       647	FUNDSIGHT S.A.                                                                            	C15           
+S             	       648	SCHRODER REAL ESTATE INVESTMENT MANAGEMENT (LUXEMBOURG) S.A R.L.                          	C16           
+S             	       654	TREETOP ASSET MANAGEMENT S.A.                                                             	C15           
+S             	       658	JPMORGAN ASSET MANAGEMENT (EUROPE) S.À R.L.                                               	C15           
+S             	       663	SCHRODER INVESTMENT MANAGEMENT (EUROPE) S.A.                                              	C15           
+S             	       665	THREADNEEDLE MANAGEMENT LUXEMBOURG S.A.                                                   	C15           
+S             	       667	AXA OPEN FUND MANAGEMENT S.A.                                                             	C16           
+S             	       675	HINES INTERNATIONAL FUND MANAGEMENT COMPANY S.A R.L.                                      	C16           
+S             	       678	LUXCELLENCE MANAGEMENT COMPANY S.A.                                                       	C15           
+S             	       685	STRUCTURED INVEST S.A.                                                                    	C15           
+S             	       686	INVESCO MANAGEMENT S.A.                                                                   	C15           
+S             	       687	SPARINVEST S.A.                                                                           	C15           
+S             	       688	EUROBANK FUND MANAGEMENT COMPANY (LUXEMBOURG) S.A.                                        	C15           
+S             	       691	ADEPA ASSET MANAGEMENT S.A.                                                               	C15           
+S             	       695	OFI INVEST LUX                                                                            	C15           
+S             	       698	VP FUND SOLUTIONS (LUXEMBOURG) SA                                                         	C15           
+S             	       700	HINES MASTER FUND MANAGEMENT COMPANY S.A R.L.                                             	C16           
+S             	       701	ENERGY ASSET MANAGEMENT S.A R.L.                                                          	C16           
+S             	       704	AXA ALTERNATIVE FINANCING MANAGEMENT S.A R.L.                                             	C16           
+S             	       708	SWISSCANTO ASSET MANAGEMENT INTERNATIONAL S.A.                                            	C15           
+S             	       713	GOODMAN FUNDS MANAGEMENT (LUX) S.A R.L.                                                   	C16           
+S             	       715	FUNDER S.A.                                                                               	C15           
+S             	       718	VICTORY ASSET MANAGEMENT S.A.                                                             	C15           
+S             	       723	CREUTZ & PARTNERS THE ART OF ASSET MANAGEMENT S.A.                                        	C15           
+S             	       725	CUBE INFRASTRUCTURE MANAGERS                                                              	C16           
+S             	       726	UNICAPITAL INVESTMENTS (MANAGEMENT) S.A.                                                  	C16           
+S             	       728	IFP INVESTMENT MANAGEMENT S.A.                                                            	C15           
+S             	       732	BELLATRIX ASSET MANAGEMENT S.A.                                                           	C15           
+S             	       734	WAYSTONE MANAGEMENT COMPANY (LUX) S.A.                                                    	C15           
+S             	       736	FIRST SENTIER INVESTORS (LUXEMBOURG) EDIF I MC S.ÀR.L.                                    	C16           
+S             	       741	FERI (LUXEMBOURG) SA                                                                      	C15           
+S             	       745	CALIBRIUM MANAGEMENT COMPANY S.A.                                                         	C16           
+S             	       747	ASSENAGON ASSET MANAGEMENT S.A.                                                           	C15           
+S             	       748	TISHMAN SPEYER EUROPE S.A R.L.                                                            	C16           
+S             	       754	SAVILLS INVESTMENT MANAGEMENT (LUXEMBOURG) S.A R.L.                                       	C16           
+S             	       755	PROLOGIS MANAGEMENT II S.A R.L.                                                           	C16           
+S             	       760	GARBE LUXEMBURG INVESTMENT MANAGEMENT S.À R.L.                                            	C16           
+S             	       766	BG FUND MANAGEMENT LUXEMBOURG S.A.                                                        	C15           
+S             	       768	INVESCO REAL ESTATE MANAGEMENT S.A R.L.                                                   	C16           
+S             	       771	MAIN SOURCE S.A.                                                                          	C16           
+S             	       777	OCORIAN FUND MANAGEMENT S.A R.L.                                                          	C15           
+S             	       782	LORAC INVESTMENT MANAGEMENT S.A R.L.                                                      	C16           
+S             	       785	FONDACO LUX S.A.                                                                          	C15           
+S             	       790	MEDIOBANCA MANAGEMENT COMPANY S.A.                                                        	C15           
+S             	       791	VECTOR ASSET MANAGEMENT S.A.                                                              	C15           
+S             	       803	NEVASTAR FINANCE (LUXEMBOURG) S.A.                                                        	C15           
+S             	       804	DINAVEST                                                                                  	C16           
+S             	       805	AERIANCE INVESTMENTS S.A R.L.                                                             	C16           
+S             	       808	NORTHAM PROPERTY FUNDS MANAGEMENT S.A R.L.                                                	C16           
+S             	       810	FUNDPARTNER SOLUTIONS (EUROPE) S.A.                                                       	C15           
+S             	       817	CARLISLE MANAGEMENT COMPANY S.C.A.                                                        	C16           
+S             	       822	ABRDN INVESTMENTS LUXEMBOURG S.A.                                                         	C15           
+S             	       829	NBG ASSET MANAGEMENT LUXEMBOURG                                                           	C15           
+S             	       830	HEPP IV MANAGEMENT COMPANY S.A R.L.                                                       	C16           
+S             	       835	FUNDROCK LIS S.A.                                                                         	C15           
+S             	       841	ANDBANK ASSET MANAGEMENT LUXEMBOURG                                                       	C15           
+S             	       842	CARNE GLOBAL FUND MANAGERS (LUXEMBOURG) S.A.                                              	C15           
+S             	       847	LHI MANAGEMENT LUXEMBURG S.A.                                                             	C16           
+S             	       848	BTG PACTUAL GLOBAL TIMBERLAND FUND MANAGEMENT S.A R.L.                                    	C16           
+S             	       850	IRIVEST INVESTMENT MANAGERS                                                               	C15           
+S             	       855	PURE CAPITAL S.A.                                                                         	C15           
+S             	       856	LOMBARD ODIER FUNDS (EUROPE) S.A.                                                         	C15           
+S             	       861	UBS ASSET MANAGEMENT (EUROPE) S.A.                                                        	C15           
+S             	       865	VEREF I MANAGEMENT S.A R.L.                                                               	C16           
+S             	       867	ETHENEA INDEPENDENT INVESTORS S.A.                                                        	C15           
+S             	       871	CYGNUS REAL ESTATE MANAGEMENT COMPANY S.A R.L.                                            	C16           
+S             	       872	HINES R&P MANAGEMENT COMPANY S.A R.L.                                                     	C16           
+S             	       875	KJK CAPITAL LUXEMBOURG S.A.                                                               	C16           
+S             	       877	CBRE INVESTMENT MANAGEMENT FUND S.A R.L.                                                  	C16           
+S             	       878	PIMCO GLOBAL ADVISORS (LUXEMBOURG) S.A.                                                   	C16           
+S             	       880	LASALLE AIFM EUROPE S.A R.L.                                                              	C16           
+S             	       884	EIFFEL INVESTMENT GROUP S.A R.L.                                                          	C16           
+S             	       888	GEN II MANAGEMENT COMPANY (LUXEMBOURG) SARL                                               	C15           
+S             	       889	EUROPEAN CAPITAL PARTNERS (LUXEMBOURG) S.A.                                               	C15           
+S             	       890	ZADIG ASSET MANAGEMENT S.A.                                                               	C15           
+S             	       895	LGT FUND MANAGEMENT (LUX) S.A.                                                            	C16           
+S             	       897	MIRABAUD ASSET MANAGEMENT (EUROPE) S.A.                                                   	C15           
+S             	       899	J. SAFRA SARASIN FUND MANAGEMENT (LUXEMBOURG) S.A.                                        	C15           
+S             	       901	MERCER ALTERNATIVES (LUXEMBOURG) S.A R.L.                                                 	C16           
+S             	       902	NINETY ONE LUXEMBOURG S.A.                                                                	C15           
+S             	       909	ALPHA INVESTOR SERVICES MANAGEMENT                                                        	C15           
+S             	       910	ESO MANAGEMENT (LUXEMBOURG) LIMITED SARL                                                  	C16           
+S             	       911	A&G LUXEMBOURG AM S.A.                                                                    	C16           
+S             	       913	EQT FUND MANAGEMENT S.A R.L.                                                              	C16           
+S             	       917	SEDCO CAPITAL LUXEMBOURG S.A.                                                             	C16           
+S             	       919	CINVEN MANCO S.A R.L.                                                                     	C16           
+S             	       920	BLUEORCHARD ASSET MANAGEMENT (LUXEMBOURG) S.A.                                            	C16           
+S             	       922	PHARUS MANAGEMENT LUX S.A.                                                                	C15           
+S             	       923	M&G LUXEMBOURG S.A.                                                                       	C15           
+S             	       926	INSTITUTIONAL INVESTMENT PARTNERS S.A R.L.                                                	C16           
+S             	       927	CAPMAN NORDIC REAL ESTATE MANAGER S.A.                                                    	C16           
+S             	       928	SWISS LIFE ASSET MANAGERS LUXEMBOURG                                                      	C15           
+S             	       929	FLOSSBACH VON STORCH INVEST S.A.                                                          	C15           
+S             	       930	ALMA CAPITAL INVESTMENT MANAGEMENT                                                        	C15           
+S             	       934	BAMBOO CAPITAL PARTNERS S.A.                                                              	C16           
+S             	       936	CORDIANT LUXEMBOURG S.A.                                                                  	C16           
+S             	       937	EASTSPRING INVESTMENTS (LUXEMBOURG) S.A.                                                  	C15           
+S             	       939	M&G REAL ESTATE FUNDS MANAGEMENT S.A R.L.                                                 	C16           
+S             	       940	EAST CAPITAL ASSET MANAGEMENT S.A.                                                        	C15           
+S             	       941	ORBIS INVESTMENT MANAGEMENT (LUXEMBOURG) S.A.                                             	C15           
+S             	       944	ALTER DOMUS MANAGEMENT COMPANY S.A.                                                       	C15           
+S             	       945	PATRIZIA INVESTMENT MANAGEMENT S.À R.L.                                                   	C16           
+S             	       948	NIAM CREDIT MANAGEMENT S.À R.L.                                                           	C16           
+S             	       949	CARMIGNAC GESTION LUXEMBOURG                                                              	C15           
+S             	       950	UBP ASSET MANAGEMENT (EUROPE) S.A.                                                        	C15           
+S             	       951	WAYSTONE FUND MANAGEMENT (LUX) S.A.                                                       	C15           
+S             	       952	TMF FUND MANAGEMENT S.A.                                                                  	C15           
+S             	       953	LCN MANAGEMENT COMPANY S.A R.L.                                                           	C16           
+S             	       954	GENESTA NORDIC CAPITAL FUND MANAGEMENT S.A R.L.                                           	C16           
+S             	       956	CAIBUO CAPITAL S.A R.L.                                                                   	C16           
+S             	       960	JTC GLOBAL AIFM SOLUTIONS S.A.                                                            	C16           
+S             	       961	JANUS HENDERSON INVESTORS EUROPE S.A.                                                     	C15           
+S             	       962	SWANCAP INVESTMENT MANAGEMENT S.A.                                                        	C16           
+S             	       964	FRANKLIN TEMPLETON INTERNATIONAL SERVICES S.À R.L.                                        	C15           
+S             	       965	NS PARTNERS EUROPE S.A.                                                                   	C15           
+S             	       968	ING SOLUTIONS INVESTMENT MANAGEMENT S.A.                                                  	C15           
+S             	       975	EXPLORA                                                                                   	C16           
+S             	       976	SÖDERBERG & PARTNERS ASSET MANAGEMENT S.A.                                                	C15           
+S             	       977	CADELUX S.A.                                                                              	C15           
+S             	       979	URBAN PARTNERS MANAGEMENT COMPANY S.A.                                                    	C16           
+S             	       981	ROYALTON PARTNERS                                                                         	C16           
+S             	       982	HINES POLAND MANAGEMENT COMPANY S.A R.L.                                                  	C16           
+S             	       985	MUNICH PRIVATE EQUITY PARTNERS MANAGEMENT S.A.                                            	C16           
+S             	       986	JAB CONSUMER FUND MANAGEMENT S.A R.L.                                                     	C16           
+S             	       987	FUNDS AVENUE S.A.                                                                         	C15           
+S             	       988	GENERALI INVESTMENTS LUXEMBOURG S.A.                                                      	C15           
+S             	       990	COMMERZ REAL FUND MANAGEMENT S.A R.L.                                                     	C16           
+S             	       992	GOLDING CAPITAL PARTNERS (LUXEMBOURG) S.A.                                                	C16           
+S             	       994	MANDATUM FUND MANAGEMENT S.A.                                                             	C15           
+S             	       995	PANDOO MANAGEMENT                                                                         	C16           
+S             	       996	ROTHSCHILD & CO INVESTMENT MANAGERS                                                       	C15           
+S             	       997	SHAFTESBURY FUND MANAGEMENT (LUXEMBOURG) S.A.                                             	C16           
+S             	       998	QUILVEST CAPITAL PARTNERS AM S.A.                                                         	C16           
+S             	       999	ALLSPRING GLOBAL INVESTMENTS LUXEMBOURG S.A.                                              	C15           
+S             	      1000	PERMIAN GLOBAL MANAGEMENT S.A R.L.                                                        	C16           
+S             	      1001	CBRE INVESTMENT MANAGEMENT LUXEMBOURG AIFM S.A R.L.                                       	C16           
+S             	      1002	KARTESIA MANAGEMENT                                                                       	C16           
+S             	      1003	IDVECTOR INVESTMENT MANAGEMENT S.A R.L.                                                   	C16           
+S             	      1004	AIF MANAGEMENT SERVICES S.A.                                                              	C16           
+S             	      1006	MASSENA PARTNERS                                                                          	C15           
+S             	      1007	PGIM LUXEMBOURG S.A.                                                                      	C16           
+S             	      1008	SHELTER INVESTMENT MANAGEMENT                                                             	C15           
+S             	      1009	ARGENTA ASSET MANAGEMENT S.A.                                                             	C15           
+S             	      1010	CCA LIFE SETTLEMENTS                                                                      	C16           
+S             	      1011	VONTOBEL ASSET MANAGEMENT S.A.                                                            	C15           
+S             	      1013	PEMBERTON ASSET MANAGEMENT S.A.                                                           	C16           
+S             	      1014	BKN CAPITAL S.A.                                                                          	C16           
+S             	      1017	CHENAVARI INVESTMENT MANAGERS (LUXEMBOURG) S.A R.L.                                       	C16           
+S             	      1018	LFE EUROPEAN ASSET MANAGEMENT S.A R.L.                                                    	C16           
+S             	      1019	RENTA 4 LUXEMBOURG                                                                        	C15           
+S             	      1021	IQ EQ FUND MANAGEMENT (LUXEMBOURG) S.A.                                                   	C16           
+S             	      1022	BI-INVEST ENDOWMENT MANAGEMENT S.A R.L.                                                   	C16           
+S             	      1023	IDI EMERGING MARKETS PARTNERS                                                             	C16           
+S             	      1025	OPPORTUNITY FUND MANAGEMENT                                                               	C15           
+S             	      1030	NATAM MANAGEMENT COMPANY S.A.                                                             	C15           
+S             	      1032	PRIME AIFM LUX S.A.                                                                       	C16           
+S             	      1033	HINES LUXEMBOURG INVESTMENT MANAGEMENT S.A R.L.                                           	C16           
+S             	      1034	LAICORN ASSET MANAGEMENT S.À R.L.                                                         	C16           
+S             	      1036	GAM (LUXEMBOURG) S.A.                                                                     	C15           
+S             	      1040	SAMARANG ASSET MANAGEMENT S.A.                                                            	C15           
+S             	      1041	ZEUS ASSET MANAGEMENT S.A.                                                                	C15           
+S             	      1042	BLACKSTONE EUROPE FUND MANAGEMENT S.À R.L.                                                	C15           
+S             	      1044	CORESTATE CAPITAL FUND MANAGEMENT S.À R.L.                                                	C16           
+S             	      1045	CAPMAN REAL ESTATE MANAGER S.A.                                                           	C16           
+S             	      1046	ICG EUROPE S.À R.L.                                                                       	C16           
+S             	      1048	MARGUERITE INVESTMENT MANAGEMENT S.A.                                                     	C16           
+S             	      1049	CSC FUND MANAGEMENT (LUXEMBOURG) S.À R.L.                                                 	C16           
+S             	      1051	FWU INVEST S.A.                                                                           	C15           
+S             	      1052	AFFM S.A.                                                                                 	C15           
+S             	      1053	LANGHAM HALL MANAGEMENT S.A.R.L                                                           	C16           
+S             	      1054	LCM COPS V S.A R.L.                                                                       	C16           
+S             	      1055	ALTUM MANAGEMENT COMPANY (LUXEMBOURG) S.A.                                                	C15           
+S             	      1058	JUPITER ASSET MANAGEMENT INTERNATIONAL                                                    	C15           
+S             	      1060	ARES MANAGEMENT LUXEMBOURG                                                                	C16           
+S             	      1061	EMPIRA INVESTMENT SOLUTIONS S.A.                                                          	C15           
+S             	      1062	MOVENTUM ASSET MANAGEMENT                                                                 	C15           
+S             	      1063	APOLLO INVESTMENT MANAGEMENT EUROPE (LUXEMBOURG) S.À R.L.                                 	C16           
+S             	      1064	BNP PARIBAS REAL ESTATE INVESTMENT MANAGEMENT LUXEMBOURG S.A.                             	C16           
+S             	      1065	ADVENT INTERNATIONAL FUND MANAGER S.À R.L.                                                	C16           
+S             	      1066	STONEWEG INVESTMENT LUXEMBOURG S.À R.L.                                                   	C16           
+S             	      1067	NUVEEN ALTERNATIVES EUROPE S.À R.L.                                                       	C16           
+S             	      1070	CRESVIA CAPITAL FUND MANAGEMENT                                                           	C16           
+S             	      1072	CAPITAL BAY R.E.I.M.                                                                      	C16           
+S             	      1073	NORVESTOR INVESTMENT MANAGEMENT S.À R.L.                                                  	C16           
+S             	      1074	ONE FUND MANAGEMENT S.A.                                                                  	C15           
+S             	      1075	NEUBERGER BERMAN AIFM S.À R.L.                                                            	C16           
+S             	      1076	R+V AIFM S.À R.L.                                                                         	C16           
+S             	      1077	CMT PORTFOLIO MANAGERS LUXEMBOURG                                                         	C16           
+S             	      1078	APIS ASSET MANAGEMENT                                                                     	C15           
+S             	      1079	AVEGA CAPITAL MANAGEMENT S.A.                                                             	C16           
+S             	      1083	PETRICCA & CO CAPITAL S.A.                                                                	C16           
+S             	      1084	AMANCO S.A.                                                                               	C16           
+S             	      1087	INTREAL LUXEMBOURG S.A.                                                                   	C16           
+S             	      1088	CAPITAL BAY R.E.I.M. II                                                                   	C16           
+S             	      1089	CAPMAN RESIDENTIAL MANAGER S.A.                                                           	C16           
+S             	      1090	MACQUARIE ASSET MANAGEMENT EUROPE S.À R.L.                                                	C16           
+S             	      1091	KBC AM LUXEMBOURG                                                                         	C16           
+S             	      1092	ALLFUNDS INVESTMENT SOLUTIONS                                                             	C15           
+S             	      1093	ARDIAN CS MANAGEMENT SARL                                                                 	C16           
+S             	      1094	KKR UCI MANCO S.À R.L.                                                                    	C16           
+S             	      1095	AXA INVESTMENT MANAGERS LUXEMBOURG S.A.                                                   	C16           
+S             	      1096	APAX MANAGEMENT LUXEMBOURG S.A R.L.                                                       	C16           
+S             	      1097	BC PARTNERS MANAGEMENT S.À R.L.                                                           	C16           
+S             	      1098	PALLADIO (LUXEMBOURG) S.À R.L.                                                            	C16           
+S             	      1099	BRIDGEPOINT FUND MANAGEMENT S.À R.L.                                                      	C16           
+S             	      1100	BLUEGEM CAPITAL (LUXEMBOURG) S.À R.L.                                                     	C16           
+S             	      1101	INTERVEST CAPITAL PARTNERS S.à R.L.                                                       	C16           
+S             	      1102	FIFE CAPITAL MANAGEMENT EUROPE S.À R.L.                                                   	C16           
+S             	      1103	CINVEN FUND MANAGEMENT S.À R.L.                                                           	C16           
+S             	      1104	HF ARODE ASSET MANAGEMENT S.A.                                                            	C15           
+S             	      1105	THREE HILLS FUND MANAGEMENT S.À R.L.                                                      	C16           
+S             	      1106	FINANCE IN MOTION ASSET MANAGEMENT S.À R.L.                                               	C16           
+S             	      1107	GCP EUROPE MANAGEMENT S.À R.L.                                                            	C16           
+S             	      1108	MANOVA PARTNERS LUX S.À R.L.                                                              	C16           
+S             	      1109	VISTRA FUND MANAGEMENT S.A.                                                               	C15           
+S             	      1110	RENAISSANCE AIFM S.À R.L.                                                                 	C16           
+S             	      1111	TRISTAN CAPITAL MANAGEMENT COMPANY S.À R.L.                                               	C16           
+S             	      8001	CANDRIAM SUCURSAL EN ESPAÑA                                                               	SUC           
+S             	      8002	CANDRIAM - SUCCURSALE ITALIANA                                                            	SUC           
+S             	      8003	CANDRIAM - NEDERLANDS BIJKANTOOR                                                          	SUC           
+S             	      8007	JPMORGAN ASSET MANAGEMENT (EUROPE) S. à R.L. – SUCCURSALE DI MILANO                       	SUC           
+S             	      8008	JPMORGAN ASSET MANAGEMENT (NORDIC) FILIAL TILL JPMORGAN ASSET MANAGEMENT (EUROPE) SARL    	SUC           
+S             	      8009	JPMORGAN ASSET MANAGEMENT (EUROPE) SARL, AUSTRIAN BRANCH                                  	SUC           
+S             	      8010	JPMORGAN ASSET MANAGEMENT (EUROPE) SARL, THE NEDERLANDS BRANCH                            	SUC           
+S             	      8011	JPMORGAN ASSET MANAGEMENT (EUROPE) SARL, FRANKFURT BRANCH                                 	SUC           
+S             	      8013	JPMORGAN ASSET MANAGEMENT (EUROPE) S.A.R.L., SUCCURSALE DE PARIS                          	SUC           
+S             	      8014	JPMORGAN ASSET MANAGEMENT (EUROPE) S.A.R.L., SUCURSAL EN ESPAÑA                           	SUC           
+S             	      8015	CANDRIAM ZWEIGNIEDERLASSUNG DEUTSCHLAND                                                   	SUC           
+S             	      8024	ASSENAGON ASSET MANAGEMENT S.A., ZWEIGNIEDERLASSUNG MÜNCHEN                               	SUC           
+S             	      8027	UNIVERSAL-INVESTMENT-LUXEMBOURG S.A., ZWEIGNIEDERLASSUNG FRANKFURT AM MAIN                	SUC           
+S             	      8029	GAM (LUXEMBOURG) S.A. - SUCURSAL EN ESPANA                                                	SUC           
+S             	      8039	SWISSCANTO ASSET MANAGEMENT INTERNATIONAL S.A., ZWEIGNIEDERLASSUNG DEUTSCHLAND            	SUC           
+S             	      8041	CANDRIAM - UK ESTABLISHMENT                                                               	SUC           
+S             	      8045	SCHRODER INVESTMENT MANAGEMENT (EUROPE) S.A., BELGIAN BRANCH                              	SUC           
+S             	      8047	SCHRODER INVESTMENT MANAGEMENT (EUROPE) S. A., SVENSK FILIAL                              	SUC           
+S             	      8048	SCHRODERS DENMARK FILIAL AV SCHRODER INVESTMENT MANAGEMENT (EUROPE) S.A.                  	SUC           
+S             	      8049	SCHRODERS NEDERLANDS BRANCH OF SCHRODER INVESTMENT MANAGEMENT (EUROPE) S.A.               	SUC           
+S             	      8053	FRANKLIN TEMPLETON INTERNATIONAL SERVICES S.A R.L., BELGIAN BRANCH                        	SUC           
+S             	      8054	NORDEA INVESTMENT FUNDS S.A. - ITALIAN BRANCH                                             	SUC           
+S             	      8055	NORDEA INVESTMENT FUNDS S.A., SUCURSAL EN ESPANA                                          	SUC           
+S             	      8057	NS PARTNERS EUROPE S.A., SUCURSAL EN ESPAÑA                                               	SUC           
+S             	      8058	NS PARTNERS EUROPE S.A., SUCCURSALE DI MILANO                                             	SUC           
+S             	      8059	ID-SPARINVEST, BRANCH OF SPARINVEST S.A., LUXEMBOURG                                      	SUC           
+S             	      8060	SWANCAP INVESTMENT MANAGEMENT S.A., SUCCURSALE IN ITALIA                                  	SUC           
+S             	      8061	INTER FUND MANAGEMENT S.A., BELGIAN BRANCH                                                	SUC           
+S             	      8062	MASSENA PARTNERS, SUCCURSALE DE PARIS                                                     	SUC           
+S             	      8064	CARMIGNAC GESTION LUXEMBOURG S.A. SUCURSAL EN ESPAÑA                                      	SUC           
+S             	      8066	VONTOBEL ASSET MANAGEMENT S.A., LONDON BRANCH                                             	SUC           
+S             	      8067	VONTOBEL ASSET MANAGEMENT S.A., MILAN BRANCH                                              	SUC           
+S             	      8068	VONTOBEL ASSET MANAGEMENT S.A., MADRID BRANCH                                             	SUC           
+S             	      8071	LEMANIK ASSET MANAGEMENT S.A., DUBLIN BRANCH                                              	SUC           
+S             	      8073	J. SAFRA SARASIN FUND MANAGEMENT (LUXEMBOURG) S.A. - AUSTRIA BRANCH                       	SUC           
+S             	      8075	PROLOGIS MANAGEMENT II S.A R.L., SUCCURSALE EN ITALIE                                     	SUC           
+S             	      8076	CANDRIAM - MENA BRANCH                                                                    	SUC           
+S             	      8077	UBP ASSET MANAGEMENT (EUROPE) S.A. BRUSSELS BRANCH                                        	SUC           
+S             	      8078	NORDEA INVESTMENT FUNDS S.A. - SUCCURSALE FRANCAISE                                       	SUC           
+S             	      8079	FRANKLIN TEMPLETON INTERNATIONAL SERVICES S.A R.L., ITALIAN BRANCH                        	SUC           
+S             	      8081	EURIZON CAPITAL S.A. - FRANKFURT BRANCH                                                   	SUC           
+S             	      8084	FUNDROCK MANAGEMENT COMPANY S.A. (IRELAND BRANCH)                                         	SUC           
+S             	      8087	EURIZON CAPITAL S.A. - PARIS BRANCH                                                       	SUC           
+S             	      8096	MFS INVESTMENT MANAGEMENT COMPANY (LUX) SARL ITALIAN                                      	SUC           
+S             	      8099	ADEPA ASSET MANAGEMENT S.A., ITALY BRANCH                                                 	SUC           
+S             	      8105	SCHRODER INVESTMENT MANAGEMENT (LUXEMBOURG) S.A.                                          	SUC           
+S             	      8106	FRANKLIN TEMPLETON INTERNATIONAL SERVICES S.A R.L., GERMAN BRANCH                         	SUC           
+S             	      8107	PICTET ASSET MANAGEMENT (EUROPE) S.A., SUCCURSALE DE FRANCE                               	SUC           
+S             	      8108	PICTET ASSET MANAGEMENT (EUROPE) S.A., BELGIUM BRANCH                                     	SUC           
+S             	      8109	PICTET ASSET MANAGEMENT (EUROPE) S.A., ITALIAN BRANCH                                     	SUC           
+S             	      8110	PICTET ASSET MANAGEMENT (EUROPE) S.A., FILIAAL NEDERLAND                                  	SUC           
+S             	      8111	PICTET ASSET MANAGEMENT (EUROPE) S.A., NIEDERLASSUNG DEUTSCHLAND                          	SUC           
+S             	      8112	PICTET ASSET MANAGEMENT (EUROPE) S.A., SUCURSAL EN ESPANA                                 	SUC           
+S             	      8113	FRANKLIN TEMPLETON INTERNATIONAL SERVICES S.A R.L., SWEDISH BRANCH                        	SUC           
+S             	      8115	T. ROWE PRICE (LUXEMBOURG) MANAGEMENT S.A R.L., ZWEIGNIEDERLASSUNG FRANKFURT              	SUC           
+S             	      8116	T. ROWE PRICE (LUXEMBOURG) MANAGEMENT S.A R.L., STOCKHOLM BRANCH                          	SUC           
+S             	      8117	T. ROWE PRICE (LUXEMBOURG) MANAGEMENT S.A R.L., FILIAL                                    	SUC           
+S             	      8118	T. ROWE PRICE (LUXEMBOURG) MANAGEMENT S.A R.L., SUCCURSALE NEERLANDAISE                   	SUC           
+S             	      8119	T. ROWE PRICE (LUXEMBOURG) MANAGEMENT S. A R.L. - SEDE SECONDARIA DI MILANO               	SUC           
+S             	      8120	T. ROWE PRICE (LUXEMBOURG) MANAGEMENT S. A R.L., SUCURSAL EN ESPANA                       	SUC           
+S             	      8122	FLOSSBACH VON STORCH INVEST S.A., SUCCURSALE ITALIANA                                     	SUC           
+S             	      8123	FLOSSBACH VON STORCH INVEST S.A., SUCURSAL EN ESPANA                                      	SUC           
+S             	      8125	CAPITAL INTERNATIONAL MANAGEMENT COMPANY - SUCURSAL EN ESPANA                             	SUC           
+S             	      8126	CAPITAL INTERNATIONAL MANAGEMENT COMPANY - SUCCURSALE ITALIANA                            	SUC           
+S             	      8127	CAPITAL INTERNATIONAL MANAGEMENT COMPANY - NETHERLANDS BRANCH                             	SUC           
+S             	      8128	CAPITAL INTERNATIONAL MANAGEMENT COMPANY - NIEDERLASSUNG DEUTSCHLAND                      	SUC           
+S             	      8129	SCHRODER INVESTMENT MANAGEMENT (EUROPE) S.A., BRANCH IN SPAIN                             	SUC           
+S             	      8130	SCHRODER INVESTMENT MANAGEMENT (EUROPE) S.A., (PARIS BRANCH)                              	SUC           
+S             	      8131	NORDEA INVESTMENT FUNDS (LUXEMBOURG) S.A. - BELGIUM BRANCH                                	SUC           
+S             	      8132	FRANKLIN TEMPLETON INTERNATIONAL SERVICES S.A R.L., DUTCH BRANCH                          	SUC           
+S             	      8133	ALLSPRING GLOBAL INVESTMENTS LUXEMBOURG S.A. (FRANKFURT BRANCH)                           	SUC           
+S             	      8134	ALLSPRING GLOBAL INVESTMENTS LUXEMBOURG S.A. (PARIS BRANCH)                               	SUC           
+S             	      8136	JUPITER ASSET MANAGEMENT INTERNATIONAL S.A, GERMAN BRANCH                                 	SUC           
+S             	      8137	JUPITER ASSET MANAGEMENT INTERNATIONAL S.A., ITALIAN BRANCH                               	SUC           
+S             	      8138	JUPITER ASSET MANAGEMENT INTERNATIONAL SUCURSAL EN ESPANA                                 	SUC           
+S             	      8140	JUPITER ASSET MANAGEMENT INTERNATIONAL, NORDICS                                           	SUC           
+S             	      8141	FRANKLIN TEMPLETON INTERNATIONAL SERVICES S.A R.L., SPANISH                               	SUC           
+S             	      8146	LOMBARD ODIER FUNDS (EUROPE) S.A. - DUTCH BRANCH                                          	SUC           
+S             	      8147	LOMBARD ODIER FUNDS (EUROPE) S.A. - FRENCH BRANCH                                         	SUC           
+S             	      8148	LOMBARD ODIER FUNDS (EUROPE) S.A. - GERMAN BRANCH (FRANKFURT)                             	SUC           
+S             	      8149	LOMBARD ODIER FUNDS (EUROPE) S.A. - ITALIAN BRANCH                                        	SUC           
+S             	      8151	BNY MELLON FUND MANAGEMENT (LUXEMBOURG) S.A., SUCCURSALE DE PARIS                         	SUC           
+S             	      8152	BNY MELLON FUND MANAGEMENT (LUXEMBOURG) S.A., ZWEIGNIEDERLASSUNG DEUTSCHLAND              	SUC           
+S             	      8153	BNY MELLON FUND MANAGEMENT (LUXEMBOURG) S.A., NETHERLANDS BRANCH                          	SUC           
+S             	      8154	BNY MELLON FUND MANAGEMENT (LUXEMBOURG) S.A., MILAN BRANCH                                	SUC           
+S             	      8155	BNY MELLON FUND MANAGEMENT (LUXEMBOURG) S.A., SUCURSAL EN ESPANA                          	SUC           
+S             	      8156	AVIVA INVESTORS LUXEMBOURG - GERMANY                                                      	SUC           
+S             	      8158	AVIVA INVESTORS LUXEMBOURG - IRELAND                                                      	SUC           
+S             	      8159	AVIVA INVESTORS LUXEMBOURG - NETHERLANDS                                                  	SUC           
+S             	      8161	JANUS HENDERSON INVESTORS EUROPE, S.A. SUCURSAL EN ESPAÑA                                 	SUC           
+S             	      8162	JANUS HENDERSON INVESTORS EUROPE S.A. (NETHERLANDS BRANCH)                                	SUC           
+S             	      8163	JANUS HENDERSON INVESTORS EUROPE S.A., ITALIAN BRANCH                                     	SUC           
+S             	      8164	JANUS HENDERSON INVESTORS EUROPE S.A., GERMAN BRANCH                                      	SUC           
+S             	      8165	JANUS HENDERSON INVESTORS EUROPE S.A FRENCH BRANCH                                        	SUC           
+S             	      8166	SCHRODER INVESTMENT MANAGEMENT (EUROPE) S.A., GERMAN BRANCH                               	SUC           
+S             	      8168	MFS INVESTMENT MANAGEMENT COMPANY (LUX) S.A R.L., SUCURSAL EN ESPANA                      	SUC           
+S             	      8169	MFS INVESTMENT MANAGEMENT COMPANY (LUX) S.A R.L., NIEDERLASSUNG FRANKFURT                 	SUC           
+S             	      8170	MFS INVESTMENT MANAGEMENT COMPANY (LUX) S.A R.L., SUCCURSALE FRANCAISE                    	SUC           
+S             	      8171	SCHRODER INVESTMENT MANAGEMENT (EUROPE) S.A., SUCCURSALE ITALIANA                         	SUC           
+S             	      8172	SCHRODER INVESTMENT MANAGEMENT (EUROPE) S.A., FINNISH BRANCH                              	SUC           
+S             	      8173	C WORLDWIDE FUND MANAGEMENT S.A. LUXEMBOURG, FILIAL I DANMARK                             	SUC           
+S             	      8174	NORDEA INVESTMENT FUNDS S.A. - GERMAN BRANCH                                              	SUC           
+S             	      8175	ADEPA ASSET MANAGEMENT, S.A., SUCURSAL EN ESPAñA                                          	SUC           
+S             	      8176	J.CHAHINE CAPITAL S.A., SUCCURSALE EN FRANCE                                              	SUC           
+S             	      8177	ALLIANCEBERNSTEIN (LUXEMBOURG) S.A R.L., STOCKHOLM FILIAL                                 	SUC           
+S             	      8178	ALLIANCEBERNSTEIN (LUXEMBOURG) S.A R.L., AMSTERDAM BRANCH                                 	SUC           
+S             	      8179	ALLIANCEBERNSTEIN (LUXEMBOURG) S.A R.L., MILAN BRANCH                                     	SUC           
+S             	      8180	ALLIANCEBERNSTEIN (LUXEMBOURG) S.A R.L., SUCURSAL EN ESPANA                               	SUC           
+S             	      8182	FRANKLIN TEMPLETON INTERNATIONAL SERVICES S.À R.L. SP. Z O. O. ODDZIAL W POLSCE           	SUC           
+S             	      8183	FRANKLIN TEMPLETON INTERNATIONAL SERVICES S.A R.L., BUCHAREST BRANCH                      	SUC           
+S             	      8184	SWISS LIFE ASSET MANAGERS LUXEMBOURG, NIEDERLASSUNG DEUTSCHLAND                           	SUC           
+S             	      8185	NINETY ONE LUXEMBOURG S.A. - GERMAN BRANCH                                                	SUC           
+S             	      8187	NINETY ONE LUXEMBOURG S.A. - SVERIGE FILIAL                                               	SUC           
+S             	      8188	ZEUS ASSET MANAGEMENT S.A. - ITALIAN BRANCH                                               	SUC           
+S             	      8189	INVESCO MANAGEMENT S.A. (LUXEMBOURG) SWEDISH FILIAL                                       	SUC           
+S             	      8190	INVESCO MANAGEMENT S.A., SUCURSAL EN ESPANA                                               	SUC           
+S             	      8191	INVESCO MANAGEMENT S.A., DUTCH BRANCH                                                     	SUC           
+S             	      8192	INVESCO MANAGEMENT S.A., SUCCURSALE ITALIA                                                	SUC           
+S             	      8193	INVESCO MANAGEMENT S.A., SUCCURSALE EN FRANCE                                             	SUC           
+S             	      8194	INVESCO MANAGEMENT S.A. (LUXEMBOURG) BELGIAN BRANCH                                       	SUC           
+S             	      8195	BLUEBAY FUNDS MANAGEMENT COMPANY S.A.                                                     	SUC           
+S             	      8196	VONTOBEL ASSET MANAGEMENT S.A. PARIS BRANCH                                               	SUC           
+S             	      8197	FLOSSBACH VON STORCH INVEST S.A. NIEDERLASSUNG DEUTSCHLAND                                	SUC           
+S             	      8198	UBP ASSET MANAGEMENT (EUROPE) S.A. FRANKFURT BRANCH                                       	SUC           
+S             	      8201	CARNE GLOBAL FUND MANAGERS (LUXEMBOURG) S.A. IRELAND BRANCH                               	SUC           
+S             	      8202	EURIZON CAPITAL S.A. - MADRID BRANCH                                                      	SUC           
+S             	      8203	BLUEBAY FUNDS MANAGEMENT COMPANY S.A., ZWEIGNIEDERLASSUNG DEUTSCHLAND                     	SUC           
+S             	      8204	PHARUS MANAGEMENT LUX S.A.-SUCCURSALE DI MILANO                                           	SUC           
+S             	      8205	NORDEA INVESTMENT FUNDS S.A.-SUCURSAL EM PORTUGAL                                         	SUC           
+S             	      8208	FRANKLIN TEMPLETON INTERNATIONAL SERVICES S.A R.L., FRENCH BRANCH                         	SUC           
+S             	      8210	ALLIANCEBERNSTEIN (LUXEMBOURG) S.A R.L., MUNICH BRANCH                                    	SUC           
+S             	      8211	THREADNEEDLE MANAGEMENT LUXEMBOURG S.A., (ITALY BRANCH)                                   	SUC           
+S             	      8212	THREADNEEDLE MANAGEMENT LUXEMBOURG S.A., (FRANCE BRANCH)                                  	SUC           
+S             	      8213	THREADNEEDLE MANAGEMENT LUXEMBOURG S.A., (NETHERLANDS BRANCH)                             	SUC           
+S             	      8214	THREADNEEDLE MANAGEMENT LUXEMBOURG S.A., (SPAIN BRANCH)                                   	SUC           
+S             	      8215	THREADNEEDLE MANAGEMENT LUXEMBOURG S.A., (GERMANY BRANCH)                                 	SUC           
+S             	      8216	THREADNEEDLE MANAGEMENT LUXEMBOURG S.A., (AUSTRIA BRANCH)                                 	SUC           
+S             	      8219	PURE CAPITAL S.A., BELGIUM                                                                	SUC           
+S             	      8222	FRANKLIN TEMPLETON INTERNATIONAL SERVICES S.A R.L., IRISH BRANCH                          	SUC           
+S             	      8223	M&G LUXEMBOURG S.A. PARIS BRANCH                                                          	SUC           
+S             	      8225	UBS ASSET MANAGEMENT (EUROPE) S.A. - AUSTRIA BRANCH                                       	SUC           
+S             	      8226	MIRABAUD ASSET MANAGEMENT (EUROPE) S.A. – SUCURSAL EN ESPAÑA                              	SUC           
+S             	      8227	UBP ASSET MANAGEMENT (EUROPE) S.A., MADRID BRANCH                                         	SUC           
+S             	      8228	GAM (LUXEMBOURG) S.A. - ZWEIGNIEDERLASSUNG DEUTSCHLAND                                    	SUC           
+S             	      8229	MIRABAUD ASSET MANAGEMENT (EUROPE) S.A. - SUCCURSALE ITALIANA                             	SUC           
+S             	      8230	JPMORGAN ASSET MANAGEMENT (EUROPE) S.A R.L. - DUBLIN BRANCH                               	SUC           
+S             	      8231	MFS INVESTMENT MANAGEMENT COMPANY (LUX) S.A R.L. NETHERLANDS                              	SUC           
+S             	      8232	AVIVA INVESTORS LUXEMBOURG- FRENCH BRANCH                                                 	SUC           
+S             	      8233	BLUEBAY FUNDS MANAGEMENT COMPANY S.A. - THE NETHERLANDS BRANCH                            	SUC           
+S             	      8234	ALMA CAPITAL INVESTMENT MANAGEMENT, FRENCH BRANCH                                         	SUC           
+S             	      8235	BLUEBAY FUNDS MANAGEMENT COMPANY S.A., SUCURSAL EN ESPAÑA                                 	SUC           
+S             	      8236	ALLSPRING GLOBAL INVESTMENTS LUXEMBOURG S.A. (MILAN BRANCH)                               	SUC           
+S             	      8237	M&G LUXEMBOURG S.A., NIEDERLASSUNG DEUTSCHLAND                                            	SUC           
+S             	      8238	M&G LUXEMBOURG S.A., SUCCURSALE BELGE                                                     	SUC           
+S             	      8239	M&G LUXEMBOURG S.A., SUCURSAL EN ESPAÑA                                                   	SUC           
+S             	      8240	M&G LUXEMBOURG S.A., SUCCURSALE ITALIANA                                                  	SUC           
+S             	      8241	M&G LUXEMBOURG S.A., DUTCH BRANCH                                                         	SUC           
+S             	      8242	M&G LUXEMBOURG S.A., SVENSK FILIAL                                                        	SUC           
+S             	      8243	AFFM S.A., SUCURSAL EN ESPAñA                                                             	SUC           
+S             	      8244	AZIMUT INVESTMENTS S.A. - SUCURSAL EM PORTUGAL                                            	SUC           
+S             	      8245	FIL INVESTMENT MANAGEMENT (LUXEMBOURG) S.A., - IRELAND BRANCH                             	SUC           
+S             	      8247	CANDRIAM - BELGIAN BRANCH                                                                 	SUC           
+S             	      8248	CANDRIAM - SUCCURSALE FRANÇAISE                                                           	SUC           
+S             	      8250	JANUS HENDERSON INVESTORS DENMARK, FILIAL AF JANUS HENDERSON INVESTORS EUROPE S.A. (LUXEMB	SUC           
+S             	      8252	ALLIANCEBERNSTEIN (LUXEMBOURG) S.A R.L., PARIS BRANCH                                     	SUC           
+S             	      8255	UBS ASSET MANAGEMENT (EUROPE) S.A., NETHERLANDS BRANCH                                    	SUC           
+S             	      8256	GAM (LUXEMBOURG) S.A., SWEDEN FILIAL                                                      	SUC           
+S             	      8257	SWISS LIFE ASSET MANAGERS LUXEMBOURG SUCCURSALE ITALIA                                    	SUC           
+S             	      8259	SCHRODER INVESTMENT MANAGEMENT (EUROPE) S.A., IRISH BRANCH                                	SUC           
+S             	      8260	NINETY ONE LUXEMBOURG S.A. - DUTCH BRANCH                                                 	SUC           
+S             	      8261	SWISSCANTO ASSET MANAGEMENT INTERNATIONAL S.A., BRANCH ITALY                              	SUC           
+S             	      8262	CARMIGNAC GESTION LUXEMBOURG, SUCCURSALE ITALIANA                                         	SUC           
+S             	      8263	CARMIGNAC GESTION LUXEMBOURG, NIEDERLASSUNG DEUTSCHLAND                                   	SUC           
+S             	      8264	VONTOBEL ASSET MANAGEMENT S.A - STOCKHOLM BRANCH                                          	SUC           
+S             	      8265	LOMBARD ODIER FUNDS (EUROPE) S.A. - GERMAN BRANCH (GARMISCH)                              	SUC           
+S             	      8266	UBS ASSET MANAGEMENT (EUROPE) S.A., SWEDEN BRANCH                                         	SUC           
+S             	      8267	UBS ASSET MANAGEMENT (EUROPE) S.A., SPAIN BRANCH                                          	SUC           
+S             	      8268	EUROPEAN CAPITAL PARTNERS (LUXEMBOURG) S.A. BELGIUM BRANCH                                	SUC           
+S             	      8270	SWISS LIFE ASSET MANAGERS DANMARK, FILIAL AF SWISS LIFE ASSET MANAGERS LUXEMBOURG, LUX    	SUC           
+S             	      8271	AFFM S.A., ZWEIGNIEDERLASSUNG FRANKFURT                                                   	SUC           
+S             	      8272	GAM (LUXEMBOURG) S.A. – SUCCURSALE ITALIANA                                               	SUC           
+S             	      8273	BLACKSTONE EUROPE FUND MANAGEMENT S.À R.L. FRANCE                                         	SUC           
+S             	      8274	BLACKSTONE EUROPE FUND MANAGEMENT S.À R.L. - ITALY                                        	SUC           
+S             	      8275	BLACKSTONE EUROPE FUND MANAGEMENT S.À R.L. - GERMANY                                      	SUC           
+S             	      8276	TREETOP ASSET MANAGEMENT S.A., BELGIAN BRANCH                                             	SUC           
+S             	      8277	ZADIG ASSET MANAGEMENT S.A., FRENCH BRANCH                                                	SUC           
+S             	      8278	JPMORGAN ASSET MANAGEMENT (EUROPE) (LUXEMBOURG) S.A R.L. - BRUSSELS BRANCH                	SUC           
+S             	      8279	BLUEBAY FUNDS MANAGEMENT COMPANY S.A., STOCKHOLM BRANCH                                   	SUC           
+S             	      8280	CANDRIAM - NORDICS FILIAL                                                                 	SUC           
+S             	      8281	BLUEBAY FUNDS MANAGEMENT COMPANY S.A., PARIS                                              	SUC           
+S             	      8282	HSBC INVESTMENT FUNDS (LUXEMBOURG) S.A., IRELAND BRANCH                                   	SUC           
+S             	      8283	CARNE GLOBAL FUND MANAGERS (LUXEMBOURG) S.A., UK BRANCH                                   	SUC           
+S             	      8284	UBS ASSET MANAGEMENT (EUROPE) S.A., ITALY BRANCH                                          	SUC           
+S             	      8285	SWISSCANTO ASSET MANAGEMENT INTERNATIONAL S.A., SUCURSAL EN ESPAÑA                        	SUC           
+S             	      8286	UBS ASSET MANAGEMENT (EUROPE) S.A., SUCCURSALE DE FRANCE                                  	SUC           
+S             	      8287	GAM (LUXEMBOURG) S.A. – FRENCH BRANCH                                                     	SUC           
+S             	      8288	CAPITAL INTERNATIONAL MANAGEMENT COMPANY SÀRL - SUCCURSALE FRANCE                         	SUC           
+S             	      8289	UBS ASSET MANAGEMENT (EUROPE) S.A., GERMANY BRANCH                                        	SUC           
+S             	      8290	INVESCO MANAGEMENT S.A., ZWEIGNIEDERLASSUNG DEUTSCHLAND                                   	SUC           
+S             	      8291	INVESCO MANAGEMENT S.A. NIEDERLASSUNG ÖSTERREICH                                          	SUC           
+S             	      8292	FUNDSIGHT S.A. SUCCURSALE DE PARIS                                                        	SUC           
+S             	      8293	AFFM S.A., ITALIAN BRANCH                                                                 	SUC           
+
+(482 rows affected)

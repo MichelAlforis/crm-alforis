@@ -1,0 +1,1912 @@
+{
+  "https://www.axa.fr": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Guillaume",
+    "representative_last_name": "Borie",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.allianzgi.com": {
+    "website_valid": true,
+    "address": "2633 Luxembourg",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Macron",
+    "representative_last_name": "appoints",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.amundibond.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.blackrock.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Larry",
+    "representative_last_name": "Fink sur",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.cppib.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.espacecdpq.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.ccg.lu": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.credit-suisse.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.db.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.fil.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.fisglobal.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "of",
+    "representative_last_name": "Automated Finance",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.gic-cert.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.generali-invest.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "in",
+    "representative_last_name": "Headquarters and",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.generali.lu": {
+    "website_valid": true,
+    "address": "1 rue Peternelchen\nL-2370 Hesperange",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.in.email": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.hsbc.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.capitalgroup.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.statestreet.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.kia.gov.kw": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.citi.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.natixis.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.ntrseurope.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.opb.ca": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.pimco.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Andrew",
+    "representative_last_name": "Balls",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.bcl.lu": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.troweprice.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.luxtimes.lu": {
+    "website_valid": true,
+    "address": "L-1741 LuxembourgTel.:(+352) 4993-1E-mail: info@luxtimes.luContact usAbout usAdvertisingCookies & TrackingTerms of useTerms and ConditionsImprintEuropean Media Freedom ActShare this with instagramShare this with facebookShare this with linkedinSectionsBusiness & FinanceLuxembourgEuropean UnionWorldCultureYour LuxembourgServicesSudokuTrafficWeatherCinemaEventsTopicsArchivePartnersThe Trust ProjectJobfinderReal EstateMycarWortshopAdvertiser contentOther titlesLuxemburger WortContactoVirguleTélécranRadio Latina©2025 Mediahuis Group. All rights reserved",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "of",
+    "representative_last_name": "the ABBL",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.ubs.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.vanguardascendglobal.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "of",
+    "representative_last_name": "Energy Efficiency",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.wellington.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "and",
+    "representative_last_name": "Head of",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.abrdn.com": {
+    "website_valid": true,
+    "address": "35a, Avenue J.F. Kennedy, L-1855 Luxembourg",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.alliancebernstein.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Our",
+    "representative_last_name": "Firm Context",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.aipb.it": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.columbiathreadneedle.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.cvc.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "What",
+    "representative_last_name": "Many",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.carlyle.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.commerzbank.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.ca-indosuez.ch": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.deka.lu": {
+    "website_valid": true,
+    "address": "1748 SenningerbergLuxembourgTelefon: (+352) 3409-3500Telefax: (+352) 3409-3700E-Mail: info@deka.luHinweis an ehemalige Kund/innen der DekaBank Deutsche Girozentrale Luxembourg S.A.Deka International S.A.Deka International S.A.6",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.dekabank.lu": {
+    "website_valid": true,
+    "address": "1748 SenningerbergLuxembourgTelefon: (+352) 3409-3500Telefax: (+352) 3409-3700E-Mail: info@deka.luHinweis an ehemalige Kund/innen der DekaBank Deutsche Girozentrale Luxembourg S.A.Deka International S.A.Deka International S.A.6",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.dws.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.eqtgroup.com": {
+    "website_valid": true,
+    "address": "46850655300PressNewsroom[email protected]CareersGet to know EQTLife at EQTWork at EQTFollow usLinkedInXYouTubeInstagramLegalTerms and Conditions of UseCookie NoticePrivacy NoticeEQT Policies & StatementsComplaints Handling ProcedureSustainable Finance DisclosureLocal sitesJapan - 日本Go to the top©EQT AB 2025. All rights reserved.Get in touchPlease fill out the form below and we'll be in touch as soon as possible.Select a countryAustraliaAustriaBelgiumBulgariaGreater ChinaCroatiaCyprusCzech RepublicDenmarkEstoniaFinlandFranceGermanyGreeceHong KongHungaryIcelandIndiaIrelandIsraelItalyJapanJerseyLatviaLiechtensteinLithuaniaLuxembourgMaltaNetherlandsNorwayPolandPortugalRomaniaSingaporeSlovakiaSloveniaSouth KoreaSpainSwedenSwitzerlandThailandUnited KingdomUnited StatesOtherFirst Name *Last Name *Email *Phone Message 0/500Sign up to receive our newsletter via emailEQT NewsRegulatory NewsEQT's Privacy Notice applies. You can unsubscribe from our newsletter at any time by clicking the \"unsubscribe\" link in the newsletter email.Send a messageEQT Group — A Global Investment Organization",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "of",
+    "representative_last_name": "EQT",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.janushenderson.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.mfs-group.co.uk": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.nb.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.nordea.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "and",
+    "representative_last_name": "leadership team",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.nuveenglobal.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.permira.com": {
+    "website_valid": true,
+    "address": "L-1940 LuxembourgTel: +352 26 441 651VIEW MORE MadridPermira Asesores SL. C/ de José Ortega y Gasset 1003rd floor28006 Madrid Tel: +34 91 418 24 99VIEW MORE MilanPalazzo SpinolaVia San Paolo 1020121 MilanItalyTel: +39 02 76 00 47 40VIEW MORE Paris31/33 Rue de la Baume",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Joins",
+    "representative_last_name": "Permira as",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.dam-com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.sebgroup.lu": {
+    "website_valid": true,
+    "address": "50 years in Luxembourg",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.schroders.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.socgen.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.fr.abnamro.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.aimco.ca": {
+    "website_valid": true,
+    "address": "11, Rue Aldringen (Le Conti) L-1118 Luxembourg",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.apg.nl": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.aqr.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.arve.lu": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.atp.etat.lu": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.accel.lu": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.achmea.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Maureen",
+    "representative_last_name": "Schlejen daar",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.allangray.co.za": {
+    "website_valid": true,
+    "address": "1993 and is chair of the board of Orbis Holdings Limited. He is also a director of Orbis' Bermuda and Luxembourg funds",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "View",
+    "representative_last_name": "more Mahesh",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.alpinvest.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.a16z.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Ali",
+    "representative_last_name": "Ghodsi explains",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.ardian.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "at",
+    "representative_last_name": "Ardian Alexandre",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.atomico.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.azimutinvestments.com": {
+    "website_valid": true,
+    "address": "2A, Rue Eugène Ruppert L-2453 Luxembourg",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Alix",
+    "representative_last_name": "Van Ormelingen",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.bank.lv": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "jobs",
+    "representative_last_name": "Actor jobs",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.railpen.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.jsafrasarasin.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.hal-privatbank.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "of",
+    "representative_last_name": "the Management",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.bcv.ch": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.bcge.ch": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.post.lu": {
+    "website_valid": true,
+    "address": "8002 8004 - depuis le Luxembourg",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.thebanks.eu": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.belfiusip.be": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.bellevue.ch": {
+    "website_valid": true,
+    "address": "4, rue Thomas Edison, L-1445 Luxembourg",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "BELLEVUE",
+    "representative_last_name": "ASSET MANAGEMENT",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.ltb-test.org": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.berenberg.de": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "jobs",
+    "representative_last_name": "Rating Analyst",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.bridgepoint.eu": {
+    "website_valid": true,
+    "address": "6B, Rue du Fort Niedergrünewald\nL-2226 Luxembourg",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "and",
+    "representative_last_name": "Co",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.bwater.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Nir",
+    "representative_last_name": "Bar Dea",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.amundi.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Amundi",
+    "representative_last_name": "Asset Management",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.nystrs.org": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.candriam.com": {
+    "website_valid": true,
+    "address": "2021 - The 5 main intermediaries (brokers) - Candriam LUXEMBOURG(.xml format)",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Expertise",
+    "representative_last_name": "Sustainable Investing",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.carmignac.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.cinven.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "and",
+    "representative_last_name": "Investor in",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.altuscitadel.lu": {
+    "website_valid": true,
+    "address": "25C, Boulevard Royal, L-2449 Luxembourg",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.collercapital.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.coronationregistrars.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.creandum.comstaffan": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.dz-privatbank.com": {
+    "website_valid": true,
+    "address": "L-1445 Strassen",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.danskebank.dk": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.degroofpetercam.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "DPAMEntreprisesMeet",
+    "representative_last_name": "the",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.discoverycapitalmanagers.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.dorval-am.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.efgbank.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.ethenea.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.edr.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.chambre-immobiliere.lu": {
+    "website_valid": true,
+    "address": "7, rue Alcide de Gasperi\nL-1615 Luxembourg",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Monde",
+    "representative_last_name": "avenir Je",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.eurazeo.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "of",
+    "representative_last_name": "high",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.eurizoncapital.lu": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "of",
+    "representative_last_name": "Development jobs",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.evli.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.hermes.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.sbafla.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.fvsinvest.lu": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.franciscopartners.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.inaps.etat.lu": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.l-gam.com": {
+    "website_valid": true,
+    "address": "13 Boulevard de la Foire\nL-1528 LuxembourgEmail",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "at",
+    "representative_last_name": "Bain Capital",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.gimv.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "our",
+    "representative_last_name": "DNAKoen Dejonckheere",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.greylock.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Hasan",
+    "representative_last_name": "Imam the",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.groupama-am.fr": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.osaps.etat.lu": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.hauck-aufhaeuser.com": {
+    "website_valid": true,
+    "address": "16. Oktober findet bei EY Luxembourg die zweite Ausgabe von Unlocking Impact Investing statt – eine Plattform für den Austausch zu nachhaltigen und wirkungsorientierten Investments.",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Lisa",
+    "representative_last_name": "Backes Deputy",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.hoopp.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "and",
+    "representative_last_name": "CEO Annesley",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.hf.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.highlandeurope.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "at",
+    "representative_last_name": "ME",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.ing.lu": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.idinvest.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.theinsightpartners.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Future",
+    "representative_last_name": "Analytica JOHN",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.investec.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.icd.gov.ae": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Organisation",
+    "representative_last_name": "Know More",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.bankingcircle.com": {
+    "website_valid": true,
+    "address": "2 Boulevard de la Foire\nL-1528 Luxembourg",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.kbc.be": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.kouros-investment.com": {
+    "website_valid": true,
+    "address": "17, Boulevard F.W. Raiffeisen\r\nL-2411 Luxembourg",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.boutiquekeva.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.kingstreet.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.kic.go.kr": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.lbbw-am.de": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "jobs",
+    "representative_last_name": "Account Manager",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.lafrancaise-group.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.lazard.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "and",
+    "representative_last_name": "Chairman Peter",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.mymail.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.lombardodier.com": {
+    "website_valid": true,
+    "address": "2024.our headquarters. rethink sustainability.rethink sustainability. system changes.home truths.university of oxford.building bridges.rethink everything®. insights.insights. all insights.investment insights.sustainability. private banking.private banking.  local expertiselocal expertise switzerland.united kingdom.france.belgium.luxembourg.italy.spain.israel.middle east.brazil.asia. investment solutions.investment solutions. discretionary portfolio management.advisory portfolio management.rethink investments.private assets.empowering investors. wealth management.wealth planning.lombard loans.philanthropy.My LO.entrepreneursUHNWI family wealth.asset management. technology for banking.technology for banking. our technology and operations servicesour banking platforms.external asset managers.asset servicing.press.careers. contact.contact. private clients.technology for banking.external asset managers.legal.English français Deutsch italiano español Nederlands português",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "of",
+    "representative_last_name": "the Lyon",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.lonestarfunds.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "of",
+    "representative_last_name": "Lone Star",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.communications.mandg.co.uk": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.macquarie.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "and",
+    "representative_last_name": "Chief Executive",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.mandg.lu": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.mandarine-gestion.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.metzler.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.leadersleague.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.mubadala.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.nnip.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.npm.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.trs.nyc.ny": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.osc.ny.gov": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.nzsuperfund.co.nz": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "governance",
+    "representative_last_name": "Derivatives Investment",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.nordlb.lu": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.pierceins.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Lonnie",
+    "representative_last_name": "earned his",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.northzone.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "and",
+    "representative_last_name": "Programme Manager",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.nykredit.dk": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.omers.comopens": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.ifm-sa.eu": {
+    "website_valid": true,
+    "address": "L-1233 LuxembourgGrand Duchy of Luxembourg",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.centerbridge.com": {
+    "website_valid": true,
+    "address": "2520 Luxembourg.Current and prospective investors should also reference the Centerbridge Client Privacy Notice for the Centerbridge Funds which Centerbridge separately makes available.",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.ostrum.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Nos",
+    "representative_last_name": "expertises Nos",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.paipartners.lu": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.qbluebalanced.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "of",
+    "representative_last_name": "FIH Erhvervsbank",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.pharmaciedepetange.lu": {
+    "website_valid": true,
+    "address": "10 Avenue de la Gare\nL-4734 Pétange",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.investpsp.ca": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "et",
+    "representative_last_name": "chef de",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.pantheon.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Kathryn",
+    "representative_last_name": "Leaf Named",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.partech.lu": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.ntrs.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.paulsonandpartners.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Corporate",
+    "representative_last_name": "Strategy",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.ppf.co.uk": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "of",
+    "representative_last_name": "Legal",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.pictet.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Nixon",
+    "representative_last_name": "suspends dollar",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.sscinc.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.cm.gov.qa": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.raiffeisen.ch": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.railwaymission.org": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.rpalt.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.edr-heritage.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.oppenheim.lu": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.saudia.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.sculptor.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "of",
+    "representative_last_name": "Financial Accounting",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.sequoiacap.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "by",
+    "representative_last_name": "Brian Halligan",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.stanlib.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.swib.state.wi.us": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.storebrandfunds.co.uk": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.swisscanto.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.sycomore-am.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.qima.com": {
+    "website_valid": true,
+    "address": "24 hoursFirst nameLast nameCompany NameEmailCountrySelect your countryAfghanistanAlbaniaAlgeriaAmerican SamoaAndorraAngolaAnguilla (UK)AntarcticaAntigua And BarbudaArgentinaArmeniaArubaAustraliaAustriaAzerbaijanBahamasBahrainBangladeshBarbadosBarbudaBelgiumBelizeBeninBermudaBhutanBoliviaBosniaBotswanaBrazilBritish Virgin Islands (UK)BruneiBulgariaBurkina FasoBurundiCambodiaCameroonCanadaCape VerdeCentral African RepublicChadChileChinaColombiaComorosCongoCook IslandsCosta RicaIvory CoastCroatiaCuracaoCyprusCzech RepublicDenmarkDiego GarciaDjiboutiDominicaDominican RepublicEaster IslandEcuadorEgyptEl SalvadorEquatorial GuineaEritreaEstoniaEthiopiaFijiFinlandFranceFrench GuianaFrench PolynesiaGabonGambiaGeorgiaGermanyGhanaGibraltar (UK)GreeceGreenlandGrenadaGuadeloupe (France)GuamGuatemalaGuineaGuinea-BissauGuyanaHaitiHondurasHong Kong SAR ChinaHungaryIcelandIndiaIndonesiaIraqIrelandIsraelItalyJamaicaJapanJerseyJordanKazakhstanKenyaKiribatiKosovoKorea (South)KuwaitKyrgyzstanLaosLatviaLebanonLesothoLiberiaLibyaLiechtensteinLithuaniaLuxembourgMacau SAR ChinaMacedoniaMadagascarMalawiMalaysiaMaldivesMaliMaltaMarshall IslandsMartinique (France)MauritaniaMauritiusMexicoMicronesiaMoldovaMonacoMongoliaMontenegroMontserrat (UK)MoroccoMozambiqueMyanmarNamibiaNauruNepalNetherlandsNew CaledoniaNew ZealandNicaraguaNigerNigeriaNorthern Mariana Islands (US)NorwayOmanPakistanPalauPalestinePanamaPapua New GuineaParaguayPeruPhilippinesPolandPortugalPuerto Rico (US)QatarReunionRomaniaRwandaSaint Kitts And NevisSaint LuciaSaint Pierre And MiquelonSaint Vincent & The GrenadinesSan MarinoSao Tome & PrincipeSaudi ArabiaSenegalSerbiaSeychellesSierra LeoneSingaporeSlovakiaSloveniaSolomon IslandsSomaliaSomalilandSouth AfricaSpainSri LankaSurinameEswatiniSwedenSwitzerlandTaiwanTajikistanTanzaniaThailandTimor-LesteTogoTongaTrinidad And TobagoTunisiaTurkeyTurkmenistanTurks And Caicos Islands (UK)TuvaluUgandaUkraineUnited Arab EmiratesUnited KingdomUnited StatesUruguayUzbekistanVanuatuVatican CityVenezuelaVietnamVirgin Islands (British)Virgin Islands (UK)Virgin Islands (US)YemenZambiaIndustrySelect your industryFood & Food PackagingBodycare Fashion & AccessoriesElectrical & Electronic ProductsGifts & PremiumsHomeware & GardenwareIndustrial Construction & Mechanical ItemsPrinting & PackagingTextile Apparel Footwear & AccessoriesToys & Recreational ItemsEyewearTechnical PartsTelephoneQueryYour question is about...Our services (prices",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.tiaa.org": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.tobam.fr": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "of",
+    "representative_last_name": "TOBAM PEOPLE",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.trta.org": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.tikehaucapital.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.uss.co.uk": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.varma.is": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.varetire.org": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.vontobel.lu": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.warburgpincus.com": {
+    "website_valid": true,
+    "address": "37A, Avenue J.F. Kennedy\nL-1855 Luxembourg",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.winton.com": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.itm.etat.lu": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.yorkcapital-eu.com": {
+    "website_valid": false,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "",
+    "representative_last_name": "",
+    "representative_email": "",
+    "representative_phone": ""
+  },
+  "https://www.zkb.ch": {
+    "website_valid": true,
+    "address": "",
+    "city": "Luxembourg",
+    "country": "Luxembourg",
+    "representative_first_name": "Private",
+    "representative_last_name": "Equity at",
+    "representative_email": "",
+    "representative_phone": ""
+  }
+}

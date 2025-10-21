@@ -68,6 +68,38 @@ class Settings(BaseSettings):
     email_track_opens: bool = True
     email_track_clicks: bool = True
 
+    # AI Agent Configuration
+    ai_enabled: bool = True
+    ai_default_provider: str = "claude"  # claude, openai, ollama
+
+    # Anthropic Claude API
+    anthropic_api_key: str = ""
+    anthropic_model: str = "claude-3-5-sonnet-20241022"
+    anthropic_max_tokens: int = 4096
+
+    # OpenAI API
+    openai_api_key: str = ""
+    openai_model: str = "gpt-4o"
+    openai_max_tokens: int = 4096
+
+    # Ollama (Local LLM)
+    ollama_base_url: str = "http://localhost:11434"
+    ollama_model: str = "llama3.1:latest"
+
+    # AI Agent Settings
+    ai_auto_apply_enabled: bool = False  # Auto-appliquer suggestions haute confiance
+    ai_auto_apply_threshold: float = 0.95  # Seuil de confiance pour auto-application
+    ai_duplicate_threshold: float = 0.85  # Seuil similarité pour doublons
+    ai_quality_threshold: float = 0.70  # Score qualité minimum
+    ai_max_suggestions_per_run: int = 100
+    ai_cache_ttl_hours: int = 24  # Durée de vie du cache en heures
+    ai_daily_budget_usd: float = 10.0  # Budget quotidien max
+    ai_monthly_budget_usd: float = 300.0  # Budget mensuel max
+
+    # AI Rate Limiting
+    ai_rate_limit_rpm: int = 10  # Requests per minute
+    ai_batch_size: int = 10  # Nombre d'items par batch
+
     class Config:
         env_file = ".env"
         case_sensitive = False

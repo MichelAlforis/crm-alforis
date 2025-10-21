@@ -13,6 +13,7 @@ from api.routes import (
     dashboards,
     workflows,
     email_campaigns,
+    ai_agent,
 )
 from routers import search, exports, webhooks
 from webhooks import sendgrid as inbound_sendgrid
@@ -50,6 +51,9 @@ api_router.include_router(inbound_sendgrid.router)
 
 # 🤖 WORKFLOWS & AUTOMATION (Phase 2.2)
 api_router.include_router(workflows.router)
+
+# 🧠 AI AGENT (Phase 3.0)
+api_router.include_router(ai_agent.router)
 
 # ⚡ IMPORTS ROUTES (bulk operations)
 api_router.include_router(imports.router)

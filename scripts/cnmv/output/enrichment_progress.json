@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-10-20T22:36:52.806395",
+  "completed": 10,
+  "stats": {
+    "total": 117,
+    "processed": 10,
+    "websites": 10,
+    "emails": 0,
+    "phones": 0,
+    "fully_enriched": 0
+  }
+}

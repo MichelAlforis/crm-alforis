@@ -1,0 +1,62 @@
+{
+  "https://www.axa.fr": {
+    "emails": [],
+    "phones": [],
+    "address": "",
+    "sources": [
+      "/kontakt",
+      "/team",
+      "/configuration-securite/mentions-legales.html",
+      "/privacy",
+      "/services-assistance/contact-axa/reclamation-banque.html",
+      "/impressum",
+      "/contacts",
+      "/management"
+    ]
+  },
+  "https://www.blackrock.com": {
+    "emails": [],
+    "phones": [],
+    "address": "",
+    "sources": [
+      "/impressum",
+      "/corporate/about-us/blackrock-history",
+      "/jp/individual/ja/about-us/important-information/electronic-notifications",
+      "/corporate/about-us/blackrock-history/patent-wall/patents-eleven-to-twenty",
+      "/corporate/about-us/leadership/sudhir-nair",
+      "/corporate/about-us/leadership/derek-stein",
+      "/jp/individual/ja/about-us/ceo-letter/archives/2024",
+      "/institutions/en-us/insights/eloqua-form/insurance-contact-form"
+    ]
+  },
+  "https://www.cppib.com": {
+    "emails": [],
+    "phones": [],
+    "address": "",
+    "sources": [
+      "/legal",
+      "/impressum",
+      "/about",
+      "/about-us",
+      "/contact",
+      "/management",
+      "/mentions-legales",
+      "/imprint"
+    ]
+  },
+  "https://www.espacecdpq.com": {
+    "emails": [],
+    "phones": [],
+    "address": "",
+    "sources": [
+      "/en/contact",
+      "/about",
+      "/team",
+      "/mentions-legales",
+      "/",
+      "/impressum",
+      "/contact-us",
+      "/privacy"
+    ]
+  }
+}

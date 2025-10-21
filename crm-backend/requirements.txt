@@ -24,3 +24,7 @@ structlog==23.2.0
 
 # Cache
 redis==5.0.0
+
+# AI Agent
+anthropic==0.39.0  # Anthropic Claude API
+openai==1.54.0  # OpenAI GPT API
