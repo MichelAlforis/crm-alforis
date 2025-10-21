@@ -639,16 +639,10 @@ export interface OrganisationActivity {
 // ============= MANDAT DE DISTRIBUTION =============
 
 export type MandatStatus =
-  | "BROUILLON"
-  | "EN_NEGOCIATION"
-  | "SIGNE"
-  | "ACTIF"
-  | "EXPIRE"
-  | "RESILIE"
-  | "proposé" // Legacy
-  | "signé" // Legacy
-  | "actif" // Legacy
-  | "terminé" // Legacy
+  | "proposé"
+  | "signé"
+  | "actif"
+  | "terminé"
 
 export interface MandatDistribution {
   id: number
@@ -707,12 +701,9 @@ export type ProduitType =
   | "Autre" // Legacy
 
 export type ProduitStatus =
-  | "ACTIF"
-  | "INACTIF"
-  | "ARCHIVE"
-  | "actif" // Legacy
-  | "inactif" // Legacy
-  | "en_attente" // Legacy
+  | "actif"
+  | "inactif"
+  | "en_attente"
 
 export interface Produit {
   id: number

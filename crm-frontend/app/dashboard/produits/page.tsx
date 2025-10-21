@@ -66,9 +66,9 @@ export default function ProduitsPage() {
       type: 'select' as const,
       options: [
         { value: '', label: 'Tous les statuts' },
-        { value: 'ACTIF', label: 'Actif' },
-        { value: 'INACTIF', label: 'Inactif' },
-        { value: 'ARCHIVE', label: 'Archivé' },
+        { value: 'actif', label: 'Actif' },
+        { value: 'inactif', label: 'Inactif' },
+        { value: 'en_attente', label: 'En attente' },
       ],
     },
   ]
@@ -125,9 +125,9 @@ export default function ProduitsPage() {
       render: (value: ProduitStatus) => (
         <span
           className={`px-2 py-1 text-xs rounded ${
-            value === 'ACTIF'
+            value === 'actif'
               ? 'bg-green-100 text-green-800'
-              : value === 'ARCHIVE'
+              : value === 'inactif'
                 ? 'bg-gray-100 text-gray-800'
                 : 'bg-yellow-100 text-yellow-800'
           }`}

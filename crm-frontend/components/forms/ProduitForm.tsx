@@ -27,9 +27,9 @@ const TYPE_OPTIONS: { value: ProduitType; label: string }[] = [
 ]
 
 const STATUS_OPTIONS: { value: ProduitStatus; label: string }[] = [
-  { value: 'ACTIF', label: 'Actif' },
-  { value: 'INACTIF', label: 'Inactif' },
-  { value: 'ARCHIVE', label: 'Archivé' },
+  { value: 'actif', label: 'Actif' },
+  { value: 'inactif', label: 'Inactif' },
+  { value: 'en_attente', label: 'En attente' },
 ]
 
 export function ProduitForm({
@@ -49,7 +49,7 @@ export function ProduitForm({
     defaultValues: {
       ...initialData,
       type: initialData?.type ?? 'AUTRE',
-      status: initialData?.status ?? 'ACTIF',
+      status: initialData?.status ?? 'actif',
     },
     mode: 'onBlur',
   })

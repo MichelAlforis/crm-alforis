@@ -12,12 +12,6 @@ import SearchBar from '@/components/search/SearchBar'
 import { MandatStatus } from '@/lib/types'
 
 const STATUS_LABELS: Record<string, string> = {
-  BROUILLON: 'Brouillon',
-  EN_NEGOCIATION: 'En négociation',
-  SIGNE: 'Signé',
-  ACTIF: 'Actif',
-  EXPIRE: 'Expiré',
-  RESILIE: 'Résilié',
   proposé: 'Proposé',
   signé: 'Signé',
   actif: 'Actif',
@@ -55,12 +49,10 @@ export default function MandatsPage() {
       type: 'select' as const,
       options: [
         { value: '', label: 'Tous les statuts' },
-        { value: 'BROUILLON', label: 'Brouillon' },
-        { value: 'EN_NEGOCIATION', label: 'En négociation' },
-        { value: 'SIGNE', label: 'Signé' },
-        { value: 'ACTIF', label: 'Actif' },
-        { value: 'EXPIRE', label: 'Expiré' },
-        { value: 'RESILIE', label: 'Résilié' },
+        { value: 'proposé', label: 'Proposé' },
+        { value: 'signé', label: 'Signé' },
+        { value: 'actif', label: 'Actif' },
+        { value: 'terminé', label: 'Terminé' },
       ],
     },
     {

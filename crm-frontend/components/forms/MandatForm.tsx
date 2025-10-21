@@ -21,12 +21,10 @@ interface MandatFormProps {
 }
 
 const STATUS_OPTIONS: { value: MandatStatus; label: string }[] = [
-  { value: 'BROUILLON', label: 'Brouillon' },
-  { value: 'EN_NEGOCIATION', label: 'En négociation' },
-  { value: 'SIGNE', label: 'Signé' },
-  { value: 'ACTIF', label: 'Actif' },
-  { value: 'EXPIRE', label: 'Expiré' },
-  { value: 'RESILIE', label: 'Résilié' },
+  { value: 'proposé', label: 'Proposé' },
+  { value: 'signé', label: 'Signé' },
+  { value: 'actif', label: 'Actif' },
+  { value: 'terminé', label: 'Terminé' },
 ]
 
 export function MandatForm({
@@ -87,7 +85,7 @@ export function MandatForm({
   } = useForm<MandatDistributionCreate>({
     defaultValues: {
       ...initialData,
-      status: initialData?.status ?? 'BROUILLON',
+      status: initialData?.status ?? 'proposé',
       date_debut: initialData?.date_debut ?? new Date().toISOString().split('T')[0],
     },
     mode: 'onBlur',
