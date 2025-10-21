@@ -33,9 +33,37 @@ export function useToast() {
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([])
 
+  // Helper pour convertir n'importe quel message en string
+  const normalizeMessage = (message: any): string => {
+    if (typeof message === 'string') return message
+    if (message === null || message === undefined) return ''
+
+    // Si c'est un objet avec des erreurs de validation Pydantic
+    if (typeof message === 'object') {
+      if (Array.isArray(message)) {
+        return message.map(err => {
+          if (typeof err === 'object' && err.msg) {
+            return err.msg
+          }
+          return String(err)
+        }).join(', ')
+      }
+      if (message.msg) return String(message.msg)
+      if (message.detail) return String(message.detail)
+      if (message.message) return String(message.message)
+      return JSON.stringify(message)
+    }
+
+    return String(message)
+  }
+
   const showToast = useCallback((toast: Omit<Toast, 'id'>) => {
     const id = Math.random().toString(36).substring(7)
-    const newToast = { ...toast, id }
+    const newToast = {
+      ...toast,
+      id,
+      message: toast.message ? normalizeMessage(toast.message) : undefined
+    }
 
     setToasts((prev) => [...prev, newToast])
 
