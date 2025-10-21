@@ -96,6 +96,8 @@ services:
       # JWT
       JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
       JWT_EXPIRATION_HOURS: ${JWT_EXPIRATION_HOURS:-24}
+      # AI Agent - Encryption
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?ENCRYPTION_KEY doit être défini dans .env}
       # Environnement
       ENVIRONMENT: production
       MAX_UPLOAD_SIZE_MB: ${MAX_UPLOAD_SIZE_MB:-10}
