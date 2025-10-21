@@ -645,9 +645,17 @@ class ApiClient {
   }
 
   async searchOrganisations(query: string, skip = 0, limit = 100): Promise<PaginatedResponse<Organisation>> {
-    return this.request<PaginatedResponse<Organisation>>('/organisations/search', {
+    const items = await this.request<Organisation[]>('/organisations/search', {
       params: { q: query, skip, limit },
     })
+
+    // Transformer la liste en réponse paginée
+    return {
+      items: items || [],
+      total: (items || []).length + skip, // Estimation (le backend ne fournit pas le total)
+      skip,
+      limit,
+    }
   }
 
   async getOrganisationsByLanguage(language: string, skip = 0, limit = 100): Promise<PaginatedResponse<Organisation>> {
