@@ -22,12 +22,16 @@ from schemas.ai_agent import (
     CheckDataQualityRequest,
     ApproveSuggestionRequest,
     RejectSuggestionRequest,
+    BatchApproveSuggestionsRequest,
+    BatchRejectSuggestionsRequest,
     UpdateAIConfigurationRequest,
     AISuggestionResponse,
     AIExecutionResponse,
     AIConfigurationResponse,
     AIStatisticsResponse,
     AITaskStatusResponse,
+    BatchOperationResponse,
+    SuggestionPreviewResponse,
     AISuggestionStatusEnum,
     AISuggestionTypeEnum,
 )
@@ -321,6 +325,164 @@ async def reject_suggestion(
 
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
+
+
+@router.post("/suggestions/batch/approve", response_model=BatchOperationResponse)
+async def batch_approve_suggestions(
+    request: BatchApproveSuggestionsRequest,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Approuve plusieurs suggestions en batch
+
+    Permet d'approuver 10-20 suggestions en 1 seul appel au lieu de 10-20 appels.
+    **Gain de temps énorme !**
+
+    Exemple:
+    ```json
+    {
+      "suggestion_ids": [1, 2, 3, 4, 5],
+      "notes": "Vérifié en masse, tous corrects"
+    }
+    ```
+    """
+    user_id = _extract_user_id(current_user)
+    ai_service = AIAgentService(db)
+
+    result = ai_service.batch_approve_suggestions(
+        suggestion_ids=request.suggestion_ids,
+        user_id=user_id,
+        notes=request.notes
+    )
+
+    # Émettre événements pour chaque succès
+    for item in result["results"]:
+        if item["status"] == "success":
+            emit_event(EventType.AI_SUGGESTION_APPROVED, {
+                "suggestion_id": item["suggestion_id"],
+                "user_id": user_id,
+                "batch": True,
+            })
+
+    return result
+
+
+@router.post("/suggestions/batch/reject", response_model=BatchOperationResponse)
+async def batch_reject_suggestions(
+    request: BatchRejectSuggestionsRequest,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Rejette plusieurs suggestions en batch
+
+    Permet de rejeter plusieurs faux positifs en une seule fois.
+
+    Exemple:
+    ```json
+    {
+      "suggestion_ids": [10, 11, 12],
+      "notes": "Faux positifs détectés"
+    }
+    ```
+    """
+    user_id = _extract_user_id(current_user)
+    ai_service = AIAgentService(db)
+
+    result = ai_service.batch_reject_suggestions(
+        suggestion_ids=request.suggestion_ids,
+        user_id=user_id,
+        notes=request.notes
+    )
+
+    # Émettre événements pour chaque succès
+    for item in result["results"]:
+        if item["status"] == "success":
+            emit_event(EventType.AI_SUGGESTION_REJECTED, {
+                "suggestion_id": item["suggestion_id"],
+                "user_id": user_id,
+                "batch": True,
+            })
+
+    return result
+
+
+@router.get("/suggestions/{suggestion_id}/preview", response_model=SuggestionPreviewResponse)
+async def preview_suggestion(
+    suggestion_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Prévisualise les changements avant d'approuver une suggestion
+
+    **Sécurité**: Voir exactement ce qui va être modifié avant application.
+
+    Retourne:
+    - Données actuelles
+    - Données proposées
+    - Résumé des changements (field by field)
+    - Impact assessment
+
+    Exemple response:
+    ```json
+    {
+      "current_data": {"nom": "BNP AM"},
+      "proposed_changes": {"nom": "BNP Paribas Asset Management"},
+      "changes_summary": [
+        {"field": "nom", "from": "BNP AM", "to": "BNP Paribas Asset Management", "type": "update"}
+      ],
+      "impact_assessment": "1 champ sera modifié"
+    }
+    ```
+    """
+    ai_service = AIAgentService(db)
+
+    try:
+        preview = ai_service.preview_suggestion(suggestion_id)
+        return preview
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
+@router.get("/suggestions/{entity_type}/{entity_id}", response_model=List[AISuggestionResponse])
+async def get_suggestions_for_entity(
+    entity_type: str,
+    entity_id: int,
+    status: Optional[AISuggestionStatusEnum] = Query(None),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Récupère toutes les suggestions pour une entité spécifique
+
+    **Utile pour:** Afficher toutes les suggestions d'une organisation dans sa fiche.
+
+    Exemples:
+    - `GET /api/v1/ai/suggestions/organisation/123` - Toutes suggestions pour org 123
+    - `GET /api/v1/ai/suggestions/organisation/123?status=pending` - Seulement pending
+
+    Args:
+    - **entity_type**: organisation, person
+    - **entity_id**: ID de l'entité
+    - **status**: Filtrer par statut (optionnel)
+    """
+    ai_service = AIAgentService(db)
+
+    from models.ai_agent import AISuggestionStatus
+
+    status_filter = None
+    if status:
+        status_filter = AISuggestionStatus[status.value.upper()]
+
+    suggestions = ai_service.get_suggestions_for_entity(
+        entity_type=entity_type,
+        entity_id=entity_id,
+        status=status_filter
+    )
+
+    return suggestions
 
 
 # ======================

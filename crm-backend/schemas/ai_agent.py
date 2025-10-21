@@ -117,6 +117,32 @@ class RejectSuggestionRequest(BaseModel):
         }
 
 
+class BatchApproveSuggestionsRequest(BaseModel):
+    suggestion_ids: List[int] = Field(..., min_length=1, description="Liste des IDs à approuver")
+    notes: Optional[str] = Field(None, max_length=1000, description="Notes communes")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "suggestion_ids": [1, 2, 3, 4, 5],
+                "notes": "Vérifié en masse, tous corrects"
+            }
+        }
+
+
+class BatchRejectSuggestionsRequest(BaseModel):
+    suggestion_ids: List[int] = Field(..., min_length=1, description="Liste des IDs à rejeter")
+    notes: Optional[str] = Field(None, max_length=1000, description="Raison commune du rejet")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "suggestion_ids": [10, 11, 12],
+                "notes": "Faux positifs détectés"
+            }
+        }
+
+
 class UpdateAIConfigurationRequest(BaseModel):
     ai_provider: Optional[AIProviderEnum] = None
     ai_model: Optional[str] = None
@@ -294,5 +320,63 @@ class AITaskStatusResponse(BaseModel):
                 "suggestions_created": 12,
                 "estimated_time_remaining_seconds": 180,
                 "current_step": "Analyse des organisations 91/200"
+            }
+        }
+
+
+class BatchOperationResponse(BaseModel):
+    total_requested: int
+    successful: int
+    failed: int
+    skipped: int
+    results: List[Dict[str, Any]]
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "total_requested": 5,
+                "successful": 4,
+                "failed": 1,
+                "skipped": 0,
+                "results": [
+                    {"suggestion_id": 1, "status": "success"},
+                    {"suggestion_id": 2, "status": "success"},
+                    {"suggestion_id": 3, "status": "failed", "error": "Already applied"},
+                ]
+            }
+        }
+
+
+class SuggestionPreviewResponse(BaseModel):
+    suggestion_id: int
+    entity_type: str
+    entity_id: int
+    current_data: Dict[str, Any]
+    proposed_changes: Dict[str, Any]
+    changes_summary: List[Dict[str, Any]]
+    impact_assessment: Optional[str] = None
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "suggestion_id": 123,
+                "entity_type": "organisation",
+                "entity_id": 45,
+                "current_data": {
+                    "nom": "BNP AM",
+                    "website": None,
+                    "email": None
+                },
+                "proposed_changes": {
+                    "nom": "BNP Paribas Asset Management",
+                    "website": "https://www.bnpparibas-am.com",
+                    "email": "contact@bnpparibas-am.com"
+                },
+                "changes_summary": [
+                    {"field": "nom", "from": "BNP AM", "to": "BNP Paribas Asset Management", "type": "update"},
+                    {"field": "website", "from": None, "to": "https://www.bnpparibas-am.com", "type": "add"},
+                    {"field": "email", "from": None, "to": "contact@bnpparibas-am.com", "type": "add"}
+                ],
+                "impact_assessment": "3 champs seront modifiés/ajoutés"
             }
         }

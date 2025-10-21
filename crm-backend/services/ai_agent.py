@@ -774,6 +774,182 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
 
         self.db.commit()
 
+    # ======================
+    # Batch Operations
+    # ======================
+
+    def batch_approve_suggestions(
+        self, suggestion_ids: List[int], user_id: int, notes: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Approuve plusieurs suggestions en batch
+
+        Args:
+            suggestion_ids: Liste des IDs à approuver
+            user_id: ID utilisateur
+            notes: Notes communes
+
+        Returns:
+            {
+                "total_requested": 5,
+                "successful": 4,
+                "failed": 1,
+                "results": [...]
+            }
+        """
+        results = []
+        successful = 0
+        failed = 0
+
+        for suggestion_id in suggestion_ids:
+            try:
+                self.approve_suggestion(suggestion_id, user_id, notes)
+                results.append({"suggestion_id": suggestion_id, "status": "success"})
+                successful += 1
+            except Exception as e:
+                results.append({
+                    "suggestion_id": suggestion_id,
+                    "status": "failed",
+                    "error": str(e)
+                })
+                failed += 1
+
+        return {
+            "total_requested": len(suggestion_ids),
+            "successful": successful,
+            "failed": failed,
+            "skipped": 0,
+            "results": results,
+        }
+
+    def batch_reject_suggestions(
+        self, suggestion_ids: List[int], user_id: int, notes: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Rejette plusieurs suggestions en batch
+
+        Args:
+            suggestion_ids: Liste des IDs à rejeter
+            user_id: ID utilisateur
+            notes: Raison commune
+
+        Returns:
+            Dict avec résultats de l'opération
+        """
+        results = []
+        successful = 0
+        failed = 0
+
+        for suggestion_id in suggestion_ids:
+            try:
+                self.reject_suggestion(suggestion_id, user_id, notes)
+                results.append({"suggestion_id": suggestion_id, "status": "success"})
+                successful += 1
+            except Exception as e:
+                results.append({
+                    "suggestion_id": suggestion_id,
+                    "status": "failed",
+                    "error": str(e)
+                })
+                failed += 1
+
+        return {
+            "total_requested": len(suggestion_ids),
+            "successful": successful,
+            "failed": failed,
+            "skipped": 0,
+            "results": results,
+        }
+
+    # ======================
+    # Preview & Entity Queries
+    # ======================
+
+    def preview_suggestion(self, suggestion_id: int) -> Dict[str, Any]:
+        """
+        Génère un aperçu des changements avant application
+
+        Args:
+            suggestion_id: ID de la suggestion
+
+        Returns:
+            {
+                "current_data": {...},
+                "proposed_changes": {...},
+                "changes_summary": [...]
+            }
+        """
+        suggestion = self.db.query(AISuggestion).filter(AISuggestion.id == suggestion_id).first()
+        if not suggestion:
+            raise ValueError("Suggestion non trouvée")
+
+        # Récupérer l'entité actuelle
+        current_data = {}
+        proposed_changes = suggestion.suggestion_data
+        changes_summary = []
+
+        if suggestion.entity_type == "organisation":
+            org = self.db.query(Organisation).filter(Organisation.id == suggestion.entity_id).first()
+            if org:
+                # Données actuelles
+                current_data = {
+                    "nom": org.nom,
+                    "website": org.website,
+                    "category": org.category,
+                    "general_email": org.general_email,
+                    "general_phone": org.general_phone,
+                }
+
+                # Analyser les changements
+                for field, new_value in proposed_changes.items():
+                    if field in current_data:
+                        old_value = current_data[field]
+                        if old_value != new_value:
+                            change_type = "update" if old_value else "add"
+                            changes_summary.append({
+                                "field": field,
+                                "from": old_value,
+                                "to": new_value,
+                                "type": change_type
+                            })
+
+        # Impact assessment
+        impact = f"{len(changes_summary)} champ(s) seront modifié(s)"
+
+        return {
+            "suggestion_id": suggestion_id,
+            "entity_type": suggestion.entity_type,
+            "entity_id": suggestion.entity_id,
+            "current_data": current_data,
+            "proposed_changes": proposed_changes,
+            "changes_summary": changes_summary,
+            "impact_assessment": impact,
+        }
+
+    def get_suggestions_for_entity(
+        self, entity_type: str, entity_id: int, status: Optional[AISuggestionStatus] = None
+    ) -> List[AISuggestion]:
+        """
+        Récupère toutes les suggestions pour une entité spécifique
+
+        Args:
+            entity_type: Type d'entité (organisation, person)
+            entity_id: ID de l'entité
+            status: Filtrer par statut (optionnel)
+
+        Returns:
+            Liste des suggestions
+        """
+        query = self.db.query(AISuggestion).filter(
+            AISuggestion.entity_type == entity_type,
+            AISuggestion.entity_id == entity_id
+        )
+
+        if status:
+            query = query.filter(AISuggestion.status == status)
+
+        return query.order_by(AISuggestion.created_at.desc()).all()
+
     def _apply_suggestion(self, suggestion: AISuggestion):
         """Applique une suggestion approuvée"""
         if suggestion.type == AISuggestionType.DATA_ENRICHMENT:
