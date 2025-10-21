@@ -1,59 +1,166 @@
-// components/search/AdvancedFilters.tsx — Filtres avancés pour la recherche
+// components/search/AdvancedFilters.tsx — Filtres avancés génériques pour toutes les tables
 'use client'
 
 import React, { useState } from 'react'
-import { Filter, X, Calendar, CheckCircle, XCircle } from 'lucide-react'
+import { Filter, X } from 'lucide-react'
+
+// ============= TYPES =============
+
+export type FilterType = 'select' | 'search' | 'date' | 'multiselect' | 'boolean'
+
+export interface FilterOption {
+  value: string
+  label: string
+}
+
+export interface FilterDefinition {
+  key: string
+  label: string
+  type: FilterType
+  options?: FilterOption[] // Pour select et multiselect
+  placeholder?: string // Pour search
+}
 
 interface AdvancedFiltersProps {
-  onFiltersChange: (filters: SearchFilters) => void
+  filters: FilterDefinition[]
+  values: Record<string, string | string[]>
+  onChange: (key: string, value: string | string[] | undefined) => void
+  onReset: () => void
 }
 
-export interface SearchFilters {
-  dateFrom?: string
-  dateTo?: string
-  status?: string
-  types?: string[]
-}
+// ============= COMPONENT =============
 
-export default function AdvancedFilters({ onFiltersChange }: AdvancedFiltersProps) {
+export default function AdvancedFilters({
+  filters,
+  values,
+  onChange,
+  onReset,
+}: AdvancedFiltersProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const [filters, setFilters] = useState<SearchFilters>({})
 
-  const types = [
-    { id: 'fournisseur', label: 'Fournisseurs' },
-    { id: 'investisseur', label: 'Investisseurs' },
-    { id: 'contact', label: 'Interactions' },
-    { id: 'kpi', label: 'KPIs' },
-  ]
-
-  const statuses = [
-    { id: 'active', label: 'Actif', icon: CheckCircle, color: 'text-green-600' },
-    { id: 'inactive', label: 'Inactif', icon: XCircle, color: 'text-gray-600' },
-  ]
-
-  function updateFilter(key: keyof SearchFilters, value: any) {
-    const newFilters = { ...filters, [key]: value }
-    setFilters(newFilters)
-    onFiltersChange(newFilters)
-  }
-
-  function toggleType(typeId: string) {
-    const currentTypes = filters.types || []
-    const newTypes = currentTypes.includes(typeId)
-      ? currentTypes.filter(t => t !== typeId)
-      : [...currentTypes, typeId]
-    updateFilter('types', newTypes.length > 0 ? newTypes : undefined)
-  }
-
-  function clearFilters() {
-    setFilters({})
-    onFiltersChange({})
-  }
-
-  const activeFiltersCount = Object.keys(filters).filter(key => {
-    const value = filters[key as keyof SearchFilters]
-    return value !== undefined && value !== null && value !== '' && (Array.isArray(value) ? value.length > 0 : true)
+  // Compte le nombre de filtres actifs
+  const activeFiltersCount = Object.keys(values).filter((key) => {
+    const value = values[key]
+    if (value === undefined || value === null || value === '') return false
+    if (Array.isArray(value)) return value.length > 0
+    return true
   }).length
+
+  const handleChange = (key: string, value: string | string[] | undefined) => {
+    onChange(key, value)
+  }
+
+  const handleReset = () => {
+    onReset()
+  }
+
+  // ============= RENDER FILTER INPUT =============
+
+  const renderFilterInput = (filter: FilterDefinition) => {
+    const value = values[filter.key] || ''
+
+    switch (filter.type) {
+      case 'select':
+        return (
+          <select
+            value={value as string}
+            onChange={(e) => handleChange(filter.key, e.target.value || undefined)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white"
+          >
+            {filter.options?.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        )
+
+      case 'search':
+        return (
+          <input
+            type="text"
+            value={value as string}
+            onChange={(e) => handleChange(filter.key, e.target.value || undefined)}
+            placeholder={filter.placeholder || 'Rechercher...'}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+          />
+        )
+
+      case 'date':
+        return (
+          <input
+            type="date"
+            value={value as string}
+            onChange={(e) => handleChange(filter.key, e.target.value || undefined)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+          />
+        )
+
+      case 'multiselect':
+        return (
+          <div className="space-y-2 max-h-48 overflow-y-auto">
+            {filter.options?.map((option) => {
+              const currentValues = (value as string[]) || []
+              const isChecked = currentValues.includes(option.value)
+              return (
+                <label
+                  key={option.value}
+                  className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors"
+                >
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={(e) => {
+                      const newValues = e.target.checked
+                        ? [...currentValues, option.value]
+                        : currentValues.filter((v) => v !== option.value)
+                      handleChange(
+                        filter.key,
+                        newValues.length > 0 ? newValues : undefined
+                      )
+                    }}
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  />
+                  <span className="text-sm text-gray-700">{option.label}</span>
+                </label>
+              )
+            })}
+          </div>
+        )
+
+      case 'boolean':
+        return (
+          <div className="flex gap-2">
+            {filter.options?.map((option) => {
+              const isSelected = value === option.value
+              return (
+                <button
+                  key={option.value}
+                  onClick={() =>
+                    handleChange(filter.key, isSelected ? undefined : option.value)
+                  }
+                  className={`
+                    flex-1 px-3 py-2 rounded-lg border-2 text-sm font-medium transition-all
+                    ${
+                      isSelected
+                        ? 'border-blue-600 bg-blue-50 text-blue-700'
+                        : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                    }
+                  `}
+                >
+                  {option.label}
+                </button>
+              )
+            })}
+          </div>
+        )
+
+      default:
+        return null
+    }
+  }
+
+  // ============= RENDER =============
 
   return (
     <div className="relative">
@@ -62,9 +169,10 @@ export default function AdvancedFilters({ onFiltersChange }: AdvancedFiltersProp
         onClick={() => setIsOpen(!isOpen)}
         className={`
           inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 text-sm font-medium transition-all duration-200
-          ${activeFiltersCount > 0
-            ? 'border-blue-600 text-blue-700 bg-blue-50'
-            : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+          ${
+            activeFiltersCount > 0
+              ? 'border-blue-600 text-blue-700 bg-blue-50'
+              : 'border-gray-300 text-gray-700 hover:bg-gray-50'
           }
         `}
       >
@@ -105,87 +213,28 @@ export default function AdvancedFilters({ onFiltersChange }: AdvancedFiltersProp
 
             {/* Content */}
             <div className="p-4 space-y-4 max-h-[60vh] overflow-y-auto">
-              {/* Filtre par date */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
-                  Période
-                </label>
-                <div className="space-y-2">
-                  <input
-                    type="date"
-                    value={filters.dateFrom || ''}
-                    onChange={(e) => updateFilter('dateFrom', e.target.value || undefined)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                    placeholder="Date de début"
-                  />
-                  <input
-                    type="date"
-                    value={filters.dateTo || ''}
-                    onChange={(e) => updateFilter('dateTo', e.target.value || undefined)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                    placeholder="Date de fin"
-                  />
+              {filters.map((filter) => (
+                <div key={filter.key}>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {filter.label}
+                  </label>
+                  {renderFilterInput(filter)}
                 </div>
-              </div>
+              ))}
 
-              {/* Filtre par type */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Type de résultat
-                </label>
-                <div className="space-y-2">
-                  {types.map((type) => (
-                    <label
-                      key={type.id}
-                      className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={filters.types?.includes(type.id) || false}
-                        onChange={() => toggleType(type.id)}
-                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                      />
-                      <span className="text-sm text-gray-700">{type.label}</span>
-                    </label>
-                  ))}
+              {filters.length === 0 && (
+                <div className="text-center py-8 text-gray-500 text-sm">
+                  Aucun filtre disponible
                 </div>
-              </div>
-
-              {/* Filtre par statut */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Statut
-                </label>
-                <div className="flex gap-2">
-                  {statuses.map((status) => {
-                    const Icon = status.icon
-                    const isSelected = filters.status === status.id
-                    return (
-                      <button
-                        key={status.id}
-                        onClick={() => updateFilter('status', isSelected ? undefined : status.id)}
-                        className={`
-                          flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border-2 text-sm font-medium transition-all
-                          ${isSelected
-                            ? 'border-blue-600 bg-blue-50 text-blue-700'
-                            : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-                          }
-                        `}
-                      >
-                        <Icon className={`w-4 h-4 ${isSelected ? 'text-blue-600' : status.color}`} />
-                        {status.label}
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
+              )}
             </div>
 
             {/* Footer */}
             <div className="flex items-center gap-2 px-4 py-3 border-t border-gray-200 bg-gray-50">
               <button
-                onClick={clearFilters}
+                onClick={() => {
+                  handleReset()
+                }}
                 className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 Réinitialiser

@@ -6,7 +6,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useProduits } from '@/hooks/useProduits'
-import { Card, Button, Table, Input, Alert, Select } from '@/components/shared'
+import { Card, Button, Table, Input, Alert, AdvancedFilters } from '@/components/shared'
 import { ProduitType, ProduitStatus } from '@/lib/types'
 
 const TYPE_LABELS: Record<string, string> = {
@@ -24,23 +24,78 @@ const TYPE_LABELS: Record<string, string> = {
 
 export default function ProduitsPage() {
   const [searchText, setSearchText] = useState('')
-  const [typeFilter, setTypeFilter] = useState<string>('')
-  const [statusFilter, setStatusFilter] = useState<string>('')
+  const [filtersState, setFiltersState] = useState({
+    type: '',
+    status: '',
+  })
+
+  const handleFilterChange = (key: string, value: unknown) => {
+    if (Array.isArray(value)) return
+    setFiltersState((prev) => ({
+      ...prev,
+      [key]: value as string,
+    }))
+  }
+
+  const resetFilters = () =>
+    setFiltersState({
+      type: '',
+      status: '',
+    })
+
+  const advancedFilterDefinitions = [
+    {
+      key: 'type',
+      label: 'Type de produit',
+      type: 'select' as const,
+      options: [
+        { value: '', label: 'Tous les types' },
+        { value: 'OPCVM', label: 'OPCVM (Fonds)' },
+        { value: 'ETF', label: 'ETF (Trackers)' },
+        { value: 'SCPI', label: 'SCPI (Immobilier)' },
+        { value: 'ASSURANCE_VIE', label: 'Assurance Vie' },
+        { value: 'PER', label: 'PER' },
+        { value: 'FCP', label: 'FCP' },
+        { value: 'SICAV', label: 'SICAV' },
+        { value: 'AUTRE', label: 'Autre' },
+      ],
+    },
+    {
+      key: 'status',
+      label: 'Statut',
+      type: 'select' as const,
+      options: [
+        { value: '', label: 'Tous les statuts' },
+        { value: 'ACTIF', label: 'Actif' },
+        { value: 'INACTIF', label: 'Inactif' },
+        { value: 'ARCHIVE', label: 'Archivé' },
+      ],
+    },
+  ]
 
   const { data, isLoading, error } = useProduits({
     limit: 100,
-    type: typeFilter || undefined,
-    status: statusFilter || undefined,
+    type: filtersState.type || undefined,
+    status: filtersState.status || undefined,
   })
 
-  // Filtrer côté client par nom/ISIN
+  // Filtrer côté client par nom/ISIN + filtres avancés
   const filteredData = data?.items.filter((produit) => {
     const search = searchText.toLowerCase()
-    return (
+    const matchesSearch =
       produit.name.toLowerCase().includes(search) ||
       produit.isin_code?.toLowerCase().includes(search) ||
-      ''
-    )
+      false
+
+    const matchesType = filtersState.type
+      ? produit.type === filtersState.type
+      : true
+
+    const matchesStatus = filtersState.status
+      ? produit.status === filtersState.status
+      : true
+
+    return matchesSearch && matchesType && matchesStatus
   })
 
   const columns = [
@@ -107,29 +162,18 @@ export default function ProduitsPage() {
       </div>
 
       <Card>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="space-y-4">
           <Input
             placeholder="Rechercher par nom ou ISIN..."
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
           />
-
-          <Select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
-            <option value="">Tous les types</option>
-            <option value="OPCVM">OPCVM (Fonds)</option>
-            <option value="ETF">ETF (Trackers)</option>
-            <option value="SCPI">SCPI (Immobilier)</option>
-            <option value="ASSURANCE_VIE">Assurance Vie</option>
-            <option value="PER">PER</option>
-            <option value="AUTRE">Autre</option>
-          </Select>
-
-          <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-            <option value="">Tous les statuts</option>
-            <option value="ACTIF">Actif</option>
-            <option value="INACTIF">Inactif</option>
-            <option value="ARCHIVE">Archivé</option>
-          </Select>
+          <AdvancedFilters
+            filters={advancedFilterDefinitions}
+            values={filtersState}
+            onChange={handleFilterChange}
+            onReset={resetFilters}
+          />
         </div>
       </Card>
 

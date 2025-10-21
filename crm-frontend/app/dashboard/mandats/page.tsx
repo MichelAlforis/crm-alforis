@@ -7,7 +7,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useMandats } from '@/hooks/useMandats'
-import { Card, Button, Table, Alert, Select, ExportButtons } from '@/components/shared'
+import { Card, Button, Table, Alert, AdvancedFilters, ExportButtons } from '@/components/shared'
 import SearchBar from '@/components/search/SearchBar'
 import { MandatStatus } from '@/lib/types'
 
@@ -26,12 +26,58 @@ const STATUS_LABELS: Record<string, string> = {
 
 export default function MandatsPage() {
   const router = useRouter()
-  const [statusFilter, setStatusFilter] = useState<string>('')
   const [searchQuery, setSearchQuery] = useState('')
+  const [filtersState, setFiltersState] = useState({
+    status: '',
+    dateFrom: '',
+    dateTo: '',
+  })
+
+  const handleFilterChange = (key: string, value: unknown) => {
+    if (Array.isArray(value)) return
+    setFiltersState((prev) => ({
+      ...prev,
+      [key]: value as string,
+    }))
+  }
+
+  const resetFilters = () =>
+    setFiltersState({
+      status: '',
+      dateFrom: '',
+      dateTo: '',
+    })
+
+  const advancedFilterDefinitions = [
+    {
+      key: 'status',
+      label: 'Statut',
+      type: 'select' as const,
+      options: [
+        { value: '', label: 'Tous les statuts' },
+        { value: 'BROUILLON', label: 'Brouillon' },
+        { value: 'EN_NEGOCIATION', label: 'En négociation' },
+        { value: 'SIGNE', label: 'Signé' },
+        { value: 'ACTIF', label: 'Actif' },
+        { value: 'EXPIRE', label: 'Expiré' },
+        { value: 'RESILIE', label: 'Résilié' },
+      ],
+    },
+    {
+      key: 'dateFrom',
+      label: 'Date début après',
+      type: 'date' as const,
+    },
+    {
+      key: 'dateTo',
+      label: 'Date fin avant',
+      type: 'date' as const,
+    },
+  ]
 
   const { data, isLoading, error } = useMandats({
     limit: 100,
-    status: statusFilter || undefined,
+    status: filtersState.status || undefined,
   })
 
   const columns = [
@@ -93,17 +139,30 @@ export default function MandatsPage() {
 
   const filteredMandats = (data?.items ?? []).filter((mandat) => {
     const search = searchQuery.trim().toLowerCase()
-    if (!search) return true
-    const numero = mandat.numero_mandat ?? ''
-    const organisationName = mandat.organisation?.name ?? ''
-    return (
-      numero.toLowerCase().includes(search) ||
-      organisationName.toLowerCase().includes(search)
-    )
+    const matchesSearch =
+      !search ||
+      (mandat.numero_mandat ?? '').toLowerCase().includes(search) ||
+      (mandat.organisation?.name ?? '').toLowerCase().includes(search)
+
+    const matchesStatus = filtersState.status
+      ? mandat.status === filtersState.status
+      : true
+
+    const dateDebut = mandat.date_debut ? new Date(mandat.date_debut) : null
+    const matchesDateFrom = filtersState.dateFrom
+      ? dateDebut && dateDebut >= new Date(filtersState.dateFrom)
+      : true
+
+    const dateFin = mandat.date_fin ? new Date(mandat.date_fin) : null
+    const matchesDateTo = filtersState.dateTo
+      ? dateFin && dateFin <= new Date(filtersState.dateTo)
+      : true
+
+    return matchesSearch && matchesStatus && matchesDateFrom && matchesDateTo
   })
 
   const exportParams = {
-    status: statusFilter || undefined,
+    status: filtersState.status || undefined,
   }
 
   return (
@@ -121,38 +180,31 @@ export default function MandatsPage() {
       </div>
 
       <Card>
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <SearchBar
-            placeholder="Rechercher un mandat…"
-            entityType="mandats"
-            onQueryChange={setSearchQuery}
-            onSubmit={setSearchQuery}
-            onSelectSuggestion={(suggestion) => {
-              if (suggestion?.id) {
-                router.push(`/dashboard/mandats/${suggestion.id}`)
-              }
-            }}
-          />
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-            <Select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-48"
-            >
-              <option value="">Tous les statuts</option>
-              <option value="BROUILLON">Brouillon</option>
-              <option value="EN_NEGOCIATION">En négociation</option>
-              <option value="SIGNE">Signé</option>
-              <option value="ACTIF">Actif</option>
-              <option value="EXPIRE">Expiré</option>
-              <option value="RESILIE">Résilié</option>
-            </Select>
+        <div className="space-y-4">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <SearchBar
+              placeholder="Rechercher un mandat…"
+              entityType="mandats"
+              onQueryChange={setSearchQuery}
+              onSubmit={setSearchQuery}
+              onSelectSuggestion={(suggestion) => {
+                if (suggestion?.id) {
+                  router.push(`/dashboard/mandats/${suggestion.id}`)
+                }
+              }}
+            />
             <ExportButtons
               resource="mandats"
               params={exportParams}
               baseFilename="mandats"
             />
           </div>
+          <AdvancedFilters
+            filters={advancedFilterDefinitions}
+            values={filtersState}
+            onChange={handleFilterChange}
+            onReset={resetFilters}
+          />
         </div>
       </Card>
 

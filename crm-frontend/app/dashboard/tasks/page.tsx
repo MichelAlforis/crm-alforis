@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useTaskViews, useTasks } from '@/hooks/useTasks'
 import TaskForm from '@/components/forms/TaskForm'
+import { AdvancedFilters } from '@/components/shared'
 import type { Task, TaskPriority } from '@/lib/types'
 
 // ============= PRIORITY BADGE =============
@@ -170,6 +171,86 @@ export default function TaskdeskPage() {
   const { overdue, today, next7, overdueCount, todayCount, next7Count, stats } = useTaskViews()
   const { quickAction } = useTasks()
   const [isFormOpen, setIsFormOpen] = useState(false)
+  const [filtersState, setFiltersState] = useState({
+    priority: '',
+    category: '',
+    status: '',
+  })
+
+  const handleFilterChange = (key: string, value: unknown) => {
+    if (Array.isArray(value)) return
+    setFiltersState((prev) => ({
+      ...prev,
+      [key]: value as string,
+    }))
+  }
+
+  const resetFilters = () =>
+    setFiltersState({
+      priority: '',
+      category: '',
+      status: '',
+    })
+
+  const advancedFilterDefinitions = [
+    {
+      key: 'priority',
+      label: 'Priorité',
+      type: 'select' as const,
+      options: [
+        { value: '', label: 'Toutes les priorités' },
+        { value: 'critique', label: '🔴 Critique' },
+        { value: 'haute', label: '🟠 Haute' },
+        { value: 'moyenne', label: '🟡 Moyenne' },
+        { value: 'basse', label: '🔵 Basse' },
+        { value: 'non_prioritaire', label: '⚪ Non prioritaire' },
+      ],
+    },
+    {
+      key: 'category',
+      label: 'Catégorie',
+      type: 'select' as const,
+      options: [
+        { value: '', label: 'Toutes les catégories' },
+        { value: 'follow_up', label: 'Suivi' },
+        { value: 'meeting', label: 'Réunion' },
+        { value: 'call', label: 'Appel' },
+        { value: 'email', label: 'Email' },
+        { value: 'other', label: 'Autre' },
+      ],
+    },
+    {
+      key: 'status',
+      label: 'Statut',
+      type: 'select' as const,
+      options: [
+        { value: '', label: 'Tous les statuts' },
+        { value: 'todo', label: 'À faire' },
+        { value: 'doing', label: 'En cours' },
+        { value: 'done', label: 'Terminé' },
+      ],
+    },
+  ]
+
+  // Filtrer les tâches
+  const filterTasks = (tasks: Task[]) => {
+    return tasks.filter((task) => {
+      const matchesPriority = filtersState.priority
+        ? task.priority === filtersState.priority
+        : true
+      const matchesCategory = filtersState.category
+        ? task.category === filtersState.category
+        : true
+      const matchesStatus = filtersState.status
+        ? task.status === filtersState.status
+        : true
+      return matchesPriority && matchesCategory && matchesStatus
+    })
+  }
+
+  const filteredOverdue = filterTasks(overdue)
+  const filteredToday = filterTasks(today)
+  const filteredNext7 = filterTasks(next7)
 
   // Raccourci clavier : K pour ouvrir le formulaire
   useEffect(() => {
@@ -226,6 +307,16 @@ export default function TaskdeskPage() {
               </svg>
               Vue Kanban
             </a>
+          </div>
+
+          {/* Filters */}
+          <div className="mt-6">
+            <AdvancedFilters
+              filters={advancedFilterDefinitions}
+              values={filtersState}
+              onChange={handleFilterChange}
+              onReset={resetFilters}
+            />
           </div>
 
           {/* Stats Cards */}
@@ -323,9 +414,9 @@ export default function TaskdeskPage() {
           {/* EN RETARD */}
           <TaskSection
             title="EN RETARD"
-            count={overdueCount}
+            count={filteredOverdue.length}
             emoji="🔴"
-            tasks={overdue}
+            tasks={filteredOverdue}
             bgColor="bg-white/80 backdrop-blur-sm border-2 border-red-200 shadow-lg"
             onQuickAction={handleQuickAction}
           />
@@ -333,9 +424,9 @@ export default function TaskdeskPage() {
           {/* AUJOURD'HUI */}
           <TaskSection
             title="AUJOURD'HUI"
-            count={todayCount}
+            count={filteredToday.length}
             emoji="⚡"
-            tasks={today}
+            tasks={filteredToday}
             bgColor="bg-white/80 backdrop-blur-sm border-2 border-orange-200 shadow-lg"
             onQuickAction={handleQuickAction}
           />
@@ -343,9 +434,9 @@ export default function TaskdeskPage() {
           {/* PROCHAINS 7 JOURS */}
           <TaskSection
             title="PROCHAINS 7 JOURS"
-            count={next7Count}
+            count={filteredNext7.length}
             emoji="📅"
-            tasks={next7}
+            tasks={filteredNext7}
             bgColor="bg-white/80 backdrop-blur-sm border-2 border-blue-200 shadow-lg"
             onQuickAction={handleQuickAction}
           />
