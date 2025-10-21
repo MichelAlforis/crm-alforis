@@ -29,6 +29,32 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
 // ============= HELPER FUNCTIONS =============
 
+// Helper pour normaliser les erreurs API (Pydantic validation errors)
+function normalizeErrorDetail(detail: any): string {
+  if (typeof detail === 'string') return detail
+
+  // Si c'est un tableau d'erreurs de validation Pydantic
+  if (Array.isArray(detail)) {
+    return detail
+      .map((err) => {
+        if (typeof err === 'object' && err.msg) {
+          const location = err.loc ? ` (${err.loc.join(' > ')})` : ''
+          return `${err.msg}${location}`
+        }
+        return String(err)
+      })
+      .join(', ')
+  }
+
+  if (typeof detail === 'object' && detail !== null) {
+    if (detail.msg) return String(detail.msg)
+    if (detail.message) return String(detail.message)
+    return JSON.stringify(detail)
+  }
+
+  return String(detail)
+}
+
 async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> {
   // ✅ CORRECTIF: Utiliser apiClient.getToken() au lieu de localStorage direct
   const token = apiClient.getToken()
@@ -44,7 +70,8 @@ async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> 
 
   if (!res.ok) {
     const error = await res.json().catch(() => ({ detail: 'Une erreur est survenue' }))
-    throw new Error(error.detail || `HTTP ${res.status}`)
+    const errorMessage = normalizeErrorDetail(error.detail || `HTTP ${res.status}`)
+    throw new Error(errorMessage)
   }
 
   return res.json()
