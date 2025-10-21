@@ -690,3 +690,188 @@ async def get_ai_statistics(
         cost_by_provider=cost_by_provider,
         config=config_data,
     )
+
+
+# ============================================================================
+# API KEYS MANAGEMENT (Frontend Configuration)
+# ============================================================================
+
+from pydantic import BaseModel, field_validator
+
+class SaveAPIKeysRequest(BaseModel):
+    """Requête pour sauvegarder les clés API depuis le frontend"""
+    anthropic_key: Optional[str] = None
+    openai_key: Optional[str] = None
+    ollama_url: Optional[str] = None
+
+    @field_validator('anthropic_key')
+    @classmethod
+    def validate_anthropic_key(cls, v):
+        if v and not v.startswith('sk-ant-'):
+            raise ValueError('Clé Anthropic invalide (doit commencer par sk-ant-)')
+        return v
+
+    @field_validator('openai_key')
+    @classmethod
+    def validate_openai_key(cls, v):
+        if v and not v.startswith('sk-'):
+            raise ValueError('Clé OpenAI invalide (doit commencer par sk-)')
+        return v
+
+
+class APIKeysStatusResponse(BaseModel):
+    """Statut des clés API (sans exposer les clés)"""
+    anthropic_configured: bool
+    openai_configured: bool
+    ollama_configured: bool
+    last_updated_at: Optional[str] = None
+    using_env_fallback: bool
+
+
+@router.put("/config/api-keys")
+async def save_api_keys(
+    request: SaveAPIKeysRequest,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Sauvegarder les clés API depuis le frontend (chiffrées en BDD)
+
+    **Sécurité:**
+    - Clés chiffrées avec Fernet (AES-256)
+    - Jamais exposées en GET
+    - Stockées uniquement dans BDD (pas de logs)
+
+    **Usage:**
+    ```javascript
+    await fetch('/api/v1/ai/config/api-keys', {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        anthropic_key: 'sk-ant-api03-xxxxx',
+        openai_key: 'sk-proj-xxxxx'
+      })
+    })
+    ```
+    """
+    from core.encryption import get_encryption_service
+    from datetime import datetime, UTC
+
+    user_id = _extract_user_id(current_user)
+
+    # Récupérer la configuration active
+    config = db.query(AIConfiguration).filter(AIConfiguration.is_active == True).first()
+    if not config:
+        raise HTTPException(status_code=404, detail="Configuration IA non trouvée")
+
+    encryption = get_encryption_service()
+
+    # Chiffrer et sauvegarder les clés
+    if request.anthropic_key:
+        config.encrypted_anthropic_key = encryption.encrypt(request.anthropic_key)
+
+    if request.openai_key:
+        config.encrypted_openai_key = encryption.encrypt(request.openai_key)
+
+    if request.ollama_url:
+        config.encrypted_ollama_url = encryption.encrypt(request.ollama_url)
+
+    config.api_keys_updated_at = datetime.now(UTC)
+    config.api_keys_updated_by = user_id
+
+    db.commit()
+
+    return {
+        "message": "Clés API sauvegardées avec succès",
+        "status": {
+            "anthropic_configured": bool(config.encrypted_anthropic_key),
+            "openai_configured": bool(config.encrypted_openai_key),
+            "ollama_configured": bool(config.encrypted_ollama_url),
+        }
+    }
+
+
+@router.get("/config/api-keys/status", response_model=APIKeysStatusResponse)
+async def get_api_keys_status(
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Vérifier le statut des clés API (SANS les exposer)
+
+    Retourne uniquement si les clés sont configurées ou non.
+    Jamais les clés elles-mêmes pour des raisons de sécurité.
+
+    **Réponse:**
+    ```json
+    {
+      "anthropic_configured": true,
+      "openai_configured": false,
+      "ollama_configured": false,
+      "last_updated_at": "2025-10-21T10:30:00Z",
+      "using_env_fallback": false
+    }
+    ```
+    """
+    from core.config import settings
+
+    config = db.query(AIConfiguration).filter(AIConfiguration.is_active == True).first()
+
+    if not config:
+        raise HTTPException(status_code=404, detail="Configuration IA non trouvée")
+
+    return APIKeysStatusResponse(
+        anthropic_configured=bool(config.encrypted_anthropic_key),
+        openai_configured=bool(config.encrypted_openai_key),
+        ollama_configured=bool(config.encrypted_ollama_url),
+        last_updated_at=config.api_keys_updated_at.isoformat() if config.api_keys_updated_at else None,
+        using_env_fallback=not any([
+            config.encrypted_anthropic_key,
+            config.encrypted_openai_key,
+            config.encrypted_ollama_url
+        ]),
+    )
+
+
+@router.delete("/config/api-keys/{provider}")
+async def delete_api_key(
+    provider: str,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Supprimer une clé API spécifique
+
+    **Providers disponibles:** `anthropic`, `openai`, `ollama`
+
+    **Usage:**
+    ```bash
+    DELETE /api/v1/ai/config/api-keys/anthropic
+    ```
+    """
+    from datetime import datetime, UTC
+
+    user_id = _extract_user_id(current_user)
+
+    config = db.query(AIConfiguration).filter(AIConfiguration.is_active == True).first()
+    if not config:
+        raise HTTPException(status_code=404, detail="Configuration IA non trouvée")
+
+    if provider == "anthropic":
+        config.encrypted_anthropic_key = None
+    elif provider == "openai":
+        config.encrypted_openai_key = None
+    elif provider == "ollama":
+        config.encrypted_ollama_url = None
+    else:
+        raise HTTPException(status_code=400, detail=f"Provider inconnu: {provider}")
+
+    config.api_keys_updated_at = datetime.now(UTC)
+    config.api_keys_updated_by = user_id
+
+    db.commit()
+
+    return {"message": f"Clé API {provider} supprimée avec succès"}

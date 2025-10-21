@@ -6,8 +6,9 @@
 import React, { useState, useEffect } from 'react'
 import { useAIConfig, useUpdateAIConfig } from '@/hooks/useAI'
 import { AIProvider } from '@/types/ai'
-import { Settings, Save, Eye, EyeOff, Zap } from 'lucide-react'
+import { Settings, Save, Eye, EyeOff, Zap, Key, ExternalLink, CheckCircle, AlertCircle } from 'lucide-react'
 import clsx from 'clsx'
+import { apiClient } from '@/lib/api'
 
 export default function AIConfigPage() {
   const { data: config, isLoading } = useAIConfig()
@@ -29,7 +30,47 @@ export default function AIConfigPage() {
     cache_ttl_hours: 24,
   })
 
-  const [showApiKey, setShowApiKey] = useState(false)
+  // États pour les API keys
+  const [apiKeys, setApiKeys] = useState({
+    anthropic: '',
+    openai: '',
+    ollama: '',
+  })
+
+  const [apiKeysStatus, setApiKeysStatus] = useState({
+    anthropic_configured: false,
+    openai_configured: false,
+    ollama_configured: false,
+    using_env_fallback: true,
+  })
+
+  const [showApiKeys, setShowApiKeys] = useState({
+    anthropic: false,
+    openai: false,
+    ollama: false,
+  })
+
+  const [isSavingKeys, setIsSavingKeys] = useState(false)
+
+  // Charger le statut des clés API au montage
+  useEffect(() => {
+    const loadKeysStatus = async () => {
+      try {
+        const response = await fetch(`${apiClient.getBaseUrl()}/ai/config/api-keys/status`, {
+          headers: {
+            'Authorization': `Bearer ${apiClient.getToken()}`,
+          },
+        })
+        if (response.ok) {
+          const status = await response.json()
+          setApiKeysStatus(status)
+        }
+      } catch (error) {
+        console.error('Erreur chargement statut clés:', error)
+      }
+    }
+    loadKeysStatus()
+  }, [])
 
   useEffect(() => {
     if (config) {
@@ -61,6 +102,41 @@ export default function AIConfigPage() {
     }
 
     updateConfig.mutate(payload)
+  }
+
+  // Sauvegarder les clés API
+  const handleSaveApiKeys = async () => {
+    setIsSavingKeys(true)
+    try {
+      const payload: any = {}
+      if (apiKeys.anthropic) payload.anthropic_key = apiKeys.anthropic
+      if (apiKeys.openai) payload.openai_key = apiKeys.openai
+      if (apiKeys.ollama) payload.ollama_url = apiKeys.ollama
+
+      const response = await fetch(`${apiClient.getBaseUrl()}/ai/config/api-keys`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${apiClient.getToken()}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        setApiKeysStatus(result.status)
+        setApiKeys({ anthropic: '', openai: '', ollama: '' }) // Clear inputs
+        alert('✅ Clés API sauvegardées avec succès!')
+      } else {
+        const error = await response.json()
+        alert(`❌ Erreur: ${error.detail}`)
+      }
+    } catch (error) {
+      console.error('Erreur sauvegarde clés:', error)
+      alert('❌ Erreur lors de la sauvegarde des clés')
+    } finally {
+      setIsSavingKeys(false)
+    }
   }
 
   if (isLoading) {
@@ -125,30 +201,169 @@ export default function AIConfigPage() {
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                API Key {config?.api_key_set && <span className="text-green-600">(✓ configurée)</span>}
-              </label>
+          </div>
+
+          {/* API Keys Section */}
+          <div className="bg-white rounded-2xl shadow-lg p-6 space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                <Key className="h-5 w-5 text-green-600" />
+                Clés API
+              </h2>
+              {apiKeysStatus.using_env_fallback && (
+                <span className="text-sm text-amber-600 flex items-center gap-1">
+                  <AlertCircle className="h-4 w-4" />
+                  Utilise .env par défaut
+                </span>
+              )}
+            </div>
+
+            {/* Anthropic Claude */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="block text-sm font-medium text-gray-700">
+                  Anthropic Claude API Key
+                </label>
+                <div className="flex items-center gap-2">
+                  {apiKeysStatus.anthropic_configured ? (
+                    <span className="text-xs text-green-600 flex items-center gap-1">
+                      <CheckCircle className="h-4 w-4" />
+                      Configurée
+                    </span>
+                  ) : (
+                    <span className="text-xs text-gray-500">Non configurée</span>
+                  )}
+                  <a
+                    href="https://console.anthropic.com/settings/keys"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-blue-600 hover:underline flex items-center gap-1"
+                  >
+                    Obtenir une clé
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+              </div>
               <div className="relative">
                 <input
-                  type={showApiKey ? 'text' : 'password'}
-                  value={formData.api_key}
-                  onChange={(e) => setFormData({ ...formData, api_key: e.target.value })}
-                  className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="sk-ant-... ou sk-..."
+                  type={showApiKeys.anthropic ? 'text' : 'password'}
+                  value={apiKeys.anthropic}
+                  onChange={(e) => setApiKeys({ ...apiKeys, anthropic: e.target.value })}
+                  className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                  placeholder="sk-ant-api03-xxxxxxxxxxxxxxxxxx"
                 />
                 <button
                   type="button"
-                  onClick={() => setShowApiKey(!showApiKey)}
+                  onClick={() => setShowApiKeys({ ...showApiKeys, anthropic: !showApiKeys.anthropic })}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showApiKey ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  {showApiKeys.anthropic ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
-              <p className="text-xs text-gray-500 mt-1">
-                Laissez vide pour conserver la clé actuelle
-              </p>
             </div>
+
+            {/* OpenAI */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="block text-sm font-medium text-gray-700">
+                  OpenAI API Key
+                </label>
+                <div className="flex items-center gap-2">
+                  {apiKeysStatus.openai_configured ? (
+                    <span className="text-xs text-green-600 flex items-center gap-1">
+                      <CheckCircle className="h-4 w-4" />
+                      Configurée
+                    </span>
+                  ) : (
+                    <span className="text-xs text-gray-500">Non configurée</span>
+                  )}
+                  <a
+                    href="https://platform.openai.com/api-keys"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-blue-600 hover:underline flex items-center gap-1"
+                  >
+                    Obtenir une clé
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+              </div>
+              <div className="relative">
+                <input
+                  type={showApiKeys.openai ? 'text' : 'password'}
+                  value={apiKeys.openai}
+                  onChange={(e) => setApiKeys({ ...apiKeys, openai: e.target.value })}
+                  className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                  placeholder="sk-proj-xxxxxxxxxxxxxxxxxx"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowApiKeys({ ...showApiKeys, openai: !showApiKeys.openai })}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showApiKeys.openai ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Ollama */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="block text-sm font-medium text-gray-700">
+                  Ollama URL (optionnel)
+                </label>
+                <div className="flex items-center gap-2">
+                  {apiKeysStatus.ollama_configured ? (
+                    <span className="text-xs text-green-600 flex items-center gap-1">
+                      <CheckCircle className="h-4 w-4" />
+                      Configurée
+                    </span>
+                  ) : (
+                    <span className="text-xs text-gray-500">Non configurée</span>
+                  )}
+                  <a
+                    href="https://ollama.com/download"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-blue-600 hover:underline flex items-center gap-1"
+                  >
+                    Installer Ollama
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+              </div>
+              <input
+                type="text"
+                value={apiKeys.ollama}
+                onChange={(e) => setApiKeys({ ...apiKeys, ollama: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                placeholder="http://localhost:11434"
+              />
+            </div>
+
+            {/* Save Button */}
+            <button
+              type="button"
+              onClick={handleSaveApiKeys}
+              disabled={isSavingKeys || (!apiKeys.anthropic && !apiKeys.openai && !apiKeys.ollama)}
+              className="w-full px-4 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {isSavingKeys ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
+                  Sauvegarde...
+                </>
+              ) : (
+                <>
+                  <Save className="h-5 w-5" />
+                  Sauvegarder les clés API
+                </>
+              )}
+            </button>
+
+            <p className="text-xs text-gray-500">
+              🔒 Les clés sont chiffrées (AES-256) et jamais exposées. Laissez vide pour conserver les clés actuelles.
+            </p>
           </div>
 
           {/* Model Parameters */}

@@ -136,8 +136,25 @@ class AIAgentService:
         temperature: float = 0.7,
     ) -> Dict[str, Any]:
         """Appel à l'API Anthropic Claude"""
-        if not settings.anthropic_api_key:
-            raise ValueError("ANTHROPIC_API_KEY non configurée")
+        # Priorité: Clé chiffrée (frontend) > Clé .env
+        api_key = None
+        if self.config and self.config.encrypted_anthropic_key:
+            from core.encryption import get_encryption_service
+            encryption = get_encryption_service()
+            try:
+                api_key = encryption.decrypt(self.config.encrypted_anthropic_key)
+            except Exception as e:
+                # Fallback sur .env si déchiffrement échoue
+                print(f"Erreur déchiffrement clé Anthropic: {e}")
+                api_key = settings.anthropic_api_key
+        else:
+            api_key = settings.anthropic_api_key
+
+        if not api_key:
+            raise ValueError(
+                "Aucune clé API Anthropic configurée. "
+                "Configurez-la dans /dashboard/ai/config ou dans le fichier .env"
+            )
 
         max_tokens = max_tokens or settings.anthropic_max_tokens
         model = self.config.ai_model or settings.anthropic_model
@@ -146,7 +163,7 @@ class AIAgentService:
             response = await client.post(
                 "https://api.anthropic.com/v1/messages",
                 headers={
-                    "x-api-key": settings.anthropic_api_key,
+                    "x-api-key": api_key,
                     "anthropic-version": "2023-06-01",
                     "content-type": "application/json",
                 },
@@ -186,8 +203,24 @@ class AIAgentService:
         temperature: float = 0.7,
     ) -> Dict[str, Any]:
         """Appel à l'API OpenAI"""
-        if not settings.openai_api_key:
-            raise ValueError("OPENAI_API_KEY non configurée")
+        # Priorité: Clé chiffrée (frontend) > Clé .env
+        api_key = None
+        if self.config and self.config.encrypted_openai_key:
+            from core.encryption import get_encryption_service
+            encryption = get_encryption_service()
+            try:
+                api_key = encryption.decrypt(self.config.encrypted_openai_key)
+            except Exception as e:
+                print(f"Erreur déchiffrement clé OpenAI: {e}")
+                api_key = settings.openai_api_key
+        else:
+            api_key = settings.openai_api_key
+
+        if not api_key:
+            raise ValueError(
+                "Aucune clé API OpenAI configurée. "
+                "Configurez-la dans /dashboard/ai/config ou dans le fichier .env"
+            )
 
         max_tokens = max_tokens or settings.openai_max_tokens
         model = self.config.ai_model or settings.openai_model
@@ -196,7 +229,7 @@ class AIAgentService:
             response = await client.post(
                 "https://api.openai.com/v1/chat/completions",
                 headers={
-                    "Authorization": f"Bearer {settings.openai_api_key}",
+                    "Authorization": f"Bearer {api_key}",
                     "Content-Type": "application/json",
                 },
                 json={
