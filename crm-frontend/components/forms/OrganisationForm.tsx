@@ -19,11 +19,13 @@ interface OrganisationFormProps {
 }
 
 const CATEGORY_OPTIONS: { value: OrganisationCategory; label: string }[] = [
-  { value: 'DISTRIBUTEUR', label: 'Distributeur' },
-  { value: 'EMETTEUR', label: 'Émetteur' },
-  { value: 'FOURNISSEUR_SERVICE', label: 'Fournisseur de service' },
-  { value: 'PARTENAIRE', label: 'Partenaire' },
-  { value: 'AUTRE', label: 'Autre' },
+  { value: 'Institution', label: 'Institution' },
+  { value: 'Wholesale', label: 'Wholesale' },
+  { value: 'SDG', label: 'SDG (Sélection de Gérants)' },
+  { value: 'CGPI', label: 'CGPI (Conseiller en Gestion de Patrimoine)' },
+  { value: 'Startup', label: 'Startup' },
+  { value: 'Corporation', label: 'Corporation' },
+  { value: 'Autres', label: 'Autres' },
 ]
 
 export function OrganisationForm({
@@ -42,7 +44,7 @@ export function OrganisationForm({
   } = useForm<OrganisationCreate>({
     defaultValues: {
       ...initialData,
-      category: initialData?.category ?? 'AUTRE',
+      category: initialData?.category ?? 'Autres',
       country_code: initialData?.country_code ?? 'FR',
       language: initialData?.language ?? 'FR',
       is_active: initialData?.is_active ?? true,

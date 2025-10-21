@@ -13,15 +13,12 @@ import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import { OrganisationCategory } from '@/lib/types'
 
 const CATEGORY_LABELS: Record<string, string> = {
-  DISTRIBUTEUR: 'Distributeur',
-  EMETTEUR: 'Émetteur',
-  FOURNISSEUR_SERVICE: 'Fournisseur de service',
-  PARTENAIRE: 'Partenaire',
-  AUTRE: 'Autre',
   Institution: 'Institution',
   Wholesale: 'Wholesale',
   SDG: 'SDG',
   CGPI: 'CGPI',
+  Startup: 'Startup',
+  Corporation: 'Corporation',
   Autres: 'Autres',
 }
 

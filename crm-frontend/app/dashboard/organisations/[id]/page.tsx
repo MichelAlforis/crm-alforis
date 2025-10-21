@@ -20,15 +20,12 @@ import type { OrganisationUpdate } from '@/lib/types'
 import { OrganisationTimeline } from '@/components/organisations/OrganisationTimeline'
 
 const CATEGORY_LABELS: Record<string, string> = {
-  DISTRIBUTEUR: 'Distributeur',
-  EMETTEUR: 'Émetteur',
-  FOURNISSEUR_SERVICE: 'Fournisseur de service',
-  PARTENAIRE: 'Partenaire',
-  AUTRE: 'Autre',
   Institution: 'Institution',
   Wholesale: 'Wholesale',
   SDG: 'SDG',
   CGPI: 'CGPI',
+  Startup: 'Startup',
+  Corporation: 'Corporation',
   Autres: 'Autres',
 }
 

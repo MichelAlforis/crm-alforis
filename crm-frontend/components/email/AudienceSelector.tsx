@@ -18,11 +18,13 @@ const PIPELINE_STAGES = [
 ]
 
 const ORGANISATION_CATEGORIES = [
-  { value: 'DISTRIBUTEUR', label: 'Distributeurs' },
-  { value: 'EMETTEUR', label: 'Émetteurs' },
-  { value: 'FOURNISSEUR_SERVICE', label: 'Prestataires' },
-  { value: 'PARTENAIRE', label: 'Partenaires' },
-  { value: 'AUTRE', label: 'Autres' },
+  { value: 'Institution', label: 'Institutions' },
+  { value: 'Wholesale', label: 'Wholesale' },
+  { value: 'SDG', label: 'SDG' },
+  { value: 'CGPI', label: 'CGPI' },
+  { value: 'Startup', label: 'Startups' },
+  { value: 'Corporation', label: 'Corporations' },
+  { value: 'Autres', label: 'Autres' },
 ]
 
 const CONTACT_ROLES = [
