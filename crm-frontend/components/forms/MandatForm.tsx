@@ -5,7 +5,7 @@
 
 import React, { useEffect, useCallback, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Input, Button, Alert, Select, SearchableSelect } from '@/components/shared'
+import { Input, Button, Alert, Select, EntityAutocompleteInput } from '@/components/shared'
 import { MandatDistribution, MandatDistributionCreate, MandatStatus, Organisation } from '@/lib/types'
 import { usePaginatedOptions, type PaginatedFetcherParams } from '@/hooks/usePaginatedOptions'
 import { apiClient } from '@/lib/api'
@@ -41,6 +41,7 @@ export function MandatForm({
   const [selectedOrganisationId, setSelectedOrganisationId] = useState<number | null>(
     initialData?.organisation_id ?? organisationId ?? null
   )
+  const [selectedOrganisationLabel, setSelectedOrganisationLabel] = useState<string>('')
 
   const fetchOrganisationOptions = useCallback(
     ({ query, skip, limit }: PaginatedFetcherParams) => {
@@ -109,6 +110,7 @@ export function MandatForm({
           sublabel: organisation.category || undefined,
         })
         setSelectedOrganisationId(orgId)
+        setSelectedOrganisationLabel(organisation.name)
       } catch (error) {
         console.error('Impossible de pré-charger l\'organisation sélectionnée', error)
       }
@@ -162,22 +164,28 @@ export function MandatForm({
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
       {error && <Alert type="error" message={error} />}
 
-      <SearchableSelect
+      <EntityAutocompleteInput
         label="Organisation *"
-        options={organisationOptions}
-        value={selectedOrganisationId}
-        onChange={(value) => setSelectedOrganisationId(value)}
-        placeholder="Rechercher une organisation..."
+        placeholder="Tapez le nom de l'organisation (minimum 2 caractères)..."
+        icon="organisation"
         required
         disabled={!!organisationId || !!initialData}
-        error={!selectedOrganisationId ? 'Organisation requise' : undefined}
-        isLoading={isLoadingOrganisations}
+        value={selectedOrganisationId}
+        selectedLabel={selectedOrganisationLabel}
+        onChange={(id, label) => {
+          setSelectedOrganisationId(id)
+          if (label) setSelectedOrganisationLabel(label)
+        }}
         onSearch={searchOrganisations}
+        options={organisationOptions}
+        isLoading={isLoadingOrganisations}
         onLoadMore={loadMoreOrganisations}
         hasMore={hasMoreOrganisations}
         isLoadingMore={isLoadingMoreOrganisations}
-        emptyMessage="Aucune organisation disponible"
-        noResultsMessage="Aucune organisation trouvée"
+        error={!selectedOrganisationId ? 'Organisation requise' : undefined}
+        emptyMessage="Tapez au moins 2 caractères pour rechercher une organisation"
+        noResultsMessage="Aucune organisation trouvée avec ce nom"
+        minSearchLength={2}
       />
 
       <Input
