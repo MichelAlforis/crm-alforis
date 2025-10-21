@@ -3,11 +3,12 @@
 
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Input, Button, Alert, Select } from '@/components/shared'
-import { MandatDistribution, MandatDistributionCreate, MandatStatus } from '@/lib/types'
-import { useOrganisations } from '@/hooks/useOrganisations'
+import { Input, Button, Alert, Select, SearchableSelect } from '@/components/shared'
+import { MandatDistribution, MandatDistributionCreate, MandatStatus, Organisation } from '@/lib/types'
+import { usePaginatedOptions, type PaginatedFetcherParams } from '@/hooks/usePaginatedOptions'
+import { apiClient } from '@/lib/api'
 import { useToast } from '@/components/ui/Toast'
 
 interface MandatFormProps {
@@ -37,35 +38,102 @@ export function MandatForm({
   submitLabel = 'Créer',
 }: MandatFormProps) {
   const { showToast } = useToast()
-  const { data: organisationsData } = useOrganisations({ limit: 1000 })
+  const [selectedOrganisationId, setSelectedOrganisationId] = useState<number | null>(
+    initialData?.organisation_id ?? organisationId ?? null
+  )
+
+  const fetchOrganisationOptions = useCallback(
+    ({ query, skip, limit }: PaginatedFetcherParams) => {
+      if (query) {
+        return apiClient.searchOrganisations(query, skip, limit)
+      }
+      return apiClient.getOrganisations({
+        skip,
+        limit,
+        is_active: true,
+      })
+    },
+    []
+  )
+
+  const mapOrganisationToOption = useCallback(
+    (organisation: Organisation) => ({
+      id: organisation.id,
+      label: organisation.name,
+      sublabel: organisation.category || undefined,
+    }),
+    []
+  )
+
+  const {
+    options: organisationOptions,
+    isLoading: isLoadingOrganisations,
+    isLoadingMore: isLoadingMoreOrganisations,
+    hasMore: hasMoreOrganisations,
+    search: searchOrganisations,
+    loadMore: loadMoreOrganisations,
+    upsertOption: upsertOrganisationOption,
+  } = usePaginatedOptions<Organisation>({
+    fetcher: fetchOrganisationOptions,
+    mapItem: mapOrganisationToOption,
+    limit: 25,
+  })
 
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<MandatDistributionCreate>({
     defaultValues: {
       ...initialData,
-      organisation_id: initialData?.organisation_id ?? organisationId,
       status: initialData?.status ?? 'BROUILLON',
       date_debut: initialData?.date_debut ?? new Date().toISOString().split('T')[0],
     },
     mode: 'onBlur',
   })
 
-  // Pré-sélectionner l'organisation si fournie
+  // Pré-charger l'organisation sélectionnée si fournie
   useEffect(() => {
-    if (organisationId) {
-      setValue('organisation_id', organisationId)
+    const orgId = initialData?.organisation_id ?? organisationId
+    if (!orgId) return
+
+    let isMounted = true
+
+    void (async () => {
+      try {
+        const organisation = await apiClient.getOrganisation(orgId)
+        if (!isMounted) return
+        upsertOrganisationOption({
+          id: organisation.id,
+          label: organisation.name,
+          sublabel: organisation.category || undefined,
+        })
+        setSelectedOrganisationId(orgId)
+      } catch (error) {
+        console.error('Impossible de pré-charger l\'organisation sélectionnée', error)
+      }
+    })()
+
+    return () => {
+      isMounted = false
     }
-  }, [organisationId, setValue])
+  }, [initialData?.organisation_id, organisationId, upsertOrganisationOption])
 
   const handleFormSubmit = async (data: MandatDistributionCreate) => {
+    if (!selectedOrganisationId) {
+      showToast({
+        type: 'warning',
+        title: 'Organisation manquante',
+        message: 'Veuillez sélectionner une organisation.',
+      })
+      return
+    }
+
     try {
       // Convertir les dates en string ISO si nécessaire
       const payload = {
         ...data,
+        organisation_id: selectedOrganisationId,
         date_debut: data.date_debut,
         date_fin: data.date_fin || undefined,
       }
@@ -94,22 +162,23 @@ export function MandatForm({
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
       {error && <Alert type="error" message={error} />}
 
-      <Select
+      <SearchableSelect
         label="Organisation *"
-        {...register('organisation_id', {
-          required: 'Organisation requise',
-          valueAsNumber: true,
-        })}
-        error={errors.organisation_id?.message}
+        options={organisationOptions}
+        value={selectedOrganisationId}
+        onChange={(value) => setSelectedOrganisationId(value)}
+        placeholder="Rechercher une organisation..."
+        required
         disabled={!!organisationId || !!initialData}
-      >
-        <option value="">-- Sélectionner une organisation --</option>
-        {organisationsData?.items.map((org) => (
-          <option key={org.id} value={org.id}>
-            {org.name} ({org.category})
-          </option>
-        ))}
-      </Select>
+        error={!selectedOrganisationId ? 'Organisation requise' : undefined}
+        isLoading={isLoadingOrganisations}
+        onSearch={searchOrganisations}
+        onLoadMore={loadMoreOrganisations}
+        hasMore={hasMoreOrganisations}
+        isLoadingMore={isLoadingMoreOrganisations}
+        emptyMessage="Aucune organisation disponible"
+        noResultsMessage="Aucune organisation trouvée"
+      />
 
       <Input
         label="Numéro de mandat"
