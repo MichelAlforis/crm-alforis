@@ -39,11 +39,14 @@ class PersonUpdate(BaseSchema):
     first_name: Optional[str] = Field(None, max_length=100)
     last_name: Optional[str] = Field(None, max_length=100)
     email: Optional[EmailStr] = Field(None, max_length=255)
+    personal_email: Optional[EmailStr] = Field(None, max_length=255)
     phone: Optional[str] = Field(None, max_length=50)
     personal_phone: Optional[str] = Field(None, max_length=50)
     mobile: Optional[str] = Field(None, max_length=50)
     job_title: Optional[str] = Field(None, max_length=200)
     role: Optional[str] = Field(None, max_length=150)
+    country_code: Optional[str] = Field(None, min_length=2, max_length=2)
+    language: Optional[str] = Field(None, max_length=5)
     notes: Optional[str] = None
     linkedin_url: Optional[str] = Field(None, max_length=500)
     is_active: Optional[bool] = None

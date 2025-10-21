@@ -13,11 +13,11 @@ export const COUNTRY_OPTIONS = [
 
 export const LANGUAGE_OPTIONS = [
   { code: '', value: '', label: 'Sélectionner une langue', flag: '', name: 'Sélectionner une langue' },
-  { code: 'FR', value: 'fr', label: 'Français', flag: '🇫🇷', name: 'Français' },
-  { code: 'EN', value: 'en', label: 'Anglais', flag: '🇬🇧', name: 'Anglais' },
-  { code: 'DE', value: 'de', label: 'Allemand', flag: '🇩🇪', name: 'Allemand' },
-  { code: 'ES', value: 'es', label: 'Espagnol', flag: '🇪🇸', name: 'Espagnol' },
-  { code: 'IT', value: 'it', label: 'Italien', flag: '🇮🇹', name: 'Italien' },
-  { code: 'NL', value: 'nl', label: 'Néerlandais', flag: '🇳🇱', name: 'Néerlandais' },
-  { code: 'PT', value: 'pt', label: 'Portugais', flag: '🇵🇹', name: 'Portugais' },
+  { code: 'FR', value: 'FR', label: 'Français', flag: '🇫🇷', name: 'Français' },
+  { code: 'EN', value: 'EN', label: 'Anglais', flag: '🇬🇧', name: 'Anglais' },
+  { code: 'DE', value: 'DE', label: 'Allemand', flag: '🇩🇪', name: 'Allemand' },
+  { code: 'ES', value: 'ES', label: 'Espagnol', flag: '🇪🇸', name: 'Espagnol' },
+  { code: 'IT', value: 'IT', label: 'Italien', flag: '🇮🇹', name: 'Italien' },
+  { code: 'NL', value: 'NL', label: 'Néerlandais', flag: '🇳🇱', name: 'Néerlandais' },
+  { code: 'PT', value: 'PT', label: 'Portugais', flag: '🇵🇹', name: 'Portugais' },
 ]
