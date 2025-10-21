@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Request, Form
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, EmailStr, Field, field_validator
-from datetime import timedelta
+from datetime import timedelta, datetime
 from sqlalchemy.orm import Session
+from collections import defaultdict
+from typing import Dict
 
 from core.security import create_access_token, decode_token, verify_password, get_password_hash
 from core.config import settings
@@ -12,6 +14,41 @@ from models.role import Role, UserRole
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 security = HTTPBearer()
+
+# ============= RATE LIMITING =============
+# Rate limiting simple en mémoire (pour prod: utiliser Redis)
+
+class RateLimiter:
+    """Rate limiter simple pour protéger /login contre le brute-force"""
+    def __init__(self, max_attempts: int = 5, window_seconds: int = 300):
+        self.max_attempts = max_attempts
+        self.window_seconds = window_seconds  # 5 minutes par défaut
+        self.attempts: Dict[str, list] = defaultdict(list)
+
+    def is_allowed(self, identifier: str) -> bool:
+        """Vérifie si une nouvelle tentative est autorisée"""
+        now = datetime.now()
+        # Nettoyer les anciennes tentatives
+        self.attempts[identifier] = [
+            attempt for attempt in self.attempts[identifier]
+            if (now - attempt).total_seconds() < self.window_seconds
+        ]
+
+        # Vérifier le nombre de tentatives
+        if len(self.attempts[identifier]) >= self.max_attempts:
+            return False
+
+        # Enregistrer la nouvelle tentative
+        self.attempts[identifier].append(now)
+        return True
+
+    def reset(self, identifier: str):
+        """Réinitialiser le compteur après un succès"""
+        if identifier in self.attempts:
+            del self.attempts[identifier]
+
+# Singleton rate limiter (5 tentatives par IP sur 5 minutes)
+login_rate_limiter = RateLimiter(max_attempts=5, window_seconds=300)
 
 # ============= SCHEMAS =============
 
@@ -65,9 +102,11 @@ TEST_USERS = {
 
 @router.post("/login", response_model=TokenResponse)
 async def login(request: Request, db: Session = Depends(get_db)):
-    
+
     """
     Authentifier un utilisateur et retourner un token JWT
+
+    **Protection:** Rate limiting (5 tentatives / 5 min par IP)
 
     **Utilisateurs de test:**
     - Email: `admin@tpmfinance.com` / Password: `admin123` (Admin)
@@ -95,7 +134,15 @@ async def login(request: Request, db: Session = Depends(get_db)):
          http://localhost:8000/api/v1/investors
     ```
     """
-    
+
+    # Rate limiting par IP
+    client_ip = request.client.host if request.client else "unknown"
+    if not login_rate_limiter.is_allowed(client_ip):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Trop de tentatives de connexion. Veuillez réessayer dans 5 minutes.",
+        )
+
     payload = None
     try:
         payload = await request.json()
@@ -180,7 +227,10 @@ async def login(request: Request, db: Session = Depends(get_db)):
         },
         expires_delta=timedelta(hours=settings.jwt_expiration_hours)
     )
-    
+
+    # Login réussi: réinitialiser le rate limiter
+    login_rate_limiter.reset(client_ip)
+
     return TokenResponse(
         access_token=access_token,
         token_type="bearer",

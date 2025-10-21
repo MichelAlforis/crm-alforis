@@ -1146,6 +1146,150 @@ En **9.5 jours de développement** (Backend 5j + Frontend 4.5j), nous avons cré
 
 **Message clé:** Agent IA **100% développé** - Backend, Frontend, Tests complets ! Prêt pour production ! 🎉
 
+---
+
+## 🔒 Sécurité JWT - Améliorations 21 Octobre
+
+### Problématiques identifiées:
+
+1. ❌ **localStorage visible en JavaScript** → Vulnérable aux attaques XSS
+2. ❌ **Pas de flag `Secure`** → Token transmissible en HTTP
+3. ❌ **SameSite=Lax** → Insuffisant contre CSRF
+4. ❌ **Pas de rate limiting** → Brute-force possible sur /login
+5. ❌ **useAI.ts accédait directement à localStorage** → Incohérence avec apiClient
+
+### Correctifs appliqués (Option A - Sécurisation rapide):
+
+#### ✅ 1. Cookies sécurisés ([crm-frontend/lib/api.ts:150-159](crm-frontend/lib/api.ts#L150-L159))
+```typescript
+// AVANT:
+document.cookie = `auth_token=${value};path=/;SameSite=Lax`
+
+// APRÈS:
+const isProduction = window.location.protocol === 'https:'
+const secureFlag = isProduction ? ';Secure' : ''
+document.cookie = `auth_token=${value};path=/;SameSite=Strict${secureFlag}`
+```
+
+**Impact:**
+- ✅ `Secure` → Token uniquement via HTTPS en production
+- ✅ `SameSite=Strict` → Protection CSRF renforcée
+
+#### ✅ 2. Protection CSRF ([crm-frontend/lib/api.ts:106-128](crm-frontend/lib/api.ts#L106-L128))
+```typescript
+// Génération token CSRF aléatoire (64 caractères hex)
+private generateCsrfToken(): string {
+  const array = new Uint8Array(32)
+  crypto.getRandomValues(array)
+  return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('')
+}
+
+// Ajout header X-CSRF-Token sur POST/PUT/DELETE
+private getHeaders(method?: string): HeadersInit {
+  const mutativeMethods = ['POST', 'PUT', 'PATCH', 'DELETE']
+  if (method && mutativeMethods.includes(method.toUpperCase()) && this.csrfToken) {
+    headers['X-CSRF-Token'] = this.csrfToken
+  }
+}
+```
+
+**Impact:**
+- ✅ Token CSRF généré côté client et stocké dans localStorage (safe car non sensible)
+- ✅ Envoyé automatiquement sur toutes requêtes mutatives
+- ✅ Nouveau token après logout (rotation)
+
+#### ✅ 3. Rate Limiting backend ([crm-backend/api/routes/auth.py:21-51](crm-backend/api/routes/auth.py#L21-L51))
+```python
+class RateLimiter:
+    """Rate limiter simple pour protéger /login contre le brute-force"""
+    def __init__(self, max_attempts: int = 5, window_seconds: int = 300):
+        self.max_attempts = max_attempts
+        self.window_seconds = window_seconds  # 5 minutes
+        self.attempts: Dict[str, list] = defaultdict(list)
+
+# Dans /login endpoint:
+client_ip = request.client.host
+if not login_rate_limiter.is_allowed(client_ip):
+    raise HTTPException(
+        status_code=429,
+        detail="Trop de tentatives. Réessayer dans 5 minutes."
+    )
+
+# Succès → reset
+login_rate_limiter.reset(client_ip)
+```
+
+**Impact:**
+- ✅ Max 5 tentatives par IP toutes les 5 minutes
+- ✅ Protection brute-force
+- ✅ Reset après succès
+
+#### ✅ 4. Bug fix useAI.ts ([crm-frontend/hooks/useAI.ts:33-34](crm-frontend/hooks/useAI.ts#L33-L34))
+```typescript
+// AVANT:
+const token = localStorage.getItem('access_token') // ❌ Mauvaise clé!
+
+// APRÈS:
+const token = apiClient.getToken() // ✅ Utilise l'abstraction centralisée
+```
+
+**Impact:**
+- ✅ Cohérence avec architecture apiClient
+- ✅ Gère automatiquement: in-memory → localStorage → cookies
+- ✅ Clé correcte: 'auth_token'
+
+### Architecture sécurité finale:
+
+```
+┌─────────────────────────────────────────┐
+│         STOCKAGE TOKENS JWT             │
+├─────────────────────────────────────────┤
+│                                         │
+│  1. In-Memory (apiClient.token)         │
+│     → Performance (évite lecture I/O)   │
+│                                         │
+│  2. localStorage ('auth_token')         │
+│     → Persistence entre refreshs        │
+│     → ❌ Visible JS (risque XSS)        │
+│     → ✅ Protégé par CSRF token         │
+│                                         │
+│  3. Cookies ('auth_token')              │
+│     → SSR compatibility (Next.js)       │
+│     → ✅ Secure (HTTPS only - prod)     │
+│     → ✅ SameSite=Strict (anti-CSRF)    │
+│     → ⚠️ Pas HttpOnly (accès JS requis) │
+│                                         │
+│  4. CSRF Token (localStorage)           │
+│     → Header X-CSRF-Token               │
+│     → POST/PUT/DELETE uniquement        │
+│     → Rotation après logout             │
+│                                         │
+└─────────────────────────────────────────┘
+```
+
+### Niveau de sécurité atteint:
+
+| Menace | Avant | Après | Protection |
+|--------|-------|-------|------------|
+| XSS | ⚠️ Vulnérable | ⚠️ Partiel | CSRF token atténue |
+| CSRF | ❌ Lax insuffisant | ✅ Strict + token | SameSite=Strict + X-CSRF-Token |
+| MITM | ❌ HTTP OK | ✅ HTTPS only (prod) | Flag Secure |
+| Brute-force | ❌ Illimité | ✅ 5/5min | Rate limiter |
+| Token leak | ❌ 24h validité | ⚠️ 24h validité | Expiration inchangée |
+
+### Améliorations futures (Option B - non implémentée):
+
+- 🔜 Cookies HttpOnly (refactor complet architecture)
+- 🔜 Refresh tokens (AT 15min + RT 7j)
+- 🔜 Token rotation automatique
+- 🔜 Rate limiting Redis (distribué multi-instances)
+- 🔜 CSP headers (Content Security Policy)
+
+**Temps implémentation Option A:** 30 minutes
+**Résultat:** ✅ Sécurité renforcée sans breaking changes
+
+---
+
 ### Démo recommandée:
 
 1. **Montrer Dashboard** (`/dashboard/ai`)

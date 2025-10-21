@@ -5,6 +5,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useToast } from './useToast'
+import { apiClient } from '@/lib/api'
 import type {
   AISuggestion,
   AIExecution,
@@ -29,7 +30,8 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 // ============= HELPER FUNCTIONS =============
 
 async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> {
-  const token = localStorage.getItem('access_token')
+  // ✅ CORRECTIF: Utiliser apiClient.getToken() au lieu de localStorage direct
+  const token = apiClient.getToken()
 
   const res = await fetch(`${API_BASE}${endpoint}`, {
     ...options,

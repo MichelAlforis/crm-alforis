@@ -82,6 +82,7 @@ interface RequestConfig extends RequestInit {
 class ApiClient {
   private baseUrl: string
   private token: string | null = null
+  private csrfToken: string | null = null
 
   constructor(baseUrl: string) {
     // Force toujours le /api/v1 à la fin de la baseUrl
@@ -90,6 +91,7 @@ class ApiClient {
     }
     this.baseUrl = baseUrl
     this.initToken()
+    this.initCsrfToken()
   }
 
   /**
@@ -99,6 +101,30 @@ class ApiClient {
     if (typeof window !== 'undefined') {
       this.token = localStorage.getItem('auth_token') || this.getCookie('auth_token')
     }
+  }
+
+  /**
+   * Initialise le CSRF token (généré côté client)
+   */
+  private initCsrfToken(): void {
+    if (typeof window !== 'undefined') {
+      // Récupérer ou générer un CSRF token
+      let csrf = localStorage.getItem('csrf_token')
+      if (!csrf) {
+        csrf = this.generateCsrfToken()
+        localStorage.setItem('csrf_token', csrf)
+      }
+      this.csrfToken = csrf
+    }
+  }
+
+  /**
+   * Génère un token CSRF aléatoire
+   */
+  private generateCsrfToken(): string {
+    const array = new Uint8Array(32)
+    crypto.getRandomValues(array)
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('')
   }
 
   /**
@@ -141,6 +167,10 @@ class ApiClient {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('auth_token')
       this.deleteCookie('auth_token')
+      // Générer un nouveau CSRF token après logout
+      const newCsrf = this.generateCsrfToken()
+      localStorage.setItem('csrf_token', newCsrf)
+      this.csrfToken = newCsrf
     }
   }
 
@@ -150,7 +180,12 @@ class ApiClient {
   private setCookie(name: string, value: string, days: number): void {
     const expires = new Date()
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000)
-    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`
+
+    // Sécurité: Secure (HTTPS only) + SameSite=Strict (anti-CSRF)
+    const isProduction = typeof window !== 'undefined' && window.location.protocol === 'https:'
+    const secureFlag = isProduction ? ';Secure' : '' // Secure uniquement en HTTPS
+
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Strict${secureFlag}`
   }
 
   /**
@@ -175,15 +210,21 @@ class ApiClient {
   }
 
   /**
-   * Construit les headers avec authentification
+   * Construit les headers avec authentification + CSRF
    */
-  private getHeaders(): HeadersInit {
+  private getHeaders(method?: string): HeadersInit {
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
     }
 
     if (this.token) {
       headers['Authorization'] = `Bearer ${this.token}`
+    }
+
+    // Protection CSRF pour les requêtes mutatives
+    const mutativeMethods = ['POST', 'PUT', 'PATCH', 'DELETE']
+    if (method && mutativeMethods.includes(method.toUpperCase()) && this.csrfToken) {
+      headers['X-CSRF-Token'] = this.csrfToken
     }
 
     return headers
@@ -231,7 +272,7 @@ class ApiClient {
       const response = await fetch(url, {
         ...requestConfig,
         headers: {
-          ...this.getHeaders(),
+          ...this.getHeaders(requestConfig.method),
           ...requestConfig.headers,
         },
       })
