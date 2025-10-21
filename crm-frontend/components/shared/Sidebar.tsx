@@ -25,9 +25,11 @@ import {
   Upload,
   Mail,
   Users,
+  Sparkles,
 } from 'lucide-react'
 import { useTaskViews } from '@/hooks/useTasks'
 import { useAuth } from '@/hooks/useAuth'
+import { usePendingSuggestionsCount } from '@/hooks/useAI'
 import ThemeToggle from '@/components/shared/ThemeToggle'
 
 interface SidebarProps {
@@ -90,6 +92,14 @@ const MENU_ITEMS = [
     gradient: 'from-indigo-500 to-purple-500',
   },
   {
+    label: 'Agent IA',
+    href: '/dashboard/ai',
+    icon: Sparkles,
+    description: 'Suggestions intelligentes',
+    badge: null, // Dynamic badge via pendingSuggestionsCount
+    gradient: 'from-violet-500 via-purple-500 to-fuchsia-500',
+  },
+  {
     label: 'Campagnes Email',
     href: '/dashboard/campaigns',
     icon: Mail,
@@ -128,6 +138,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
   const { todayCount } = useTaskViews()
   const { user, logout } = useAuth()
+  const pendingSuggestionsCount = usePendingSuggestionsCount()
   const tasksDueToday = todayCount
   const isAdmin = user?.is_admin || false
 
@@ -272,6 +283,11 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
               const active = isActive(item.href)
               const isHovered = hoveredItem === item.href
 
+              // Dynamic badge pour Agent IA
+              const dynamicBadge = item.href === '/dashboard/ai' && pendingSuggestionsCount > 0
+                ? pendingSuggestionsCount
+                : item.badge
+
               return (
                 <Link
                   key={item.href}
@@ -338,7 +354,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                       </div>
 
                       {/* Badge */}
-                      {item.badge && (
+                      {dynamicBadge && (
                         <div className={clsx(
                           'px-2.5 py-1 rounded-lg text-xs font-bold',
                           'transition-all duration-300 shadow-sm',
@@ -346,7 +362,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                             ? 'bg-white/30 text-white shadow-lg'
                             : 'bg-white/10 text-slate-300 group-hover:bg-white/20 group-hover:scale-110'
                         )}>
-                          {item.badge}
+                          {dynamicBadge}
                         </div>
                       )}
 
@@ -358,9 +374,9 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                   )}
 
                   {/* Collapsed Badge */}
-                  {collapsed && item.badge && (
+                  {collapsed && dynamicBadge && (
                     <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full text-[9px] font-bold text-white flex items-center justify-center shadow-lg border-2 border-slate-900">
-                      {item.badge === 'NEW' ? '!' : item.badge}
+                      {dynamicBadge === 'NEW' ? '!' : dynamicBadge}
                     </div>
                   )}
                 </Link>
