@@ -66,6 +66,17 @@ from models.email import (
     EmailSendStatus,
     EmailEventType,
 )
+from models.ai_agent import (
+    AISuggestion,
+    AIExecution,
+    AIConfiguration,
+    AICache,
+    AISuggestionType,
+    AISuggestionStatus,
+    AIExecutionStatus,
+    AITaskType,
+    AIProvider,
+)
 
 __all__ = [
     # Base
@@ -137,6 +148,17 @@ __all__ = [
     "EmailVariant",
     "EmailSendStatus",
     "EmailEventType",
+
+    # AI Agent
+    "AISuggestion",
+    "AIExecution",
+    "AIConfiguration",
+    "AICache",
+    "AISuggestionType",
+    "AISuggestionStatus",
+    "AIExecutionStatus",
+    "AITaskType",
+    "AIProvider",
 ]
 
 # Backwards compatibility aliases (legacy spelling)
