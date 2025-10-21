@@ -13,6 +13,8 @@ import { useAuth } from '@/hooks/useAuth'
 import Navbar from '@/components/shared/Navbar'
 import Sidebar from '@/components/shared/Sidebar'
 import QueryProvider from '@/components/providers/QueryProvider'
+import InstallPrompt from '@/components/pwa/InstallPrompt'
+import OfflineIndicator from '@/components/pwa/OfflineIndicator'
 import { Loader2 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -90,6 +92,10 @@ export default function DashboardLayout({
             onClick={() => setIsSidebarOpen(false)}
           />
         )}
+
+        {/* PWA Components */}
+        <InstallPrompt />
+        <OfflineIndicator />
       </div>
     </QueryProvider>
   )

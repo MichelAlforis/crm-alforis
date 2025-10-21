@@ -17,6 +17,17 @@ export const metadata: Metadata = {
   keywords: ['CRM', 'TPM Finance', 'Gestion', 'Investisseurs', 'Fournisseurs'],
   authors: [{ name: 'TPM Finance' }],
   creator: 'TPM Finance',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'TPM CRM',
+  },
+  formatDetection: {
+    telephone: true,
+    email: true,
+    address: true,
+  },
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
@@ -24,15 +35,22 @@ export const metadata: Metadata = {
     description: 'Plateforme CRM professionnelle pour la gestion des investisseurs',
     siteName: 'TPM Finance CRM',
   },
+  twitter: {
+    card: 'summary',
+    title: 'TPM Finance CRM',
+    description: 'Plateforme CRM professionnelle',
+  },
 }
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
+  userScalable: true,
+  viewportFit: 'cover',
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
+    { media: '(prefers-color-scheme: light)', color: '#FEFBF7' },
+    { media: '(prefers-color-scheme: dark)', color: '#1D1D1D' },
   ],
 }
 
@@ -64,13 +82,17 @@ export default function RootLayout({
           sizes="16x16"
           href="/favicon/favicon-16.png"
         />
-        <link rel="manifest" href="/favicon/site.webmanifest" />
+        <link rel="manifest" href="/manifest.json" />
         <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#E39F70" />
         <link rel="shortcut icon" href="/favicon/favicon.ico" />
-        <meta name="apple-mobile-web-app-title" content="Alforis" />
-        <meta name="application-name" content="Alforis" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-title" content="TPM CRM" />
+        <meta name="application-name" content="TPM CRM" />
         <meta name="msapplication-TileColor" content="#E39F70" />
+        <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
         <meta name="theme-color" content="#E39F70" />
+        <meta name="color-scheme" content="light dark" />
       </head>
       <body className="bg-background text-text-primary min-h-screen transition-colors duration-300">
         {/* Skip to main content - Accessibility */}
