@@ -4,10 +4,10 @@
 # Multi-stage build pour dev + production
 
 # --- STAGE 1: BASE ---
-FROM node:20-alpine AS base
+FROM node:20-slim AS base
 
 # Installer curl et bash pour healthchecks et scripts
-RUN apk add --no-cache curl bash
+RUN apt-get update && apt-get install -y --no-install-recommends curl bash && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -59,10 +59,10 @@ ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 RUN npm run build
 
 # --- STAGE 5: PRODUCTION ---
-FROM node:20-alpine AS production
+FROM node:20-slim AS production
 
 # Installer curl pour healthchecks
-RUN apk add --no-cache curl
+RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -71,8 +71,8 @@ ENV NODE_ENV=production
 ENV PORT=3010
 
 # Créer un utilisateur non-root
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nextjs -u 1001
+RUN groupadd -g 1001 nodejs && \
+    useradd -u 1001 -g nodejs -s /bin/bash -m nextjs
 
 # Copier les fichiers nécessaires depuis les stages précédents
 COPY --from=dependencies --chown=nextjs:nodejs /app/node_modules ./node_modules
