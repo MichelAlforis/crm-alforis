@@ -176,7 +176,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: https:",
-              "connect-src 'self' http://localhost:8000 http://127.0.0.1:8000 https://crm.alforis.fr",
+              "connect-src 'self' http://localhost:8000 http://127.0.0.1:8000 ws://localhost:8000 ws://127.0.0.1:8000 https://crm.alforis.fr wss://crm.alforis.fr",
               "frame-ancestors 'none'",
             ].join('; '),
           },

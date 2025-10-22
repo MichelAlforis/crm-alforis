@@ -193,6 +193,46 @@ except Exception as e:
     print("⚠️ Erreur lors du chargement des routes :", e)
     traceback.print_exc()
 
+# ============================================================
+# 🔌 WebSocket pour notifications temps réel
+# ============================================================
+
+try:
+    from fastapi import WebSocket, WebSocketDisconnect, Query
+    from core.notifications import websocket_endpoint
+    from core.security import decode_token
+    from core.database import get_db
+
+    @app.websocket("/ws/notifications")
+    async def notifications_websocket(
+        websocket: WebSocket,
+        token: str = Query(...)
+    ):
+        """Endpoint WebSocket pour les notifications temps réel"""
+        try:
+            # Décoder le token pour obtenir l'utilisateur
+            payload = decode_token(token)
+            user_id = payload.get("sub")
+
+            if not user_id:
+                await websocket.close(code=1008, reason="Invalid token: missing user_id")
+                return
+
+            # Connecter via le manager
+            await websocket_endpoint(websocket, user_id)
+
+        except Exception as e:
+            print(f"❌ WebSocket error: {e}")
+            try:
+                await websocket.close(code=1011, reason=f"Error: {str(e)}")
+            except:
+                pass
+
+    print("✅ WebSocket endpoint /ws/notifications activé")
+
+except Exception as e:
+    print(f"⚠️ WebSocket non disponible: {e}")
+
 # Si tu préfères inclure router par router :
 # try:
 #     from api.routes import auth, people, organisations, kpis, products, system
