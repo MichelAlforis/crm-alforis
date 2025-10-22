@@ -620,21 +620,27 @@ PROCHAINE ÉTAPE:
 ## Prochaines Étapes
 - [x] ~~Propager useTableColumns aux pages People, Mandats~~ ✅ **TERMINÉ** (commit d366ce1a)
 - [x] ~~Créer useConfirm hook~~ ✅ **TERMINÉ** (commit d366ce1a)
-- [ ] Appliquer useConfirm aux pages detail People et Mandats
+- [x] ~~Appliquer useConfirm aux pages detail~~ ✅ **TERMINÉ** (commit 462d9c7e)
 - [ ] Créer relation Many-to-Many Organisation-People (backend)
 - [ ] Ajouter section Contacts (tests 5.16-5.17)
 - [ ] Tester exports CSV/Excel/PDF depuis frontend
 
-## Propagation Réussie (Commit d366ce1a)
+## Propagation Complète ✅
 
-### People Page ✅
+### People Page ✅ (Commit d366ce1a)
 - useTableColumns avec 6 colonnes (Mobile et Langue cachés par défaut)
 - ColumnSelector + localStorage 'people-columns'
-- ExportButtons CSV/Excel/PDF
+- ExportButtons CSV/Excel/PDF ajouté
 - Breadcrumb "Retour à l'annuaire"
 - Pagination déjà présente (conservée)
 
-### Mandats Page ✅
+### People Detail ✅ (Commit 462d9c7e)
+- useConfirm appliqué: 2 confirm() remplacés
+- Modal danger: Suppression personne
+- Modal warning: Retirer rattachement organisation
+- Toast success/error géré
+
+### Mandats Page ✅ (Commit d366ce1a)
 - useTableColumns avec 6 colonnes (Date fin cachée par défaut)
 - ColumnSelector + localStorage 'mandats-columns'
 - Tri par colonnes complet (string/date/number)
@@ -642,19 +648,38 @@ PROCHAINE ÉTAPE:
 - ExportButtons déjà présent (conservé)
 - Breadcrumb "Retour à l'annuaire"
 
-### Hook useConfirm ✅
+### Mandats Detail ✅ (Commit 462d9c7e)
+- useConfirm appliqué: 2 confirm() remplacés
+- Modal danger: Suppression mandat
+- Modal warning: Retirer produit du mandat
+- Toast success/error géré
+
+### Hook useConfirm ✅ (Commit d366ce1a)
 - Hook réutilisable créé: crm-frontend/hooks/useConfirm.tsx
 - API simple: `confirm({ title, message, type, onConfirm })`
 - Support async/await automatique
 - État loading géré
-- Prêt à être utilisé dans les pages detail
+- Utilisé dans 2 pages detail (4 confirmations)
+
+## Cohérence UX Globale
+
+TOUS les confirm() de l'annuaire utilisent maintenant ConfirmDialog:
+
+| Module | Liste | Detail |
+|--------|-------|--------|
+| Organisations | ✅ ConfirmDialog | ✅ useConfirm |
+| People | N/A | ✅ useConfirm |
+| Mandats | N/A | ✅ useConfirm |
+
+**Résultat**: UX moderne et cohérente partout.
 
 ## Prêt pour Production
 ✅ Branch: test/chapitre5-organisations
 ✅ Backend redémarré avec fix export
-✅ Tests validés: 20/22
-✅ 6 commits propres et documentés
-✅ Améliorations propagées à People et Mandats
+✅ Tests validés: 20/22 (91%)
+✅ 7 commits propres et documentés
+✅ Améliorations propagées à People et Mandats (liste + detail)
+✅ Tous les confirm() natifs remplacés
 ```
 
 ---
