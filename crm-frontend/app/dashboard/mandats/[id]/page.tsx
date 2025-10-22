@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useMandat, useUpdateMandat, useDeleteMandat } from '@/hooks/useMandats'
 import { useProduitsByMandat, useDeleteMandatProduitAssociation } from '@/hooks/useProduits'
+import { useConfirm } from '@/hooks/useConfirm'
 import { Card, Button, Table, Alert, Modal } from '@/components/shared'
 import { MandatForm } from '@/components/forms'
 import { SkeletonCard } from '@/components/ui/Skeleton'
@@ -48,6 +49,7 @@ export default function MandatDetailPage() {
   const deleteMutation = useDeleteMandat()
   const deleteAssociationMutation = useDeleteMandatProduitAssociation()
   const { showToast } = useToast()
+  const { confirm, ConfirmDialogComponent } = useConfirm()
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isAssociationModalOpen, setIsAssociationModalOpen] = useState(false)
@@ -58,39 +60,60 @@ export default function MandatDetailPage() {
     setIsEditModalOpen(false)
   }
 
-  const handleDelete = async () => {
+  const handleDeleteClick = () => {
     if (!mandatId) return
-    if (
-      confirm(
-        "Êtes-vous sûr de vouloir supprimer ce mandat ? Cette action est irréversible."
-      )
-    ) {
-      await deleteMutation.mutateAsync(mandatId)
-      router.push('/dashboard/mandats')
-    }
+
+    confirm({
+      title: 'Supprimer ce mandat ?',
+      message: 'Cette action est irréversible. Le mandat et toutes ses associations seront supprimés.',
+      type: 'danger',
+      confirmText: 'Supprimer',
+      onConfirm: async () => {
+        try {
+          await deleteMutation.mutateAsync(mandatId)
+          showToast({
+            type: 'success',
+            title: 'Mandat supprimé',
+          })
+          setTimeout(() => {
+            router.push('/dashboard/mandats')
+          }, 500)
+        } catch (error: any) {
+          showToast({
+            type: 'error',
+            title: 'Erreur',
+            message: error?.detail || 'Impossible de supprimer le mandat.',
+          })
+        }
+      },
+    })
   }
 
-  const handleDeleteAssociation = async (associationId: number, produitName: string) => {
-    if (!confirm(`Retirer le produit "${produitName}" de ce mandat ?`)) {
-      return
-    }
-
-    try {
-      await deleteAssociationMutation.mutateAsync(associationId)
-      showToast({
-        type: 'success',
-        title: 'Produit retiré',
-        message: 'Le produit a été dissocié du mandat.',
-      })
-      refetchProduits()
-      refetch()
-    } catch (err: any) {
-      showToast({
-        type: 'error',
-        title: 'Erreur',
-        message: err?.detail || 'Impossible de retirer le produit.',
-      })
-    }
+  const handleDeleteAssociationClick = (associationId: number, produitName: string) => {
+    confirm({
+      title: `Retirer "${produitName}" ?`,
+      message: 'Le produit ne sera plus associé à ce mandat.',
+      type: 'warning',
+      confirmText: 'Retirer',
+      onConfirm: async () => {
+        try {
+          await deleteAssociationMutation.mutateAsync(associationId)
+          showToast({
+            type: 'success',
+            title: 'Produit retiré',
+            message: 'Le produit a été dissocié du mandat.',
+          })
+          refetchProduits()
+          refetch()
+        } catch (err: any) {
+          showToast({
+            type: 'error',
+            title: 'Erreur',
+            message: err?.detail || 'Impossible de retirer le produit.',
+          })
+        }
+      },
+    })
   }
 
   const handleAssociationSuccess = () => {
@@ -192,7 +215,7 @@ export default function MandatDetailPage() {
               <Button
                 variant="danger"
                 size="sm"
-                onClick={() => handleDeleteAssociation(association.id, row.name)}
+                onClick={() => handleDeleteAssociationClick(association.id, row.name)}
                 disabled={deleteAssociationMutation.isPending}
               >
                 Retirer
@@ -233,7 +256,7 @@ export default function MandatDetailPage() {
           <Button variant="secondary" onClick={() => setIsEditModalOpen(true)}>
             Modifier
           </Button>
-          <Button variant="danger" onClick={handleDelete} disabled={deleteMutation.isPending}>
+          <Button variant="danger" onClick={handleDeleteClick} disabled={deleteMutation.isPending}>
             {deleteMutation.isPending ? 'Suppression...' : 'Supprimer'}
           </Button>
         </div>
@@ -349,6 +372,9 @@ export default function MandatDetailPage() {
         mandatStatus={mandat.status}
         onSuccess={handleAssociationSuccess}
       />
+
+      {/* Confirmation Dialogs */}
+      <ConfirmDialogComponent />
     </div>
   )
 }

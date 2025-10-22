@@ -9,6 +9,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { Card, Button, Alert, Table, Modal, Input } from '@/components/shared'
 import { PersonForm } from '@/components/forms'
 import { usePeople } from '@/hooks/usePeople'
+import { useConfirm } from '@/hooks/useConfirm'
 import { PersonOrganizationLinkInput } from '@/lib/types'
 import { SkeletonCard, SkeletonTable } from '@/components/ui/Skeleton'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
@@ -26,6 +27,7 @@ export default function PersonDetailPage() {
   const params = useParams<{ id?: string }>()
   const router = useRouter()
   const { showToast } = useToast()
+  const { confirm, ConfirmDialogComponent } = useConfirm()
   const personId = useMemo(() => {
     const rawId = params?.id
     if (!rawId) return null
@@ -100,34 +102,36 @@ export default function PersonDetailPage() {
     setIsEditModalOpen(false)
   }
 
-  const handleDelete = async () => {
+  const handleDeleteClick = () => {
     if (personId === null) return
-
-    // Prévenir les clics multiples
     if (remove.isLoading) return
 
-    if (!confirm('Supprimer cette personne ? Cette action est définitive.')) {
-      return
-    }
-
-    try {
-      await deletePerson(personId)
-      showToast({
-        type: 'success',
-        title: 'Contact supprimé',
-        message: 'Le contact a été supprimé avec succès.',
-      })
-      // Attendre un peu pour que le toast s'affiche avant la redirection
-      setTimeout(() => {
-        router.push('/dashboard/people')
-      }, 500)
-    } catch (error: any) {
-      showToast({
-        type: 'error',
-        title: 'Erreur',
-        message: error?.detail || 'Impossible de supprimer le contact.',
-      })
-    }
+    confirm({
+      title: 'Supprimer cette personne ?',
+      message: 'Cette action est définitive et irréversible.',
+      type: 'danger',
+      confirmText: 'Supprimer',
+      onConfirm: async () => {
+        try {
+          await deletePerson(personId)
+          showToast({
+            type: 'success',
+            title: 'Contact supprimé',
+            message: 'Le contact a été supprimé avec succès.',
+          })
+          // Attendre un peu pour que le toast s'affiche avant la redirection
+          setTimeout(() => {
+            router.push('/dashboard/people')
+          }, 500)
+        } catch (error: any) {
+          showToast({
+            type: 'error',
+            title: 'Erreur',
+            message: error?.detail || 'Impossible de supprimer le contact.',
+          })
+        }
+      },
+    })
   }
 
   const handleCreateLink = async () => {
@@ -157,10 +161,21 @@ export default function PersonDetailPage() {
     }
   }
 
-  const handleDeleteLink = async (linkId: number) => {
-    if (!confirm('Retirer ce rattachement ?')) return
-    await deletePersonOrganizationLink(linkId)
-    await refresh()
+  const handleDeleteLinkClick = (linkId: number) => {
+    confirm({
+      title: 'Retirer ce rattachement ?',
+      message: 'La personne ne sera plus liée à cette organisation.',
+      type: 'warning',
+      confirmText: 'Retirer',
+      onConfirm: async () => {
+        await deletePersonOrganizationLink(linkId)
+        await refresh()
+        showToast({
+          type: 'success',
+          title: 'Rattachement retiré',
+        })
+      },
+    })
   }
 
   const linkColumns = [
@@ -203,7 +218,7 @@ export default function PersonDetailPage() {
             variant="ghost"
             size="xs"
             className="text-rouge"
-            onClick={() => handleDeleteLink(row.id)}
+            onClick={() => handleDeleteLinkClick(row.id)}
           >
             Supprimer
           </Button>
@@ -245,7 +260,7 @@ export default function PersonDetailPage() {
           <Button variant="secondary" onClick={() => setIsEditModalOpen(true)}>
             Éditer
           </Button>
-          <Button variant="danger" onClick={handleDelete} isLoading={remove.isLoading}>
+          <Button variant="danger" onClick={handleDeleteClick} isLoading={remove.isLoading}>
             Supprimer
           </Button>
         </div>
@@ -398,6 +413,9 @@ export default function PersonDetailPage() {
           </Button>
         </div>
       </Modal>
+
+      {/* Confirmation Dialogs */}
+      <ConfirmDialogComponent />
     </div>
   )
 }
