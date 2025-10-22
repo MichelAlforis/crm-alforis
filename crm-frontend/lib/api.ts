@@ -309,7 +309,18 @@ class ApiClient {
         } as ApiError
       }
 
-      return await response.json() as T
+      // Pour les réponses 204 No Content ou autres sans body, retourner void
+      if (response.status === 204 || response.headers.get('content-length') === '0') {
+        return undefined as T
+      }
+
+      // Sinon, parser le JSON
+      const text = await response.text()
+      if (!text) {
+        return undefined as T
+      }
+
+      return JSON.parse(text) as T
     } catch (error: any) {
       // Réformater les erreurs
       if (error && typeof error === 'object' && 'status_code' in error && 'detail' in error) {

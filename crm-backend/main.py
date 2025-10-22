@@ -251,6 +251,16 @@ except Exception as e:
 # 🛡️ Handlers d'erreurs (facultatifs mais propres)
 # ============================================================
 
+from core.exceptions import APIException
+
+@app.exception_handler(APIException)
+async def api_exception_handler(request: Request, exc: APIException):
+    """Handler pour les exceptions API personnalisées (404, 409, etc.)"""
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail}
+    )
+
 @app.exception_handler(Exception)
 async def unhandled_exception_handler(request: Request, exc: Exception):
     if SENTRY_DSN:

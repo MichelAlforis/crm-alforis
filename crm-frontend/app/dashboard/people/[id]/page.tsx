@@ -102,9 +102,14 @@ export default function PersonDetailPage() {
 
   const handleDelete = async () => {
     if (personId === null) return
+
+    // Prévenir les clics multiples
+    if (remove.isLoading) return
+
     if (!confirm('Supprimer cette personne ? Cette action est définitive.')) {
       return
     }
+
     try {
       await deletePerson(personId)
       showToast({
@@ -112,7 +117,10 @@ export default function PersonDetailPage() {
         title: 'Contact supprimé',
         message: 'Le contact a été supprimé avec succès.',
       })
-      router.push('/dashboard/people')
+      // Attendre un peu pour que le toast s'affiche avant la redirection
+      setTimeout(() => {
+        router.push('/dashboard/people')
+      }, 500)
     } catch (error: any) {
       showToast({
         type: 'error',
