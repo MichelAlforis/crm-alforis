@@ -261,6 +261,15 @@ class EmailConfigurationService:
         import requests
 
         try:
+            # Format from_email selon Resend : "Name <email@domain.com>" ou juste "email@domain.com"
+            from_email = config.from_email or 'onboarding@resend.dev'
+            if config.from_name and from_email != 'onboarding@resend.dev':
+                # Nom uniquement pour les domaines vérifiés
+                from_field = f"{config.from_name} <{from_email}>"
+            else:
+                # Email seul pour onboarding@resend.dev
+                from_field = from_email
+
             response = requests.post(
                 "https://api.resend.com/emails",
                 headers={
@@ -268,15 +277,19 @@ class EmailConfigurationService:
                     "Content-Type": "application/json"
                 },
                 json={
-                    "from": f"{config.from_name or 'CRM'} <{config.from_email or 'noreply@example.com'}>",
+                    "from": from_field,
                     "to": [test_email],
                     "subject": "[TEST] Configuration Resend - CRM",
-                    "html": "<p>Ceci est un email de test de votre configuration Resend.</p>"
+                    "html": "<p>Ceci est un email de test de votre configuration Resend.</p><p><strong>Provider:</strong> Resend</p><p><strong>Configuration:</strong> " + config.name + "</p>"
                 },
                 timeout=10
             )
             response.raise_for_status()
             return True, None
+        except requests.exceptions.HTTPError as e:
+            # Capturer le détail de l'erreur Resend
+            error_detail = e.response.text if e.response else str(e)
+            return False, f"{e.response.status_code} {e.response.reason}: {error_detail}"
         except Exception as e:
             return False, str(e)
 

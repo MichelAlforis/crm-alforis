@@ -52,6 +52,7 @@ const PROVIDER_INFO: Record<EmailProvider, { name: string; docUrl: string; color
 export default function EmailApisSettingsPage() {
   const [configurations, setConfigurations] = useState<EmailConfiguration[]>([])
   const [showCreateModal, setShowCreateModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
   const [showTestModal, setShowTestModal] = useState(false)
   const [selectedConfig, setSelectedConfig] = useState<EmailConfiguration | null>(null)
   const [testEmail, setTestEmail] = useState('')
@@ -109,6 +110,11 @@ export default function EmailApisSettingsPage() {
         }
       },
     })
+  }
+
+  const handleEdit = (config: EmailConfiguration) => {
+    setSelectedConfig(config)
+    setShowEditModal(true)
   }
 
   const handleTest = (config: EmailConfiguration) => {
@@ -263,6 +269,14 @@ export default function EmailApisSettingsPage() {
                     >
                       Tester
                     </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleEdit(config)}
+                      leftIcon={<Edit className="w-4 h-4" />}
+                    >
+                      Modifier
+                    </Button>
                     {config.is_active ? (
                       <Button
                         variant="ghost"
@@ -306,6 +320,22 @@ export default function EmailApisSettingsPage() {
           onClose={() => setShowCreateModal(false)}
           onSuccess={() => {
             setShowCreateModal(false)
+            loadConfigurations()
+          }}
+        />
+      )}
+
+      {/* Modal Edit */}
+      {showEditModal && selectedConfig && (
+        <EditConfigModal
+          config={selectedConfig}
+          onClose={() => {
+            setShowEditModal(false)
+            setSelectedConfig(null)
+          }}
+          onSuccess={() => {
+            setShowEditModal(false)
+            setSelectedConfig(null)
             loadConfigurations()
           }}
         />
@@ -480,6 +510,177 @@ function CreateConfigModal({ onClose, onSuccess }: { onClose: () => void; onSucc
                 leftIcon={<Plus className="w-4 h-4" />}
               >
                 Créer
+              </Button>
+            </div>
+          </div>
+        </form>
+      </Card>
+    </div>
+  )
+}
+
+// Modal d'édition
+function EditConfigModal({
+  config,
+  onClose,
+  onSuccess,
+}: {
+  config: EmailConfiguration
+  onClose: () => void
+  onSuccess: () => void
+}) {
+  const [formData, setFormData] = useState({
+    name: config.name,
+    description: config.description || '',
+    api_key: '', // Vide par défaut, rempli uniquement si l'utilisateur veut changer
+    mailgun_domain: '',
+    from_name: config.from_name || '',
+    from_email: config.from_email || '',
+    reply_to: config.reply_to || '',
+    rate_limit_per_minute: config.rate_limit_per_minute,
+    batch_size: config.batch_size,
+    track_opens: config.track_opens,
+    track_clicks: config.track_clicks,
+  })
+
+  const emailConfig = useEmailConfig()
+  const { showToast } = useToast()
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    try {
+      // Ne pas envoyer api_key si vide (pas de changement)
+      const updateData: any = { ...formData }
+      if (!updateData.api_key) {
+        delete updateData.api_key
+      }
+      if (!updateData.mailgun_domain) {
+        delete updateData.mailgun_domain
+      }
+
+      await emailConfig.updateConfiguration(config.id, updateData)
+      showToast({ type: 'success', title: 'Configuration modifiée' })
+      onSuccess()
+    } catch (error: any) {
+      showToast({ type: 'error', title: error.message })
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+      <Card className="max-w-2xl w-full my-8">
+        <form onSubmit={handleSubmit}>
+          <div className="p-6 space-y-6">
+            <div>
+              <h3 className="text-xl font-semibold text-text-primary">Modifier la configuration</h3>
+              <p className="text-sm text-gray-600 mt-1">
+                Provider: <span className="font-medium">{PROVIDER_INFO[config.provider].name}</span>
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <Input
+                label="Nom *"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="Ex: Production Resend"
+                required
+              />
+
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-1">Description</label>
+                <textarea
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  placeholder="Description optionnelle"
+                  rows={2}
+                  className="w-full px-3 py-2 border border-border rounded-radius-md focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                />
+              </div>
+
+              <Input
+                label="Clé API (laisser vide pour ne pas modifier)"
+                type="password"
+                value={formData.api_key}
+                onChange={(e) => setFormData({ ...formData, api_key: e.target.value })}
+                placeholder="Nouvelle clé API (sera cryptée)"
+              />
+
+              {config.provider === 'mailgun' && (
+                <Input
+                  label="Domaine Mailgun (laisser vide pour ne pas modifier)"
+                  value={formData.mailgun_domain}
+                  onChange={(e) => setFormData({ ...formData, mailgun_domain: e.target.value })}
+                  placeholder="Ex: mg.example.com"
+                />
+              )}
+
+              <div className="grid grid-cols-2 gap-4">
+                <Input
+                  label="Nom expéditeur"
+                  value={formData.from_name}
+                  onChange={(e) => setFormData({ ...formData, from_name: e.target.value })}
+                />
+                <Input
+                  label="Email expéditeur"
+                  type="email"
+                  value={formData.from_email}
+                  onChange={(e) => setFormData({ ...formData, from_email: e.target.value })}
+                  placeholder="noreply@example.com"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <Input
+                  label="Limite d'envoi/min"
+                  type="number"
+                  value={formData.rate_limit_per_minute}
+                  onChange={(e) =>
+                    setFormData({ ...formData, rate_limit_per_minute: parseInt(e.target.value) || 120 })
+                  }
+                />
+                <Input
+                  label="Taille des lots"
+                  type="number"
+                  value={formData.batch_size}
+                  onChange={(e) => setFormData({ ...formData, batch_size: parseInt(e.target.value) || 500 })}
+                />
+              </div>
+
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={formData.track_opens}
+                    onChange={(e) => setFormData({ ...formData, track_opens: e.target.checked })}
+                    className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                  />
+                  <span className="text-sm text-text-primary">Tracker les ouvertures</span>
+                </label>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={formData.track_clicks}
+                    onChange={(e) => setFormData({ ...formData, track_clicks: e.target.checked })}
+                    className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                  />
+                  <span className="text-sm text-text-primary">Tracker les clics</span>
+                </label>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 pt-4 border-t border-border">
+              <Button variant="ghost" type="button" onClick={onClose}>
+                Annuler
+              </Button>
+              <Button
+                variant="primary"
+                type="submit"
+                isLoading={emailConfig.isLoading}
+                leftIcon={<Edit className="w-4 h-4" />}
+              >
+                Enregistrer
               </Button>
             </div>
           </div>
