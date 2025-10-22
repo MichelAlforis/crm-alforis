@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 
-from database import get_db
+from core.database import get_db
 from models.user import User
 from schemas.email_config import (
     EmailConfigurationCreate,
@@ -16,7 +16,7 @@ from schemas.email_config import (
     EmailConfigurationTestResponse,
 )
 from services.email_config_service import EmailConfigurationService
-from routers.auth import get_current_user
+from core.security import get_current_user
 from core.exceptions import ResourceNotFound, ValidationError
 
 router = APIRouter(prefix="/email-config", tags=["Email Configuration"])
