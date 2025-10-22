@@ -31,12 +31,13 @@ CREATE TABLE IF NOT EXISTS email_configurations (
 
     -- Timestamps
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE,
-
-    -- Index
-    CONSTRAINT unique_active_config UNIQUE (is_active) WHERE is_active = TRUE
+    updated_at TIMESTAMP WITH TIME ZONE
 );
 
+-- Index unique partiel pour garantir une seule configuration active
+CREATE UNIQUE INDEX unique_active_config ON email_configurations(is_active) WHERE is_active = TRUE;
+
+-- Autres index
 CREATE INDEX idx_email_configurations_is_active ON email_configurations(is_active);
 CREATE INDEX idx_email_configurations_provider ON email_configurations(provider);
 
@@ -44,4 +45,3 @@ CREATE INDEX idx_email_configurations_provider ON email_configurations(provider)
 COMMENT ON TABLE email_configurations IS 'Configurations des fournisseurs d''email avec clés API cryptées';
 COMMENT ON COLUMN email_configurations.api_key_encrypted IS 'Clé API cryptée avec Fernet';
 COMMENT ON COLUMN email_configurations.provider_config IS 'Configuration additionnelle cryptée (JSON)';
-COMMENT ON CONSTRAINT unique_active_config ON email_configurations IS 'Une seule configuration peut être active à la fois';
