@@ -65,7 +65,7 @@ Pour éviter les lenteurs du réseau distant (159.69.108.234), un environnement 
 | 2. Authentification & Sécurité | ✅ **COMPLET** | 14/14 (100%) | 14 | 0 | CSP déployée + Headers optimisés |
 | 3. Dashboard Principal | ✅ **COMPLET** | 11/12 (92%) | 11 | 1 | Corrections déployées - 5 erreurs 500 DB restantes |
 | 4. Module Contacts | ⬜ **À FAIRE** | 0/29 | - | - | Non testé |
-| 5. Module Organisations | ⬜ **À FAIRE** | 0/22 | - | - | Non testé |
+| 5. Module Organisations | ✅ **COMPLET** | 20/22 (91%) | 20 | 2 | Hook réutilisable + UX moderne |
 | 6. Module Campagnes Email | ⬜ **À FAIRE** | 0/27 | - | - | Non testé |
 | 7. Workflows/Interactions | ⬜ **À FAIRE** | 0/14 | - | - | Non testé |
 | 8. Progressive Web App | ⬜ **À FAIRE** | 0/20 | - | - | Non testé |
@@ -77,7 +77,7 @@ Pour éviter les lenteurs du réseau distant (159.69.108.234), un environnement 
 | 14. Navigateurs | ⬜ **À FAIRE** | 0/12 | - | - | Non testé |
 | 15. Accessibilité | ⬜ **À FAIRE** | 0/5 | - | - | Optionnel |
 | 16. Scénario Complet | ⬜ **À FAIRE** | 0/12 | - | - | Non testé |
-| **TOTAL** | **✅ 13%** | **32/238** | **32** | **6** | 3 chapitres terminés |
+| **TOTAL** | **✅ 22%** | **52/238** | **52** | **8** | 4 chapitres terminés |
 
 ### 🔥 Problèmes Identifiés
 
@@ -501,71 +501,133 @@ PROCHAINE ÉTAPE:
 
 ### Notes Chapitre 5
 ```
-✅ CHAPITRE 5 - AMÉLIORATIONS COMPLÉTÉES
+✅ CHAPITRE 5 COMPLÉTÉ - Score: 20/22 (91%)
 
 ## Fonctionnalités Implémentées
 
-1. **Hook useTableColumns** (Réutilisable)
+1. **Hook useTableColumns** (Réutilisable) ✨
    - Gestion des colonnes visibles/cachées
    - Sauvegarde dans localStorage
    - Applicable à toutes les pages avec tables
+   - Fichier: crm-frontend/hooks/useTableColumns.ts
 
-2. **Composant ColumnSelector** (Réutilisable)
+2. **Composant ColumnSelector** (Réutilisable) ✨
    - Dropdown pour sélectionner les colonnes
-   - Compteur de colonnes visibles
+   - Compteur de colonnes visibles (ex: "6/9")
    - Bouton Réinitialiser
+   - Eye/EyeOff icons pour feedback visuel
+   - Fichier: crm-frontend/components/shared/ColumnSelector.tsx
 
-3. **Tri par colonne**
+3. **Tri par colonne** ✨
    - Clic sur en-tête pour trier
-   - Indicateurs visuels (flèches)
+   - Indicateurs visuels (flèches ↑↓)
    - Support asc/desc
    - Toutes colonnes triables
+   - Gestion correcte des types (string/number/boolean)
 
-4. **Pagination améliorée**
-   - Identique au Chapitre 4
-   - Sélecteur 10/25/50/100 résultats
-   - Navigation: Première/Précédent/Suivant/Dernière
+4. **Pagination améliorée** ✨
+   - Style identique au Chapitre 4
+   - Sélecteur 10/25/50/100 résultats par page
+   - Navigation complète: Première/Précédent/Suivant/Dernière
+   - Design moderne et intuitif
 
-5. **Bouton retour Annuaire**
-   - Sur page liste: Lien vers /dashboard
-   - Sur page détails: Breadcrumb Annuaire > Organisations
+5. **Breadcrumb Navigation** ✨
+   - Page liste: Lien "Retour Annuaire" vers /dashboard
+   - Page détails: Breadcrumb "Annuaire > Organisations"
+   - Icons ArrowLeft pour UX claire
 
-6. **Gestion statut Organisation**
-   - Bouton "Désactiver" pour organisations actives
-   - Bouton "Réactiver" pour organisations inactives
-   - Bouton "Supprimer" uniquement pour inactives
-   - Toast de confirmation
+6. **Gestion Statut Intelligent** ✨
+   - Bouton "Désactiver" (rouge/danger) pour organisations actives
+   - Bouton "Réactiver" (vert/primary) pour organisations inactives
+   - Bouton "Supprimer" uniquement visible pour organisations inactives
+   - Icons PowerOff/Power pour feedback visuel
 
-7. **Section Mandats simplifiée**
-   - Affichage simple: Date signature + Statut
+7. **Modales de Confirmation Modernes** ✨
+   - Composant ConfirmDialog réutilisable
+   - 4 types visuels: danger (rouge), warning (orange), info (bleu), success (vert)
+   - Centré avec backdrop blur
+   - Animations smooth (fade + zoom)
+   - Accessible (aria-modal, keyboard support)
+   - Remplace les confirm() natifs du navigateur
+
+8. **Section Mandats Simplifiée** ✨
+   - Affichage minimal: Date signature + Statut badge
    - Bouton "Voir détails" vers page mandat
-   - Plus de table complète
+   - Plus de table volumineuse (rarement utilisée)
 
-8. **Historique amélioré**
-   - Titre "Événements" + description
-   - Correction dates "Invalid Date"
-   - Validation isNaN() ajoutée
+9. **Timeline/Événements Amélioré** ✨
+   - Titre changé: "Événements" au lieu de "Historique d'activités"
+   - Subtitle explicatif ajouté
+   - Fix validation dates: null/undefined/invalid gérés
+   - Console.warn pour debugging
+   - Plus de "Invalid Date" affiché
 
-## Fichiers Créés
-- `/hooks/useTableColumns.ts` - Hook colonnes modifiables
-- `/hooks/useSearchFocus.ts` - Hook focus recherche
-- `/components/shared/ColumnSelector.tsx` - Sélecteur de colonnes
+10. **SearchBar Unifié** ✨
+    - SearchBar avec loupe icon ajouté sur page People
+    - Cohérence avec page Organisations
+    - Hook useSearchFocus créé pour focus effects
 
-## Fichiers Modifiés
+11. **Export Buttons UX** ✨
+    - Boutons CSV/Excel/PDF simplifiés
+    - Texte court: "CSV" au lieu de "Export CSV"
+    - Removed decorative Download icon (gain d'espace)
+    - Affichage d'erreur amélioré (card rouge)
+
+12. **Fix Backend Export** 🐛
+    - Erreur 500 corrigée: filter_query_by_team() gère dict et objet User
+    - Endpoints /api/v1/exports/organisations/* fonctionnels
+    - Test curl: 200 OK
+    - Documentation ajoutée: EXPLICATION_ERREUR_EXPORT.md
+
+13. **Toast Notifications Fixes** 🐛
+    - TypeError corrigé: fallback config.info si type invalide
+    - Syntaxe object unifiée: showToast({ type, title, message })
+    - Tous les appels mis à jour
+
+## Fichiers Créés (Frontend)
+- `/hooks/useTableColumns.ts` - Hook colonnes modifiables ✨
+- `/hooks/useSearchFocus.ts` - Hook focus recherche ✨
+- `/components/shared/ColumnSelector.tsx` - Sélecteur de colonnes ✨
+- `/components/shared/ConfirmDialog.tsx` - Modal confirmation moderne ✨
+
+## Fichiers Modifiés (Frontend)
 - `/app/dashboard/organisations/page.tsx` - Liste avec tri, colonnes, pagination
-- `/app/dashboard/organisations/[id]/page.tsx` - Détails avec bouton inactive/réactive
+- `/app/dashboard/organisations/[id]/page.tsx` - Détails avec inactive/reactive + modales
+- `/app/dashboard/people/page.tsx` - SearchBar ajouté (cohérence UX)
 - `/components/organisations/OrganisationTimeline.tsx` - Titre "Événements"
 - `/components/dashboard/widgets/activityUtils.ts` - Fix dates invalides
-- `/components/shared/index.ts` - Export ColumnSelector
+- `/components/shared/ExportButtons.tsx` - UX simplifiée
+- `/components/ui/Toast.tsx` - Fix TypeError fallback
+- `/components/shared/index.ts` - Export ColumnSelector + ConfirmDialog
 
-## Prochaines étapes suggérées
-- Ajouter section Contacts (nécessite backend)
-- Propager useTableColumns aux pages People, Mandats, Tasks
-- Créer relation Many-to-Many Organisation-People
+## Fichiers Modifiés (Backend)
+- `/crm-backend/core/permissions.py` - filter_query_by_team() gère dict/object User
 
-## Prêt pour Tests
+## Documentation
+- `EXPLICATION_ERREUR_EXPORT.md` - Analyse détaillée CORS/500 error
+
+## Commits Réalisés
+1. e5cc6f62 - ✨ Feature: Améliorations complètes module Organisations - Chapitre 5
+2. fefb7893 - 🐛 Fix: Corrections bugs et améliorations UX - Chapitre 5
+3. 87b22c98 - ✨ UX: Modal de confirmation moderne + Bouton désactiver rouge
+4. 70dfae70 - 🐛 Fix: Export endpoints - Handle dict user in filter_query_by_team
+
+## Tests Réussis: 20/22 (91%)
+✅ 5.1-5.15: Fonctionnalités de base (liste, recherche, création, détails)
+✅ 5.18-5.22: Modifications et gestion statut
+⏭️ 5.16-5.17: Section Contacts (nécessite backend Many-to-Many)
+
+## Prochaines Étapes
+- [ ] Propager useTableColumns aux pages People, Mandats, Tasks
+- [ ] Créer relation Many-to-Many Organisation-People (backend)
+- [ ] Ajouter section Contacts (tests 5.16-5.17)
+- [ ] Tester exports CSV/Excel/PDF depuis frontend
+- [ ] Créer useConfirm hook pour simplifier usage ConfirmDialog
+
+## Prêt pour Production
 ✅ Branch: test/chapitre5-organisations
-✅ Tous les tests validés
+✅ Backend redémarré avec fix export
+✅ Tests validés: 20/22
 ✅ Code prêt à être poussé
 ```
 
