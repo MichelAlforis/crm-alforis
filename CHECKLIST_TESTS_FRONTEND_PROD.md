@@ -13,7 +13,7 @@
 | Chapitre | Statut | Score | Tests OK | Tests KO | Remarques |
 |----------|--------|-------|----------|----------|-----------|
 | 1. Infrastructure & Santé | ✅ **COMPLET** | 7/7 (100%) | 7 | 0 | Tous systèmes opérationnels |
-| 2. Authentification & Sécurité | ✅ **COMPLET** | 14/14 (100%) | 14 | 0 | Corrections appliquées + tests validés |
+| 2. Authentification & Sécurité | ✅ **COMPLET** | 14/14 (100%) | 14 | 0 | CSP déployée + Headers optimisés |
 | 3. Dashboard Principal | 🔄 **EN COURS** | 6/12 (50%) | 6 | 6 | Erreurs API identifiées |
 | 4. Module Contacts | ⬜ **À FAIRE** | 0/29 | - | - | Non testé |
 | 5. Module Organisations | ⬜ **À FAIRE** | 0/22 | - | - | Non testé |
@@ -76,18 +76,20 @@
 ✅ CHAPITRE 1 COMPLÉTÉ - Score: 7/7 (100%)
 
 RÉSULTATS DÉTAILLÉS:
-- Site accessible sur http://localhost:3010
+- Site accessible sur https://crm.alforis.fr
 - Temps de chargement initial: excellent (<1s)
 - Aucune erreur console dans DevTools
 - Tous les assets se chargent correctement (CSS, JS, images)
 - Favicon présent et visible
 - PWA Manifest détecté et valide
-- Headers de sécurité configurés (5/5):
-  ✓ X-Frame-Options: DENY
-  ✓ X-Content-Type-Options: nosniff
-  ✓ X-XSS-Protection: 1; mode=block
-  ✓ Referrer-Policy: strict-origin-when-cross-origin
-  ✓ Permissions-Policy: camera=(), microphone=(), geolocation=()
+- Headers de sécurité configurés (7/7):
+  ✓ X-Frame-Options: SAMEORIGIN (Nginx)
+  ✓ X-Content-Type-Options: nosniff (Nginx)
+  ✓ X-XSS-Protection: 1; mode=block (Nginx)
+  ✓ Strict-Transport-Security: max-age=31536000 (Nginx)
+  ✓ Content-Security-Policy (Next.js) ✨ NOUVEAU
+  ✓ Referrer-Policy: strict-origin-when-cross-origin (Next.js)
+  ✓ Permissions-Policy: camera=(), microphone=(), geolocation=() (Next.js)
 
 BACKEND HEALTH:
 - API /api/v1/health: ✅ {"status":"ok"} (36ms)
@@ -164,18 +166,29 @@ TESTS AUTOMATISÉS (script Python):
 - ✅ HTTPS forcé
 - ✅ Headers sécurité (X-Frame-Options, HSTS, X-Content-Type)
 
-PERFORMANCE LIGHTHOUSE:
+PERFORMANCE LIGHTHOUSE (https://crm.alforis.fr):
 - FCP (First Contentful Paint): 0,3s ⭐
 - Speed Index: 0,7s ⭐
 - LCP (Largest Contentful Paint): 2,0s 🟡
+- TBT (Total Blocking Time): 0ms ⭐
+- CLS (Cumulative Layout Shift): 0 ⭐
 - Score global: Excellent
 
 ÉTAT PRODUCTION (https://crm.alforis.fr):
 ✅ Authentification 100% fonctionnelle
 ✅ Toast d'erreur correct
 ✅ API routes accessibles
-✅ HTTPS + Headers sécurité
+✅ HTTPS + Headers sécurité (7/7)
+✅ Content-Security-Policy déployée (Protection XSS)
+✅ Headers dédupliqués (Nginx + Next.js optimisés)
 ✅ Performance excellente
+
+DERNIÈRE MISE À JOUR (2025-10-22):
+🔒 Déploiement CSP et optimisation headers
+   - Commit: e5ded519
+   - Build frontend: ✅ Réussi
+   - Déploiement prod: ✅ Vérifié
+   - Headers production: ✅ Tous présents
 
 PROCHAINE ÉTAPE:
 🎯 CHAPITRE 3: Dashboard Principal (déjà en cours selon utilisateur)
