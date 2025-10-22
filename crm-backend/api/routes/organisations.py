@@ -33,13 +33,13 @@ def _extract_user_id(current_user: dict) -> Optional[int]:
 
 # ============= GET ROUTES =============
 
-@router.get("", response_model=List[OrganisationResponse])
+@router.get("", response_model=PaginatedResponse[OrganisationResponse])
 @cache_response(ttl=300, key_prefix="organisations:list")
 async def list_organisations(
-    page: int = Query(1, ge=1),
-    limit: int = Query(10, ge=1, le=100),
+    skip: int = Query(0, ge=0, description="Nombre d'éléments à sauter"),
+    limit: int = Query(50, ge=1, le=200, description="Nombre d'éléments par page"),
     category: Optional[str] = Query(None),
-    active_only: bool = Query(False, alias="active_only"),
+    is_active: Optional[bool] = Query(None, description="Filtrer par statut actif"),
     country_code: Optional[str] = Query(None, min_length=2, max_length=2),
     language: Optional[str] = Query(None, min_length=2, max_length=5),
     db: Session = Depends(get_db),
@@ -57,8 +57,8 @@ async def list_organisations(
     service = OrganisationService(db)
 
     filters: Dict[str, Any] = {}
-    if active_only:
-        filters["is_active"] = True
+    if is_active is not None:
+        filters["is_active"] = is_active
     if category:
         filters["category"] = category
     if country_code:
@@ -66,26 +66,35 @@ async def list_organisations(
     if language:
         filters["language"] = language.upper()
 
-    skip = (page - 1) * limit
-    items, _ = await service.get_all(skip=skip, limit=limit, filters=filters)
+    items, total = await service.get_all(skip=skip, limit=limit, filters=filters)
 
-    return [OrganisationResponse.model_validate(item) for item in items]
+    return {
+        "items": [OrganisationResponse.model_validate(item) for item in items],
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+    }
 
 
-@router.get("/search", response_model=List[OrganisationResponse])
+@router.get("/search", response_model=PaginatedResponse[OrganisationResponse])
 @cache_response(ttl=300, key_prefix="organisations:search")
 async def search_organisations(
     q: str = Query(..., min_length=1),
     skip: int = Query(0, ge=0),
-    limit: int = Query(20, ge=1, le=100),
+    limit: int = Query(50, ge=1, le=200),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
     """Rechercher des organisations par nom, website ou notes"""
     service = OrganisationService(db)
-    items, _ = await service.search(q, skip=skip, limit=limit)
+    items, total = await service.search(q, skip=skip, limit=limit)
 
-    return [OrganisationResponse.model_validate(item) for item in items]
+    return {
+        "items": [OrganisationResponse.model_validate(item) for item in items],
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+    }
 
 
 @router.get("/stats")
@@ -107,12 +116,12 @@ async def get_organisation_stats(
     return stats
 
 
-@router.get("/by-language/{language}", response_model=List[OrganisationResponse])
+@router.get("/by-language/{language}", response_model=PaginatedResponse[OrganisationResponse])
 @cache_response(ttl=300, key_prefix="organisations:language")
 async def get_organisations_by_language(
     language: str,
     skip: int = Query(0, ge=0),
-    limit: int = Query(20, ge=1, le=100),
+    limit: int = Query(100, ge=1, le=200),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
@@ -121,9 +130,14 @@ async def get_organisations_by_language(
     Utile pour la segmentation des newsletters
     """
     service = OrganisationService(db)
-    items, _ = await service.get_by_language(language.upper(), skip=skip, limit=limit)
+    items, total = await service.get_by_language(language.upper(), skip=skip, limit=limit)
 
-    return [OrganisationResponse.model_validate(item) for item in items]
+    return {
+        "items": [OrganisationResponse.model_validate(item) for item in items],
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+    }
 
 
 @router.get("/{organisation_id}", response_model=OrganisationDetailResponse)
