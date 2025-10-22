@@ -395,7 +395,9 @@ PROCHAINE ÉTAPE:
 
 ### Notes Chapitre 4
 ```
-✅ TOUTES LES FONCTIONNALITÉS IMPLÉMENTÉES
+✅ CHAPITRE 4 COMPLÉTÉ À 100%
+
+## Fonctionnalités Implémentées
 
 1. URLs lisibles avec slugs:
    - Format: /people/123-jean-dupont (ID + slug nom-prénom)
@@ -418,10 +420,32 @@ PROCHAINE ÉTAPE:
 4. Gestion d'erreurs:
    - Parser FastAPI validation errors
    - Messages lisibles et localisés
+   - Gestion correcte des réponses 204 No Content
+   - Exception handler pour APIException (404 au lieu de 500)
 
 5. Toast notifications:
    - Confirmation après suppression
-   - Redirection automatique vers annuaire
+   - Redirection automatique vers annuaire (500ms delay)
+   - Protection contre double-clic
+
+## Commits Créés (Branch: test/chapitre4-contacts-people)
+
+1. d01e9281 - ✨ UX: Améliorations UI/UX (pagination, erreurs, slugs, toast)
+2. 7aa5aadc - ✨ Feature: Tri par colonne + Sélecteur résultats
+3. e374db56 - 🐛 Fix: Gestion suppressions et réponses 204 No Content
+
+## Bugs Corrigés
+
+✅ Erreur JSON parsing sur DELETE (204 No Content)
+✅ Protection contre clics multiples sur "Supprimer"
+✅ Toast s'affiche avant redirection (delay 500ms)
+✅ Exception handler backend pour erreurs 404
+
+## Prêt pour Production
+
+✅ Tous les tests validés
+✅ Tous les bugs corrigés
+✅ Branche prête à être pushée et déployée
 ```
 
 ---
