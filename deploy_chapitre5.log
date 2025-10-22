@@ -1,0 +1,42 @@
+\033[0;34mAlforis CRM - Docker Deployment Script\033[0m
+
+\033[0;32mUsage:\033[0m ./scripts/deploy.sh [OPTIONS] <ACTION>
+
+\033[0;32mOptions:\033[0m
+  -v        Verbose mode
+  -h        Affiche cette aide
+
+\033[0;32mActions:\033[0m
+  setup           Configuration initiale du serveur (Docker, nginx, SSL)
+  setup-ssl       Configure Nginx + SSL Let's Encrypt (après deploy)
+  deploy          Déploiement complet (copie + build + migrate + restart)
+  deploy-backend  Déploiement backend uniquement (rebuild API)
+  deploy-frontend Déploiement frontend uniquement (rebuild frontend)
+  start           Démarrage des containers
+  stop            Arrêt des containers
+  restart         Redémarrage des containers
+  status          Affiche le statut des containers
+  logs            Affiche les logs en temps réel
+  logs-api        Logs API uniquement
+  logs-frontend   Logs frontend uniquement
+  migrate         Exécute les migrations Alembic
+  backup-db       Sauvegarde la base de données
+  restore-db      Restaure la dernière sauvegarde
+  rollback        Rollback vers la version précédente (git)
+  update          Mise à jour depuis git (pull + rebuild + migrate)
+  clean-docker    Nettoie les images/volumes Docker non utilisés
+
+\033[0;32mVariables d'environnement:\033[0m
+  SSH_KEY       Clé SSH (défaut: ~/.ssh/id_rsa_hetzner)
+  SERVER        Serveur (défaut: root@159.69.108.234)
+  REMOTE_DIR    Répertoire distant (défaut: /opt/alforis-crm)
+  COMPOSE_FILE  Fichier compose (défaut: docker-compose.prod.yml)
+
+\033[0;32mExemples:\033[0m
+  ./scripts/deploy.sh setup                  Configuration initiale serveur
+  ./scripts/deploy.sh -v deploy              Déploiement complet
+  ./scripts/deploy.sh deploy-backend         Backend uniquement
+  ./scripts/deploy.sh migrate                Migrations DB
+  ./scripts/deploy.sh backup-db              Backup base de données
+  ./scripts/deploy.sh logs-api               Logs API en temps réel
+[0;34mℹ️  Test connexion SSH...[0m

@@ -34,7 +34,7 @@ class EmailConfiguration(BaseModel):
     is_active = Column(Boolean, default=False, nullable=False, index=True)
 
     # Provider et configuration
-    provider = Column(SQLEnum(EmailProvider), nullable=False, default=EmailProvider.RESEND)
+    provider = Column(SQLEnum(EmailProvider, values_callable=lambda x: [e.value for e in x]), nullable=False, default=EmailProvider.RESEND)
 
     # Clés API (cryptées)
     api_key_encrypted = Column(Text, nullable=False)  # Clé API cryptée
