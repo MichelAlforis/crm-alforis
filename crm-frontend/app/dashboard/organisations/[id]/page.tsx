@@ -13,7 +13,7 @@ import {
   useDeleteOrganisation,
 } from '@/hooks/useOrganisations'
 import { useMandatsByOrganisation } from '@/hooks/useMandats'
-import { Card, Button, Table, Alert, Modal } from '@/components/shared'
+import { Card, Button, Table, Alert, Modal, ConfirmDialog } from '@/components/shared'
 import { OrganisationForm } from '@/components/forms'
 import { SkeletonCard } from '@/components/ui/Skeleton'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
@@ -58,6 +58,10 @@ export default function OrganisationDetailPage() {
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isInactivating, setIsInactivating] = useState(false)
+  const [confirmDialog, setConfirmDialog] = useState<{
+    isOpen: boolean
+    type: 'deactivate' | 'reactivate' | 'delete'
+  }>({ isOpen: false, type: 'deactivate' })
 
   const handleUpdate = async (data: OrganisationUpdate) => {
     if (!organisationId) return
@@ -69,42 +73,45 @@ export default function OrganisationDetailPage() {
     })
   }
 
+  // Open confirmation dialog for toggle status
+  const handleToggleStatusClick = () => {
+    if (!organisation) return
+    setConfirmDialog({
+      isOpen: true,
+      type: organisation.is_active ? 'deactivate' : 'reactivate',
+    })
+  }
+
   // Toggle active/inactive status
   const handleToggleStatus = async () => {
     if (!organisationId || !organisation) return
 
     const newStatus = !organisation.is_active
-    const action = newStatus ? 'réactiver' : 'désactiver'
 
-    if (
-      confirm(
-        `Êtes-vous sûr de vouloir ${action} cette organisation ?`
-      )
-    ) {
-      try {
-        setIsInactivating(true)
-        await updateMutation.mutateAsync({
-          id: organisationId,
-          data: { is_active: newStatus },
-        })
-        showToast({
-          type: 'success',
-          title: `Organisation ${newStatus ? 'réactivée' : 'désactivée'} avec succès`,
-        })
-      } catch (err) {
-        showToast({
-          type: 'error',
-          title: `Erreur lors de la ${action}`,
-        })
-      } finally {
-        setIsInactivating(false)
-      }
+    try {
+      setIsInactivating(true)
+      await updateMutation.mutateAsync({
+        id: organisationId,
+        data: { is_active: newStatus },
+      })
+      showToast({
+        type: 'success',
+        title: `Organisation ${newStatus ? 'réactivée' : 'désactivée'} avec succès`,
+      })
+      setConfirmDialog({ isOpen: false, type: 'deactivate' })
+    } catch (err) {
+      showToast({
+        type: 'error',
+        title: `Erreur lors de ${newStatus ? 'la réactivation' : 'la désactivation'}`,
+      })
+    } finally {
+      setIsInactivating(false)
     }
   }
 
-  // Delete only for inactive organisations
-  const handleDelete = async () => {
-    if (!organisationId || !organisation) return
+  // Open confirmation dialog for delete
+  const handleDeleteClick = () => {
+    if (!organisation) return
 
     if (organisation.is_active) {
       showToast({
@@ -114,26 +121,28 @@ export default function OrganisationDetailPage() {
       return
     }
 
-    if (
-      confirm(
-        "Êtes-vous sûr de vouloir supprimer définitivement cette organisation ? Cette action est irréversible et supprimera également tous les mandats associés."
-      )
-    ) {
-      try {
-        await deleteMutation.mutateAsync(organisationId)
-        showToast({
-          type: 'success',
-          title: 'Organisation supprimée avec succès',
-        })
-        setTimeout(() => {
-          router.push('/dashboard/organisations')
-        }, 500)
-      } catch (err) {
-        showToast({
-          type: 'error',
-          title: 'Erreur lors de la suppression',
-        })
-      }
+    setConfirmDialog({ isOpen: true, type: 'delete' })
+  }
+
+  // Delete only for inactive organisations
+  const handleDelete = async () => {
+    if (!organisationId || !organisation) return
+
+    try {
+      await deleteMutation.mutateAsync(organisationId)
+      showToast({
+        type: 'success',
+        title: 'Organisation supprimée avec succès',
+      })
+      setConfirmDialog({ isOpen: false, type: 'delete' })
+      setTimeout(() => {
+        router.push('/dashboard/organisations')
+      }, 500)
+    } catch (err) {
+      showToast({
+        type: 'error',
+        title: 'Erreur lors de la suppression',
+      })
     }
   }
 
@@ -248,8 +257,8 @@ export default function OrganisationDetailPage() {
             Modifier
           </Button>
           <Button
-            variant={organisation.is_active ? 'secondary' : 'primary'}
-            onClick={handleToggleStatus}
+            variant={organisation.is_active ? 'danger' : 'primary'}
+            onClick={handleToggleStatusClick}
             disabled={isInactivating || updateMutation.isPending}
           >
             {isInactivating ? (
@@ -267,7 +276,7 @@ export default function OrganisationDetailPage() {
             )}
           </Button>
           {!organisation.is_active && (
-            <Button variant="danger" onClick={handleDelete} disabled={deleteMutation.isPending}>
+            <Button variant="danger" onClick={handleDeleteClick} disabled={deleteMutation.isPending}>
               {deleteMutation.isPending ? 'Suppression...' : 'Supprimer'}
             </Button>
           )}
@@ -376,6 +385,43 @@ export default function OrganisationDetailPage() {
           submitLabel="Enregistrer"
         />
       </Modal>
+
+      {/* Confirmation Dialogs */}
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen && confirmDialog.type === 'deactivate'}
+        onClose={() => setConfirmDialog({ isOpen: false, type: 'deactivate' })}
+        onConfirm={handleToggleStatus}
+        type="warning"
+        title="Désactiver l'organisation ?"
+        message={`Êtes-vous sûr de vouloir désactiver ${organisation.name} ? L'organisation ne sera plus visible dans les listes actives mais pourra être réactivée à tout moment.`}
+        confirmText="Désactiver"
+        cancelText="Annuler"
+        isLoading={isInactivating}
+      />
+
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen && confirmDialog.type === 'reactivate'}
+        onClose={() => setConfirmDialog({ isOpen: false, type: 'reactivate' })}
+        onConfirm={handleToggleStatus}
+        type="success"
+        title="Réactiver l'organisation ?"
+        message={`Êtes-vous sûr de vouloir réactiver ${organisation.name} ? L'organisation sera à nouveau visible et active dans le système.`}
+        confirmText="Réactiver"
+        cancelText="Annuler"
+        isLoading={isInactivating}
+      />
+
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen && confirmDialog.type === 'delete'}
+        onClose={() => setConfirmDialog({ isOpen: false, type: 'delete' })}
+        onConfirm={handleDelete}
+        type="danger"
+        title="Supprimer définitivement ?"
+        message={`Cette action est irréversible. ${organisation.name} et tous les mandats associés seront définitivement supprimés. Voulez-vous continuer ?`}
+        confirmText="Supprimer définitivement"
+        cancelText="Annuler"
+        isLoading={deleteMutation.isPending}
+      />
     </div>
   )
 }
