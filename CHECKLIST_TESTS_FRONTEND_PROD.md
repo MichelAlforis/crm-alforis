@@ -756,14 +756,21 @@ TOUS les confirm() de l'annuaire utilisent maintenant ConfirmDialog:
 - Statuts de campagne gérés : draft, scheduled, sending, completed, paused
 
 ⚙️ Configuration Email requise (crm-backend/.env) :
-Pour SendGrid :
-  SENDGRID_API_KEY=votre_clé_api_sendgrid
+Pour Resend (RECOMMANDÉ) :
+  RESEND_API_KEY=votre_clé_api_resend
+  → Simple, moderne, 100 emails/jour gratuit
+  → Obtenir sur : https://resend.com/api-keys
 
-Pour Mailgun :
+OU Pour SendGrid :
+  SENDGRID_API_KEY=votre_clé_api_sendgrid
+  → 100 emails/jour gratuit
+
+OU Pour Mailgun :
   MAILGUN_API_KEY=votre_clé_api_mailgun
   MAILGUN_DOMAIN=votre_domaine.mailgun.org
+  → 100 emails/jour gratuit (3 premiers mois)
 
-Optionnel :
+Configuration optionnelle :
   DEFAULT_EMAIL_FROM_NAME="Alforis CRM"
   DEFAULT_EMAIL_FROM_ADDRESS=noreply@alforis.com
   DEFAULT_EMAIL_REPLY_TO=support@alforis.com
@@ -771,18 +778,24 @@ Optionnel :
   EMAIL_BATCH_SIZE=500
 
 ⏳ Tests à effectuer en environnement dev :
-1. Configurer SENDGRID_API_KEY ou MAILGUN_API_KEY dans .env
+1. Configurer RESEND_API_KEY (ou SENDGRID_API_KEY / MAILGUN_API_KEY) dans .env
 2. Créer un template avec l'éditeur Unlayer
 3. Créer une campagne avec destinataires filtrés
-4. Tester l'envoi d'email de test
-5. Préparation et lancement d'une campagne
-6. Vérifier la réception des emails
+4. Sélectionner le provider "resend" dans le formulaire
+5. Tester l'envoi d'email de test
+6. Préparation et lancement d'une campagne
+7. Vérifier la réception des emails
 
 📚 Documentation :
 - documentation/email-campaigns-guide.md
-- Configuration: crm-backend/core/config.py (lignes 56-68)
-- Service: crm-backend/services/email_service.py
+- Configuration: crm-backend/core/config.py (lignes 57-70)
+- Service: crm-backend/services/email_service.py (support Resend, SendGrid, Mailgun)
 - Exemple config: crm-backend/.env.email.example
+
+🔜 Prochaine fonctionnalité :
+- Interface web de gestion des clés API (Paramètres > APIs Email)
+- Cryptage des clés en base de données (comme pour les API IA)
+- Configuration sans redémarrage du backend
 ```
 
 ---
