@@ -46,6 +46,7 @@ class EmailProvider(str, enum.Enum):
 
     SENDGRID = "sendgrid"
     MAILGUN = "mailgun"
+    RESEND = "resend"
 
 
 class EmailCampaignStatus(str, enum.Enum):

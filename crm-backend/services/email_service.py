@@ -424,6 +424,8 @@ class EmailDeliveryService:
             response = self._send_via_sendgrid(send, subject, html_content)
         elif send.campaign.provider == EmailProvider.MAILGUN:
             response = self._send_via_mailgun(send, subject, html_content)
+        elif send.campaign.provider == EmailProvider.RESEND:
+            response = self._send_via_resend(send, subject, html_content)
         else:
             raise ValidationError(f"Provider {send.campaign.provider} non supporté")
 
@@ -583,6 +585,60 @@ class EmailDeliveryService:
             send.status = EmailSendStatus.FAILED
             send.error_message = str(exc)
             logger.exception("email_mailgun_send_failed: %s", exc)
+            return {"error": str(exc)}
+
+    def _send_via_resend(self, send: EmailSend, subject: str, html_content: str) -> Dict[str, Any]:
+        if not settings.resend_api_key:
+            error = "RESEND_API_KEY manquant"
+            send.status = EmailSendStatus.FAILED
+            send.error_message = error
+            logger.error("email_resend_missing_key", extra={"send_id": send.id})
+            return {"error": error}
+
+        import requests
+
+        headers = {
+            "Authorization": f"Bearer {settings.resend_api_key}",
+            "Content-Type": "application/json",
+        }
+
+        payload = {
+            "from": f"{send.campaign.from_name} <{send.campaign.from_email}>",
+            "to": [send.recipient_email],
+            "subject": subject,
+            "html": html_content,
+            "tags": [
+                {"name": "campaign_id", "value": str(send.campaign_id)},
+                {"name": "send_id", "value": str(send.id)},
+            ],
+        }
+
+        if send.campaign.reply_to:
+            payload["reply_to"] = send.campaign.reply_to
+
+        try:
+            response = requests.post(
+                "https://api.resend.com/emails",
+                headers=headers,
+                json=payload,
+            )
+            response.raise_for_status()
+            resp_json = response.json()
+            message_id = resp_json.get("id")
+            send.provider_message_id = message_id
+            send.status = EmailSendStatus.SENT
+            send.sent_at = datetime.now(UTC)
+            send.campaign.total_sent = (send.campaign.total_sent or 0) + 1
+            send.campaign.last_sent_at = datetime.now(UTC)
+            logger.info(
+                "email_resend_sent",
+                extra={"send_id": send.id, "message_id": message_id},
+            )
+            return resp_json
+        except Exception as exc:
+            send.status = EmailSendStatus.FAILED
+            send.error_message = str(exc)
+            logger.exception("email_resend_send_failed: %s", exc)
             return {"error": str(exc)}
 
 

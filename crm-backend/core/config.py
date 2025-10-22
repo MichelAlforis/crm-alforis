@@ -59,6 +59,7 @@ class Settings(BaseSettings):
     sendgrid_event_webhook_key: str = ""
     mailgun_api_key: str = ""
     mailgun_domain: str = ""
+    resend_api_key: str = ""
     default_email_from_name: str = "Alforis CRM"
     default_email_from_address: str = "noreply@example.com"
     default_email_reply_to: str = "support@example.com"
