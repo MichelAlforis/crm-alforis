@@ -3,11 +3,13 @@
 // app/dashboard/people/page.tsx
 // ============= PEOPLE DIRECTORY =============
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { ArrowLeft } from 'lucide-react'
 import { usePeople } from '@/hooks/usePeople'
-import { Card, Button, Table, Alert, AdvancedFilters } from '@/components/shared'
+import { useTableColumns } from '@/hooks/useTableColumns'
+import { Card, Button, Table, Alert, AdvancedFilters, ColumnSelector, ExportButtons } from '@/components/shared'
 import SearchBar from '@/components/search/SearchBar'
 import { Person } from '@/lib/types'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
@@ -35,51 +37,6 @@ const LANGUAGE_LABELS = LANGUAGE_OPTIONS.filter((option) => option.value).reduce
   {} as Record<string, string>,
 )
 
-const COLUMNS = [
-  {
-    header: 'Nom',
-    accessor: 'last_name',
-    sortable: true,
-    render: (_: string, row: Person) => (
-      <Link
-        href={`/dashboard/people/${personSlug(row.id, row.first_name, row.last_name)}`}
-        className="text-bleu hover:underline text-sm font-medium"
-      >
-        {`${row.first_name} ${row.last_name}`}
-      </Link>
-    ),
-  },
-  {
-    header: 'Rôle',
-    accessor: 'role',
-    sortable: true,
-  },
-  {
-    header: 'Email',
-    accessor: 'personal_email',
-    sortable: true,
-  },
-  {
-    header: 'Mobile',
-    accessor: 'personal_phone',
-    sortable: true,
-  },
-  {
-    header: 'Pays',
-    accessor: 'country_code',
-    sortable: true,
-    render: (value: string | null | undefined) =>
-      value ? COUNTRY_LABELS[value] || value : '-',
-  },
-  {
-    header: 'Langue',
-    accessor: 'language',
-    sortable: true,
-    render: (value: string | null | undefined) =>
-      value ? LANGUAGE_LABELS[value] || value : '-',
-  },
-]
-
 export default function PeoplePage() {
   const router = useRouter()
   const { people, fetchPeople } = usePeople()
@@ -94,6 +51,72 @@ export default function PeoplePage() {
     language: '',
     createdFrom: '',
     createdTo: '',
+  })
+
+  // Define columns with useTableColumns hook
+  const defaultColumns = useMemo(
+    () => [
+      {
+        key: 'name',
+        header: 'Nom',
+        accessor: 'last_name',
+        visible: true,
+        sortable: true,
+        render: (_: string, row: Person) => (
+          <Link
+            href={`/dashboard/people/${personSlug(row.id, row.first_name, row.last_name)}`}
+            className="text-bleu hover:underline text-sm font-medium"
+          >
+            {`${row.first_name} ${row.last_name}`}
+          </Link>
+        ),
+      },
+      {
+        key: 'role',
+        header: 'Rôle',
+        accessor: 'role',
+        visible: true,
+        sortable: true,
+      },
+      {
+        key: 'email',
+        header: 'Email',
+        accessor: 'personal_email',
+        visible: true,
+        sortable: true,
+      },
+      {
+        key: 'mobile',
+        header: 'Mobile',
+        accessor: 'personal_phone',
+        visible: false,
+        sortable: true,
+      },
+      {
+        key: 'country',
+        header: 'Pays',
+        accessor: 'country_code',
+        visible: true,
+        sortable: true,
+        render: (value: string | null | undefined) =>
+          value ? COUNTRY_LABELS[value] || value : '-',
+      },
+      {
+        key: 'language',
+        header: 'Langue',
+        accessor: 'language',
+        visible: false,
+        sortable: true,
+        render: (value: string | null | undefined) =>
+          value ? LANGUAGE_LABELS[value] || value : '-',
+      },
+    ],
+    [],
+  )
+
+  const { visibleColumns, toggleColumn, resetColumns } = useTableColumns({
+    storageKey: 'people-columns',
+    defaultColumns,
   })
 
   const handleFilterChange = (key: string, value: unknown) => {
@@ -243,6 +266,15 @@ export default function PeoplePage() {
 
   return (
     <div className="space-y-6">
+      {/* Breadcrumb */}
+      <Link
+        href="/dashboard"
+        className="inline-flex items-center gap-2 text-gray-600 hover:text-bleu transition-colors mb-2"
+      >
+        <ArrowLeft className="w-5 h-5" />
+        <span className="font-medium">Retour à l'annuaire</span>
+      </Link>
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-ardoise">Personnes physiques</h1>
@@ -262,17 +294,31 @@ export default function PeoplePage() {
 
       <Card>
         <div className="space-y-4">
-          <SearchBar
-            placeholder="Rechercher une personne…"
-            entityType="people"
-            onQueryChange={setSearchText}
-            onSubmit={setSearchText}
-            onSelectSuggestion={(suggestion) => {
-              if (suggestion?.id) {
-                router.push(`/dashboard/people/${suggestion.id}`)
-              }
-            }}
-          />
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <SearchBar
+              placeholder="Rechercher une personne…"
+              entityType="people"
+              onQueryChange={setSearchText}
+              onSubmit={setSearchText}
+              onSelectSuggestion={(suggestion) => {
+                if (suggestion?.id) {
+                  router.push(`/dashboard/people/${suggestion.id}`)
+                }
+              }}
+            />
+            <div className="flex items-center gap-2">
+              <ColumnSelector
+                columns={defaultColumns}
+                onToggle={toggleColumn}
+                onReset={resetColumns}
+              />
+              <ExportButtons
+                resource="people"
+                params={{}}
+                baseFilename="personnes"
+              />
+            </div>
+          </div>
           <AdvancedFilters
             filters={advancedFilterDefinitions}
             values={filtersState}
@@ -285,7 +331,7 @@ export default function PeoplePage() {
 
       <Card>
         <Table
-          columns={COLUMNS}
+          columns={visibleColumns}
           data={filteredPeople}
           isLoading={people.isLoading}
           isEmpty={filteredPeople.length === 0}
