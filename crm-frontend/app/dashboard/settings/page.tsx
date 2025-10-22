@@ -813,6 +813,37 @@ export default function SettingsPage() {
 
       <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
         <div className="flex items-center gap-3">
+          <Mail className="h-6 w-6 text-purple-500" />
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">
+              APIs Email
+            </h2>
+            <p className="text-sm text-gray-500">
+              Gérez vos clés API pour l'envoi de campagnes email (Resend, SendGrid, Mailgun).
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-6">
+          <Link
+            href="/dashboard/settings/email-apis"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-purple-600 bg-purple-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-purple-700"
+          >
+            <KeyRound className="h-4 w-4" />
+            Configurer les APIs email
+          </Link>
+        </div>
+
+        <div className="mt-4 rounded-lg border border-purple-100 bg-purple-50 p-4">
+          <p className="text-xs text-purple-700">
+            <strong>Nouveau :</strong> Vos clés API sont maintenant cryptées et gérées via l'interface web.
+            Plus besoin de modifier le fichier .env ! Configurez Resend, SendGrid ou Mailgun en quelques clics.
+          </p>
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="flex items-center gap-3">
           <Globe className="h-6 w-6 text-blue-500" />
           <div>
             <h2 className="text-xl font-semibold text-gray-900">
