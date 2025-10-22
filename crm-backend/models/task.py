@@ -128,3 +128,11 @@ class Task(BaseModel):
         if not self.due_date:
             return False
         return self.due_date < datetime.now(timezone.utc)
+
+    def get_linked_entity_name(self) -> str:
+        """Retourne le nom de l'entité liée (organisation ou personne)."""
+        if self.organisation:
+            return self.organisation.name
+        if self.person:
+            return self.person.name
+        return "Non lié"
