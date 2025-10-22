@@ -61,11 +61,11 @@ async def export_organisations_csv(
     if not organisations:
         raise HTTPException(404, "Aucune organisation à exporter")
 
-    # Export CSV with explicit columns
+    # Export CSV with explicit columns (noms d'attributs Python, pas noms DB)
     headers = [
         "id", "name", "type", "category", "pipeline_stage",
-        "email", "main_phone", "website", "address", "city",
-        "country_code", "language", "annual_revenue", "employee_count",
+        "email", "phone", "website", "address", "city",
+        "country_code", "language", "aum", "domicile",
         "created_at", "is_active"
     ]
 
@@ -346,12 +346,12 @@ async def export_people_csv(
     if not people:
         raise HTTPException(404, "Aucune personne à exporter")
 
-    # Export CSV with explicit columns
+    # Export CSV with explicit columns (noms d'attributs Python)
     headers = [
-        "id", "first_name", "last_name", "role",
-        "personal_email", "personal_phone",
-        "country_code", "language", "address",
-        "created_at", "updated_at"
+        "id", "first_name", "last_name", "role", "job_title",
+        "email", "personal_email", "phone", "personal_phone", "mobile",
+        "country_code", "language", "linkedin_url",
+        "created_at", "is_active"
     ]
 
     buffer = ExportService.export_csv(
@@ -409,12 +409,11 @@ async def export_people_excel(
     if not people:
         raise HTTPException(404, "Aucune personne à exporter")
 
-    # Export Excel with explicit columns
+    # Export Excel with explicit columns (noms d'attributs Python)
     headers = [
-        "id", "first_name", "last_name", "role",
-        "personal_email", "personal_phone",
-        "country_code", "language", "address",
-        "created_at"
+        "id", "first_name", "last_name", "role", "job_title",
+        "email", "personal_email", "phone", "mobile",
+        "country_code", "language", "created_at", "is_active"
     ]
 
     buffer = ExportService.export_excel_simple(
