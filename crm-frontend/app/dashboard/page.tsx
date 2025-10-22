@@ -3,7 +3,7 @@
 
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Card } from '@/components/shared'
 import { useOrganisations } from '@/hooks/useOrganisations'
 import { useMandats } from '@/hooks/useMandats'
@@ -17,11 +17,16 @@ export default function DashboardPage() {
   const tasksHook = useTasks()
   const peopleHook = usePeople()
 
-  // Extract counts
+  // ✅ CORRECTIF: Charger les personnes au montage du composant
+  useEffect(() => {
+    peopleHook.fetchPeople(0, 1)  // Charger seulement 1 item pour avoir le total
+  }, [])
+
+  // Extract counts - utiliser le champ 'total' pour avoir le vrai nombre
   const organisationsCount = organisationsData?.total ?? 0
   const mandatsCount = mandatsData?.total ?? 0
-  const tasksCount = tasksHook.tasks?.length ?? 0
-  const peopleCount = peopleHook.people?.data?.items?.length ?? 0
+  const tasksCount = tasksHook.total ?? 0  // ✅ CORRECTIF: Utiliser .total au lieu de .tasks.length
+  const peopleCount = peopleHook.people?.data?.total ?? 0  // ✅ CORRECTIF: Utiliser .data.total au lieu de .data.items.length
 
   const isLoading = loadingOrgs || loadingMandats || tasksHook.isLoading || peopleHook.people.isLoading
 

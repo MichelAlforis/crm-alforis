@@ -25,8 +25,6 @@ import type {
   UpdateAIConfigRequest,
 } from '@/types/ai'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-
 // ============= HELPER FUNCTIONS =============
 
 // Helper pour normaliser les erreurs API (Pydantic validation errors)
@@ -58,6 +56,12 @@ function normalizeErrorDetail(detail: any): string {
 async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> {
   // ✅ CORRECTIF: Utiliser apiClient.getToken() au lieu de localStorage direct
   const token = apiClient.getToken()
+
+  // ✅ CORRECTIF: Construire l'URL complète correctement
+  // En production: utiliser chemin relatif, en dev: utiliser localhost
+  const API_BASE = typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+    ? ''  // Production: chemin relatif (le endpoint contient déjà /api/v1)
+    : 'http://localhost:8000'  // Dev: URL complète vers le backend
 
   const res = await fetch(`${API_BASE}${endpoint}`, {
     ...options,

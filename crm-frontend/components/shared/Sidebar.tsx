@@ -26,6 +26,7 @@ import {
   Mail,
   Users,
   Sparkles,
+  BarChart3,
 } from 'lucide-react'
 import { useTaskViews } from '@/hooks/useTasks'
 import { useAuth } from '@/hooks/useAuth'
@@ -90,6 +91,14 @@ const MENU_ITEMS = [
     description: 'Automatisations',
     badge: null,
     gradient: 'from-indigo-500 to-purple-500',
+  },
+  {
+    label: 'KPIs Fournisseurs',
+    href: '/dashboard/kpis',
+    icon: BarChart3,
+    description: 'Indicateurs de performance',
+    badge: null,
+    gradient: 'from-emerald-500 to-teal-500',
   },
   {
     label: 'Agent IA',
