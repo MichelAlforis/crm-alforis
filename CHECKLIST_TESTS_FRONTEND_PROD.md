@@ -755,13 +755,34 @@ TOUS les confirm() de l'annuaire utilisent maintenant ConfirmDialog:
 - Endpoints backend : /prepare, /start, /pause, /send-test, /preview
 - Statuts de campagne gérés : draft, scheduled, sending, completed, paused
 
-⏳ Tests à effectuer en environnement dev :
-- Création d'un template avec l'éditeur Unlayer
-- Test d'envoi d'email (vérifier configuration SMTP/SendGrid)
-- Préparation et lancement d'une campagne
-- Vérification de la réception des emails de test
+⚙️ Configuration Email requise (crm-backend/.env) :
+Pour SendGrid :
+  SENDGRID_API_KEY=votre_clé_api_sendgrid
 
-📚 Documentation : documentation/email-campaigns-guide.md
+Pour Mailgun :
+  MAILGUN_API_KEY=votre_clé_api_mailgun
+  MAILGUN_DOMAIN=votre_domaine.mailgun.org
+
+Optionnel :
+  DEFAULT_EMAIL_FROM_NAME="Alforis CRM"
+  DEFAULT_EMAIL_FROM_ADDRESS=noreply@alforis.com
+  DEFAULT_EMAIL_REPLY_TO=support@alforis.com
+  EMAIL_RATE_LIMIT_PER_MINUTE=120
+  EMAIL_BATCH_SIZE=500
+
+⏳ Tests à effectuer en environnement dev :
+1. Configurer SENDGRID_API_KEY ou MAILGUN_API_KEY dans .env
+2. Créer un template avec l'éditeur Unlayer
+3. Créer une campagne avec destinataires filtrés
+4. Tester l'envoi d'email de test
+5. Préparation et lancement d'une campagne
+6. Vérifier la réception des emails
+
+📚 Documentation :
+- documentation/email-campaigns-guide.md
+- Configuration: crm-backend/core/config.py (lignes 56-68)
+- Service: crm-backend/services/email_service.py
+- Exemple config: crm-backend/.env.email.example
 ```
 
 ---
