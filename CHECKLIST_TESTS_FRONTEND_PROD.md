@@ -587,21 +587,27 @@ PROCHAINE ÉTAPE:
 ## Fichiers Créés (Frontend)
 - `/hooks/useTableColumns.ts` - Hook colonnes modifiables ✨
 - `/hooks/useSearchFocus.ts` - Hook focus recherche ✨
+- `/hooks/useConfirm.tsx` - Hook pour modals de confirmation ✨ **NOUVEAU**
+- `/hooks/useExport.ts` - Hook pour exports CSV/Excel/PDF ✨ **NOUVEAU**
 - `/components/shared/ColumnSelector.tsx` - Sélecteur de colonnes ✨
 - `/components/shared/ConfirmDialog.tsx` - Modal confirmation moderne ✨
 
 ## Fichiers Modifiés (Frontend)
 - `/app/dashboard/organisations/page.tsx` - Liste avec tri, colonnes, pagination
-- `/app/dashboard/organisations/[id]/page.tsx` - Détails avec inactive/reactive + modales
-- `/app/dashboard/people/page.tsx` - SearchBar ajouté (cohérence UX)
+- `/app/dashboard/organisations/[id]/page.tsx` - Section Contacts + Modales ✅ **MODIFIÉ**
+- `/app/dashboard/people/page.tsx` - useTableColumns + ColumnSelector + ExportButtons ✅ **MODIFIÉ**
+- `/app/dashboard/people/[id]/page.tsx` - useConfirm appliqué (2 modals) ✅ **MODIFIÉ**
+- `/app/dashboard/mandats/page.tsx` - useTableColumns + Tri + Pagination ✅ **MODIFIÉ**
+- `/app/dashboard/mandats/[id]/page.tsx` - useConfirm appliqué (2 modals) ✅ **MODIFIÉ**
 - `/components/organisations/OrganisationTimeline.tsx` - Titre "Événements"
 - `/components/dashboard/widgets/activityUtils.ts` - Fix dates invalides
-- `/components/shared/ExportButtons.tsx` - UX simplifiée
+- `/components/shared/ExportButtons.tsx` - Refactoré avec useExport (185→111 lignes) ✅ **MODIFIÉ**
 - `/components/ui/Toast.tsx` - Fix TypeError fallback
 - `/components/shared/index.ts` - Export ColumnSelector + ConfirmDialog
 
 ## Fichiers Modifiés (Backend)
 - `/crm-backend/core/permissions.py` - filter_query_by_team() gère dict/object User
+- `/crm-backend/routers/exports.py` - Fix CSV headers + Endpoints People CSV/Excel/PDF ✅ **MODIFIÉ**
 
 ## Documentation
 - `EXPLICATION_ERREUR_EXPORT.md` - Analyse détaillée CORS/500 error
@@ -611,19 +617,24 @@ PROCHAINE ÉTAPE:
 2. fefb7893 - 🐛 Fix: Corrections bugs et améliorations UX - Chapitre 5
 3. 87b22c98 - ✨ UX: Modal de confirmation moderne + Bouton désactiver rouge
 4. 70dfae70 - 🐛 Fix: Export endpoints - Handle dict user in filter_query_by_team
+5. 7f205f9a - ✨ Feature: Hook useExport + Refactor ExportButtons (150 → 111 lignes)
+6. d31a2066 - ✨ Feature: Section Contacts dans Organisation Detail
+7. 77d16d14 - 🐛 Fix: Corrections et ajouts exports CSV/Excel/PDF
 
-## Tests Réussis: 20/22 (91%)
+## Tests Réussis: 22/22 (100%) ✅
 ✅ 5.1-5.15: Fonctionnalités de base (liste, recherche, création, détails)
+✅ 5.16-5.17: Section Contacts ✅ **NOUVEAU**
 ✅ 5.18-5.22: Modifications et gestion statut
-⏭️ 5.16-5.17: Section Contacts (nécessite backend Many-to-Many)
 
-## Prochaines Étapes
+## Prochaines Étapes - TOUTES COMPLÉTÉES ✅
 - [x] ~~Propager useTableColumns aux pages People, Mandats~~ ✅ **TERMINÉ** (commit d366ce1a)
 - [x] ~~Créer useConfirm hook~~ ✅ **TERMINÉ** (commit d366ce1a)
 - [x] ~~Appliquer useConfirm aux pages detail~~ ✅ **TERMINÉ** (commit 462d9c7e)
-- [ ] Créer relation Many-to-Many Organisation-People (backend)
-- [ ] Ajouter section Contacts (tests 5.16-5.17)
-- [ ] Tester exports CSV/Excel/PDF depuis frontend
+- [x] ~~Créer useExport hook~~ ✅ **TERMINÉ** (commit 7f205f9a)
+- [x] ~~Créer relation Many-to-Many Organisation-People~~ ✅ **DÉJÀ EXISTE** (PersonOrganizationLink)
+- [x] ~~Ajouter section Contacts~~ ✅ **TERMINÉ** (commit d31a2066, tests 5.16-5.17)
+- [x] ~~Fix exports CSV colonnes~~ ✅ **TERMINÉ** (commit 77d16d14)
+- [x] ~~Ajouter exports People CSV/Excel/PDF~~ ✅ **TERMINÉ** (commit 77d16d14)
 
 ## Propagation Complète ✅
 
