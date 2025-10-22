@@ -113,8 +113,9 @@ response_time=$(echo "$result" | cut -d'|' -f2)
 body=$(echo "$result" | cut -d'|' -f3-)
 
 if [ "$http_code" = "200" ]; then
-    db_status=$(echo "$body" | grep -o '"db"[[:space:]]*:[[:space:]]*[a-z]*' | awk '{print $NF}')
-    redis_status=$(echo "$body" | grep -o '"redis"[[:space:]]*:[[:space:]]*[a-z]*' | awk '{print $NF}')
+    # Parser JSON : "db":true ou "db":false (sans guillemets en JSON)
+    db_status=$(echo "$body" | grep -o '"db"[[:space:]]*:[[:space:]]*[truefals]*' | grep -o '[truefals]*$')
+    redis_status=$(echo "$body" | grep -o '"redis"[[:space:]]*:[[:space:]]*[truefalsn]*' | grep -o '[truefalsn]*$')
 
     if [ "$db_status" = "true" ]; then
         print_test_result "Database connection" "PASS" "PostgreSQL connected (${response_time}ms)"
