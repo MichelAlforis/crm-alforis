@@ -347,6 +347,48 @@ class ApiClient {
     return this.baseUrl
   }
 
+  // ============= GENERIC HTTP METHODS =============
+
+  /**
+   * GET request générique
+   */
+  public async get<T>(endpoint: string, config?: RequestConfig): Promise<{ data: T }> {
+    const data = await this.request<T>(endpoint, { ...config, method: 'GET' })
+    return { data }
+  }
+
+  /**
+   * POST request générique
+   */
+  public async post<T>(endpoint: string, body?: any, config?: RequestConfig): Promise<{ data: T }> {
+    const data = await this.request<T>(endpoint, {
+      ...config,
+      method: 'POST',
+      body: body ? JSON.stringify(body) : undefined,
+    })
+    return { data }
+  }
+
+  /**
+   * PATCH request générique
+   */
+  public async patch<T>(endpoint: string, body?: any, config?: RequestConfig): Promise<{ data: T }> {
+    const data = await this.request<T>(endpoint, {
+      ...config,
+      method: 'PATCH',
+      body: body ? JSON.stringify(body) : undefined,
+    })
+    return { data }
+  }
+
+  /**
+   * DELETE request générique
+   */
+  public async delete<T = void>(endpoint: string, config?: RequestConfig): Promise<{ data: T }> {
+    const data = await this.request<T>(endpoint, { ...config, method: 'DELETE' })
+    return { data }
+  }
+
   // ============= AUTH ENDPOINTS =============
 
   async login(data: LoginRequest): Promise<TokenResponse> {

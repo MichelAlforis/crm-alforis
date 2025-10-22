@@ -78,7 +78,7 @@ export function useEmailConfig() {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await apiClient.get<EmailConfiguration[]>('/api/v1/email-config/')
+      const response = await apiClient.get<EmailConfiguration[]>('/email-config/')
       return response.data
     } catch (err: any) {
       const message = err?.response?.data?.detail || 'Erreur lors du chargement des configurations'
@@ -93,7 +93,7 @@ export function useEmailConfig() {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await apiClient.get<EmailConfiguration>('/api/v1/email-config/active')
+      const response = await apiClient.get<EmailConfiguration>('/email-config/active')
       return response.data
     } catch (err: any) {
       if (err?.response?.status === 404) {
@@ -111,7 +111,7 @@ export function useEmailConfig() {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await apiClient.post<EmailConfiguration>('/api/v1/email-config/', data)
+      const response = await apiClient.post<EmailConfiguration>('/email-config/', data)
       return response.data
     } catch (err: any) {
       const message = err?.response?.data?.detail || 'Erreur lors de la création'
@@ -129,7 +129,7 @@ export function useEmailConfig() {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await apiClient.patch<EmailConfiguration>(`/api/v1/email-config/${id}`, data)
+      const response = await apiClient.patch<EmailConfiguration>(`/email-config/${id}`, data)
       return response.data
     } catch (err: any) {
       const message = err?.response?.data?.detail || 'Erreur lors de la mise à jour'
@@ -144,7 +144,7 @@ export function useEmailConfig() {
     setIsLoading(true)
     setError(null)
     try {
-      await apiClient.delete(`/api/v1/email-config/${id}`)
+      await apiClient.delete(`/email-config/${id}`)
     } catch (err: any) {
       const message = err?.response?.data?.detail || 'Erreur lors de la suppression'
       setError(message)
@@ -158,7 +158,7 @@ export function useEmailConfig() {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await apiClient.post<EmailConfiguration>(`/api/v1/email-config/${id}/activate`)
+      const response = await apiClient.post<EmailConfiguration>(`/email-config/${id}/activate`)
       return response.data
     } catch (err: any) {
       const message = err?.response?.data?.detail || 'Erreur lors de l\'activation'
@@ -173,7 +173,7 @@ export function useEmailConfig() {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await apiClient.post<EmailConfiguration>(`/api/v1/email-config/${id}/deactivate`)
+      const response = await apiClient.post<EmailConfiguration>(`/email-config/${id}/deactivate`)
       return response.data
     } catch (err: any) {
       const message = err?.response?.data?.detail || 'Erreur lors de la désactivation'
@@ -192,7 +192,7 @@ export function useEmailConfig() {
     setError(null)
     try {
       const response = await apiClient.post<TestEmailResponse>(
-        `/api/v1/email-config/${id}/test`,
+        `/email-config/${id}/test`,
         { test_email: testEmail }
       )
       return response.data
