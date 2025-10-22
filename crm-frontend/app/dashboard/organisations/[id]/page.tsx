@@ -6,6 +6,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
+import { ArrowLeft, Power, PowerOff } from 'lucide-react'
 import {
   useOrganisation,
   useUpdateOrganisation,
@@ -18,6 +19,7 @@ import { SkeletonCard } from '@/components/ui/Skeleton'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import type { OrganisationUpdate } from '@/lib/types'
 import { OrganisationTimeline } from '@/components/organisations/OrganisationTimeline'
+import { useToast } from '@/hooks/useToast'
 
 const CATEGORY_LABELS: Record<string, string> = {
   Institution: 'Institution',
@@ -41,6 +43,8 @@ const STATUS_LABELS: Record<string, string> = {
 export default function OrganisationDetailPage() {
   const params = useParams<{ id?: string }>()
   const router = useRouter()
+  const { showToast } = useToast()
+
   const organisationId = React.useMemo(() => {
     const rawId = params?.id
     const parsed = rawId ? Number.parseInt(rawId, 10) : NaN
@@ -53,22 +57,71 @@ export default function OrganisationDetailPage() {
   const deleteMutation = useDeleteOrganisation()
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isInactivating, setIsInactivating] = useState(false)
 
   const handleUpdate = async (data: OrganisationUpdate) => {
     if (!organisationId) return
     await updateMutation.mutateAsync({ id: organisationId, data })
     setIsEditModalOpen(false)
+    showToast('Organisation mise à jour avec succès', 'success')
   }
 
-  const handleDelete = async () => {
-    if (!organisationId) return
+  // Toggle active/inactive status
+  const handleToggleStatus = async () => {
+    if (!organisationId || !organisation) return
+
+    const newStatus = !organisation.is_active
+    const action = newStatus ? 'réactiver' : 'désactiver'
+
     if (
       confirm(
-        "Êtes-vous sûr de vouloir supprimer cette organisation ? Cette action est irréversible et supprimera également tous les mandats associés."
+        `Êtes-vous sûr de vouloir ${action} cette organisation ?`
       )
     ) {
-      await deleteMutation.mutateAsync(organisationId)
-      router.push('/dashboard/organisations')
+      try {
+        setIsInactivating(true)
+        await updateMutation.mutateAsync({
+          id: organisationId,
+          data: { is_active: newStatus },
+        })
+        showToast(
+          `Organisation ${newStatus ? 'réactivée' : 'désactivée'} avec succès`,
+          'success'
+        )
+      } catch (err) {
+        showToast(`Erreur lors de la ${action}`, 'error')
+      } finally {
+        setIsInactivating(false)
+      }
+    }
+  }
+
+  // Delete only for inactive organisations
+  const handleDelete = async () => {
+    if (!organisationId || !organisation) return
+
+    if (organisation.is_active) {
+      showToast(
+        'Vous devez d\'abord désactiver l\'organisation avant de la supprimer',
+        'error'
+      )
+      return
+    }
+
+    if (
+      confirm(
+        "Êtes-vous sûr de vouloir supprimer définitivement cette organisation ? Cette action est irréversible et supprimera également tous les mandats associés."
+      )
+    ) {
+      try {
+        await deleteMutation.mutateAsync(organisationId)
+        showToast('Organisation supprimée avec succès', 'success')
+        setTimeout(() => {
+          router.push('/dashboard/organisations')
+        }, 500)
+      } catch (err) {
+        showToast('Erreur lors de la suppression', 'error')
+      }
     }
   }
 
@@ -152,6 +205,19 @@ export default function OrganisationDetailPage() {
 
   return (
     <div className="space-y-6">
+      {/* Header with back button */}
+      <div className="flex items-center gap-3 mb-4">
+        <Link
+          href="/dashboard/organisations"
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span className="text-sm">Annuaire</span>
+        </Link>
+        <span className="text-gray-400">•</span>
+        <span className="text-sm text-gray-600">Organisations</span>
+      </div>
+
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
@@ -159,9 +225,9 @@ export default function OrganisationDetailPage() {
           <p className="text-gray-600 mt-1">
             {CATEGORY_LABELS[organisation.category]} •{' '}
             {organisation.is_active ? (
-              <span className="text-green-600">Active</span>
+              <span className="text-green-600 font-medium">Active</span>
             ) : (
-              <span className="text-gray-500">Inactive</span>
+              <span className="text-gray-500 font-medium">Inactive</span>
             )}
           </p>
         </div>
@@ -169,9 +235,30 @@ export default function OrganisationDetailPage() {
           <Button variant="secondary" onClick={() => setIsEditModalOpen(true)}>
             Modifier
           </Button>
-          <Button variant="danger" onClick={handleDelete} disabled={deleteMutation.isPending}>
-            {deleteMutation.isPending ? 'Suppression...' : 'Supprimer'}
+          <Button
+            variant={organisation.is_active ? 'secondary' : 'primary'}
+            onClick={handleToggleStatus}
+            disabled={isInactivating || updateMutation.isPending}
+          >
+            {isInactivating ? (
+              'Chargement...'
+            ) : organisation.is_active ? (
+              <>
+                <PowerOff className="w-4 h-4 mr-1" />
+                Désactiver
+              </>
+            ) : (
+              <>
+                <Power className="w-4 h-4 mr-1" />
+                Réactiver
+              </>
+            )}
           </Button>
+          {!organisation.is_active && (
+            <Button variant="danger" onClick={handleDelete} disabled={deleteMutation.isPending}>
+              {deleteMutation.isPending ? 'Suppression...' : 'Supprimer'}
+            </Button>
+          )}
         </div>
       </div>
 
@@ -219,27 +306,47 @@ export default function OrganisationDetailPage() {
         </div>
       </Card>
 
-      {/* Mandats */}
-      <Card>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">
-            Mandats de distribution ({mandats?.length || 0})
-          </h2>
-          <Link href={`/dashboard/mandats/new?organisation_id=${organisationId}`}>
-            <Button variant="primary" size="sm">
-              + Nouveau mandat
-            </Button>
-          </Link>
-        </div>
-
-        {mandats && mandats.length > 0 ? (
-          <Table columns={mandatColumns} data={mandats} isLoading={false} isEmpty={false} />
-        ) : (
-          <div className="text-center py-8 text-gray-500">
-            Aucun mandat de distribution pour cette organisation.
+      {/* Mandats - Simplified view */}
+      {mandats && mandats.length > 0 && (
+        <Card>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-xl font-semibold">Mandat</h2>
+            <Link href={`/dashboard/mandats/${mandats[0].id}`}>
+              <Button variant="secondary" size="sm">
+                Voir détails
+              </Button>
+            </Link>
           </div>
-        )}
-      </Card>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-600">Date de signature</span>
+              <span className="font-medium text-gray-900">
+                {mandats[0].date_debut
+                  ? new Date(mandats[0].date_debut).toLocaleDateString('fr-FR', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                    })
+                  : '-'}
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-600">Statut</span>
+              <span
+                className={`px-2 py-1 text-xs rounded ${
+                  mandats[0].status === 'ACTIF' || mandats[0].status === 'SIGNE'
+                    ? 'bg-green-100 text-green-800'
+                    : mandats[0].status === 'EXPIRE' || mandats[0].status === 'RESILIE'
+                      ? 'bg-red-100 text-red-800'
+                      : 'bg-yellow-100 text-yellow-800'
+                }`}
+              >
+                {STATUS_LABELS[mandats[0].status] || mandats[0].status}
+              </span>
+            </div>
+          </div>
+        </Card>
+      )}
 
       {organisationId && <OrganisationTimeline organisationId={organisationId} />}
 

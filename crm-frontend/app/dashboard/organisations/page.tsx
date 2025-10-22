@@ -3,11 +3,14 @@
 
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { ArrowLeft } from 'lucide-react'
 import { useOrganisations } from '@/hooks/useOrganisations'
+import { useTableColumns } from '@/hooks/useTableColumns'
 import { Card, Button, Table, Alert, AdvancedFilters, ExportButtons } from '@/components/shared'
+import { ColumnSelector } from '@/components/shared/ColumnSelector'
 import SearchBar from '@/components/search/SearchBar'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import { OrganisationCategory } from '@/lib/types'
@@ -27,6 +30,10 @@ export default function OrganisationsPage() {
   const [searchText, setSearchText] = useState('')
   const [skip, setSkip] = useState(0)
   const [limit, setLimit] = useState(50)
+  const [sortConfig, setSortConfig] = useState<{
+    key: string
+    direction: 'asc' | 'desc'
+  }>({ key: 'name', direction: 'asc' })
   const [filtersState, setFiltersState] = useState({
     category: '',
     status: '',
@@ -150,118 +157,244 @@ export default function OrganisationsPage() {
     },
   ]
 
-  const filteredData = data?.items?.filter((org) => {
-    const search = searchText.toLowerCase()
-    const matchesSearch =
-      org.name.toLowerCase().includes(search) ||
-      org.email?.toLowerCase().includes(search) ||
-      ''
-
-    const matchesCategory = filtersState.category
-      ? org.category === filtersState.category
-      : true
-
-    const matchesStatus =
-      filtersState.status === ''
-        ? true
-        : filtersState.status === 'active'
-          ? org.is_active
-          : !org.is_active
-
-    const matchesCountry = filtersState.country
-      ? org.country_code === filtersState.country
-      : true
-
-    const matchesLanguage = filtersState.language
-      ? (org.language || '').toUpperCase() === filtersState.language
-      : true
-
-    const createdAt = org.created_at ? new Date(org.created_at) : null
-    const matchesCreatedFrom = filtersState.createdFrom
-      ? createdAt && createdAt >= new Date(filtersState.createdFrom)
-      : true
-
-    const matchesCreatedTo = filtersState.createdTo
-      ? createdAt && createdAt <= new Date(filtersState.createdTo)
-      : true
-
-    return (
-      matchesSearch &&
-      matchesCategory &&
-      matchesStatus &&
-      matchesCountry &&
-      matchesLanguage &&
-      matchesCreatedFrom &&
-      matchesCreatedTo
-    )
-  }) || []
-
-  const columns = [
-    {
-      header: 'Nom',
-      accessor: 'name',
-    },
-    {
-      header: 'Catégorie',
-      accessor: 'category',
-      render: (value: OrganisationCategory | null) =>
-        value ? (
-          <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
-            {CATEGORY_LABELS[value] || value}
+  // Define default columns configuration
+  const defaultColumns = useMemo(
+    () => [
+      {
+        key: 'name',
+        header: 'Nom',
+        accessor: 'name',
+        visible: true,
+        sortable: true,
+      },
+      {
+        key: 'category',
+        header: 'Catégorie',
+        accessor: 'category',
+        visible: true,
+        sortable: true,
+        render: (value: OrganisationCategory | null) =>
+          value ? (
+            <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+              {CATEGORY_LABELS[value] || value}
+            </span>
+          ) : (
+            <span className="text-gray-400 text-xs">-</span>
+          ),
+      },
+      {
+        key: 'email',
+        header: 'Email',
+        accessor: 'email',
+        visible: true,
+        sortable: true,
+        render: (value: string | null) => value || '-',
+      },
+      {
+        key: 'main_phone',
+        header: 'Téléphone',
+        accessor: 'main_phone',
+        visible: false,
+        sortable: true,
+        render: (value: string | null) => value || '-',
+      },
+      {
+        key: 'country_code',
+        header: 'Pays',
+        accessor: 'country_code',
+        visible: true,
+        sortable: true,
+        render: (value: string | null) => getCountryLabel(value),
+      },
+      {
+        key: 'language',
+        header: 'Langue',
+        accessor: 'language',
+        visible: true,
+        sortable: true,
+        render: (value: string | null) => getLanguageLabel(value),
+      },
+      {
+        key: 'website',
+        header: 'Site web',
+        accessor: 'website',
+        visible: false,
+        sortable: true,
+        render: (value: string | null) =>
+          value ? (
+            <a
+              href={value}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline text-xs truncate max-w-[150px] inline-block"
+            >
+              {value}
+            </a>
+          ) : (
+            '-'
+          ),
+      },
+      {
+        key: 'is_active',
+        header: 'Statut',
+        accessor: 'is_active',
+        visible: true,
+        sortable: true,
+        render: (value: boolean) => (
+          <span
+            className={`px-2 py-1 text-xs rounded ${
+              value ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+            }`}
+          >
+            {value ? 'Active' : 'Inactive'}
           </span>
-        ) : (
-          <span className="text-gray-400 text-xs">-</span>
         ),
-    },
-    {
-      header: 'Email',
-      accessor: 'email',
-      render: (value: string | null) => value || '-',
-    },
-    {
-      header: 'Pays',
-      accessor: 'country_code',
-      render: (value: string | null) => getCountryLabel(value),
-    },
-    {
-      header: 'Langue',
-      accessor: 'language',
-      render: (value: string | null) => getLanguageLabel(value),
-    },
-    {
-      header: 'Statut',
-      accessor: 'is_active',
-      render: (value: boolean) => (
-        <span
-          className={`px-2 py-1 text-xs rounded ${
-            value ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-          }`}
-        >
-          {value ? 'Active' : 'Inactive'}
-        </span>
-      ),
-    },
-    {
-      header: 'Actions',
-      accessor: 'id',
-      render: (id: number) => (
-        <Link
-          href={`/dashboard/organisations/${id}`}
-          className="text-bleu hover:underline text-sm"
-        >
-          Voir
-        </Link>
-      ),
-    },
-  ]
+      },
+      {
+        key: 'actions',
+        header: 'Actions',
+        accessor: 'id',
+        visible: true,
+        sortable: false,
+        render: (id: number) => (
+          <Link
+            href={`/dashboard/organisations/${id}`}
+            className="text-bleu hover:underline text-sm"
+          >
+            Voir
+          </Link>
+        ),
+      },
+    ],
+    []
+  )
+
+  // Use the useTableColumns hook
+  const {
+    visibleColumns,
+    columns: allColumns,
+    toggleColumn,
+    resetColumns,
+  } = useTableColumns({
+    storageKey: 'organisations-columns',
+    defaultColumns,
+  })
+
+  // Handle sorting
+  const handleSort = (key: string) => {
+    setSortConfig((prevConfig) => ({
+      key,
+      direction: prevConfig.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc',
+    }))
+  }
+
+  // Filter and sort data
+  const filteredAndSortedData = useMemo(() => {
+    const filtered =
+      data?.items?.filter((org) => {
+        const search = searchText.toLowerCase()
+        const matchesSearch =
+          org.name.toLowerCase().includes(search) ||
+          org.email?.toLowerCase().includes(search) ||
+          ''
+
+        const matchesCategory = filtersState.category
+          ? org.category === filtersState.category
+          : true
+
+        const matchesStatus =
+          filtersState.status === ''
+            ? true
+            : filtersState.status === 'active'
+              ? org.is_active
+              : !org.is_active
+
+        const matchesCountry = filtersState.country
+          ? org.country_code === filtersState.country
+          : true
+
+        const matchesLanguage = filtersState.language
+          ? (org.language || '').toUpperCase() === filtersState.language
+          : true
+
+        const createdAt = org.created_at ? new Date(org.created_at) : null
+        const matchesCreatedFrom = filtersState.createdFrom
+          ? createdAt && createdAt >= new Date(filtersState.createdFrom)
+          : true
+
+        const matchesCreatedTo = filtersState.createdTo
+          ? createdAt && createdAt <= new Date(filtersState.createdTo)
+          : true
+
+        return (
+          matchesSearch &&
+          matchesCategory &&
+          matchesStatus &&
+          matchesCountry &&
+          matchesLanguage &&
+          matchesCreatedFrom &&
+          matchesCreatedTo
+        )
+      }) || []
+
+    // Sort the filtered data
+    return [...filtered].sort((a, b) => {
+      const aValue = (a as any)[sortConfig.key]
+      const bValue = (b as any)[sortConfig.key]
+
+      // Handle null/undefined values
+      if (aValue == null) return 1
+      if (bValue == null) return -1
+
+      // Handle boolean values
+      if (typeof aValue === 'boolean') {
+        return sortConfig.direction === 'asc'
+          ? aValue === bValue
+            ? 0
+            : aValue
+              ? -1
+              : 1
+          : aValue === bValue
+            ? 0
+            : aValue
+              ? 1
+              : -1
+      }
+
+      // Handle string values
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return sortConfig.direction === 'asc'
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue)
+      }
+
+      // Handle numeric values
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue
+      }
+
+      return 0
+    })
+  }, [data?.items, searchText, filtersState, sortConfig])
 
   return (
     <div className="space-y-6">
+      {/* Header with back button */}
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-ardoise">Organisations</h1>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span className="text-sm">Annuaire</span>
+          </Link>
+          <span className="text-gray-400">•</span>
+          <h1 className="text-3xl font-bold text-ardoise">Organisations</h1>
+        </div>
         <div className="flex gap-2">
           <Link href="/dashboard/organisations/import">
-            <Button variant="secondary">📥 Importer</Button>
+            <Button variant="secondary">Importer</Button>
           </Link>
           <Link href="/dashboard/organisations/new">
             <Button variant="primary">+ Nouvelle organisation</Button>
@@ -283,11 +416,18 @@ export default function OrganisationsPage() {
                 }
               }}
             />
-            <ExportButtons
-              resource="organisations"
-              params={exportParams}
-              baseFilename="organisations"
-            />
+            <div className="flex gap-2">
+              <ColumnSelector
+                columns={allColumns}
+                onToggle={toggleColumn}
+                onReset={resetColumns}
+              />
+              <ExportButtons
+                resource="organisations"
+                params={exportParams}
+                baseFilename="organisations"
+              />
+            </div>
           </div>
           <AdvancedFilters
             filters={advancedFilterDefinitions}
@@ -302,10 +442,12 @@ export default function OrganisationsPage() {
 
       <Card>
         <Table
-          columns={columns}
-          data={filteredData || []}
+          columns={visibleColumns}
+          data={filteredAndSortedData || []}
           isLoading={isLoading}
-          isEmpty={!filteredData || filteredData.length === 0}
+          isEmpty={!filteredAndSortedData || filteredAndSortedData.length === 0}
+          sortConfig={sortConfig}
+          onSort={handleSort}
           pagination={{
             total: data?.total || 0,
             skip: skip,

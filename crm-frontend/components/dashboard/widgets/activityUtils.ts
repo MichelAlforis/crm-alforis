@@ -55,7 +55,15 @@ export function getActivityVisual(type: OrganisationActivityType): ActivityVisua
 }
 
 export function formatRelativeTime(dateString: string): string {
+  if (!dateString) return 'Date inconnue'
+
   const date = new Date(dateString)
+
+  // Check for invalid date
+  if (isNaN(date.getTime())) {
+    return 'Date invalide'
+  }
+
   const now = new Date()
   const diffMs = now.getTime() - date.getTime()
   const diffSeconds = Math.round(diffMs / 1000)

@@ -65,8 +65,8 @@ export const OrganisationTimeline: React.FC<OrganisationTimelineProps> = ({
   return (
     <Card className="h-full">
       <CardHeader
-        title="Historique d'activités"
-        subtitle="Timeline unifiée des actions"
+        title="Événements"
+        subtitle="Historique complet de tous les changements et activités"
         className="pb-spacing-sm"
       >
         {!propTypes && (
