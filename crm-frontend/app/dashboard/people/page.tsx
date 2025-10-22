@@ -9,6 +9,7 @@ import { usePeople } from '@/hooks/usePeople'
 import { Card, Button, Table, Input, Alert, AdvancedFilters } from '@/components/shared'
 import { Person } from '@/lib/types'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
+import { personSlug } from '@/lib/utils'
 
 const COUNTRY_LABELS = COUNTRY_OPTIONS.filter((option) => option.value).reduce(
   (acc, option) => {
@@ -38,7 +39,7 @@ const COLUMNS = [
     accessor: 'fullName',
     render: (_: string, row: Person) => (
       <Link
-        href={`/dashboard/people/${row.id}`}
+        href={`/dashboard/people/${personSlug(row.id, row.first_name, row.last_name)}`}
         className="text-bleu hover:underline text-sm font-medium"
       >
         {`${row.first_name} ${row.last_name}`}
@@ -75,6 +76,8 @@ export default function PeoplePage() {
   const { people, fetchPeople } = usePeople()
   const [searchText, setSearchText] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
+  const [skip, setSkip] = useState(0)
+  const [limit] = useState(50)
   const [filtersState, setFiltersState] = useState({
     role: '',
     country: '',
@@ -106,8 +109,8 @@ export default function PeoplePage() {
   }, [searchText])
 
   useEffect(() => {
-    fetchPeople(0, 50, debouncedSearch ? { q: debouncedSearch } : undefined)
-  }, [debouncedSearch, fetchPeople])
+    fetchPeople(skip, limit, debouncedSearch ? { q: debouncedSearch } : undefined)
+  }, [debouncedSearch, skip, limit, fetchPeople])
 
   const advancedFilterDefinitions = [
     {
@@ -235,6 +238,12 @@ export default function PeoplePage() {
           data={filteredPeople}
           isLoading={people.isLoading}
           isEmpty={filteredPeople.length === 0}
+          pagination={{
+            total: people.data?.total || 0,
+            skip: skip,
+            limit: limit,
+            onPageChange: (newSkip) => setSkip(newSkip),
+          }}
         />
       </Card>
     </div>

@@ -25,6 +25,8 @@ const CATEGORY_LABELS: Record<string, string> = {
 export default function OrganisationsPage() {
   const router = useRouter()
   const [searchText, setSearchText] = useState('')
+  const [skip, setSkip] = useState(0)
+  const [limit] = useState(50)
   const [filtersState, setFiltersState] = useState({
     category: '',
     status: '',
@@ -55,7 +57,8 @@ export default function OrganisationsPage() {
     })
 
   const { data, isLoading, error } = useOrganisations({
-    limit: 100,
+    skip: skip,
+    limit: limit,
     category: filtersState.category || undefined,
     is_active:
       filtersState.status === ''
@@ -303,16 +306,14 @@ export default function OrganisationsPage() {
           data={filteredData || []}
           isLoading={isLoading}
           isEmpty={!filteredData || filteredData.length === 0}
+          pagination={{
+            total: data?.total || 0,
+            skip: skip,
+            limit: limit,
+            onPageChange: (newSkip) => setSkip(newSkip),
+          }}
         />
       </Card>
-
-      {data && (
-        <div className="flex items-center justify-between text-sm text-gray-600">
-          <p>
-            Total: {filteredData?.length || 0} / {data.total} organisations
-          </p>
-        </div>
-      )}
     </div>
   )
 }

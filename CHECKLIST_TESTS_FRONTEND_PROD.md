@@ -343,10 +343,10 @@ PROCHAINE ÉTAPE:
 
 | # | Test | Statut | Remarques |
 |---|------|--------|-----------|
-| 4.1 | La page "Contacts" charge correctement | ⬜ |  |
-| 4.2 | Liste des contacts s'affiche (tableau) | ⬜ | Nombre visible: _____ |
-| 4.3 | Colonnes visibles : Nom, Email, Téléphone, etc. | ⬜ |  |
-| 4.4 | Bouton "Nouveau Contact" / "Créer" visible | ⬜ |  |
+| 4.1 | La page "Contacts" charge correctement | ✅ |  |
+| 4.2 | Liste des contacts s'affiche (tableau) | ✅ | Nombre visible: _____ |
+| 4.3 | Colonnes visibles : Nom, Email, Téléphone, etc. | ✅ |  |
+| 4.4 | Bouton "Nouveau Contact" / "Créer" visible | ✅ |  |
 | 4.5 | Pagination fonctionne (si >10 contacts) | ⬜ |  |
 | 4.6 | Nombre de résultats par page modifiable | ⬜ |  |
 
@@ -354,48 +354,151 @@ PROCHAINE ÉTAPE:
 
 | # | Test | Statut | Remarques |
 |---|------|--------|-----------|
-| 4.7 | Barre de recherche présente | ⬜ |  |
-| 4.8 | **Test** : Rechercher un nom existant | ⬜ | Mot-clé: _____ |
-| 4.9 | Résultats filtrés en temps réel | ⬜ |  |
-| 4.10 | **Test** : Rechercher email existant | ⬜ |  |
-| 4.11 | Filtres avancés accessibles (si présents) | ⬜ |  |
-| 4.12 | Tri par colonne fonctionne (nom, date, etc.) | ⬜ |  |
+| 4.7 | Barre de recherche présente | ✅ |  |
+| 4.8 | **Test** : Rechercher un nom existant | ✅ | Mot-clé: _____ |
+| 4.9 | Résultats filtrés en temps réel | ✅ | la liste contenant les Pays: je dois avoir obligatoirement: France / Espagne / Portugal / Luxembourg idem pour les langues (marchés cible) |
+| 4.10 | **Test** : Rechercher email existant | ✅ |  |
+| 4.11 | Filtres avancés accessibles (si présents) | ✅ |  |
+| 4.12 | Tri par colonne fonctionne (nom, date, etc.) | ❌ | n'existe pas |
 
 ### Tests Création Contact
 
 | # | Test | Statut | Remarques |
 |---|------|--------|-----------|
-| 4.13 | Cliquer "Nouveau Contact" ouvre formulaire | ⬜ |  |
-| 4.14 | Champs visibles : Prénom, Nom, Email, etc. | ⬜ |  |
-| 4.15 | **Test** : Créer contact avec données valides | ⬜ | Nom test: _____ |
-| 4.16 | Validation des champs obligatoires | ⬜ |  |
-| 4.17 | **Test** : Créer avec email invalide (ex: "test") | ⬜ |  |
-| 4.18 | Message d'erreur pour email invalide | ⬜ |  |
-| 4.19 | Contact créé apparaît dans la liste | ⬜ |  |
-| 4.20 | Message de succès après création | ⬜ |  |
+| 4.13 | Cliquer "Nouveau Contact" ouvre formulaire | ✅ |  |
+| 4.14 | Champs visibles : Prénom, Nom, Email, etc. | ✅ |  |
+| 4.15 | **Test** : Créer contact avec données valides | ✅ | Nom test: _____ |
+| 4.16 | Validation des champs obligatoires | ✅ |  |
+| 4.17 | **Test** : Créer avec email invalide (ex: "test") | ✅ |  |
+| 4.18 | Message d'erreur pour email invalide | ❌ | AMELIORER LE MESSAGE D ERREURUnhandled Runtime Error
+Error: Objects are not valid as a React child (found: object with keys {type, loc, msg, input, ctx}). If you meant to render a collection of children, use an array instead.
+Aller au contenu principal
+Oups ! Une erreur est survenue
+Quelque chose s'est mal passé lors du chargement de cette page
+
+Message d'erreur
+Objects are not valid as a React child (found: object with keys {type, loc, msg, input, ctx}). If you meant to render a collection of children, use an array instead.
+
+Détails techniques (développement)
+
+    at p
+    at div
+    at div
+    at Alert (webpack-internal:///(app-pages-browser)/./components/shared/Alert.tsx:12:11)
+    at form
+    at PersonForm (webpack-internal:///(app-pages-browser)/./components/forms/PersonForm.tsx:22:11)
+    at div
+    at _c (webpack-internal:///(app-pages-browser)/./components/shared/Card.tsx:18:11)
+    at div
+    at NewPersonPage (webpack-internal:///(app-pages-browser)/./app/dashboard/people/new/page.tsx:25:78)
+    at ClientPageRoot (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/client-page.js:14:11)
+    at InnerLayoutRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:243:11)
+    at RedirectErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:74:9)
+    at RedirectBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:82:11)
+    at NotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:84:11)
+    at LoadingBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:349:11)
+    at ErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:160:11)
+    at InnerScrollAndFocusHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:153:9)
+    at ScrollAndFocusHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:228:11)
+    at RenderFromTemplateContext (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/render-from-template-context.js:16:44)
+    at OuterLayoutRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:370:11)
+    at InnerLayoutRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:243:11)
+    at RedirectErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:74:9)
+    at RedirectBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:82:11)
+    at NotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:84:11)
+    at LoadingBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:349:11)
+    at ErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:160:11)
+    at InnerScrollAndFocusHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:153:9)
+    at ScrollAndFocusHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:228:11)
+    at RenderFromTemplateContext (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/render-from-template-context.js:16:44)
+    at OuterLayoutRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:370:11)
+    at InnerLayoutRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:243:11)
+    at RedirectErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:74:9)
+    at RedirectBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:82:11)
+    at NotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:84:11)
+    at LoadingBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:349:11)
+    at ErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:160:11)
+    at InnerScrollAndFocusHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:153:9)
+    at ScrollAndFocusHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:228:11)
+    at RenderFromTemplateContext (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/render-from-template-context.js:16:44)
+    at OuterLayoutRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:370:11)
+    at div
+    at main
+    at div
+    at div
+    at QueryClientProvider (webpack-internal:///(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js:27:11)
+    at QueryProvider (webpack-internal:///(app-pages-browser)/./components/providers/QueryProvider.tsx:15:11)
+    at DashboardLayout (webpack-internal:///(app-pages-browser)/./app/dashboard/layout.tsx:36:11)
+    at InnerLayoutRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:243:11)
+    at RedirectErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:74:9)
+    at RedirectBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:82:11)
+    at NotFoundErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:76:9)
+    at NotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:84:11)
+    at LoadingBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:349:11)
+    at ErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:160:11)
+    at InnerScrollAndFocusHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:153:9)
+    at ScrollAndFocusHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:228:11)
+    at RenderFromTemplateContext (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/render-from-template-context.js:16:44)
+    at OuterLayoutRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:370:11)
+    at div
+    at ToastProvider (webpack-internal:///(app-pages-browser)/./components/ui/Toast.tsx:31:11)
+    at f (webpack-internal:///(app-pages-browser)/./node_modules/next-themes/dist/index.module.js:8:597)
+    at $ (webpack-internal:///(app-pages-browser)/./node_modules/next-themes/dist/index.module.js:8:348)
+    at ErrorBoundary (webpack-internal:///(app-pages-browser)/./components/ui/ErrorBoundary.tsx:337:9)
+    at Providers (webpack-internal:///(app-pages-browser)/./app/providers.tsx:17:11)
+    at body
+    at html
+    at RootLayout (Server)
+    at RedirectErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:74:9)
+    at RedirectBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:82:11)
+    at NotFoundErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:76:9)
+    at NotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:84:11)
+    at DevRootNotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/dev-root-not-found-boundary.js:33:11)
+    at ReactDevOverlay (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/app/ReactDevOverlay.js:87:9)
+    at HotReload (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/app/hot-reloader-client.js:321:11)
+    at Router (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/app-router.js:207:11)
+    at ErrorBoundaryHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:113:9)
+    at ErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:160:11)
+    at AppRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/app-router.js:585:13)
+    at ServerRoot (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:112:27)
+    at Root (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:117:11)
+Réessayer
+Accueil
+Recharger la page
+Besoin d'aide ? Si le problème persiste, essayez de :
+
+Vider le cache de votre navigateur
+Vous déconnecter puis vous reconnecter
+Contacter le support technique
+TPM Finance CRM · Support technique disponible
+
+4 errors |
+| 4.19 | Contact créé apparaît dans la liste | ✅ |  |
+| 4.20 | Message de succès après création | ✅ | TOAST |
 
 ### Tests Modification Contact
 
 | # | Test | Statut | Remarques |
 |---|------|--------|-----------|
-| 4.21 | Cliquer sur un contact ouvre détails/édition | ⬜ |  |
-| 4.22 | Toutes les données du contact affichées | ⬜ |  |
-| 4.23 | **Test** : Modifier le nom du contact | ⬜ |  |
-| 4.24 | Sauvegarder les modifications | ⬜ |  |
-| 4.25 | Les modifications apparaissent dans la liste | ⬜ |  |
+| 4.21 | Cliquer sur un contact ouvre détails/édition | ✅ |  |
+| 4.22 | Toutes les données du contact affichées | ✅ |  |
+| 4.23 | **Test** : Modifier le nom du contact | ✅ |  |
+| 4.24 | Sauvegarder les modifications | ✅ |  |
+| 4.25 | Les modifications apparaissent dans la liste | ✅ |  |
 
 ### Tests Suppression Contact
 
 | # | Test | Statut | Remarques |
 |---|------|--------|-----------|
-| 4.26 | Bouton "Supprimer" visible | ⬜ |  |
-| 4.27 | **Test** : Supprimer un contact de test | ⬜ |  |
-| 4.28 | Confirmation demandée avant suppression | ⬜ |  |
-| 4.29 | Contact supprimé disparaît de la liste | ⬜ |  |
+| 4.26 | Bouton "Supprimer" visible | ✅ |  |
+| 4.27 | **Test** : Supprimer un contact de test | ✅ |  |
+| 4.28 | Confirmation demandée avant suppression | ✅ |  |
+| 4.29 | Contact supprimé disparaît de la liste | ✅ | on devrait revenir à l'annuaire (et non : http://localhost:3010/dashboard/people/1) avec toast de confirmation|
 
 ### Notes Chapitre 4
 ```
-[Écrivez vos observations générales ici]
+Comme pour les autres j'aimerais que l'id ne soit pas présent dans la barre http://localhost:3010/dashboard/people/3. je ne veux pas voir le 3 mais le nom prénom de la personne.
+Le numéro id est utile dans le code mais pas dans la vrai vie (pas lisible)
 ```
 
 ---

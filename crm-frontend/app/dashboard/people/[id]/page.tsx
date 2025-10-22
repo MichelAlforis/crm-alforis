@@ -12,6 +12,8 @@ import { usePeople } from '@/hooks/usePeople'
 import { PersonOrganizationLinkInput } from '@/lib/types'
 import { SkeletonCard, SkeletonTable } from '@/components/ui/Skeleton'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
+import { useToast } from '@/components/ui/Toast'
+import { extractIdFromSlug } from '@/lib/utils'
 
 // ✅ MIGRATION 2025-10-20: ORGANIZATION_OPTIONS supprimé
 // Le type d'organisation est maintenant stocké dans Organisation.category
@@ -23,9 +25,17 @@ import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 export default function PersonDetailPage() {
   const params = useParams<{ id?: string }>()
   const router = useRouter()
+  const { showToast } = useToast()
   const personId = useMemo(() => {
     const rawId = params?.id
-    const parsed = rawId ? Number.parseInt(rawId, 10) : NaN
+    if (!rawId) return null
+
+    // Try to extract ID from slug format: "123-john-doe" -> 123
+    const idFromSlug = extractIdFromSlug(rawId)
+    if (idFromSlug !== null) return idFromSlug
+
+    // Fallback: try to parse as direct number (legacy URLs)
+    const parsed = Number.parseInt(rawId, 10)
     return Number.isNaN(parsed) ? null : parsed
   }, [params])
 
@@ -95,8 +105,21 @@ export default function PersonDetailPage() {
     if (!confirm('Supprimer cette personne ? Cette action est définitive.')) {
       return
     }
-    await deletePerson(personId)
-    router.push('/dashboard/people')
+    try {
+      await deletePerson(personId)
+      showToast({
+        type: 'success',
+        title: 'Contact supprimé',
+        message: 'Le contact a été supprimé avec succès.',
+      })
+      router.push('/dashboard/people')
+    } catch (error: any) {
+      showToast({
+        type: 'error',
+        title: 'Erreur',
+        message: error?.detail || 'Impossible de supprimer le contact.',
+      })
+    }
   }
 
   const handleCreateLink = async () => {

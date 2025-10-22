@@ -146,3 +146,39 @@ export function formatCompact(value: number): string {
   if (value >= 1e3) return (value / 1e3).toFixed(1) + 'K'
   return value.toString()
 }
+
+/**
+ * Génère un slug URL-friendly à partir d'une chaîne
+ * Exemple: "Jean-Paul Dupont" -> "jean-paul-dupont"
+ */
+export function slugify(text: string): string {
+  if (!text) return ''
+  return text
+    .toString()
+    .toLowerCase()
+    .normalize('NFD') // Décompose les caractères accentués
+    .replace(/[\u0300-\u036f]/g, '') // Supprime les diacritiques
+    .replace(/[^a-z0-9]+/g, '-') // Remplace les caractères non-alphanumériques par des tirets
+    .replace(/^-+|-+$/g, '') // Supprime les tirets au début et à la fin
+    .replace(/-+/g, '-') // Remplace les tirets multiples par un seul
+}
+
+/**
+ * Génère une URL slug pour une personne: "id-prenom-nom"
+ * Exemple: (123, "Jean", "Dupont") -> "123-jean-dupont"
+ */
+export function personSlug(id: number, firstName: string, lastName: string): string {
+  const nameSlug = slugify(`${firstName} ${lastName}`)
+  return `${id}-${nameSlug}`
+}
+
+/**
+ * Extrait l'ID d'un slug de personne
+ * Exemple: "123-jean-dupont" -> 123
+ */
+export function extractIdFromSlug(slug: string): number | null {
+  if (!slug) return null
+  const parts = slug.split('-')
+  const id = parseInt(parts[0], 10)
+  return isNaN(id) ? null : id
+}

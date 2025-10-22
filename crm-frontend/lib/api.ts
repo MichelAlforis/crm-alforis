@@ -285,9 +285,27 @@ class ApiClient {
         }
 
         const error = await response.json().catch(() => ({}))
+
+        // Parser le detail: peut être une string, un array d'erreurs de validation, ou un objet
+        let detailMessage = 'Une erreur est survenue'
+
+        if (typeof error.detail === 'string') {
+          detailMessage = error.detail
+        } else if (Array.isArray(error.detail)) {
+          // FastAPI validation errors: [{type, loc, msg, input, ctx}, ...]
+          detailMessage = error.detail
+            .map((err: any) => {
+              const field = err.loc && err.loc.length > 1 ? err.loc[err.loc.length - 1] : 'champ'
+              return `${field}: ${err.msg || 'erreur de validation'}`
+            })
+            .join(', ')
+        } else if (error.detail && typeof error.detail === 'object') {
+          detailMessage = JSON.stringify(error.detail)
+        }
+
         throw {
           status_code: response.status,
-          detail: error.detail || 'Une erreur est survenue',
+          detail: detailMessage,
         } as ApiError
       }
 

@@ -15,6 +15,13 @@ interface Column<T = any> {
   className?: string
 }
 
+interface PaginationInfo {
+  total: number
+  skip: number
+  limit: number
+  onPageChange: (skip: number) => void
+}
+
 interface TableProps<T = any> {
   columns: Column<T>[]
   data: T[]
@@ -29,6 +36,7 @@ interface TableProps<T = any> {
   variant?: 'default' | 'striped' | 'bordered'
   size?: 'sm' | 'md' | 'lg'
   stickyHeader?: boolean
+  pagination?: PaginationInfo
 }
 
 // ============= SKELETON ROW =============
@@ -71,10 +79,123 @@ const SortIcon = ({ column, sortConfig }: { column: string; sortConfig?: TablePr
   if (!sortConfig || sortConfig.key !== column) {
     return <ChevronsUpDown className="w-4 h-4 text-text-muted" />
   }
-  
-  return sortConfig.direction === 'asc' 
+
+  return sortConfig.direction === 'asc'
     ? <ChevronUp className="w-4 h-4 text-primary" />
     : <ChevronDown className="w-4 h-4 text-primary" />
+}
+
+// ============= PAGINATION COMPONENT =============
+const Pagination = ({ total, skip, limit, onPageChange }: PaginationInfo) => {
+  const currentPage = Math.floor(skip / limit) + 1
+  const totalPages = Math.ceil(total / limit)
+  const hasNext = skip + limit < total
+  const hasPrev = skip > 0
+
+  const handlePrev = () => {
+    if (hasPrev) {
+      onPageChange(Math.max(0, skip - limit))
+    }
+  }
+
+  const handleNext = () => {
+    if (hasNext) {
+      onPageChange(skip + limit)
+    }
+  }
+
+  const handleFirst = () => {
+    onPageChange(0)
+  }
+
+  const handleLast = () => {
+    onPageChange((totalPages - 1) * limit)
+  }
+
+  // Don't show pagination if only one page
+  if (totalPages <= 1) return null
+
+  const startItem = skip + 1
+  const endItem = Math.min(skip + limit, total)
+
+  return (
+    <div className="flex items-center justify-between px-6 py-3 border-t border-gray-200 bg-white">
+      {/* Info */}
+      <div className="text-sm text-gray-600">
+        Affichage de <span className="font-medium text-gray-900">{startItem}</span> à{' '}
+        <span className="font-medium text-gray-900">{endItem}</span> sur{' '}
+        <span className="font-medium text-gray-900">{total}</span> résultats
+      </div>
+
+      {/* Controls */}
+      <div className="flex items-center gap-1">
+        {/* First page */}
+        <button
+          onClick={handleFirst}
+          disabled={!hasPrev}
+          className={clsx(
+            'px-2.5 py-1.5 text-sm rounded transition-colors',
+            hasPrev
+              ? 'text-gray-700 hover:bg-gray-100 border border-gray-300'
+              : 'text-gray-400 cursor-not-allowed border border-gray-200'
+          )}
+          title="Première page"
+        >
+          ««
+        </button>
+
+        {/* Previous */}
+        <button
+          onClick={handlePrev}
+          disabled={!hasPrev}
+          className={clsx(
+            'px-3 py-1.5 text-sm rounded transition-colors',
+            hasPrev
+              ? 'text-gray-700 hover:bg-gray-100 border border-gray-300'
+              : 'text-gray-400 cursor-not-allowed border border-gray-200'
+          )}
+          title="Page précédente"
+        >
+          « Précédent
+        </button>
+
+        {/* Page info */}
+        <span className="px-4 py-1.5 text-sm text-gray-700">
+          Page {currentPage} / {totalPages}
+        </span>
+
+        {/* Next */}
+        <button
+          onClick={handleNext}
+          disabled={!hasNext}
+          className={clsx(
+            'px-3 py-1.5 text-sm rounded transition-colors',
+            hasNext
+              ? 'text-gray-700 hover:bg-gray-100 border border-gray-300'
+              : 'text-gray-400 cursor-not-allowed border border-gray-200'
+          )}
+          title="Page suivante"
+        >
+          Suivant »
+        </button>
+
+        {/* Last page */}
+        <button
+          onClick={handleLast}
+          disabled={!hasNext}
+          className={clsx(
+            'px-2.5 py-1.5 text-sm rounded transition-colors',
+            hasNext
+              ? 'text-gray-700 hover:bg-gray-100 border border-gray-300'
+              : 'text-gray-400 cursor-not-allowed border border-gray-200'
+          )}
+          title="Dernière page"
+        >
+          »»
+        </button>
+      </div>
+    </div>
+  )
 }
 
 // ============= TABLE COMPONENT =============
@@ -89,6 +210,7 @@ export function Table<T = any>({
   variant = 'default',
   size = 'md',
   stickyHeader = false,
+  pagination,
 }: TableProps<T>) {
   // Size styles
   const sizes = {
@@ -116,7 +238,7 @@ export function Table<T = any>({
     <div className="w-full overflow-hidden rounded-radius-lg border border-border">
       <div className="overflow-x-auto">
         <table className={clsx('w-full', sizes[size], variants[variant])}>
-          <thead 
+          <thead
             className={clsx(
               'bg-muted border-b border-border',
               stickyHeader && 'sticky top-0 z-10'
@@ -140,9 +262,9 @@ export function Table<T = any>({
                   <div className="flex items-center gap-2">
                     <span>{column.header}</span>
                     {column.sortable && (
-                      <SortIcon 
-                        column={typeof column.accessor === 'string' ? column.accessor : ''} 
-                        sortConfig={sortConfig} 
+                      <SortIcon
+                        column={typeof column.accessor === 'string' ? column.accessor : ''}
+                        sortConfig={sortConfig}
                       />
                     )}
                   </div>
@@ -150,7 +272,7 @@ export function Table<T = any>({
               ))}
             </tr>
           </thead>
-          
+
           <tbody className="divide-y divide-border/50">
             {isLoading ? (
               // Loading state
@@ -171,7 +293,7 @@ export function Table<T = any>({
                 >
                   {columns.map((column, colIdx) => {
                     const value = getCellValue(row, column.accessor)
-                    
+
                     return (
                       <td
                         key={colIdx}
@@ -181,7 +303,7 @@ export function Table<T = any>({
                           column.className
                         )}
                       >
-                        {column.render 
+                        {column.render
                           ? column.render(value, row, rowIdx)
                           : value}
                       </td>
@@ -193,6 +315,9 @@ export function Table<T = any>({
           </tbody>
         </table>
       </div>
+
+      {/* Pagination */}
+      {pagination && <Pagination {...pagination} />}
     </div>
   )
 }
