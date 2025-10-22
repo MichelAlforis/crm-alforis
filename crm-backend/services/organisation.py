@@ -323,6 +323,27 @@ class OrganisationService(BaseService[Organisation, OrganisationCreate, Organisa
             logger.error(f"Error computing organisation statistics: {e}")
             raise
 
+    async def get_available_countries(self) -> list:
+        """
+        Obtenir la liste des codes pays disponibles
+
+        Retourne une liste de codes pays (country_code) distincts présents dans la base
+        """
+        try:
+            countries = (
+                self.db.query(Organisation.country_code)
+                .filter(Organisation.country_code.isnot(None))
+                .filter(Organisation.country_code != '')
+                .distinct()
+                .order_by(Organisation.country_code)
+                .all()
+            )
+            # Convertir les tuples en liste de strings
+            return [country[0] for country in countries]
+        except Exception as e:
+            logger.error(f"Error getting available countries: {e}")
+            raise
+
 
 class OrganisationContactService(BaseService[OrganisationContact, OrganisationContactCreate, OrganisationContactUpdate]):
     """Service pour la gestion des contacts d'organisations"""

@@ -85,11 +85,9 @@ class ApiClient {
   private csrfToken: string | null = null
 
   constructor(baseUrl: string) {
-    // Force toujours le /api/v1 à la fin de la baseUrl
-    if (!baseUrl.endsWith('/api/v1')) {
-      baseUrl = baseUrl.replace(/\/?$/, '/api/v1')
-    }
-    this.baseUrl = baseUrl
+    // Normaliser la baseUrl: retirer le trailing slash s'il existe
+    // La baseUrl doit déjà contenir /api/v1 (défini dans API_BASE_URL)
+    this.baseUrl = baseUrl.replace(/\/$/, '')
     this.initToken()
     this.initCsrfToken()
   }

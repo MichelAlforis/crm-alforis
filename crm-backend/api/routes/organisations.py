@@ -116,6 +116,22 @@ async def get_organisation_stats(
     return stats
 
 
+@router.get("/countries")
+@cache_response(ttl=3600, key_prefix="organisations:countries")
+async def get_available_countries(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Obtenir la liste des pays disponibles dans la base de données
+
+    Retourne une liste de codes pays (country_code) distincts
+    """
+    service = OrganisationService(db)
+    countries = await service.get_available_countries()
+    return countries
+
+
 @router.get("/by-language/{language}", response_model=PaginatedResponse[OrganisationResponse])
 @cache_response(ttl=300, key_prefix="organisations:language")
 async def get_organisations_by_language(
