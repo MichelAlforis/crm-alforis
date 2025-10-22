@@ -13,6 +13,7 @@ from schemas.person import (
     PersonDetailResponse,
     PersonOrganizationLinkResponse,
 )
+from schemas.base import PaginatedResponse
 from services.person import PersonService, PersonOrganizationLinkService
 from models.organisation import OrganisationType
 
@@ -29,7 +30,7 @@ def _extract_user_id(current_user: dict) -> Optional[int]:
         return None
 
 
-@router.get("", response_model=List[PersonResponse])
+@router.get("", response_model=PaginatedResponse[PersonResponse])
 async def list_people(
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=200),
@@ -57,15 +58,26 @@ async def list_people(
             if person is not None and getattr(person, "id", None) is not None:
                 seen_people[person.id] = person
         people = list(seen_people.values())
+        total = len(people)
         sliced = people[skip : skip + limit] if limit else people
-        return [PersonResponse.model_validate(person) for person in sliced]
+        return {
+            "items": [PersonResponse.model_validate(person) for person in sliced],
+            "total": total,
+            "skip": skip,
+            "limit": limit,
+        }
 
     if q:
-        people, _ = await service.search(q, skip=skip, limit=limit)
+        people, total = await service.search(q, skip=skip, limit=limit)
     else:
-        people, _ = await service.get_all(skip=skip, limit=limit)
+        people, total = await service.get_all(skip=skip, limit=limit)
 
-    return [PersonResponse.model_validate(person) for person in people]
+    return {
+        "items": [PersonResponse.model_validate(person) for person in people],
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+    }
 
 
 @router.post("", response_model=PersonResponse, status_code=status.HTTP_201_CREATED)
