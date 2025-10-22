@@ -93,6 +93,8 @@ export function useAuth() {
         isSubmitting: false,
         error: errorMessage,
       })
+      // Re-throw l'erreur pour que le formulaire puisse l'intercepter
+      throw new Error(errorMessage)
     }
   }, [router])
 
