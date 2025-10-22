@@ -792,10 +792,23 @@ Configuration optionnelle :
 - Service: crm-backend/services/email_service.py (support Resend, SendGrid, Mailgun)
 - Exemple config: crm-backend/.env.email.example
 
-🔜 Prochaine fonctionnalité :
-- Interface web de gestion des clés API (Paramètres > APIs Email)
-- Cryptage des clés en base de données (comme pour les API IA)
-- Configuration sans redémarrage du backend
+✅ Gestion des clés API via interface web (TERMINÉ) :
+- Page dédiée : Paramètres > APIs Email (/dashboard/settings/email-apis)
+- CRUD complet des configurations email
+- Cryptage des clés API en base de données (Fernet)
+- Test de connexion avec envoi d'email réel
+- Activation/désactivation des configurations
+- Une seule configuration active à la fois
+- Plus besoin du fichier .env !
+
+Fonctionnalités disponibles :
+✓ Créer une configuration (Resend, SendGrid ou Mailgun)
+✓ Saisir la clé API (cryptée automatiquement)
+✓ Configurer from_name, from_email, reply_to, limites
+✓ Tester l'envoi d'un email
+✓ Activer/désactiver une configuration
+✓ Supprimer une configuration
+✓ Fallback automatique sur .env si aucune config active
 ```
 
 ---
