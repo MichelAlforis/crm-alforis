@@ -15,7 +15,7 @@ from api.routes import (
     email_campaigns,
     ai_agent,
 )
-from routers import search, exports, webhooks
+from routers import search, exports, webhooks, email_config
 from webhooks import sendgrid as inbound_sendgrid
 
 # ❌ SUPPRIMÉ (20 oct 2024): interactions, kpis
@@ -48,6 +48,9 @@ api_router.include_router(search.router)
 api_router.include_router(exports.router)
 api_router.include_router(webhooks.router)
 api_router.include_router(inbound_sendgrid.router)
+
+# 📧 EMAIL CONFIGURATION (Chapitre 6)
+api_router.include_router(email_config.router)
 
 # 🤖 WORKFLOWS & AUTOMATION (Phase 2.2)
 api_router.include_router(workflows.router)
