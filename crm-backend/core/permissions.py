@@ -278,24 +278,34 @@ def filter_query_by_team(query, user: User, model_class):
     Returns:
         Query filtrée
     """
+    # Gérer user comme dict ou objet
+    if isinstance(user, dict):
+        user_role = user.get('role', {}).get('name') if isinstance(user.get('role'), dict) else user.get('role')
+        user_id = user.get('id')
+        user_team_id = user.get('team_id')
+    else:
+        user_role = user.role.name if hasattr(user.role, 'name') else user.role
+        user_id = user.id
+        user_team_id = user.team_id
+
     # Admin voit tout
-    if user.role.name == UserRole.ADMIN:
+    if user_role == UserRole.ADMIN:
         return query
 
     # Manager et Viewer: voir leur équipe
-    if user.role.name in [UserRole.MANAGER, UserRole.VIEWER]:
-        if user.team_id:
+    if user_role in [UserRole.MANAGER, UserRole.VIEWER]:
+        if user_team_id:
             # Filtrer par team_id du owner
             from models.user import User as UserModel
             query = query.join(UserModel, model_class.owner_id == UserModel.id)
-            query = query.filter(UserModel.team_id == user.team_id)
+            query = query.filter(UserModel.team_id == user_team_id)
         else:
             # Pas d'équipe = pas de données
             query = query.filter(False)
 
     # USER: voir seulement ses propres données
-    elif user.role.name == UserRole.USER:
-        query = query.filter(model_class.owner_id == user.id)
+    elif user_role == UserRole.USER:
+        query = query.filter(model_class.owner_id == user_id)
 
     else:
         # Rôle inconnu = pas de données
