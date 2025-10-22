@@ -142,8 +142,8 @@ function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
     },
   }
 
-  const { icon: Icon, bgClass, borderClass, iconClass, titleClass, messageClass } =
-    config[toast.type]
+  const toastConfig = config[toast.type] || config.info
+  const { icon: Icon, bgClass, borderClass, iconClass, titleClass, messageClass } = toastConfig
 
   return (
     <div

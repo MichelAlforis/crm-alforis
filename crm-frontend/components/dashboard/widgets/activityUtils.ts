@@ -54,13 +54,14 @@ export function getActivityVisual(type: OrganisationActivityType): ActivityVisua
   return visuals[type] ?? defaultVisual
 }
 
-export function formatRelativeTime(dateString: string): string {
-  if (!dateString) return 'Date inconnue'
+export function formatRelativeTime(dateString: string | null | undefined): string {
+  if (!dateString || dateString.trim() === '') return 'Date inconnue'
 
   const date = new Date(dateString)
 
   // Check for invalid date
   if (isNaN(date.getTime())) {
+    console.warn('Invalid date string:', dateString)
     return 'Date invalide'
   }
 

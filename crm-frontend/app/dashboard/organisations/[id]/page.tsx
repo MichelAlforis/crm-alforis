@@ -63,7 +63,10 @@ export default function OrganisationDetailPage() {
     if (!organisationId) return
     await updateMutation.mutateAsync({ id: organisationId, data })
     setIsEditModalOpen(false)
-    showToast('Organisation mise à jour avec succès', 'success')
+    showToast({
+      type: 'success',
+      title: 'Organisation mise à jour avec succès',
+    })
   }
 
   // Toggle active/inactive status
@@ -84,12 +87,15 @@ export default function OrganisationDetailPage() {
           id: organisationId,
           data: { is_active: newStatus },
         })
-        showToast(
-          `Organisation ${newStatus ? 'réactivée' : 'désactivée'} avec succès`,
-          'success'
-        )
+        showToast({
+          type: 'success',
+          title: `Organisation ${newStatus ? 'réactivée' : 'désactivée'} avec succès`,
+        })
       } catch (err) {
-        showToast(`Erreur lors de la ${action}`, 'error')
+        showToast({
+          type: 'error',
+          title: `Erreur lors de la ${action}`,
+        })
       } finally {
         setIsInactivating(false)
       }
@@ -101,10 +107,10 @@ export default function OrganisationDetailPage() {
     if (!organisationId || !organisation) return
 
     if (organisation.is_active) {
-      showToast(
-        'Vous devez d\'abord désactiver l\'organisation avant de la supprimer',
-        'error'
-      )
+      showToast({
+        type: 'error',
+        title: 'Vous devez d\'abord désactiver l\'organisation avant de la supprimer',
+      })
       return
     }
 
@@ -115,12 +121,18 @@ export default function OrganisationDetailPage() {
     ) {
       try {
         await deleteMutation.mutateAsync(organisationId)
-        showToast('Organisation supprimée avec succès', 'success')
+        showToast({
+          type: 'success',
+          title: 'Organisation supprimée avec succès',
+        })
         setTimeout(() => {
           router.push('/dashboard/organisations')
         }, 500)
       } catch (err) {
-        showToast('Erreur lors de la suppression', 'error')
+        showToast({
+          type: 'error',
+          title: 'Erreur lors de la suppression',
+        })
       }
     }
   }

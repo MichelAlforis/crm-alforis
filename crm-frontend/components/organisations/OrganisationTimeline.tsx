@@ -140,7 +140,7 @@ export const OrganisationTimeline: React.FC<OrganisationTimelineProps> = ({
                         )}
                       </div>
                       <span className="text-xs text-text-tertiary">
-                        {formatRelativeTime(activity.occurred_at)}
+                        {activity.occurred_at ? formatRelativeTime(activity.occurred_at) : 'Date inconnue'}
                       </span>
                     </div>
 

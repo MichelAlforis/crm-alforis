@@ -5,8 +5,10 @@
 
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { usePeople } from '@/hooks/usePeople'
-import { Card, Button, Table, Input, Alert, AdvancedFilters } from '@/components/shared'
+import { Card, Button, Table, Alert, AdvancedFilters } from '@/components/shared'
+import SearchBar from '@/components/search/SearchBar'
 import { Person } from '@/lib/types'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import { personSlug } from '@/lib/utils'
@@ -79,6 +81,7 @@ const COLUMNS = [
 ]
 
 export default function PeoplePage() {
+  const router = useRouter()
   const { people, fetchPeople } = usePeople()
   const [searchText, setSearchText] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
@@ -259,10 +262,16 @@ export default function PeoplePage() {
 
       <Card>
         <div className="space-y-4">
-          <Input
-            placeholder="Rechercher par nom, email, rôle..."
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
+          <SearchBar
+            placeholder="Rechercher une personne…"
+            entityType="people"
+            onQueryChange={setSearchText}
+            onSubmit={setSearchText}
+            onSelectSuggestion={(suggestion) => {
+              if (suggestion?.id) {
+                router.push(`/dashboard/people/${suggestion.id}`)
+              }
+            }}
           />
           <AdvancedFilters
             filters={advancedFilterDefinitions}
@@ -272,7 +281,6 @@ export default function PeoplePage() {
           />
         </div>
       </Card>
-
       {people.error && <Alert type="error" message={people.error} />}
 
       <Card>

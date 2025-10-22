@@ -116,9 +116,6 @@ export function ExportButtons({
 
   return (
     <div className={clsx('flex flex-wrap items-center gap-2', className)}>
-      <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50 text-gray-500">
-        <Download className="h-5 w-5" aria-hidden />
-      </span>
       {resolvedActions.map((action) => {
         const Icon = action.icon ?? FileDown
         const isLoading = currentFormat === action.format
@@ -128,7 +125,7 @@ export function ExportButtons({
             type="button"
             className={clsx(
               buttonClasses,
-              'border-gray-200 bg-white text-gray-700 hover:border-blue-400 hover:text-blue-600 shadow-sm hover:shadow-md'
+              'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-400 shadow-sm'
             )}
             title={action.tooltip}
             disabled={disabled || isLoading}
@@ -136,14 +133,16 @@ export function ExportButtons({
           >
             <Icon className={clsx('h-4 w-4', isLoading && 'animate-spin')} aria-hidden />
             <span>
-              Export {action.label}
+              {action.label}
             </span>
           </button>
         )
       })}
 
       {error && (
-        <p className="w-full text-sm text-red-600">{error}</p>
+        <div className="w-full mt-2 px-3 py-2 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+          {error}
+        </div>
       )}
     </div>
   )
