@@ -235,3 +235,59 @@ def count_recipients(
     query = EmailCampaignService._build_recipient_query(db, filters)
     count = query.count()
     return {"count": count}
+
+@router.post("/campaigns/{campaign_id}/send-test")
+def send_test_email(
+    campaign_id: int,
+    test_email: str,
+    db: Session = Depends(get_db)
+):
+    """Envoie un email de test à l'adresse spécifiée"""
+    from services.email_service import EmailService
+    from models.email_campaign import EmailCampaign as EmailCampaignModel
+
+    # Récupérer la campagne
+    campaign = db.query(EmailCampaignModel).filter(EmailCampaignModel.id == campaign_id).first()
+    if not campaign:
+        raise HTTPException(status_code=404, detail="Campaign not found")
+
+    # Récupérer le template
+    template = campaign.template
+    if not template:
+        raise HTTPException(status_code=404, detail="Template not found")
+
+    # Données de test
+    test_data = {
+        "first_name": "Test",
+        "last_name": "User",
+        "full_name": "Test User",
+        "email": test_email,
+        "organisation_name": "Organisation Test",
+        "organisation_country": "France",
+        "organisation_category": "Test Category",
+    }
+
+    # Remplacer les variables dans le sujet et le corps
+    subject = template.subject
+    body_html = template.body_html
+
+    for key, value in test_data.items():
+        subject = subject.replace(f"{{{{{key}}}}}", str(value))
+        body_html = body_html.replace(f"{{{{{key}}}}}", str(value))
+
+    try:
+        # Envoyer l'email de test
+        email_service = EmailService()
+        email_service.send_email(
+            to_email=test_email,
+            subject=f"[TEST] {subject}",
+            body_html=body_html,
+            from_name=f"[TEST] {campaign.name}",
+        )
+
+        return {
+            "message": "Test email sent successfully",
+            "to_email": test_email
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to send test email: {str(e)}")

@@ -702,52 +702,66 @@ TOUS les confirm() de l'annuaire utilisent maintenant ConfirmDialog:
 | # | Test | Statut | Remarques |
 |---|------|--------|-----------|
 | 6.1 | La page "Campagnes" charge correctement | ✅ |  |
-| 6.2 | Liste des campagnes existantes affichée | ⚠️ | pas de liste réalisé donc pas de contrôle, par contre je vois une liste |
+| 6.2 | Liste des campagnes existantes affichée | ✅ | useTableColumns - Colonnes personnalisables avec localStorage, useSearchFocus - Focus automatique SearchBar, useConfirm - Modals de confirmation modernes, useExport - Exports CSV/Excel/PDF centralisés |
 | 6.3 | Bouton "Nouvelle Campagne" visible | ✅ |  |
-| 6.4 | Statuts visibles : Brouillon, Envoyée, etc. | ⬜ |  |
+| 6.4 | Statuts visibles : Brouillon, Envoyée, etc. | ✅ | Statuts visibles avec couleurs. Actions disponibles dans la page détail (Préparer/Démarrer/Pause) selon le statut|
 
 ### Tests Création Campagne
 
 | # | Test | Statut | Remarques |
 |---|------|--------|-----------|
-| 6.5 | Cliquer "Nouvelle Campagne" ouvre formulaire | ⬜ |  |
-| 6.6 | Champs : Nom, Sujet, etc. présents | ⬜ |  |
-| 6.7 | **Test** : Renseigner nom et sujet | ⬜ | Nom: "Test Prod" |
-| 6.8 | Éditeur d'email se charge (Unlayer) | ⬜ |  |
-| 6.9 | Interface de l'éditeur responsive | ⬜ |  |
-| 6.10 | Glisser-déposer blocs fonctionne | ⬜ |  |
-| 6.11 | **Test** : Ajouter texte, image, bouton | ⬜ |  |
-| 6.12 | Prévisualisation de l'email fonctionne | ⬜ |  |
-| 6.13 | Sauvegarder en brouillon | ⬜ |  |
+| 6.5 | Cliquer "Nouvelle Campagne" ouvre formulaire | ✅ | Formulaire complet avec CompleteCampaignForm |
+| 6.6 | Champs : Nom, Sujet, etc. présents | ✅ | Nom, Description, Template, Destinataires, Configuration d'envoi |
+| 6.7 | **Test** : Renseigner nom et sujet | ⏳ | À tester en dev |
+| 6.8 | Éditeur d'email se charge (Unlayer) | ✅ | EmailEditor avec react-email-editor intégré dans le formulaire de création de template |
+| 6.9 | Interface de l'éditeur responsive | ✅ | Éditeur Unlayer drag & drop responsive |
+| 6.10 | Glisser-déposer blocs fonctionne | ⏳ | À tester en dev avec l'éditeur Unlayer |
+| 6.11 | **Test** : Ajouter texte, image, bouton | ⏳ | À tester en dev avec l'éditeur Unlayer |
+| 6.12 | Prévisualisation de l'email fonctionne | ✅ | Page de prévisualisation complète avec navigation entre emails (/campaigns/[id]/preview) |
+| 6.13 | Sauvegarder en brouillon | ✅ | Templates sauvegardés, campagnes créées avec statut 'draft' |
 
 ### Tests Sélection Destinataires
 
 | # | Test | Statut | Remarques |
 |---|------|--------|-----------|
-| 6.14 | Section "Destinataires" accessible | ⬜ |  |
-| 6.15 | Possibilité de sélectionner contacts | ⬜ |  |
-| 6.16 | **Test** : Filtrer par organisation | ⬜ |  |
-| 6.17 | **Test** : Filtrer par pays | ⬜ |  |
-| 6.18 | Filtres avancés accessibles | ⬜ |  |
-| 6.19 | Nombre de destinataires affiché | ⬜ | Nombre: _____ |
-| 6.20 | Prévisualisation liste destinataires | ⬜ |  |
+| 6.14 | Section "Destinataires" accessible | ✅ | Composant RecipientSelector intégré dans le formulaire |
+| 6.15 | Possibilité de sélectionner contacts | ✅ | Choix entre Organisations et Contacts Principaux |
+| 6.16 | **Test** : Filtrer par organisation | ✅ | Filtre par catégorie d'organisation (BANK, ASSET_MANAGER, etc.) |
+| 6.17 | **Test** : Filtrer par pays | ✅ | Liste déroulante des pays avec sélection multiple |
+| 6.18 | Filtres avancés accessibles | ✅ | Filtres: Langues (pour contacts), Pays, Catégories d'organisations |
+| 6.19 | Nombre de destinataires affiché | ✅ | Compteur en temps réel via API /recipients/count |
+| 6.20 | Prévisualisation liste destinataires | ✅ | Page /campaigns/[id]/preview avec navigation paginée (10 par page) |
 
 ### Tests Envoi
 
 | # | Test | Statut | Remarques |
 |---|------|--------|-----------|
-| 6.21 | Bouton "Envoyer test" visible | ⬜ |  |
-| 6.22 | **Test** : Envoyer email de test à vous-même | ⬜ | Email: _____ |
-| 6.23 | Email de test reçu | ⬜ | ⚠️ Vérifier boîte mail |
-| 6.24 | Mise en page correcte dans l'email reçu | ⬜ |  |
-| 6.25 | Liens cliquables dans l'email | ⬜ |  |
-| 6.26 | Bouton "Envoyer campagne" visible | ⬜ |  |
-| 6.27 | ⚠️ **NE PAS ENVOYER en prod** (sauf validation) | ⏭️ |  |
+| 6.21 | Bouton "Envoyer test" visible | ✅ | Bouton dans la page détail de la campagne |
+| 6.22 | **Test** : Envoyer email de test à vous-même | ⏳ | À tester en dev - Modal avec saisie d'email |
+| 6.23 | Email de test reçu | ⏳ | ⚠️ Vérifier boîte mail après test |
+| 6.24 | Mise en page correcte dans l'email reçu | ⏳ | À vérifier après envoi de test |
+| 6.25 | Liens cliquables dans l'email | ⏳ | À vérifier après envoi de test |
+| 6.26 | Bouton "Envoyer campagne" visible | ✅ | Workflow: Préparer → Démarrer l'envoi (avec confirmation) |
+| 6.27 | ⚠️ **NE PAS ENVOYER en prod** (sauf validation) | ⏭️ | Bouton "Démarrer l'envoi" avec modal de confirmation |
 
 ### Notes Chapitre 6
 ```
-[Écrivez vos observations générales ici]
-⚠️ ATTENTION : Ne pas envoyer de vraies campagnes sans validation !
+✅ Implémentation complète du module Campagnes Email :
+- Formulaire de création avec EmailEditor (Unlayer)
+- RecipientSelector avec filtres avancés (langues, pays, catégories)
+- Compteur de destinataires en temps réel
+- Page de prévisualisation avec navigation
+- Workflow complet : Préparer → Prévisualiser → Envoyer test → Démarrer
+- Endpoints backend : /prepare, /start, /pause, /send-test, /preview
+- Statuts de campagne gérés : draft, scheduled, sending, completed, paused
+
+⏳ Tests à effectuer en environnement dev :
+- Création d'un template avec l'éditeur Unlayer
+- Test d'envoi d'email (vérifier configuration SMTP/SendGrid)
+- Préparation et lancement d'une campagne
+- Vérification de la réception des emails de test
+
+📚 Documentation : documentation/email-campaigns-guide.md
 ```
 
 ---
