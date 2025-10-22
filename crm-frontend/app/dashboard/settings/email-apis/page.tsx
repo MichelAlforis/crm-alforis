@@ -58,7 +58,7 @@ export default function EmailApisSettingsPage() {
 
   const emailConfig = useEmailConfig()
   const { showToast } = useToast()
-  const confirm = useConfirm()
+  const { confirm, ConfirmDialogComponent } = useConfirm()
 
   useEffect(() => {
     loadConfigurations()
@@ -93,23 +93,22 @@ export default function EmailApisSettingsPage() {
     }
   }
 
-  const handleDelete = async (id: number, name: string) => {
-    const confirmed = await confirm({
+  const handleDelete = (id: number, name: string) => {
+    confirm({
       title: 'Supprimer la configuration',
       message: `Êtes-vous sûr de vouloir supprimer "${name}" ?`,
       confirmText: 'Supprimer',
-      isDangerous: true,
+      type: 'danger',
+      onConfirm: async () => {
+        try {
+          await emailConfig.deleteConfiguration(id)
+          showToast({ type: 'success', title: 'Configuration supprimée' })
+          loadConfigurations()
+        } catch (error: any) {
+          showToast({ type: 'error', title: error.message })
+        }
+      },
     })
-
-    if (!confirmed) return
-
-    try {
-      await emailConfig.deleteConfiguration(id)
-      showToast({ type: 'success', title: 'Configuration supprimée' })
-      loadConfigurations()
-    } catch (error: any) {
-      showToast({ type: 'error', title: error.message })
-    }
   }
 
   const handleTest = (config: EmailConfiguration) => {
@@ -297,6 +296,9 @@ export default function EmailApisSettingsPage() {
           ))
         )}
       </div>
+
+      {/* Confirm Dialog */}
+      <ConfirmDialogComponent />
 
       {/* Modal Create */}
       {showCreateModal && (
