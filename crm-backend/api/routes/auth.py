@@ -224,6 +224,10 @@ async def login(request: Request, db: Session = Depends(get_db)):
             "email": user.email,
             "is_admin": is_admin_flag,
             "name": user.display_name,
+            "role": {
+                "name": user.role.name if user.role else None,
+                "level": user.role.level if user.role else 0,
+            } if user.role else None,
         },
         expires_delta=timedelta(hours=settings.jwt_expiration_hours)
     )

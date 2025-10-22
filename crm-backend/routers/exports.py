@@ -184,12 +184,18 @@ async def export_organisations_pdf(
     if not organisations:
         raise HTTPException(404, "Aucune organisation à exporter")
 
+    # Gérer current_user comme dict ou objet pour l'auteur du PDF
+    if isinstance(current_user, dict):
+        author_name = current_user.get('username', current_user.get('email', 'CRM User'))
+    else:
+        author_name = current_user.username
+
     # Export PDF
     buffer = ExportService.export_organisations_pdf(
         organisations=organisations,
         filename="organisations.pdf",
         title="Rapport Organisations",
-        author=f"{current_user.username} - CRM Alforis",
+        author=f"{author_name} - CRM Alforis",
     )
 
     buffer.seek(0)
