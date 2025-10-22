@@ -61,7 +61,7 @@ export function useExport({
         const url = `${apiUrl}/exports/${resource}/${format}${queryString ? `?${queryString}` : ''}`
 
         // Récupérer le token d'authentification
-        const token = localStorage.getItem('token')
+        const token = localStorage.getItem('auth_token')
         if (!token) {
           throw new Error('Non authentifié')
         }
