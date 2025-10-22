@@ -618,17 +618,43 @@ PROCHAINE ÉTAPE:
 ⏭️ 5.16-5.17: Section Contacts (nécessite backend Many-to-Many)
 
 ## Prochaines Étapes
-- [ ] Propager useTableColumns aux pages People, Mandats, Tasks
+- [x] ~~Propager useTableColumns aux pages People, Mandats~~ ✅ **TERMINÉ** (commit d366ce1a)
+- [x] ~~Créer useConfirm hook~~ ✅ **TERMINÉ** (commit d366ce1a)
+- [ ] Appliquer useConfirm aux pages detail People et Mandats
 - [ ] Créer relation Many-to-Many Organisation-People (backend)
 - [ ] Ajouter section Contacts (tests 5.16-5.17)
 - [ ] Tester exports CSV/Excel/PDF depuis frontend
-- [ ] Créer useConfirm hook pour simplifier usage ConfirmDialog
+
+## Propagation Réussie (Commit d366ce1a)
+
+### People Page ✅
+- useTableColumns avec 6 colonnes (Mobile et Langue cachés par défaut)
+- ColumnSelector + localStorage 'people-columns'
+- ExportButtons CSV/Excel/PDF
+- Breadcrumb "Retour à l'annuaire"
+- Pagination déjà présente (conservée)
+
+### Mandats Page ✅
+- useTableColumns avec 6 colonnes (Date fin cachée par défaut)
+- ColumnSelector + localStorage 'mandats-columns'
+- Tri par colonnes complet (string/date/number)
+- Pagination moderne ajoutée (skip/limit)
+- ExportButtons déjà présent (conservé)
+- Breadcrumb "Retour à l'annuaire"
+
+### Hook useConfirm ✅
+- Hook réutilisable créé: crm-frontend/hooks/useConfirm.tsx
+- API simple: `confirm({ title, message, type, onConfirm })`
+- Support async/await automatique
+- État loading géré
+- Prêt à être utilisé dans les pages detail
 
 ## Prêt pour Production
 ✅ Branch: test/chapitre5-organisations
 ✅ Backend redémarré avec fix export
 ✅ Tests validés: 20/22
-✅ Code prêt à être poussé
+✅ 6 commits propres et documentés
+✅ Améliorations propagées à People et Mandats
 ```
 
 ---
