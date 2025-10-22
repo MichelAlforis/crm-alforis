@@ -121,6 +121,7 @@ app = FastAPI(
 )
 
 # --- Middleware CORS ---
+print(f"🔧 Configuration CORS: {ALLOWED_ORIGINS}")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
@@ -128,6 +129,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+print(f"✅ Middleware CORS ajouté pour: {ALLOWED_ORIGINS}")
 
 # --- GZip (utile pour grosses réponses JSON) ---
 app.add_middleware(GZipMiddleware, minimum_size=1024)

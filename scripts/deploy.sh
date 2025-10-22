@@ -172,27 +172,9 @@ create_backup() {
   fi
 }
 
-copy_env_file() {
-  log "Copie du fichier .env (exclus de git)"
-
-  # .env racine (chargé nativement par Docker Compose)
-  if [[ -f .env ]]; then
-    print_info "Copie .env (racine)..."
-    if scp -i "$SSH_KEY" .env "$SERVER:$REMOTE_DIR/.env" >> "$LOGFILE" 2>&1; then
-      print_success ".env copié"
-    else
-      print_error "Échec copie .env"
-      return 1
-    fi
-  else
-    print_error ".env introuvable à la racine!"
-    print_info "Docker Compose requiert .env pour les variables (POSTGRES_PASSWORD, SECRET_KEY, etc.)"
-    print_info "Créez-le depuis: cp .env.example .env"
-    return 1
-  fi
-
-  return 0
-}
+# SUPPRIMÉ: Les fichiers .env sont maintenant stables sur le serveur
+# Plus besoin de les copier à chaque déploiement
+# Configuration initiale uniquement lors du premier setup
 
 # -------------------- CHECKS ---------------------
 while getopts "vh" opt; do
@@ -305,11 +287,14 @@ case "$ACTION" in
     fi
     print_success "Fichiers copiés"
 
-    # Copie du fichier .env (séparément, exclus de git)
-    if ! copy_env_file; then
-      print_error "Échec copie .env"
+    # Les .env sont maintenant stables sur le serveur (pas de copie)
+    print_info "Vérification .env existant sur serveur..."
+    if ! ssh_cmd "[ -f '$REMOTE_DIR/.env' ]"; then
+      print_error ".env manquant sur le serveur!"
+      print_info "Créez-le manuellement sur le serveur: cp .env.example .env"
       exit 13
     fi
+    print_success ".env présent"
 
     # Build et démarrage
     print_info "Build des images Docker..."

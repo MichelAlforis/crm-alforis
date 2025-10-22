@@ -72,15 +72,16 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    env_file:
-      - ./crm-backend/.env.local
-      # - ./.env   # (dé-commente si tu veux aussi charger la racine)
+    # env_file:
+      # - ./crm-backend/.env.local  # Plus utilisé, tout est dans .env racine
+      # - ./.env   # Docker Compose charge automatiquement .env racine
     environment:
       # Fallbacks si non définis dans .env.local
       DATABASE_URL: ${DATABASE_URL:-postgresql://${POSTGRES_USER:-crm_user}:${POSTGRES_PASSWORD:-crm_password}@postgres:5432/${POSTGRES_DB:-crm_db}}
       DEBUG: ${DEBUG:-True}
       SECRET_KEY: ${SECRET_KEY:-dev_secret_key_change_in_production}
-      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-["http://localhost:3010","http://localhost:3000","http://localhost:5173"]}
+      # FORCER localhost pour dev local (ignorer .env qui peut avoir prod)
+      ALLOWED_ORIGINS: '["http://localhost:3010","http://127.0.0.1:3010","http://localhost:3000"]'
       JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
       JWT_EXPIRATION_HOURS: ${JWT_EXPIRATION_HOURS:-24}
       ENVIRONMENT: ${ENVIRONMENT:-development}
@@ -122,8 +123,8 @@ services:
     depends_on:
       api:
         condition: service_started
-    env_file:
-      - ./crm-frontend/.env.local
+    # env_file:
+      # - ./crm-frontend/.env.local  # Plus utilisé, tout est dans .env racine
     environment:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:${API_PORT:-8000}}
       PORT: ${FRONTEND_PORT:-3010}

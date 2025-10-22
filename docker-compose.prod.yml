@@ -39,7 +39,7 @@ services:
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-crm_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD doit être défini dans .env.production}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD doit être défini dans .env}
       POSTGRES_DB: ${POSTGRES_DB:-crm_db}
       PGDATA: /var/lib/postgresql/data/pgdata
     command:
@@ -91,7 +91,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-crm_user}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-crm_db}
       # Sécurité
       DEBUG: "False"
-      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY doit être défini dans .env.production}
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY doit être défini dans .env}
       ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-["https://crm.alforis.fr"]}
       # JWT
       JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
@@ -133,8 +133,8 @@ services:
       dockerfile: Dockerfile
       target: production
       args:
-        # Passer l'URL de l'API au build pour l'inclure dans le bundle Next.js
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://crm.alforis.fr/api/v1}
+        # Passer l'URL de l'API au build - Lit depuis .env racine
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api/v1}
     restart: always
     depends_on:
       api:
@@ -142,7 +142,7 @@ services:
     # Docker Compose charge automatiquement .env à la racine
     environment:
       # URL de l'API accessible depuis le navigateur
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://crm.alforis.fr/api/v1}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api/v1}
       NODE_ENV: production
       PORT: ${FRONTEND_PORT:-3010}
     working_dir: /app
