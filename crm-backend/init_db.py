@@ -7,24 +7,24 @@ Script d'initialisation de la base de données
 
 # Import tous les models pour éviter les problèmes de dépendances circulaires
 from models.user import User
+from models.team import Team
 from models.organisation import Organisation
-from models.contact import Contact
-from models.activity import Activity
+from models.person import Person, PersonOrganizationLink
 from models.task import Task
-from models.email import Email
-from models.campaign import Campaign
-from models.workflow import Workflow
-from models.tag import Tag
-from models.note import Note
-from models.document import Document
-from models.custom_field import CustomField
-from models.role import Role, Permission, RolePermission
+from models.workflow import Workflow, WorkflowExecution
+from models.role import Role
+from models.permission import Permission
+from models.notification import Notification
 from models.organisation_activity import OrganisationActivity
+from models.email import EmailTemplate, EmailCampaign, EmailCampaignStep, EmailSend, EmailEvent
+from models.email_config import EmailConfiguration
+from models.ai_agent import AISuggestion, AIExecution, AIConfiguration, AICache
+from models.mandat import Mandat
+from models.kpi import DashboardKPI
+from models.webhook import Webhook
 
 from core.database import Base, engine, SessionLocal
-from passlib.context import CryptContext
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+from core.security import hash_password
 
 def init_database():
     """Initialise la base de données"""
@@ -47,26 +47,25 @@ def init_database():
 
     try:
         # Vérifier si l'admin existe déjà
-        existing_admin = db.query(User).filter(User.email == "admin@alforis.fr").first()
+        existing_admin = db.query(User).filter(User.email == "admin@alforis.com").first()
 
         if existing_admin:
             print("ℹ️  L'utilisateur admin existe déjà")
             print(f"   📧 Email: {existing_admin.email}")
         else:
-            # Créer l'admin
+            # Créer l'admin (champs correspondant au modèle actuel)
             admin = User(
-                email="admin@alforis.fr",
+                email="admin@alforis.com",
                 username="admin",
-                first_name="Admin",
-                last_name="Alforis",
-                password=pwd_context.hash("Alforis2025!"),
-                role="admin",
-                is_active=True
+                full_name="Admin Alforis",
+                hashed_password=hash_password("Alforis2025!"),
+                is_active=True,
+                is_superuser=True
             )
             db.add(admin)
             db.commit()
             print("✅ Utilisateur admin créé avec succès")
-            print(f"   📧 Email: admin@alforis.fr")
+            print(f"   📧 Email: admin@alforis.com")
             print(f"   🔑 Mot de passe: Alforis2025!")
             print(f"   ⚠️  CHANGEZ CE MOT DE PASSE après la première connexion!")
 
@@ -74,11 +73,11 @@ def init_database():
         print("\n📊 Statistiques de la base de données:")
         user_count = db.query(User).count()
         org_count = db.query(Organisation).count()
-        contact_count = db.query(Contact).count()
+        person_count = db.query(Person).count()
 
         print(f"   👤 Utilisateurs: {user_count}")
         print(f"   🏢 Organisations: {org_count}")
-        print(f"   👥 Contacts: {contact_count}")
+        print(f"   👥 Personnes: {person_count}")
 
         return True
 
@@ -95,8 +94,8 @@ if __name__ == "__main__":
     if success:
         print("\n✅ Initialisation terminée avec succès")
         print("\n🌐 Vous pouvez maintenant vous connecter à:")
-        print("   https://crm.alforis.fr")
-        print("   Email: admin@alforis.fr")
+        print("   http://localhost:3010")
+        print("   Email: admin@alforis.com")
         print("   Password: Alforis2025!")
     else:
         print("\n❌ Échec de l'initialisation")

@@ -826,6 +826,18 @@ Fonctionnalités disponibles :
 4. Tester l'envoi d'un email
 5. Activer la configuration
 6. Vérifier que les campagnes utilisent cette config
+Configuration
+Click Tracking
+
+To track clicks, Resend modifies each link in the body of the HTML email. When recipients open a link, they are sent to a Resend server, and are immediately redirected to the URL destination.
+
+Open Tracking
+
+A 1x1 pixel transparent GIF image is inserted in each email and includes a unique reference. Open tracking can produce inaccurate results and decrease deliverability. Learn more and consider if open tracking is right for you.
+
+TLS (Transport Layer Security)
+
+"Opportunistic TLS" means that it always attempts to make a secure connection to the receiving mail server. If it can't establish a secure connection, it sends the message unencrypted. "Enforced TLS" on the other hand, requires that the email communication must use TLS no matter what. If the receiving server does not support TLS, the email will not be sent.
 ```
 
 ---
