@@ -193,6 +193,23 @@ else
     echo -e "${RED}❌ Frontend non accessible${NC}"
 fi
 
+# --- Health Checks complets ---
+echo -e "\n${YELLOW}🏥 Health Checks complets...${NC}"
+if [ -f "scripts/health-check/run_health_check.sh" ]; then
+    chmod +x scripts/health-check/run_health_check.sh
+    # Déterminer l'environnement (production ou local selon le compose file)
+    if [[ "$COMPOSE_FILE" == *"prod"* ]]; then
+        HEALTH_ENV="production"
+    else
+        HEALTH_ENV="local"
+    fi
+
+    echo -e "${BLUE}Lancement des health checks en mode ${HEALTH_ENV}...${NC}"
+    ./scripts/health-check/run_health_check.sh "$HEALTH_ENV" || echo -e "${YELLOW}⚠️  Certains health checks ont échoué (voir détails ci-dessus)${NC}"
+else
+    echo -e "${YELLOW}⚠️  Scripts de health check non trouvés (scripts/health-check/)${NC}"
+fi
+
 # --- Afficher les logs récents ---
 echo -e "\n${YELLOW}📋 Logs récents:${NC}"
 "${COMPOSE_CMD[@]}" -f "$COMPOSE_FILE" logs --tail=20
