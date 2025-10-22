@@ -26,7 +26,7 @@ export default function OrganisationsPage() {
   const router = useRouter()
   const [searchText, setSearchText] = useState('')
   const [skip, setSkip] = useState(0)
-  const [limit] = useState(50)
+  const [limit, setLimit] = useState(50)
   const [filtersState, setFiltersState] = useState({
     category: '',
     status: '',
@@ -311,6 +311,7 @@ export default function OrganisationsPage() {
             skip: skip,
             limit: limit,
             onPageChange: (newSkip) => setSkip(newSkip),
+            onLimitChange: (newLimit) => setLimit(newLimit),
           }}
         />
       </Card>

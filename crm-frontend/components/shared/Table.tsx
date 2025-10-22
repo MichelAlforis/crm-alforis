@@ -20,6 +20,7 @@ interface PaginationInfo {
   skip: number
   limit: number
   onPageChange: (skip: number) => void
+  onLimitChange?: (limit: number) => void
 }
 
 interface TableProps<T = any> {
@@ -86,7 +87,7 @@ const SortIcon = ({ column, sortConfig }: { column: string; sortConfig?: TablePr
 }
 
 // ============= PAGINATION COMPONENT =============
-const Pagination = ({ total, skip, limit, onPageChange }: PaginationInfo) => {
+const Pagination = ({ total, skip, limit, onPageChange, onLimitChange }: PaginationInfo) => {
   const currentPage = Math.floor(skip / limit) + 1
   const totalPages = Math.ceil(total / limit)
   const hasNext = skip + limit < total
@@ -112,6 +113,14 @@ const Pagination = ({ total, skip, limit, onPageChange }: PaginationInfo) => {
     onPageChange((totalPages - 1) * limit)
   }
 
+  const handleLimitChange = (newLimit: number) => {
+    if (onLimitChange) {
+      // Reset to first page when changing limit
+      onPageChange(0)
+      onLimitChange(newLimit)
+    }
+  }
+
   // Don't show pagination if only one page
   if (totalPages <= 1) return null
 
@@ -120,14 +129,34 @@ const Pagination = ({ total, skip, limit, onPageChange }: PaginationInfo) => {
 
   return (
     <div className="flex items-center justify-between px-6 py-3 border-t border-gray-200 bg-white">
-      {/* Info */}
-      <div className="text-sm text-gray-600">
-        Affichage de <span className="font-medium text-gray-900">{startItem}</span> à{' '}
-        <span className="font-medium text-gray-900">{endItem}</span> sur{' '}
-        <span className="font-medium text-gray-900">{total}</span> résultats
+      {/* Left: Info + Limit Selector */}
+      <div className="flex items-center gap-4">
+        <div className="text-sm text-gray-600">
+          Affichage de <span className="font-medium text-gray-900">{startItem}</span> à{' '}
+          <span className="font-medium text-gray-900">{endItem}</span> sur{' '}
+          <span className="font-medium text-gray-900">{total}</span> résultats
+        </div>
+
+        {/* Limit selector */}
+        {onLimitChange && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600">Afficher</span>
+            <select
+              value={limit}
+              onChange={(e) => handleLimitChange(Number(e.target.value))}
+              className="px-2 py-1 text-sm border border-gray-300 rounded bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </select>
+            <span className="text-sm text-gray-600">par page</span>
+          </div>
+        )}
       </div>
 
-      {/* Controls */}
+      {/* Right: Controls */}
       <div className="flex items-center gap-1">
         {/* First page */}
         <button
