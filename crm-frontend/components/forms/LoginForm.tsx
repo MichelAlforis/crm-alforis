@@ -44,7 +44,7 @@ export function LoginForm({ onSubmit, isLoading, error }: LoginFormProps) {
         title: 'Connexion impossible',
         message,
       })
-      throw err
+      // Ne pas re-throw: l'erreur est déjà gérée avec le Toast
     }
   }
 
