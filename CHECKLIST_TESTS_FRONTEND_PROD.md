@@ -701,9 +701,9 @@ TOUS les confirm() de l'annuaire utilisent maintenant ConfirmDialog:
 
 | # | Test | Statut | Remarques |
 |---|------|--------|-----------|
-| 6.1 | La page "Campagnes" charge correctement | ⬜ |  |
-| 6.2 | Liste des campagnes existantes affichée | ⬜ |  |
-| 6.3 | Bouton "Nouvelle Campagne" visible | ⬜ |  |
+| 6.1 | La page "Campagnes" charge correctement | ✅ |  |
+| 6.2 | Liste des campagnes existantes affichée | ⚠️ | pas de liste réalisé donc pas de contrôle, par contre je vois une liste |
+| 6.3 | Bouton "Nouvelle Campagne" visible | ✅ |  |
 | 6.4 | Statuts visibles : Brouillon, Envoyée, etc. | ⬜ |  |
 
 ### Tests Création Campagne
