@@ -9,6 +9,8 @@ from sqlalchemy.orm import Session, selectinload
 
 from core.config import settings
 from core.exceptions import DatabaseError, ResourceNotFound, ValidationError
+from models.email_config import EmailConfiguration
+from services.email_config_service import EmailConfigurationService
 from models.email import (
     EmailCampaign,
     EmailCampaignStatus,
@@ -479,9 +481,45 @@ class EmailDeliveryService:
         system_ctx.setdefault("unsubscribe_url", unsubscribe_url)
         return context
 
+    def _get_active_email_config(self) -> Optional[EmailConfiguration]:
+        """Récupère la configuration email active"""
+        try:
+            config_service = EmailConfigurationService(self.db)
+            return config_service.get_active()
+        except Exception as e:
+            logger.warning(f"Failed to load email configuration: {e}")
+            return None
+
+    def _get_api_credentials(self, provider: EmailProvider) -> tuple[Optional[str], Optional[dict]]:
+        """
+        Récupère les credentials API (clé + config additionnelle)
+        Priorité : EmailConfiguration active > variables d'environnement
+
+        Returns:
+            (api_key, provider_config_dict)
+        """
+        # 1. Essayer de charger depuis EmailConfiguration
+        email_config = self._get_active_email_config()
+        if email_config and email_config.provider == provider:
+            config_service = EmailConfigurationService(self.db)
+            decrypted = config_service.get_decrypted_config(email_config)
+            return decrypted["api_key"], decrypted["provider_config"]
+
+        # 2. Fallback sur variables d'environnement
+        if provider == EmailProvider.RESEND:
+            return settings.resend_api_key, None
+        elif provider == EmailProvider.SENDGRID:
+            return settings.sendgrid_api_key, None
+        elif provider == EmailProvider.MAILGUN:
+            return settings.mailgun_api_key, {"domain": settings.mailgun_domain}
+
+        return None, None
+
     def _send_via_sendgrid(self, send: EmailSend, subject: str, html_content: str) -> Dict[str, Any]:
-        if not settings.sendgrid_api_key:
-            error = "SENDGRID_API_KEY manquant"
+        api_key, _ = self._get_api_credentials(EmailProvider.SENDGRID)
+
+        if not api_key:
+            error = "SENDGRID_API_KEY manquant (configurer dans Paramètres > APIs Email ou .env)"
             send.status = EmailSendStatus.FAILED
             send.error_message = error
             logger.error("email_sendgrid_missing_key", extra={"send_id": send.id})
@@ -513,7 +551,7 @@ class EmailDeliveryService:
             "open_tracking": {"enable": send.campaign.track_opens},
         }
         try:
-            client = SendGridAPIClient(settings.sendgrid_api_key)
+            client = SendGridAPIClient(api_key)
             response = client.send(mail)
             message_id = response.headers.get(SENDGRID_HEADER_MESSAGE_ID) if response and response.headers else None
             if message_id:
@@ -538,8 +576,11 @@ class EmailDeliveryService:
             return {"error": str(exc)}
 
     def _send_via_mailgun(self, send: EmailSend, subject: str, html_content: str) -> Dict[str, Any]:
-        if not settings.mailgun_api_key or not settings.mailgun_domain:
-            error = "MAILGUN_API_KEY ou MAILGUN_DOMAIN manquant"
+        api_key, provider_config = self._get_api_credentials(EmailProvider.MAILGUN)
+        domain = provider_config.get("domain") if provider_config else None
+
+        if not api_key or not domain:
+            error = "MAILGUN_API_KEY ou MAILGUN_DOMAIN manquant (configurer dans Paramètres > APIs Email ou .env)"
             send.status = EmailSendStatus.FAILED
             send.error_message = error
             logger.error("email_mailgun_missing_credentials", extra={"send_id": send.id})
@@ -547,7 +588,7 @@ class EmailDeliveryService:
 
         import requests
 
-        auth = ("api", settings.mailgun_api_key)
+        auth = ("api", api_key)
         data = {
             "from": f"{send.campaign.from_name} <{send.campaign.from_email}>",
             "to": [send.recipient_email],
@@ -564,7 +605,7 @@ class EmailDeliveryService:
         data = {k: v for k, v in data.items() if v is not None}
         try:
             response = requests.post(
-                f"https://api.mailgun.net/v3/{settings.mailgun_domain}/messages",
+                f"https://api.mailgun.net/v3/{domain}/messages",
                 auth=auth,
                 data=data,
             )
@@ -588,8 +629,10 @@ class EmailDeliveryService:
             return {"error": str(exc)}
 
     def _send_via_resend(self, send: EmailSend, subject: str, html_content: str) -> Dict[str, Any]:
-        if not settings.resend_api_key:
-            error = "RESEND_API_KEY manquant"
+        api_key, _ = self._get_api_credentials(EmailProvider.RESEND)
+
+        if not api_key:
+            error = "RESEND_API_KEY manquant (configurer dans Paramètres > APIs Email ou .env)"
             send.status = EmailSendStatus.FAILED
             send.error_message = error
             logger.error("email_resend_missing_key", extra={"send_id": send.id})
@@ -598,7 +641,7 @@ class EmailDeliveryService:
         import requests
 
         headers = {
-            "Authorization": f"Bearer {settings.resend_api_key}",
+            "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
         }
 
