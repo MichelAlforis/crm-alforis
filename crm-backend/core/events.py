@@ -80,6 +80,7 @@ class EventType(str, enum.Enum):
     # Email Automation
     EMAIL_TEMPLATE_CREATED = "email.template_created"
     EMAIL_CAMPAIGN_CREATED = "email.campaign_created"
+    EMAIL_CAMPAIGN_UPDATED = "email.campaign_updated"
     EMAIL_CAMPAIGN_SCHEDULED = "email.campaign_scheduled"
     EMAIL_CAMPAIGN_DELETED = "email.campaign_deleted"
     EMAIL_SEND_FAILED = "email.send_failed"

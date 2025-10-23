@@ -86,6 +86,18 @@ export const RecipientSelectorTableV2: React.FC<RecipientSelectorTableProps> = (
   const [importError, setImportError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  // Synchroniser les states locaux quand value change (ex: chargement d'une liste)
+  useEffect(() => {
+    setSelectedCountries(value.countries || [])
+    setSelectedLanguages(value.languages || [])
+    setSelectedCategories(value.organisation_categories || [])
+    setSelectedTypes(value.organisation_types || [])
+    setSelectedCities(value.cities || [])
+    setSelectedRoles(value.roles || [])
+    setSelectedIds(value.specific_ids || [])
+    setFilterIsActive(value.is_active)
+  }, [value])
+
   // Import des destinataires depuis un fichier
   const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
