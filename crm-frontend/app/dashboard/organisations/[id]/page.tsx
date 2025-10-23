@@ -20,6 +20,7 @@ import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import type { OrganisationUpdate } from '@/lib/types'
 import { OrganisationTimeline } from '@/components/organisations/OrganisationTimeline'
 import { useToast } from '@/hooks/useToast'
+import { CampaignSubscriptionManager } from '@/components/email/CampaignSubscriptionManager'
 
 const CATEGORY_LABELS: Record<string, string> = {
   Institution: 'Institution',
@@ -408,6 +409,15 @@ export default function OrganisationDetailPage() {
       )}
 
       {organisationId && <OrganisationTimeline organisationId={organisationId} />}
+
+      {/* Campaign Subscriptions */}
+      {organisationId && (
+        <CampaignSubscriptionManager
+          entityType="organisation"
+          entityId={organisationId}
+          entityName={organisation.name}
+        />
+      )}
 
       {/* Modal d'édition */}
       <Modal

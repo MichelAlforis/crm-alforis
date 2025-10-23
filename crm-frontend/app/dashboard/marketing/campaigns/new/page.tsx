@@ -23,17 +23,25 @@ export default function NewCampaignPage() {
   const [isCreating, setIsCreating] = React.useState(false)
   const [initialData, setInitialData] = React.useState<any>(null)
 
-  // Charger le brouillon depuis localStorage au montage
+  // Charger le brouillon depuis URL si on édite (ex: /new?edit=123)
   React.useEffect(() => {
-    try {
-      const savedDraft = localStorage.getItem('campaign_draft')
-      if (savedDraft) {
-        const draft = JSON.parse(savedDraft)
-        setInitialData(draft)
-        console.log('📥 Brouillon chargé depuis localStorage:', draft)
-      }
-    } catch (err) {
-      console.error('Failed to load draft:', err)
+    const params = new URLSearchParams(window.location.search)
+    const editId = params.get('edit')
+
+    if (editId) {
+      // Charger la campagne depuis l'API
+      apiClient.get<CampaignResponse>(`/email/campaigns/${editId}`)
+        .then(response => {
+          setInitialData(response.data)
+          console.log('📥 Brouillon chargé depuis DB:', response.data)
+        })
+        .catch(err => {
+          console.error('Failed to load draft:', err)
+          showToast({
+            type: 'error',
+            title: 'Impossible de charger le brouillon',
+          })
+        })
     }
   }, [])
 
@@ -42,9 +50,6 @@ export default function NewCampaignPage() {
     try {
       const response = await apiClient.post<CampaignResponse>('/email/campaigns', formData)
       const campaign = response.data
-
-      // Supprimer le brouillon après création réussie
-      localStorage.removeItem('campaign_draft')
 
       showToast({
         type: 'success',
@@ -63,19 +68,35 @@ export default function NewCampaignPage() {
   }
 
   const handleSaveDraft = async (formData: any) => {
-    // Sauvegarde locale pour le moment (peut être étendu avec un endpoint backend)
+    // Sauvegarder en base de données comme brouillon
     try {
-      localStorage.setItem('campaign_draft', JSON.stringify(formData))
-      console.log('Draft saved to localStorage')
-      showToast({
-        type: 'success',
-        title: 'Brouillon sauvegardé',
-      })
-    } catch (err) {
+      if (initialData?.id) {
+        // Mise à jour d'un brouillon existant
+        await apiClient.put(`/email/campaigns/${initialData.id}`, formData)
+        showToast({
+          type: 'success',
+          title: 'Brouillon mis à jour',
+        })
+      } else {
+        // Création d'un nouveau brouillon
+        const response = await apiClient.post<CampaignResponse>('/email/campaigns', formData)
+        const campaign = response.data
+
+        // Mettre à jour initialData avec l'ID pour les prochaines sauvegardes
+        setInitialData({ ...formData, id: campaign.id })
+
+        showToast({
+          type: 'success',
+          title: 'Brouillon sauvegardé',
+          message: `Vous pouvez le retrouver dans la liste des campagnes`,
+        })
+      }
+    } catch (err: any) {
       console.error('Failed to save draft:', err)
       showToast({
         type: 'error',
         title: 'Erreur lors de la sauvegarde',
+        message: err?.response?.data?.detail || 'Impossible de sauvegarder le brouillon',
       })
     }
   }

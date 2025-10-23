@@ -179,11 +179,19 @@ export default function CampaignsPage() {
       accessor: 'id',
       render: (id: number, row: EmailCampaign) => (
         <div className="flex items-center gap-2">
-          <Link href={`/dashboard/marketing/campaigns/${id}`}>
-            <Button variant="ghost" size="sm" title="Voir les détails">
-              <Eye className="w-4 h-4" />
-            </Button>
-          </Link>
+          {row.status === 'draft' ? (
+            <Link href={`/dashboard/marketing/campaigns/new?edit=${id}`}>
+              <Button variant="ghost" size="sm" title="Modifier le brouillon">
+                <Edit className="w-4 h-4" />
+              </Button>
+            </Link>
+          ) : (
+            <Link href={`/dashboard/marketing/campaigns/${id}`}>
+              <Button variant="ghost" size="sm" title="Voir les détails">
+                <Eye className="w-4 h-4" />
+              </Button>
+            </Link>
+          )}
           <Button
             variant="ghost"
             size="sm"

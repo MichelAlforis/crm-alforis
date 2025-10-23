@@ -325,6 +325,13 @@ export default function PersonDetailPage() {
         />
       </Card>
 
+      {/* Campaign Subscriptions */}
+      <CampaignSubscriptionManager
+        entityType="person"
+        entityId={personId}
+        entityName={`${person.first_name} ${person.last_name}`}
+      />
+
       {/* Edit Modal */}
       <Modal
         isOpen={isEditModalOpen}
