@@ -302,21 +302,16 @@ class CampaignSubscriptionCreate(BaseSchema):
     person_id: Optional[int] = Field(None, gt=0)
     organisation_id: Optional[int] = Field(None, gt=0)
 
-    @field_validator('person_id', 'organisation_id')
-    @classmethod
-    def validate_entity(cls, v, info):
+    @model_validator(mode='after')
+    def validate_entity(self):
         """Valider qu'au moins une entité est fournie."""
-        values = info.data
-        person_id = values.get('person_id')
-        organisation_id = values.get('organisation_id')
-
-        if not person_id and not organisation_id:
+        if not self.person_id and not self.organisation_id:
             raise ValueError('Au moins person_id ou organisation_id doit être fourni')
 
-        if person_id and organisation_id:
+        if self.person_id and self.organisation_id:
             raise ValueError('Seul person_id ou organisation_id peut être fourni, pas les deux')
 
-        return v
+        return self
 
 
 class CampaignSubscriptionResponse(TimestampedSchema):
@@ -343,18 +338,13 @@ class CampaignSubscriptionBulkCreate(BaseSchema):
     person_ids: Optional[List[int]] = Field(default_factory=list)
     organisation_ids: Optional[List[int]] = Field(default_factory=list)
 
-    @field_validator('person_ids', 'organisation_ids')
-    @classmethod
-    def validate_not_empty(cls, v, info):
+    @model_validator(mode='after')
+    def validate_not_empty(self):
         """Valider qu'au moins une liste n'est pas vide."""
-        values = info.data
-        person_ids = values.get('person_ids', [])
-        organisation_ids = values.get('organisation_ids', [])
-
-        if not person_ids and not organisation_ids:
+        if not self.person_ids and not self.organisation_ids:
             raise ValueError('Au moins person_ids ou organisation_ids doit contenir des IDs')
 
-        return v
+        return self
 
 
 class CampaignSubscriptionBulkResponse(BaseSchema):
