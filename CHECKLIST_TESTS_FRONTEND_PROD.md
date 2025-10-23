@@ -1,11 +1,11 @@
 # 📋 CHECKLIST TESTS FRONTEND PRODUCTION - CRM ALFORIS
 
 **Date de création :** 2025-10-22
-**Version :** 1.3
+**Version :** 1.4
 **Testeur :** Équipe Alforis
 **Environnement :** Développement Local (localhost:3010 + API:8000)
 **Date des tests :** 2025-10-22
-**Dernière session debug :** 2025-10-23 (TaskStatus + Template Preview)
+**Dernière session debug :** 2025-10-23 (TaskStatus + Template Edit + Send Test Email)
 
 ---
 
@@ -93,6 +93,7 @@ Pour éviter les lenteurs du réseau distant (159.69.108.234), un environnement 
 | 7 | Dashboard | 🔴 Critique | GET /api/v1/dashboards/stats/global → 500 | ✅ **CORRIGÉ** (TaskStatus.DONE) |
 | 8 | Marketing | ⚠️ Moyen | Template preview manquant | ✅ **CORRIGÉ** (TemplatePreviewModal) |
 | 9 | Marketing | ⚠️ Moyen | Template edit manquant | ✅ **CORRIGÉ** (TemplateEditModal) |
+| 10 | Marketing | 🔴 Critique | POST /email/templates/{id}/send-test → 500 | ✅ **CORRIGÉ** (EmailConfiguration décryptage) |
 
 ---
 
@@ -871,19 +872,23 @@ TOUS les confirm() de l'annuaire utilisent maintenant ConfirmDialog:
 
 | # | Test | Statut | Remarques |
 |---|------|--------|-----------|
-| 6.65 | Page charge sans erreur | ✅ | Grid layout 3 colonnes |
+| 6.65 | Page charge sans erreur | ✅ | Grid layout 3 colonnes responsive |
 | 6.66 | Liste des templates affichée | ✅ | Cards avec nom + sujet |
 | 6.67 | Bouton "Nouveau Template" ouvre modal | ✅ | TemplateCreateModal |
 | 6.68 | Modal création avec éditeur Unlayer | ⏳ | Drag & drop email builder |
 | 6.69 | Sauvegarde template → Reload liste | ⏳ | À tester |
 | 6.70 | Bouton "Aperçu" affiche preview | ✅ | Modal preview desktop/mobile ✨ **NOUVEAU** |
-| 6.71 | Bouton "Modifier" ouvre éditeur | ✅ | Modal éditeur + preview côte à côte ✨ **NOUVEAU** |
+| 6.71 | Bouton "Modifier" ouvre éditeur | ✅ | Modal split-view éditeur + preview ✨ **NOUVEAU** |
 | 6.72 | Édition en temps réel dans preview | ✅ | Preview se met à jour automatiquement |
-| 6.73 | Enregistrement modifications | ✅ | PUT /email/templates/{id} |
-| 6.74 | Bouton "Supprimer" avec confirmation | ✅ | useConfirm dialog (danger) |
-| 6.75 | Template utilisé dans campagne non supprimable | ❌ | À IMPLÉMENTER - Check référence |
-| 6.76 | État vide affiche CTA création | ✅ | Icon + message + bouton |
-| 6.77 | Date création affichée | ✅ | Format DD/MM/YYYY |
+| 6.73 | Enregistrement modifications | ✅ | PUT /email/templates/{id} avec cache invalidation |
+| 6.74 | Modal responsive (mobile/desktop) | ✅ | Layout vertical mobile, horizontal desktop |
+| 6.75 | Bouton "Supprimer" avec confirmation | ✅ | useConfirm dialog (danger) |
+| 6.76 | Template utilisé dans campagne non supprimable | ✅ | Backend check + erreur 400 |
+| 6.77 | État vide affiche CTA création | ✅ | Icon + message + bouton |
+| 6.78 | Date création affichée | ✅ | Format DD/MM/YYYY |
+| 6.79 | Envoi email de test depuis preview | ✅ | Input email + bouton "Envoyer un test" ✨ **NOUVEAU** |
+| 6.80 | Email de test reçu correctement | ✅ | Variables remplacées, préfixe [TEST] |
+| 6.81 | Gestion erreur config email manquante | ✅ | Message clair si pas de config active |
 
 ### Tests Workflow Complet Campagne
 
@@ -996,11 +1001,11 @@ TOUS les confirm() de l'annuaire utilisent maintenant ConfirmDialog:
   1. ✅ Template Preview Modal - Test #6.70
      - Composant: crm-frontend/components/email/TemplatePreviewModal.tsx
      - Features: Toggle Desktop/Mobile, HTML rendering, Fake email client header
-     - Bouton "Envoyer un test" présent (pas encore implémenté)
      - Bouton X pour fermer le modal
+     - ✨ **Envoi email de test intégré** (Tests #6.79-6.81)
      - Modifié: app/dashboard/marketing/templates/page.tsx
 
-  2. ✅ Template Edit Modal - Tests #6.71-6.73 ✨ **NOUVEAU**
+  2. ✅ Template Edit Modal - Tests #6.71-6.74 ✨ **NOUVEAU**
      - Composant: crm-frontend/components/email/TemplateEditModal.tsx
      - Features:
        * Split-view 50/50: Éditeur (gauche) + Preview (droite)
@@ -1008,10 +1013,10 @@ TOUS les confirm() de l'annuaire utilisent maintenant ConfirmDialog:
        * Toggle Desktop/Mobile pour le preview
        * Édition champs: Nom, Sujet, Preheader, HTML Content
        * Variables cliquables (insertion automatique dans le contenu)
-       * Sauvegarde via PUT /email/templates/{id}
+       * Sauvegarde via PUT /email/templates/{id} avec cache invalidation React Query
        * Bouton X + Bouton Annuler + Bouton Enregistrer
        * Loading state pendant la sauvegarde
-       * **Responsive**:
+       * **Responsive complet**:
          - Layout vertical sur mobile (éditeur en haut, preview en bas)
          - Layout horizontal sur desktop (split 50/50)
          - Tailles de texte adaptatives (text-xs → md:text-sm)
@@ -1021,7 +1026,27 @@ TOUS les confirm() de l'annuaire utilisent maintenant ConfirmDialog:
            * Desktop: Dans le header principal (en haut à droite)
            * Mobile: Dans le header de la section "Aperçu" (sticky)
            * Style compact sur mobile (icônes uniquement, fond blanc/gris)
-     - Modifié: app/dashboard/marketing/templates/page.tsx (ajout bouton "Modifier")
+     - Modifié: app/dashboard/marketing/templates/page.tsx (ajout bouton "Modifier", layout responsive)
+
+  3. ✅ Envoi Email de Test - Tests #6.79-6.81 ✨ **NOUVEAU**
+     - Endpoint: POST /api/v1/email/templates/{id}/send-test
+     - Fichier backend: crm-backend/api/routes/email_campaigns.py:118-203
+     - Fonctionnalités:
+       * Récupération configuration email active (EmailConfiguration)
+       * Décryptage clé API via EmailConfigurationService
+       * Remplacement variables template avec données de test
+       * Envoi direct via API Resend
+       * Retour response Resend (email ID)
+       * Gestion erreurs:
+         - 400: Aucune configuration email active
+         - 500: Erreur envoi (détail Resend API)
+     - Fichier frontend: crm-frontend/components/email/TemplatePreviewModal.tsx
+       * Input email avec validation
+       * Bouton "Envoyer un test" avec loading state
+       * Feedback visuel: ✅ succès ou ❌ erreur
+       * Auto-clear après 3 secondes
+     - Test réussi: Email reçu avec ID 9ac5ba5b-5564-436f-87b7-ddcea6447d1d
+     - Configuration DB activée: email_configurations.id = 2 (Resend)
 
   3. ✅ Template Preview Modal - Améliorations responsive ✨ **AMÉLIORÉ**
      - Composant: crm-frontend/components/email/TemplatePreviewModal.tsx

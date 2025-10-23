@@ -115,6 +115,97 @@ async def delete_template(
     return None
 
 
+@router.post("/templates/{template_id}/send-test")
+async def send_test_email_from_template(
+    template_id: int,
+    test_email: str = Query(..., description="Email du destinataire de test"),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """Envoie un email de test à partir d'un template"""
+    from models.email import EmailTemplate
+    from fastapi import HTTPException
+
+    # Récupérer le template
+    template = db.query(EmailTemplate).filter(EmailTemplate.id == template_id).first()
+    if not template:
+        raise HTTPException(status_code=404, detail="Template not found")
+
+    # Données de test
+    test_data = {
+        "first_name": "Test",
+        "last_name": "User",
+        "full_name": "Test User",
+        "email": test_email,
+        "organisation_name": "Organisation Test",
+        "country": "France",
+        "language": "fr",
+    }
+
+    # Remplacer les variables dans le sujet et le corps
+    subject = template.subject
+    body_html = template.html_content
+
+    for key, value in test_data.items():
+        subject = subject.replace(f"{{{{{key}}}}}", str(value))
+        body_html = body_html.replace(f"{{{{{key}}}}}", str(value))
+
+    try:
+        # Récupérer la configuration email active
+        from models.email_config import EmailConfiguration
+        from services.email_config_service import EmailConfigurationService
+        import os
+        import requests
+
+        email_config = db.query(EmailConfiguration).filter(
+            EmailConfiguration.is_active == True
+        ).first()
+
+        if not email_config:
+            raise HTTPException(
+                status_code=400,
+                detail="Aucune configuration email active. Veuillez configurer une API email dans les paramètres."
+            )
+
+        # Décrypter la clé API
+        config_service = EmailConfigurationService(db)
+        decrypted_config = config_service.get_decrypted_config(email_config)
+        api_key = decrypted_config["api_key"]
+
+        # Préparer le from_email
+        from_email = email_config.from_email or "onboarding@resend.dev"
+        from_name = email_config.from_name or "ALFORIS Finance"
+
+        # Envoyer directement via l'API Resend
+        response = requests.post(
+            "https://api.resend.com/emails",
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "from": f"{from_name} <{from_email}>",
+                "to": [test_email],
+                "subject": f"[TEST] {subject}",
+                "html": body_html,
+            }
+        )
+
+        if response.status_code not in [200, 201]:
+            raise Exception(f"Resend API error: {response.text}")
+
+        return {
+            "message": "Test email sent successfully",
+            "to_email": test_email,
+            "template_id": template_id,
+            "resend_response": response.json()
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to send test email: {str(e)}")
+
+
 # ============= RECIPIENT COUNT =============
 
 class RecipientFilters(BaseModel):

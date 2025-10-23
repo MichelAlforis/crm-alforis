@@ -168,7 +168,7 @@ class EmailCampaign(BaseModel):
         default=EmailCampaignStatus.DRAFT,
     )
     provider = Column(
-        Enum(EmailProvider, name="emailprovider"),
+        Enum(EmailProvider, name="emailprovider", values_callable=lambda x: [e.value for e in x]),
         nullable=False,
         default=EmailProvider.SENDGRID,
     )

@@ -170,7 +170,15 @@ class EmailCampaignService(BaseService[EmailCampaign, EmailCampaignCreate, Email
         return campaigns, total
 
     async def create(self, payload: EmailCampaignCreate) -> EmailCampaign:
-        data = payload.model_dump(exclude={"steps"}, exclude_none=True)
+        # Ne PAS utiliser model_dump() car il sérialise les enums en string
+        # Au lieu de ça, on récupère directement les attributs du payload pour garder les objets Enum Python
+        data = {}
+        for field_name in payload.model_fields:
+            if field_name != 'steps':
+                field_value = getattr(payload, field_name, None)
+                if field_value is not None:
+                    data[field_name] = field_value
+
         steps_payload = payload.steps or []
         campaign = EmailCampaign(**data)
 
