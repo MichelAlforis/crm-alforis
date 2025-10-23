@@ -1364,8 +1364,10 @@ OU Via .env (crm-backend/.env):
 ## 6.7 MODULE ABONNEMENTS AUX CAMPAGNES 🔔
 
 **Date d'implémentation :** 2025-10-23
-**Version :** 1.0
+**Version :** 1.1
+**Dernière mise à jour UX :** 2025-10-23 14:45
 **Documentation complète :** [FEATURE_CAMPAIGN_SUBSCRIPTIONS.md](FEATURE_CAMPAIGN_SUBSCRIPTIONS.md)
+**Guide de test :** [GUIDE_TEST_ABONNEMENTS.md](GUIDE_TEST_ABONNEMENTS.md)
 
 ### ✅ FONCTIONNALITÉ COMPLÉTÉE (100%)
 
@@ -1416,10 +1418,10 @@ Cette fonctionnalité permet d'abonner manuellement des personnes ou organisatio
 |---|------|-----------|--------|-----------|
 | 6.107 | Section "Abonnements aux campagnes" visible | Person page | ⬜ | Affichée après rattachements |
 | 6.108 | Section "Abonnements aux campagnes" visible | Organisation page | ⬜ | Affichée après timeline |
-| 6.109 | Bouton "Abonner à une campagne" cliquable | Both pages | ⬜ | Ouvre modal sélection |
-| 6.110 | Modal sélection campagne s'ouvre | Modal | ⬜ | Liste campagnes disponibles |
+| 6.109 | Bouton "Ajouter à une campagne" cliquable | Both pages | ⬜ | Ouvre modal sélection |
+| 6.110 | Modal "Ajouter à une campagne" s'ouvre | Modal | ⬜ | Liste campagnes disponibles |
 | 6.111 | Campagnes déjà abonnées filtrées | Modal | ⬜ | N'apparaissent pas dans liste |
-| 6.112 | Validation abonnement → Toast succès | Modal | ⬜ | "Abonné à la campagne X" |
+| 6.112 | Validation abonnement → Toast succès | Modal | ⬜ | Bouton "Valider" (pas "Abonner") |
 | 6.113 | Liste abonnements actifs affichée | Card | ⬜ | Nom campagne, date, statut |
 | 6.114 | Bouton désabonnement visible | Card | ⬜ | Icône poubelle rouge |
 | 6.115 | Désabonnement → Toast succès | Card | ⬜ | "Désabonnement réussi" |
@@ -1479,6 +1481,7 @@ Statut: ✅ IMPLÉMENTÉ - ⏳ TESTS EN COURS
 - **Cascade DELETE:** Suppression automatique si campagne/entité supprimée
 - **Cache:** Invalidation automatique sur toutes les queries liées
 - **Events:** `EMAIL_CAMPAIGN_UPDATED` émis pour chaque opération
+- **UX:** Libellés optimisés - "Ajouter" au lieu de "Abonner" (évite confusion avec "Abandonner")
 
 ---
 
