@@ -59,8 +59,11 @@ export const Step2Recipients: React.FC<Step2RecipientsProps> = ({
     const list = mailingLists.find(l => l.id === Number(listId))
     if (!list) return
 
-    // Appliquer les filtres de la liste
-    onChange(list.filters)
+    // Appliquer les filtres de la liste + ajouter target_type depuis la liste
+    onChange({
+      ...list.filters,
+      target_type: list.target_type as any, // Ajouter target_type manquant
+    })
     setSelectedListId(listId)
 
     // Marquer comme utilisée
