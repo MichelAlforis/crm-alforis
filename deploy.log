@@ -5182,3 +5182,15 @@ time="2025-10-22T19:55:20Z" level=warning msg="Found orphan containers ([crm-alf
  Container crm-alforis-frontend-1  Starting
  Container crm-alforis-frontend-1  Started
 FAILED: No config file 'alembic.ini' found, or file has no '[alembic]' section
+[2025-10-23 23:20:50] 🔄 Update depuis git
+From https://github.com/MichelAlforis/crm-alforis
+ * branch              main       -> FETCH_HEAD
+   2c90c092..dcfc3ecc  main       -> origin/main
+error: The following untracked working tree files would be overwritten by merge:
+	crm-backend/scripts/seed_local_db.py
+	crm-backend/scripts/seed_local_db_simple.py
+	scripts/seed_local_db.py
+	scripts/seed_local_db_simple.py
+Please move or remove them before you merge.
+Aborting
+Updating 2c90c092..dcfc3ecc

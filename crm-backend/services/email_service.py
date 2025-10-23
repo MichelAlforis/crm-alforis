@@ -502,6 +502,48 @@ class EmailDeliveryService:
             logger.info("email_send_already_processed", extra={"send_id": send.id, "status": send.status.value})
             return send
 
+        # ⚠️ RGPD: Vérifier si le destinataire s'est désabonné
+        from models.email import UnsubscribedEmail
+
+        is_unsubscribed = False
+        unsubscribe_reason = None
+
+        # 1. Vérifier Person.email_unsubscribed
+        if send.recipient_person and send.recipient_person.email_unsubscribed:
+            is_unsubscribed = True
+            unsubscribe_reason = f"Person {send.recipient_person.id} a le flag email_unsubscribed = True"
+
+        # 2. Vérifier Organisation.email_unsubscribed
+        if send.organisation and send.organisation.email_unsubscribed:
+            is_unsubscribed = True
+            unsubscribe_reason = f"Organisation {send.organisation.id} a le flag email_unsubscribed = True"
+
+        # 3. Vérifier la blacklist globale unsubscribed_emails
+        if send.recipient_email and not is_unsubscribed:
+            unsubscribed_entry = self.db.query(UnsubscribedEmail).filter(
+                UnsubscribedEmail.email == send.recipient_email.lower()
+            ).first()
+            if unsubscribed_entry:
+                is_unsubscribed = True
+                unsubscribe_reason = f"Email dans la blacklist globale (unsubscribed_at: {unsubscribed_entry.unsubscribed_at})"
+
+        # Si désabonné, marquer comme FAILED et ne pas envoyer
+        if is_unsubscribed:
+            send.status = EmailSendStatus.FAILED
+            send.error_message = f"RGPD: Email bloqué - Destinataire désabonné. {unsubscribe_reason}"
+            logger.warning(
+                "email_send_blocked_unsubscribed",
+                extra={
+                    "send_id": send.id,
+                    "recipient_email": send.recipient_email,
+                    "reason": unsubscribe_reason
+                }
+            )
+            self.db.add(send)
+            self.db.commit()
+            self.db.refresh(send)
+            return send
+
         template = self._resolve_template(send)
         if not template:
             raise ValidationError("Template introuvable pour l'envoi")
