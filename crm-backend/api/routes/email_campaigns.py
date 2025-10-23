@@ -130,10 +130,12 @@ async def count_recipients(
 
     elif filters.target_type == 'contacts':
         # Contacts principaux = personnes liées à une organisation comme contact principal
+        # On accepte soit email professionnel soit personal_email
+        from sqlalchemy import or_
         query = db.query(Person).join(PersonOrganizationLink).filter(
             and_(
                 PersonOrganizationLink.is_primary == True,
-                Person.email.isnot(None)
+                or_(Person.email.isnot(None), Person.personal_email.isnot(None))
             )
         )
 
