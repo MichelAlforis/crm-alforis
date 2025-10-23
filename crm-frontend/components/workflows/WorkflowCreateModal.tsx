@@ -4,9 +4,14 @@
 'use client'
 
 import React, { useState } from 'react'
-import { X, Zap, AlertCircle } from 'lucide-react'
+import { X, Zap, AlertCircle, Workflow } from 'lucide-react'
 import { Input } from '@/components/shared/Input'
 import { Select } from '@/components/shared/Select'
+import dynamic from 'next/dynamic'
+import type { Node, Edge } from 'reactflow'
+
+// Import dynamique pour éviter SSR issues avec ReactFlow
+const WorkflowBuilder = dynamic(() => import('./WorkflowBuilder'), { ssr: false })
 
 interface WorkflowCreateModalProps {
   isOpen: boolean
@@ -65,6 +70,7 @@ export default function WorkflowCreateModal({
 }: WorkflowCreateModalProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [useVisualBuilder, setUseVisualBuilder] = useState(true)
 
   // Données du formulaire
   const [name, setName] = useState('')
@@ -73,6 +79,17 @@ export default function WorkflowCreateModal({
   const [triggerConfig, setTriggerConfig] = useState('{}')
   const [conditions, setConditions] = useState('')
   const [actions, setActions] = useState(EXAMPLE_ACTIONS)
+
+  // Builder visuel
+  const [builderNodes, setBuilderNodes] = useState<Node[]>([
+    {
+      id: 'trigger-1',
+      type: 'trigger',
+      position: { x: 250, y: 50 },
+      data: { label: 'Déclencheur' },
+    },
+  ])
+  const [builderEdges, setBuilderEdges] = useState<Edge[]>([])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -102,13 +119,29 @@ export default function WorkflowCreateModal({
       }
 
       let parsedActions = []
-      try {
-        parsedActions = JSON.parse(actions)
-        if (!Array.isArray(parsedActions)) {
-          throw new Error('Actions doit être un tableau')
+
+      // Si mode visuel, convertir les nodes en actions
+      if (useVisualBuilder) {
+        parsedActions = builderNodes
+          .filter(node => node.type === 'action')
+          .map(node => ({
+            type: node.data.type,
+            config: node.data.config || {},
+          }))
+
+        if (parsedActions.length === 0) {
+          throw new Error('Veuillez ajouter au moins une action au workflow')
         }
-      } catch (err) {
-        throw new Error('Actions invalides (JSON mal formé)')
+      } else {
+        // Mode JSON
+        try {
+          parsedActions = JSON.parse(actions)
+          if (!Array.isArray(parsedActions)) {
+            throw new Error('Actions doit être un tableau')
+          }
+        } catch (err) {
+          throw new Error('Actions invalides (JSON mal formé)')
+        }
       }
 
       const workflowData = {
@@ -158,7 +191,7 @@ export default function WorkflowCreateModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+      <div className={`bg-white rounded-lg shadow-xl w-full max-h-[90vh] overflow-hidden flex flex-col ${useVisualBuilder ? 'max-w-6xl' : 'max-w-3xl'}`}>
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -183,11 +216,25 @@ export default function WorkflowCreateModal({
               </div>
             )}
 
-            {/* Info MVP */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <p className="text-sm text-blue-800">
-                <strong>Version MVP :</strong> Les conditions et actions doivent être saisies en JSON.
-                Une interface visuelle sera ajoutée prochainement.
+            {/* Toggle Mode */}
+            <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <Workflow className="w-5 h-5 text-purple-600" />
+                  <span className="font-medium text-purple-900">Mode de configuration</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setUseVisualBuilder(!useVisualBuilder)}
+                  className="px-3 py-1 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700"
+                >
+                  {useVisualBuilder ? 'Passer en JSON' : 'Passer en visuel'}
+                </button>
+              </div>
+              <p className="text-sm text-purple-700">
+                {useVisualBuilder
+                  ? '✨ Builder visuel activé - Glissez-déposez vos actions'
+                  : '⚙️ Mode JSON - Pour les utilisateurs avancés'}
               </p>
             </div>
 
@@ -264,26 +311,40 @@ export default function WorkflowCreateModal({
               </div>
             </div>
 
-            {/* Actions */}
-            <div className="space-y-3">
-              <h3 className="font-medium text-gray-900 border-b pb-2">Actions *</h3>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Actions JSON (tableau)
-                </label>
-                <textarea
-                  value={actions}
-                  onChange={(e) => setActions(e.target.value)}
-                  rows={10}
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono focus:ring-2 focus:ring-bleu focus:outline-none"
+            {/* Actions - Conditionnel selon mode */}
+            {useVisualBuilder ? (
+              <div className="space-y-3">
+                <h3 className="font-medium text-gray-900 border-b pb-2">Workflow visuel *</h3>
+                <WorkflowBuilder
+                  initialNodes={builderNodes}
+                  initialEdges={builderEdges}
+                  onUpdate={(nodes, edges) => {
+                    setBuilderNodes(nodes)
+                    setBuilderEdges(edges)
+                  }}
                 />
-                <p className="text-xs text-gray-500 mt-1">
-                  Types disponibles : create_task, send_email, send_notification, update_field, assign_user, add_tag
-                </p>
               </div>
-            </div>
+            ) : (
+              <div className="space-y-3">
+                <h3 className="font-medium text-gray-900 border-b pb-2">Actions (JSON) *</h3>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Actions JSON (tableau)
+                  </label>
+                  <textarea
+                    value={actions}
+                    onChange={(e) => setActions(e.target.value)}
+                    rows={10}
+                    required={!useVisualBuilder}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono focus:ring-2 focus:ring-bleu focus:outline-none"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Types disponibles : create_task, send_email, send_notification, update_field, assign_user, add_tag
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Footer */}
@@ -301,7 +362,7 @@ export default function WorkflowCreateModal({
               </button>
               <button
                 type="submit"
-                disabled={loading || !name || !actions}
+                disabled={loading || !name || (useVisualBuilder && builderNodes.filter(n => n.type === 'action').length === 0)}
                 className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {loading ? 'Création...' : 'Créer le workflow'}
