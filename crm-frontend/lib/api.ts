@@ -67,9 +67,7 @@ import type { ApiError } from './types'
 
 // En production, utiliser un chemin relatif pour éviter les problèmes CORS et mixed content
 // Le reverse proxy Nginx fera le routage vers l'API backend
-const API_BASE_URL = typeof window !== 'undefined' && window.location.hostname !== 'localhost'
-  ? '/api/v1'  // Production: chemin relatif (Nginx proxy)
-  : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1')  // Dev: localhost
+const API_BASE_URL = 'http://localhost:8000/api/v1'  // TOUJOURS utiliser l'URL directe en dev
 
 // ============= TYPES INTERNES =============
 
