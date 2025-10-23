@@ -1,35 +1,47 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Mail, Eye, MousePointerClick, Ban, Send, Loader2, PlayCircle, Pause, Edit, Trash2 } from 'lucide-react'
+import { ArrowLeft, Mail, Eye, MousePointerClick, Ban, Send, Edit, Trash2, Plus, Clock, ChevronLeft, ChevronRight, TrendingUp } from 'lucide-react'
 import { Card, Alert, Button } from '@/components/shared'
-import { Modal } from '@/components/shared/Modal'
-import { Input } from '@/components/shared/Input'
-import { useEmailCampaign, useEmailCampaignStats, useEmailCampaigns } from '@/hooks/useEmailAutomation'
+import { useEmailCampaign, useEmailCampaignStats } from '@/hooks/useEmailAutomation'
 import { useToast } from '@/components/ui/Toast'
 import { apiClient } from '@/lib/api'
 import { useConfirm } from '@/hooks/useConfirm'
 
-const STATUS_COLORS = {
-  draft: 'bg-gray-100 text-gray-700',
-  scheduled: 'bg-blue-100 text-blue-700',
-  sending: 'bg-orange-100 text-orange-700',
-  sent: 'bg-green-100 text-green-700',
-  failed: 'bg-red-100 text-red-700',
-  completed: 'bg-green-100 text-green-700',
-  paused: 'bg-yellow-100 text-yellow-700',
+interface EmailSend {
+  id: number
+  campaign_id: number
+  status: string
+  scheduled_at?: string
+  sent_at?: string
+  created_at: string
+  total_recipients: number
+  sent_count: number
+  delivered_count: number
+  opened_count: number
+  clicked_count: number
+  bounced_count: number
+  failed_count: number
 }
 
-const STATUS_LABELS = {
-  draft: 'Brouillon',
-  scheduled: 'Programmée',
-  sending: 'En cours',
-  sent: 'Envoyée',
-  failed: 'Échouée',
-  completed: 'Terminée',
-  paused: 'En pause',
+const getStatusBadge = (status: string) => {
+  const statusMap: Record<string, { label: string; className: string }> = {
+    queued: { label: 'En file', className: 'bg-gray-100 text-gray-700' },
+    scheduled: { label: 'Programmé', className: 'bg-blue-100 text-blue-700' },
+    sending: { label: 'En cours', className: 'bg-yellow-100 text-yellow-700' },
+    sent: { label: 'Envoyé', className: 'bg-green-100 text-green-700' },
+    completed: { label: 'Terminé', className: 'bg-success/20 text-success' },
+    failed: { label: 'Échec', className: 'bg-red-100 text-red-700' },
+    cancelled: { label: 'Annulé', className: 'bg-gray-100 text-gray-700' },
+  }
+  const config = statusMap[status] || { label: status, className: 'bg-gray-100 text-gray-700' }
+  return (
+    <span className={`px-2 py-1 rounded text-xs font-medium ${config.className}`}>
+      {config.label}
+    </span>
+  )
 }
 
 export default function CampaignDetailPage() {
@@ -39,452 +51,372 @@ export default function CampaignDetailPage() {
 
   const { data: campaign, isLoading, error, refetch } = useEmailCampaign(campaignId)
   const { data: stats } = useEmailCampaignStats(campaignId)
-  const { deleteCampaign } = useEmailCampaigns()
   const { showToast } = useToast()
   const { confirm, ConfirmDialogComponent } = useConfirm()
 
-  const [isPreparing, setIsPreparing] = useState(false)
-  const [isStarting, setIsStarting] = useState(false)
-  const [isPausing, setIsPausing] = useState(false)
-  const [showTestEmailDialog, setShowTestEmailDialog] = useState(false)
-  const [testEmail, setTestEmail] = useState('')
-  const [isSendingTest, setIsSendingTest] = useState(false)
+  const [sends, setSends] = useState<EmailSend[]>([])
+  const [totalSends, setTotalSends] = useState(0)
+  const [page, setPage] = useState(1)
+  const [limit] = useState(10)
+  const [isLoadingSends, setIsLoadingSends] = useState(false)
 
-  const handlePrepareCampaign = () => {
-    confirm({
-      title: 'Préparer la campagne',
-      message: 'Cette action va générer tous les emails personnalisés. Continuer ?',
-      confirmText: 'Préparer',
-      cancelText: 'Annuler',
-      type: 'warning',
-      onConfirm: async () => {
-        setIsPreparing(true)
-        try {
-          const response = await apiClient.post(`/email/campaigns/${campaignId}/prepare`)
-          showToast({
-            type: 'success',
-            title: `${response.data.emails_prepared} emails préparés avec succès`,
-          })
-          refetch()
-        } catch (err: any) {
-          showToast({
-            type: 'error',
-            title: err?.response?.data?.detail || 'Erreur lors de la préparation',
-          })
-        } finally {
-          setIsPreparing(false)
-        }
-      },
-    })
-  }
-
-  const handleStartCampaign = () => {
-    confirm({
-      title: 'Démarrer la campagne',
-      message: `Êtes-vous sûr de vouloir démarrer l'envoi de cette campagne ? Cette action ne peut pas être annulée.`,
-      confirmText: 'Démarrer l\'envoi',
-      cancelText: 'Annuler',
-      type: 'danger',
-      onConfirm: async () => {
-        setIsStarting(true)
-        try {
-          await apiClient.post(`/email/campaigns/${campaignId}/start`)
-          showToast({
-            type: 'success',
-            title: 'Campagne démarrée avec succès',
-          })
-          refetch()
-        } catch (err: any) {
-          showToast({
-            type: 'error',
-            title: err?.response?.data?.detail || 'Erreur lors du démarrage',
-          })
-        } finally {
-          setIsStarting(false)
-        }
-      },
-    })
-  }
-
-  const handlePauseCampaign = async () => {
-    setIsPausing(true)
-    try {
-      await apiClient.post(`/email/campaigns/${campaignId}/pause`)
-      showToast({
-        type: 'success',
-        title: 'Campagne mise en pause',
-      })
-      refetch()
-    } catch (err: any) {
-      showToast({
-        type: 'error',
-        title: err?.response?.data?.detail || 'Erreur lors de la mise en pause',
-      })
-    } finally {
-      setIsPausing(false)
+  // Charger les batches d'envois avec pagination
+  useEffect(() => {
+    const loadSends = async () => {
+      setIsLoadingSends(true)
+      try {
+        const skip = (page - 1) * limit
+        const response = await apiClient.get<{ items: EmailSend[], total: number }>(
+          `/email/campaigns/${campaignId}/batches`,
+          { params: { skip, limit } }
+        )
+        setSends(response.data.items || [])
+        setTotalSends(response.data.total || 0)
+      } catch (error) {
+        console.error('Failed to load batches:', error)
+      } finally {
+        setIsLoadingSends(false)
+      }
     }
+
+    if (campaignId) {
+      loadSends()
+    }
+  }, [campaignId, page, limit])
+
+  const handleCreateNewSend = () => {
+    router.push(`/dashboard/marketing/campaigns/${campaignId}/new`)
+  }
+
+  const handleViewSendStats = (sendId: number) => {
+    router.push(`/dashboard/marketing/campaigns/${campaignId}/sends/${sendId}`)
   }
 
   const handleEditCampaign = () => {
     router.push(`/dashboard/marketing/campaigns/${campaignId}/edit`)
   }
 
-  const handleDeleteCampaign = () => {
+  const handleDeleteCampaign = async () => {
     if (!campaign) return
 
-    // Vérifier le statut avant suppression
-    if (campaign.status === 'sending' || campaign.status === 'scheduled') {
-      confirm({
-        title: 'Suppression impossible',
-        message: 'Vous ne pouvez pas supprimer une campagne en cours d\'envoi ou programmée. Veuillez d\'abord la mettre en pause.',
-        type: 'warning',
-        confirmText: 'Compris',
-        onConfirm: () => {},
-      })
-      return
-    }
-
-    confirm({
+    const confirmed = await confirm({
       title: 'Supprimer la campagne ?',
-      message: `Êtes-vous sûr de vouloir supprimer "${campaign.name}" ? Cette action est irréversible.`,
+      message: `Êtes-vous sûr de vouloir supprimer "${campaign.name}" ? Cette action supprimera également tous les envois associés.`,
       type: 'danger',
       confirmText: 'Supprimer',
       cancelText: 'Annuler',
-      onConfirm: async () => {
-        try {
-          await deleteCampaign(campaign.id)
-          showToast({
-            type: 'success',
-            title: 'Campagne supprimée',
-          })
-          router.push('/dashboard/marketing/campaigns')
-        } catch (error) {
-          // Error already handled by hook
-        }
-      },
     })
-  }
 
-  const handlePreviewCampaign = () => {
-    router.push(`/dashboard/marketing/campaigns/${campaignId}/preview`)
-  }
-
-  const handleSendTestEmail = async () => {
-    if (!testEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(testEmail)) {
-      showToast({
-        type: 'error',
-        title: 'Email invalide',
-      })
-      return
-    }
-
-    setIsSendingTest(true)
-    try {
-      await apiClient.post(`/email/campaigns/${campaignId}/send-test`, null, {
-        params: { test_email: testEmail }
-      })
-      showToast({
-        type: 'success',
-        title: `Email de test envoyé à ${testEmail}`,
-      })
-      setShowTestEmailDialog(false)
-      setTestEmail('')
-    } catch (err: any) {
-      showToast({
-        type: 'error',
-        title: err?.response?.data?.detail || 'Erreur lors de l\'envoi du test',
-      })
-    } finally {
-      setIsSendingTest(false)
+    if (confirmed) {
+      try {
+        await apiClient.delete(`/email/campaigns/${campaign.id}`)
+        showToast({
+          type: 'success',
+          title: 'Campagne supprimée',
+        })
+        router.push('/dashboard/marketing/campaigns')
+      } catch (error: any) {
+        showToast({
+          type: 'error',
+          title: 'Erreur',
+          message: error?.response?.data?.detail || 'Impossible de supprimer la campagne',
+        })
+      }
     }
   }
 
   if (isLoading) return <div className="p-6">Chargement...</div>
-  if (error || !campaign) return <Alert type="error" message="Campagne introuvable" />
+  if (error || !campaign) return <div className="p-6"><Alert type="error" message="Campagne introuvable" /></div>
 
-  const canEdit = campaign.status === 'draft'
-  const canPrepare = campaign.status === 'draft'
-  const canStart = campaign.status === 'scheduled' || campaign.status === 'paused'
-  const canPause = campaign.status === 'sending'
-  const canDelete = campaign.status !== 'sending' && campaign.status !== 'scheduled'
+  const totalPages = Math.ceil(totalSends / limit)
 
   return (
     <div className="space-y-6 p-6">
+      {/* Header */}
       <div>
-        <Link href="/dashboard/marketing/campaigns" className="inline-flex items-center text-sm text-bleu hover:underline mb-2">
+        <Link href="/dashboard/marketing/campaigns" className="inline-flex items-center text-sm text-primary hover:underline mb-2">
           <ArrowLeft className="w-4 h-4 mr-1" />
           Retour aux campagnes
         </Link>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-ardoise">{campaign.name}</h1>
-            <div className="flex items-center gap-3 mt-2">
-              <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${STATUS_COLORS[campaign.status as keyof typeof STATUS_COLORS] || 'bg-gray-100 text-gray-700'}`}>
-                {STATUS_LABELS[campaign.status as keyof typeof STATUS_LABELS] || campaign.status}
-              </span>
-              {campaign.scheduled_at && (
-                <span className="text-sm text-gray-600">
-                  Programmée pour: {new Date(campaign.scheduled_at).toLocaleString('fr-FR')}
-                </span>
-              )}
-            </div>
+            <h1 className="text-3xl font-bold text-text-primary">{campaign.name}</h1>
+            {campaign.description && (
+              <p className="text-text-secondary mt-2">{campaign.description}</p>
+            )}
           </div>
           <div className="flex items-center gap-2">
-            {canEdit && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleEditCampaign}
-                leftIcon={<Edit className="w-4 h-4" />}
-              >
-                Modifier
-              </Button>
-            )}
-            {canDelete && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleDeleteCampaign}
-                leftIcon={<Trash2 className="w-4 h-4 text-error" />}
-              >
-                Supprimer
-              </Button>
-            )}
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setShowTestEmailDialog(true)}
-              leftIcon={<Send className="w-4 h-4" />}
+              onClick={handleEditCampaign}
+              leftIcon={<Edit className="w-4 h-4" />}
             >
-              Envoyer test
+              Modifier
             </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={handlePreviewCampaign}
-              leftIcon={<Eye className="w-4 h-4" />}
-            >
-              Prévisualiser
-            </Button>
-            {canPrepare && (
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={handlePrepareCampaign}
-                isLoading={isPreparing}
-                leftIcon={<Loader2 className="w-4 h-4" />}
-              >
-                Préparer
-              </Button>
-            )}
-            {canStart && (
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={handleStartCampaign}
-                isLoading={isStarting}
-                leftIcon={<PlayCircle className="w-4 h-4" />}
-              >
-                Démarrer l'envoi
-              </Button>
-            )}
-            {canPause && (
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={handlePauseCampaign}
-                isLoading={isPausing}
-                leftIcon={<Pause className="w-4 h-4" />}
-              >
-                Mettre en pause
-              </Button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="text-center p-6">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 mb-2">
-            <Mail className="w-6 h-6 text-blue-600" />
-          </div>
-          <div className="text-3xl font-bold text-bleu">{stats?.total_sent || 0}</div>
-          <p className="text-gray-600 text-sm mt-1">Envoyés</p>
-        </Card>
-
-        <Card className="text-center p-6">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-green-100 mb-2">
-            <Eye className="w-6 h-6 text-green-600" />
-          </div>
-          <div className="text-3xl font-bold text-green-600">
-            {stats?.opens || 0}
-          </div>
-          <p className="text-gray-600 text-sm mt-1">
-            Ouvertures ({stats?.open_rate ? (stats.open_rate * 100).toFixed(1) : '0'}%)
-          </p>
-        </Card>
-
-        <Card className="text-center p-6">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-purple-100 mb-2">
-            <MousePointerClick className="w-6 h-6 text-purple-600" />
-          </div>
-          <div className="text-3xl font-bold text-purple-600">
-            {stats?.clicks || 0}
-          </div>
-          <p className="text-gray-600 text-sm mt-1">
-            Clics ({stats?.click_rate ? (stats.click_rate * 100).toFixed(1) : '0'}%)
-          </p>
-        </Card>
-
-        <Card className="text-center p-6">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mb-2">
-            <Ban className="w-6 h-6 text-red-600" />
-          </div>
-          <div className="text-3xl font-bold text-red-600">
-            {stats?.bounces || 0}
-          </div>
-          <p className="text-gray-600 text-sm mt-1">
-            Rebonds ({stats?.bounce_rate ? (stats.bounce_rate * 100).toFixed(1) : '0'}%)
-          </p>
-        </Card>
-      </div>
-
-      <Card>
-        <div className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Détails de la campagne</h2>
-          <div className="space-y-4">
-            <div>
-              <p className="text-sm text-gray-600">Nom</p>
-              <p className="font-medium">{campaign.name}</p>
-            </div>
-
-            {campaign.subject && (
-              <div>
-                <p className="text-sm text-gray-600">Objet</p>
-                <p className="font-medium">{campaign.subject}</p>
-              </div>
-            )}
-
-            {campaign.default_template_id && (
-              <div>
-                <p className="text-sm text-gray-600">Template</p>
-                <p className="font-medium">Template #{campaign.default_template_id}</p>
-              </div>
-            )}
-
-            {campaign.provider && (
-              <div>
-                <p className="text-sm text-gray-600">Fournisseur</p>
-                <p className="font-medium capitalize">{campaign.provider}</p>
-              </div>
-            )}
-
-            <div>
-              <p className="text-sm text-gray-600">Créée le</p>
-              <p className="font-medium">{new Date(campaign.created_at).toLocaleString('fr-FR')}</p>
-            </div>
-
-            {campaign.last_sent_at && (
-              <div>
-                <p className="text-sm text-gray-600">Dernier envoi le</p>
-                <p className="font-medium">{new Date(campaign.last_sent_at).toLocaleString('fr-FR')}</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </Card>
-
-      {stats && (
-        <Card>
-          <div className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Statistiques détaillées</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div>
-                <p className="text-sm text-gray-600">Total envoyés</p>
-                <p className="text-2xl font-bold text-bleu">{stats.total_sent}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Total ouvertures</p>
-                <p className="text-2xl font-bold text-green-600">{stats.opens}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Ouvertures uniques</p>
-                <p className="text-2xl font-bold text-green-600">{stats.unique_opens}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Total clics</p>
-                <p className="text-2xl font-bold text-purple-600">{stats.clicks}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Clics uniques</p>
-                <p className="text-2xl font-bold text-purple-600">{stats.unique_clicks}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Total rebonds</p>
-                <p className="text-2xl font-bold text-red-600">{stats.bounces}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Total désinscriptions</p>
-                <p className="text-2xl font-bold text-orange-600">{stats.unsubscribes}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Plaintes spam</p>
-                <p className="text-2xl font-bold text-gray-600">{stats.complaints}</p>
-              </div>
-            </div>
-          </div>
-        </Card>
-      )}
-
-      {/* Modal envoi test */}
-      <Modal
-        isOpen={showTestEmailDialog}
-        onClose={() => {
-          setShowTestEmailDialog(false)
-          setTestEmail('')
-        }}
-        title="Envoyer un email de test"
-        footer={
-          <>
             <Button
               variant="ghost"
-              onClick={() => {
-                setShowTestEmailDialog(false)
-                setTestEmail('')
-              }}
+              size="sm"
+              onClick={handleDeleteCampaign}
+              leftIcon={<Trash2 className="w-4 h-4 text-error" />}
             >
-              Annuler
+              Supprimer
             </Button>
             <Button
               variant="primary"
-              onClick={handleSendTestEmail}
-              isLoading={isSendingTest}
-              leftIcon={<Send className="w-4 h-4" />}
+              size="sm"
+              onClick={handleCreateNewSend}
+              leftIcon={<Plus className="w-4 h-4" />}
             >
-              Envoyer
+              Nouvel envoi
             </Button>
-          </>
-        }
-      >
-        <div className="space-y-4">
-          <p className="text-sm text-text-secondary">
-            Entrez votre adresse email pour recevoir un aperçu de la campagne
-          </p>
-          <Input
-            label="Email de test *"
-            type="email"
-            value={testEmail}
-            onChange={(e) => setTestEmail(e.target.value)}
-            placeholder="votre.email@exemple.com"
-            required
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleSendTestEmail()
-              }
-            }}
-          />
+          </div>
         </div>
-      </Modal>
+      </div>
+
+      {/* Statistiques globales */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="p-4">
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-primary/10 rounded-lg">
+              <Mail className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <p className="text-xs text-text-secondary">Total envoyé</p>
+              <p className="text-2xl font-bold text-text-primary">{stats?.total_sent || 0}</p>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-4">
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-success/10 rounded-lg">
+              <Eye className="w-5 h-5 text-success" />
+            </div>
+            <div>
+              <p className="text-xs text-text-secondary">Taux d'ouverture</p>
+              <p className="text-2xl font-bold text-text-primary">
+                {((stats?.open_rate || 0) * 100).toFixed(1)}%
+              </p>
+              <p className="text-xs text-text-secondary mt-1">
+                {stats?.total_opened || 0} ouvertures
+              </p>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-4">
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-purple-100 rounded-lg">
+              <MousePointerClick className="w-5 h-5 text-purple-600" />
+            </div>
+            <div>
+              <p className="text-xs text-text-secondary">Taux de clic</p>
+              <p className="text-2xl font-bold text-text-primary">
+                {((stats?.click_rate || 0) * 100).toFixed(1)}%
+              </p>
+              <p className="text-xs text-text-secondary mt-1">
+                {stats?.total_clicked || 0} clics
+              </p>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-4">
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-error/10 rounded-lg">
+              <Ban className="w-5 h-5 text-error" />
+            </div>
+            <div>
+              <p className="text-xs text-text-secondary">Taux de rebond</p>
+              <p className="text-2xl font-bold text-text-primary">
+                {((stats?.bounce_rate || 0) * 100).toFixed(1)}%
+              </p>
+              <p className="text-xs text-text-secondary mt-1">
+                {stats?.total_bounced || 0} rebonds
+              </p>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* Liste des envois */}
+      <Card>
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-primary" />
+              Historique des envois
+            </h2>
+          </div>
+
+          {isLoadingSends ? (
+            <div className="text-center py-8 text-text-secondary">Chargement des envois...</div>
+          ) : sends.length === 0 ? (
+            <div className="text-center py-12">
+              <Mail className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <p className="text-text-secondary mb-2">Aucun envoi pour cette campagne</p>
+              <p className="text-sm text-text-tertiary mb-4">
+                Créez votre premier envoi pour démarrer votre campagne email
+              </p>
+              <Button
+                variant="primary"
+                onClick={handleCreateNewSend}
+                leftIcon={<Plus className="w-4 h-4" />}
+              >
+                Créer un envoi
+              </Button>
+            </div>
+          ) : (
+            <>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-muted/10 border-b border-border">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase">
+                        Nom
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase">
+                        Statut
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase">
+                        Destinataires
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase">
+                        Envoyés
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase">
+                        Ouverts
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase">
+                        Cliqués
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase">
+                        Date
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {sends.map((send) => (
+                      <tr key={send.id} className="hover:bg-muted/5 cursor-pointer" onClick={() => handleViewSendStats(send.id)}>
+                        <td className="px-4 py-3">
+                          <div className="font-medium text-text-primary">
+                            {(send as any).name || 'Sans nom'}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex flex-col gap-1">
+                            {getStatusBadge(send.status)}
+                            {send.status === 'scheduled' && send.scheduled_at && (
+                              <span className="text-xs text-text-tertiary flex items-center gap-1">
+                                <Clock className="w-3 h-3" />
+                                {new Date(send.scheduled_at).toLocaleString('fr-FR')}
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className="text-sm font-medium text-text-primary">
+                            {send.total_recipients || 0}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className="text-sm text-text-primary">
+                            {send.sent_count || 0}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex flex-col">
+                            <span className="text-sm text-text-primary">
+                              {send.opened_count || 0}
+                            </span>
+                            {send.sent_count > 0 && (
+                              <span className="text-xs text-text-tertiary">
+                                {((send.opened_count / send.sent_count) * 100).toFixed(1)}%
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex flex-col">
+                            <span className="text-sm text-text-primary">
+                              {send.clicked_count || 0}
+                            </span>
+                            {send.sent_count > 0 && (
+                              <span className="text-xs text-text-tertiary">
+                                {((send.clicked_count / send.sent_count) * 100).toFixed(1)}%
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-sm text-text-secondary">
+                          {send.sent_at
+                            ? new Date(send.sent_at).toLocaleString('fr-FR', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              })
+                            : 'Non envoyé'}
+                        </td>
+                        <td className="px-4 py-3">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleViewSendStats(send.id)
+                            }}
+                            leftIcon={<Eye className="w-4 h-4" />}
+                          >
+                            Voir
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
+                  <p className="text-sm text-text-secondary">
+                    Affichage {((page - 1) * limit) + 1} à {Math.min(page * limit, totalSends)} sur {totalSends}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setPage(p => Math.max(1, p - 1))}
+                      disabled={page === 1}
+                      leftIcon={<ChevronLeft className="w-4 h-4" />}
+                    >
+                      Précédent
+                    </Button>
+                    <span className="text-sm text-text-secondary">
+                      Page {page} sur {totalPages}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                      disabled={page >= totalPages}
+                      rightIcon={<ChevronRight className="w-4 h-4" />}
+                    >
+                      Suivant
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </Card>
 
       {/* Modal de confirmation */}
       <ConfirmDialogComponent />

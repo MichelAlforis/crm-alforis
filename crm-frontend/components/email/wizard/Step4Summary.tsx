@@ -1,12 +1,21 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Check, Mail, Users, Settings, FileText, AlertCircle } from 'lucide-react'
+import { Check, Mail, Users, Settings, TrendingUp, AlertCircle } from 'lucide-react'
 import { Alert } from '@/components/shared/Alert'
 import { apiClient } from '@/lib/api'
 import { RecipientFilters } from '../RecipientSelectorTable'
 
 type EmailProvider = 'resend' | 'sendgrid' | 'mailgun'
+
+interface Produit {
+  id: number
+  name: string
+  isin?: string
+  type: string
+  status: string
+  notes?: string
+}
 
 interface EmailTemplate {
   id: number
@@ -18,6 +27,7 @@ interface EmailTemplate {
 interface Step4SummaryProps {
   name: string
   description: string
+  produit_id: number | null
   template_id: number | null
   recipient_filters: RecipientFilters
   provider: EmailProvider
@@ -31,6 +41,7 @@ interface Step4SummaryProps {
 export const Step4Summary: React.FC<Step4SummaryProps> = ({
   name,
   description,
+  produit_id,
   template_id,
   recipient_filters,
   provider,
@@ -40,7 +51,22 @@ export const Step4Summary: React.FC<Step4SummaryProps> = ({
   delay_between_batches,
   recipientCount,
 }) => {
+  const [produit, setProduit] = useState<Produit | null>(null)
   const [template, setTemplate] = useState<EmailTemplate | null>(null)
+
+  useEffect(() => {
+    if (produit_id) {
+      const loadProduit = async () => {
+        try {
+          const response = await apiClient.get<Produit>(`/produits/${produit_id}`)
+          setProduit(response.data)
+        } catch (error) {
+          console.error('Failed to load produit:', error)
+        }
+      }
+      loadProduit()
+    }
+  }, [produit_id])
 
   useEffect(() => {
     if (template_id) {
@@ -67,15 +93,15 @@ export const Step4Summary: React.FC<Step4SummaryProps> = ({
       {/* Alert de confirmation */}
       <Alert
         type="success"
-        title="Prêt à créer la campagne"
-        message="Vérifiez les informations ci-dessous avant de créer votre campagne email."
+        title="Prêt à lancer la campagne"
+        message="Vérifiez les informations ci-dessous avant de lancer votre campagne marketing."
       />
 
       {/* Informations de base */}
       <div className="rounded-radius-md border border-border p-spacing-md space-y-spacing-sm">
         <div className="flex items-center gap-2 text-primary mb-3">
-          <FileText className="h-5 w-5" />
-          <h3 className="text-base font-semibold">Informations de base</h3>
+          <TrendingUp className="h-5 w-5" />
+          <h3 className="text-base font-semibold">Informations de la campagne</h3>
         </div>
         <div className="space-y-2 text-sm">
           <div className="flex">
@@ -88,14 +114,36 @@ export const Step4Summary: React.FC<Step4SummaryProps> = ({
               <span className="text-text-primary">{description}</span>
             </div>
           )}
-          <div className="flex">
-            <span className="w-32 text-text-secondary">Template :</span>
-            <span className="text-text-primary">{template?.name || 'Chargement...'}</span>
-          </div>
-          {template && (
+          {produit_id && (
+            <>
+              <div className="flex">
+                <span className="w-32 text-text-secondary">Produit :</span>
+                <span className="text-text-primary">{produit?.name || 'Chargement...'}</span>
+              </div>
+              {produit && produit.isin && (
+                <div className="flex">
+                  <span className="w-32 text-text-secondary">ISIN :</span>
+                  <span className="text-text-primary">{produit.isin}</span>
+                </div>
+              )}
+              {produit && (
+                <div className="flex">
+                  <span className="w-32 text-text-secondary">Type :</span>
+                  <span className="text-text-primary">{produit.type}</span>
+                </div>
+              )}
+            </>
+          )}
+          {template_id && (
             <div className="flex">
-              <span className="w-32 text-text-secondary">Sujet :</span>
-              <span className="text-text-primary">{template.subject}</span>
+              <span className="w-32 text-text-secondary">Template :</span>
+              <span className="text-text-primary">{template?.name || 'Chargement...'}</span>
+            </div>
+          )}
+          {!produit_id && !template_id && (
+            <div className="flex">
+              <span className="w-32 text-text-secondary">Type :</span>
+              <span className="text-text-primary">Newsletter / Prospection</span>
             </div>
           )}
         </div>
@@ -190,15 +238,34 @@ export const Step4Summary: React.FC<Step4SummaryProps> = ({
         />
       )}
 
-      {/* Aperçu du template */}
-      {template && (
-        <div className="rounded-radius-md border border-border p-spacing-md space-y-spacing-sm">
-          <p className="text-sm font-semibold text-text-primary mb-2">Aperçu du template</p>
-          <div
-            className="prose prose-sm max-w-none rounded-radius-sm border border-border bg-white p-spacing-md max-h-96 overflow-y-auto"
-            dangerouslySetInnerHTML={{ __html: template.html_content }}
-          />
-        </div>
+      {/* Info sur le template et produit */}
+      {produit_id && !template_id && (
+        <Alert
+          type="info"
+          title="Informations d'envoi"
+          message="Le template sera généré automatiquement depuis le produit. Une interaction sera créée pour chaque destinataire (tracking KPI)."
+        />
+      )}
+      {produit_id && template_id && (
+        <Alert
+          type="info"
+          title="Informations d'envoi"
+          message="Template manuel sélectionné pour ce produit. Une interaction sera créée pour chaque destinataire (tracking KPI)."
+        />
+      )}
+      {!produit_id && template_id && (
+        <Alert
+          type="info"
+          title="Informations d'envoi"
+          message="Campagne avec template manuel (prospection/newsletter)."
+        />
+      )}
+      {!produit_id && !template_id && (
+        <Alert
+          type="warning"
+          title="Attention"
+          message="Template à définir avant l'envoi."
+        />
       )}
     </div>
   )

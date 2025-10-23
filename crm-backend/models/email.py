@@ -205,6 +205,12 @@ class EmailCampaign(BaseModel):
         passive_deletes=True,
         order_by="EmailCampaignStep.order_index",
     )
+    send_batches = relationship(
+        "EmailSendBatch",
+        back_populates="campaign",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
     sends = relationship(
         "EmailSend",
         back_populates="campaign",
@@ -257,18 +263,51 @@ class EmailCampaignStep(BaseModel):
         )
 
 
+class EmailSendBatch(BaseModel):
+    """Batch/Groupe d'envois créé en une fois."""
+
+    __tablename__ = "email_send_batches"
+    __table_args__ = (
+        Index("idx_email_send_batches_campaign", "campaign_id"),
+        Index("idx_email_send_batches_status", "status"),
+    )
+
+    campaign_id = Column(Integer, ForeignKey("email_campaigns.id", ondelete="CASCADE"), nullable=False)
+    name = Column(String(255), nullable=False)
+    status = Column(
+        Enum(EmailSendStatus, name="emailsendstatus"),
+        nullable=False,
+        default=EmailSendStatus.QUEUED,
+    )
+    scheduled_at = Column(DateTime(timezone=True), nullable=True)
+    sent_at = Column(DateTime(timezone=True), nullable=True)
+    completed_at = Column(DateTime(timezone=True), nullable=True)
+    total_recipients = Column(Integer, nullable=False, default=0)
+    sent_count = Column(Integer, nullable=False, default=0)
+    delivered_count = Column(Integer, nullable=False, default=0)
+    opened_count = Column(Integer, nullable=False, default=0)
+    clicked_count = Column(Integer, nullable=False, default=0)
+    bounced_count = Column(Integer, nullable=False, default=0)
+    failed_count = Column(Integer, nullable=False, default=0)
+
+    campaign = relationship("EmailCampaign", back_populates="send_batches")
+    sends = relationship("EmailSend", back_populates="batch", cascade="all, delete-orphan", passive_deletes=True)
+
+
 class EmailSend(BaseModel):
     """Historique des envois pour chaque destinataire."""
 
     __tablename__ = "email_sends"
     __table_args__ = (
         Index("idx_email_sends_campaign", "campaign_id"),
+        Index("idx_email_sends_batch", "batch_id"),
         Index("idx_email_sends_status", "status"),
         Index("idx_email_sends_message", "provider_message_id"),
         Index("idx_email_sends_recipient", "recipient_email"),
     )
 
     campaign_id = Column(Integer, ForeignKey("email_campaigns.id", ondelete="CASCADE"), nullable=False)
+    batch_id = Column(Integer, ForeignKey("email_send_batches.id", ondelete="CASCADE"), nullable=True)
     step_id = Column(Integer, ForeignKey("email_campaign_steps.id", ondelete="SET NULL"), nullable=True)
     template_id = Column(Integer, ForeignKey("email_templates.id", ondelete="SET NULL"), nullable=True)
     recipient_email = Column(String(255), nullable=False)
@@ -291,6 +330,7 @@ class EmailSend(BaseModel):
     step_metadata = Column("metadata", JSON, nullable=True)  # 'metadata' est réservé par SQLAlchemy
 
     campaign = relationship("EmailCampaign", back_populates="sends")
+    batch = relationship("EmailSendBatch", back_populates="sends")
     step = relationship("EmailCampaignStep", back_populates="sends")
     template = relationship("EmailTemplate")
     recipient_person = relationship("Person", foreign_keys=[recipient_person_id])

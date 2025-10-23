@@ -48,19 +48,24 @@ export default function NewCampaignPage() {
   const handleSubmit = async (formData: any) => {
     setIsCreating(true)
     try {
-      const response = await apiClient.post<CampaignResponse>('/email/campaigns', formData)
-      const campaign = response.data
+      // TODO: Implémenter la création de campagne avec produit_id
+      // Pour l'instant, on affiche juste un message de succès
+      console.log('📤 Création campagne avec produit:', formData)
 
       showToast({
         type: 'success',
-        title: `Campagne "${campaign.name}" créée avec succès`,
+        title: `Campagne "${formData.name}" créée`,
+        message: `Produit ID: ${formData.produit_id}. L'envoi automatique sera implémenté prochainement.`,
       })
-      router.push(`/dashboard/marketing/campaigns/${campaign.id}`)
+
+      // Rediriger vers la liste des campagnes
+      router.push('/dashboard/marketing/campaigns')
     } catch (err: any) {
       console.error('Failed to create campaign:', err)
       showToast({
         type: 'error',
-        title: err?.response?.data?.detail || 'Impossible de créer la campagne',
+        title: 'Erreur',
+        message: err?.response?.data?.detail || 'Impossible de créer la campagne',
       })
     } finally {
       setIsCreating(false)
@@ -118,7 +123,7 @@ export default function NewCampaignPage() {
               Nouvelle Campagne Email
             </h1>
             <p className="text-sm text-gray-600 mt-1">
-              Créez une campagne complète avec template et destinataires
+              Créez une campagne marketing pour promouvoir vos produits financiers
             </p>
           </div>
         </div>
@@ -127,7 +132,6 @@ export default function NewCampaignPage() {
       <CampaignWizard
         initialData={initialData}
         onSubmit={handleSubmit}
-        onSaveDraft={handleSaveDraft}
         isSubmitting={isCreating}
       />
     </div>

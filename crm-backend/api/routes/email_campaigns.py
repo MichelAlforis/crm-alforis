@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
 
@@ -14,6 +14,7 @@ from schemas.email import (
     EmailCampaignScheduleRequest,
     EmailCampaignStatsResponse,
     EmailCampaignUpdate,
+    EmailSendBatchResponse,
     EmailSendResponse,
     EmailTemplateCreate,
     EmailTemplateResponse,
@@ -70,6 +71,19 @@ async def create_template(
         data={"template_id": template.id, "name": template.name},
         user_id=_extract_user_id(current_user),
     )
+    return EmailTemplateResponse.model_validate(template)
+
+
+@router.get("/templates/{template_id}", response_model=EmailTemplateResponse)
+async def get_template(
+    template_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    service = EmailTemplateService(db)
+    template = await service.get_by_id(template_id)
+    if not template:
+        raise HTTPException(status_code=404, detail="Template not found")
     return EmailTemplateResponse.model_validate(template)
 
 
@@ -562,6 +576,29 @@ async def campaign_stats(
     return stats
 
 
+@router.get("/campaigns/{campaign_id}/batches", response_model=PaginatedResponse[EmailSendBatchResponse])
+async def list_campaign_batches(
+    campaign_id: int,
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=500),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """Lister les batches d'envois d'une campagne."""
+    from models.email import EmailSendBatch
+
+    query = db.query(EmailSendBatch).filter(EmailSendBatch.campaign_id == campaign_id)
+    total = query.count()
+    batches = (
+        query.order_by(EmailSendBatch.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+    items = [EmailSendBatchResponse.model_validate(batch) for batch in batches]
+    return PaginatedResponse(total=total, skip=skip, limit=limit, items=items)
+
+
 @router.get("/campaigns/{campaign_id}/sends", response_model=PaginatedResponse[EmailSendResponse])
 async def list_campaign_sends(
     campaign_id: int,
@@ -581,6 +618,54 @@ async def list_campaign_sends(
         .limit(limit)
         .all()
     )
+    items = [EmailSendResponse.model_validate(send) for send in sends]
+    return PaginatedResponse(total=total, skip=skip, limit=limit, items=items)
+
+
+@router.get("/campaigns/{campaign_id}/sends/{send_id}", response_model=EmailSendBatchResponse)
+async def get_campaign_send_batch(
+    campaign_id: int,
+    send_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """Récupérer les détails d'un batch d'envoi spécifique."""
+    from models.email import EmailSendBatch
+
+    batch = db.query(EmailSendBatch).filter(
+        EmailSendBatch.id == send_id,
+        EmailSendBatch.campaign_id == campaign_id
+    ).first()
+
+    if not batch:
+        raise HTTPException(status_code=404, detail="Batch d'envoi introuvable")
+
+    return EmailSendBatchResponse.model_validate(batch)
+
+
+@router.get("/sends/{send_id}/details", response_model=PaginatedResponse[EmailSendResponse])
+async def get_send_batch_details(
+    send_id: int,
+    skip: int = Query(0, ge=0),
+    limit: int = Query(20, ge=1, le=500),
+    status_filter: Optional[EmailSendStatus] = Query(None, alias="status"),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """Lister tous les envois individuels d'un batch (avec filtres et pagination)."""
+    query = db.query(EmailSend).filter(EmailSend.batch_id == send_id)
+
+    if status_filter:
+        query = query.filter(EmailSend.status == status_filter)
+
+    total = query.count()
+    sends = (
+        query.order_by(EmailSend.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
     items = [EmailSendResponse.model_validate(send) for send in sends]
     return PaginatedResponse(total=total, skip=skip, limit=limit, items=items)
 

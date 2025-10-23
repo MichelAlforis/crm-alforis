@@ -194,6 +194,10 @@ class EmailCampaignService(BaseService[EmailCampaign, EmailCampaignCreate, Email
             self.db.add(campaign)
             self.db.flush()
             self._sync_steps(campaign, steps_payload)
+
+            # Auto-créer les subscriptions si specific_ids est présent dans audience_filters
+            self._sync_subscriptions(campaign)
+
             self.db.commit()
             self.db.refresh(campaign)
             logger.info("email_campaign_created", extra={"campaign_id": campaign.id})
@@ -213,6 +217,11 @@ class EmailCampaignService(BaseService[EmailCampaign, EmailCampaignCreate, Email
         try:
             if steps_payload is not None:
                 self._sync_steps(campaign, steps_payload)
+
+            # Re-synchroniser les subscriptions si audience_filters a changé
+            if "audience_filters" in data:
+                self._sync_subscriptions(campaign)
+
             self.db.add(campaign)
             self.db.commit()
             self.db.refresh(campaign)
@@ -254,6 +263,45 @@ class EmailCampaignService(BaseService[EmailCampaign, EmailCampaignCreate, Email
             )
             self.db.add(step)
 
+    def _sync_subscriptions(self, campaign: EmailCampaign) -> None:
+        """Synchroniser les subscriptions depuis audience_filters.specific_ids."""
+        from models.email import CampaignSubscription
+
+        # Vérifier si audience_filters contient specific_ids
+        if not campaign.audience_filters:
+            return
+
+        specific_ids = campaign.audience_filters.get("specific_ids", [])
+        if not specific_ids:
+            return
+
+        target_type = campaign.audience_filters.get("target_type", "contacts")
+
+        # Supprimer les anciennes subscriptions
+        self.db.query(CampaignSubscription).filter(
+            CampaignSubscription.campaign_id == campaign.id
+        ).delete()
+        self.db.flush()
+
+        # Créer les nouvelles subscriptions
+        for entity_id in specific_ids:
+            subscription = CampaignSubscription(
+                campaign_id=campaign.id,
+                person_id=entity_id if target_type == "contacts" else None,
+                organisation_id=entity_id if target_type == "organisations" else None,
+                is_active=True,
+            )
+            self.db.add(subscription)
+
+        logger.info(
+            "subscriptions_synced",
+            extra={
+                "campaign_id": campaign.id,
+                "count": len(specific_ids),
+                "target_type": target_type,
+            }
+        )
+
 
 class EmailDeliveryService:
     """Gestion de la planification et de l'envoi des emails."""
@@ -262,6 +310,8 @@ class EmailDeliveryService:
         self.db = db
 
     def schedule_campaign(self, campaign_id: int, payload: EmailCampaignScheduleRequest) -> Tuple[EmailCampaign, List[EmailSend]]:
+        from models.email import EmailSendBatch
+
         campaign = (
             self.db.query(EmailCampaign)
             .filter(EmailCampaign.id == campaign_id)
@@ -280,6 +330,25 @@ class EmailDeliveryService:
 
         scheduled_at = payload.scheduled_at or datetime.now(UTC)
         now = datetime.now(UTC)
+
+        # Créer le batch d'envoi
+        batch_status = (
+            EmailSendStatus.SENDING
+            if payload.schedule_type == EmailScheduleType.IMMEDIATE and scheduled_at <= now
+            else EmailSendStatus.SCHEDULED
+        )
+
+        batch = EmailSendBatch(
+            campaign_id=campaign_id,
+            name=payload.name,
+            status=batch_status,
+            scheduled_at=scheduled_at if payload.schedule_type == EmailScheduleType.SCHEDULED else None,
+            total_recipients=len(recipients),
+        )
+        self.db.add(batch)
+        self.db.flush()  # Pour obtenir l'ID du batch
+
+        # Mettre à jour la campagne
         campaign.scheduled_at = scheduled_at
         campaign.timezone = payload.timezone or campaign.timezone
         campaign.rate_limit_per_minute = payload.rate_limit_per_minute or campaign.rate_limit_per_minute
@@ -296,17 +365,20 @@ class EmailDeliveryService:
 
         created_sends: List[EmailSend] = []
         for recipient in recipients:
-            send_created = self._create_sends_for_recipient(campaign, recipient, scheduled_at)
+            send_created = self._create_sends_for_recipient(campaign, recipient, scheduled_at, batch.id)
             created_sends.extend(send_created)
 
         try:
             self.db.add(campaign)
             self.db.commit()
             self.db.refresh(campaign)
+            self.db.refresh(batch)
             logger.info(
                 "email_campaign_scheduled",
                 extra={
                     "campaign_id": campaign.id,
+                    "batch_id": batch.id,
+                    "batch_name": batch.name,
                     "scheduled_at": scheduled_at.isoformat(),
                     "recipients": len(recipients),
                 },
@@ -364,6 +436,7 @@ class EmailDeliveryService:
         campaign: EmailCampaign,
         recipient: EmailRecipient,
         scheduled_at: datetime,
+        batch_id: Optional[int] = None,
     ) -> List[EmailSend]:
         sends: List[EmailSend] = []
         assigned_variant = self._assign_ab_test_variant(campaign, recipient)
@@ -380,6 +453,7 @@ class EmailDeliveryService:
 
             send = EmailSend(
                 campaign_id=campaign.id,
+                batch_id=batch_id,
                 step_id=step.id,
                 template_id=step.template_id,
                 recipient_email=recipient.email,

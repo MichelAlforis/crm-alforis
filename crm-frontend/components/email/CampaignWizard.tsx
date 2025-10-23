@@ -16,6 +16,7 @@ type EmailProvider = 'resend' | 'sendgrid' | 'mailgun'
 export interface CampaignFormData {
   name: string
   description: string
+  produit_id: number | null
   template_id: number | null
   recipient_filters: RecipientFilters
   batch_size: number
@@ -43,7 +44,7 @@ const STEPS: WizardStep[] = [
   {
     id: 1,
     title: 'Informations',
-    subtitle: 'Nom et template',
+    subtitle: 'Nom et produit',
     icon: <FileText className="h-5 w-5" />,
   },
   {
@@ -76,6 +77,7 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
   const [formData, setFormData] = useState<CampaignFormData>({
     name: initialData?.name || '',
     description: initialData?.description || '',
+    produit_id: initialData?.produit_id || null,
     template_id: initialData?.template_id || null,
     recipient_filters: initialData?.recipient_filters || {
       target_type: 'contacts' as TargetType,
@@ -148,7 +150,8 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
   const canGoNext = () => {
     switch (currentStep) {
       case 1:
-        return formData.name.trim() !== '' && formData.template_id !== null
+        // Nom requis, produit et template optionnels
+        return formData.name.trim() !== ''
       case 2:
         return true // On peut toujours passer à l'étape 3
       case 3:
@@ -165,6 +168,7 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
           <Step1BasicInfo
             name={formData.name}
             description={formData.description}
+            produit_id={formData.produit_id}
             template_id={formData.template_id}
             onChange={updateFormData}
           />
@@ -193,6 +197,7 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
           <Step4Summary
             name={formData.name}
             description={formData.description}
+            produit_id={formData.produit_id}
             template_id={formData.template_id}
             recipient_filters={formData.recipient_filters}
             provider={formData.provider}

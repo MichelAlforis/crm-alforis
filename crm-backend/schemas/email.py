@@ -202,6 +202,7 @@ class EmailRecipientSummary(BaseSchema):
 class EmailCampaignScheduleRequest(BaseSchema):
     """Payload de planification d'une campagne."""
 
+    name: str = Field(..., min_length=1, max_length=255)
     scheduled_at: Optional[datetime] = None
     timezone: Optional[str] = Field("Europe/Paris", max_length=64)
     recipients: List[EmailRecipient] = Field(default_factory=list)
@@ -217,11 +218,38 @@ class EmailCampaignScheduleRequest(BaseSchema):
         return value
 
 
+class EmailSendBatchCreate(BaseSchema):
+    """Création d'un batch d'envoi."""
+
+    name: str
+    scheduled_at: Optional[datetime] = None
+
+
+class EmailSendBatchResponse(TimestampedSchema):
+    """Retour d'un batch d'envoi."""
+
+    id: int
+    campaign_id: int
+    name: str
+    status: EmailSendStatus
+    scheduled_at: Optional[datetime]
+    sent_at: Optional[datetime]
+    completed_at: Optional[datetime]
+    total_recipients: int = 0
+    sent_count: int = 0
+    delivered_count: int = 0
+    opened_count: int = 0
+    clicked_count: int = 0
+    bounced_count: int = 0
+    failed_count: int = 0
+
+
 class EmailSendResponse(TimestampedSchema):
     """Retour d'un envoi."""
 
     id: int
     campaign_id: int
+    batch_id: Optional[int]
     step_id: Optional[int]
     template_id: Optional[int]
     recipient_email: str
