@@ -822,23 +822,49 @@ async def list_campaign_subscriptions(
     subscriptions = query.order_by(CampaignSubscription.created_at.desc()).all()
 
     result = []
+    from models.email import UnsubscribedEmail
+
     for sub in subscriptions:
         response_data = CampaignSubscriptionResponse.model_validate(sub)
         response_data.campaign_name = campaign.name
 
         # Enrichir avec les infos de l'entité
+        entity_email = None
+        should_skip = False
+
         if sub.person_id:
             person = db.query(Person).filter(Person.id == sub.person_id).first()
             if person:
                 response_data.entity_name = f"{person.first_name} {person.last_name}"
-                response_data.entity_email = person.email or person.personal_email
+                entity_email = person.email or person.personal_email
+                response_data.entity_email = entity_email
+
+                # Vérifier si désabonné (colonne email_unsubscribed)
+                if person.email_unsubscribed:
+                    should_skip = True
+
         elif sub.organisation_id:
             org = db.query(Organisation).filter(Organisation.id == sub.organisation_id).first()
             if org:
                 response_data.entity_name = org.name
-                response_data.entity_email = org.email
+                entity_email = org.email
+                response_data.entity_email = entity_email
 
-        result.append(response_data)
+                # Vérifier si désabonné (colonne email_unsubscribed)
+                if org.email_unsubscribed:
+                    should_skip = True
+
+        # Vérifier si l'email est dans la liste noire globale
+        if entity_email and not should_skip:
+            unsubscribed = db.query(UnsubscribedEmail).filter(
+                UnsubscribedEmail.email == entity_email.lower()
+            ).first()
+            if unsubscribed:
+                should_skip = True
+
+        # N'ajouter que les emails non désabonnés ET qui ont un email valide
+        if not should_skip and entity_email and entity_email.strip():
+            result.append(response_data)
 
     return result
 
