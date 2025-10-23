@@ -2,6 +2,21 @@
 
 import { useState, useCallback } from 'react'
 
+// API Base URL
+const API_BASE_URL = 'http://localhost:8000/api/v1'
+
+// Helper pour fetch avec auth
+const authFetch = async (url: string, options?: RequestInit) => {
+  const token = localStorage.getItem('access_token') || localStorage.getItem('auth_token')
+  return fetch(url, {
+    ...options,
+    headers: {
+      ...options?.headers,
+      ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+    },
+  })
+}
+
 // Types
 export interface Workflow {
   id: number
@@ -104,7 +119,7 @@ export function useWorkflows() {
         ...(filters?.is_template !== undefined && { is_template: filters.is_template.toString() }),
       })
 
-      const response = await fetch(`/api/v1/workflows?${params}`)
+      const response = await authFetch(`${API_BASE_URL}/workflows?${params}`)
       if (!response.ok) throw new Error('Erreur lors du chargement des workflows')
 
       const data = await response.json()
@@ -121,7 +136,7 @@ export function useWorkflows() {
   const fetchWorkflow = useCallback(async (id: number) => {
     setSingleWorkflow({ isLoading: true })
     try {
-      const response = await fetch(`/api/v1/workflows/${id}`)
+      const response = await authFetch(`${API_BASE_URL}/workflows/${id}`)
       if (!response.ok) throw new Error('Workflow introuvable')
 
       const data = await response.json()
@@ -138,7 +153,7 @@ export function useWorkflows() {
   const createWorkflow = useCallback(async (workflowData: any) => {
     setOperation({ isLoading: true })
     try {
-      const response = await fetch('/api/v1/workflows', {
+      const response = await authFetch(`${API_BASE_URL}/workflows`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(workflowData),
@@ -166,7 +181,7 @@ export function useWorkflows() {
   const updateWorkflow = useCallback(async (id: number, workflowData: any) => {
     setOperation({ isLoading: true })
     try {
-      const response = await fetch(`/api/v1/workflows/${id}`, {
+      const response = await authFetch(`${API_BASE_URL}/workflows/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(workflowData),
@@ -194,7 +209,7 @@ export function useWorkflows() {
   const deleteWorkflow = useCallback(async (id: number) => {
     setOperation({ isLoading: true })
     try {
-      const response = await fetch(`/api/v1/workflows/${id}`, {
+      const response = await authFetch(`${API_BASE_URL}/workflows/${id}`, {
         method: 'DELETE',
       })
 
@@ -218,7 +233,7 @@ export function useWorkflows() {
   const toggleWorkflow = useCallback(async (id: number, status: 'active' | 'inactive') => {
     setOperation({ isLoading: true })
     try {
-      const response = await fetch(`/api/v1/workflows/${id}/activate`, {
+      const response = await authFetch(`${API_BASE_URL}/workflows/${id}/activate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
@@ -251,7 +266,7 @@ export function useWorkflows() {
   ) => {
     setOperation({ isLoading: true })
     try {
-      const response = await fetch(`/api/v1/workflows/${id}/execute`, {
+      const response = await authFetch(`${API_BASE_URL}/workflows/${id}/execute`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -294,7 +309,7 @@ export function useWorkflows() {
         ...(status && { status }),
       })
 
-      const response = await fetch(`/api/v1/workflows/${workflowId}/executions?${params}`)
+      const response = await authFetch(`${API_BASE_URL}/workflows/${workflowId}/executions?${params}`)
       if (!response.ok) throw new Error('Erreur lors du chargement des exécutions')
 
       const data = await response.json()
@@ -311,7 +326,7 @@ export function useWorkflows() {
   const fetchStats = useCallback(async (workflowId: number) => {
     setStats({ isLoading: true })
     try {
-      const response = await fetch(`/api/v1/workflows/${workflowId}/stats`)
+      const response = await authFetch(`${API_BASE_URL}/workflows/${workflowId}/stats`)
       if (!response.ok) throw new Error('Erreur lors du chargement des statistiques')
 
       const data = await response.json()
@@ -328,7 +343,7 @@ export function useWorkflows() {
   const fetchTemplates = useCallback(async () => {
     setTemplates({ isLoading: true })
     try {
-      const response = await fetch('/api/v1/workflows/templates/list')
+      const response = await authFetch(`${API_BASE_URL}/workflows/templates/list`)
       if (!response.ok) throw new Error('Erreur lors du chargement des templates')
 
       const data = await response.json()
@@ -345,7 +360,7 @@ export function useWorkflows() {
   const createFromTemplate = useCallback(async (templateId: string) => {
     setOperation({ isLoading: true })
     try {
-      const response = await fetch(`/api/v1/workflows/templates/${templateId}/create`, {
+      const response = await authFetch(`${API_BASE_URL}/workflows/templates/${templateId}/create`, {
         method: 'POST',
       })
 
