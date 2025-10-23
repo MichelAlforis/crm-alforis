@@ -70,6 +70,12 @@ export const RecipientSelectorTable: React.FC<RecipientSelectorTableProps> = ({
 
   // Charger les destinataires depuis l'API
   useEffect(() => {
+    // Ne charger que si target_type est défini
+    if (!value.target_type) {
+      setRecipients([])
+      return
+    }
+
     const loadRecipients = async () => {
       setIsLoading(true)
       try {
