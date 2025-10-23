@@ -1064,3 +1064,197 @@ async def bulk_subscribe_to_campaign(
         errors=errors,
         subscriptions=subscriptions,
     )
+
+
+# ============= TRACKING LEADS =============
+
+
+class RecipientTrackingResponse(BaseModel):
+    """Destinataire avec tracking détaillé pour suivi commercial."""
+
+    id: int
+    recipient: dict  # person_id, name, email, organisation, role
+    tracking: dict   # sent_at, opened[], clicked[], bounced
+    engagement_score: int  # Score 0-100 pour priorisation
+
+
+@router.get(
+    "/campaigns/{campaign_id}/batches/{batch_id}/recipients-tracking",
+    response_model=List[RecipientTrackingResponse]
+)
+async def get_batch_recipients_with_tracking(
+    campaign_id: int,
+    batch_id: int,
+    filter: Optional[str] = Query(None, description="Filter: clicked, opened, not_opened, bounced, all"),
+    sort: Optional[str] = Query("engagement", description="Sort: engagement, name, date"),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Retourne la liste des destinataires d'un batch avec leur tracking détaillé.
+
+    Cas d'usage commercial: Identifier les leads chauds à rappeler.
+
+    Filtres:
+    - clicked: Leads ayant cliqué (leads chauds 🔥)
+    - opened: Leads ayant ouvert (leads tièdes)
+    - not_opened: Leads n'ayant pas ouvert (à relancer)
+    - bounced: Emails rebondis (invalides)
+    - all: Tous les destinataires
+
+    Tri:
+    - engagement: Par score d'engagement (défaut)
+    - name: Par nom alphabétique
+    - date: Par date de dernier événement
+    """
+    from models.email import EmailEvent, EmailEventType, EmailSendBatch
+    from models.person import Person
+    from models.organisation import Organisation
+    from sqlalchemy.orm import joinedload
+    from datetime import datetime, timezone
+
+    # Vérifier que le batch appartient bien à la campagne
+    batch = db.query(EmailSendBatch).filter(
+        and_(
+            EmailSendBatch.id == batch_id,
+            EmailSendBatch.campaign_id == campaign_id
+        )
+    ).first()
+
+    if not batch:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Batch {batch_id} not found for campaign {campaign_id}"
+        )
+
+    # Query de base avec jointures
+    query = (
+        db.query(EmailSend)
+        .filter(EmailSend.batch_id == batch_id)
+        .options(
+            joinedload(EmailSend.recipient_person),
+            joinedload(EmailSend.organisation),
+            joinedload(EmailSend.events)
+        )
+    )
+
+    # Appliquer filtres
+    if filter == 'clicked':
+        # Sous-requête pour trouver les send_id avec événements CLICKED
+        clicked_send_ids = (
+            db.query(EmailEvent.send_id)
+            .filter(EmailEvent.event_type == EmailEventType.CLICKED)
+            .distinct()
+        )
+        query = query.filter(EmailSend.id.in_(clicked_send_ids))
+
+    elif filter == 'opened':
+        # Sous-requête pour trouver les send_id avec événements OPENED
+        opened_send_ids = (
+            db.query(EmailEvent.send_id)
+            .filter(EmailEvent.event_type == EmailEventType.OPENED)
+            .distinct()
+        )
+        query = query.filter(EmailSend.id.in_(opened_send_ids))
+
+    elif filter == 'not_opened':
+        # LEFT JOIN pour exclure ceux qui ont des events OPENED
+        opened_send_ids = (
+            db.query(EmailEvent.send_id)
+            .filter(EmailEvent.event_type == EmailEventType.OPENED)
+            .distinct()
+        )
+        query = query.filter(~EmailSend.id.in_(opened_send_ids))
+
+    elif filter == 'bounced':
+        # Sous-requête pour trouver les send_id avec événements BOUNCED
+        bounced_send_ids = (
+            db.query(EmailEvent.send_id)
+            .filter(EmailEvent.event_type == EmailEventType.BOUNCED)
+            .distinct()
+        )
+        query = query.filter(EmailSend.id.in_(bounced_send_ids))
+
+    # Récupérer tous les sends
+    sends = query.all()
+
+    # Construire la réponse avec calcul du score d'engagement
+    results = []
+    for send in sends:
+        # Extraire les événements par type
+        opened_events = [
+            {"event_at": e.event_at.isoformat(), "ip": e.ip_address}
+            for e in send.events if e.event_type == EmailEventType.OPENED
+        ]
+        clicked_events = [
+            {"event_at": e.event_at.isoformat(), "url": e.url, "ip": e.ip_address}
+            for e in send.events if e.event_type == EmailEventType.CLICKED
+        ]
+        bounced = any(e.event_type == EmailEventType.BOUNCED for e in send.events)
+
+        # Calcul du score d'engagement (0-100)
+        score = 0
+        score += len(clicked_events) * 20      # Clic = +20 points
+        score += len(opened_events) * 10       # Ouverture = +10 points
+
+        # Bonus si événement récent (< 24h)
+        now = datetime.now(timezone.utc)
+        if clicked_events:
+            last_click = max(e["event_at"] for e in clicked_events)
+            last_click_dt = datetime.fromisoformat(last_click.replace('Z', '+00:00'))
+            hours_since_click = (now - last_click_dt).total_seconds() / 3600
+            if hours_since_click < 24:
+                score += 30  # Lead très chaud !
+            elif hours_since_click < 48:
+                score += 15
+
+        # Bonus si plusieurs ouvertures (intérêt)
+        if len(opened_events) > 3:
+            score += 20
+
+        # Pénalité si rebond
+        if bounced:
+            score = 0
+
+        # Cap à 100
+        score = min(score, 100)
+
+        # Infos destinataire
+        recipient = {
+            "person_id": send.recipient_person_id,
+            "name": send.recipient_name or "Nom inconnu",
+            "email": send.recipient_email,
+            "organisation": send.organisation.name if send.organisation else None,
+            "role": send.recipient_person.role if send.recipient_person else None,
+        }
+
+        # Tracking
+        tracking = {
+            "sent_at": send.sent_at.isoformat() if send.sent_at else None,
+            "opened": opened_events,
+            "clicked": clicked_events,
+            "bounced": bounced,
+            "open_count": len(opened_events),
+            "click_count": len(clicked_events),
+        }
+
+        results.append(RecipientTrackingResponse(
+            id=send.id,
+            recipient=recipient,
+            tracking=tracking,
+            engagement_score=score,
+        ))
+
+    # Tri
+    if sort == 'engagement':
+        results.sort(key=lambda x: x.engagement_score, reverse=True)
+    elif sort == 'name':
+        results.sort(key=lambda x: x.recipient['name'])
+    elif sort == 'date':
+        results.sort(key=lambda x: (
+            max([e['event_at'] for e in x.tracking['clicked']], default='')
+            or max([e['event_at'] for e in x.tracking['opened']], default='')
+            or x.tracking['sent_at']
+        ), reverse=True)
+
+    return results

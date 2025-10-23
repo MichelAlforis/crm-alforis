@@ -3,21 +3,24 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Mail, Eye, MousePointerClick, Ban, Clock, Calendar, User, Filter, Search, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowLeft, Mail, Eye, MousePointerClick, Ban, Clock, Filter, TrendingUp, Users, AlertCircle } from 'lucide-react'
 import { Card, CardHeader, CardBody } from '@/components/shared/Card'
 import { Button } from '@/components/shared/Button'
 import { Alert } from '@/components/shared/Alert'
+import { Input } from '@/components/shared/Input'
+import { RecipientTrackingList } from '@/components/email/RecipientTrackingList'
 import { apiClient } from '@/lib/api'
 import { useToast } from '@/components/ui/Toast'
 import { logger } from '@/lib/logger'
 
-interface EmailSend {
+interface EmailSendBatch {
   id: number
   campaign_id: number
+  name: string
   status: string
   scheduled_at?: string
   sent_at?: string
-  created_at: string
+  completed_at?: string
   total_recipients: number
   sent_count: number
   delivered_count: number
@@ -27,125 +30,165 @@ interface EmailSend {
   failed_count: number
 }
 
-interface EmailSendDetail {
+interface RecipientWithTracking {
   id: number
-  send_id: number
-  recipient_email: string
-  recipient_name?: string
-  status: string
-  sent_at?: string
-  delivered_at?: string
-  opened_at?: string
-  clicked_at?: string
-  bounced_at?: string
-  error_message?: string
-}
-
-const getStatusBadge = (status: string) => {
-  const statusMap: Record<string, { label: string; className: string }> = {
-    queued: { label: 'En file', className: 'bg-gray-100 text-gray-700' },
-    sending: { label: 'En cours', className: 'bg-yellow-100 text-yellow-700' },
-    sent: { label: 'Envoyé', className: 'bg-green-100 text-green-700' },
-    delivered: { label: 'Délivré', className: 'bg-success/20 text-success' },
-    opened: { label: 'Ouvert', className: 'bg-primary/20 text-primary' },
-    clicked: { label: 'Cliqué', className: 'bg-purple-100 text-purple-700' },
-    failed: { label: 'Échec', className: 'bg-red-100 text-red-700' },
-    bounced: { label: 'Rebond', className: 'bg-orange-100 text-orange-700' },
+  recipient: {
+    person_id: number | null
+    name: string
+    email: string
+    organisation: string | null
+    role: string | null
   }
-  const config = statusMap[status] || { label: status, className: 'bg-gray-100 text-gray-700' }
-  return (
-    <span className={`px-2 py-1 rounded text-xs font-medium ${config.className}`}>
-      {config.label}
-    </span>
-  )
+  tracking: {
+    sent_at: string | null
+    opened: Array<{ event_at: string; ip: string | null }>
+    clicked: Array<{ event_at: string; url: string | null; ip: string | null }>
+    bounced: boolean
+    open_count: number
+    click_count: number
+  }
+  engagement_score: number
 }
 
-export default function SendStatsPage() {
+type FilterType = 'all' | 'clicked' | 'opened' | 'not_opened' | 'bounced'
+
+const FILTER_OPTIONS: Array<{ value: FilterType; label: string; icon: React.ReactNode; color: string }> = [
+  { value: 'all', label: 'Tous', icon: <Users className="w-4 h-4" />, color: 'bg-gray-100 text-gray-700' },
+  { value: 'clicked', label: 'Ont cliqué', icon: <MousePointerClick className="w-4 h-4" />, color: 'bg-red-100 text-red-700' },
+  { value: 'opened', label: 'Ont ouvert', icon: <Eye className="w-4 h-4" />, color: 'bg-primary/20 text-primary' },
+  { value: 'not_opened', label: 'Non ouverts', icon: <Mail className="w-4 h-4" />, color: 'bg-gray-100 text-gray-700' },
+  { value: 'bounced', label: 'Rebonds', icon: <Ban className="w-4 h-4" />, color: 'bg-orange-100 text-orange-700' },
+]
+
+export default function BatchTrackingPage() {
   const params = useParams<{ id: string; sendId: string }>()
   const router = useRouter()
   const campaignId = params?.id ? parseInt(params.id, 10) : 0
-  const sendId = params?.sendId ? parseInt(params.sendId, 10) : 0
+  const batchId = params?.sendId ? parseInt(params.sendId, 10) : 0
   const { showToast } = useToast()
 
-  const [send, setSend] = useState<EmailSend | null>(null)
-  const [details, setDetails] = useState<EmailSendDetail[]>([])
-  const [totalDetails, setTotalDetails] = useState(0)
-  const [page, setPage] = useState(1)
-  const [limit] = useState(20)
-  const [statusFilter, setStatusFilter] = useState<string>('')
-  const [searchQuery, setSearchQuery] = useState('')
+  const [batch, setBatch] = useState<EmailSendBatch | null>(null)
+  const [recipients, setRecipients] = useState<RecipientWithTracking[]>([])
+  const [filter, setFilter] = useState<FilterType>('all')
   const [isLoading, setIsLoading] = useState(true)
-  const [isLoadingDetails, setIsLoadingDetails] = useState(false)
+  const [isLoadingRecipients, setIsLoadingRecipients] = useState(false)
 
-  // Charger les données de l'envoi
+  // Charger les données du batch
   useEffect(() => {
-    const loadSend = async () => {
+    const loadBatch = async () => {
       try {
         setIsLoading(true)
-        const response = await apiClient.get<EmailSend>(`/email/campaigns/${campaignId}/sends/${sendId}`)
-        setSend(response.data)
+        const response = await apiClient.get<EmailSendBatch>(
+          `/email/campaigns/${campaignId}/batches/${batchId}`
+        )
+        setBatch(response.data)
       } catch (error) {
-        logger.error('Failed to load send:', error)
+        logger.error('Failed to load batch:', error)
         showToast({
           type: 'error',
           title: 'Erreur',
-          message: 'Impossible de charger les données de l\'envoi',
+          message: 'Impossible de charger les données du batch',
         })
       } finally {
         setIsLoading(false)
       }
     }
 
-    if (campaignId && sendId) {
-      loadSend()
+    if (campaignId && batchId) {
+      loadBatch()
     }
-  }, [campaignId, sendId, showToast])
+  }, [campaignId, batchId])
 
-  // Charger les détails des envois avec filtres
+  // Charger les destinataires avec tracking
   useEffect(() => {
-    const loadDetails = async () => {
+    const loadRecipients = async () => {
       try {
-        setIsLoadingDetails(true)
-        const skip = (page - 1) * limit
-        const params: any = { skip, limit }
-
-        if (statusFilter) params.status = statusFilter
-        if (searchQuery) params.search = searchQuery
-
-        const response = await apiClient.get<{ items: EmailSendDetail[], total: number }>(
-          `/email/sends/${sendId}/details`,
-          { params }
+        setIsLoadingRecipients(true)
+        const response = await apiClient.get<RecipientWithTracking[]>(
+          `/email/campaigns/${campaignId}/batches/${batchId}/recipients-tracking`,
+          {
+            params: {
+              filter: filter === 'all' ? undefined : filter,
+              sort: 'engagement',
+            }
+          }
         )
-        setDetails(response.data.items || [])
-        setTotalDetails(response.data.total || 0)
+        setRecipients(response.data)
       } catch (error) {
-        logger.error('Failed to load send details:', error)
+        logger.error('Failed to load recipients tracking:', error)
+        showToast({
+          type: 'error',
+          title: 'Erreur',
+          message: 'Impossible de charger le tracking des destinataires',
+        })
       } finally {
-        setIsLoadingDetails(false)
+        setIsLoadingRecipients(false)
       }
     }
 
-    if (sendId) {
-      loadDetails()
+    if (campaignId && batchId) {
+      loadRecipients()
     }
-  }, [sendId, page, limit, statusFilter, searchQuery])
+  }, [campaignId, batchId, filter])
 
-  if (isLoading) {
-    return <div className="p-6">Chargement...</div>
+  // Actions commerciales
+  const handleCallClick = async (personId: number, recipient: RecipientWithTracking) => {
+    try {
+      // Créer une tâche "Appel" automatiquement
+      await apiClient.post('/tasks', {
+        title: `Rappeler ${recipient.recipient.name}`,
+        description: `Suivi email : A ${recipient.tracking.click_count > 0 ? 'cliqué' : 'ouvert'} l'email "${batch?.name || 'campagne'}"`,
+        assigned_to_id: null, // L'utilisateur courant
+        due_date: new Date().toISOString(),
+        priority: recipient.engagement_score >= 70 ? 'high' : 'medium',
+        type: 'call',
+        related_person_id: personId,
+      })
+
+      showToast({
+        type: 'success',
+        title: 'Tâche créée',
+        message: `Tâche d'appel créée pour ${recipient.recipient.name}`,
+      })
+    } catch (error: any) {
+      logger.error('Failed to create task:', error)
+      showToast({
+        type: 'error',
+        title: 'Erreur',
+        message: error?.response?.data?.detail || 'Impossible de créer la tâche',
+      })
+    }
   }
 
-  if (!send) {
+  const handleNoteClick = (personId: number, recipient: RecipientWithTracking) => {
+    // Rediriger vers la fiche personne avec param pour ouvrir modal note
+    router.push(`/dashboard/people/${personId}?action=add-note&context=email`)
+  }
+
+  if (isLoading || !batch) {
     return (
       <div className="p-6">
-        <Alert type="error" message="Envoi introuvable" />
+        <div className="animate-pulse space-y-4">
+          <div className="h-8 bg-muted/20 rounded w-1/3" />
+          <div className="h-32 bg-muted/20 rounded" />
+        </div>
       </div>
     )
   }
 
-  const totalPages = Math.ceil(totalDetails / limit)
-  const openRate = send.sent_count > 0 ? (send.opened_count / send.sent_count) * 100 : 0
-  const clickRate = send.sent_count > 0 ? (send.clicked_count / send.sent_count) * 100 : 0
-  const bounceRate = send.sent_count > 0 ? (send.bounced_count / send.sent_count) * 100 : 0
+  // Calcul des pourcentages
+  const openRate = batch.sent_count > 0 ? (batch.opened_count / batch.sent_count * 100).toFixed(1) : '0'
+  const clickRate = batch.sent_count > 0 ? (batch.clicked_count / batch.sent_count * 100).toFixed(1) : '0'
+  const bounceRate = batch.sent_count > 0 ? (batch.bounced_count / batch.sent_count * 100).toFixed(1) : '0'
+
+  // Compter les destinataires par filtre
+  const filterCounts = {
+    all: recipients.length,
+    clicked: recipients.filter(r => r.tracking.click_count > 0).length,
+    opened: recipients.filter(r => r.tracking.open_count > 0).length,
+    not_opened: recipients.filter(r => r.tracking.open_count === 0 && !r.tracking.bounced).length,
+    bounced: recipients.filter(r => r.tracking.bounced).length,
+  }
 
   return (
     <div className="space-y-6 p-6">
@@ -158,246 +201,157 @@ export default function SendStatsPage() {
           <ArrowLeft className="w-4 h-4 mr-1" />
           Retour à la campagne
         </Link>
-        <h1 className="text-3xl font-bold text-text-primary">Statistiques de l'envoi</h1>
-        <div className="flex items-center gap-4 mt-2 text-sm text-text-secondary">
-          <div className="flex items-center gap-1">
-            <Calendar className="w-4 h-4" />
-            {send.sent_at
-              ? `Envoyé le ${new Date(send.sent_at).toLocaleString('fr-FR')}`
-              : send.scheduled_at
-              ? `Programmé pour le ${new Date(send.scheduled_at).toLocaleString('fr-FR')}`
-              : `Créé le ${new Date(send.created_at).toLocaleString('fr-FR')}`}
+
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-text-primary flex items-center gap-2">
+              <Mail className="w-8 h-8 text-primary" />
+              {batch.name}
+            </h1>
+            <p className="text-text-secondary mt-1">
+              Envoyé le {batch.sent_at ? new Date(batch.sent_at).toLocaleDateString('fr-FR', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+              }) : '-'}
+            </p>
           </div>
-          {getStatusBadge(send.status)}
         </div>
       </div>
 
-      {/* Statistiques globales */}
+      {/* KPIs Globaux */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-primary/10 rounded-lg">
-              <User className="w-5 h-5 text-primary" />
+        <Card>
+          <CardBody className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-text-tertiary">Envoyés</p>
+                <p className="text-3xl font-bold text-text-primary mt-1">{batch.sent_count}</p>
+                <p className="text-xs text-text-secondary mt-1">
+                  Sur {batch.total_recipients} destinataires
+                </p>
+              </div>
+              <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
+                <Mail className="w-6 h-6 text-gray-600" />
+              </div>
             </div>
-            <div>
-              <p className="text-xs text-text-secondary">Destinataires</p>
-              <p className="text-2xl font-bold text-text-primary">{send.total_recipients}</p>
-              <p className="text-xs text-text-tertiary mt-1">
-                {send.sent_count} envoyés
-              </p>
-            </div>
-          </div>
+          </CardBody>
         </Card>
 
-        <Card className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-success/10 rounded-lg">
-              <Eye className="w-5 h-5 text-success" />
+        <Card>
+          <CardBody className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-text-tertiary">Ouverts</p>
+                <p className="text-3xl font-bold text-primary mt-1">{batch.opened_count}</p>
+                <p className="text-xs text-text-secondary mt-1">
+                  Taux d'ouverture: {openRate}%
+                </p>
+              </div>
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <Eye className="w-6 h-6 text-primary" />
+              </div>
             </div>
-            <div>
-              <p className="text-xs text-text-secondary">Ouvertures</p>
-              <p className="text-2xl font-bold text-text-primary">{send.opened_count}</p>
-              <p className="text-xs text-text-tertiary mt-1">
-                {openRate.toFixed(1)}% taux d'ouverture
-              </p>
-            </div>
-          </div>
+          </CardBody>
         </Card>
 
-        <Card className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <MousePointerClick className="w-5 h-5 text-purple-600" />
+        <Card>
+          <CardBody className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-text-tertiary">Cliqués</p>
+                <p className="text-3xl font-bold text-success mt-1">{batch.clicked_count}</p>
+                <p className="text-xs text-text-secondary mt-1">
+                  Taux de clic: {clickRate}%
+                </p>
+              </div>
+              <div className="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center">
+                <MousePointerClick className="w-6 h-6 text-success" />
+              </div>
             </div>
-            <div>
-              <p className="text-xs text-text-secondary">Clics</p>
-              <p className="text-2xl font-bold text-text-primary">{send.clicked_count}</p>
-              <p className="text-xs text-text-tertiary mt-1">
-                {clickRate.toFixed(1)}% taux de clic
-              </p>
-            </div>
-          </div>
+          </CardBody>
         </Card>
 
-        <Card className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-error/10 rounded-lg">
-              <Ban className="w-5 h-5 text-error" />
+        <Card>
+          <CardBody className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-text-tertiary">Rebonds</p>
+                <p className="text-3xl font-bold text-error mt-1">{batch.bounced_count}</p>
+                <p className="text-xs text-text-secondary mt-1">
+                  Taux de rebond: {bounceRate}%
+                </p>
+              </div>
+              <div className="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center">
+                <Ban className="w-6 h-6 text-error" />
+              </div>
             </div>
-            <div>
-              <p className="text-xs text-text-secondary">Rebonds</p>
-              <p className="text-2xl font-bold text-text-primary">{send.bounced_count}</p>
-              <p className="text-xs text-text-tertiary mt-1">
-                {bounceRate.toFixed(1)}% taux de rebond
-              </p>
-            </div>
-          </div>
+          </CardBody>
         </Card>
       </div>
 
-      {/* Liste des destinataires */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Détails par destinataire</h2>
-          </div>
-        </CardHeader>
-        <CardBody>
-          {/* Filtres et recherche */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Rechercher par email..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value)
-                  setPage(1)
-                }}
-                className="w-full pl-10 pr-3 py-2 border border-border rounded-lg text-sm"
-              />
-            </div>
-            <div className="relative">
-              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <select
-                value={statusFilter}
-                onChange={(e) => {
-                  setStatusFilter(e.target.value)
-                  setPage(1)
-                }}
-                className="w-full pl-10 pr-3 py-2 border border-border rounded-lg text-sm bg-white"
+      {/* Alerte leads chauds */}
+      {filterCounts.clicked > 0 && (
+        <Alert
+          type="success"
+          message={
+            <div className="flex items-center justify-between">
+              <span>
+                🔥 <strong>{filterCounts.clicked} lead(s) chaud(s)</strong> ont cliqué ! Moment idéal pour les rappeler.
+              </span>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => setFilter('clicked')}
               >
-                <option value="">Tous les statuts</option>
-                <option value="queued">En file</option>
-                <option value="sending">En cours</option>
-                <option value="sent">Envoyé</option>
-                <option value="delivered">Délivré</option>
-                <option value="opened">Ouvert</option>
-                <option value="clicked">Cliqué</option>
-                <option value="failed">Échec</option>
-                <option value="bounced">Rebond</option>
-              </select>
+                Voir les leads chauds
+              </Button>
             </div>
+          }
+        />
+      )}
+
+      {/* Filtres + Destinataires */}
+      <Card>
+        <CardHeader
+          title="Destinataires avec tracking"
+          subtitle="Identifiez les leads chauds à rappeler"
+          icon={<TrendingUp className="w-5 h-5 text-primary" />}
+        />
+        <CardBody>
+          {/* Tabs de filtre */}
+          <div className="flex flex-wrap gap-2 mb-6">
+            {FILTER_OPTIONS.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => setFilter(option.value)}
+                className={`
+                  px-4 py-2 rounded-lg font-medium text-sm transition-all
+                  flex items-center gap-2
+                  ${filter === option.value
+                    ? `${option.color} shadow-sm`
+                    : 'bg-muted/20 text-text-secondary hover:bg-muted/30'
+                  }
+                `}
+              >
+                {option.icon}
+                <span>{option.label}</span>
+                <span className="ml-1 px-2 py-0.5 rounded-full bg-white/30 text-xs font-semibold">
+                  {filter === 'all' ? filterCounts.all : filterCounts[option.value] || 0}
+                </span>
+              </button>
+            ))}
           </div>
 
-          {isLoadingDetails ? (
-            <div className="text-center py-8 text-text-secondary">Chargement...</div>
-          ) : details.length === 0 ? (
-            <Alert type="info" message="Aucun destinataire trouvé avec ces critères" />
-          ) : (
-            <>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-muted/10 border-b border-border">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase">
-                        Destinataire
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase">
-                        Statut
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase">
-                        Envoyé
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase">
-                        Ouvert
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-text-secondary uppercase">
-                        Cliqué
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    {details.map((detail) => (
-                      <tr key={detail.id} className="hover:bg-muted/5">
-                        <td className="px-4 py-3">
-                          <div className="text-sm font-medium text-text-primary">
-                            {detail.recipient_email}
-                          </div>
-                          {detail.recipient_name && (
-                            <div className="text-xs text-text-tertiary">
-                              {detail.recipient_name}
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-4 py-3">
-                          {getStatusBadge(detail.status)}
-                          {detail.error_message && (
-                            <div className="text-xs text-error mt-1" title={detail.error_message}>
-                              Erreur
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-text-secondary">
-                          {detail.sent_at
-                            ? new Date(detail.sent_at).toLocaleString('fr-FR', {
-                                day: '2-digit',
-                                month: '2-digit',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                              })
-                            : '-'}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-text-secondary">
-                          {detail.opened_at
-                            ? new Date(detail.opened_at).toLocaleString('fr-FR', {
-                                day: '2-digit',
-                                month: '2-digit',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                              })
-                            : '-'}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-text-secondary">
-                          {detail.clicked_at
-                            ? new Date(detail.clicked_at).toLocaleString('fr-FR', {
-                                day: '2-digit',
-                                month: '2-digit',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                              })
-                            : '-'}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
-                  <p className="text-sm text-text-secondary">
-                    Affichage {((page - 1) * limit) + 1} à {Math.min(page * limit, totalDetails)} sur {totalDetails}
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setPage(p => Math.max(1, p - 1))}
-                      disabled={page === 1}
-                      leftIcon={<ChevronLeft className="w-4 h-4" />}
-                    >
-                      Précédent
-                    </Button>
-                    <span className="text-sm text-text-secondary">
-                      Page {page} sur {totalPages}
-                    </span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                      disabled={page >= totalPages}
-                      rightIcon={<ChevronRight className="w-4 h-4" />}
-                    >
-                      Suivant
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </>
-          )}
+          {/* Liste des destinataires */}
+          <RecipientTrackingList
+            recipients={recipients}
+            isLoading={isLoadingRecipients}
+            onCallClick={handleCallClick}
+            onNoteClick={handleNoteClick}
+          />
         </CardBody>
       </Card>
     </div>
