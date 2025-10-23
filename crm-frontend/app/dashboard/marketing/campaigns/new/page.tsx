@@ -52,9 +52,13 @@ export default function NewCampaignPage() {
             }
           }
 
+          // Transformer default_template_id (backend) → template_id (frontend)
+          const template_id = data.default_template_id !== undefined ? data.default_template_id : data.template_id
+
           setInitialData({
             ...data,
             recipient_filters,
+            template_id,
           })
           logger.log('📥 Brouillon chargé depuis DB:', { ...data, recipient_filters })
         })
@@ -81,6 +85,12 @@ export default function NewCampaignPage() {
         }
         // Supprimer recipient_filters car c'est un format frontend
         delete payload.recipient_filters
+      }
+
+      // IMPORTANT: Le backend utilise default_template_id, pas template_id
+      if (formData.template_id !== undefined) {
+        payload.default_template_id = formData.template_id
+        delete payload.template_id
       }
 
       logger.log('📤 Création campagne avec produit:', payload)
@@ -120,6 +130,12 @@ export default function NewCampaignPage() {
         }
         // Supprimer recipient_filters car c'est un format frontend
         delete payload.recipient_filters
+      }
+
+      // IMPORTANT: Le backend utilise default_template_id, pas template_id
+      if (formData.template_id !== undefined) {
+        payload.default_template_id = formData.template_id
+        delete payload.template_id
       }
 
       if (initialData?.id) {
