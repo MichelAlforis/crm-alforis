@@ -569,15 +569,27 @@ class EmailDeliveryService:
         unsubscribe_base = settings.default_email_unsubscribe_base_url.rstrip("?")
         separator = "&" if "?" in unsubscribe_base else "?"
 
-        # Générer token JWT pour désinscription (compatible alforis.fr/fr/b2b/unsubscribe?token=...)
-        from core.security import create_access_token
-        unsubscribe_token = create_access_token(
-            data={
+        # Générer token JWT pour désinscription avec secret partagé alforis.fr
+        from jose import jwt
+        from datetime import datetime, timedelta
+
+        # Utiliser le secret partagé avec alforis.fr (pas le SECRET_KEY principal du CRM)
+        unsubscribe_secret = settings.unsubscribe_jwt_secret
+        if not unsubscribe_secret:
+            logger.warning("UNSUBSCRIBE_JWT_SECRET non configuré, utilisation du SECRET_KEY par défaut")
+            unsubscribe_secret = settings.secret_key
+
+        # Token avec expiration longue (1 an) pour permettre désabonnement tardif
+        expire = datetime.utcnow() + timedelta(days=365)
+        unsubscribe_token = jwt.encode(
+            {
                 "email": send.recipient_email,
                 "send_id": send.id,
-                "type": "unsubscribe"
+                "type": "unsubscribe",
+                "exp": expire
             },
-            expires_delta=None  # Token sans expiration pour désinscription
+            unsubscribe_secret,
+            algorithm="HS256"
         )
         unsubscribe_url = f"{unsubscribe_base}{separator}token={unsubscribe_token}"
         system_ctx.setdefault("unsubscribe_url", unsubscribe_url)

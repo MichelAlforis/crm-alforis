@@ -72,6 +72,9 @@ class Settings(BaseSettings):
     # Webhook Security (pour alforis.fr -> CRM)
     webhook_secret: str = ""  # Token Bearer pour authentifier les webhooks entrants
 
+    # JWT Secret partagé avec alforis.fr pour désinscription
+    unsubscribe_jwt_secret: str = ""  # Même secret que JWT_SECRET sur alforis.fr
+
     # AI Agent Configuration
     ai_enabled: bool = True
     ai_default_provider: str = "claude"  # claude, openai, ollama
