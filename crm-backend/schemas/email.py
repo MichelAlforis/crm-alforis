@@ -123,7 +123,7 @@ class EmailCampaignBase(BaseSchema):
 
     name: str = Field(..., min_length=1, max_length=255)
     description: Optional[str] = None
-    provider: EmailProvider = EmailProvider.SENDGRID
+    provider: EmailProvider = EmailProvider.RESEND
     from_name: str = Field(..., min_length=1, max_length=255)
     from_email: str = Field(..., min_length=3, max_length=255)
     reply_to: Optional[str] = Field(None, max_length=255)

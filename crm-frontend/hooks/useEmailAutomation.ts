@@ -49,6 +49,13 @@ export function useEmailTemplates(options?: { onlyActive?: boolean }) {
     },
   })
 
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => apiClient.delete(`/email/templates/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['email', 'templates'] })
+    },
+  })
+
   return {
     templates: data ?? [],
     isLoading,
@@ -57,8 +64,10 @@ export function useEmailTemplates(options?: { onlyActive?: boolean }) {
     createTemplate: createMutation.mutateAsync,
     updateTemplate: (id: number, payload: EmailTemplateUpdateInput) =>
       updateMutation.mutateAsync({ id, data: payload }),
+    deleteTemplate: deleteMutation.mutateAsync,
     isCreating: createMutation.isPending,
     isUpdating: updateMutation.isPending,
+    isDeleting: deleteMutation.isPending,
   }
 }
 
@@ -104,6 +113,13 @@ export function useEmailCampaigns(filters?: EmailCampaignFilters) {
     },
   })
 
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => apiClient.delete(`/email/campaigns/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['email', 'campaigns'] })
+    },
+  })
+
   return {
     campaigns: data?.items ?? [],
     pagination: {
@@ -119,9 +135,11 @@ export function useEmailCampaigns(filters?: EmailCampaignFilters) {
       updateMutation.mutateAsync({ id, data: payload }),
     scheduleCampaign: (id: number, payload: EmailCampaignScheduleInput) =>
       scheduleMutation.mutateAsync({ id, data: payload }),
+    deleteCampaign: deleteMutation.mutateAsync,
     isCreating: createMutation.isPending,
     isUpdating: updateMutation.isPending,
     isScheduling: scheduleMutation.isPending,
+    isDeleting: deleteMutation.isPending,
     refetch: () => queryClient.invalidateQueries({ queryKey: ['email', 'campaigns'] }),
   }
 }

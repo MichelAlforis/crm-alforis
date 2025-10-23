@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, Query, status
+from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
 
 from core import get_current_user, get_db
@@ -78,6 +79,40 @@ async def update_template(
     service = EmailTemplateService(db)
     template = await service.update(template_id, payload)
     return EmailTemplateResponse.model_validate(template)
+
+
+@router.delete("/templates/{template_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_template(
+    template_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """Supprimer un template email"""
+    from models.email import EmailTemplate
+    from fastapi import HTTPException
+
+    # Récupérer le template
+    template = db.query(EmailTemplate).filter(EmailTemplate.id == template_id).first()
+    if not template:
+        raise HTTPException(status_code=404, detail="Template introuvable")
+
+    # Vérifier si utilisé dans des campagnes
+    from models.email import EmailCampaign
+    campaigns_using_template = db.query(EmailCampaign).filter(
+        EmailCampaign.default_template_id == template_id
+    ).count()
+
+    if campaigns_using_template > 0:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Impossible de supprimer ce template. Il est utilisé dans {campaigns_using_template} campagne(s)."
+        )
+
+    # Supprimer le template
+    db.delete(template)
+    db.commit()
+
+    return None
 
 
 # ============= RECIPIENT COUNT =============
@@ -159,6 +194,98 @@ async def count_recipients(
     return RecipientCountResponse(count=count)
 
 
+@router.post("/campaigns/recipients/list")
+async def list_recipients(
+    filters: RecipientFilters,
+    skip: int = Query(0, ge=0),
+    limit: int = Query(1000, ge=1, le=10000),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """Retourne la liste complète des destinataires selon les filtres"""
+    from models.organisation import Organisation
+    from models.person import Person, PersonOrganizationLink
+
+    recipients = []
+
+    if filters.target_type == 'organisations':
+        query = db.query(Organisation).filter(
+            and_(
+                Organisation.is_active == True,
+                Organisation.email.isnot(None)
+            )
+        )
+
+        if filters.languages:
+            query = query.filter(Organisation.language.in_(filters.languages))
+
+        if filters.countries:
+            query = query.filter(Organisation.country_code.in_(filters.countries))
+
+        if filters.organisation_categories:
+            query = query.filter(Organisation.category.in_(filters.organisation_categories))
+
+        if filters.specific_ids:
+            query = query.filter(Organisation.id.in_(filters.specific_ids))
+
+        if filters.exclude_ids:
+            query = query.filter(~Organisation.id.in_(filters.exclude_ids))
+
+        orgs = query.offset(skip).limit(limit).all()
+
+        for org in orgs:
+            recipients.append({
+                "id": org.id,
+                "name": org.name,
+                "email": org.email,
+                "country": org.country_code,
+                "language": org.language,
+                "category": org.category,
+            })
+
+    elif filters.target_type == 'contacts':
+        from sqlalchemy import or_
+        query = db.query(Person, Organisation).join(
+            PersonOrganizationLink,
+            and_(
+                PersonOrganizationLink.person_id == Person.id,
+                PersonOrganizationLink.is_primary == True
+            )
+        ).outerjoin(
+            Organisation,
+            Organisation.id == PersonOrganizationLink.organisation_id
+        ).filter(
+            or_(Person.email.isnot(None), Person.personal_email.isnot(None))
+        )
+
+        if filters.languages:
+            query = query.filter(Person.language.in_(filters.languages))
+
+        if filters.countries:
+            query = query.filter(Person.country_code.in_(filters.countries))
+
+        if filters.specific_ids:
+            query = query.filter(Person.id.in_(filters.specific_ids))
+
+        if filters.exclude_ids:
+            query = query.filter(~Person.id.in_(filters.exclude_ids))
+
+        results = query.offset(skip).limit(limit).all()
+
+        for person, org in results:
+            email = person.email or person.personal_email
+            recipients.append({
+                "id": person.id,
+                "name": person.full_name,
+                "email": email,
+                "organisation_name": org.name if org else None,
+                "country": person.country_code,
+                "language": person.language,
+            })
+
+    return {"recipients": recipients, "total": len(recipients)}
+
+
 # ============= CAMPAIGNS =============
 
 @router.get("/campaigns", response_model=PaginatedResponse[EmailCampaignResponse])
@@ -218,6 +345,41 @@ async def update_campaign(
     service = EmailCampaignService(db)
     campaign = await service.update(campaign_id, payload)
     return EmailCampaignResponse.model_validate(campaign)
+
+
+@router.delete("/campaigns/{campaign_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_campaign(
+    campaign_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """Supprimer une campagne (seulement si draft, paused, completed ou failed)"""
+    from models.email import EmailCampaign, EmailCampaignStatus
+    from fastapi import HTTPException
+
+    # Récupérer la campagne
+    campaign = db.query(EmailCampaign).filter(EmailCampaign.id == campaign_id).first()
+    if not campaign:
+        raise HTTPException(status_code=404, detail="Campagne introuvable")
+
+    # Vérifier le statut - ne pas autoriser la suppression si sending ou scheduled
+    if campaign.status in [EmailCampaignStatus.SENDING, EmailCampaignStatus.SCHEDULED]:
+        raise HTTPException(
+            status_code=400,
+            detail="Impossible de supprimer une campagne en cours d'envoi ou programmée. Veuillez d'abord la mettre en pause."
+        )
+
+    # Supprimer la campagne
+    db.delete(campaign)
+    db.commit()
+
+    await emit_event(
+        EventType.EMAIL_CAMPAIGN_DELETED,
+        data={"campaign_id": campaign_id, "name": campaign.name},
+        user_id=_extract_user_id(current_user),
+    )
+
+    return None
 
 
 @router.post("/campaigns/{campaign_id}/schedule", response_model=EmailCampaignResponse)

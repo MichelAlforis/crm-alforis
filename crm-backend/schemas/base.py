@@ -6,7 +6,7 @@ T = TypeVar("T")
 
 class BaseSchema(PydanticBaseModel):
     """Schéma de base pour toutes les réponses"""
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, use_enum_values=True)
 
 class TimestampedSchema(BaseSchema):
     """Schéma avec timestamps"""

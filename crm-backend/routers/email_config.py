@@ -48,6 +48,34 @@ def get_active_configuration(
     return config
 
 
+@router.get("/available-providers", response_model=List[str])
+def get_available_providers(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+    """Retourne la liste des providers configurés (via DB ou .env)"""
+    from core.config import settings
+
+    service = EmailConfigurationService(db)
+    available = []
+
+    # Vérifier les configurations en DB
+    configs = service.get_all()
+    for config in configs:
+        if config.provider not in available:
+            available.append(config.provider)
+
+    # Vérifier les .env variables
+    if settings.resend_api_key and "resend" not in available:
+        available.append("resend")
+    if settings.sendgrid_api_key and "sendgrid" not in available:
+        available.append("sendgrid")
+    if settings.mailgun_api_key and settings.mailgun_domain and "mailgun" not in available:
+        available.append("mailgun")
+
+    return available
+
+
 @router.get("/{config_id}", response_model=EmailConfigurationResponse)
 def get_email_configuration(
     config_id: int,

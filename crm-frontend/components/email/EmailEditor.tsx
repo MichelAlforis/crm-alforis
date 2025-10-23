@@ -7,14 +7,26 @@ import { Card, CardBody, CardHeader } from '@/components/shared/Card'
 import { Alert } from '@/components/shared/Alert'
 import { Copy, Download, Eye, Layers, Loader2, RefreshCw, Sparkles } from 'lucide-react'
 
-const ReactEmailEditor = dynamic(() => import('react-email-editor'), {
+const ReactEmailEditor = dynamic(() => {
+  console.log('⚡ EmailEditor: Tentative de chargement du module react-email-editor')
+  return import('react-email-editor').then((module) => {
+    console.log('✅ EmailEditor: Module react-email-editor chargé')
+    return module
+  }).catch((error) => {
+    console.error('❌ EmailEditor: Erreur lors du chargement du module:', error)
+    throw error
+  })
+}, {
   ssr: false,
-  loading: () => (
-    <div className="flex h-96 items-center justify-center gap-3 rounded-radius-md border border-dashed border-border text-text-secondary">
-      <Loader2 className="h-5 w-5 animate-spin" />
-      <span>Initialisation de l'éditeur email…</span>
-    </div>
-  ),
+  loading: () => {
+    console.log('⏳ EmailEditor: Affichage du loader...')
+    return (
+      <div className="flex h-96 items-center justify-center gap-3 rounded-radius-md border border-dashed border-border text-text-secondary">
+        <Loader2 className="h-5 w-5 animate-spin" />
+        <span>Initialisation de l'éditeur email…</span>
+      </div>
+    )
+  },
 })
 
 type EmailEditorRef = {
@@ -133,6 +145,7 @@ export const EmailEditor: React.FC<EmailEditorProps> = ({
   }, [value])
 
   const handleEditorLoaded = useCallback(() => {
+    console.log('✅ EmailEditor: Éditeur chargé!')
     setIsEditorReady(true)
     loadInitialContent(true)
   }, [loadInitialContent])

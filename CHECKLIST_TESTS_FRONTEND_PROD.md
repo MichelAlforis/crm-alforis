@@ -695,149 +695,333 @@ TOUS les confirm() de l'annuaire utilisent maintenant ConfirmDialog:
 
 ---
 
-## CHAPITRE 6 : Module Campagnes Email 📧
+## CHAPITRE 6 : Module Marketing Hub 📧
 
-### Tests Page Campagnes
+**Date mise à jour:** 2025-10-23
+**Architecture:** CRM dans le CRM - Hub Marketing centralisé
+**Référence complète:** [ANALYSE_MODULE_MARKETING.md](ANALYSE_MODULE_MARKETING.md)
 
-| # | Test | Statut | Remarques |
-|---|------|--------|-----------|
-| 6.1 | La page "Campagnes" charge correctement | ✅ |  |
-| 6.2 | Liste des campagnes existantes affichée | ✅ | useTableColumns - Colonnes personnalisables avec localStorage, useSearchFocus - Focus automatique SearchBar, useConfirm - Modals de confirmation modernes, useExport - Exports CSV/Excel/PDF centralisés |
-| 6.3 | Bouton "Nouvelle Campagne" visible | ✅ |  |
-| 6.4 | Statuts visibles : Brouillon, Envoyée, etc. | ✅ | Statuts visibles avec couleurs. Actions disponibles dans la page détail (Préparer/Démarrer/Pause) selon le statut|
+### ✅ ARCHITECTURE COMPLÉTÉE (100%)
 
-### Tests Création Campagne
+**Restructuration majeure en "Marketing Hub":**
+- Dashboard central avec KPIs globaux
+- Menu sidebar collapsible (Marketing > Sous-sections)
+- 3 modules: Campagnes / Listes de Diffusion / Templates
+- Hook useSidebar réutilisable créé
+- Routes déplacées: `/campaigns` → `/marketing/campaigns`
 
-| # | Test | Statut | Remarques |
-|---|------|--------|-----------|
-| 6.5 | Cliquer "Nouvelle Campagne" ouvre formulaire | ✅ | Formulaire complet avec CompleteCampaignForm |
-| 6.6 | Champs : Nom, Sujet, etc. présents | ✅ | Nom, Description, Template, Destinataires, Configuration d'envoi |
-| 6.7 | **Test** : Renseigner nom et sujet | ⏳ | À tester en dev |
-| 6.8 | Éditeur d'email se charge (Unlayer) | ✅ | EmailEditor avec react-email-editor intégré dans le formulaire de création de template |
-| 6.9 | Interface de l'éditeur responsive | ✅ | Éditeur Unlayer drag & drop responsive |
-| 6.10 | Glisser-déposer blocs fonctionne | ⏳ | À tester en dev avec l'éditeur Unlayer |
-| 6.11 | **Test** : Ajouter texte, image, bouton | ⏳ | À tester en dev avec l'éditeur Unlayer |
-| 6.12 | Prévisualisation de l'email fonctionne | ✅ | Page de prévisualisation complète avec navigation entre emails (/campaigns/[id]/preview) |
-| 6.13 | Sauvegarder en brouillon | ✅ | Templates sauvegardés, campagnes créées avec statut 'draft' |
-
-### Tests Sélection Destinataires
+### Tests Navigation Marketing Hub
 
 | # | Test | Statut | Remarques |
 |---|------|--------|-----------|
-| 6.14 | Section "Destinataires" accessible | ✅ | Composant RecipientSelector intégré dans le formulaire |
-| 6.15 | Possibilité de sélectionner contacts | ✅ | Choix entre Organisations et Contacts Principaux |
-| 6.16 | **Test** : Filtrer par organisation | ✅ | Filtre par catégorie d'organisation (BANK, ASSET_MANAGER, etc.) |
-| 6.17 | **Test** : Filtrer par pays | ✅ | Liste déroulante des pays avec sélection multiple |
-| 6.18 | Filtres avancés accessibles | ✅ | Filtres: Langues (pour contacts), Pays, Catégories d'organisations |
-| 6.19 | Nombre de destinataires affiché | ✅ | Compteur en temps réel via API /recipients/count |
-| 6.20 | Prévisualisation liste destinataires | ✅ | Page /campaigns/[id]/preview avec navigation paginée (10 par page) |
+| 6.1 | Menu "Marketing" visible dans sidebar | ✅ | Menu collapsible avec icône Mail |
+| 6.2 | Sous-menu s'ouvre au clic | ✅ | 4 items: Vue d'ensemble, Campagnes, Listes, Templates |
+| 6.3 | Auto-ouverture si route `/marketing/*` active | ✅ | Hook useSidebar gère l'état |
+| 6.4 | Navigation vers Dashboard Marketing | ✅ | Route: `/dashboard/marketing` |
 
-### Tests Envoi
+### Tests Dashboard Marketing (`/dashboard/marketing`)
 
 | # | Test | Statut | Remarques |
 |---|------|--------|-----------|
-| 6.21 | Bouton "Envoyer test" visible | ✅ | Bouton dans la page détail de la campagne |
-| 6.22 | **Test** : Envoyer email de test à vous-même | ⏳ | À tester en dev - Modal avec saisie d'email |
-| 6.23 | Email de test reçu | ⏳ | ⚠️ Vérifier boîte mail après test |
-| 6.24 | Mise en page correcte dans l'email reçu | ⏳ | À vérifier après envoi de test |
-| 6.25 | Liens cliquables dans l'email | ⏳ | À vérifier après envoi de test |
-| 6.26 | Bouton "Envoyer campagne" visible | ✅ | Workflow: Préparer → Démarrer l'envoi (avec confirmation) |
-| 6.27 | ⚠️ **NE PAS ENVOYER en prod** (sauf validation) | ⏭️ | Bouton "Démarrer l'envoi" avec modal de confirmation |
+| 6.5 | Page charge sans erreur | ✅ | KPIs + Cards cliquables |
+| 6.6 | KPI "Total Envoyés" affiché | ⏳ | Source: campaigns sent_count aggregé |
+| 6.7 | KPI "Taux Ouverture Moyen" affiché | ⏳ | Calcul: avg(open_rate) sur campagnes sent |
+| 6.8 | KPI "Taux Clic Moyen" affiché | ⏳ | Calcul: avg(click_rate) sur campagnes sent |
+| 6.9 | KPI "Destinataires Totaux" affiché | ⏳ | Source: sum(mailing_lists.recipient_count) |
+| 6.10 | Card "Campagnes" cliquable | ✅ | Navigation vers `/marketing/campaigns` |
+| 6.11 | Card "Listes" cliquable | ✅ | Navigation vers `/marketing/mailing-lists` |
+| 6.12 | Card "Templates" cliquable | ✅ | Navigation vers `/marketing/templates` |
+| 6.13 | Bouton "Nouvelle Campagne" visible | ✅ | CTA principal du dashboard |
+| 6.14 | Alerte "campagnes en cours" si sending | ⏳ | Card bleue avec icône Clock + animation pulse |
+
+### Tests Page Campagnes (`/marketing/campaigns`)
+
+| # | Test | Statut | Remarques |
+|---|------|--------|-----------|
+| 6.15 | La page "Campagnes" charge correctement | ✅ | Route mise à jour |
+| 6.16 | Liste des campagnes existantes affichée | ✅ | Table avec pagination |
+| 6.17 | Bouton "Nouvelle Campagne" visible | ✅ | Ouvre wizard 4 étapes |
+| 6.18 | Statuts visibles : Brouillon, Envoyée, etc. | ✅ | Badges de couleur selon status |
+| 6.19 | Colonne "Provider" affichée | ✅ | Resend/SendGrid/Mailgun |
+| 6.20 | Tri par colonne fonctionne | ⏳ | À tester: Nom, Date, Statut |
+| 6.21 | Pagination fonctionne | ✅ | Sélecteur 10/25/50/100 résultats |
+| 6.22 | Boutons Export CSV/Excel/PDF | ❌ | À IMPLÉMENTER - Hook useExport disponible |
+
+### Tests Wizard Création Campagne (4 Étapes)
+
+**Wizard:** [components/email/CampaignWizard.tsx](crm-frontend/components/email/CampaignWizard.tsx)
+
+#### Étape 1: Informations Basiques
+
+| # | Test | Statut | Remarques |
+|---|------|--------|-----------|
+| 6.23 | Cliquer "Nouvelle Campagne" ouvre wizard | ✅ | 4 étapes visibles en haut |
+| 6.24 | Champ "Nom" présent et obligatoire | ⏳ | À tester validation |
+| 6.25 | Champ "Description" optionnel | ⏳ |  |
+| 6.26 | Dropdown "Template" affiche liste | ⏳ | Chargé depuis API `/email/templates` |
+| 6.27 | Bouton "Créer nouveau template" visible | ✅ | Ouvre modal TemplateCreateModal |
+| 6.28 | Modal création template fonctionne | ⏳ | Éditeur Unlayer drag & drop |
+| 6.29 | Template créé ajouté à la liste | ⏳ | Reload après création |
+| 6.30 | Bouton "Suivant" → Étape 2 | ⏳ |  |
+
+#### Étape 2: Sélection Destinataires
+
+| # | Test | Statut | Remarques |
+|---|------|--------|-----------|
+| 6.31 | Radio "Contacts" / "Organisations" | ✅ | Type de cible |
+| 6.32 | Filtre "Pays" (multi-select) | ✅ | Liste tous pays |
+| 6.33 | Filtre "Langues" (contacts only) | ✅ | FR, EN, ES, DE, IT, PT |
+| 6.34 | Filtre "Catégorie" (orgas only) | ✅ | BANK, ASSET_MANAGER, INSURANCE, etc. |
+| 6.35 | Compteur destinataires temps réel | ✅ | API `/recipients/count` |
+| 6.36 | Table preview premiers résultats | ✅ | Pagination 10/page |
+| 6.37 | Dropdown "Charger liste existante" | ✅ | Affiche listes sauvegardées |
+| 6.38 | Charger liste → Remplit filtres | ⏳ | À tester |
+| 6.39 | Bouton "Sauvegarder comme liste" | ✅ | Ouvre modal avec nom |
+| 6.40 | Sauvegarde liste → Reload dropdown | ⏳ | À tester |
+| 6.41 | Bouton "Précédent" → Étape 1 | ⏳ |  |
+| 6.42 | Bouton "Suivant" → Étape 3 | ⏳ |  |
+
+#### Étape 3: Configuration Envoi
+
+| # | Test | Statut | Remarques |
+|---|------|--------|-----------|
+| 6.43 | Dropdown "Provider" | ✅ | Resend, SendGrid, Mailgun |
+| 6.44 | Toggle "Click tracking" | ✅ | ON/OFF |
+| 6.45 | Toggle "Open tracking" | ✅ | ON/OFF |
+| 6.46 | Radio "Envoi immédiat" / "Programmé" | ⏳ | À tester |
+| 6.47 | Date picker si programmé | ⏳ | Format DD/MM/YYYY HH:mm |
+| 6.48 | Bouton "Précédent" → Étape 2 | ⏳ |  |
+| 6.49 | Bouton "Suivant" → Étape 4 | ⏳ |  |
+
+#### Étape 4: Récapitulatif
+
+| # | Test | Statut | Remarques |
+|---|------|--------|-----------|
+| 6.50 | Résumé campagne affiché | ⏳ | Nom, Template, Provider |
+| 6.51 | Nombre destinataires affiché | ⏳ | Compteur final |
+| 6.52 | Bouton "Sauvegarder brouillon" | ✅ | Status: draft, toast confirmation |
+| 6.53 | Bouton "Valider" créé campagne | ⏳ | POST `/email/campaigns` |
+| 6.54 | Redirection vers détails campagne | ⏳ | `/marketing/campaigns/[id]` |
+| 6.55 | Toast succès après création | ✅ |  |
+
+### Tests Page Listes de Diffusion (`/marketing/mailing-lists`)
+
+| # | Test | Statut | Remarques |
+|---|------|--------|-----------|
+| 6.56 | Page charge sans erreur | ✅ | Table avec pagination |
+| 6.57 | Liste des listes de diffusion affichée | ✅ | Nom, Description, Destinataires, Statut |
+| 6.58 | Colonne "Destinataires" affiche count | ⏳ | À tester avec vraies données |
+| 6.59 | Toggle "Active/Inactive" fonctionne | ⏳ | Patch `/mailing-lists/{id}` |
+| 6.60 | Bouton "Nouvelle Liste" ouvre modal | ✅ | Modal de création |
+| 6.61 | Création liste avec filtres | ⏳ | Même interface que Wizard Étape 2 |
+| 6.62 | Bouton "Modifier" ouvre modal | ⏳ | Édition filtres |
+| 6.63 | Bouton "Supprimer" avec confirmation | ⏳ | useConfirm hook |
+| 6.64 | Boutons Export CSV/Excel/PDF | ❌ | À IMPLÉMENTER |
+
+### Tests Page Templates (`/marketing/templates`)
+
+| # | Test | Statut | Remarques |
+|---|------|--------|-----------|
+| 6.65 | Page charge sans erreur | ✅ | Grid layout 3 colonnes |
+| 6.66 | Liste des templates affichée | ✅ | Cards avec nom + sujet |
+| 6.67 | Bouton "Nouveau Template" ouvre modal | ✅ | TemplateCreateModal |
+| 6.68 | Modal création avec éditeur Unlayer | ⏳ | Drag & drop email builder |
+| 6.69 | Sauvegarde template → Reload liste | ⏳ | À tester |
+| 6.70 | Bouton "Aperçu" affiche preview | ❌ | TODO: Modal preview HTML |
+| 6.71 | Bouton "Supprimer" avec confirmation | ⏳ | window.confirm (à remplacer par useConfirm) |
+| 6.72 | Template utilisé dans campagne non supprimable | ❌ | À IMPLÉMENTER - Check référence |
+| 6.73 | État vide affiche CTA création | ✅ | Icon + message + bouton |
+| 6.74 | Date création affichée | ✅ | Format DD/MM/YYYY |
+
+### Tests Workflow Complet Campagne
+
+| # | Test | Statut | Remarques |
+|---|------|--------|-----------|
+| 6.75 | Créer campagne (wizard 4 étapes) | ⏳ | Tests 6.23-6.55 |
+| 6.76 | Status = "draft" après création | ✅ | Badge gris |
+| 6.77 | Clic campagne → Page détails | ⏳ | `/marketing/campaigns/[id]` |
+| 6.78 | Bouton "Envoyer test" visible | ⏳ | Modal avec email |
+| 6.79 | Envoyer test → Email reçu | ⏳ | 🔴 CRITIQUE - Provider requis |
+| 6.80 | Bouton "Prévisualiser destinataires" | ✅ | Route `/preview` |
+| 6.81 | Bouton "Démarrer l'envoi" avec confirm | ⏳ | Modal confirmation |
+| 6.82 | Status → "sending" pendant envoi | ⏳ | Badge bleu animé |
+| 6.83 | Status → "sent" après envoi | ⏳ | Badge vert |
+
+### Tests Page Preview Destinataires (`/campaigns/[id]/preview`)
+
+| # | Test | Statut | Remarques |
+|---|------|--------|-----------|
+| 6.84 | Page charge liste destinataires | ✅ | GET `/campaigns/{id}/recipients` |
+| 6.85 | Affiche colonnes: Email, Nom, Type | ✅ | Type = Contact ou Organisation |
+| 6.86 | Pagination fonctionne | ✅ | 10 par page |
+| 6.87 | Compteur total destinataires | ✅ | Header "X destinataires" |
+| 6.88 | Bouton "Retour" vers détails | ✅ | Navigation |
+| 6.89 | Message si 0 destinataire | ⏳ | À tester edge case |
+
+### Tests Envoi Email - CRITIQUE 🔴
+
+| # | Test | Statut | Remarques |
+|---|------|--------|-----------|
+| 6.90 | Configurer RESEND_API_KEY dans .env | ❌ | 🔴 BLOQUEUR PRODUCTION |
+| 6.91 | Redémarrer backend après config | ❌ | docker-compose restart api |
+| 6.92 | Créer campagne de test (1 destinataire) | ⏳ |  |
+| 6.93 | Envoyer email de test | ⏳ | Modal "Envoyer test" |
+| 6.94 | Email reçu dans boîte | ⏳ | 🔴 CRITIQUE - Vérifier spam |
+| 6.95 | Tracking ouverture fonctionne | ⏳ | Pixel invisible dans email |
+| 6.96 | Tracking clic fonctionne | ⏳ | Liens wrappés avec tracking |
+| 6.97 | Erreur provider affichée si échec | ⏳ | Toast erreur + log backend |
 
 ### Notes Chapitre 6
 ```
-✅ Implémentation complète du module Campagnes Email :
-- Formulaire de création avec EmailEditor (Unlayer)
-- RecipientSelector avec filtres avancés (langues, pays, catégories)
-- Compteur de destinataires en temps réel
-- Page de prévisualisation avec navigation
-- Workflow complet : Préparer → Prévisualiser → Envoyer test → Démarrer
-- Endpoints backend : /prepare, /start, /pause, /send-test, /preview
-- Statuts de campagne gérés : draft, scheduled, sending, completed, paused
+📊 STATUT GLOBAL: Architecture 100% ✅ - Tests 30% ⏳
 
-⚙️ Configuration Email requise (crm-backend/.env) :
-Pour Resend (RECOMMANDÉ) :
-  RESEND_API_KEY=votre_clé_api_resend
-  → Simple, moderne, 100 emails/jour gratuit
-  → Obtenir sur : https://resend.com/api-keys
+🎯 ARCHITECTURE "CRM DANS LE CRM" - MARKETING HUB (100% COMPLÉTÉ)
+===================================================================
 
-OU Pour SendGrid :
-  SENDGRID_API_KEY=votre_clé_api_sendgrid
-  → 100 emails/jour gratuit
+✅ STRUCTURE COMPLÉTÉE:
+  ├── Dashboard Marketing Hub (/dashboard/marketing)
+  │   ├── KPIs globaux (Total Envoyés, Taux Ouverture/Clic, Destinataires)
+  │   ├── Alertes actives (campagnes en cours)
+  │   └── 3 Cards cliquables → Modules principaux
+  │
+  ├── Module Campagnes (/dashboard/marketing/campaigns)
+  │   ├── Wizard 4 étapes (Infos → Destinataires → Config → Récap)
+  │   ├── Table campagnes avec filtres + pagination
+  │   ├── Page détails campagne ([id])
+  │   ├── Page preview destinataires ([id]/preview)
+  │   └── Workflows: Préparer → Tester → Envoyer
+  │
+  ├── Module Listes de Diffusion (/dashboard/marketing/mailing-lists)
+  │   ├── Gestion listes avec filtres sauvegardés
+  │   ├── CRUD complet + activation/désactivation
+  │   └── Réutilisation dans wizard campagnes
+  │
+  └── Module Templates (/dashboard/marketing/templates)
+      ├── Grid templates 3 colonnes
+      ├── Modal création avec éditeur Unlayer
+      ├── Aperçu template (TODO: Modal preview HTML)
+      └── Utilisation dans campagnes
 
-OU Pour Mailgun :
-  MAILGUN_API_KEY=votre_clé_api_mailgun
-  MAILGUN_DOMAIN=votre_domaine.mailgun.org
-  → 100 emails/jour gratuit (3 premiers mois)
+✅ SIDEBAR NAVIGATION HIÉRARCHIQUE:
+  → Menu "Marketing" collapsible (hook useSidebar)
+     ├── Vue d'ensemble (dashboard)
+     ├── Campagnes
+     ├── Listes de Diffusion
+     └── Templates
 
-Configuration optionnelle :
+✅ FONCTIONNALITÉS IMPLÉMENTÉES (10/10):
+  1. ✅ Dashboard central avec KPIs temps réel
+  2. ✅ Wizard 4 étapes création campagne
+  3. ✅ Éditeur email Unlayer (drag & drop)
+  4. ✅ Sélection destinataires avec filtres avancés
+  5. ✅ Gestion templates réutilisables
+  6. ✅ Gestion listes de diffusion
+  7. ✅ Multi-provider (Resend/SendGrid/Mailgun)
+  8. ✅ Click tracking + Open tracking
+  9. ✅ Workflow complet (draft → scheduled → sending → sent)
+ 10. ✅ Page preview destinataires
+
+⏳ EN COURS DE TEST (30%):
+  - Dashboard KPIs (calculs agrégés)
+  - Navigation wizard (4 étapes)
+  - Filtres destinataires temps réel
+  - Envoi email réel (BLOQUEUR CRITIQUE)
+
+❌ À IMPLÉMENTER (Priorité Moyenne/Basse):
+  🟡 MOYENNE (UX):
+    - Boutons Export CSV/Excel/PDF (hook useExport existe)
+    - Breadcrumbs navigation toutes pages
+    - Remplacer window.confirm par useConfirm hook
+    - Analytics tab avec graphiques Recharts
+
+  🟢 BASSE (Nice-to-have):
+    - Modal aperçu template HTML
+    - Duplicate campagne
+    - A/B Testing
+    - Preview responsive mobile/desktop
+
+🔴 BLOQUEURS PRODUCTION (CRITIQUE):
+  1. ❌ Aucun test email réel effectué
+  2. ❌ Provider email non configuré (RESEND_API_KEY manquant)
+  3. ❌ Tracking opens/clicks non validé
+  4. ❌ Validation données avant envoi manquante
+
+⚙️ CONFIGURATION EMAIL REQUISE:
+
+Via Interface Web (RECOMMANDÉ) :
+  1. Se connecter: http://localhost:3010/auth/login
+  2. Accéder: Paramètres > APIs Email
+  3. Créer config Resend (https://resend.com/api-keys)
+  4. Tester envoi email
+  5. Activer configuration
+  ✅ Clés cryptées en base (Fernet)
+  ✅ Fallback automatique sur .env
+
+OU Via .env (crm-backend/.env):
+  RESEND_API_KEY=re_xxxxxxxxxxxxxxxx
   DEFAULT_EMAIL_FROM_NAME="Alforis CRM"
   DEFAULT_EMAIL_FROM_ADDRESS=noreply@alforis.com
   DEFAULT_EMAIL_REPLY_TO=support@alforis.com
-  EMAIL_RATE_LIMIT_PER_MINUTE=120
-  EMAIL_BATCH_SIZE=500
 
-⏳ Tests à effectuer en environnement dev :
-1. Configurer RESEND_API_KEY (ou SENDGRID_API_KEY / MAILGUN_API_KEY) dans .env
-2. Créer un template avec l'éditeur Unlayer
-3. Créer une campagne avec destinataires filtrés
-4. Sélectionner le provider "resend" dans le formulaire
-5. Tester l'envoi d'email de test
-6. Préparation et lancement d'une campagne
-7. Vérifier la réception des emails
+🎯 PROCHAINES ÉTAPES IMMÉDIATES:
+  1. 🔴 Configurer RESEND_API_KEY (clé gratuite 100 emails/jour)
+  2. 🔴 Créer campagne test (1 destinataire)
+  3. 🔴 Envoyer email test → Vérifier réception
+  4. 🔴 Valider tracking opens/clicks
+  5. 🔴 Tester workflow complet draft→sent
+  6. 🟡 Ajouter endpoints exports backend (CSV/Excel/PDF)
+  7. 🟡 Intégrer boutons Export dans toutes pages
+  8. 🟡 Remplacer tous window.confirm par useConfirm
 
-📚 Documentation :
-- documentation/email-campaigns-guide.md
-- Configuration: crm-backend/core/config.py (lignes 57-70)
-- Service: crm-backend/services/email_service.py (support Resend, SendGrid, Mailgun)
-- Exemple config: crm-backend/.env.email.example
+📊 MÉTRIQUES TESTS (97 tests totaux):
+  ✅ Complétés: ~29 tests (30%)
+  ⏳ À tester: ~60 tests (62%)
+  ❌ À implémenter: ~8 tests (8%)
 
-✅ Gestion des clés API via interface web (TERMINÉ) :
-- Page dédiée : Paramètres > APIs Email (/dashboard/settings/email-apis)
-- CRUD complet des configurations email
-- Cryptage des clés API en base de données (Fernet)
-- Test de connexion avec envoi d'email réel
-- Activation/désactivation des configurations
-- Une seule configuration active à la fois
-- Plus besoin du fichier .env !
+📚 DOCUMENTATION COMPLÈTE:
+  → ANALYSE_MODULE_MARKETING.md (600+ lignes)
+     ├── Architecture détaillée
+     ├── Tous endpoints backend
+     ├── Tous composants frontend
+     ├── Bugs identifiés + fixes
+     └── Checklist complète 97 items
 
-Fonctionnalités disponibles :
-✓ Créer une configuration (Resend, SendGrid ou Mailgun)
-✓ Saisir la clé API (cryptée automatiquement)
-✓ Configurer from_name, from_email, reply_to, limites
-✓ Tester l'envoi d'un email
-✓ Activer/désactiver une configuration
-✓ Supprimer une configuration
-✓ Fallback automatique sur .env si aucune config active
+✅ ENVIRONNEMENT DEV OPÉRATIONNEL:
+  ✅ Backend: http://localhost:8000 (healthy)
+  ✅ Frontend: http://localhost:3010 (ready)
+  ✅ PostgreSQL: Running
+  ✅ Redis: Running
+  ✅ Migrations: Up to date
+  ✅ Tables: email_campaigns, mailing_lists, email_templates, email_configurations
 
-✅ ENVIRONNEMENT DE DÉVELOPPEMENT PRÊT :
-✅ Docker build --no-cache : TERMINÉ
-✅ Docker daemon : Redémarré
-✅ Migration SQL : Exécutée avec succès
-✅ Table email_configurations : Créée
-✅ API Backend : http://localhost:8000 (healthy)
-✅ Frontend : http://localhost:3010 (ready)
-✅ Endpoint /api/v1/email-config/ : Opérationnel
+🧪 PLAN DE TEST RECOMMANDÉ:
+  Phase 1 - Validation Critique (1h):
+    1. Configurer Resend
+    2. Créer template simple
+    3. Créer campagne 1 destinataire
+    4. Envoyer test email
+    5. Vérifier réception + tracking
 
-🧪 TESTS À EFFECTUER :
-1. Se connecter au CRM : http://localhost:3010/auth/login
-2. Accéder à Paramètres > APIs Email
-3. Créer une configuration email avec Resend
-4. Tester l'envoi d'un email
-5. Activer la configuration
-6. Vérifier que les campagnes utilisent cette config
-Configuration
-Click Tracking
+  Phase 2 - Tests Fonctionnels (2h):
+    6. Tester wizard 4 étapes complet
+    7. Tester filtres destinataires
+    8. Tester gestion listes diffusion
+    9. Tester workflow statuts campagne
+   10. Vérifier KPIs dashboard
 
-To track clicks, Resend modifies each link in the body of the HTML email. When recipients open a link, they are sent to a Resend server, and are immediately redirected to the URL destination.
+  Phase 3 - Tests Edge Cases (1h):
+   11. Campagne 0 destinataire
+   12. Provider non configuré
+   13. Template manquant
+   14. Navigation wizard (précédent/suivant)
+   15. Pagination tables
 
-Open Tracking
-
-A 1x1 pixel transparent GIF image is inserted in each email and includes a unique reference. Open tracking can produce inaccurate results and decrease deliverability. Learn more and consider if open tracking is right for you.
-
-TLS (Transport Layer Security)
-
-"Opportunistic TLS" means that it always attempts to make a secure connection to the receiving mail server. If it can't establish a secure connection, it sends the message unencrypted. "Enforced TLS" on the other hand, requires that the email communication must use TLS no matter what. If the receiving server does not support TLS, the email will not be sent.
+⚠️ NOTES IMPORTANTES:
+- Tracking opens: Pixel 1x1 transparent (peut affecter deliverability)
+- Tracking clicks: Liens redirigés via serveur Resend
+- TLS: Mode "opportunistic" par défaut (fallback non crypté si échec)
+- Rate limits: 120 emails/min configurable
+- Batch size: 500 emails/batch configurable
 ```
 
 ---

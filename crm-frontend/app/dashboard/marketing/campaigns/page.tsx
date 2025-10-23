@@ -2,9 +2,13 @@
 
 import React, { useState, useMemo } from 'react'
 import Link from 'next/link'
-import { Plus, Eye, Mail, Send, Clock, CheckCircle, XCircle, TrendingUp, Users, Calendar } from 'lucide-react'
+import { Plus, Eye, Mail, Send, Clock, CheckCircle, XCircle, TrendingUp, Users, Calendar, Edit, Trash2, Download, Copy } from 'lucide-react'
 import { Card, CardHeader, CardBody, Button, Table } from '@/components/shared'
 import { useEmailCampaigns } from '@/hooks/useEmailAutomation'
+import { useExport } from '@/hooks/useExport'
+import { useConfirm } from '@/hooks/useConfirm'
+import { useToast } from '@/components/ui/Toast'
+import { apiClient } from '@/lib/api'
 import type { EmailCampaign } from '@/lib/types'
 
 const STATUS_COLORS = {
@@ -26,8 +30,17 @@ const STATUS_LABELS = {
 }
 
 export default function CampaignsPage() {
-  const { campaigns, isLoading, error } = useEmailCampaigns()
+  const { campaigns, isLoading, error, deleteCampaign, isDeleting, refetch } = useEmailCampaigns()
   const [statusFilter, setStatusFilter] = useState<string | null>(null)
+  const { confirm, ConfirmDialogComponent } = useConfirm()
+  const { showToast } = useToast()
+
+  // Hook d'export avec filtres
+  const { exportData, isExporting } = useExport({
+    resource: 'email/campaigns',
+    baseFilename: 'campagnes-email',
+    params: statusFilter ? { status: statusFilter } : {},
+  })
 
   // Calcul des statistiques
   const stats = useMemo(() => {
@@ -54,13 +67,78 @@ export default function CampaignsPage() {
     return campaigns.filter(c => c.status === statusFilter)
   }, [campaigns, statusFilter])
 
+  // Handler pour supprimer une campagne
+  const handleDelete = (campaign: EmailCampaign) => {
+    // Ne permettre la suppression que des brouillons ou des campagnes terminées
+    if (campaign.status === 'sending' || campaign.status === 'scheduled') {
+      confirm({
+        title: 'Suppression impossible',
+        message: 'Vous ne pouvez pas supprimer une campagne en cours d\'envoi ou programmée. Veuillez d\'abord la mettre en pause.',
+        type: 'warning',
+        confirmText: 'Compris',
+        onConfirm: () => {},
+      })
+      return
+    }
+
+    confirm({
+      title: 'Supprimer la campagne ?',
+      message: `Êtes-vous sûr de vouloir supprimer "${campaign.name}" ? Cette action est irréversible.`,
+      type: 'danger',
+      confirmText: 'Supprimer',
+      cancelText: 'Annuler',
+      onConfirm: async () => {
+        await deleteCampaign(campaign.id)
+      },
+    })
+  }
+
+  // Handler pour dupliquer une campagne
+  const handleDuplicate = async (campaign: EmailCampaign) => {
+    try {
+      // Créer une copie de la campagne avec un nouveau nom
+      const duplicatedCampaign = {
+        name: `${campaign.name} (Copie)`,
+        description: campaign.description,
+        subject: campaign.subject,
+        default_template_id: campaign.default_template_id,
+        provider: campaign.provider,
+        from_name: campaign.from_name,
+        from_email: campaign.from_email,
+        recipient_filters: campaign.recipient_filters,
+        batch_size: campaign.batch_size,
+        delay_between_batches: campaign.delay_between_batches,
+        track_opens: campaign.track_opens,
+        track_clicks: campaign.track_clicks,
+        // Status toujours draft pour une copie
+        status: 'draft',
+      }
+
+      await apiClient.post('/email/campaigns', duplicatedCampaign)
+
+      showToast({
+        type: 'success',
+        title: 'Campagne dupliquée',
+        message: `La campagne "${campaign.name}" a été dupliquée avec succès`,
+      })
+
+      refetch()
+    } catch (error: any) {
+      showToast({
+        type: 'error',
+        title: 'Erreur',
+        message: error?.response?.data?.detail || 'Impossible de dupliquer la campagne',
+      })
+    }
+  }
+
   const columns = [
     {
       header: 'Campagne',
       accessor: 'name',
       render: (value: string, row: EmailCampaign) => (
         <div>
-          <Link href={`/dashboard/campaigns/${row.id}`} className="font-medium text-bleu hover:underline">
+          <Link href={`/dashboard/marketing/campaigns/${row.id}`} className="font-medium text-bleu hover:underline">
             {value}
           </Link>
           {row.subject && (
@@ -99,13 +177,30 @@ export default function CampaignsPage() {
     {
       header: 'Actions',
       accessor: 'id',
-      render: (id: number) => (
+      render: (id: number, row: EmailCampaign) => (
         <div className="flex items-center gap-2">
-          <Link href={`/dashboard/campaigns/${id}`}>
-            <Button variant="ghost" size="sm">
+          <Link href={`/dashboard/marketing/campaigns/${id}`}>
+            <Button variant="ghost" size="sm" title="Voir les détails">
               <Eye className="w-4 h-4" />
             </Button>
           </Link>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => handleDuplicate(row)}
+            title="Dupliquer"
+          >
+            <Copy className="w-4 h-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => handleDelete(row)}
+            disabled={isDeleting}
+            title="Supprimer"
+          >
+            <Trash2 className="w-4 h-4 text-error" />
+          </Button>
         </div>
       ),
     },
@@ -124,7 +219,7 @@ export default function CampaignsPage() {
             Gérez et analysez vos campagnes de marketing par email
           </p>
         </div>
-        <Link href="/dashboard/campaigns/new">
+        <Link href="/dashboard/marketing/campaigns/new">
           <Button variant="primary" size="lg">
             <Plus className="w-5 h-5 mr-2" />
             Nouvelle campagne
@@ -260,6 +355,37 @@ export default function CampaignsPage() {
           icon={<Mail className="w-5 h-5 text-primary" />}
         />
         <CardBody>
+          {/* Boutons d'export */}
+          <div className="flex items-center justify-end gap-2 mb-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => exportData('csv')}
+              disabled={isExporting || filteredCampaigns.length === 0}
+            >
+              <Download className="w-4 h-4 mr-2" />
+              CSV
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => exportData('excel')}
+              disabled={isExporting || filteredCampaigns.length === 0}
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Excel
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => exportData('pdf')}
+              disabled={isExporting || filteredCampaigns.length === 0}
+            >
+              <Download className="w-4 h-4 mr-2" />
+              PDF
+            </Button>
+          </div>
+
           <Table
             data={filteredCampaigns}
             columns={columns}
@@ -269,6 +395,9 @@ export default function CampaignsPage() {
           />
         </CardBody>
       </Card>
+
+      {/* Modal de confirmation */}
+      <ConfirmDialogComponent />
     </div>
   )
 }

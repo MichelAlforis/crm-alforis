@@ -81,6 +81,7 @@ class EventType(str, enum.Enum):
     EMAIL_TEMPLATE_CREATED = "email.template_created"
     EMAIL_CAMPAIGN_CREATED = "email.campaign_created"
     EMAIL_CAMPAIGN_SCHEDULED = "email.campaign_scheduled"
+    EMAIL_CAMPAIGN_DELETED = "email.campaign_deleted"
     EMAIL_SEND_FAILED = "email.send_failed"
     EMAIL_EVENT_RECEIVED = "email.event_received"
 

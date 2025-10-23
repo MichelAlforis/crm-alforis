@@ -32,7 +32,7 @@ export default function NewCampaignPage() {
         type: 'success',
         title: `Campagne "${campaign.name}" créée avec succès`,
       })
-      router.push(`/dashboard/campaigns/${campaign.id}`)
+      router.push(`/dashboard/marketing/campaigns/${campaign.id}`)
     } catch (err: any) {
       console.error('Failed to create campaign:', err)
       showToast({
@@ -67,7 +67,7 @@ export default function NewCampaignPage() {
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link href="/dashboard/campaigns">
+          <Link href="/dashboard/marketing/campaigns">
             <Button variant="ghost" size="sm">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Retour

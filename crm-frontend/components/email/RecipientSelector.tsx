@@ -104,7 +104,8 @@ export const RecipientSelector: React.FC<RecipientSelectorProps> = ({
     }
 
     loadCount()
-  }, [value, onCountChange])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value])
 
   const handleTargetTypeChange = (target_type: TargetType) => {
     onChange({ ...value, target_type })

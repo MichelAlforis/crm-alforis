@@ -8,7 +8,7 @@ import { Input } from '@/components/shared/Input'
 import { Select } from '@/components/shared/Select'
 import { Alert } from '@/components/shared/Alert'
 import { EmailEditor, EmailEditorValue } from './EmailEditor'
-import RecipientSelector, { RecipientFilters, TargetType } from './RecipientSelector'
+import RecipientSelectorTable, { RecipientFilters, TargetType } from './RecipientSelectorTable'
 import { apiClient } from '@/lib/api'
 import { useConfirm } from '@/hooks/useConfirm'
 
@@ -16,12 +16,14 @@ interface EmailTemplate {
   id: number
   name: string
   subject: string
-  body_html: string
+  html_content: string  // Le backend retourne html_content, pas body_html
   body_text?: string
-  variables: string[]
+  variables?: string[]
   created_at: string
   updated_at?: string
 }
+
+type EmailProvider = 'resend' | 'sendgrid' | 'mailgun'
 
 interface CampaignFormData {
   name: string
@@ -30,6 +32,9 @@ interface CampaignFormData {
   recipient_filters: RecipientFilters
   batch_size: number
   delay_between_batches: number
+  from_name: string
+  from_email: string
+  provider: EmailProvider
 }
 
 interface CompleteCampaignFormProps {
@@ -57,6 +62,9 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
     },
     batch_size: 600,
     delay_between_batches: 60,
+    from_name: 'ALFORIS Finance',
+    from_email: 'contact@alforis.com',
+    provider: 'resend',
   })
 
   const [templates, setTemplates] = useState<EmailTemplate[]>([])
@@ -74,15 +82,37 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
   })
   const [isSavingTemplate, setIsSavingTemplate] = useState(false)
   const [recipientCount, setRecipientCount] = useState<number>(0)
+  const [availableProviders, setAvailableProviders] = useState<EmailProvider[]>([])
+  const [isLoadingProviders, setIsLoadingProviders] = useState(true)
+
+  // Charger les providers disponibles
+  useEffect(() => {
+    const loadProviders = async () => {
+      try {
+        const response = await apiClient.get<EmailProvider[]>('/email-config/available-providers')
+        setAvailableProviders(response.data || [])
+      } catch (error) {
+        console.error('Failed to load available providers:', error)
+        // En cas d'erreur, autoriser tous les providers
+        setAvailableProviders(['resend', 'sendgrid', 'mailgun'])
+      } finally {
+        setIsLoadingProviders(false)
+      }
+    }
+    loadProviders()
+  }, [])
 
   // Charger les templates existants
   useEffect(() => {
     const loadTemplates = async () => {
       try {
+        console.log('🔄 Chargement des templates...')
         const response = await apiClient.get<EmailTemplate[]>('/email/templates')
+        console.log('✅ Templates reçus:', response.data)
+        console.log('📊 Nombre de templates:', response.data?.length || 0)
         setTemplates(response.data || [])
       } catch (error) {
-        console.error('Failed to load templates:', error)
+        console.error('❌ Failed to load templates:', error)
       } finally {
         setIsLoadingTemplates(false)
       }
@@ -92,8 +122,11 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
 
   // Charger le template sélectionné
   useEffect(() => {
+    console.log('🔍 Template ID sélectionné:', formData.template_id)
+    console.log('📦 Templates disponibles:', templates)
     if (formData.template_id) {
       const template = templates.find(t => t.id === formData.template_id)
+      console.log('🎯 Template trouvé:', template)
       setSelectedTemplate(template || null)
     } else {
       setSelectedTemplate(null)
@@ -125,9 +158,9 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
       const response = await apiClient.post<EmailTemplate>('/email/templates', {
         name: newTemplate.name,
         subject: newTemplate.subject,
-        body_html: newTemplate.content.html,
-        body_text: '', // Optionnel
-        variables: [], // Sera détecté automatiquement par le backend
+        html_content: newTemplate.content.html,
+        category: 'custom',
+        is_active: true,
       })
 
       const createdTemplate = response.data
@@ -177,10 +210,11 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
     // Afficher le modal de confirmation avec récapitulatif
     const templateName = selectedTemplate?.name || 'Template inconnu'
     const targetTypeLabel = formData.recipient_filters.target_type === 'contacts' ? 'Contacts' : 'Organisations'
+    const providerLabel = formData.provider === 'resend' ? 'Resend' : formData.provider === 'sendgrid' ? 'SendGrid' : 'Mailgun'
 
     confirm({
       title: 'Créer la campagne ?',
-      message: `Vous allez créer la campagne "${formData.name}" avec le template "${templateName}" pour ${recipientCount} ${targetTypeLabel.toLowerCase()}. Confirmez-vous ?`,
+      message: `Vous allez créer la campagne "${formData.name}" avec le template "${templateName}" pour ${recipientCount} ${targetTypeLabel.toLowerCase()}.\n\nFournisseur : ${providerLabel}\nExpéditeur : ${formData.from_name} <${formData.from_email}>\n\nConfirmez-vous ?`,
       type: 'info',
       confirmText: 'Créer la campagne',
       cancelText: 'Annuler',
@@ -273,7 +307,7 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
                   </p>
                   <div
                     className="prose prose-sm max-w-none rounded-radius-sm border border-border bg-white p-spacing-sm max-h-60 overflow-y-auto"
-                    dangerouslySetInnerHTML={{ __html: selectedTemplate.body_html }}
+                    dangerouslySetInnerHTML={{ __html: selectedTemplate.html_content }}
                   />
                 </div>
               )}
@@ -323,7 +357,7 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
       </Card>
 
       {/* Sélection des destinataires */}
-      <RecipientSelector
+      <RecipientSelectorTable
         value={formData.recipient_filters}
         onChange={handleRecipientFiltersChange}
         onCountChange={setRecipientCount}
@@ -336,6 +370,41 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
           subtitle="Paramètres d'envoi par lots pour éviter les limitations"
         />
         <CardBody className="space-y-spacing-md">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-md">
+            <Select
+              label="Fournisseur d'email *"
+              value={formData.provider}
+              onChange={(e) => handleFieldChange('provider', e.target.value as EmailProvider)}
+              disabled={isLoadingProviders}
+              required
+            >
+              <option value="resend" disabled={!availableProviders.includes('resend')}>
+                Resend{!availableProviders.includes('resend') ? ' (non configuré)' : ''}
+              </option>
+              <option value="sendgrid" disabled={!availableProviders.includes('sendgrid')}>
+                SendGrid{!availableProviders.includes('sendgrid') ? ' (non configuré)' : ''}
+              </option>
+              <option value="mailgun" disabled={!availableProviders.includes('mailgun')}>
+                Mailgun{!availableProviders.includes('mailgun') ? ' (non configuré)' : ''}
+              </option>
+            </Select>
+            <Input
+              label="Nom de l'expéditeur *"
+              value={formData.from_name}
+              onChange={(e) => handleFieldChange('from_name', e.target.value)}
+              placeholder="Ex: ALFORIS Finance"
+              required
+            />
+            <Input
+              label="Email de l'expéditeur *"
+              type="email"
+              value={formData.from_email}
+              onChange={(e) => handleFieldChange('from_email', e.target.value)}
+              placeholder="Ex: contact@alforis.com"
+              required
+            />
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md">
             <Input
               label="Taille des lots (batch)"
