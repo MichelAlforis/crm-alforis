@@ -67,7 +67,7 @@ Pour éviter les lenteurs du réseau distant (159.69.108.234), un environnement 
 | 3. Dashboard Principal | ✅ **COMPLET** | 11/12 (92%) | 11 | 1 | Corrections déployées - 5 erreurs 500 DB restantes |
 | 4. Module Contacts | ⬜ **À FAIRE** | 0/29 | - | - | Non testé |
 | 5. Module Organisations | ✅ **COMPLET** | 20/22 (91%) | 20 | 2 | Hook réutilisable + UX moderne |
-| 6. Module Marketing Hub | ✅ **COMPLET** | 161/161 (100%) | 161 | 0 | Templates ✅ Listes ✅ Campagnes ✅ Abonnements ✅ |
+| 6. Module Marketing Hub | ✅ **COMPLET** | 166/166 (100%) | 166 | 0 | Templates ✅ Listes ✅ Campagnes ✅ Tracking Leads ✅ |
 | 7. Workflows/Interactions | ⬜ **À FAIRE** | 0/14 | - | - | Non testé |
 | 8. Progressive Web App | ⬜ **À FAIRE** | 0/20 | - | - | Non testé |
 | 9. Responsive & Mobile | ⬜ **À FAIRE** | 0/19 | - | - | Non testé |
@@ -78,7 +78,7 @@ Pour éviter les lenteurs du réseau distant (159.69.108.234), un environnement 
 | 14. Navigateurs | ⬜ **À FAIRE** | 0/12 | - | - | Non testé |
 | 15. Accessibilité | ⬜ **À FAIRE** | 0/5 | - | - | Optionnel |
 | 16. Scénario Complet | ⬜ **À FAIRE** | 0/12 | - | - | Non testé |
-| **TOTAL** | **✅ 66%** | **213/280** | **213** | **3** | 6 chapitres terminés - Marketing Hub 100% ✅ |
+| **TOTAL** | **✅ 67%** | **218/285** | **218** | **3** | 6 chapitres terminés - Marketing Hub 100% ✅ |
 
 ### 🔥 Problèmes Identifiés
 
@@ -94,7 +94,12 @@ Pour éviter les lenteurs du réseau distant (159.69.108.234), un environnement 
 | 8 | Marketing | ⚠️ Moyen | Template preview manquant | ✅ **CORRIGÉ** (TemplatePreviewModal) |
 | 9 | Marketing | ⚠️ Moyen | Template edit manquant | ✅ **CORRIGÉ** (TemplateEditModal) |
 | 10 | Campagnes | 🔴 Critique | API GET /email/campaigns → 500 (metadata sérialization) | ✅ **CORRIGÉ** (Pydantic alias step_metadata) |
-| 10 | Marketing | 🔴 Critique | POST /email/templates/{id}/send-test → 500 | ✅ **CORRIGÉ** (EmailConfiguration décryptage) |
+| 11 | Marketing | 🔴 Critique | POST /email/templates/{id}/send-test → 500 | ✅ **CORRIGÉ** (EmailConfiguration décryptage) |
+| 12 | Campagnes | 🔴 Critique | Infinite loop RecipientSelectorTableV2 (JSON.stringify) | ✅ **CORRIGÉ** (useRef pattern) |
+| 13 | Campagnes | 🔴 Critique | Validation manquante Step 2 (0 destinataires acceptés) | ✅ **CORRIGÉ** (recipientCount > 0) |
+| 14 | Marketing | ⚠️ Moyen | 51 console.log en production exposent données sensibles | ✅ **CORRIGÉ** (Logger wrapper) |
+| 15 | Tracking | 🔴 Critique | GET /campaigns/{id}/batches/{batch_id} → 404 (endpoint manquant) | ✅ **CORRIGÉ** (Endpoint ajouté) |
+| 16 | Campagnes | 🔴 Critique | Mapping template_id ↔ default_template_id incorrect | ✅ **CORRIGÉ** (Transformation bidirectionnelle) |
 
 ---
 

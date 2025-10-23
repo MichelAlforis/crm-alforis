@@ -217,6 +217,15 @@ class EmailCampaignService(BaseService[EmailCampaign, EmailCampaignCreate, Email
         try:
             if steps_payload is not None:
                 self._sync_steps(campaign, steps_payload)
+            # Si default_template_id est défini et qu'il n'y a pas de steps existants, créer un step par défaut
+            elif "default_template_id" in data and campaign.default_template_id and not campaign.steps:
+                default_steps = [
+                    EmailCampaignStepCreate(
+                        template_id=campaign.default_template_id,
+                        order_index=1,
+                    )
+                ]
+                self._sync_steps(campaign, default_steps)
 
             # Re-synchroniser les subscriptions si audience_filters a changé
             if "audience_filters" in data:
