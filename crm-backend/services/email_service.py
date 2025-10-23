@@ -568,7 +568,18 @@ class EmailDeliveryService:
         system_ctx = context.setdefault("system", {})
         unsubscribe_base = settings.default_email_unsubscribe_base_url.rstrip("?")
         separator = "&" if "?" in unsubscribe_base else "?"
-        unsubscribe_url = f"{unsubscribe_base}{separator}send_id={send.id}"
+
+        # Générer token JWT pour désinscription (compatible alforis.fr/fr/b2b/unsubscribe?token=...)
+        from core.security import create_access_token
+        unsubscribe_token = create_access_token(
+            data={
+                "email": send.recipient_email,
+                "send_id": send.id,
+                "type": "unsubscribe"
+            },
+            expires_delta=None  # Token sans expiration pour désinscription
+        )
+        unsubscribe_url = f"{unsubscribe_base}{separator}token={unsubscribe_token}"
         system_ctx.setdefault("unsubscribe_url", unsubscribe_url)
         return context
 
