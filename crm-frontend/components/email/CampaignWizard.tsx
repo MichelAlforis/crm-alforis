@@ -93,6 +93,19 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
   const [isSaving, setIsSaving] = useState(false)
   const [recipientCount, setRecipientCount] = useState(0)
 
+  // Mettre à jour formData quand initialData change (restauration depuis localStorage)
+  useEffect(() => {
+    if (initialData) {
+      setFormData(prev => ({
+        ...prev,
+        ...initialData,
+        // S'assurer que recipient_filters a une structure valide
+        recipient_filters: initialData.recipient_filters || prev.recipient_filters,
+      }))
+      console.log('✅ FormData mis à jour depuis initialData:', initialData)
+    }
+  }, [initialData])
+
   // Sauvegarde automatique toutes les 30 secondes
   useEffect(() => {
     if (!onSaveDraft) return

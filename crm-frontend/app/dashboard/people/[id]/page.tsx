@@ -15,6 +15,7 @@ import { SkeletonCard, SkeletonTable } from '@/components/ui/Skeleton'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import { useToast } from '@/components/ui/Toast'
 import { extractIdFromSlug } from '@/lib/utils'
+import { CampaignSubscriptionManager } from '@/components/email/CampaignSubscriptionManager'
 
 // ✅ MIGRATION 2025-10-20: ORGANIZATION_OPTIONS supprimé
 // Le type d'organisation est maintenant stocké dans Organisation.category
