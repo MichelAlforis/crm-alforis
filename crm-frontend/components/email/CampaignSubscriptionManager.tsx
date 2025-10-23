@@ -103,7 +103,7 @@ export function CampaignSubscriptionManager({
             disabled={availableCampaigns.length === 0}
           >
             <Plus className="w-4 h-4 mr-2" />
-            Abonner à une campagne
+            Ajouter à une campagne
           </Button>
         }
       />
@@ -200,7 +200,7 @@ export function CampaignSubscriptionManager({
           setIsModalOpen(false)
           setSelectedCampaignId(null)
         }}
-        title="Abonner à une campagne"
+        title="Ajouter à une campagne"
         size="md"
         footer={
           <>
@@ -218,7 +218,7 @@ export function CampaignSubscriptionManager({
               onClick={handleSubscribe}
               disabled={!selectedCampaignId || isSubscribing}
             >
-              {isSubscribing ? 'Abonnement...' : 'Abonner'}
+              {isSubscribing ? 'Validation...' : 'Valider'}
             </Button>
           </>
         }
@@ -226,7 +226,7 @@ export function CampaignSubscriptionManager({
         <div className="space-y-4">
           <Alert
             type="info"
-            message={`Sélectionnez une campagne email à laquelle abonner ${entityName}.`}
+            message={`Sélectionnez une campagne email à laquelle ajouter ${entityName}.`}
           />
 
           <div>
