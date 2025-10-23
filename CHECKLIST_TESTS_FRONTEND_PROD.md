@@ -875,8 +875,8 @@ TOUS les confirm() de l'annuaire utilisent maintenant ConfirmDialog:
 | 6.65 | Page charge sans erreur | ✅ | Grid layout 3 colonnes responsive |
 | 6.66 | Liste des templates affichée | ✅ | Cards avec nom + sujet |
 | 6.67 | Bouton "Nouveau Template" ouvre modal | ✅ | TemplateCreateModal |
-| 6.68 | Modal création avec éditeur Unlayer | ⏳ | Drag & drop email builder |
-| 6.69 | Sauvegarde template → Reload liste | ⏳ | À tester |
+| 6.68 | Modal création sauvegarde template | ✅ | POST /email/templates avec React Query |
+| 6.69 | Sauvegarde template → Reload liste | ✅ | Cache invalidation automatique |
 | 6.70 | Bouton "Aperçu" affiche preview | ✅ | Modal preview desktop/mobile ✨ **NOUVEAU** |
 | 6.71 | Bouton "Modifier" ouvre éditeur | ✅ | Modal split-view éditeur + preview ✨ **NOUVEAU** |
 | 6.72 | Édition en temps réel dans preview | ✅ | Preview se met à jour automatiquement |
