@@ -68,7 +68,7 @@ export const RecipientSelector: React.FC<RecipientSelectorProps> = ({
   useEffect(() => {
     const loadCountries = async () => {
       try {
-        const response = await apiClient.get('/api/v1/organisations/countries')
+        const response = await apiClient.get('/organisations/countries')
         if (response.data && Array.isArray(response.data)) {
           setCountries(response.data)
         }
@@ -84,7 +84,7 @@ export const RecipientSelector: React.FC<RecipientSelectorProps> = ({
     const loadCount = async () => {
       setIsCountLoading(true)
       try {
-        const response = await apiClient.post<RecipientCount>('/api/v1/email-campaigns/recipients/count', value)
+        const response = await apiClient.post<RecipientCount>('/email/campaigns/recipients/count', value)
         setRecipientCount(response.data.count)
       } catch (error) {
         console.error('Failed to load recipient count:', error)

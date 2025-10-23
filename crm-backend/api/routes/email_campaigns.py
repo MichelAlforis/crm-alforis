@@ -18,6 +18,7 @@ from schemas.email import (
     EmailTemplateResponse,
     EmailTemplateUpdate,
 )
+from pydantic import BaseModel
 from services.email_service import (
     EmailAnalyticsService,
     EmailCampaignService,
@@ -78,6 +79,85 @@ async def update_template(
     template = await service.update(template_id, payload)
     return EmailTemplateResponse.model_validate(template)
 
+
+# ============= RECIPIENT COUNT =============
+
+class RecipientFilters(BaseModel):
+    """Filtres pour sélectionner des destinataires"""
+    target_type: str  # 'organisations' ou 'contacts'
+    languages: Optional[List[str]] = None
+    countries: Optional[List[str]] = None
+    organisation_categories: Optional[List[str]] = None
+    specific_ids: Optional[List[int]] = None
+    exclude_ids: Optional[List[int]] = None
+
+
+class RecipientCountResponse(BaseModel):
+    """Réponse du comptage de destinataires"""
+    count: int
+
+
+@router.post("/campaigns/recipients/count", response_model=RecipientCountResponse)
+async def count_recipients(
+    filters: RecipientFilters,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Compter le nombre de destinataires correspondant aux filtres
+    Utilisé pour prévisualiser le nombre de destinataires d'une campagne
+    """
+    from models.organisation import Organisation
+    from models.person import Person, PersonOrganizationLink
+    from sqlalchemy import and_
+
+    if filters.target_type == 'organisations':
+        query = db.query(Organisation).filter(Organisation.email.isnot(None))
+
+        if filters.countries:
+            query = query.filter(Organisation.country_code.in_(filters.countries))
+
+        if filters.organisation_categories:
+            query = query.filter(Organisation.category.in_(filters.organisation_categories))
+
+        if filters.specific_ids:
+            query = query.filter(Organisation.id.in_(filters.specific_ids))
+
+        if filters.exclude_ids:
+            query = query.filter(~Organisation.id.in_(filters.exclude_ids))
+
+        count = query.count()
+
+    elif filters.target_type == 'contacts':
+        # Contacts principaux = personnes liées à une organisation comme contact principal
+        query = db.query(Person).join(PersonOrganizationLink).filter(
+            and_(
+                PersonOrganizationLink.is_primary == True,
+                Person.email.isnot(None)
+            )
+        )
+
+        if filters.languages:
+            query = query.filter(Person.language.in_(filters.languages))
+
+        if filters.countries:
+            query = query.filter(Person.country_code.in_(filters.countries))
+
+        if filters.specific_ids:
+            query = query.filter(Person.id.in_(filters.specific_ids))
+
+        if filters.exclude_ids:
+            query = query.filter(~Person.id.in_(filters.exclude_ids))
+
+        count = query.distinct().count()
+
+    else:
+        count = 0
+
+    return RecipientCountResponse(count=count)
+
+
+# ============= CAMPAIGNS =============
 
 @router.get("/campaigns", response_model=PaginatedResponse[EmailCampaignResponse])
 async def list_campaigns(
