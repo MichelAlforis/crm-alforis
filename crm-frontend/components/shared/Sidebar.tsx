@@ -458,7 +458,8 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                     <div className="ml-6 mt-1 space-y-1 border-l-2 border-white/10 pl-3">
                       {item.submenu.map((subItem: any) => {
                         const SubIcon = subItem.icon
-                        const subActive = isActive(subItem.href)
+                        // Pour les sous-menus, on vérifie une correspondance exacte du pathname
+                        const subActive = pathname === subItem.href
 
                         return (
                           <Link
