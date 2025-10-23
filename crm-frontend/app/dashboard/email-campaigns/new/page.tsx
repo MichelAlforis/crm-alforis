@@ -132,7 +132,7 @@ export default function NewEmailCampaignPage() {
         exclude_ids: [],
       };
 
-      const response = await fetch("/api/v1/email-campaigns/recipients/count", {
+      const response = await fetch("/email/campaigns/recipients/count", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

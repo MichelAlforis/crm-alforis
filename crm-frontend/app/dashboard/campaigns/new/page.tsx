@@ -25,7 +25,7 @@ export default function NewCampaignPage() {
   const handleSubmit = async (formData: any) => {
     setIsCreating(true)
     try {
-      const response = await apiClient.post<CampaignResponse>('/api/v1/email-campaigns/campaigns', formData)
+      const response = await apiClient.post<CampaignResponse>('/email/campaigns', formData)
       const campaign = response.data
 
       showToast({

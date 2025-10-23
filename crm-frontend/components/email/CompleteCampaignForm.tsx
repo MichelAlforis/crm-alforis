@@ -75,7 +75,7 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
   useEffect(() => {
     const loadTemplates = async () => {
       try {
-        const response = await apiClient.get<EmailTemplate[]>('/api/v1/email-campaigns/templates')
+        const response = await apiClient.get<EmailTemplate[]>('/email/templates')
         setTemplates(response.data || [])
       } catch (error) {
         console.error('Failed to load templates:', error)
@@ -112,7 +112,7 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
 
     setIsSavingTemplate(true)
     try {
-      const response = await apiClient.post<EmailTemplate>('/api/v1/email-campaigns/templates', {
+      const response = await apiClient.post<EmailTemplate>('/email/templates', {
         name: newTemplate.name,
         subject: newTemplate.subject,
         body_html: newTemplate.content.html,

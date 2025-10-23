@@ -48,7 +48,7 @@ export default function CampaignDetailPage() {
 
     setIsPreparing(true)
     try {
-      const response = await apiClient.post(`/api/v1/email-campaigns/campaigns/${campaignId}/prepare`)
+      const response = await apiClient.post(`/email/campaigns/campaigns/${campaignId}/prepare`)
       showToast({
         type: 'success',
         title: `${response.data.emails_prepared} emails préparés avec succès`,
@@ -76,7 +76,7 @@ export default function CampaignDetailPage() {
 
     setIsStarting(true)
     try {
-      await apiClient.post(`/api/v1/email-campaigns/campaigns/${campaignId}/start`)
+      await apiClient.post(`/email/campaigns/campaigns/${campaignId}/start`)
       showToast({
         type: 'success',
         title: 'Campagne démarrée avec succès',
@@ -95,7 +95,7 @@ export default function CampaignDetailPage() {
   const handlePauseCampaign = async () => {
     setIsPausing(true)
     try {
-      await apiClient.post(`/api/v1/email-campaigns/campaigns/${campaignId}/pause`)
+      await apiClient.post(`/email/campaigns/campaigns/${campaignId}/pause`)
       showToast({
         type: 'success',
         title: 'Campagne mise en pause',
@@ -126,7 +126,7 @@ export default function CampaignDetailPage() {
 
     setIsSendingTest(true)
     try {
-      await apiClient.post(`/api/v1/email-campaigns/campaigns/${campaignId}/send-test`, null, {
+      await apiClient.post(`/email/campaigns/campaigns/${campaignId}/send-test`, null, {
         params: { test_email: testEmail }
       })
       showToast({

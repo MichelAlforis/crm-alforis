@@ -135,7 +135,7 @@ export default function EmailTemplatesPage() {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`/api/v1/email-campaigns/templates/${id}`, {
+      const response = await fetch(`/email/campaigns/templates/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

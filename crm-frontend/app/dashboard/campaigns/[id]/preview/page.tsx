@@ -46,7 +46,7 @@ export default function CampaignPreviewPage() {
       setError(null)
       try {
         const response = await apiClient.get<EmailPreviewList>(
-          `/api/v1/email-campaigns/campaigns/${campaignId}/preview`,
+          `/email/campaigns/campaigns/${campaignId}/preview`,
           {
             params: { page: currentPage, page_size: pageSize }
           }

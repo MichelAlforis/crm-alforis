@@ -132,7 +132,7 @@ export default function EmailCampaignDetailPage() {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `/api/v1/email-campaigns/campaigns/${campaignId}/preview?page=${page}&page_size=10`,
+        `/email/campaigns/campaigns/${campaignId}/preview?page=${page}&page_size=10`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -162,7 +162,7 @@ export default function EmailCampaignDetailPage() {
   const handlePrepareCampaign = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`/api/v1/email-campaigns/campaigns/${campaignId}/prepare`, {
+      const response = await fetch(`/email/campaigns/campaigns/${campaignId}/prepare`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
