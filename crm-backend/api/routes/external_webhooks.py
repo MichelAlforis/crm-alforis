@@ -45,6 +45,7 @@ RESEND_EVENT_MAPPING = {
     "email.clicked": EmailEventType.CLICKED,
     "email.complained": EmailEventType.SPAM_REPORT,
     "email.scheduled": EmailEventType.PROCESSED,  # Pas d'équivalent, utilise PROCESSED
+    "email.unsubscribed": EmailEventType.UNSUBSCRIBED,  # Désinscription automatique
 }
 
 
@@ -129,9 +130,39 @@ async def receive_resend_webhook(
             email_send.status = "OPENED"
         elif event_type == EmailEventType.CLICKED:
             email_send.status = "CLICKED"
-        elif event_type in [EmailEventType.BOUNCED, EmailEventType.FAILED]:
+        elif event_type in [EmailEventType.BOUNCED, EmailEventType.DROPPED]:
             email_send.status = "FAILED"
             email_send.error_message = event.data.get("bounce_reason") or event.data.get("failure_reason") if event.data else None
+        elif event_type == EmailEventType.UNSUBSCRIBED:
+            # 5. Désinscription automatique : mettre à jour Person/Organisation
+            email_lower = event.to.lower()
+
+            # Ajouter à la blacklist globale si pas déjà présent
+            existing_unsubscribe = db.query(UnsubscribedEmail).filter(UnsubscribedEmail.email == email_lower).first()
+            if not existing_unsubscribe:
+                unsubscribed = UnsubscribedEmail(
+                    email=email_lower,
+                    source="email",  # Provient d'un clic sur lien email
+                    reason="Unsubscribed via email link",
+                )
+                db.add(unsubscribed)
+
+            # Mettre à jour Person.email_unsubscribed
+            db.query(Person).filter(Person.email == email_lower).update(
+                {"email_unsubscribed": True},
+                synchronize_session=False
+            )
+
+            # Mettre à jour Organisation.email_unsubscribed
+            db.query(Organisation).filter(Organisation.email == email_lower).update(
+                {"email_unsubscribed": True},
+                synchronize_session=False
+            )
+
+            logger.info(
+                "auto_unsubscribe_from_webhook",
+                extra={"email": email_lower, "event_id": email_event.id}
+            )
 
         db.commit()
 
