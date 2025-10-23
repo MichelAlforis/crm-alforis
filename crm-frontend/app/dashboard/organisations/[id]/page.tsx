@@ -296,6 +296,23 @@ export default function OrganisationDetailPage() {
             <p className="text-sm text-gray-600">Téléphone</p>
             <p className="font-medium">{organisation.main_phone || '-'}</p>
           </div>
+          <div className="md:col-span-2">
+            <p className="text-sm text-gray-600 mb-2">Statut emails marketing</p>
+            {organisation.email_unsubscribed ? (
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                  🚫 Désinscrit des emails marketing
+                </span>
+                <span className="text-xs text-gray-500">
+                  (Conformité RGPD - Aucun email ne sera envoyé)
+                </span>
+              </div>
+            ) : (
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                ✅ Abonné aux emails marketing
+              </span>
+            )}
+          </div>
           <div>
             <p className="text-sm text-gray-600">Site web</p>
             <p className="font-medium">
