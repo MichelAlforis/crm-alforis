@@ -1,0 +1,4 @@
+name,description,target_type,filters,recipient_count,is_active
+Clients Premium TEST,Clients premium actifs,contacts,{},150,true
+Prospects Q1 TEST,Nouveaux prospects du Q1,contacts,{},50,true
+Organisations Partenaires,Nos partenaires stratégiques,organisations,{},25,true
