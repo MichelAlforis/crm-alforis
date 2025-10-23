@@ -6,6 +6,7 @@ import { Input } from '@/components/shared/Input'
 import { Select } from '@/components/shared/Select'
 import { Alert } from '@/components/shared/Alert'
 import { apiClient } from '@/lib/api'
+import { logger } from '@/lib/logger'
 
 interface Produit {
   id: number
@@ -56,7 +57,7 @@ export const Step1BasicInfo: React.FC<Step1BasicInfoProps> = ({
         // L'API retourne un objet paginé avec { items: [...] }
         setProduits(response.data?.items || [])
       } catch (error) {
-        console.error('Failed to load produits:', error)
+        logger.error('Failed to load produits:', error)
         setProduits([])
       } finally {
         setIsLoadingProduits(false)
@@ -72,7 +73,7 @@ export const Step1BasicInfo: React.FC<Step1BasicInfoProps> = ({
         const response = await apiClient.get<EmailTemplate[]>('/email/templates')
         setTemplates(response.data || [])
       } catch (error) {
-        console.error('Failed to load templates:', error)
+        logger.error('Failed to load templates:', error)
         setTemplates([])
       } finally {
         setIsLoadingTemplates(false)

@@ -6,6 +6,7 @@ import { Input } from '@/components/shared/Input'
 import { Select } from '@/components/shared/Select'
 import { Alert } from '@/components/shared/Alert'
 import { apiClient } from '@/lib/api'
+import { logger } from '@/lib/logger'
 
 type EmailProvider = 'resend' | 'sendgrid' | 'mailgun'
 
@@ -41,7 +42,7 @@ export const Step3Configuration: React.FC<Step3ConfigurationProps> = ({
         const response = await apiClient.get<EmailProvider[]>('/email-config/available-providers')
         setAvailableProviders(response.data || [])
       } catch (error) {
-        console.error('Failed to load available providers:', error)
+        logger.error('Failed to load available providers:', error)
         setAvailableProviders(['resend', 'sendgrid', 'mailgun'])
       } finally {
         setIsLoadingProviders(false)

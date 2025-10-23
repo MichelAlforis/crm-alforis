@@ -12,6 +12,7 @@ import { apiClient } from '@/lib/api'
 import { useToast } from '@/components/ui/Toast'
 import { useEmailTemplates } from '@/hooks/useEmailAutomation'
 import type { EmailTemplate } from '@/lib/types'
+import { logger } from '@/lib/logger'
 
 interface EmailCampaign {
   id: number
@@ -70,12 +71,12 @@ export default function NewCampaignSendPage() {
           )
           setRecipientCount(subscriptionsResponse.data?.length || 0)
         } catch (err) {
-          console.error('Failed to load subscriptions:', err)
+          logger.error('Failed to load subscriptions:', err)
           setRecipientCount(0)
         }
 
       } catch (error) {
-        console.error('Failed to load campaign:', error)
+        logger.error('Failed to load campaign:', error)
         showToast({
           type: 'error',
           title: 'Erreur',
@@ -138,7 +139,7 @@ export default function NewCampaignSendPage() {
           name: sub.entity_name,
         }))
       } catch (err) {
-        console.error('Failed to load campaign subscriptions:', err)
+        logger.error('Failed to load campaign subscriptions:', err)
         showToast({
           type: 'error',
           title: 'Erreur de chargement',
@@ -192,7 +193,7 @@ export default function NewCampaignSendPage() {
       router.push(`/dashboard/marketing/campaigns/${campaignId}`)
 
     } catch (error: any) {
-      console.error('Failed to schedule campaign:', error)
+      logger.error('Failed to schedule campaign:', error)
       showToast({
         type: 'error',
         title: 'Erreur',

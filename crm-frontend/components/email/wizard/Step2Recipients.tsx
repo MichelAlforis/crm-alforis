@@ -10,6 +10,7 @@ import { Input } from '@/components/shared/Input'
 import { Alert } from '@/components/shared/Alert'
 import { apiClient } from '@/lib/api'
 import { useToast } from '@/components/ui/Toast'
+import { logger } from '@/lib/logger'
 
 interface Step2RecipientsProps {
   recipient_filters: RecipientFilters
@@ -46,7 +47,7 @@ export const Step2Recipients: React.FC<Step2RecipientsProps> = ({
         const response = await apiClient.get<{ items: MailingList[] }>('/mailing-lists')
         setMailingLists(response.data.items || [])
       } catch (error) {
-        console.error('Failed to load mailing lists:', error)
+        logger.error('Failed to load mailing lists:', error)
       }
     }
     loadLists()
@@ -70,7 +71,7 @@ export const Step2Recipients: React.FC<Step2RecipientsProps> = ({
     try {
       await apiClient.post(`/mailing-lists/${listId}/mark-used`, {})
     } catch (error) {
-      console.error('Failed to mark list as used:', error)
+      logger.error('Failed to mark list as used:', error)
     }
 
     showToast({
@@ -111,7 +112,7 @@ export const Step2Recipients: React.FC<Step2RecipientsProps> = ({
       setSaveListName('')
       setSaveListDescription('')
     } catch (error) {
-      console.error('Failed to save list:', error)
+      logger.error('Failed to save list:', error)
       showToast({ type: 'error', title: 'Erreur lors de la sauvegarde' })
     }
   }

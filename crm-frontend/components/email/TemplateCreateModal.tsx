@@ -7,6 +7,7 @@ import { Button } from '@/components/shared/Button'
 import { Alert } from '@/components/shared/Alert'
 import { apiClient } from '@/lib/api'
 import { Loader2 } from 'lucide-react'
+import { logger } from '@/lib/logger'
 
 interface TemplateCreateModalProps {
   isOpen: boolean
@@ -61,7 +62,7 @@ export const TemplateCreateModal: React.FC<TemplateCreateModalProps> = ({
 
       onClose()
     } catch (err: any) {
-      console.error('Failed to create template:', err)
+      logger.error('Failed to create template:', err)
       setError(err?.response?.data?.detail || 'Impossible de créer le template')
     } finally {
       setIsSubmitting(false)

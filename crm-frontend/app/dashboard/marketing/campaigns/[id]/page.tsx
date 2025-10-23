@@ -9,6 +9,7 @@ import { useEmailCampaign, useEmailCampaignStats } from '@/hooks/useEmailAutomat
 import { useToast } from '@/components/ui/Toast'
 import { apiClient } from '@/lib/api'
 import { useConfirm } from '@/hooks/useConfirm'
+import { logger } from '@/lib/logger'
 
 interface EmailSend {
   id: number
@@ -73,7 +74,7 @@ export default function CampaignDetailPage() {
         setSends(response.data.items || [])
         setTotalSends(response.data.total || 0)
       } catch (error) {
-        console.error('Failed to load batches:', error)
+        logger.error('Failed to load batches:', error)
       } finally {
         setIsLoadingSends(false)
       }

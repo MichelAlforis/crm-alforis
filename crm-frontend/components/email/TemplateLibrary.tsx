@@ -9,6 +9,7 @@ import { Button } from '@/components/shared/Button'
 import { Input } from '@/components/shared/Input'
 import { Select } from '@/components/shared/Select'
 import { Alert } from '@/components/shared/Alert'
+import { logger } from '@/lib/logger'
 
 interface TemplateLibraryProps {
   selectedTemplateId?: number | null
@@ -97,7 +98,7 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({
       setFeedback(`Template « ${template.name} » dupliqué avec succès.`)
       setTimeout(() => setFeedback(null), 2500)
     } catch (error) {
-      console.error('Erreur duplication template', error)
+      logger.error('Erreur duplication template', error)
       setFeedback("Impossible de dupliquer le template. Réessayez plus tard.")
       setTimeout(() => setFeedback(null), 3500)
     }
@@ -116,7 +117,7 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({
       category: 'custom',
       html_content: '<h1>Nouveau template</h1><p>Ajoutez votre contenu…</p>',
     }).catch((error) => {
-      console.error('Erreur création template', error)
+      logger.error('Erreur création template', error)
       setFeedback("Impossible de créer un template vide.")
       setTimeout(() => setFeedback(null), 3500)
     })

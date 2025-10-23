@@ -9,6 +9,7 @@ import { Table } from '@/components/shared/Table'
 import { Alert } from '@/components/shared/Alert'
 import { apiClient } from '@/lib/api'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
+import { logger } from '@/lib/logger'
 
 export type TargetType = 'organisations' | 'contacts'
 
@@ -87,26 +88,33 @@ export const RecipientSelectorTableV2: React.FC<RecipientSelectorTableProps> = (
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Synchroniser les states locaux quand value change (ex: chargement d'une liste)
-  // On utilise JSON.stringify pour comparer les valeurs au lieu de la référence
+  // Utilise useRef pour éviter les re-renders inutiles causés par JSON.stringify
+  const prevValueRef = useRef<RecipientFilters>(value)
+
   useEffect(() => {
-    setSelectedCountries(value.countries || [])
-    setSelectedLanguages(value.languages || [])
-    setSelectedCategories(value.organisation_categories || [])
-    setSelectedTypes(value.organisation_types || [])
-    setSelectedCities(value.cities || [])
-    setSelectedRoles(value.roles || [])
-    setSelectedIds(value.specific_ids || [])
-    setFilterIsActive(value.is_active)
-  }, [
-    JSON.stringify(value.countries),
-    JSON.stringify(value.languages),
-    JSON.stringify(value.organisation_categories),
-    JSON.stringify(value.organisation_types),
-    JSON.stringify(value.cities),
-    JSON.stringify(value.roles),
-    JSON.stringify(value.specific_ids),
-    value.is_active,
-  ])
+    const prev = prevValueRef.current
+    const hasChanged =
+      JSON.stringify(prev.countries) !== JSON.stringify(value.countries) ||
+      JSON.stringify(prev.languages) !== JSON.stringify(value.languages) ||
+      JSON.stringify(prev.organisation_categories) !== JSON.stringify(value.organisation_categories) ||
+      JSON.stringify(prev.organisation_types) !== JSON.stringify(value.organisation_types) ||
+      JSON.stringify(prev.cities) !== JSON.stringify(value.cities) ||
+      JSON.stringify(prev.roles) !== JSON.stringify(value.roles) ||
+      JSON.stringify(prev.specific_ids) !== JSON.stringify(value.specific_ids) ||
+      prev.is_active !== value.is_active
+
+    if (hasChanged) {
+      setSelectedCountries(value.countries || [])
+      setSelectedLanguages(value.languages || [])
+      setSelectedCategories(value.organisation_categories || [])
+      setSelectedTypes(value.organisation_types || [])
+      setSelectedCities(value.cities || [])
+      setSelectedRoles(value.roles || [])
+      setSelectedIds(value.specific_ids || [])
+      setFilterIsActive(value.is_active)
+      prevValueRef.current = value
+    }
+  }, [value])
 
   // Import des destinataires depuis un fichier
   const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -158,7 +166,7 @@ export const RecipientSelectorTableV2: React.FC<RecipientSelectorTableProps> = (
         fileInputRef.current.value = ''
       }
     } catch (error) {
-      console.error('Import failed:', error)
+      logger.error('Import failed:', error)
       setImportError(error instanceof Error ? error.message : 'Erreur lors de l\'import')
     } finally {
       setIsImporting(false)
@@ -185,7 +193,7 @@ export const RecipientSelectorTableV2: React.FC<RecipientSelectorTableProps> = (
       link.click()
       document.body.removeChild(link)
     } catch (error) {
-      console.error('Export failed:', error)
+      logger.error('Export failed:', error)
     } finally {
       setIsExporting(false)
     }
@@ -217,7 +225,7 @@ export const RecipientSelectorTableV2: React.FC<RecipientSelectorTableProps> = (
         setRecipients(response.data.recipients || [])
         setTotalRecipients(response.data.total || 0)
       } catch (error) {
-        console.error('Failed to load recipients:', error)
+        logger.error('Failed to load recipients:', error)
         setRecipients([])
         setTotalRecipients(0)
       } finally {
@@ -293,7 +301,7 @@ export const RecipientSelectorTableV2: React.FC<RecipientSelectorTableProps> = (
       const allIds = response.data.recipients.map(r => r.id)
       setSelectedIds(allIds)
     } catch (error) {
-      console.error('Failed to select all filtered recipients:', error)
+      logger.error('Failed to select all filtered recipients:', error)
     }
   }
 

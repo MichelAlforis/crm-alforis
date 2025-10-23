@@ -8,6 +8,7 @@ import { Button } from '@/components/shared'
 import { useToast } from '@/components/ui/Toast'
 import { CampaignWizard } from '@/components/email/CampaignWizard'
 import { apiClient } from '@/lib/api'
+import { logger } from '@/lib/logger'
 
 interface CampaignResponse {
   id: number
@@ -33,10 +34,10 @@ export default function NewCampaignPage() {
       apiClient.get<CampaignResponse>(`/email/campaigns/${editId}`)
         .then(response => {
           setInitialData(response.data)
-          console.log('📥 Brouillon chargé depuis DB:', response.data)
+          logger.log('📥 Brouillon chargé depuis DB:', response.data)
         })
         .catch(err => {
-          console.error('Failed to load draft:', err)
+          logger.error('Failed to load draft:', err)
           showToast({
             type: 'error',
             title: 'Impossible de charger le brouillon',
@@ -50,7 +51,7 @@ export default function NewCampaignPage() {
     try {
       // TODO: Implémenter la création de campagne avec produit_id
       // Pour l'instant, on affiche juste un message de succès
-      console.log('📤 Création campagne avec produit:', formData)
+      logger.log('📤 Création campagne avec produit:', formData)
 
       showToast({
         type: 'success',
@@ -61,7 +62,7 @@ export default function NewCampaignPage() {
       // Rediriger vers la liste des campagnes
       router.push('/dashboard/marketing/campaigns')
     } catch (err: any) {
-      console.error('Failed to create campaign:', err)
+      logger.error('Failed to create campaign:', err)
       showToast({
         type: 'error',
         title: 'Erreur',
@@ -75,16 +76,28 @@ export default function NewCampaignPage() {
   const handleSaveDraft = async (formData: any) => {
     // Sauvegarder en base de données comme brouillon
     try {
+      // Transformer recipient_filters en audience_filters pour le backend
+      const payload = { ...formData }
+
+      if (formData.recipient_filters) {
+        payload.audience_filters = {
+          target_type: formData.recipient_filters.type || 'contacts',
+          specific_ids: formData.recipient_filters.selectedIds || []
+        }
+        // Supprimer recipient_filters car c'est un format frontend
+        delete payload.recipient_filters
+      }
+
       if (initialData?.id) {
         // Mise à jour d'un brouillon existant
-        await apiClient.put(`/email/campaigns/${initialData.id}`, formData)
+        await apiClient.put(`/email/campaigns/${initialData.id}`, payload)
         showToast({
           type: 'success',
           title: 'Brouillon mis à jour',
         })
       } else {
         // Création d'un nouveau brouillon
-        const response = await apiClient.post<CampaignResponse>('/email/campaigns', formData)
+        const response = await apiClient.post<CampaignResponse>('/email/campaigns', payload)
         const campaign = response.data
 
         // Mettre à jour initialData avec l'ID pour les prochaines sauvegardes
@@ -97,7 +110,7 @@ export default function NewCampaignPage() {
         })
       }
     } catch (err: any) {
-      console.error('Failed to save draft:', err)
+      logger.error('Failed to save draft:', err)
       showToast({
         type: 'error',
         title: 'Erreur lors de la sauvegarde',
@@ -132,6 +145,7 @@ export default function NewCampaignPage() {
       <CampaignWizard
         initialData={initialData}
         onSubmit={handleSubmit}
+        onSaveDraft={handleSaveDraft}
         isSubmitting={isCreating}
       />
     </div>

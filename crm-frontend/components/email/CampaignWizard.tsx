@@ -10,6 +10,7 @@ import { Step1BasicInfo } from './wizard/Step1BasicInfo'
 import { Step2Recipients } from './wizard/Step2Recipients'
 import { Step3Configuration } from './wizard/Step3Configuration'
 import { Step4Summary } from './wizard/Step4Summary'
+import { logger } from '@/lib/logger'
 
 type EmailProvider = 'resend' | 'sendgrid' | 'mailgun'
 
@@ -104,7 +105,7 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
         // S'assurer que recipient_filters a une structure valide
         recipient_filters: initialData.recipient_filters || prev.recipient_filters,
       }))
-      console.log('✅ FormData mis à jour depuis initialData:', initialData)
+      logger.log('✅ FormData mis à jour depuis initialData:', initialData)
     }
   }, [initialData])
 
@@ -118,7 +119,7 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
         await onSaveDraft(formData)
         setLastSaved(new Date())
       } catch (error) {
-        console.error('Auto-save failed:', error)
+        logger.error('Auto-save failed:', error)
       } finally {
         setIsSaving(false)
       }
@@ -153,7 +154,8 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
         // Nom requis, produit et template optionnels
         return formData.name.trim() !== ''
       case 2:
-        return true // On peut toujours passer à l'étape 3
+        // Au moins 1 destinataire requis
+        return recipientCount > 0
       case 3:
         return formData.from_name.trim() !== '' && formData.from_email.trim() !== ''
       default:
@@ -322,7 +324,7 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
                   await onSaveDraft(formData)
                   setLastSaved(new Date())
                 } catch (error) {
-                  console.error('Manual save failed:', error)
+                  logger.error('Manual save failed:', error)
                 } finally {
                   setIsSaving(false)
                 }
@@ -362,7 +364,9 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
           type="warning"
           message={
             currentStep === 1
-              ? 'Veuillez renseigner le nom de la campagne et sélectionner un template pour continuer.'
+              ? 'Veuillez renseigner le nom de la campagne pour continuer.'
+              : currentStep === 2
+              ? 'Veuillez sélectionner au moins 1 destinataire pour continuer.'
               : 'Veuillez remplir tous les champs requis pour continuer.'
           }
         />

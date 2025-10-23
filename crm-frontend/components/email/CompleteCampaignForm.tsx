@@ -11,6 +11,7 @@ import { EmailEditor, EmailEditorValue } from './EmailEditor'
 import RecipientSelectorTable, { RecipientFilters, TargetType } from './RecipientSelectorTable'
 import { apiClient } from '@/lib/api'
 import { useConfirm } from '@/hooks/useConfirm'
+import { logger } from '@/lib/logger'
 
 interface EmailTemplate {
   id: number
@@ -92,7 +93,7 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
         const response = await apiClient.get<EmailProvider[]>('/email-config/available-providers')
         setAvailableProviders(response.data || [])
       } catch (error) {
-        console.error('Failed to load available providers:', error)
+        logger.error('Failed to load available providers:', error)
         // En cas d'erreur, autoriser tous les providers
         setAvailableProviders(['resend', 'sendgrid', 'mailgun'])
       } finally {
@@ -106,13 +107,13 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
   useEffect(() => {
     const loadTemplates = async () => {
       try {
-        console.log('🔄 Chargement des templates...')
+        logger.log('🔄 Chargement des templates...')
         const response = await apiClient.get<EmailTemplate[]>('/email/templates')
-        console.log('✅ Templates reçus:', response.data)
-        console.log('📊 Nombre de templates:', response.data?.length || 0)
+        logger.log('✅ Templates reçus:', response.data)
+        logger.log('📊 Nombre de templates:', response.data?.length || 0)
         setTemplates(response.data || [])
       } catch (error) {
-        console.error('❌ Failed to load templates:', error)
+        logger.error('❌ Failed to load templates:', error)
       } finally {
         setIsLoadingTemplates(false)
       }
@@ -122,11 +123,11 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
 
   // Charger le template sélectionné
   useEffect(() => {
-    console.log('🔍 Template ID sélectionné:', formData.template_id)
-    console.log('📦 Templates disponibles:', templates)
+    logger.log('🔍 Template ID sélectionné:', formData.template_id)
+    logger.log('📦 Templates disponibles:', templates)
     if (formData.template_id) {
       const template = templates.find(t => t.id === formData.template_id)
-      console.log('🎯 Template trouvé:', template)
+      logger.log('🎯 Template trouvé:', template)
       setSelectedTemplate(template || null)
     } else {
       setSelectedTemplate(null)
@@ -169,7 +170,7 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
       setShowTemplateEditor(false)
       setNewTemplate({ name: '', subject: '', content: { html: '' } })
     } catch (error: any) {
-      console.error('Failed to create template:', error)
+      logger.error('Failed to create template:', error)
       confirm({
         title: 'Erreur lors de la création',
         message: error?.response?.data?.detail || 'Impossible de créer le template. Veuillez réessayer.',

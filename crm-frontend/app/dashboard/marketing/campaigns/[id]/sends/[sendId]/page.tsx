@@ -9,6 +9,7 @@ import { Button } from '@/components/shared/Button'
 import { Alert } from '@/components/shared/Alert'
 import { apiClient } from '@/lib/api'
 import { useToast } from '@/components/ui/Toast'
+import { logger } from '@/lib/logger'
 
 interface EmailSend {
   id: number
@@ -84,7 +85,7 @@ export default function SendStatsPage() {
         const response = await apiClient.get<EmailSend>(`/email/campaigns/${campaignId}/sends/${sendId}`)
         setSend(response.data)
       } catch (error) {
-        console.error('Failed to load send:', error)
+        logger.error('Failed to load send:', error)
         showToast({
           type: 'error',
           title: 'Erreur',
@@ -118,7 +119,7 @@ export default function SendStatsPage() {
         setDetails(response.data.items || [])
         setTotalDetails(response.data.total || 0)
       } catch (error) {
-        console.error('Failed to load send details:', error)
+        logger.error('Failed to load send details:', error)
       } finally {
         setIsLoadingDetails(false)
       }

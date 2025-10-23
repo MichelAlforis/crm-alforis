@@ -9,6 +9,7 @@ import { Table } from '@/components/shared/Table'
 import { Alert } from '@/components/shared/Alert'
 import { apiClient } from '@/lib/api'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
+import { logger } from '@/lib/logger'
 
 export type TargetType = 'organisations' | 'contacts'
 
@@ -91,10 +92,10 @@ export const RecipientSelectorTable: React.FC<RecipientSelectorTableProps> = ({
           filters
         )
 
-        console.log('📊 Recipients loaded:', response.data)
+        logger.log('📊 Recipients loaded:', response.data)
         setRecipients(response.data.recipients || [])
       } catch (error) {
-        console.error('Failed to load recipients:', error)
+        logger.error('Failed to load recipients:', error)
         setRecipients([])
       } finally {
         setIsLoading(false)

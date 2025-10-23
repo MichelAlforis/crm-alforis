@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/shared/Input'
 import { Alert } from '@/components/shared/Alert'
 import { useEmailTemplates } from '@/hooks/useEmailAutomation'
+import { logger } from '@/lib/logger'
 
 interface EmailTemplate {
   id: number
@@ -84,7 +85,7 @@ export function TemplateEditModal({
 
       onClose()
     } catch (err: any) {
-      console.error('Failed to update template:', err)
+      logger.error('Failed to update template:', err)
       setError(err?.response?.data?.detail || 'Impossible de mettre à jour le template')
     } finally {
       setIsSubmitting(false)

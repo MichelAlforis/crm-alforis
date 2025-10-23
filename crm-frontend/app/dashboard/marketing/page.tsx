@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { apiClient } from '@/lib/api'
 import { useToast } from '@/hooks/useToast'
+import { logger } from '@/lib/logger'
 
 interface Campaign {
   id: number
@@ -123,7 +124,7 @@ export default function MarketingDashboard() {
         performance,
       })
     } catch (error: any) {
-      console.error('Erreur chargement stats marketing:', error)
+      logger.error('Erreur chargement stats marketing:', error)
       showToast({
         type: 'error',
         title: 'Erreur',

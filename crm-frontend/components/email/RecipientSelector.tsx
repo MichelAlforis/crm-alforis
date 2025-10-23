@@ -7,6 +7,7 @@ import { Button } from '@/components/shared/Button'
 import { Select } from '@/components/shared/Select'
 import { Alert } from '@/components/shared/Alert'
 import { apiClient } from '@/lib/api'
+import { logger } from '@/lib/logger'
 
 export type TargetType = 'organisations' | 'contacts'
 
@@ -75,7 +76,7 @@ export const RecipientSelector: React.FC<RecipientSelectorProps> = ({
           setCountries(response.data)
         }
       } catch (error) {
-        console.error('Failed to load countries:', error)
+        logger.error('Failed to load countries:', error)
       }
     }
     loadCountries()
@@ -93,7 +94,7 @@ export const RecipientSelector: React.FC<RecipientSelectorProps> = ({
           onCountChange(count)
         }
       } catch (error) {
-        console.error('Failed to load recipient count:', error)
+        logger.error('Failed to load recipient count:', error)
         setRecipientCount(null)
         if (onCountChange) {
           onCountChange(0)

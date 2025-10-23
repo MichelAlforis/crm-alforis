@@ -5,6 +5,7 @@ import { Check, Mail, Users, Settings, TrendingUp, AlertCircle } from 'lucide-re
 import { Alert } from '@/components/shared/Alert'
 import { apiClient } from '@/lib/api'
 import { RecipientFilters } from '../RecipientSelectorTable'
+import { logger } from '@/lib/logger'
 
 type EmailProvider = 'resend' | 'sendgrid' | 'mailgun'
 
@@ -61,7 +62,7 @@ export const Step4Summary: React.FC<Step4SummaryProps> = ({
           const response = await apiClient.get<Produit>(`/produits/${produit_id}`)
           setProduit(response.data)
         } catch (error) {
-          console.error('Failed to load produit:', error)
+          logger.error('Failed to load produit:', error)
         }
       }
       loadProduit()
@@ -75,7 +76,7 @@ export const Step4Summary: React.FC<Step4SummaryProps> = ({
           const response = await apiClient.get<EmailTemplate>(`/email/templates/${template_id}`)
           setTemplate(response.data)
         } catch (error) {
-          console.error('Failed to load template:', error)
+          logger.error('Failed to load template:', error)
         }
       }
       loadTemplate()

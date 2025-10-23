@@ -6,20 +6,21 @@ import { Button } from '@/components/shared/Button'
 import { Card, CardBody, CardHeader } from '@/components/shared/Card'
 import { Alert } from '@/components/shared/Alert'
 import { Copy, Download, Eye, Layers, Loader2, RefreshCw, Sparkles } from 'lucide-react'
+import { logger } from '@/lib/logger'
 
 const ReactEmailEditor = dynamic(() => {
-  console.log('⚡ EmailEditor: Tentative de chargement du module react-email-editor')
+  logger.log('⚡ EmailEditor: Tentative de chargement du module react-email-editor')
   return import('react-email-editor').then((module) => {
-    console.log('✅ EmailEditor: Module react-email-editor chargé')
+    logger.log('✅ EmailEditor: Module react-email-editor chargé')
     return module
   }).catch((error) => {
-    console.error('❌ EmailEditor: Erreur lors du chargement du module:', error)
+    logger.error('❌ EmailEditor: Erreur lors du chargement du module:', error)
     throw error
   })
 }, {
   ssr: false,
   loading: () => {
-    console.log('⏳ EmailEditor: Affichage du loader...')
+    logger.log('⏳ EmailEditor: Affichage du loader...')
     return (
       <div className="flex h-96 items-center justify-center gap-3 rounded-radius-md border border-dashed border-border text-text-secondary">
         <Loader2 className="h-5 w-5 animate-spin" />
@@ -119,7 +120,7 @@ export const EmailEditor: React.FC<EmailEditorProps> = ({
         }
         lastLoadedSignature.current = signature
       } catch (error) {
-        console.error('Impossible de charger le design email', error)
+        logger.error('Impossible de charger le design email', error)
       }
     },
     [isEditorReady, serializedValue, value]
@@ -145,7 +146,7 @@ export const EmailEditor: React.FC<EmailEditorProps> = ({
   }, [value])
 
   const handleEditorLoaded = useCallback(() => {
-    console.log('✅ EmailEditor: Éditeur chargé!')
+    logger.log('✅ EmailEditor: Éditeur chargé!')
     setIsEditorReady(true)
     loadInitialContent(true)
   }, [loadInitialContent])
