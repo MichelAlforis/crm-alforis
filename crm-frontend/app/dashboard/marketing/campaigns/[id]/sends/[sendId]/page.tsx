@@ -181,13 +181,14 @@ export default function BatchTrackingPage() {
   const clickRate = batch.sent_count > 0 ? (batch.clicked_count / batch.sent_count * 100).toFixed(1) : '0'
   const bounceRate = batch.sent_count > 0 ? (batch.bounced_count / batch.sent_count * 100).toFixed(1) : '0'
 
-  // Compter les destinataires par filtre
+  // Utiliser les compteurs du batch (données globales) au lieu de filtrer recipients
+  // Car recipients est déjà filtré par l'API selon le filtre actif
   const filterCounts = {
-    all: recipients.length,
-    clicked: recipients.filter(r => r.tracking.click_count > 0).length,
-    opened: recipients.filter(r => r.tracking.open_count > 0).length,
-    not_opened: recipients.filter(r => r.tracking.open_count === 0 && !r.tracking.bounced).length,
-    bounced: recipients.filter(r => r.tracking.bounced).length,
+    all: batch.sent_count,
+    clicked: batch.clicked_count,
+    opened: batch.opened_count,
+    not_opened: batch.sent_count - batch.opened_count - batch.bounced_count,
+    bounced: batch.bounced_count,
   }
 
   return (
@@ -339,7 +340,7 @@ export default function BatchTrackingPage() {
                 {option.icon}
                 <span>{option.label}</span>
                 <span className="ml-1 px-2 py-0.5 rounded-full bg-white/30 text-xs font-semibold">
-                  {filter === 'all' ? filterCounts.all : filterCounts[option.value] || 0}
+                  {filterCounts[option.value] || 0}
                 </span>
               </button>
             ))}
