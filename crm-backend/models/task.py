@@ -134,5 +134,5 @@ class Task(BaseModel):
         if self.organisation:
             return self.organisation.name
         if self.person:
-            return self.person.name
+            return self.person.full_name
         return "Non lié"

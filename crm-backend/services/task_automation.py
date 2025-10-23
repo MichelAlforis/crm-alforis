@@ -101,7 +101,7 @@ class TaskAutomationService:
         # Règle : Prospect Chaud → Relance J+3
         if new_stage == StagePerson.PROSPECT_CHAUD:
             return await self.task_service.create_auto_task(
-                title=f"Relancer person {person.name}",
+                title=f"Relancer person {person.full_name}",
                 description=f"Le person est maintenant chaud. Faire un suivi pour finaliser le partenariat.",
                 due_date=date.today() + timedelta(days=3),
                 priority=TaskPriority.HAUTE,
@@ -113,7 +113,7 @@ class TaskAutomationService:
         # Règle : En Négociation → Suivi J+5
         elif new_stage == StagePerson.EN_NEGOCIATION:
             return await self.task_service.create_auto_task(
-                title=f"Suivi négociation {person.name}",
+                title=f"Suivi négociation {person.full_name}",
                 description=f"Faire le point sur les termes du contrat person.",
                 due_date=date.today() + timedelta(days=5),
                 priority=TaskPriority.HAUTE,
@@ -153,9 +153,9 @@ class TaskAutomationService:
                 entity_id_Organisation = Organisation_id
 
         if person_id:
-            person = self.db.query(person).filter(person.id == person_id).first()
+            person = self.db.query(Person).filter(Person.id == person_id).first()
             if person:
-                entity_name = person.name
+                entity_name = person.full_name
                 entity_id_person = person_id
 
         # Règle : Réunion → Compte-rendu J+1

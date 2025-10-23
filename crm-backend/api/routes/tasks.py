@@ -47,7 +47,7 @@ def enrich_task_response(task) -> dict:
     if task.organisation:
         data["organisation_name"] = task.organisation.name
     if task.person:
-        data["person_name"] = task.person.name
+        data["person_name"] = task.person.full_name
 
     data["linked_entity_display"] = task.get_linked_entity_name()
 

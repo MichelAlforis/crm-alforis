@@ -1,6 +1,6 @@
 from pydantic import Field, field_validator
 from typing import Optional
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from schemas.base import TimestampedSchema, BaseSchema
 from models.task import TaskPriority, TaskStatus, TaskCategory
 
@@ -13,27 +13,24 @@ class TaskCreate(BaseSchema):
     """Création d'une tâche"""
     title: str = Field(..., min_length=1, max_length=255)
     description: Optional[str] = None
-    due_date: date = Field(..., description="Date d'échéance (YYYY-MM-DD)")
+    due_date: Optional[datetime] = Field(None, description="Date d'échéance (ISO format)")
     priority: TaskPriority = TaskPriority.MOYENNE
     status: TaskStatus = TaskStatus.TODO
     category: TaskCategory = TaskCategory.AUTRE
 
-    # Liens optionnels (peut en avoir plusieurs ou aucun)
-    investor_id: Optional[int] = None
-    fournisseur_id: Optional[int] = None
+    # Liens optionnels
     organisation_id: Optional[int] = None
     person_id: Optional[int] = None
-
-    # Métadonnées auto-création
-    is_auto_created: bool = False
-    auto_creation_rule: Optional[str] = None
+    assigned_to: Optional[int] = None
 
     @field_validator("due_date", mode="before")
     @classmethod
     def validate_due_date(cls, v):
-        """Convertir string en date si nécessaire"""
+        """Convertir string en datetime si nécessaire"""
+        if v is None:
+            return v
         if isinstance(v, str):
-            return date.fromisoformat(v)
+            return datetime.fromisoformat(v.replace('Z', '+00:00'))
         return v
 
 
@@ -41,14 +38,13 @@ class TaskUpdate(BaseSchema):
     """Mise à jour d'une tâche"""
     title: Optional[str] = Field(None, min_length=1, max_length=255)
     description: Optional[str] = None
-    due_date: Optional[date] = None
+    due_date: Optional[datetime] = None
     priority: Optional[TaskPriority] = None
     status: Optional[TaskStatus] = None
     category: Optional[TaskCategory] = None
-    investor_id: Optional[int] = None
-    fournisseur_id: Optional[int] = None
     organisation_id: Optional[int] = None
     person_id: Optional[int] = None
+    assigned_to: Optional[int] = None
 
     @field_validator("due_date", mode="before")
     @classmethod
@@ -56,7 +52,7 @@ class TaskUpdate(BaseSchema):
         if v is None:
             return v
         if isinstance(v, str):
-            return date.fromisoformat(v)
+            return datetime.fromisoformat(v.replace('Z', '+00:00'))
         return v
 
 
@@ -64,18 +60,15 @@ class TaskResponse(TimestampedSchema):
     """Réponse tâche simple"""
     title: str
     description: Optional[str]
-    due_date: date
-    snoozed_until: Optional[date]
-    completed_at: Optional[date]
+    due_date: Optional[datetime]  # Changed from date to datetime to match model
+    completed_at: Optional[datetime]  # Changed from date to datetime
     priority: TaskPriority
     status: TaskStatus
     category: TaskCategory
-    investor_id: Optional[int]
-    fournisseur_id: Optional[int]
     organisation_id: Optional[int]
     person_id: Optional[int]
-    is_auto_created: bool
-    auto_creation_rule: Optional[str]
+    assigned_to: Optional[int]  # Added to match model
+    created_by: Optional[int]  # Added to match model
 
     # Propriétés calculées
     is_overdue: bool = False
@@ -89,9 +82,9 @@ class TaskResponse(TimestampedSchema):
 
 class TaskWithRelations(TaskResponse):
     """Réponse tâche avec informations des entités liées"""
-    investor_name: Optional[str] = None
-    fournisseur_name: Optional[str] = None
     person_name: Optional[str] = None
+    organisation_name: Optional[str] = None
+    assigned_to_name: Optional[str] = None
     linked_entity_display: Optional[str] = None  # Ex: "📊 Acme Corp"
 
 
@@ -115,11 +108,10 @@ class TaskFilterParams(BaseSchema):
     status: Optional[TaskStatus] = None
     priority: Optional[TaskPriority] = None
     category: Optional[TaskCategory] = None
-    investor_id: Optional[int] = None
-    fournisseur_id: Optional[int] = None
     person_id: Optional[int] = None
+    organisation_id: Optional[int] = None
+    assigned_to: Optional[int] = None
     view: Optional[str] = None  # 'today', 'overdue', 'next7', 'all'
-    is_auto_created: Optional[bool] = None
 
 
 # =====================================================
