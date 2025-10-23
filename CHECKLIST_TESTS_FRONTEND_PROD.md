@@ -1107,6 +1107,45 @@ TOUS les confirm() de l'annuaire utilisent maintenant ConfirmDialog:
        * Empty state responsive
        * Loading state responsive
 
+  6. 🔗 Webhooks Externes Resend et Désabonnements ✨ **NOUVEAU** (2025-10-23)
+     - Fichier backend: crm-backend/api/routes/external_webhooks.py
+     - Modèles:
+       * UnsubscribedEmail: Liste noire globale des emails désabonnés
+       * email_unsubscribed: Colonne ajoutée à Person et Organisation
+     - Endpoints créés:
+       * POST /api/v1/webhooks/resend (9 événements supportés)
+         - email.sent → PROCESSED
+         - email.delivered → DELIVERED ⭐
+         - email.delivery_delayed → DEFERRED
+         - email.failed → DROPPED
+         - email.bounced → BOUNCED
+         - email.opened → OPENED ⭐
+         - email.clicked → CLICKED ⭐
+         - email.complained → SPAM_REPORT
+         - email.scheduled → PROCESSED
+       * POST /api/v1/webhooks/unsubscribe (désabonnement depuis site web)
+     - Sécurité:
+       * Middleware verify_webhook_token (Bearer Token)
+       * WEBHOOK_SECRET: Configuré dans .env (voir WEBHOOK_SETUP_ALFORIS.md)
+     - Base de données:
+       * Migration SQL: create_unsubscribed_emails.sql
+       * Table unsubscribed_emails (email UNIQUE, source, reason)
+       * Index sur email pour recherche rapide
+     - Configuration site web:
+       * URL Resend: https://www.alforis.fr/api/webhooks/resend ✅
+       * Secret Resend: Configuré dans /root/alforis/.env.local ✅
+       * Proxy configuré pour forwarder vers CRM
+     - Tests:
+       * ✅ Webhook Resend testé (event_type: email.delivered)
+       * ✅ Désabonnement testé (test-unsub2@example.com)
+     - KPIs calculables:
+       * Taux de délivrabilité: delivered / sent
+       * Taux d'ouverture: opened / delivered
+       * Taux de clic (CTR): clicked / delivered
+       * Taux de bounce: bounced / sent
+       * Taux de spam: complained / sent
+     - Documentation: WEBHOOK_SETUP_ALFORIS.md
+
 🎉 MODULE LISTES DE DIFFUSION - REFONTE COMPLÈTE (2025-10-23) ✨ **NOUVEAU**
 ===========================================================================
 
@@ -1361,7 +1400,7 @@ OU Via .env (crm-backend/.env):
 
 ---
 
-## 6.7 MODULE ABONNEMENTS AUX CAMPAGNES 🔔
+### 6.7 MODULE ABONNEMENTS AUX CAMPAGNES 🔔
 
 **Date d'implémentation :** 2025-10-23
 **Version :** 1.1
