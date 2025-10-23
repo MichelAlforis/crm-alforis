@@ -16,6 +16,7 @@ from api.routes import (
     ai_agent,
     mailing_lists,
     external_webhooks,
+    public,
 )
 from routers import search, exports, webhooks, email_config
 from webhooks import sendgrid as inbound_sendgrid
@@ -57,6 +58,9 @@ api_router.include_router(mailing_lists.router)
 
 # 🔗 WEBHOOKS EXTERNES (alforis.fr → CRM)
 api_router.include_router(external_webhooks.router)
+
+# 🌐 ROUTES PUBLIQUES (sans auth utilisateur, avec Bearer token)
+api_router.include_router(public.router)
 
 # 🤖 WORKFLOWS & AUTOMATION (Phase 2.2)
 api_router.include_router(workflows.router)
