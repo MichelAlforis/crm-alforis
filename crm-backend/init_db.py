@@ -16,8 +16,9 @@ from models.role import Role
 from models.permission import Permission
 from models.notification import Notification
 from models.organisation_activity import OrganisationActivity
-from models.email import EmailTemplate, EmailCampaign, EmailCampaignStep, EmailSend, EmailEvent
+from models.email import EmailTemplate, EmailCampaign, EmailCampaignStep, EmailSend, EmailEvent, CampaignSubscription
 from models.email_config import EmailConfiguration
+from models.mailing_list import MailingList
 from models.ai_agent import AISuggestion, AIExecution, AIConfiguration, AICache
 from models.mandat import Mandat
 from models.kpi import DashboardKPI
