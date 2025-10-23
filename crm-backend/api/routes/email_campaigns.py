@@ -599,6 +599,34 @@ async def list_campaign_batches(
     return PaginatedResponse(total=total, skip=skip, limit=limit, items=items)
 
 
+@router.get("/campaigns/{campaign_id}/batches/{batch_id}", response_model=EmailSendBatchResponse)
+async def get_campaign_batch(
+    campaign_id: int,
+    batch_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """Récupérer un batch spécifique d'une campagne."""
+    from models.email import EmailSendBatch
+
+    batch = (
+        db.query(EmailSendBatch)
+        .filter(
+            EmailSendBatch.id == batch_id,
+            EmailSendBatch.campaign_id == campaign_id
+        )
+        .first()
+    )
+
+    if not batch:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Batch {batch_id} not found for campaign {campaign_id}"
+        )
+
+    return EmailSendBatchResponse.model_validate(batch)
+
+
 @router.get("/campaigns/{campaign_id}/sends", response_model=PaginatedResponse[EmailSendResponse])
 async def list_campaign_sends(
     campaign_id: int,

@@ -33,8 +33,30 @@ export default function NewCampaignPage() {
       // Charger la campagne depuis l'API
       apiClient.get<CampaignResponse>(`/email/campaigns/${editId}`)
         .then(response => {
-          setInitialData(response.data)
-          logger.log('📥 Brouillon chargé depuis DB:', response.data)
+          const data = response.data as any
+
+          // Transformer audience_filters (backend) → recipient_filters (frontend)
+          let recipient_filters = data.recipient_filters
+          if (data.audience_filters && !data.recipient_filters) {
+            recipient_filters = {
+              target_type: data.audience_filters.target_type || 'contacts',
+              specific_ids: data.audience_filters.specific_ids || [],
+              languages: data.audience_filters.languages || [],
+              countries: data.audience_filters.countries || [],
+              organisation_categories: data.audience_filters.organisation_categories || [],
+              organisation_types: data.audience_filters.organisation_types || [],
+              cities: data.audience_filters.cities || [],
+              roles: data.audience_filters.roles || [],
+              is_active: data.audience_filters.is_active,
+              exclude_ids: data.audience_filters.exclude_ids || [],
+            }
+          }
+
+          setInitialData({
+            ...data,
+            recipient_filters,
+          })
+          logger.log('📥 Brouillon chargé depuis DB:', { ...data, recipient_filters })
         })
         .catch(err => {
           logger.error('Failed to load draft:', err)
@@ -49,14 +71,26 @@ export default function NewCampaignPage() {
   const handleSubmit = async (formData: any) => {
     setIsCreating(true)
     try {
-      // TODO: Implémenter la création de campagne avec produit_id
-      // Pour l'instant, on affiche juste un message de succès
-      logger.log('📤 Création campagne avec produit:', formData)
+      // Transformer recipient_filters en audience_filters pour le backend
+      const payload = { ...formData }
+
+      if (formData.recipient_filters) {
+        payload.audience_filters = {
+          target_type: formData.recipient_filters.target_type || 'contacts',
+          specific_ids: formData.recipient_filters.specific_ids || []
+        }
+        // Supprimer recipient_filters car c'est un format frontend
+        delete payload.recipient_filters
+      }
+
+      logger.log('📤 Création campagne avec produit:', payload)
+
+      const response = await apiClient.post<CampaignResponse>('/email/campaigns', payload)
 
       showToast({
         type: 'success',
         title: `Campagne "${formData.name}" créée`,
-        message: `Produit ID: ${formData.produit_id}. L'envoi automatique sera implémenté prochainement.`,
+        message: `${payload.audience_filters?.specific_ids?.length || 0} destinataires sélectionnés`,
       })
 
       // Rediriger vers la liste des campagnes
@@ -81,8 +115,8 @@ export default function NewCampaignPage() {
 
       if (formData.recipient_filters) {
         payload.audience_filters = {
-          target_type: formData.recipient_filters.type || 'contacts',
-          specific_ids: formData.recipient_filters.selectedIds || []
+          target_type: formData.recipient_filters.target_type || 'contacts',
+          specific_ids: formData.recipient_filters.specific_ids || []
         }
         // Supprimer recipient_filters car c'est un format frontend
         delete payload.recipient_filters
