@@ -1,26 +1,73 @@
 // app/dashboard/interactions/page.tsx
 // ============= INTERACTIONS PAGE =============
-// MIGRATED: Uses new Organisation activity API instead of legacy hooks
+// Page avec création + filtres
 
 'use client'
 
 import React, { useState, useMemo } from 'react'
+import { Plus, Filter } from 'lucide-react'
 import { useOrganisations } from '@/hooks/useOrganisations'
 import { useOrganisationActivity, flattenActivities } from '@/hooks/useOrganisationActivity'
-import { Card, Table, Alert } from '@/components/shared'
+import { Card, Table, Alert, Button } from '@/components/shared'
+import InteractionCreateModal from '@/components/interactions/InteractionCreateModal'
+
+const ACTIVITY_TYPES = [
+  { value: 'all', label: 'Tous les types' },
+  { value: 'email', label: 'Email' },
+  { value: 'appel', label: 'Appel' },
+  { value: 'reunion', label: 'Réunion' },
+  { value: 'dejeuner', label: 'Déjeuner' },
+  { value: 'note', label: 'Note' },
+  { value: 'autre', label: 'Autre' },
+]
 
 export default function InteractionsPage() {
   const { data: organisations } = useOrganisations()
   const [selectedOrgId, setSelectedOrgId] = useState<number | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const activityQuery = selectedOrgId 
+  // Filtres
+  const [filterType, setFilterType] = useState('all')
+  const [filterDateFrom, setFilterDateFrom] = useState('')
+  const [filterDateTo, setFilterDateTo] = useState('')
+
+  const activityQuery = selectedOrgId
     ? useOrganisationActivity(selectedOrgId)
     : null
-  
-  const activities = useMemo(() => 
+
+  const activities = useMemo(() =>
     flattenActivities(activityQuery?.data?.pages),
     [activityQuery?.data?.pages]
   )
+
+  // Filtrer les activités
+  const filteredActivities = useMemo(() => {
+    if (!activities) return []
+
+    return activities.filter((activity) => {
+      // Filtre par type
+      if (filterType !== 'all' && activity.type !== filterType) {
+        return false
+      }
+
+      // Filtre par date
+      const activityDate = new Date(activity.created_at)
+
+      if (filterDateFrom) {
+        const fromDate = new Date(filterDateFrom)
+        if (activityDate < fromDate) return false
+      }
+
+      if (filterDateTo) {
+        const toDate = new Date(filterDateTo)
+        toDate.setHours(23, 59, 59, 999)
+        if (activityDate > toDate) return false
+      }
+
+      return true
+    })
+  }, [activities, filterType, filterDateFrom, filterDateTo])
+
   const activityLoading = activityQuery?.isLoading ?? false
   const activityError = activityQuery?.error ? String(activityQuery.error) : undefined
 
@@ -28,7 +75,7 @@ export default function InteractionsPage() {
     if (confirm('Supprimer cette activité?')) {
       try {
         const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-        const token = localStorage.getItem('access_token')
+        const token = localStorage.getItem('access_token') || localStorage.getItem('auth_token')
         await fetch(`${API_BASE}/api/v1/organisations/${selectedOrgId}/activity/${activityId}`, {
           method: 'DELETE',
           headers: {
@@ -44,22 +91,62 @@ export default function InteractionsPage() {
 
   const columns = [
     {
-      header: 'Type d\'événement',
-      accessor: 'event_type',
+      header: 'Type',
+      accessor: 'type',
+      render: (value: string) => {
+        const typeConfig: Record<string, { label: string; color: string }> = {
+          email: { label: 'Email', color: 'bg-blue-100 text-blue-800' },
+          appel: { label: 'Appel', color: 'bg-green-100 text-green-800' },
+          reunion: { label: 'Réunion', color: 'bg-purple-100 text-purple-800' },
+          dejeuner: { label: 'Déjeuner', color: 'bg-orange-100 text-orange-800' },
+          note: { label: 'Note', color: 'bg-gray-100 text-gray-800' },
+          autre: { label: 'Autre', color: 'bg-yellow-100 text-yellow-800' },
+        }
+
+        const config = typeConfig[value] || { label: value, color: 'bg-gray-100 text-gray-800' }
+
+        return (
+          <span className={`px-2 py-1 ${config.color} rounded text-xs font-medium`}>
+            {config.label}
+          </span>
+        )
+      },
+    },
+    {
+      header: 'Titre',
+      accessor: 'title',
       render: (value: string) => (
-        <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium">
-          {value || 'Événement'}
-        </span>
+        <div className="font-medium text-gray-900">{value}</div>
       ),
     },
     {
       header: 'Date',
       accessor: 'created_at',
-      render: (value: string) => new Date(value).toLocaleDateString('fr-FR'),
+      render: (value: string) => {
+        const date = new Date(value)
+        return (
+          <div className="text-sm text-gray-600">
+            {date.toLocaleDateString('fr-FR', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric',
+            })}
+            <br />
+            <span className="text-xs text-gray-400">
+              {date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+            </span>
+          </div>
+        )
+      },
     },
     {
       header: 'Description',
       accessor: 'description',
+      render: (value: string) => (
+        <div className="text-sm text-gray-600 max-w-xs truncate">
+          {value || '-'}
+        </div>
+      ),
     },
     {
       header: 'Actions',
@@ -77,18 +164,35 @@ export default function InteractionsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-ardoise">Activités et interactions</h1>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-ardoise">Interactions</h1>
+          <p className="text-gray-600 mt-1">
+            Historique des activités et communications
+          </p>
+        </div>
+
+        {selectedOrgId && (
+          <Button
+            onClick={() => setIsModalOpen(true)}
+            variant="primary"
+            leftIcon={<Plus className="w-4 h-4" />}
+          >
+            Nouvelle Interaction
+          </Button>
+        )}
+      </div>
 
       {/* Sélection d'organisation */}
       <Card>
-        <div className="mb-4">
+        <div className="p-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Sélectionner une organisation
           </label>
           <select
             value={selectedOrgId || ''}
             onChange={(e) => setSelectedOrgId(e.target.value ? parseInt(e.target.value) : null)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bleu focus:outline-none"
           >
             <option value="">-- Choisir une organisation --</option>
             {organisations?.items?.map((org) => (
@@ -102,8 +206,86 @@ export default function InteractionsPage() {
 
       {selectedOrgId && activityQuery && (
         <>
+          {/* Filtres */}
+          <Card>
+            <div className="p-4">
+              <div className="flex items-center gap-2 mb-4">
+                <Filter className="w-4 h-4 text-gray-500" />
+                <h3 className="font-medium text-gray-900">Filtres</h3>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Filtre Type */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Type d'interaction
+                  </label>
+                  <select
+                    value={filterType}
+                    onChange={(e) => setFilterType(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-bleu focus:outline-none"
+                  >
+                    {ACTIVITY_TYPES.map((type) => (
+                      <option key={type.value} value={type.value}>
+                        {type.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Filtre Date De */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Date de début
+                  </label>
+                  <input
+                    type="date"
+                    value={filterDateFrom}
+                    onChange={(e) => setFilterDateFrom(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-bleu focus:outline-none"
+                  />
+                </div>
+
+                {/* Filtre Date À */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Date de fin
+                  </label>
+                  <input
+                    type="date"
+                    value={filterDateTo}
+                    onChange={(e) => setFilterDateTo(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-bleu focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              {(filterType !== 'all' || filterDateFrom || filterDateTo) && (
+                <div className="mt-3 flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      setFilterType('all')
+                      setFilterDateFrom('')
+                      setFilterDateTo('')
+                    }}
+                    className="text-sm text-bleu hover:underline"
+                  >
+                    Réinitialiser les filtres
+                  </button>
+                  <span className="text-sm text-gray-500">
+                    ({filteredActivities.length} résultat{filteredActivities.length > 1 ? 's' : ''})
+                  </span>
+                </div>
+              )}
+            </div>
+          </Card>
+
+          {/* Tableau */}
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold">Historique d'activité</h2>
+            <h2 className="text-xl font-bold">
+              Historique d'activité
+              {filterType !== 'all' && ` - ${ACTIVITY_TYPES.find(t => t.value === filterType)?.label}`}
+            </h2>
           </div>
 
           {activityError && (
@@ -113,13 +295,28 @@ export default function InteractionsPage() {
           <Card>
             <Table
               columns={columns}
-              data={activities || []}
+              data={filteredActivities || []}
               isLoading={activityLoading}
-              isEmpty={!activities || activities.length === 0}
+              isEmpty={!filteredActivities || filteredActivities.length === 0}
+              emptyMessage={
+                filterType !== 'all' || filterDateFrom || filterDateTo
+                  ? 'Aucune interaction ne correspond aux filtres'
+                  : 'Aucune interaction pour cette organisation'
+              }
             />
           </Card>
         </>
       )}
+
+      {/* Modal Création */}
+      <InteractionCreateModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        organisationId={selectedOrgId || undefined}
+        onSuccess={() => {
+          activityQuery?.refetch?.()
+        }}
+      />
     </div>
   )
 }

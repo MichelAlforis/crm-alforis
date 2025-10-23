@@ -2,10 +2,11 @@
 
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Play, Pause, Eye, Zap, AlertCircle } from 'lucide-react'
+import { Play, Pause, Eye, Zap, AlertCircle, Plus } from 'lucide-react'
 import { Card, CardHeader, CardBody, Button, Table, Alert } from '@/components/shared'
 import { useWorkflows, type Workflow } from '@/hooks/useWorkflows'
 import { useToast } from '@/components/ui/Toast'
+import WorkflowCreateModal from '@/components/workflows/WorkflowCreateModal'
 
 const TRIGGER_LABELS: Record<string, string> = {
   manual: 'Manuel',
@@ -17,6 +18,7 @@ const TRIGGER_LABELS: Record<string, string> = {
 
 export default function WorkflowsPage() {
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all')
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const {
     workflows,
     fetchWorkflows,
@@ -135,11 +137,20 @@ export default function WorkflowsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-ardoise">Workflows</h1>
-        <p className="text-gray-600 mt-1">
-          Automatisez vos processus avec des workflows personnalisés
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-ardoise">Workflows</h1>
+          <p className="text-gray-600 mt-1">
+            Automatisez vos processus avec des workflows personnalisés
+          </p>
+        </div>
+        <Button
+          onClick={() => setIsCreateModalOpen(true)}
+          variant="primary"
+          leftIcon={<Plus className="w-4 h-4" />}
+        >
+          Nouveau Workflow
+        </Button>
       </div>
 
       {workflows.error && (
@@ -184,11 +195,29 @@ export default function WorkflowsPage() {
           <p className="text-gray-600 mb-4">
             Les workflows permettent d'automatiser vos processus métier.
           </p>
-          <p className="text-sm text-gray-500">
-            Contactez votre administrateur pour créer des workflows via l'API.
-          </p>
+          <Button
+            onClick={() => setIsCreateModalOpen(true)}
+            variant="primary"
+            leftIcon={<Plus className="w-4 h-4" />}
+          >
+            Créer votre premier workflow
+          </Button>
         </div>
       )}
+
+      {/* Modal Création */}
+      <WorkflowCreateModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSuccess={() => {
+          fetchWorkflows(0, 100, filterStatus === 'all' ? {} : { status: filterStatus })
+          showToast({
+            type: 'success',
+            title: 'Workflow créé',
+            message: 'Le workflow a été créé avec succès en mode brouillon.',
+          })
+        }}
+      />
     </div>
   )
 }
