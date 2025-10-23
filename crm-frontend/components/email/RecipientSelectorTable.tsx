@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useMemo } from 'react'
-import { Users, Search, Filter, Check, X, Trash2 } from 'lucide-react'
+import { Users, Search, Filter, X, Trash2 } from 'lucide-react'
 import { Card, CardHeader, CardBody } from '@/components/shared/Card'
 import { Button } from '@/components/shared/Button'
 import { Input } from '@/components/shared/Input'
@@ -132,8 +132,20 @@ export const RecipientSelectorTable: React.FC<RecipientSelectorTableProps> = ({
     }
   }, [filteredRecipients.length, onCountChange])
 
-  // Note: La synchronisation se fait via le bouton "Valider la sélection"
-  // pour éviter les boucles infinies de re-render
+  // Synchronisation automatique avec debounce (500ms)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onChange({
+        ...value,
+        countries: selectedCountries,
+        languages: selectedLanguages,
+        organisation_categories: selectedCategories,
+        exclude_ids: excludedIds,
+      })
+    }, 500) // Délai de 500ms pour éviter trop d'appels
+
+    return () => clearTimeout(timer)
+  }, [selectedCountries, selectedLanguages, selectedCategories, excludedIds])
 
   const handleRemoveRecipient = (id: number) => {
     setExcludedIds(prev => [...prev, id])
@@ -155,16 +167,6 @@ export const RecipientSelectorTable: React.FC<RecipientSelectorTableProps> = ({
     setSelectedCategories(prev =>
       prev.includes(category) ? prev.filter(c => c !== category) : [...prev, category]
     )
-  }
-
-  const handleValidateSelection = () => {
-    onChange({
-      ...value,
-      countries: selectedCountries,
-      languages: selectedLanguages,
-      organisation_categories: selectedCategories,
-      exclude_ids: excludedIds,
-    })
   }
 
   const handleResetFilters = () => {
@@ -371,23 +373,14 @@ export const RecipientSelectorTable: React.FC<RecipientSelectorTableProps> = ({
               isLoading={isLoading}
             />
 
-            <div className="flex items-center justify-between pt-spacing-md border-t border-border">
-              <div className="text-sm text-text-secondary">
-                {excludedIds.length > 0 && (
-                  <span className="text-warning">
-                    {excludedIds.length} destinataire{excludedIds.length > 1 ? 's' : ''} exclu
-                    {excludedIds.length > 1 ? 's' : ''}
-                  </span>
-                )}
+            {excludedIds.length > 0 && (
+              <div className="pt-spacing-md border-t border-border">
+                <div className="text-sm text-warning">
+                  {excludedIds.length} destinataire{excludedIds.length > 1 ? 's' : ''} exclu
+                  {excludedIds.length > 1 ? 's' : ''}
+                </div>
               </div>
-              <Button
-                variant="primary"
-                onClick={handleValidateSelection}
-                leftIcon={<Check className="h-4 w-4" />}
-              >
-                Valider la sélection ({filteredRecipients.length} destinataires)
-              </Button>
-            </div>
+            )}
           </>
         )}
       </CardBody>
