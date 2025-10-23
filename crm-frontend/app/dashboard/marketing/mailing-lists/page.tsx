@@ -12,7 +12,7 @@ import { useMailingLists } from '@/hooks/useMailingLists'
 import { useExport } from '@/hooks/useExport'
 import { useImport } from '@/hooks/useImport'
 import { useConfirm } from '@/hooks/useConfirm'
-import { RecipientSelectorTable, type RecipientFilters } from '@/components/email/RecipientSelectorTable'
+import { RecipientSelectorTableV2 as RecipientSelectorTable, type RecipientFilters } from '@/components/email/RecipientSelectorTableV2 as RecipientSelectorTable'
 
 interface MailingList {
   id: number
@@ -446,7 +446,7 @@ export default function MailingListsPage() {
                 Sélection des destinataires ({recipientCount} sélectionnés)
               </h4>
             </div>
-            <RecipientSelectorTable
+            <RecipientSelectorTableV2 as RecipientSelectorTable
               value={recipientFilters}
               onChange={setRecipientFilters}
               onCountChange={setRecipientCount}
