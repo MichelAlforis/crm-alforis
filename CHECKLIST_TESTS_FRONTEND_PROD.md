@@ -67,7 +67,7 @@ Pour éviter les lenteurs du réseau distant (159.69.108.234), un environnement 
 | 3. Dashboard Principal | ✅ **COMPLET** | 11/12 (92%) | 11 | 1 | Corrections déployées - 5 erreurs 500 DB restantes |
 | 4. Module Contacts | ⬜ **À FAIRE** | 0/29 | - | - | Non testé |
 | 5. Module Organisations | ✅ **COMPLET** | 20/22 (91%) | 20 | 2 | Hook réutilisable + UX moderne |
-| 6. Module Marketing Hub | 🟡 **EN COURS** | 107/143 (75%) | 107 | 0 | Templates 100% ✅ Listes 100% ✅ Campagnes ⏳ |
+| 6. Module Marketing Hub | ✅ **COMPLET** | 143/143 (100%) | 143 | 0 | Templates ✅ Listes ✅ Campagnes ✅ TOUT OK |
 | 7. Workflows/Interactions | ⬜ **À FAIRE** | 0/14 | - | - | Non testé |
 | 8. Progressive Web App | ⬜ **À FAIRE** | 0/20 | - | - | Non testé |
 | 9. Responsive & Mobile | ⬜ **À FAIRE** | 0/19 | - | - | Non testé |
@@ -78,7 +78,7 @@ Pour éviter les lenteurs du réseau distant (159.69.108.234), un environnement 
 | 14. Navigateurs | ⬜ **À FAIRE** | 0/12 | - | - | Non testé |
 | 15. Accessibilité | ⬜ **À FAIRE** | 0/5 | - | - | Optionnel |
 | 16. Scénario Complet | ⬜ **À FAIRE** | 0/12 | - | - | Non testé |
-| **TOTAL** | **✅ 48%** | **159/262** | **159** | **3** | 5 chapitres terminés/en cours |
+| **TOTAL** | **✅ 62%** | **195/262** | **195** | **3** | 6 chapitres terminés - Marketing Hub 100% ✅ |
 
 ### 🔥 Problèmes Identifiés
 
@@ -93,6 +93,7 @@ Pour éviter les lenteurs du réseau distant (159.69.108.234), un environnement 
 | 7 | Dashboard | 🔴 Critique | GET /api/v1/dashboards/stats/global → 500 | ✅ **CORRIGÉ** (TaskStatus.DONE) |
 | 8 | Marketing | ⚠️ Moyen | Template preview manquant | ✅ **CORRIGÉ** (TemplatePreviewModal) |
 | 9 | Marketing | ⚠️ Moyen | Template edit manquant | ✅ **CORRIGÉ** (TemplateEditModal) |
+| 10 | Campagnes | 🔴 Critique | API GET /email/campaigns → 500 (metadata sérialization) | ✅ **CORRIGÉ** (Pydantic alias step_metadata) |
 | 10 | Marketing | 🔴 Critique | POST /email/templates/{id}/send-test → 500 | ✅ **CORRIGÉ** (EmailConfiguration décryptage) |
 
 ---

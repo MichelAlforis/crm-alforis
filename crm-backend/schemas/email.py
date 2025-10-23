@@ -76,7 +76,7 @@ class EmailCampaignStepBase(BaseSchema):
     send_window_hours: Optional[int] = Field(
         None, ge=1, le=168, description="Fenêtre maximale pour l'envoi (heures)"
     )
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: Optional[Dict[str, Any]] = Field(None, alias='step_metadata')
 
 
 class EmailCampaignStepCreate(EmailCampaignStepBase):
@@ -96,7 +96,7 @@ class EmailCampaignStepUpdate(BaseSchema):
     wait_for_event: Optional[EmailEventType] = None
     variant: Optional[EmailVariant] = None
     send_window_hours: Optional[int] = Field(None, ge=1, le=168)
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: Optional[Dict[str, Any]] = Field(None, alias='step_metadata')
 
 
 class EmailCampaignStepResponse(TimestampedSchema, EmailCampaignStepBase):
