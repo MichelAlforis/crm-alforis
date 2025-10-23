@@ -408,3 +408,20 @@ class CampaignSubscription(BaseModel):
         entity_type = "Person" if self.person_id else "Organisation"
         entity_id = self.person_id or self.organisation_id
         return f"<CampaignSubscription id={self.id} campaign_id={self.campaign_id} {entity_type}={entity_id}>"
+
+
+class UnsubscribedEmail(BaseModel):
+    """Emails désabonnés globalement (liste noire)."""
+
+    __tablename__ = "unsubscribed_emails"
+    __table_args__ = (
+        Index("idx_unsubscribed_email", "email", unique=True),
+    )
+
+    email = Column(String(255), nullable=False, unique=True)
+    unsubscribed_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+    source = Column(String(50), nullable=False, default="web")  # "web", "email", "manual"
+    reason = Column(Text, nullable=True)
+
+    def __repr__(self) -> str:
+        return f"<UnsubscribedEmail id={self.id} email='{self.email}'>"

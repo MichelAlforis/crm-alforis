@@ -69,6 +69,9 @@ class Settings(BaseSettings):
     email_track_opens: bool = True
     email_track_clicks: bool = True
 
+    # Webhook Security (pour alforis.fr -> CRM)
+    webhook_secret: str = ""  # Token Bearer pour authentifier les webhooks entrants
+
     # AI Agent Configuration
     ai_enabled: bool = True
     ai_default_provider: str = "claude"  # claude, openai, ollama

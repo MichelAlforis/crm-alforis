@@ -54,6 +54,7 @@ class Person(BaseModel):
     notes = Column(Text, nullable=True)
     linkedin_url = Column(String(500), nullable=True)
     is_active = Column(Boolean, default=True, index=True)
+    email_unsubscribed = Column(Boolean, default=False, nullable=False)
 
     organizations = relationship(
         "PersonOrganizationLink",

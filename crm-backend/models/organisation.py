@@ -179,6 +179,7 @@ class Organisation(BaseModel):
     description = Column(Text, nullable=True)
     tags = Column(JSON, nullable=True)
     is_active = Column(Boolean, default=True, index=True)
+    email_unsubscribed = Column(Boolean, default=False, nullable=False)
     created_by = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True)
     assigned_to = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True)
     owner_id = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True, index=True)

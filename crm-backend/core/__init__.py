@@ -18,6 +18,7 @@ from .security import (
     get_current_user,
     get_current_user_optional,
     verify_admin_user,
+    verify_webhook_token,
 )
 
 __all__ = [
@@ -42,4 +43,5 @@ __all__ = [
     "get_current_user",
     "get_current_user_optional",
     "verify_admin_user",
+    "verify_webhook_token",
 ]

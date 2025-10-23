@@ -382,3 +382,54 @@ class CampaignSubscriptionBulkResponse(BaseSchema):
     already_exists: int
     errors: int
     subscriptions: List[CampaignSubscriptionResponse]
+
+
+# ============= WEBHOOKS & UNSUBSCRIBE =============
+
+
+class ResendWebhookEvent(BaseSchema):
+    """Événement reçu depuis le webhook Resend (via proxy alforis.fr)."""
+
+    event_type: str = Field(..., description="Type d'événement Resend")
+    status: str = Field(..., description="Statut de l'email")
+    email_id: str = Field(..., description="ID de l'email dans Resend")
+    to: str = Field(..., description="Destinataire")
+    from_email: str = Field(..., alias="from", description="Expéditeur")
+    subject: Optional[str] = Field(None, description="Sujet de l'email")
+    timestamp: datetime = Field(..., description="Date/heure de l'événement")
+    created_at: Optional[datetime] = Field(None, description="Date de création")
+    data: Optional[Dict[str, Any]] = Field(None, description="Données supplémentaires")
+
+
+class ResendWebhookResponse(BaseSchema):
+    """Réponse de l'endpoint webhook Resend."""
+
+    success: bool
+    message: str
+    event_id: Optional[int] = None
+
+
+class UnsubscribeRequest(BaseSchema):
+    """Requête de désabonnement depuis le site web."""
+
+    email: str = Field(..., description="Email à désabonner")
+    unsubscribed_at: Optional[datetime] = Field(None, description="Date du désabonnement")
+    source: str = Field(default="web", description="Source du désabonnement")
+    reason: Optional[str] = Field(None, max_length=500, description="Raison du désabonnement")
+
+    @field_validator("email")
+    @classmethod
+    def validate_email_format(cls, v: str) -> str:
+        """Valider le format de l'email."""
+        import re
+        if not re.match(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", v):
+            raise ValueError("Format d'email invalide")
+        return v.lower()
+
+
+class UnsubscribeResponse(BaseSchema):
+    """Réponse de l'endpoint de désabonnement."""
+
+    success: bool
+    message: str
+    email: str

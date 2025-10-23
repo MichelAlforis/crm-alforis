@@ -135,3 +135,37 @@ async def verify_admin_user(current_user: dict = Depends(get_current_user)) -> d
             detail="Admin privileges required"
         )
     return current_user
+
+
+async def verify_webhook_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> bool:
+    """
+    Dependency pour vérifier le token Bearer des webhooks externes (alforis.fr -> CRM).
+
+    Usage:
+        def webhook_endpoint(auth: bool = Depends(verify_webhook_token)):
+            # Le token a été vérifié, on peut traiter la requête
+    """
+    if not credentials:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Missing Bearer token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    token = credentials.credentials
+    webhook_secret = settings.webhook_secret
+
+    if not webhook_secret:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="WEBHOOK_SECRET not configured on server",
+        )
+
+    if token != webhook_secret:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid webhook token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    return True

@@ -15,6 +15,7 @@ from api.routes import (
     email_campaigns,
     ai_agent,
     mailing_lists,
+    external_webhooks,
 )
 from routers import search, exports, webhooks, email_config
 from webhooks import sendgrid as inbound_sendgrid
@@ -53,6 +54,9 @@ api_router.include_router(inbound_sendgrid.router)
 ## 📧 EMAIL CONFIGURATION & MAILING LISTS (Chapitre 6)
 api_router.include_router(email_config.router)
 api_router.include_router(mailing_lists.router)
+
+# 🔗 WEBHOOKS EXTERNES (alforis.fr → CRM)
+api_router.include_router(external_webhooks.router)
 
 # 🤖 WORKFLOWS & AUTOMATION (Phase 2.2)
 api_router.include_router(workflows.router)
