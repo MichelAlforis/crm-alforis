@@ -915,18 +915,21 @@ TOUS les confirm() de l'annuaire utilisent maintenant ConfirmDialog:
 | 6.88 | Bouton "Retour" vers détails | ✅ | Navigation |
 | 6.89 | Message si 0 destinataire | ⏳ | À tester edge case |
 
-### Tests Envoi Email - CRITIQUE 🔴
+### Tests Envoi Email
 
 | # | Test | Statut | Remarques |
 |---|------|--------|-----------|
-| 6.90 | Configurer RESEND_API_KEY dans .env | ❌ | 🔴 BLOQUEUR PRODUCTION |
-| 6.91 | Redémarrer backend après config | ❌ | docker-compose restart api |
-| 6.92 | Créer campagne de test (1 destinataire) | ⏳ |  |
-| 6.93 | Envoyer email de test | ⏳ | Modal "Envoyer test" |
-| 6.94 | Email reçu dans boîte | ⏳ | 🔴 CRITIQUE - Vérifier spam |
-| 6.95 | Tracking ouverture fonctionne | ⏳ | Pixel invisible dans email |
-| 6.96 | Tracking clic fonctionne | ⏳ | Liens wrappés avec tracking |
-| 6.97 | Erreur provider affichée si échec | ⏳ | Toast erreur + log backend |
+| 6.90 | Configuration email active dans DB | ✅ | EmailConfiguration ID=2 (Resend) activée |
+| 6.91 | Clé API décryptée correctement | ✅ | Via EmailConfigurationService |
+| 6.92 | Envoyer email de test depuis template | ✅ | POST /email/templates/{id}/send-test |
+| 6.93 | Email de test reçu | ✅ | Email ID: 9ac5ba5b-5564-436f-87b7-ddcea6447d1d |
+| 6.94 | Variables template remplacées | ✅ | {{first_name}}, {{last_name}}, etc. |
+| 6.95 | Préfixe [TEST] présent | ✅ | Sujet et from_name préfixés |
+| 6.96 | Gestion erreur config manquante | ✅ | Message 400 clair |
+| 6.97 | Gestion erreur envoi Resend | ✅ | Message 500 avec détail erreur |
+| 6.98 | Créer campagne de test (1 destinataire) | ⏳ | À tester avec workflow complet |
+| 6.99 | Tracking ouverture fonctionne | ⏳ | Pixel invisible dans email |
+| 6.100 | Tracking clic fonctionne | ⏳ | Liens wrappés avec tracking |
 
 ### Notes Chapitre 6
 ```
