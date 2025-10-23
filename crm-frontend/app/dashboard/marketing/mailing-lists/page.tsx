@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import Link from 'next/link'
-import { Plus, Edit, Trash2, List, Users, Calendar, Download } from 'lucide-react'
+import { Plus, Edit, Trash2, List, Users, Calendar, Download, Upload } from 'lucide-react'
 import { Card, CardHeader, CardBody, Button, Table } from '@/components/shared'
 import { Modal } from '@/components/shared/Modal'
 import { Input } from '@/components/shared/Input'
@@ -10,6 +10,7 @@ import { Select } from '@/components/shared/Select'
 import { Alert } from '@/components/shared/Alert'
 import { useMailingLists } from '@/hooks/useMailingLists'
 import { useExport } from '@/hooks/useExport'
+import { useImport } from '@/hooks/useImport'
 import { useConfirm } from '@/hooks/useConfirm'
 
 interface MailingList {
@@ -40,15 +41,26 @@ export default function MailingListsPage() {
     baseFilename: 'listes-diffusion',
   })
 
+  const { importData, isImporting, importResult, resetImportResult } = useImport({
+    resource: 'mailing-lists',
+    updateExisting: true,
+    onSuccess: () => {
+      // Rafraîchir la liste après l'import
+      window.location.reload()
+    },
+  })
+
   const { confirm, ConfirmDialogComponent } = useConfirm()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false)
   const [editingList, setEditingList] = useState<MailingList | null>(null)
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     target_type: 'contacts',
   })
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleCreate = () => {
     setEditingList(null)
@@ -98,6 +110,30 @@ export default function MailingListsPage() {
         await deleteList(list.id)
       },
     })
+  }
+
+  const handleImportClick = () => {
+    resetImportResult()
+    setIsImportModalOpen(true)
+  }
+
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      await importData(file)
+      // Réinitialiser l'input pour permettre le même fichier
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
+    }
+  }
+
+  const handleImportModalClose = () => {
+    setIsImportModalOpen(false)
+    resetImportResult()
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
   }
 
   const columns = [
@@ -252,8 +288,17 @@ export default function MailingListsPage() {
           icon={<List className="w-5 h-5 text-primary" />}
         />
         <CardBody>
-          {/* Boutons d'export */}
+          {/* Boutons Import/Export */}
           <div className="flex items-center justify-end gap-2 mb-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleImportClick}
+              disabled={isImporting}
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              Importer
+            </Button>
             <Button
               variant="outline"
               size="sm"
@@ -349,6 +394,120 @@ export default function MailingListsPage() {
             <option value="contacts">Contacts (Personnes)</option>
             <option value="organisations">Organisations</option>
           </Select>
+        </div>
+      </Modal>
+
+      {/* Modal Import */}
+      <Modal
+        isOpen={isImportModalOpen}
+        onClose={handleImportModalClose}
+        title="Importer des listes de diffusion"
+        footer={
+          <>
+            <Button variant="ghost" onClick={handleImportModalClose}>
+              Fermer
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-spacing-md">
+          <Alert
+            type="info"
+            message="Importez vos listes depuis un fichier CSV ou Excel. Les listes existantes (même nom) seront mises à jour."
+          />
+
+          {/* Format attendu */}
+          <div className="bg-background-secondary p-4 rounded-radius-md">
+            <p className="text-sm font-medium text-text-primary mb-2">Format attendu :</p>
+            <ul className="text-xs text-text-secondary space-y-1">
+              <li>• <strong>name</strong> (obligatoire) : Nom de la liste</li>
+              <li>• <strong>description</strong> (optionnel) : Description</li>
+              <li>• <strong>target_type</strong> (optionnel) : "contacts" ou "organisations"</li>
+              <li>• <strong>filters</strong> (optionnel) : JSON des filtres</li>
+              <li>• <strong>recipient_count</strong> (optionnel) : Nombre de destinataires</li>
+              <li>• <strong>is_active</strong> (optionnel) : true/false</li>
+            </ul>
+          </div>
+
+          {/* Exemple CSV */}
+          <div className="bg-background-secondary p-4 rounded-radius-md">
+            <p className="text-sm font-medium text-text-primary mb-2">Exemple CSV :</p>
+            <pre className="text-xs text-text-secondary overflow-x-auto">
+{`name,description,target_type,filters,recipient_count,is_active
+"Clients Premium","Clients actifs","contacts","{}",150,true
+"Prospects Q1","Nouveaux prospects","contacts","{}",50,true`}
+            </pre>
+          </div>
+
+          {/* Input fichier */}
+          <div>
+            <label className="block text-sm font-medium text-text-primary mb-2">
+              Choisir un fichier
+            </label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".csv,.xlsx,.xls"
+              onChange={handleFileSelect}
+              disabled={isImporting}
+              className="block w-full text-sm text-text-secondary
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-radius-md file:border-0
+                file:text-sm file:font-semibold
+                file:bg-primary file:text-white
+                hover:file:bg-primary-hover
+                file:cursor-pointer
+                disabled:opacity-50 disabled:cursor-not-allowed"
+            />
+          </div>
+
+          {/* État d'import */}
+          {isImporting && (
+            <div className="flex items-center gap-2 text-sm text-primary">
+              <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent"></div>
+              <span>Import en cours...</span>
+            </div>
+          )}
+
+          {/* Résultat d'import */}
+          {importResult && (
+            <div className="space-y-2">
+              <Alert
+                type={importResult.results.errors.length > 0 ? 'warning' : 'success'}
+                message={importResult.message}
+              />
+
+              {/* Détails */}
+              <div className="bg-background-secondary p-4 rounded-radius-md space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-text-secondary">Créées :</span>
+                  <span className="font-medium text-success">{importResult.results.created.length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-text-secondary">Mises à jour :</span>
+                  <span className="font-medium text-warning">{importResult.results.updated.length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-text-secondary">Erreurs :</span>
+                  <span className="font-medium text-error">{importResult.results.errors.length}</span>
+                </div>
+              </div>
+
+              {/* Erreurs détaillées */}
+              {importResult.results.errors.length > 0 && (
+                <div className="bg-error/10 p-4 rounded-radius-md">
+                  <p className="text-sm font-medium text-error mb-2">Erreurs :</p>
+                  <ul className="text-xs text-error space-y-1 max-h-40 overflow-y-auto">
+                    {importResult.results.errors.map((err, idx) => (
+                      <li key={idx}>
+                        Ligne {err.row} ({err.name}) : {err.error}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </Modal>
 
