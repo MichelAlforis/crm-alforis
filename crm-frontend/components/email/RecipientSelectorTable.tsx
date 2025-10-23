@@ -85,6 +85,7 @@ export const RecipientSelectorTable: React.FC<RecipientSelectorTableProps> = ({
           filters
         )
 
+        console.log('📊 Recipients loaded:', response.data)
         setRecipients(response.data.recipients || [])
       } catch (error) {
         console.error('Failed to load recipients:', error)
@@ -125,16 +126,8 @@ export const RecipientSelectorTable: React.FC<RecipientSelectorTableProps> = ({
     }
   }, [filteredRecipients.length, onCountChange])
 
-  // Synchroniser automatiquement les filtres avec le parent
-  useEffect(() => {
-    onChange({
-      ...value,
-      countries: selectedCountries,
-      languages: selectedLanguages,
-      organisation_categories: selectedCategories,
-      exclude_ids: excludedIds,
-    })
-  }, [selectedCountries, selectedLanguages, selectedCategories, excludedIds])
+  // Note: La synchronisation se fait via le bouton "Valider la sélection"
+  // pour éviter les boucles infinies de re-render
 
   const handleRemoveRecipient = (id: number) => {
     setExcludedIds(prev => [...prev, id])
