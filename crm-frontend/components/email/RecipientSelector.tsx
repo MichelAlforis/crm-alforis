@@ -22,6 +22,7 @@ export interface RecipientFilters {
 interface RecipientSelectorProps {
   value: RecipientFilters
   onChange: (filters: RecipientFilters) => void
+  onCountChange?: (count: number) => void
   className?: string
 }
 
@@ -55,6 +56,7 @@ const CATEGORY_OPTIONS = [
 export const RecipientSelector: React.FC<RecipientSelectorProps> = ({
   value,
   onChange,
+  onCountChange,
   className,
 }) => {
   const [recipientCount, setRecipientCount] = useState<number | null>(null)
@@ -85,17 +87,24 @@ export const RecipientSelector: React.FC<RecipientSelectorProps> = ({
       setIsCountLoading(true)
       try {
         const response = await apiClient.post<RecipientCount>('/email/campaigns/recipients/count', value)
-        setRecipientCount(response.data.count)
+        const count = response.data.count
+        setRecipientCount(count)
+        if (onCountChange) {
+          onCountChange(count)
+        }
       } catch (error) {
         console.error('Failed to load recipient count:', error)
         setRecipientCount(null)
+        if (onCountChange) {
+          onCountChange(0)
+        }
       } finally {
         setIsCountLoading(false)
       }
     }
 
     loadCount()
-  }, [value])
+  }, [value, onCountChange])
 
   const handleTargetTypeChange = (target_type: TargetType) => {
     onChange({ ...value, target_type })

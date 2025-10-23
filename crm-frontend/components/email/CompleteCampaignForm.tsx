@@ -10,6 +10,7 @@ import { Alert } from '@/components/shared/Alert'
 import { EmailEditor, EmailEditorValue } from './EmailEditor'
 import RecipientSelector, { RecipientFilters, TargetType } from './RecipientSelector'
 import { apiClient } from '@/lib/api'
+import { useConfirm } from '@/hooks/useConfirm'
 
 interface EmailTemplate {
   id: number
@@ -42,6 +43,8 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
   isSubmitting = false,
   className,
 }) => {
+  const { confirm, ConfirmDialogComponent } = useConfirm()
+
   const [formData, setFormData] = useState<CampaignFormData>({
     name: '',
     description: '',
@@ -70,6 +73,7 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
     content: { html: '' },
   })
   const [isSavingTemplate, setIsSavingTemplate] = useState(false)
+  const [recipientCount, setRecipientCount] = useState<number>(0)
 
   // Charger les templates existants
   useEffect(() => {
@@ -106,7 +110,13 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
 
   const handleCreateTemplate = async () => {
     if (!newTemplate.name.trim() || !newTemplate.subject.trim() || !newTemplate.content.html) {
-      alert('Veuillez renseigner le nom, le sujet et le contenu du template')
+      confirm({
+        title: 'Informations manquantes',
+        message: 'Veuillez renseigner le nom, le sujet et le contenu du template avant de l\'enregistrer.',
+        type: 'warning',
+        confirmText: 'Compris',
+        onConfirm: () => {},
+      })
       return
     }
 
@@ -127,7 +137,13 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
       setNewTemplate({ name: '', subject: '', content: { html: '' } })
     } catch (error: any) {
       console.error('Failed to create template:', error)
-      alert(error?.response?.data?.detail || 'Erreur lors de la création du template')
+      confirm({
+        title: 'Erreur lors de la création',
+        message: error?.response?.data?.detail || 'Impossible de créer le template. Veuillez réessayer.',
+        type: 'danger',
+        confirmText: 'Compris',
+        onConfirm: () => {},
+      })
     } finally {
       setIsSavingTemplate(false)
     }
@@ -138,15 +154,40 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
 
     // Validations
     if (!formData.name.trim()) {
-      alert('Le nom de la campagne est requis')
+      confirm({
+        title: 'Nom de campagne requis',
+        message: 'Veuillez saisir un nom pour votre campagne email.',
+        type: 'warning',
+        confirmText: 'Compris',
+        onConfirm: () => {},
+      })
       return
     }
     if (!formData.template_id) {
-      alert('Veuillez sélectionner ou créer un template')
+      confirm({
+        title: 'Template requis',
+        message: 'Veuillez sélectionner ou créer un template avant de créer la campagne.',
+        type: 'warning',
+        confirmText: 'Compris',
+        onConfirm: () => {},
+      })
       return
     }
 
-    await onSubmit(formData)
+    // Afficher le modal de confirmation avec récapitulatif
+    const templateName = selectedTemplate?.name || 'Template inconnu'
+    const targetTypeLabel = formData.recipient_filters.target_type === 'contacts' ? 'Contacts' : 'Organisations'
+
+    confirm({
+      title: 'Créer la campagne ?',
+      message: `Vous allez créer la campagne "${formData.name}" avec le template "${templateName}" pour ${recipientCount} ${targetTypeLabel.toLowerCase()}. Confirmez-vous ?`,
+      type: 'info',
+      confirmText: 'Créer la campagne',
+      cancelText: 'Annuler',
+      onConfirm: async () => {
+        await onSubmit(formData)
+      },
+    })
   }
 
   return (
@@ -285,6 +326,7 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
       <RecipientSelector
         value={formData.recipient_filters}
         onChange={handleRecipientFiltersChange}
+        onCountChange={setRecipientCount}
       />
 
       {/* Configuration d'envoi */}
@@ -334,6 +376,9 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
           Créer la campagne
         </Button>
       </div>
+
+      {/* Modal de confirmation */}
+      <ConfirmDialogComponent />
     </form>
   )
 }
