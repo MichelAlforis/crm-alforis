@@ -171,48 +171,48 @@ export const RecipientSelectorTable: React.FC<RecipientSelectorTableProps> = ({
 
   const columns = [
     {
-      key: 'name',
-      label: 'Nom',
+      header: 'Nom',
+      accessor: 'name',
       sortable: true,
     },
     {
-      key: 'email',
-      label: 'Email',
+      header: 'Email',
+      accessor: 'email',
       sortable: true,
     },
     ...(value.target_type === 'contacts'
       ? [
           {
-            key: 'organisation_name',
-            label: 'Organisation',
+            header: 'Organisation',
+            accessor: 'organisation_name',
             sortable: true,
           },
         ]
       : []),
     {
-      key: 'country',
-      label: 'Pays',
+      header: 'Pays',
+      accessor: 'country',
       sortable: true,
-      render: (row: Recipient) => {
+      render: (value: any, row: Recipient) => {
         if (!row) return '-'
         const country = COUNTRY_OPTIONS.find(c => c.code === row.country)
         return country ? `${country.flag} ${country.name}` : row.country || '-'
       },
     },
     {
-      key: 'language',
-      label: 'Langue',
+      header: 'Langue',
+      accessor: 'language',
       sortable: true,
-      render: (row: Recipient) => {
+      render: (value: any, row: Recipient) => {
         if (!row) return '-'
         const lang = LANGUAGE_OPTIONS.find(l => l.code === row.language)
         return lang ? `${lang.flag} ${lang.name}` : row.language || '-'
       },
     },
     {
-      key: 'actions',
-      label: 'Actions',
-      render: (row: Recipient) => (
+      header: 'Actions',
+      accessor: 'id',
+      render: (value: any, row: Recipient) => (
         <Button
           variant="ghost"
           size="sm"
