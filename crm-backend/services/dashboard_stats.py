@@ -245,7 +245,7 @@ class DashboardStatsService:
 
             completed_tasks = (
                 self.db.query(func.count(Task.id))
-                .filter(Task.status == TaskStatus.COMPLETED)
+                .filter(Task.status == TaskStatus.DONE)
                 .scalar() or 0
             )
 
@@ -254,7 +254,7 @@ class DashboardStatsService:
                 self.db.query(func.count(Task.id))
                 .filter(
                     and_(
-                        Task.status != TaskStatus.COMPLETED,
+                        Task.status != TaskStatus.DONE,
                         Task.due_date < today
                     )
                 )
@@ -265,7 +265,7 @@ class DashboardStatsService:
                 self.db.query(func.count(Task.id))
                 .filter(
                     and_(
-                        Task.status != TaskStatus.COMPLETED,
+                        Task.status != TaskStatus.DONE,
                         Task.due_date == today
                     )
                 )
@@ -334,7 +334,7 @@ class DashboardStatsService:
                 .filter(
                     and_(
                         Task.organisation_id == organisation_id,
-                        Task.status == TaskStatus.COMPLETED
+                        Task.status == TaskStatus.DONE
                     )
                 )
                 .scalar() or 0

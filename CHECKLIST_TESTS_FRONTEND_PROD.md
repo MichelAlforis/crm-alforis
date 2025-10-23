@@ -1,10 +1,11 @@
 # 📋 CHECKLIST TESTS FRONTEND PRODUCTION - CRM ALFORIS
 
 **Date de création :** 2025-10-22
-**Version :** 1.1
+**Version :** 1.3
 **Testeur :** Équipe Alforis
 **Environnement :** Développement Local (localhost:3010 + API:8000)
 **Date des tests :** 2025-10-22
+**Dernière session debug :** 2025-10-23 (TaskStatus + Template Preview)
 
 ---
 
@@ -87,9 +88,11 @@ Pour éviter les lenteurs du réseau distant (159.69.108.234), un environnement 
 | 2 | Dashboard | 🔴 Critique | API /api/v1/ai/statistics 404 (double prefix) | ✅ **CORRIGÉ** |
 | 3 | Dashboard | ⚠️ Moyen | KPI n'affichent pas les données réelles | ✅ **CORRIGÉ** |
 | 4 | Dashboard | ⚠️ Moyen | Graphiques vides (pas de données) | ✅ **CORRIGÉ** |
-| 5 | Dashboard | 🟡 DB | GET /api/v1/tasks → 500 (champs Pydantic manquants) | 🔧 Migration DB requise |
-| 6 | Dashboard | 🟡 DB | GET /api/v1/ai/* → 500 (enum 'claude' invalide) | 🔧 Mise à jour DB requise |
-| 7 | Dashboard | 🟡 DB | GET /api/v1/dashboards/stats/global → 500 | 🔧 Enum TaskStatus invalide |
+| 5 | Dashboard | 🟡 DB | GET /api/v1/tasks → 500 (champs Pydantic manquants) | ✅ **FAUX POSITIF** (fonctionne) |
+| 6 | Dashboard | 🟡 DB | GET /api/v1/ai/* → 500 (enum 'claude' invalide) | ✅ **FAUX POSITIF** (fonctionne) |
+| 7 | Dashboard | 🔴 Critique | GET /api/v1/dashboards/stats/global → 500 | ✅ **CORRIGÉ** (TaskStatus.DONE) |
+| 8 | Marketing | ⚠️ Moyen | Template preview manquant | ✅ **CORRIGÉ** (TemplatePreviewModal) |
+| 9 | Marketing | ⚠️ Moyen | Template edit manquant | ✅ **CORRIGÉ** (TemplateEditModal) |
 
 ---
 
@@ -827,11 +830,14 @@ TOUS les confirm() de l'annuaire utilisent maintenant ConfirmDialog:
 | 6.67 | Bouton "Nouveau Template" ouvre modal | ✅ | TemplateCreateModal |
 | 6.68 | Modal création avec éditeur Unlayer | ⏳ | Drag & drop email builder |
 | 6.69 | Sauvegarde template → Reload liste | ⏳ | À tester |
-| 6.70 | Bouton "Aperçu" affiche preview | ❌ | TODO: Modal preview HTML |
-| 6.71 | Bouton "Supprimer" avec confirmation | ⏳ | window.confirm (à remplacer par useConfirm) |
-| 6.72 | Template utilisé dans campagne non supprimable | ❌ | À IMPLÉMENTER - Check référence |
-| 6.73 | État vide affiche CTA création | ✅ | Icon + message + bouton |
-| 6.74 | Date création affichée | ✅ | Format DD/MM/YYYY |
+| 6.70 | Bouton "Aperçu" affiche preview | ✅ | Modal preview desktop/mobile ✨ **NOUVEAU** |
+| 6.71 | Bouton "Modifier" ouvre éditeur | ✅ | Modal éditeur + preview côte à côte ✨ **NOUVEAU** |
+| 6.72 | Édition en temps réel dans preview | ✅ | Preview se met à jour automatiquement |
+| 6.73 | Enregistrement modifications | ✅ | PUT /email/templates/{id} |
+| 6.74 | Bouton "Supprimer" avec confirmation | ✅ | useConfirm dialog (danger) |
+| 6.75 | Template utilisé dans campagne non supprimable | ❌ | À IMPLÉMENTER - Check référence |
+| 6.76 | État vide affiche CTA création | ✅ | Icon + message + bouton |
+| 6.77 | Date création affichée | ✅ | Format DD/MM/YYYY |
 
 ### Tests Workflow Complet Campagne
 
@@ -939,6 +945,75 @@ TOUS les confirm() de l'annuaire utilisent maintenant ConfirmDialog:
     - Duplicate campagne
     - A/B Testing
     - Preview responsive mobile/desktop
+
+✅ NOUVELLES FONCTIONNALITÉS (2025-10-23):
+  1. ✅ Template Preview Modal - Test #6.70
+     - Composant: crm-frontend/components/email/TemplatePreviewModal.tsx
+     - Features: Toggle Desktop/Mobile, HTML rendering, Fake email client header
+     - Bouton "Envoyer un test" présent (pas encore implémenté)
+     - Bouton X pour fermer le modal
+     - Modifié: app/dashboard/marketing/templates/page.tsx
+
+  2. ✅ Template Edit Modal - Tests #6.71-6.73 ✨ **NOUVEAU**
+     - Composant: crm-frontend/components/email/TemplateEditModal.tsx
+     - Features:
+       * Split-view 50/50: Éditeur (gauche) + Preview (droite)
+       * Preview en temps réel (mise à jour automatique pendant l'édition)
+       * Toggle Desktop/Mobile pour le preview
+       * Édition champs: Nom, Sujet, Preheader, HTML Content
+       * Variables cliquables (insertion automatique dans le contenu)
+       * Sauvegarde via PUT /email/templates/{id}
+       * Bouton X + Bouton Annuler + Bouton Enregistrer
+       * Loading state pendant la sauvegarde
+       * **Responsive**:
+         - Layout vertical sur mobile (éditeur en haut, preview en bas)
+         - Layout horizontal sur desktop (split 50/50)
+         - Tailles de texte adaptatives (text-xs → md:text-sm)
+         - Padding adaptatif (p-3 → md:p-6)
+         - Footer stack vertical sur mobile, horizontal sur desktop
+         - Boutons Desktop/Mobile:
+           * Desktop: Dans le header principal (en haut à droite)
+           * Mobile: Dans le header de la section "Aperçu" (sticky)
+           * Style compact sur mobile (icônes uniquement, fond blanc/gris)
+     - Modifié: app/dashboard/marketing/templates/page.tsx (ajout bouton "Modifier")
+
+  3. ✅ Template Preview Modal - Améliorations responsive ✨ **AMÉLIORÉ**
+     - Composant: crm-frontend/components/email/TemplatePreviewModal.tsx
+     - Améliorations:
+       * Largeur adaptative (95vw mobile, 4xl desktop)
+       * Tailles de texte adaptatives
+       * Boutons Desktop/Mobile cachés sur petits écrans (< sm)
+       * Footer responsive (vertical mobile, horizontal desktop)
+       * Truncate pour éviter débordements
+       * Padding adaptatif partout
+
+  5. ✅ Envoi d'email de test - Implémentation complète ✨ **NOUVEAU**
+     - Backend: POST /email/templates/{template_id}/send-test
+       * Endpoint créé dans routers/email_campaign.py
+       * Remplace automatiquement les variables {{first_name}}, {{last_name}}, etc.
+       * Préfixe [TEST] dans le sujet et from_name
+       * Données de test : Test User, Organisation Test, France, fr
+     - Frontend: crm-frontend/components/email/TemplatePreviewModal.tsx
+       * Input email avec validation
+       * Bouton "Envoyer un test" avec loading state
+       * Messages de succès (vert) et d'erreur (rouge)
+       * Auto-clear de l'input après succès (3s)
+       * Responsive : vertical mobile, horizontal desktop
+
+  4. ✅ Page Templates - Responsive complet ✨ **AMÉLIORÉ**
+     - Fichier: crm-frontend/app/dashboard/marketing/templates/page.tsx
+     - Améliorations:
+       * Header responsive (vertical mobile, horizontal desktop)
+       * Bouton "Nouveau Template" → "Nouveau" sur mobile
+       * Boutons export avec icônes/texte adaptatifs
+       * Grid responsive (1 col mobile, 2 cols tablet, 3 cols desktop)
+       * Cards avec padding adaptatif (p-4 → md:p-6)
+       * Template cards actions:
+         - Vertical stack sur mobile (boutons pleine largeur)
+         - Horizontal sur desktop (boutons compacts)
+         - Labels courts sur mobile ("Voir" au lieu de "Aperçu")
+       * Empty state responsive
+       * Loading state responsive
 
 🔴 BLOQUEURS PRODUCTION (CRITIQUE):
   1. ❌ Aucun test email réel effectué

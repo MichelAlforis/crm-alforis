@@ -1,18 +1,13 @@
 'use client'
 
-import React, { useState, useRef } from 'react'
+import React, { useState, useMemo } from 'react'
 import Link from 'next/link'
-import { Plus, Edit, Trash2, List, Users, Calendar, Download, Upload } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { Plus, Edit, Trash2, List, Users, Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Card, CardHeader, CardBody, Button, Table } from '@/components/shared'
-import { Modal } from '@/components/shared/Modal'
-import { Input } from '@/components/shared/Input'
-import { Select } from '@/components/shared/Select'
 import { Alert } from '@/components/shared/Alert'
 import { useMailingLists } from '@/hooks/useMailingLists'
-import { useExport } from '@/hooks/useExport'
-import { useImport } from '@/hooks/useImport'
 import { useConfirm } from '@/hooks/useConfirm'
-import { RecipientSelectorTableV2 as RecipientSelectorTable, type RecipientFilters } from '@/components/email/RecipientSelectorTableV2 as RecipientSelectorTable'
 
 interface MailingList {
   id: number
@@ -27,117 +22,23 @@ interface MailingList {
 }
 
 export default function MailingListsPage() {
+  const router = useRouter()
   const {
     lists,
     isLoading,
-    createList,
-    updateList,
     deleteList,
-    isCreating,
     isDeleting,
   } = useMailingLists()
 
-  const { exportData, isExporting } = useExport({
-    resource: 'mailing-lists',
-    baseFilename: 'listes-diffusion',
-  })
-
-  const { importData, isImporting, importResult, resetImportResult } = useImport({
-    resource: 'mailing-lists',
-    updateExisting: true,
-    onSuccess: () => {
-      // Rafraîchir la liste après l'import
-      window.location.reload()
-    },
-  })
-
   const { confirm, ConfirmDialogComponent } = useConfirm()
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isImportModalOpen, setIsImportModalOpen] = useState(false)
-  const [editingList, setEditingList] = useState<MailingList | null>(null)
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    target_type: 'contacts',
+  // Pagination et tri
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage] = useState(20)
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' }>({
+    key: 'created_at',
+    direction: 'desc',
   })
-  const [recipientFilters, setRecipientFilters] = useState<RecipientFilters>({
-    target_type: 'contacts',
-    languages: [],
-    countries: [],
-    organisation_categories: [],
-    specific_ids: [],
-    exclude_ids: [],
-  })
-  const [recipientCount, setRecipientCount] = useState(0)
-  const fileInputRef = useRef<HTMLInputElement>(null)
-
-  const handleCreate = () => {
-    setEditingList(null)
-    setFormData({ name: '', description: '', target_type: 'contacts' })
-    setRecipientFilters({
-      target_type: 'contacts',
-      languages: [],
-      countries: [],
-      organisation_categories: [],
-      specific_ids: [],
-      exclude_ids: [],
-    })
-    setRecipientCount(0)
-    setIsModalOpen(true)
-  }
-
-  const handleEdit = (list: MailingList) => {
-    setEditingList(list)
-    setFormData({
-      name: list.name,
-      description: list.description || '',
-      target_type: list.target_type,
-    })
-    setRecipientFilters({
-      target_type: list.target_type as 'contacts' | 'organisations',
-      languages: list.filters?.languages || [],
-      countries: list.filters?.countries || [],
-      organisation_categories: list.filters?.organisation_categories || [],
-      specific_ids: list.filters?.specific_ids || [],
-      exclude_ids: list.filters?.exclude_ids || [],
-    })
-    setRecipientCount(list.recipient_count)
-    setIsModalOpen(true)
-  }
-
-  const handleSave = async () => {
-    if (!formData.name.trim()) {
-      return
-    }
-
-    try {
-      const filters = {
-        languages: recipientFilters.languages,
-        countries: recipientFilters.countries,
-        organisation_categories: recipientFilters.organisation_categories,
-        specific_ids: recipientFilters.specific_ids,
-        exclude_ids: recipientFilters.exclude_ids,
-      }
-
-      if (editingList) {
-        await updateList(editingList.id, {
-          ...formData,
-          filters,
-          recipient_count: recipientCount,
-        })
-      } else {
-        await createList({
-          ...formData,
-          filters,
-          recipient_count: recipientCount,
-        })
-      }
-      setIsModalOpen(false)
-    } catch (error) {
-      console.error('Failed to save list:', error)
-    }
-  }
 
   const handleDelete = (list: MailingList) => {
     confirm({
@@ -152,34 +53,53 @@ export default function MailingListsPage() {
     })
   }
 
-  const handleImportClick = () => {
-    resetImportResult()
-    setIsImportModalOpen(true)
-  }
+  // Tri des données
+  const sortedLists = useMemo(() => {
+    if (!sortConfig) return lists
 
-  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      await importData(file)
-      // Réinitialiser l'input pour permettre le même fichier
-      if (fileInputRef.current) {
-        fileInputRef.current.value = ''
+    const sorted = [...lists].sort((a, b) => {
+      const aValue = a[sortConfig.key as keyof MailingList]
+      const bValue = b[sortConfig.key as keyof MailingList]
+
+      if (aValue === null || aValue === undefined) return 1
+      if (bValue === null || bValue === undefined) return -1
+
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return sortConfig.direction === 'asc'
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue)
       }
-    }
-  }
 
-  const handleImportModalClose = () => {
-    setIsImportModalOpen(false)
-    resetImportResult()
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue
+      }
+
+      return 0
+    })
+
+    return sorted
+  }, [lists, sortConfig])
+
+  // Pagination
+  const paginatedLists = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage
+    return sortedLists.slice(startIndex, startIndex + itemsPerPage)
+  }, [sortedLists, currentPage, itemsPerPage])
+
+  const totalPages = Math.ceil(sortedLists.length / itemsPerPage)
+
+  const handleSort = (key: string) => {
+    setSortConfig((current) => ({
+      key,
+      direction: current?.key === key && current.direction === 'asc' ? 'desc' : 'asc',
+    }))
   }
 
   const columns = [
     {
       header: 'Nom',
       accessor: 'name',
+      sortable: true,
       render: (value: string, row: MailingList) => (
         <div>
           <p className="font-medium text-text-primary">{value}</p>
@@ -192,6 +112,7 @@ export default function MailingListsPage() {
     {
       header: 'Type',
       accessor: 'target_type',
+      sortable: true,
       render: (value: string) => (
         <span className="text-sm capitalize">
           {value === 'contacts' ? 'Contacts' : 'Organisations'}
@@ -201,6 +122,7 @@ export default function MailingListsPage() {
     {
       header: 'Destinataires',
       accessor: 'recipient_count',
+      sortable: true,
       render: (value: number) => (
         <div className="flex items-center gap-2">
           <Users className="w-4 h-4 text-text-tertiary" />
@@ -211,35 +133,40 @@ export default function MailingListsPage() {
     {
       header: 'Dernière utilisation',
       accessor: 'last_used_at',
+      sortable: true,
       render: (value: string | undefined) =>
         value ? new Date(value).toLocaleDateString('fr-FR') : 'Jamais utilisée',
     },
     {
       header: 'Créée le',
       accessor: 'created_at',
+      sortable: true,
       render: (value: string) => new Date(value).toLocaleDateString('fr-FR'),
     },
     {
       header: 'Actions',
       accessor: 'id',
+      width: '200px',
       render: (id: number, row: MailingList) => (
         <div className="flex items-center gap-2">
+          <Link href={`/dashboard/marketing/mailing-lists/${id}`}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="hover:bg-primary/10 hover:border-primary"
+            >
+              <Edit className="w-4 h-4 mr-1" />
+              Modifier
+            </Button>
+          </Link>
           <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => handleEdit(row)}
-            title="Modifier"
-          >
-            <Edit className="w-4 h-4" />
-          </Button>
-          <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
             onClick={() => handleDelete(row)}
             disabled={isDeleting}
-            title="Supprimer"
+            className="hover:bg-error/10 hover:border-error text-error"
           >
-            <Trash2 className="w-4 h-4 text-error" />
+            <Trash2 className="w-4 h-4" />
           </Button>
         </div>
       ),
@@ -261,10 +188,12 @@ export default function MailingListsPage() {
             Gérez vos listes de destinataires réutilisables
           </p>
         </div>
-        <Button variant="primary" size="lg" onClick={handleCreate}>
-          <Plus className="w-5 h-5 mr-2" />
-          Nouvelle liste
-        </Button>
+        <Link href="/dashboard/marketing/mailing-lists/new">
+          <Button variant="primary" size="lg">
+            <Plus className="w-5 h-5 mr-2" />
+            Nouvelle liste
+          </Button>
+        </Link>
       </div>
 
       {/* KPIs */}
@@ -328,246 +257,46 @@ export default function MailingListsPage() {
           icon={<List className="w-5 h-5 text-primary" />}
         />
         <CardBody>
-          {/* Boutons Import/Export */}
-          <div className="flex items-center justify-end gap-2 mb-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleImportClick}
-              disabled={isImporting}
-            >
-              <Upload className="w-4 h-4 mr-2" />
-              Importer
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => exportData('csv')}
-              disabled={isExporting || lists.length === 0}
-            >
-              <Download className="w-4 h-4 mr-2" />
-              CSV
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => exportData('excel')}
-              disabled={isExporting || lists.length === 0}
-            >
-              <Download className="w-4 h-4 mr-2" />
-              Excel
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => exportData('pdf')}
-              disabled={isExporting || lists.length === 0}
-            >
-              <Download className="w-4 h-4 mr-2" />
-              PDF
-            </Button>
-          </div>
-
           <Table
-            data={lists}
+            data={paginatedLists}
             columns={columns}
             isLoading={isLoading}
             isEmpty={!isLoading && lists.length === 0}
             emptyMessage="Aucune liste créée. Créez votre première liste de diffusion !"
+            sortConfig={sortConfig}
+            onSort={handleSort}
           />
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
+              <div className="text-sm text-text-secondary">
+                Page {currentPage} sur {totalPages} ({sortedLists.length} listes au total)
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  Précédent
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Suivant
+                  <ChevronRight className="w-4 h-4 ml-1" />
+                </Button>
+              </div>
+            </div>
+          )}
         </CardBody>
       </Card>
-
-      {/* Modal Créer/Éditer */}
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title={editingList ? 'Modifier la liste' : 'Créer une liste'}
-        footer={
-          <>
-            <Button variant="ghost" onClick={() => setIsModalOpen(false)}>
-              Annuler
-            </Button>
-            <Button
-              variant="primary"
-              onClick={handleSave}
-              disabled={isCreating || !formData.name.trim()}
-            >
-              {isCreating ? 'Enregistrement...' : editingList ? 'Mettre à jour' : 'Créer'}
-            </Button>
-          </>
-        }
-      >
-        <div className="space-y-spacing-md">
-          <Alert
-            type="info"
-            message="Créez une liste de diffusion en sélectionnant les contacts ou organisations que vous souhaitez cibler. Vous pouvez utiliser des filtres pour affiner votre sélection."
-          />
-
-          <Input
-            label="Nom de la liste *"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            placeholder="Ex: Clients France, Prospects Q1 2025"
-            required
-          />
-
-          <div>
-            <label className="block text-sm font-medium text-text-primary mb-1">
-              Description (optionnel)
-            </label>
-            <textarea
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Décrivez l'usage de cette liste..."
-              rows={3}
-              className="w-full px-3 py-2 border border-border rounded-radius-md focus:ring-2 focus:ring-primary focus:border-transparent text-sm resize-none"
-            />
-          </div>
-
-          <Select
-            label="Type de destinataires *"
-            value={formData.target_type}
-            onChange={(e) => {
-              const newType = e.target.value as 'contacts' | 'organisations'
-              setFormData({ ...formData, target_type: newType })
-              setRecipientFilters({ ...recipientFilters, target_type: newType })
-            }}
-            required
-          >
-            <option value="contacts">Contacts (Personnes)</option>
-            <option value="organisations">Organisations</option>
-          </Select>
-
-          {/* Sélecteur de destinataires */}
-          <div className="border-t border-border pt-4">
-            <div className="flex items-center justify-between mb-4">
-              <h4 className="text-sm font-medium text-text-primary">
-                Sélection des destinataires ({recipientCount} sélectionnés)
-              </h4>
-            </div>
-            <RecipientSelectorTableV2 as RecipientSelectorTable
-              value={recipientFilters}
-              onChange={setRecipientFilters}
-              onCountChange={setRecipientCount}
-            />
-          </div>
-        </div>
-      </Modal>
-
-      {/* Modal Import */}
-      <Modal
-        isOpen={isImportModalOpen}
-        onClose={handleImportModalClose}
-        title="Importer des listes de diffusion"
-        footer={
-          <>
-            <Button variant="ghost" onClick={handleImportModalClose}>
-              Fermer
-            </Button>
-          </>
-        }
-      >
-        <div className="space-y-spacing-md">
-          <Alert
-            type="info"
-            message="Importez vos listes depuis un fichier CSV ou Excel. Les listes existantes (même nom) seront mises à jour."
-          />
-
-          {/* Format attendu */}
-          <div className="bg-background-secondary p-4 rounded-radius-md">
-            <p className="text-sm font-medium text-text-primary mb-2">Format attendu :</p>
-            <ul className="text-xs text-text-secondary space-y-1">
-              <li>• <strong>name</strong> (obligatoire) : Nom de la liste</li>
-              <li>• <strong>description</strong> (optionnel) : Description</li>
-              <li>• <strong>target_type</strong> (optionnel) : "contacts" ou "organisations"</li>
-              <li>• <strong>filters</strong> (optionnel) : JSON des filtres</li>
-              <li>• <strong>recipient_count</strong> (optionnel) : Nombre de destinataires</li>
-              <li>• <strong>is_active</strong> (optionnel) : true/false</li>
-            </ul>
-          </div>
-
-          {/* Exemple CSV */}
-          <div className="bg-background-secondary p-4 rounded-radius-md">
-            <p className="text-sm font-medium text-text-primary mb-2">Exemple CSV :</p>
-            <pre className="text-xs text-text-secondary overflow-x-auto">
-{`name,description,target_type,filters,recipient_count,is_active
-"Clients Premium","Clients actifs","contacts","{}",150,true
-"Prospects Q1","Nouveaux prospects","contacts","{}",50,true`}
-            </pre>
-          </div>
-
-          {/* Input fichier */}
-          <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">
-              Choisir un fichier
-            </label>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".csv,.xlsx,.xls"
-              onChange={handleFileSelect}
-              disabled={isImporting}
-              className="block w-full text-sm text-text-secondary
-                file:mr-4 file:py-2 file:px-4
-                file:rounded-radius-md file:border-0
-                file:text-sm file:font-semibold
-                file:bg-primary file:text-white
-                hover:file:bg-primary-hover
-                file:cursor-pointer
-                disabled:opacity-50 disabled:cursor-not-allowed"
-            />
-          </div>
-
-          {/* État d'import */}
-          {isImporting && (
-            <div className="flex items-center gap-2 text-sm text-primary">
-              <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent"></div>
-              <span>Import en cours...</span>
-            </div>
-          )}
-
-          {/* Résultat d'import */}
-          {importResult && (
-            <div className="space-y-2">
-              <Alert
-                type={importResult.results.errors.length > 0 ? 'warning' : 'success'}
-                message={importResult.message}
-              />
-
-              {/* Détails */}
-              <div className="bg-background-secondary p-4 rounded-radius-md space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-text-secondary">Créées :</span>
-                  <span className="font-medium text-success">{importResult.results.created.length}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-text-secondary">Mises à jour :</span>
-                  <span className="font-medium text-warning">{importResult.results.updated.length}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-text-secondary">Erreurs :</span>
-                  <span className="font-medium text-error">{importResult.results.errors.length}</span>
-                </div>
-              </div>
-
-              {/* Erreurs détaillées */}
-              {importResult.results.errors.length > 0 && (
-                <div className="bg-error/10 p-4 rounded-radius-md">
-                  <p className="text-sm font-medium text-error mb-2">Erreurs :</p>
-                  <ul className="text-xs text-error space-y-1 max-h-40 overflow-y-auto">
-                    {importResult.results.errors.map((err, idx) => (
-                      <li key={idx}>
-                        Ligne {err.row} ({err.name}) : {err.error}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </Modal>
 
       {/* Modal de confirmation */}
       <ConfirmDialogComponent />

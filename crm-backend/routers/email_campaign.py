@@ -66,6 +66,58 @@ def delete_email_template(
         raise HTTPException(status_code=404, detail="Template not found")
     return {"message": "Template deleted successfully"}
 
+@router.post("/templates/{template_id}/send-test")
+def send_test_email_from_template(
+    template_id: int,
+    test_email: str,
+    db: Session = Depends(get_db)
+):
+    """Envoie un email de test à partir d'un template"""
+    from services.email_service import EmailService
+    from models.email_campaign import EmailTemplate as EmailTemplateModel
+
+    # Récupérer le template
+    template = db.query(EmailTemplateModel).filter(EmailTemplateModel.id == template_id).first()
+    if not template:
+        raise HTTPException(status_code=404, detail="Template not found")
+
+    # Données de test
+    test_data = {
+        "first_name": "Test",
+        "last_name": "User",
+        "full_name": "Test User",
+        "email": test_email,
+        "organisation_name": "Organisation Test",
+        "country": "France",
+        "language": "fr",
+    }
+
+    # Remplacer les variables dans le sujet et le corps
+    subject = template.subject
+    body_html = template.html_content
+
+    for key, value in test_data.items():
+        subject = subject.replace(f"{{{{{key}}}}}", str(value))
+        body_html = body_html.replace(f"{{{{{key}}}}}", str(value))
+
+    try:
+        # Envoyer l'email de test
+        email_service = EmailService()
+        email_service.send_email(
+            to_email=test_email,
+            subject=f"[TEST] {subject}",
+            body_html=body_html,
+            from_name="[TEST] ALFORIS Finance",
+        )
+
+        return {
+            "message": "Test email sent successfully",
+            "to_email": test_email,
+            "template_id": template_id
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to send test email: {str(e)}")
+
 # ============================================================
 # EMAIL CAMPAIGNS
 # ============================================================

@@ -123,6 +123,10 @@ class RecipientFilters(BaseModel):
     languages: Optional[List[str]] = None
     countries: Optional[List[str]] = None
     organisation_categories: Optional[List[str]] = None
+    organisation_types: Optional[List[str]] = None  # INVESTOR, CLIENT, FOURNISSEUR
+    cities: Optional[List[str]] = None  # Villes
+    roles: Optional[List[str]] = None  # Fonction/rôle des personnes
+    is_active: Optional[bool] = None  # Statut actif/inactif
     specific_ids: Optional[List[int]] = None
     exclude_ids: Optional[List[int]] = None
 
@@ -155,6 +159,15 @@ async def count_recipients(
         if filters.organisation_categories:
             query = query.filter(Organisation.category.in_(filters.organisation_categories))
 
+        if filters.organisation_types:
+            query = query.filter(Organisation.type.in_(filters.organisation_types))
+
+        if filters.cities:
+            query = query.filter(Organisation.ville.in_(filters.cities))
+
+        if filters.is_active is not None:
+            query = query.filter(Organisation.is_active == filters.is_active)
+
         if filters.specific_ids:
             query = query.filter(Organisation.id.in_(filters.specific_ids))
 
@@ -164,14 +177,10 @@ async def count_recipients(
         count = query.count()
 
     elif filters.target_type == 'contacts':
-        # Contacts principaux = personnes liées à une organisation comme contact principal
-        # On accepte soit email professionnel soit personal_email
+        # TOUS les contacts avec email (pas seulement les contacts principaux)
         from sqlalchemy import or_
-        query = db.query(Person).join(PersonOrganizationLink).filter(
-            and_(
-                PersonOrganizationLink.is_primary == True,
-                or_(Person.email.isnot(None), Person.personal_email.isnot(None))
-            )
+        query = db.query(Person).filter(
+            or_(Person.email.isnot(None), Person.personal_email.isnot(None))
         )
 
         if filters.languages:
@@ -179,6 +188,15 @@ async def count_recipients(
 
         if filters.countries:
             query = query.filter(Person.country_code.in_(filters.countries))
+
+        if filters.roles:
+            query = query.filter(or_(
+                Person.job_title.in_(filters.roles),
+                Person.role.in_(filters.roles)
+            ))
+
+        if filters.is_active is not None:
+            query = query.filter(Person.is_active == filters.is_active)
 
         if filters.specific_ids:
             query = query.filter(Person.id.in_(filters.specific_ids))
@@ -209,12 +227,7 @@ async def list_recipients(
     recipients = []
 
     if filters.target_type == 'organisations':
-        query = db.query(Organisation).filter(
-            and_(
-                Organisation.is_active == True,
-                Organisation.email.isnot(None)
-            )
-        )
+        query = db.query(Organisation).filter(Organisation.email.isnot(None))
 
         if filters.languages:
             query = query.filter(Organisation.language.in_(filters.languages))
@@ -225,11 +238,23 @@ async def list_recipients(
         if filters.organisation_categories:
             query = query.filter(Organisation.category.in_(filters.organisation_categories))
 
+        if filters.organisation_types:
+            query = query.filter(Organisation.type.in_(filters.organisation_types))
+
+        if filters.cities:
+            query = query.filter(Organisation.ville.in_(filters.cities))
+
+        if filters.is_active is not None:
+            query = query.filter(Organisation.is_active == filters.is_active)
+
         if filters.specific_ids:
             query = query.filter(Organisation.id.in_(filters.specific_ids))
 
         if filters.exclude_ids:
             query = query.filter(~Organisation.id.in_(filters.exclude_ids))
+
+        # Calculer le total AVANT la pagination
+        total = query.count()
 
         orgs = query.offset(skip).limit(limit).all()
 
@@ -245,11 +270,13 @@ async def list_recipients(
 
     elif filters.target_type == 'contacts':
         from sqlalchemy import or_
-        query = db.query(Person, Organisation).join(
+        # Récupérer TOUS les contacts avec email, pas seulement les contacts principaux
+        # LEFT JOIN pour avoir l'organisation si elle existe
+        query = db.query(Person, Organisation).outerjoin(
             PersonOrganizationLink,
             and_(
                 PersonOrganizationLink.person_id == Person.id,
-                PersonOrganizationLink.is_primary == True
+                PersonOrganizationLink.is_primary == True  # Prendre l'org principale si elle existe
             )
         ).outerjoin(
             Organisation,
@@ -264,11 +291,23 @@ async def list_recipients(
         if filters.countries:
             query = query.filter(Person.country_code.in_(filters.countries))
 
+        if filters.roles:
+            query = query.filter(or_(
+                Person.job_title.in_(filters.roles),
+                Person.role.in_(filters.roles)
+            ))
+
+        if filters.is_active is not None:
+            query = query.filter(Person.is_active == filters.is_active)
+
         if filters.specific_ids:
             query = query.filter(Person.id.in_(filters.specific_ids))
 
         if filters.exclude_ids:
             query = query.filter(~Person.id.in_(filters.exclude_ids))
+
+        # Calculer le total AVANT la pagination
+        total = query.count()
 
         results = query.offset(skip).limit(limit).all()
 
@@ -282,8 +321,10 @@ async def list_recipients(
                 "country": person.country_code,
                 "language": person.language,
             })
+    else:
+        total = 0
 
-    return {"recipients": recipients, "total": len(recipients)}
+    return {"recipients": recipients, "total": total}
 
 
 # ============= CAMPAIGNS =============
