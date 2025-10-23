@@ -125,6 +125,17 @@ export const RecipientSelectorTable: React.FC<RecipientSelectorTableProps> = ({
     }
   }, [filteredRecipients.length, onCountChange])
 
+  // Synchroniser automatiquement les filtres avec le parent
+  useEffect(() => {
+    onChange({
+      ...value,
+      countries: selectedCountries,
+      languages: selectedLanguages,
+      organisation_categories: selectedCategories,
+      exclude_ids: excludedIds,
+    })
+  }, [selectedCountries, selectedLanguages, selectedCategories, excludedIds])
+
   const handleRemoveRecipient = (id: number) => {
     setExcludedIds(prev => [...prev, id])
   }
