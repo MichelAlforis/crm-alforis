@@ -340,3 +340,31 @@ class EmailEvent(BaseModel):
 
     def __repr__(self) -> str:
         return f"<EmailEvent id={self.id} send_id={self.send_id} type={self.event_type}>"
+
+
+class CampaignSubscription(BaseModel):
+    """Abonnement manuel d'une personne ou organisation à une campagne."""
+
+    __tablename__ = "campaign_subscriptions"
+    __table_args__ = (
+        Index("idx_campaign_subscriptions_campaign", "campaign_id"),
+        Index("idx_campaign_subscriptions_person", "person_id"),
+        Index("idx_campaign_subscriptions_organisation", "organisation_id"),
+        Index("idx_campaign_subscriptions_unique", "campaign_id", "person_id", "organisation_id", unique=True),
+    )
+
+    campaign_id = Column(Integer, ForeignKey("email_campaigns.id", ondelete="CASCADE"), nullable=False)
+    person_id = Column(Integer, ForeignKey("people.id", ondelete="CASCADE"), nullable=True)
+    organisation_id = Column(Integer, ForeignKey("organisations.id", ondelete="CASCADE"), nullable=True)
+    subscribed_by = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True)
+    is_active = Column(Boolean, nullable=False, default=True)
+    unsubscribed_at = Column(DateTime(timezone=True), nullable=True)
+
+    campaign = relationship("EmailCampaign")
+    person = relationship("Person", foreign_keys=[person_id])
+    organisation = relationship("Organisation", foreign_keys=[organisation_id])
+
+    def __repr__(self) -> str:
+        entity_type = "Person" if self.person_id else "Organisation"
+        entity_id = self.person_id or self.organisation_id
+        return f"<CampaignSubscription id={self.id} campaign_id={self.campaign_id} {entity_type}={entity_id}>"

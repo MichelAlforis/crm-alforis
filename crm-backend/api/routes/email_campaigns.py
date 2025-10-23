@@ -18,6 +18,10 @@ from schemas.email import (
     EmailTemplateCreate,
     EmailTemplateResponse,
     EmailTemplateUpdate,
+    CampaignSubscriptionCreate,
+    CampaignSubscriptionResponse,
+    CampaignSubscriptionBulkCreate,
+    CampaignSubscriptionBulkResponse,
 )
 from pydantic import BaseModel
 from services.email_service import (
@@ -579,3 +583,373 @@ async def list_campaign_sends(
     )
     items = [EmailSendResponse.model_validate(send) for send in sends]
     return PaginatedResponse(total=total, skip=skip, limit=limit, items=items)
+
+
+# ============= CAMPAIGN SUBSCRIPTIONS =============
+
+
+@router.post("/campaigns/{campaign_id}/subscriptions", response_model=CampaignSubscriptionResponse, status_code=status.HTTP_201_CREATED)
+async def subscribe_to_campaign(
+    campaign_id: int,
+    payload: CampaignSubscriptionCreate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """Abonner une personne ou organisation à une campagne."""
+    from models.email import EmailCampaign, CampaignSubscription
+    from models.person import Person
+    from models.organisation import Organisation
+    from fastapi import HTTPException
+    from datetime import datetime, UTC
+
+    # Vérifier que la campagne existe
+    campaign = db.query(EmailCampaign).filter(EmailCampaign.id == campaign_id).first()
+    if not campaign:
+        raise HTTPException(status_code=404, detail="Campagne introuvable")
+
+    # Vérifier que l'entité existe
+    entity_name = None
+    entity_email = None
+    if payload.person_id:
+        person = db.query(Person).filter(Person.id == payload.person_id).first()
+        if not person:
+            raise HTTPException(status_code=404, detail="Personne introuvable")
+        entity_name = f"{person.first_name} {person.last_name}"
+        entity_email = person.email or person.personal_email
+    elif payload.organisation_id:
+        org = db.query(Organisation).filter(Organisation.id == payload.organisation_id).first()
+        if not org:
+            raise HTTPException(status_code=404, detail="Organisation introuvable")
+        entity_name = org.name
+        entity_email = org.email
+
+    # Vérifier si déjà abonné
+    existing = db.query(CampaignSubscription).filter(
+        CampaignSubscription.campaign_id == campaign_id,
+        CampaignSubscription.person_id == payload.person_id,
+        CampaignSubscription.organisation_id == payload.organisation_id,
+    ).first()
+
+    if existing:
+        # Réactiver si désabonné
+        if not existing.is_active:
+            existing.is_active = True
+            existing.unsubscribed_at = None
+            db.commit()
+            db.refresh(existing)
+
+        response_data = CampaignSubscriptionResponse.model_validate(existing)
+        response_data.campaign_name = campaign.name
+        response_data.entity_name = entity_name
+        response_data.entity_email = entity_email
+        return response_data
+
+    # Créer l'abonnement
+    user_id = _extract_user_id(current_user)
+    subscription = CampaignSubscription(
+        campaign_id=campaign_id,
+        person_id=payload.person_id,
+        organisation_id=payload.organisation_id,
+        subscribed_by=user_id,
+        is_active=True,
+    )
+
+    db.add(subscription)
+    db.commit()
+    db.refresh(subscription)
+
+    await emit_event(
+        EventType.EMAIL_CAMPAIGN_UPDATED,
+        data={
+            "campaign_id": campaign_id,
+            "action": "subscription_added",
+            "entity_type": "person" if payload.person_id else "organisation",
+            "entity_id": payload.person_id or payload.organisation_id,
+        },
+        user_id=user_id,
+    )
+
+    response_data = CampaignSubscriptionResponse.model_validate(subscription)
+    response_data.campaign_name = campaign.name
+    response_data.entity_name = entity_name
+    response_data.entity_email = entity_email
+    return response_data
+
+
+@router.delete("/campaigns/{campaign_id}/subscriptions/{subscription_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def unsubscribe_from_campaign(
+    campaign_id: int,
+    subscription_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """Désabonner une entité d'une campagne."""
+    from models.email import CampaignSubscription
+    from fastapi import HTTPException
+    from datetime import datetime, UTC
+
+    subscription = db.query(CampaignSubscription).filter(
+        CampaignSubscription.id == subscription_id,
+        CampaignSubscription.campaign_id == campaign_id,
+    ).first()
+
+    if not subscription:
+        raise HTTPException(status_code=404, detail="Abonnement introuvable")
+
+    subscription.is_active = False
+    subscription.unsubscribed_at = datetime.now(UTC)
+    db.commit()
+
+    await emit_event(
+        EventType.EMAIL_CAMPAIGN_UPDATED,
+        data={
+            "campaign_id": campaign_id,
+            "action": "subscription_removed",
+            "subscription_id": subscription_id,
+        },
+        user_id=_extract_user_id(current_user),
+    )
+
+
+@router.get("/campaigns/{campaign_id}/subscriptions", response_model=List[CampaignSubscriptionResponse])
+async def list_campaign_subscriptions(
+    campaign_id: int,
+    only_active: bool = Query(True),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """Lister les abonnements d'une campagne."""
+    from models.email import CampaignSubscription, EmailCampaign
+    from models.person import Person
+    from models.organisation import Organisation
+    from fastapi import HTTPException
+
+    # Vérifier que la campagne existe
+    campaign = db.query(EmailCampaign).filter(EmailCampaign.id == campaign_id).first()
+    if not campaign:
+        raise HTTPException(status_code=404, detail="Campagne introuvable")
+
+    query = db.query(CampaignSubscription).filter(CampaignSubscription.campaign_id == campaign_id)
+
+    if only_active:
+        query = query.filter(CampaignSubscription.is_active == True)
+
+    subscriptions = query.order_by(CampaignSubscription.created_at.desc()).all()
+
+    result = []
+    for sub in subscriptions:
+        response_data = CampaignSubscriptionResponse.model_validate(sub)
+        response_data.campaign_name = campaign.name
+
+        # Enrichir avec les infos de l'entité
+        if sub.person_id:
+            person = db.query(Person).filter(Person.id == sub.person_id).first()
+            if person:
+                response_data.entity_name = f"{person.first_name} {person.last_name}"
+                response_data.entity_email = person.email or person.personal_email
+        elif sub.organisation_id:
+            org = db.query(Organisation).filter(Organisation.id == sub.organisation_id).first()
+            if org:
+                response_data.entity_name = org.name
+                response_data.entity_email = org.email
+
+        result.append(response_data)
+
+    return result
+
+
+@router.get("/people/{person_id}/subscriptions", response_model=List[CampaignSubscriptionResponse])
+async def list_person_subscriptions(
+    person_id: int,
+    only_active: bool = Query(True),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """Lister les abonnements d'une personne."""
+    from models.email import CampaignSubscription, EmailCampaign
+    from models.person import Person
+    from fastapi import HTTPException
+
+    # Vérifier que la personne existe
+    person = db.query(Person).filter(Person.id == person_id).first()
+    if not person:
+        raise HTTPException(status_code=404, detail="Personne introuvable")
+
+    query = db.query(CampaignSubscription).filter(CampaignSubscription.person_id == person_id)
+
+    if only_active:
+        query = query.filter(CampaignSubscription.is_active == True)
+
+    subscriptions = query.order_by(CampaignSubscription.created_at.desc()).all()
+
+    result = []
+    for sub in subscriptions:
+        response_data = CampaignSubscriptionResponse.model_validate(sub)
+
+        # Enrichir avec le nom de la campagne
+        campaign = db.query(EmailCampaign).filter(EmailCampaign.id == sub.campaign_id).first()
+        if campaign:
+            response_data.campaign_name = campaign.name
+
+        response_data.entity_name = f"{person.first_name} {person.last_name}"
+        response_data.entity_email = person.email or person.personal_email
+
+        result.append(response_data)
+
+    return result
+
+
+@router.get("/organisations/{organisation_id}/subscriptions", response_model=List[CampaignSubscriptionResponse])
+async def list_organisation_subscriptions(
+    organisation_id: int,
+    only_active: bool = Query(True),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """Lister les abonnements d'une organisation."""
+    from models.email import CampaignSubscription, EmailCampaign
+    from models.organisation import Organisation
+    from fastapi import HTTPException
+
+    # Vérifier que l'organisation existe
+    org = db.query(Organisation).filter(Organisation.id == organisation_id).first()
+    if not org:
+        raise HTTPException(status_code=404, detail="Organisation introuvable")
+
+    query = db.query(CampaignSubscription).filter(CampaignSubscription.organisation_id == organisation_id)
+
+    if only_active:
+        query = query.filter(CampaignSubscription.is_active == True)
+
+    subscriptions = query.order_by(CampaignSubscription.created_at.desc()).all()
+
+    result = []
+    for sub in subscriptions:
+        response_data = CampaignSubscriptionResponse.model_validate(sub)
+
+        # Enrichir avec le nom de la campagne
+        campaign = db.query(EmailCampaign).filter(EmailCampaign.id == sub.campaign_id).first()
+        if campaign:
+            response_data.campaign_name = campaign.name
+
+        response_data.entity_name = org.name
+        response_data.entity_email = org.email
+
+        result.append(response_data)
+
+    return result
+
+
+@router.post("/campaigns/subscriptions/bulk", response_model=CampaignSubscriptionBulkResponse, status_code=status.HTTP_201_CREATED)
+async def bulk_subscribe_to_campaign(
+    payload: CampaignSubscriptionBulkCreate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """Abonner plusieurs personnes/organisations à une campagne en une fois."""
+    from models.email import EmailCampaign, CampaignSubscription
+    from models.person import Person
+    from models.organisation import Organisation
+    from fastapi import HTTPException
+
+    # Vérifier que la campagne existe
+    campaign = db.query(EmailCampaign).filter(EmailCampaign.id == payload.campaign_id).first()
+    if not campaign:
+        raise HTTPException(status_code=404, detail="Campagne introuvable")
+
+    user_id = _extract_user_id(current_user)
+    created = 0
+    already_exists = 0
+    errors = 0
+    subscriptions = []
+
+    # Abonner les personnes
+    for person_id in payload.person_ids:
+        try:
+            # Vérifier si existe déjà
+            existing = db.query(CampaignSubscription).filter(
+                CampaignSubscription.campaign_id == payload.campaign_id,
+                CampaignSubscription.person_id == person_id,
+            ).first()
+
+            if existing:
+                if not existing.is_active:
+                    existing.is_active = True
+                    existing.unsubscribed_at = None
+                    db.commit()
+                    db.refresh(existing)
+                    created += 1
+                    subscriptions.append(CampaignSubscriptionResponse.model_validate(existing))
+                else:
+                    already_exists += 1
+            else:
+                # Créer nouvel abonnement
+                subscription = CampaignSubscription(
+                    campaign_id=payload.campaign_id,
+                    person_id=person_id,
+                    subscribed_by=user_id,
+                    is_active=True,
+                )
+                db.add(subscription)
+                db.commit()
+                db.refresh(subscription)
+                created += 1
+                subscriptions.append(CampaignSubscriptionResponse.model_validate(subscription))
+        except Exception as e:
+            errors += 1
+            db.rollback()
+
+    # Abonner les organisations
+    for org_id in payload.organisation_ids:
+        try:
+            # Vérifier si existe déjà
+            existing = db.query(CampaignSubscription).filter(
+                CampaignSubscription.campaign_id == payload.campaign_id,
+                CampaignSubscription.organisation_id == org_id,
+            ).first()
+
+            if existing:
+                if not existing.is_active:
+                    existing.is_active = True
+                    existing.unsubscribed_at = None
+                    db.commit()
+                    db.refresh(existing)
+                    created += 1
+                    subscriptions.append(CampaignSubscriptionResponse.model_validate(existing))
+                else:
+                    already_exists += 1
+            else:
+                # Créer nouvel abonnement
+                subscription = CampaignSubscription(
+                    campaign_id=payload.campaign_id,
+                    organisation_id=org_id,
+                    subscribed_by=user_id,
+                    is_active=True,
+                )
+                db.add(subscription)
+                db.commit()
+                db.refresh(subscription)
+                created += 1
+                subscriptions.append(CampaignSubscriptionResponse.model_validate(subscription))
+        except Exception as e:
+            errors += 1
+            db.rollback()
+
+    await emit_event(
+        EventType.EMAIL_CAMPAIGN_UPDATED,
+        data={
+            "campaign_id": payload.campaign_id,
+            "action": "bulk_subscriptions_added",
+            "created": created,
+            "already_exists": already_exists,
+            "errors": errors,
+        },
+        user_id=user_id,
+    )
+
+    return CampaignSubscriptionBulkResponse(
+        created=created,
+        already_exists=already_exists,
+        errors=errors,
+        subscriptions=subscriptions,
+    )

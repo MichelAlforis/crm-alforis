@@ -21,12 +21,30 @@ export default function NewCampaignPage() {
   const router = useRouter()
   const { showToast } = useToast()
   const [isCreating, setIsCreating] = React.useState(false)
+  const [initialData, setInitialData] = React.useState<any>(null)
+
+  // Charger le brouillon depuis localStorage au montage
+  React.useEffect(() => {
+    try {
+      const savedDraft = localStorage.getItem('campaign_draft')
+      if (savedDraft) {
+        const draft = JSON.parse(savedDraft)
+        setInitialData(draft)
+        console.log('📥 Brouillon chargé depuis localStorage:', draft)
+      }
+    } catch (err) {
+      console.error('Failed to load draft:', err)
+    }
+  }, [])
 
   const handleSubmit = async (formData: any) => {
     setIsCreating(true)
     try {
       const response = await apiClient.post<CampaignResponse>('/email/campaigns', formData)
       const campaign = response.data
+
+      // Supprimer le brouillon après création réussie
+      localStorage.removeItem('campaign_draft')
 
       showToast({
         type: 'success',
@@ -86,6 +104,7 @@ export default function NewCampaignPage() {
       </div>
 
       <CampaignWizard
+        initialData={initialData}
         onSubmit={handleSubmit}
         onSaveDraft={handleSaveDraft}
         isSubmitting={isCreating}
