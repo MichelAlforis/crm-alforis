@@ -12,6 +12,7 @@ import { useMailingLists } from '@/hooks/useMailingLists'
 import { useExport } from '@/hooks/useExport'
 import { useImport } from '@/hooks/useImport'
 import { useConfirm } from '@/hooks/useConfirm'
+import { RecipientSelectorTable, type RecipientFilters } from '@/components/email/RecipientSelectorTable'
 
 interface MailingList {
   id: number
@@ -60,11 +61,29 @@ export default function MailingListsPage() {
     description: '',
     target_type: 'contacts',
   })
+  const [recipientFilters, setRecipientFilters] = useState<RecipientFilters>({
+    target_type: 'contacts',
+    languages: [],
+    countries: [],
+    organisation_categories: [],
+    specific_ids: [],
+    exclude_ids: [],
+  })
+  const [recipientCount, setRecipientCount] = useState(0)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleCreate = () => {
     setEditingList(null)
     setFormData({ name: '', description: '', target_type: 'contacts' })
+    setRecipientFilters({
+      target_type: 'contacts',
+      languages: [],
+      countries: [],
+      organisation_categories: [],
+      specific_ids: [],
+      exclude_ids: [],
+    })
+    setRecipientCount(0)
     setIsModalOpen(true)
   }
 
@@ -75,6 +94,15 @@ export default function MailingListsPage() {
       description: list.description || '',
       target_type: list.target_type,
     })
+    setRecipientFilters({
+      target_type: list.target_type as 'contacts' | 'organisations',
+      languages: list.filters?.languages || [],
+      countries: list.filters?.countries || [],
+      organisation_categories: list.filters?.organisation_categories || [],
+      specific_ids: list.filters?.specific_ids || [],
+      exclude_ids: list.filters?.exclude_ids || [],
+    })
+    setRecipientCount(list.recipient_count)
     setIsModalOpen(true)
   }
 
@@ -84,13 +112,25 @@ export default function MailingListsPage() {
     }
 
     try {
+      const filters = {
+        languages: recipientFilters.languages,
+        countries: recipientFilters.countries,
+        organisation_categories: recipientFilters.organisation_categories,
+        specific_ids: recipientFilters.specific_ids,
+        exclude_ids: recipientFilters.exclude_ids,
+      }
+
       if (editingList) {
-        await updateList(editingList.id, formData)
+        await updateList(editingList.id, {
+          ...formData,
+          filters,
+          recipient_count: recipientCount,
+        })
       } else {
         await createList({
           ...formData,
-          filters: {},
-          recipient_count: 0,
+          filters,
+          recipient_count: recipientCount,
         })
       }
       setIsModalOpen(false)
@@ -361,7 +401,7 @@ export default function MailingListsPage() {
         <div className="space-y-spacing-md">
           <Alert
             type="info"
-            message="Créez une liste vide que vous pourrez ensuite utiliser dans le wizard de campagne pour sélectionner et sauvegarder des destinataires."
+            message="Créez une liste de diffusion en sélectionnant les contacts ou organisations que vous souhaitez cibler. Vous pouvez utiliser des filtres pour affiner votre sélection."
           />
 
           <Input
@@ -388,12 +428,30 @@ export default function MailingListsPage() {
           <Select
             label="Type de destinataires *"
             value={formData.target_type}
-            onChange={(e) => setFormData({ ...formData, target_type: e.target.value })}
+            onChange={(e) => {
+              const newType = e.target.value as 'contacts' | 'organisations'
+              setFormData({ ...formData, target_type: newType })
+              setRecipientFilters({ ...recipientFilters, target_type: newType })
+            }}
             required
           >
             <option value="contacts">Contacts (Personnes)</option>
             <option value="organisations">Organisations</option>
           </Select>
+
+          {/* Sélecteur de destinataires */}
+          <div className="border-t border-border pt-4">
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-sm font-medium text-text-primary">
+                Sélection des destinataires ({recipientCount} sélectionnés)
+              </h4>
+            </div>
+            <RecipientSelectorTable
+              value={recipientFilters}
+              onChange={setRecipientFilters}
+              onCountChange={setRecipientCount}
+            />
+          </div>
         </div>
       </Modal>
 
