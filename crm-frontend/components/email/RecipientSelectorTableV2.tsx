@@ -87,6 +87,7 @@ export const RecipientSelectorTableV2: React.FC<RecipientSelectorTableProps> = (
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Synchroniser les states locaux quand value change (ex: chargement d'une liste)
+  // On utilise JSON.stringify pour comparer les valeurs au lieu de la référence
   useEffect(() => {
     setSelectedCountries(value.countries || [])
     setSelectedLanguages(value.languages || [])
@@ -96,7 +97,16 @@ export const RecipientSelectorTableV2: React.FC<RecipientSelectorTableProps> = (
     setSelectedRoles(value.roles || [])
     setSelectedIds(value.specific_ids || [])
     setFilterIsActive(value.is_active)
-  }, [value])
+  }, [
+    JSON.stringify(value.countries),
+    JSON.stringify(value.languages),
+    JSON.stringify(value.organisation_categories),
+    JSON.stringify(value.organisation_types),
+    JSON.stringify(value.cities),
+    JSON.stringify(value.roles),
+    JSON.stringify(value.specific_ids),
+    value.is_active,
+  ])
 
   // Import des destinataires depuis un fichier
   const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
