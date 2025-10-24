@@ -161,7 +161,7 @@ V1/
 
 ### Checklists Qualité
 
-- [Tests Frontend Production](CHECKLIST_TESTS_FRONTEND_PROD.md) - En cours
+- [Tests Frontend Production](TESTS_FRONTEND.md) - 259/297 tests validés (87%)
 - [Roadmap Améliorations](CHECKLIST_AMELIORATION_FUTURE.md) - Prochaines étapes
 
 ---
@@ -219,6 +219,7 @@ Voir la checklist complète : [CHECKLIST_TESTS_FRONTEND_PROD.md](CHECKLIST_TESTS
 - Workflows automatisés opérationnels
 
 **Frontend** : Production Ready (95%)
+- 87% des tests frontend validés (259/297)
 - Dashboard analytics complet
 - Module marketing 100% fonctionnel
 - PWA installable sur mobile

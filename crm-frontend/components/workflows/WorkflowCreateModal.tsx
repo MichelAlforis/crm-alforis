@@ -79,7 +79,7 @@ export default function WorkflowCreateModal({
 }: WorkflowCreateModalProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [useVisualBuilder, setUseVisualBuilder] = useState(true)
+  const [useVisualBuilder, setUseVisualBuilder] = useState(false) // Désactivé temporairement en attente de fix ReactFlow
 
   // Données du formulaire
   const [name, setName] = useState('')
