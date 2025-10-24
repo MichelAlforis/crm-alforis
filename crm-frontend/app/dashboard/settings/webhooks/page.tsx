@@ -23,6 +23,8 @@ import {
   Input,
 } from '@/components/shared'
 import { useToast } from '@/components/ui/Toast'
+import { useConfirm } from '@/hooks/useConfirm'
+import { useModalForm } from '@/hooks/useModalForm'
 import {
   useWebhooks,
   useWebhookEvents,
@@ -59,6 +61,7 @@ function maskSecret(secret: string): string {
 
 export default function WebhookSettingsPage() {
   const { showToast } = useToast()
+  const confirm = useConfirm()
 
   const { data: webhooks, isLoading, error } = useWebhooks()
   const { data: events, isLoading: eventsLoading } = useWebhookEvents()
@@ -67,83 +70,32 @@ export default function WebhookSettingsPage() {
   const deleteWebhook = useDeleteWebhook()
   const rotateWebhookSecret = useRotateWebhookSecret()
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState<ModalMode>('create')
-  const [formState, setFormState] = useState<WebhookFormState>(INITIAL_FORM)
   const [editingWebhook, setEditingWebhook] = useState<Webhook | null>(null)
-  const [formError, setFormError] = useState<string | null>(null)
   const [actionWebhookId, setActionWebhookId] = useState<number | null>(null)
 
-  const eventLabelMap = useMemo(() => {
-    const map = new Map<string, string>()
-    events?.forEach((evt) => map.set(evt.value, evt.label))
-    return map
-  }, [events])
-
-  const resetForm = () => {
-    setFormState(INITIAL_FORM)
-    setEditingWebhook(null)
-    setFormError(null)
-  }
-
-  const openCreateModal = () => {
-    resetForm()
-    setModalMode('create')
-    setIsModalOpen(true)
-  }
-
-  const openEditModal = (webhook: Webhook) => {
-    setFormState({
-      url: webhook.url,
-      events: webhook.events,
-      description: webhook.description || '',
-      is_active: webhook.is_active,
-      secret: '',
-    })
-    setEditingWebhook(webhook)
-    setModalMode('edit')
-    setFormError(null)
-    setIsModalOpen(true)
-  }
-
-  const closeModal = () => {
-    setIsModalOpen(false)
-    resetForm()
-  }
-
-  const toggleEvent = (eventValue: string) => {
-    setFormState((prev) => {
-      const exists = prev.events.includes(eventValue)
-      return {
-        ...prev,
-        events: exists ? prev.events.filter((evt) => evt !== eventValue) : [...prev.events, eventValue],
+  // Use the new useModalForm hook
+  const modal = useModalForm<WebhookFormState>({
+    initialValues: INITIAL_FORM,
+    validate: (values) => {
+      const errors: Partial<Record<keyof WebhookFormState, string>> = {}
+      if (!values.url.trim()) {
+        errors.url = 'L\'URL du webhook est obligatoire.'
       }
-    })
-  }
+      if (values.events.length === 0) {
+        errors.events = 'Sélectionnez au moins un événement.'
+      }
+      return errors
+    },
+    onSubmit: async (values) => {
+      const payload = {
+        url: values.url.trim(),
+        events: values.events,
+        description: values.description.trim() || undefined,
+        is_active: values.is_active,
+        secret: values.secret.trim() || undefined,
+      }
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setFormError(null)
-
-    if (!formState.url.trim()) {
-      setFormError('L’URL du webhook est obligatoire.')
-      return
-    }
-
-    if (formState.events.length === 0) {
-      setFormError('Sélectionnez au moins un événement.')
-      return
-    }
-
-    const payload = {
-      url: formState.url.trim(),
-      events: formState.events,
-      description: formState.description.trim() || undefined,
-      is_active: formState.is_active,
-      secret: formState.secret.trim() || undefined,
-    }
-
-    try {
       if (modalMode === 'create') {
         await createWebhook.mutateAsync(payload)
         showToast({
@@ -163,38 +115,69 @@ export default function WebhookSettingsPage() {
           message: 'Les modifications ont été enregistrées.',
         })
       }
-      closeModal()
-    } catch (err: any) {
-      setFormError(
-        err?.detail ||
-          'Impossible de sauvegarder le webhook. Vérifiez les informations saisies.'
-      )
-    }
+    },
+  })
+
+  const eventLabelMap = useMemo(() => {
+    const map = new Map<string, string>()
+    events?.forEach((evt) => map.set(evt.value, evt.label))
+    return map
+  }, [events])
+
+  const openCreateModal = () => {
+    modal.reset()
+    setModalMode('create')
+    setEditingWebhook(null)
+    modal.open()
+  }
+
+  const openEditModal = (webhook: Webhook) => {
+    modal.setValues({
+      url: webhook.url,
+      events: webhook.events,
+      description: webhook.description || '',
+      is_active: webhook.is_active,
+      secret: '',
+    })
+    setEditingWebhook(webhook)
+    setModalMode('edit')
+    modal.open()
+  }
+
+  const toggleEvent = (eventValue: string) => {
+    const currentEvents = modal.values.events
+    const exists = currentEvents.includes(eventValue)
+    modal.setFieldValue(
+      'events',
+      exists ? currentEvents.filter((evt) => evt !== eventValue) : [...currentEvents, eventValue]
+    )
   }
 
   const handleDelete = async (webhook: Webhook) => {
-    const confirmed = window.confirm(
-      `Supprimer le webhook ${webhook.url} ? Cette action est irréversible.`
-    )
-    if (!confirmed) return
-
-    try {
-      setActionWebhookId(webhook.id)
-      await deleteWebhook.mutateAsync(webhook.id)
-      showToast({
-        type: 'success',
-        title: 'Webhook supprimé',
-        message: 'Le webhook a été retiré de la configuration.',
-      })
-    } catch (err: any) {
-      showToast({
-        type: 'error',
-        title: 'Erreur',
-        message: err?.detail || 'Suppression impossible. Réessayez plus tard.',
-      })
-    } finally {
-      setActionWebhookId(null)
-    }
+    await confirm({
+      title: 'Supprimer le webhook ?',
+      message: `Voulez-vous vraiment supprimer le webhook ${webhook.url} ? Cette action est irréversible.`,
+      type: 'danger',
+      onConfirm: async () => {
+        try {
+          setActionWebhookId(webhook.id)
+          await deleteWebhook.mutateAsync(webhook.id)
+          showToast({
+            type: 'success',
+            title: 'Webhook supprimé',
+            message: 'Le webhook a été retiré de la configuration.',
+          })
+        } catch (err: any) {
+          showToast({
+            type: 'error',
+            title: 'Erreur',
+            message: err?.detail || 'Suppression impossible. Réessayez plus tard.',
+          })
+        } finally {
+          setActionWebhookId(null)
+        }
+      },
+    })
   }
 
   const handleRotateSecret = async (webhook: Webhook) => {
@@ -371,12 +354,12 @@ export default function WebhookSettingsPage() {
       </Card>
 
       <Modal
-        isOpen={isModalOpen}
-        onClose={closeModal}
+        isOpen={modal.isOpen}
+        onClose={modal.close}
         title={modalMode === 'create' ? 'Ajouter un webhook' : 'Modifier le webhook'}
         footer={
           <>
-            <Button variant="ghost" onClick={closeModal}>
+            <Button variant="ghost" onClick={modal.close}>
               Annuler
             </Button>
             <Button
@@ -384,19 +367,19 @@ export default function WebhookSettingsPage() {
                 const form = document.getElementById('webhook-form') as HTMLFormElement | null
                 form?.requestSubmit()
               }}
-              isLoading={isSaving}
+              isLoading={modal.isSubmitting}
             >
               {modalMode === 'create' ? 'Créer' : 'Enregistrer'}
             </Button>
           </>
         }
       >
-        <form id="webhook-form" onSubmit={handleSubmit} className="space-y-4">
-          {formError && (
+        <form id="webhook-form" onSubmit={modal.handleSubmit} className="space-y-4">
+          {modal.error && (
             <Alert
               type="error"
-              message={formError}
-              onClose={() => setFormError(null)}
+              message={modal.error}
+              onClose={modal.clearError}
             />
           )}
 
@@ -405,8 +388,8 @@ export default function WebhookSettingsPage() {
             type="url"
             placeholder="https://votre-app.com/webhook"
             required
-            value={formState.url}
-            onChange={(e) => setFormState((prev) => ({ ...prev, url: e.target.value }))}
+            value={modal.values.url}
+            onChange={modal.handleChange('url')}
           />
 
           <div>
@@ -418,7 +401,7 @@ export default function WebhookSettingsPage() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {(events || []).map((evt) => {
-                  const checked = formState.events.includes(evt.value)
+                  const checked = modal.values.events.includes(evt.value)
                   return (
                     <label
                       key={evt.value}
@@ -449,10 +432,8 @@ export default function WebhookSettingsPage() {
         id="webhook-active"
         type="checkbox"
         className="h-4 w-4 text-bleu border-gray-300 rounded"
-        checked={formState.is_active}
-        onChange={(e) =>
-          setFormState((prev) => ({ ...prev, is_active: e.target.checked }))
-        }
+        checked={modal.values.is_active}
+        onChange={modal.handleChange('is_active')}
       />
       <label htmlFor="webhook-active" className="text-sm text-gray-700">
         Activer immédiatement
@@ -462,10 +443,8 @@ export default function WebhookSettingsPage() {
       <Input
         label="Secret personnalisé (optionnel)"
         placeholder="Laisser vide pour générer automatiquement"
-        value={formState.secret}
-        onChange={(e) =>
-          setFormState((prev) => ({ ...prev, secret: e.target.value }))
-        }
+        value={modal.values.secret}
+        onChange={modal.handleChange('secret')}
       />
     </div>
   </div>
@@ -475,13 +454,11 @@ export default function WebhookSettingsPage() {
       Description (optionnel)
     </label>
     <textarea
-      value={formState.description}
-      onChange={(e) =>
-        setFormState((prev) => ({ ...prev, description: e.target.value }))
-      }
+      value={modal.values.description}
+      onChange={modal.handleChange('description')}
       rows={3}
       className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-bleu"
-      placeholder="Ex: Synchronisation avec l’outil marketing"
+      placeholder="Ex: Synchronisation avec l'outil marketing"
     />
   </div>
 </form>

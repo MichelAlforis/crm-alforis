@@ -92,13 +92,13 @@ export default function WorkflowsPage() {
                 Automatisez vos processus métier
               </p>
             </div>
-            <button
-              onClick={() => setShowTemplateModal(true)}
-              className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+            <a
+              href="/workflows/new"
+              className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-blue-700 transition shadow-lg shadow-purple-500/30"
             >
               <Plus size={20} />
               Nouveau workflow
-            </button>
+            </a>
           </div>
 
           {/* Filtres */}

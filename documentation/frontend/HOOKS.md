@@ -8,7 +8,14 @@
 
 Liste complète des hooks React personnalisés utilisés dans le CRM.
 
-**Total** : **29 hooks** | **Réutilisables** : 4 hooks ⭐ | **Métier** : 17 hooks | **UI/UX** : 6 hooks | **Utilitaires** : 2 hooks
+**Total** : **32 hooks** | **Phase 2 High Impact** : 3 hooks ⭐⭐⭐ | **Réutilisables** : 4 hooks ⭐ | **Métier** : 17 hooks | **UI/UX** : 6 hooks | **Utilitaires** : 2 hooks
+
+### 🎯 Nouveautés Phase 2 (Octobre 2025)
+- **useModalForm** : Gestion formulaires modals (~195 lignes économisées)
+- **useClientSideTable** : Tables client-side complètes (~375 lignes économisées)
+- **useFilters** : Gestion état filtres (~100 lignes économisées)
+
+**Impact total Phase 2** : **~670 lignes de code économisées** ✅
 
 ---
 
@@ -407,6 +414,117 @@ toast.info('Info')
 
 ---
 
+## ⚡ Hooks Phase 2 - High Impact (3 hooks)
+
+### useModalForm ⭐⭐⭐
+**Fichier** : `hooks/useModalForm.ts` | **Créé** : Phase 2
+
+Gestion complète de formulaires modals avec validation, états de chargement et gestion d'erreurs.
+
+```typescript
+const modal = useModalForm<WebhookFormState>({
+  initialValues: { url: '', events: [], description: '', is_active: true },
+  validate: (values) => {
+    const errors = {}
+    if (!values.url.trim()) errors.url = 'URL requise'
+    if (values.events.length === 0) errors.events = 'Au moins un événement'
+    return errors
+  },
+  onSubmit: async (values) => {
+    await createWebhook(values)
+  },
+  onSuccess: () => toast.success('Créé!')
+})
+
+// Usage
+<Modal isOpen={modal.isOpen} onClose={modal.close}>
+  <form onSubmit={modal.handleSubmit}>
+    {modal.error && <Alert type="error" message={modal.error} />}
+    <Input value={modal.values.url} onChange={modal.handleChange('url')} />
+    <Button type="submit" isLoading={modal.isSubmitting}>Save</Button>
+  </form>
+</Modal>
+```
+
+**Impact** : ~195 lignes économisées, utilisable dans 15+ fichiers
+**Fonctionnalités** :
+- État du formulaire centralisé
+- Validation intégrée avec erreurs par champ
+- Gestion automatique loading/error/success
+- Reset et close automatiques
+- Type-safe avec generics
+
+---
+
+### useClientSideTable ⭐⭐⭐
+**Fichier** : `hooks/useClientSideTable.ts` | **Créé** : Phase 2
+
+Gestion complète de tables côté client : recherche, filtrage, tri.
+
+```typescript
+const table = useClientSideTable<Person>({
+  data: people?.items || [],
+  searchFields: ['first_name', 'last_name', 'email'],
+  defaultSortKey: 'name',
+  filterFn: (item, filters) => {
+    if (filters.country && item.country !== filters.country) return false
+    return true
+  }
+})
+
+// Usage
+<SearchBar value={table.searchQuery} onChange={table.setSearchQuery} />
+<Table
+  data={table.filteredData}
+  sortConfig={table.sortConfig}
+  onSort={table.handleSort}
+/>
+```
+
+**Impact** : ~375 lignes économisées, utilisable dans 5+ pages
+**Fonctionnalités** :
+- Recherche multi-champs
+- Tri ascendant/descendant
+- Filtrage personnalisé
+- Compteurs total/filtré
+- Type-safe avec generics
+
+---
+
+### useFilters ⭐⭐
+**Fichier** : `hooks/useFilters.ts` | **Créé** : Phase 2
+
+Gestion simplifiée d'états de filtres avec reset.
+
+```typescript
+const filters = useFilters({
+  initialValues: {
+    role: '',
+    country: '',
+    language: '',
+    createdFrom: '',
+    createdTo: '',
+  }
+})
+
+// Usage
+<AdvancedFilters
+  values={filters.values}
+  onChange={filters.handleChange}
+  onReset={filters.reset}
+/>
+{filters.hasActiveFilters && <Badge>{filters.activeCount} filtres actifs</Badge>}
+```
+
+**Impact** : ~100 lignes économisées, utilisable dans 10+ pages
+**Fonctionnalités** :
+- Gestion état multi-filtres
+- Détection filtres actifs
+- Reset en un clic
+- Compatible AdvancedFilters component
+
+---
+
 ## 🛠️ Hooks Utilitaires (2 hooks)
 
 ### useDebounce
@@ -431,15 +549,17 @@ const [theme, setTheme] = useLocalStorage('theme', 'light')
 
 ---
 
-## 📊 Index Alphabétique (29 hooks)
+## 📊 Index Alphabétique (32 hooks)
 
 | Hook | Type | Fichier | Utilité |
 |------|------|---------|---------|
 | useAI | Métier | useAI.ts | Agent IA statistiques/suggestions |
 | useAuth | Métier ⭐⭐⭐ | useAuth.ts | Authentification JWT |
 | useCampaignSubscriptions | Métier | useCampaignSubscriptions.ts | Abonnements RGPD |
+| useClientSideTable | Phase 2 ⭐⭐⭐ | useClientSideTable.ts | Tables client-side complètes |
 | useConfirm | UI/UX ⭐ | useConfirm.tsx | Modals confirmation |
 | useDebounce | Utilitaire | useDebounce.ts | Debounce valeurs |
+| useFilters | Phase 2 ⭐⭐ | useFilters.ts | Gestion état filtres |
 | useEmailAutomation | Métier | useEmailAutomation.ts | Automatisations email |
 | useEmailConfig | Métier | useEmailConfig.ts | Config providers email |
 | useExport | UI/UX ⭐ | useExport.ts | Exports CSV/Excel/PDF |
@@ -448,6 +568,7 @@ const [theme, setTheme] = useLocalStorage('theme', 'light')
 | useMailingLists | Métier | useMailingLists.ts | Listes diffusion |
 | useMandats | Métier | useMandats.ts | CRUD mandats |
 | useMediaQuery | UI/UX | useMediaQuery.ts | Breakpoints responsive |
+| useModalForm | Phase 2 ⭐⭐⭐ | useModalForm.ts | Formulaires modals complets |
 | useNotifications | Métier | useNotifications.ts | WebSocket temps réel |
 | useOnlineStatus | UI/UX | useOnlineStatus.ts | Détection réseau |
 | useOrganisationActivity | Métier | useOrganisationActivity.ts | Timeline activités |
@@ -492,18 +613,29 @@ const [theme, setTheme] = useLocalStorage('theme', 'light')
 ### Par Catégorie
 | Catégorie | Nombre | % |
 |-----------|--------|---|
-| Métier | 17 | 59% |
-| UI/UX | 6 | 21% |
-| Utilitaires | 2 | 7% |
-| Réutilisables ⭐ | 4 | 14% |
+| Métier | 17 | 53% |
+| UI/UX | 6 | 19% |
+| Phase 2 High Impact ⭐⭐⭐ | 3 | 9% |
+| Réutilisables ⭐ | 4 | 13% |
+| Utilitaires | 2 | 6% |
+| **Total** | **32** | **100%** |
 
 ### Impact Projet
 | Métrique | Avant | Après | Gain |
 |----------|-------|-------|------|
-| Hooks totaux | - | 29 | ✅ |
+| Hooks totaux | 29 | 32 | +3 nouveaux |
 | Lignes ExportButtons | 185 | 111 | -40% |
 | Duplications confirm() | 6+ | 0 | ✅ |
+| **Phase 2 économies** | **-** | **-670 lignes** | **✅** |
 | Cohérence UX | ❌ | ✅ | ⭐ |
+
+### Réduction Code Phase 2
+| Hook | Économie | Fichiers affectés |
+|------|----------|-------------------|
+| useModalForm | ~195 lignes | 2 fichiers (15+ potentiel) |
+| useClientSideTable | ~375 lignes | 1 fichier (5+ potentiel) |
+| useFilters | ~100 lignes | 1 fichier (10+ potentiel) |
+| **Total Phase 2** | **~670 lignes** | **2 migrations complètes** |
 
 ---
 

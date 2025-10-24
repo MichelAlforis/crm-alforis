@@ -3,12 +3,14 @@
 // app/dashboard/people/page.tsx
 // ============= PEOPLE DIRECTORY =============
 
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { usePeople } from '@/hooks/usePeople'
 import { useTableColumns } from '@/hooks/useTableColumns'
+import { useClientSideTable } from '@/hooks/useClientSideTable'
+import { useFilters } from '@/hooks/useFilters'
 import { Card, Button, Table, Alert, AdvancedFilters, ColumnSelector, ExportButtons } from '@/components/shared'
 import SearchBar from '@/components/search/SearchBar'
 import { Person } from '@/lib/types'
@@ -37,21 +39,59 @@ const LANGUAGE_LABELS = LANGUAGE_OPTIONS.filter((option) => option.value).reduce
   {} as Record<string, string>,
 )
 
+interface PeopleFilters {
+  role: string
+  country: string
+  language: string
+  createdFrom: string
+  createdTo: string
+}
+
 export default function PeoplePage() {
   const router = useRouter()
   const { people, fetchPeople } = usePeople()
-  const [searchText, setSearchText] = useState('')
-  const [debouncedSearch, setDebouncedSearch] = useState('')
-  const [skip, setSkip] = useState(0)
-  const [limit, setLimit] = useState(50)
-  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | undefined>()
-  const [filtersState, setFiltersState] = useState({
-    role: '',
-    country: '',
-    language: '',
-    createdFrom: '',
-    createdTo: '',
+
+  // Use new hooks for cleaner state management
+  const filters = useFilters<PeopleFilters>({
+    initialValues: {
+      role: '',
+      country: '',
+      language: '',
+      createdFrom: '',
+      createdTo: '',
+    },
   })
+
+  const table = useClientSideTable<Person, PeopleFilters>({
+    data: people.data?.items || [],
+    searchFields: ['first_name', 'last_name', 'personal_email', 'role'],
+    defaultSortKey: 'last_name',
+    defaultSortDirection: 'asc',
+    filterFn: (person, activeFilters) => {
+      if (activeFilters.role && !person.role?.toLowerCase().includes(activeFilters.role.toLowerCase())) {
+        return false
+      }
+      if (activeFilters.country && person.country_code !== activeFilters.country) {
+        return false
+      }
+      if (activeFilters.language && (person.language || '').toUpperCase() !== activeFilters.language) {
+        return false
+      }
+      const createdAt = person.created_at ? new Date(person.created_at) : null
+      if (activeFilters.createdFrom && createdAt && createdAt < new Date(activeFilters.createdFrom)) {
+        return false
+      }
+      if (activeFilters.createdTo && createdAt && createdAt > new Date(activeFilters.createdTo)) {
+        return false
+      }
+      return true
+    },
+  })
+
+  // Sync table filters with filter hook
+  useEffect(() => {
+    table.setFilters(filters.activeFilters as PeopleFilters)
+  }, [filters.activeFilters])
 
   // Define columns with useTableColumns hook
   const defaultColumns = useMemo(
@@ -119,45 +159,10 @@ export default function PeoplePage() {
     defaultColumns,
   })
 
-  const handleFilterChange = (key: string, value: unknown) => {
-    if (Array.isArray(value)) return
-    setFiltersState((prev) => ({
-      ...prev,
-      [key]: value as string,
-    }))
-  }
-
-  const resetFilters = () =>
-    setFiltersState({
-      role: '',
-      country: '',
-      language: '',
-      createdFrom: '',
-      createdTo: '',
-    })
-
-  const handleSort = (key: string) => {
-    setSortConfig((prev) => {
-      if (prev?.key === key) {
-        // Toggle direction
-        return {
-          key,
-          direction: prev.direction === 'asc' ? 'desc' : 'asc',
-        }
-      }
-      // New sort key
-      return { key, direction: 'asc' }
-    })
-  }
-
+  // Fetch people from API (server-side pagination)
   useEffect(() => {
-    const timer = setTimeout(() => setDebouncedSearch(searchText), 300)
-    return () => clearTimeout(timer)
-  }, [searchText])
-
-  useEffect(() => {
-    fetchPeople(skip, limit, debouncedSearch ? { q: debouncedSearch } : undefined)
-  }, [debouncedSearch, skip, limit, fetchPeople])
+    fetchPeople(0, 1000) // Fetch more data for client-side filtering
+  }, [fetchPeople])
 
   const advancedFilterDefinitions = [
     {
@@ -202,68 +207,6 @@ export default function PeoplePage() {
     },
   ]
 
-  const filteredPeople = (people.data?.items ?? [])
-    .filter((person) => {
-      const matchesSearch =
-        `${person.first_name} ${person.last_name}`.toLowerCase().includes(
-          searchText.toLowerCase()
-        ) ||
-        person.personal_email?.toLowerCase().includes(searchText.toLowerCase()) ||
-        person.role?.toLowerCase().includes(searchText.toLowerCase()) ||
-        ''
-
-      const matchesRole = filtersState.role
-        ? person.role?.toLowerCase().includes(filtersState.role.toLowerCase())
-        : true
-
-      const matchesCountry = filtersState.country
-        ? person.country_code === filtersState.country
-        : true
-
-      const matchesLanguage = filtersState.language
-        ? (person.language || '').toUpperCase() === filtersState.language
-        : true
-
-      const createdAt = person.created_at ? new Date(person.created_at) : null
-      const matchesCreatedFrom = filtersState.createdFrom
-        ? createdAt && createdAt >= new Date(filtersState.createdFrom)
-        : true
-
-      const matchesCreatedTo = filtersState.createdTo
-        ? createdAt && createdAt <= new Date(filtersState.createdTo)
-        : true
-
-      return (
-        matchesSearch &&
-        matchesRole &&
-        matchesCountry &&
-        matchesLanguage &&
-        matchesCreatedFrom &&
-        matchesCreatedTo
-      )
-    })
-    .sort((a, b) => {
-      if (!sortConfig) return 0
-
-      const aValue = a[sortConfig.key as keyof Person]
-      const bValue = b[sortConfig.key as keyof Person]
-
-      // Handle null/undefined values
-      if (!aValue && !bValue) return 0
-      if (!aValue) return 1
-      if (!bValue) return -1
-
-      // String comparison (case insensitive)
-      const aStr = String(aValue).toLowerCase()
-      const bStr = String(bValue).toLowerCase()
-
-      if (sortConfig.direction === 'asc') {
-        return aStr < bStr ? -1 : aStr > bStr ? 1 : 0
-      } else {
-        return aStr > bStr ? -1 : aStr < bStr ? 1 : 0
-      }
-    })
-
   return (
     <div className="space-y-6">
       {/* Breadcrumb */}
@@ -298,8 +241,8 @@ export default function PeoplePage() {
             <SearchBar
               placeholder="Rechercher une personne…"
               entityType="people"
-              onQueryChange={setSearchText}
-              onSubmit={setSearchText}
+              onQueryChange={table.setSearchQuery}
+              onSubmit={table.setSearchQuery}
               onSelectSuggestion={(suggestion) => {
                 if (suggestion?.id) {
                   router.push(`/dashboard/people/${suggestion.id}`)
@@ -321,9 +264,9 @@ export default function PeoplePage() {
           </div>
           <AdvancedFilters
             filters={advancedFilterDefinitions}
-            values={filtersState}
-            onChange={handleFilterChange}
-            onReset={resetFilters}
+            values={filters.values}
+            onChange={filters.handleChange}
+            onReset={filters.reset}
           />
         </div>
       </Card>
@@ -332,18 +275,11 @@ export default function PeoplePage() {
       <Card>
         <Table
           columns={visibleColumns}
-          data={filteredPeople}
+          data={table.filteredData}
           isLoading={people.isLoading}
-          isEmpty={filteredPeople.length === 0}
-          sortConfig={sortConfig}
-          onSort={handleSort}
-          pagination={{
-            total: people.data?.total || 0,
-            skip: skip,
-            limit: limit,
-            onPageChange: (newSkip) => setSkip(newSkip),
-            onLimitChange: (newLimit) => setLimit(newLimit),
-          }}
+          isEmpty={table.filteredData.length === 0}
+          sortConfig={table.sortConfig}
+          onSort={table.handleSort}
         />
       </Card>
     </div>
