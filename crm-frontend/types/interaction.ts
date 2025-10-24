@@ -1,9 +1,9 @@
 /**
- * Types TypeScript pour Interactions v1
+ * Types TypeScript pour Interactions V2
  *
  * Alignés avec le backend FastAPI:
  * - IDs = Integer (cohérence projet)
- * - Pas de champs inbox (status, assignee, nextActionAt) en v1
+ * - V2: champs inbox (status, assignee_id, next_action_at, notified_at)
  * - Attachments = liste d'URLs { name, url }
  */
 
@@ -17,6 +17,11 @@ import { z } from 'zod'
  * Type d'interaction (v1.1: ajout 'visio')
  */
 export type InteractionType = 'call' | 'email' | 'meeting' | 'visio' | 'note' | 'other'
+
+/**
+ * Statut d'une interaction (V2 - workflow inbox)
+ */
+export type InteractionStatus = 'todo' | 'in_progress' | 'done'
 
 /**
  * Labels UI pour les types d'interaction
@@ -40,6 +45,24 @@ export const INTERACTION_TYPE_ICONS: Record<InteractionType, string> = {
   visio: '🎥',
   note: '📝',
   other: '📄',
+}
+
+/**
+ * Labels UI pour les statuts d'interaction (V2)
+ */
+export const INTERACTION_STATUS_LABELS: Record<InteractionStatus, string> = {
+  todo: 'À faire',
+  in_progress: 'En cours',
+  done: 'Terminé',
+}
+
+/**
+ * Couleurs Tailwind par statut (V2)
+ */
+export const INTERACTION_STATUS_COLORS: Record<InteractionStatus, string> = {
+  todo: 'bg-gray-100 text-gray-700',
+  in_progress: 'bg-blue-100 text-blue-700',
+  done: 'bg-green-100 text-green-700',
 }
 
 // ============================================
@@ -80,6 +103,11 @@ export const InteractionCreateSchema = z.object({
   // v1.1: Participants
   participants: z.array(ParticipantInSchema).optional(),
   external_participants: z.array(ExternalParticipantSchema).optional(),
+
+  // V2: Workflow inbox
+  status: z.enum(['todo', 'in_progress', 'done']).optional().default('todo'),
+  assignee_id: z.number().int().positive().optional().nullable(),
+  next_action_at: z.string().datetime().optional().nullable(),
 }).refine(
   (data) => data.org_id !== undefined || data.person_id !== undefined,
   {
@@ -100,6 +128,32 @@ export const InteractionUpdateSchema = z.object({
   // v1.1: Participants
   participants: z.array(ParticipantInSchema).optional(),
   external_participants: z.array(ExternalParticipantSchema).optional(),
+
+  // V2: Workflow inbox
+  status: z.enum(['todo', 'in_progress', 'done']).optional(),
+  assignee_id: z.number().int().positive().optional().nullable(),
+  next_action_at: z.string().datetime().optional().nullable(),
+})
+
+/**
+ * Schéma Zod pour mise à jour du statut uniquement (V2)
+ */
+export const InteractionStatusUpdateSchema = z.object({
+  status: z.enum(['todo', 'in_progress', 'done']),
+})
+
+/**
+ * Schéma Zod pour mise à jour de l'assignee uniquement (V2)
+ */
+export const InteractionAssigneeUpdateSchema = z.object({
+  assignee_id: z.number().int().positive().optional().nullable(),
+})
+
+/**
+ * Schéma Zod pour mise à jour de la prochaine action (V2)
+ */
+export const InteractionNextActionUpdateSchema = z.object({
+  next_action_at: z.string().datetime().optional().nullable(),
 })
 
 /**
@@ -120,6 +174,14 @@ export const InteractionSchema = z.object({
   // v1.1: Participants
   participants: z.array(ParticipantInSchema).optional().default([]),
   external_participants: z.array(ExternalParticipantSchema).optional().default([]),
+
+  // V2: Workflow inbox
+  status: z.enum(['todo', 'in_progress', 'done']),
+  assignee_id: z.number().int().positive().optional().nullable(),
+  next_action_at: z.string().datetime().optional().nullable(),
+  notified_at: z.string().datetime().optional().nullable(),
+  linked_task_id: z.number().int().positive().optional().nullable(),
+  linked_event_id: z.number().int().positive().optional().nullable(),
 })
 
 // ============================================
@@ -153,7 +215,7 @@ export interface ExternalParticipant {
 }
 
 /**
- * Interaction (réponse API) - v1.1 avec participants
+ * Interaction (réponse API) - V2 avec workflow inbox
  */
 export interface Interaction {
   id: number
@@ -170,10 +232,18 @@ export interface Interaction {
   // v1.1: Participants multiples
   participants?: ParticipantIn[]
   external_participants?: ExternalParticipant[]
+
+  // V2: Workflow inbox
+  status: InteractionStatus
+  assignee_id?: number | null
+  next_action_at?: string | null  // ISO datetime
+  notified_at?: string | null  // ISO datetime
+  linked_task_id?: number | null
+  linked_event_id?: number | null
 }
 
 /**
- * Données pour créer une interaction - v1.1 avec participants
+ * Données pour créer une interaction - V2 avec workflow inbox
  */
 export interface InteractionCreateInput {
   org_id?: number
@@ -186,10 +256,15 @@ export interface InteractionCreateInput {
   // v1.1: Participants multiples
   participants?: ParticipantIn[]
   external_participants?: ExternalParticipant[]
+
+  // V2: Workflow inbox
+  status?: InteractionStatus
+  assignee_id?: number | null
+  next_action_at?: string | null  // ISO datetime
 }
 
 /**
- * Données pour modifier une interaction - v1.1 avec participants
+ * Données pour modifier une interaction - V2 avec workflow inbox
  */
 export interface InteractionUpdateInput {
   type?: InteractionType
@@ -200,6 +275,32 @@ export interface InteractionUpdateInput {
   // v1.1: Participants multiples
   participants?: ParticipantIn[]
   external_participants?: ExternalParticipant[]
+
+  // V2: Workflow inbox
+  status?: InteractionStatus
+  assignee_id?: number | null
+  next_action_at?: string | null  // ISO datetime
+}
+
+/**
+ * Données pour mise à jour du statut uniquement (V2)
+ */
+export interface InteractionStatusUpdate {
+  status: InteractionStatus
+}
+
+/**
+ * Données pour mise à jour de l'assignee uniquement (V2)
+ */
+export interface InteractionAssigneeUpdate {
+  assignee_id?: number | null
+}
+
+/**
+ * Données pour mise à jour de la prochaine action (V2)
+ */
+export interface InteractionNextActionUpdate {
+  next_action_at?: string | null  // ISO datetime
 }
 
 /**
