@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { useMandats } from '@/hooks/useMandats'
 import { useTableColumns } from '@/hooks/useTableColumns'
+import { useFilters } from '@/hooks/useFilters'
 import { Card, Button, Table, Alert, AdvancedFilters, ExportButtons, ColumnSelector } from '@/components/shared'
 import SearchBar from '@/components/search/SearchBar'
 import { MandatStatus } from '@/lib/types'
@@ -20,32 +21,25 @@ const STATUS_LABELS: Record<string, string> = {
   terminé: 'Terminé',
 }
 
+interface MandatFilters {
+  status: string
+  dateFrom: string
+  dateTo: string
+}
+
 export default function MandatsPage() {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
-  const [skip, setSkip] = useState(0)
-  const [limit, setLimit] = useState(25)
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | undefined>()
-  const [filtersState, setFiltersState] = useState({
-    status: '',
-    dateFrom: '',
-    dateTo: '',
-  })
 
-  const handleFilterChange = (key: string, value: unknown) => {
-    if (Array.isArray(value)) return
-    setFiltersState((prev) => ({
-      ...prev,
-      [key]: value as string,
-    }))
-  }
-
-  const resetFilters = () =>
-    setFiltersState({
+  // Use new useFilters hook
+  const filters = useFilters<MandatFilters>({
+    initialValues: {
       status: '',
       dateFrom: '',
       dateTo: '',
-    })
+    },
+  })
 
   const advancedFilterDefinitions = [
     {
@@ -86,7 +80,7 @@ export default function MandatsPage() {
 
   const { data, isLoading, error } = useMandats({
     limit: 100,
-    status: filtersState.status || undefined,
+    status: filters.values.status || undefined,
   })
 
   // Define columns with useTableColumns hook
@@ -181,18 +175,18 @@ export default function MandatsPage() {
         (mandat.numero_mandat ?? '').toLowerCase().includes(search) ||
         (mandat.organisation?.name ?? '').toLowerCase().includes(search)
 
-      const matchesStatus = filtersState.status
-        ? mandat.status === filtersState.status
+      const matchesStatus = filters.values.status
+        ? mandat.status === filters.values.status
         : true
 
       const dateDebut = mandat.date_debut ? new Date(mandat.date_debut) : null
-      const matchesDateFrom = filtersState.dateFrom
-        ? dateDebut && dateDebut >= new Date(filtersState.dateFrom)
+      const matchesDateFrom = filters.values.dateFrom
+        ? dateDebut && dateDebut >= new Date(filters.values.dateFrom)
         : true
 
       const dateFin = mandat.date_fin ? new Date(mandat.date_fin) : null
-      const matchesDateTo = filtersState.dateTo
-        ? dateFin && dateFin <= new Date(filtersState.dateTo)
+      const matchesDateTo = filters.values.dateTo
+        ? dateFin && dateFin <= new Date(filters.values.dateTo)
         : true
 
       return matchesSearch && matchesStatus && matchesDateFrom && matchesDateTo
@@ -223,7 +217,7 @@ export default function MandatsPage() {
     })
 
   const exportParams = {
-    status: filtersState.status || undefined,
+    status: filters.values.status || undefined,
   }
 
   return (
@@ -278,9 +272,9 @@ export default function MandatsPage() {
           </div>
           <AdvancedFilters
             filters={advancedFilterDefinitions}
-            values={filtersState}
-            onChange={handleFilterChange}
-            onReset={resetFilters}
+            values={filters.values}
+            onChange={filters.handleChange}
+            onReset={filters.reset}
           />
         </div>
       </Card>

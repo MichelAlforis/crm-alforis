@@ -3,12 +3,13 @@
 
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { useOrganisations } from '@/hooks/useOrganisations'
 import { useTableColumns } from '@/hooks/useTableColumns'
+import { useFilters } from '@/hooks/useFilters'
 import { Card, Button, Table, Alert, AdvancedFilters, ExportButtons } from '@/components/shared'
 import { ColumnSelector } from '@/components/shared/ColumnSelector'
 import SearchBar from '@/components/search/SearchBar'
@@ -25,54 +26,40 @@ const CATEGORY_LABELS: Record<string, string> = {
   Autres: 'Autres',
 }
 
+interface OrganisationFilters {
+  category: string
+  status: string
+  country: string
+  language: string
+  createdFrom: string
+  createdTo: string
+}
+
 export default function OrganisationsPage() {
   const router = useRouter()
-  const [searchText, setSearchText] = useState('')
-  const [skip, setSkip] = useState(0)
-  const [limit, setLimit] = useState(50)
-  const [sortConfig, setSortConfig] = useState<{
-    key: string
-    direction: 'asc' | 'desc'
-  }>({ key: 'name', direction: 'asc' })
-  const [filtersState, setFiltersState] = useState({
-    category: '',
-    status: '',
-    country: '',
-    language: '',
-    createdFrom: '',
-    createdTo: '',
-  })
 
-  const handleFilterChange = (key: string, value: unknown) => {
-    if (Array.isArray(value)) {
-      return
-    }
-    setFiltersState((prev) => ({
-      ...prev,
-      [key]: value as string,
-    }))
-  }
-
-  const resetFilters = () =>
-    setFiltersState({
+  // Use new useFilters hook for cleaner state management
+  const filters = useFilters<OrganisationFilters>({
+    initialValues: {
       category: '',
       status: '',
       country: '',
       language: '',
       createdFrom: '',
       createdTo: '',
-    })
+    },
+  })
 
   const { data, isLoading, error } = useOrganisations({
-    skip: skip,
-    limit: limit,
-    category: filtersState.category || undefined,
+    skip: 0,
+    limit: 1000, // Fetch more for better UX
+    category: filters.values.category || undefined,
     is_active:
-      filtersState.status === ''
+      filters.values.status === ''
         ? undefined
-        : filtersState.status === 'active',
-    country_code: filtersState.country || undefined,
-    language: filtersState.language || undefined,
+        : filters.values.status === 'active',
+    country_code: filters.values.country || undefined,
+    language: filters.values.language || undefined,
   })
 
   const getCountryLabel = (code?: string | null) => {
@@ -88,14 +75,14 @@ export default function OrganisationsPage() {
   }
 
   const exportParams = {
-    category: filtersState.category || undefined,
+    category: filters.values.category || undefined,
     is_active:
-      filtersState.status === ''
+      filters.values.status === ''
         ? undefined
-        : filtersState.status === 'active'
+        : filters.values.status === 'active'
           ? 'true'
           : 'false',
-    country: filtersState.country || undefined,
+    country: filters.values.country || undefined,
   }
 
   const advancedFilterDefinitions = [
@@ -431,9 +418,9 @@ export default function OrganisationsPage() {
           </div>
           <AdvancedFilters
             filters={advancedFilterDefinitions}
-            values={filtersState}
-            onChange={handleFilterChange}
-            onReset={resetFilters}
+            values={filters.values}
+            onChange={filters.handleChange}
+            onReset={filters.reset}
           />
         </div>
       </Card>

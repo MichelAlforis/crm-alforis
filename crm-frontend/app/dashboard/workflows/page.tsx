@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Play, Pause, Eye, Zap, AlertCircle, Plus } from 'lucide-react'
 import { Card, CardHeader, CardBody, Button, Table, Alert } from '@/components/shared'
 import { useWorkflows, type Workflow } from '@/hooks/useWorkflows'
 import { useToast } from '@/components/ui/Toast'
-import WorkflowCreateModal from '@/components/workflows/WorkflowCreateModal'
 
 const TRIGGER_LABELS: Record<string, string> = {
   manual: 'Manuel',
@@ -17,8 +17,8 @@ const TRIGGER_LABELS: Record<string, string> = {
 }
 
 export default function WorkflowsPage() {
+  const router = useRouter()
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all')
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const {
     workflows,
     fetchWorkflows,
@@ -145,7 +145,7 @@ export default function WorkflowsPage() {
           </p>
         </div>
         <Button
-          onClick={() => setIsCreateModalOpen(true)}
+          onClick={() => router.push('/workflows/new')}
           variant="primary"
           leftIcon={<Plus className="w-4 h-4" />}
         >
@@ -196,7 +196,7 @@ export default function WorkflowsPage() {
             Les workflows permettent d'automatiser vos processus métier.
           </p>
           <Button
-            onClick={() => setIsCreateModalOpen(true)}
+            onClick={() => router.push('/workflows/new')}
             variant="primary"
             leftIcon={<Plus className="w-4 h-4" />}
           >
@@ -204,20 +204,6 @@ export default function WorkflowsPage() {
           </Button>
         </div>
       )}
-
-      {/* Modal Création */}
-      <WorkflowCreateModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        onSuccess={() => {
-          fetchWorkflows(0, 100, filterStatus === 'all' ? {} : { status: filterStatus })
-          showToast({
-            type: 'success',
-            title: 'Workflow créé',
-            message: 'Le workflow a été créé avec succès en mode brouillon.',
-          })
-        }}
-      />
     </div>
   )
 }
