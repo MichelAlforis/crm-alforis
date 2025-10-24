@@ -8,7 +8,10 @@ import { X, Zap, AlertCircle, Workflow } from 'lucide-react'
 import { Input } from '@/components/shared/Input'
 import { Select } from '@/components/shared/Select'
 import dynamic from 'next/dynamic'
-import type { Node, Edge } from 'reactflow'
+
+// Types pour ReactFlow (définis localement pour éviter l'import SSR)
+type Node = any
+type Edge = any
 
 // Import dynamique pour éviter SSR issues avec ReactFlow
 const WorkflowBuilder = dynamic(() => import('./WorkflowBuilder'), { ssr: false })
