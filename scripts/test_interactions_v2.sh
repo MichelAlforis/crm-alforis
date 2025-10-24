@@ -6,7 +6,20 @@ set -e
 
 # Configuration
 API_URL="${API_URL:-http://localhost:8000/api/v1}"
-TOKEN="${TOKEN:-your_jwt_token_here}"
+TOKEN="${TOKEN:-}"
+
+# Check if TOKEN is set
+if [ -z "$TOKEN" ]; then
+    echo -e "${RED}ERROR: TOKEN not set${NC}"
+    echo "Please set your JWT token:"
+    echo "  export TOKEN='your_jwt_token'"
+    echo ""
+    echo "Or get a token with:"
+    echo "  curl -X POST http://localhost:8000/api/v1/auth/login \\"
+    echo "    -H 'Content-Type: application/json' \\"
+    echo "    -d '{\"username\":\"test@example.com\",\"password\":\"password\"}'"
+    exit 1
+fi
 
 # Colors
 GREEN='\033[0;32m'
@@ -38,9 +51,19 @@ run_test() {
 
     log_info "Test: $test_name"
 
-    response=$(eval "$command" -w "\n%{http_code}" 2>&1)
-    http_code=$(echo "$response" | tail -n 1)
-    body=$(echo "$response" | sed '$d')
+    # Run command and capture output + HTTP code
+    response=$(eval "$command" -w "\\nHTTP_CODE:%{http_code}" 2>&1)
+    http_code=$(echo "$response" | grep "HTTP_CODE:" | sed 's/HTTP_CODE://')
+    body=$(echo "$response" | grep -v "HTTP_CODE:")
+
+    # Validate http_code is a number
+    if ! [[ "$http_code" =~ ^[0-9]+$ ]]; then
+        log_error "$test_name (Invalid HTTP code: $http_code)"
+        echo "$body"
+        ((TESTS_FAILED++))
+        echo ""
+        return
+    fi
 
     if [ "$http_code" -eq "$expected_http_code" ]; then
         log_success "$test_name (HTTP $http_code)"
@@ -91,6 +114,9 @@ echo "2. QUICK ACTIONS TESTS"
 echo "=========================================="
 
 # Prerequisites: Create test interaction
+# macOS compatible date (+1 day)
+NEXT_DAY=$(date -u -v+1d +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -d '+1 day' +%Y-%m-%dT%H:%M:%SZ)
+
 INTERACTION_ID=$(curl -s "$API_URL/interactions" \
     -H "Authorization: Bearer $TOKEN" \
     -H "Content-Type: application/json" \
@@ -99,10 +125,15 @@ INTERACTION_ID=$(curl -s "$API_URL/interactions" \
         "title": "Test Interaction V2",
         "person_id": 1,
         "status": "todo",
-        "next_action_at": "'$(date -u -d '+1 day' +%Y-%m-%dT%H:%M:%SZ)'"
+        "next_action_at": "'"$NEXT_DAY"'"
     }' | jq -r '.id')
 
 log_info "Created test interaction: ID=$INTERACTION_ID"
+
+# Validate interaction was created
+if [ "$INTERACTION_ID" = "null" ] || [ -z "$INTERACTION_ID" ]; then
+    log_error "Failed to create test interaction. Check if person_id=1 exists."
+fi
 
 # Test 2.1: Update status
 run_test "2.1 PATCH /interactions/$INTERACTION_ID/status" \
@@ -119,7 +150,8 @@ run_test "2.2 PATCH /interactions/$INTERACTION_ID/assignee" \
         -d '{\"assignee_id\": 1}'"
 
 # Test 2.3: Update next_action_at
-NEW_DATE=$(date -u -d '+3 days' +%Y-%m-%dT%H:%M:%SZ)
+# macOS compatible date (+3 days)
+NEW_DATE=$(date -u -v+3d +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -d '+3 days' +%Y-%m-%dT%H:%M:%SZ)
 run_test "2.3 PATCH /interactions/$INTERACTION_ID/next-action" \
     "curl -s -X PATCH '$API_URL/interactions/$INTERACTION_ID/next-action' \
         -H 'Authorization: Bearer $TOKEN' \
@@ -143,6 +175,8 @@ echo "=========================================="
 
 # Test 3.1: Ingest email sent event
 EXTERNAL_ID="test_$(date +%s)"
+TIMESTAMP_NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
 run_test "3.1 POST /marketing/email/ingest (sent)" \
     "curl -s -X POST '$API_URL/marketing/email/ingest' \
         -H 'Authorization: Bearer $TOKEN' \
@@ -151,13 +185,14 @@ run_test "3.1 POST /marketing/email/ingest (sent)" \
             \"provider\": \"resend\",
             \"external_id\": \"'$EXTERNAL_ID'\",
             \"event\": \"sent\",
-            \"occurred_at\": \"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'\",
+            \"occurred_at\": \"'$TIMESTAMP_NOW'\",
             \"person_id\": 1,
             \"subject\": \"Test Email\"
         }'"
 
 # Test 3.2: Ingest email opened event (first open → +3 score)
 sleep 1
+TIMESTAMP_NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 run_test "3.2 POST /marketing/email/ingest (opened, first)" \
     "curl -s -X POST '$API_URL/marketing/email/ingest' \
         -H 'Authorization: Bearer $TOKEN' \
@@ -166,13 +201,14 @@ run_test "3.2 POST /marketing/email/ingest (opened, first)" \
             \"provider\": \"resend\",
             \"external_id\": \"'$EXTERNAL_ID'\",
             \"event\": \"opened\",
-            \"occurred_at\": \"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'\",
+            \"occurred_at\": \"'$TIMESTAMP_NOW'\",
             \"person_id\": 1,
             \"subject\": \"Test Email\"
         }'"
 
 # Test 3.3: Ingest email opened again (subsequent → +1 score)
 sleep 1
+TIMESTAMP_NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 run_test "3.3 POST /marketing/email/ingest (opened, repeat)" \
     "curl -s -X POST '$API_URL/marketing/email/ingest' \
         -H 'Authorization: Bearer $TOKEN' \
@@ -181,13 +217,14 @@ run_test "3.3 POST /marketing/email/ingest (opened, repeat)" \
             \"provider\": \"resend\",
             \"external_id\": \"'$EXTERNAL_ID'\",
             \"event\": \"opened\",
-            \"occurred_at\": \"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'\",
+            \"occurred_at\": \"'$TIMESTAMP_NOW'\",
             \"person_id\": 1,
             \"subject\": \"Test Email\"
         }'"
 
 # Test 3.4: Ingest email clicked event (first click → +8 score)
 sleep 1
+TIMESTAMP_NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 run_test "3.4 POST /marketing/email/ingest (clicked, first)" \
     "curl -s -X POST '$API_URL/marketing/email/ingest' \
         -H 'Authorization: Bearer $TOKEN' \
@@ -196,7 +233,7 @@ run_test "3.4 POST /marketing/email/ingest (clicked, first)" \
             \"provider\": \"resend\",
             \"external_id\": \"'$EXTERNAL_ID'\",
             \"event\": \"clicked\",
-            \"occurred_at\": \"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'\",
+            \"occurred_at\": \"'$TIMESTAMP_NOW'\",
             \"person_id\": 1,
             \"subject\": \"Test Email\"
         }'"
@@ -214,6 +251,7 @@ echo "4. IDEMPOTENCE TESTS"
 echo "=========================================="
 
 # Test 4.1: Re-ingest same opened event (should be idempotent, no duplicate)
+TIMESTAMP_NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 run_test "4.1 POST /marketing/email/ingest (idempotence check)" \
     "curl -s -X POST '$API_URL/marketing/email/ingest' \
         -H 'Authorization: Bearer $TOKEN' \
@@ -222,7 +260,7 @@ run_test "4.1 POST /marketing/email/ingest (idempotence check)" \
             \"provider\": \"resend\",
             \"external_id\": \"'$EXTERNAL_ID'\",
             \"event\": \"opened\",
-            \"occurred_at\": \"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'\",
+            \"occurred_at\": \"'$TIMESTAMP_NOW'\",
             \"person_id\": 1,
             \"subject\": \"Test Email\"
         }'"
