@@ -14,9 +14,9 @@ import { z } from 'zod'
 // ============================================
 
 /**
- * Type d'interaction
+ * Type d'interaction (v1.1: ajout 'visio')
  */
-export type InteractionType = 'call' | 'email' | 'meeting' | 'note' | 'other'
+export type InteractionType = 'call' | 'email' | 'meeting' | 'visio' | 'note' | 'other'
 
 /**
  * Labels UI pour les types d'interaction
@@ -25,6 +25,7 @@ export const INTERACTION_TYPE_LABELS: Record<InteractionType, string> = {
   call: 'Appel',
   email: 'Email',
   meeting: 'Réunion',
+  visio: 'Visioconférence',
   note: 'Note',
   other: 'Autre',
 }
@@ -36,6 +37,7 @@ export const INTERACTION_TYPE_ICONS: Record<InteractionType, string> = {
   call: '☎️',
   email: '📧',
   meeting: '📅',
+  visio: '🎥',
   note: '📝',
   other: '📄',
 }
@@ -55,13 +57,29 @@ export const AttachmentSchema = z.object({
 /**
  * Schéma Zod pour la création d'une interaction
  */
+const ParticipantInSchema = z.object({
+  person_id: z.number().int().positive(),
+  role: z.string().max(80).optional().nullable(),
+  present: z.boolean().optional().default(true),
+})
+
+const ExternalParticipantSchema = z.object({
+  name: z.string().min(1).max(255),
+  email: z.string().email().optional().nullable(),
+  company: z.string().max(255).optional().nullable(),
+})
+
 export const InteractionCreateSchema = z.object({
   org_id: z.number().int().positive().optional(),
   person_id: z.number().int().positive().optional(),
-  type: z.enum(['call', 'email', 'meeting', 'note', 'other']),
+  type: z.enum(['call', 'email', 'meeting', 'visio', 'note', 'other']),
   title: z.string().min(1).max(200),
   body: z.string().optional(),
   attachments: z.array(AttachmentSchema).optional().default([]),
+
+  // v1.1: Participants
+  participants: z.array(ParticipantInSchema).optional(),
+  external_participants: z.array(ExternalParticipantSchema).optional(),
 }).refine(
   (data) => data.org_id !== undefined || data.person_id !== undefined,
   {
@@ -74,10 +92,14 @@ export const InteractionCreateSchema = z.object({
  * Schéma Zod pour la mise à jour d'une interaction
  */
 export const InteractionUpdateSchema = z.object({
-  type: z.enum(['call', 'email', 'meeting', 'note', 'other']).optional(),
+  type: z.enum(['call', 'email', 'meeting', 'visio', 'note', 'other']).optional(),
   title: z.string().min(1).max(200).optional(),
   body: z.string().optional(),
   attachments: z.array(AttachmentSchema).optional(),
+
+  // v1.1: Participants
+  participants: z.array(ParticipantInSchema).optional(),
+  external_participants: z.array(ExternalParticipantSchema).optional(),
 })
 
 /**
@@ -87,13 +109,17 @@ export const InteractionSchema = z.object({
   id: z.number().int().positive(),
   org_id: z.number().int().positive().optional().nullable(),
   person_id: z.number().int().positive().optional().nullable(),
-  type: z.enum(['call', 'email', 'meeting', 'note', 'other']),
+  type: z.enum(['call', 'email', 'meeting', 'visio', 'note', 'other']),
   title: z.string(),
   body: z.string().optional().nullable(),
   created_by: z.number().int().positive(),
   created_at: z.string().datetime(),
   updated_at: z.string().datetime().optional().nullable(),
   attachments: z.array(AttachmentSchema),
+
+  // v1.1: Participants
+  participants: z.array(ParticipantInSchema).optional().default([]),
+  external_participants: z.array(ExternalParticipantSchema).optional().default([]),
 })
 
 // ============================================
@@ -109,7 +135,25 @@ export interface Attachment {
 }
 
 /**
- * Interaction (réponse API)
+ * Participant interne (personne du CRM) - v1.1
+ */
+export interface ParticipantIn {
+  person_id: number
+  role?: string | null
+  present?: boolean
+}
+
+/**
+ * Participant externe (non dans le CRM) - v1.1
+ */
+export interface ExternalParticipant {
+  name: string
+  email?: string | null
+  company?: string | null
+}
+
+/**
+ * Interaction (réponse API) - v1.1 avec participants
  */
 export interface Interaction {
   id: number
@@ -122,10 +166,14 @@ export interface Interaction {
   created_at: string  // ISO datetime
   updated_at?: string | null  // ISO datetime
   attachments: Attachment[]
+
+  // v1.1: Participants multiples
+  participants?: ParticipantIn[]
+  external_participants?: ExternalParticipant[]
 }
 
 /**
- * Données pour créer une interaction
+ * Données pour créer une interaction - v1.1 avec participants
  */
 export interface InteractionCreateInput {
   org_id?: number
@@ -134,16 +182,24 @@ export interface InteractionCreateInput {
   title: string
   body?: string
   attachments?: Attachment[]
+
+  // v1.1: Participants multiples
+  participants?: ParticipantIn[]
+  external_participants?: ExternalParticipant[]
 }
 
 /**
- * Données pour modifier une interaction
+ * Données pour modifier une interaction - v1.1 avec participants
  */
 export interface InteractionUpdateInput {
   type?: InteractionType
   title?: string
   body?: string
   attachments?: Attachment[]
+
+  // v1.1: Participants multiples
+  participants?: ParticipantIn[]
+  external_participants?: ExternalParticipant[]
 }
 
 /**
