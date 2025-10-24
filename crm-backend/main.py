@@ -208,7 +208,7 @@ try:
         websocket: WebSocket,
         token: str = Query(...)
     ):
-        """Endpoint WebSocket pour les notifications temps réel"""
+        """Endpoint WebSocket pour les notifications temps réel (multi-tenant)"""
         try:
             # Décoder le token pour obtenir l'utilisateur
             payload = decode_token(token)
@@ -218,8 +218,33 @@ try:
                 await websocket.close(code=1008, reason="Invalid token: missing user_id")
                 return
 
-            # Connecter via le manager
-            await websocket_endpoint(websocket, user_id)
+            # Récupérer l'org_id depuis le token ou la DB
+            org_id = payload.get("org_id")
+
+            # Fallback: si pas dans le token, récupérer depuis la DB
+            if not org_id:
+                from models.user import User
+                db_gen = get_db()
+                db = next(db_gen)
+                try:
+                    user = db.query(User).filter(User.id == int(user_id)).first()
+                    if user and hasattr(user, 'organisation_id'):
+                        org_id = user.organisation_id
+                    elif user:
+                        # Fallback: organisation par défaut (1) si pas d'org_id
+                        org_id = 1
+                    else:
+                        await websocket.close(code=1008, reason="User not found")
+                        return
+                finally:
+                    db.close()
+
+            if not org_id:
+                await websocket.close(code=1008, reason="Invalid token: missing org_id")
+                return
+
+            # Connecter via le manager avec org_id
+            await websocket_endpoint(websocket, int(user_id), int(org_id))
 
         except Exception as e:
             print(f"❌ WebSocket error: {e}")
@@ -282,3 +307,4 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False)
+# test optimisation $(date)

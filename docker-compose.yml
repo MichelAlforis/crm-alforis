@@ -18,6 +18,9 @@ volumes:
   postgres-data:
   api-uploads:
   api-backups:
+  api-venv:              # Cache des dépendances Python
+  frontend-node-modules: # Cache node_modules
+  frontend-next:         # Cache du build Next.js
 
 # --- Services ---
 services:
@@ -91,12 +94,12 @@ services:
       UNSUBSCRIBE_JWT_SECRET: ${UNSUBSCRIBE_JWT_SECRET}
     working_dir: /app
     command: >
-      sh -c "uvicorn main:app --host 0.0.0.0 --port ${API_PORT:-8000} --reload"
+      sh -c "uvicorn main:app --host 0.0.0.0 --port ${API_PORT:-8000} --reload --reload-delay 2"
     ports:
       - "127.0.0.1:${API_PORT:-8000}:${API_PORT:-8000}"
     volumes:
-      - ./crm-backend:/app
-      - /app/venv
+      - ./crm-backend:/app:cached   # cached pour macOS (réduit les faux changements)
+      - api-venv:/app/venv          # Volume nommé pour cache pip
       - api-uploads:/app/uploads
       - api-backups:/app/backups
     networks:
@@ -104,10 +107,15 @@ services:
     # Healthcheck sans curl/wget (utilise Python disponible dans l'image)
     healthcheck:
       test: ["CMD-SHELL", "python -c 'import urllib.request,os;u=os.environ.get(\"API_PORT\",\"8000\");urllib.request.urlopen(f\"http://localhost:{u}/api/v1/health\")' || exit 1"]
-      interval: 20s
-      timeout: 5s
-      retries: 10
-      start_period: 40s
+      interval: 30s          # Réduit la fréquence (était 20s)
+      timeout: 10s           # Plus de temps (était 5s)
+      retries: 5             # Moins de retries (était 10)
+      start_period: 60s      # Plus de temps au démarrage (était 40s)
+    # Augmentation des file descriptors (évite problèmes WebSocket)
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     logging:
       driver: "json-file"
       options: { max-size: "10m", max-file: "3" }
@@ -141,9 +149,9 @@ services:
     ports:
       - "127.0.0.1:${FRONTEND_PORT:-3010}:${FRONTEND_PORT:-3010}"
     volumes:
-      - ./crm-frontend:/app
-      - /app/node_modules
-      - /app/.next
+      - ./crm-frontend:/app:cached               # cached pour macOS
+      - frontend-node-modules:/app/node_modules  # Volume nommé pour cache npm
+      - frontend-next:/app/.next                 # Volume nommé pour cache build
     networks:
       - crm-network
     # Healthcheck via node (pas besoin de wget/curl)
@@ -153,6 +161,11 @@ services:
       timeout: 10s
       retries: 5
       start_period: 60s
+    # Augmentation des file descriptors (évite problèmes WebSocket + HMR)
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     logging:
       driver: "json-file"
       options: { max-size: "10m", max-file: "3" }

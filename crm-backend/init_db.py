@@ -23,6 +23,7 @@ from models.ai_agent import AISuggestion, AIExecution, AIConfiguration, AICache
 from models.mandat import Mandat
 from models.kpi import DashboardKPI
 from models.webhook import Webhook
+from models.help_analytics import HelpAnalyticsEvent
 
 from core.database import Base, engine, SessionLocal
 from core.security import hash_password

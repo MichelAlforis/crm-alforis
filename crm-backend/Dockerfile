@@ -40,11 +40,13 @@ RUN python -m pip install --upgrade pip setuptools wheel
 # --- STAGE 2: DEVELOPMENT ---
 FROM base AS development
 
-# Installer les dépendances
+# Installer les dépendances AVANT de copier le code (meilleur cache)
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# OPTIMISATION: Utiliser le cache pip pour accélérer les rebuilds
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install -r requirements.txt
 
-# Copie du code
+# Copie du code (après les deps pour profiter du cache)
 COPY . .
 
 # Dossiers
@@ -66,7 +68,9 @@ FROM base AS production
 
 # Installer les dépendances
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# OPTIMISATION: Cache pip pour production aussi
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install -r requirements.txt
 
 # Copie du code
 COPY . .

@@ -8,15 +8,21 @@ Endpoints:
 Business Logic:
 - Ingest: upsert EmailSend, create Interaction si first open, update LeadScore
 - Scoring: opened (+3 first, +1 after), clicked (+8 first, +2 after), bounced (-10)
+
+Security:
+- Webhook signature verification (HMAC SHA-256)
+- Timestamp validation (reject events > 5min old)
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Header, status
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
-from typing import List
+from typing import List, Optional
 from datetime import datetime
+import os
 
 from core import get_db, get_current_user
+from core.webhook_security import verify_webhook_signature, validate_webhook_timestamp
 from models.email_marketing import EmailSend, EmailStatus, LeadScore
 from models.interaction import Interaction, InteractionType, InteractionStatus
 from models.person import Person
@@ -114,13 +120,18 @@ def create_interaction_from_email(
 @router.post("/email/ingest", response_model=EmailSendOut, status_code=status.HTTP_200_OK)
 async def ingest_email_event(
     payload: EmailIngestPayload,
+    x_signature: Optional[str] = Header(None, description="HMAC signature (provider-specific format)"),
+    x_timestamp: Optional[str] = Header(None, description="Event timestamp (ISO 8601 or Unix)"),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
     """
     POST /marketing/email/ingest - Webhook pour tracking emails
 
-    Reçoit un événement email (sent, opened, clicked, bounced).
+    Security:
+    - Requires JWT auth (via current_user)
+    - Validates HMAC signature (X-Signature header)
+    - Validates timestamp (X-Timestamp header, max 5min old)
 
     Logic:
     1. Upsert EmailSend via (provider, external_id)
@@ -130,6 +141,26 @@ async def ingest_email_event(
 
     Returns: EmailSendOut
     """
+    # Security: Validate webhook signature
+    webhook_secret = os.getenv("WEBHOOK_SECRET")
+    if webhook_secret and x_signature:
+        # Verify HMAC signature
+        payload_dict = payload.dict()
+        if not verify_webhook_signature(payload_dict, x_signature, webhook_secret):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Invalid webhook signature"
+            )
+    elif webhook_secret:
+        # Secret configured but signature missing
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Missing X-Signature header"
+        )
+
+    # Security: Validate timestamp (reject old events)
+    if x_timestamp:
+        validate_webhook_timestamp(x_timestamp, max_age_seconds=300)  # 5 min
     # 1. Upsert EmailSend
     email_send = db.query(EmailSend).filter(
         EmailSend.provider == payload.provider,
@@ -150,14 +181,18 @@ async def ingest_email_event(
         db.add(email_send)
         db.flush()
 
-    # 2. Update status, compteurs, timestamps
+    # 2. Calculate score delta BEFORE incrementing counters
+    delta_before_update = calculate_score_delta(email_send, payload.event)
+
+    # 3. Update status, compteurs, timestamps
     if payload.event == "opened":
+        is_first_open = (email_send.open_count == 0)
         email_send.status = EmailStatus.OPENED
         email_send.open_count += 1
         email_send.last_open_at = payload.occurred_at
 
-        # 3. Create Interaction on first open
-        if email_send.open_count == 1 and email_send.interaction_id is None:
+        # 4. Create Interaction on first open
+        if is_first_open and email_send.interaction_id is None:
             user_id = current_user.get("user_id", 1)
             create_interaction_from_email(db, email_send, user_id)
 
@@ -176,11 +211,9 @@ async def ingest_email_event(
 
     email_send.updated_at = datetime.utcnow()
 
-    # 4. Update LeadScore (if person_id)
-    if payload.person_id:
-        delta = calculate_score_delta(email_send, payload.event)
-        if delta != 0:
-            update_lead_score(db, payload.person_id, delta, payload.occurred_at)
+    # 5. Update LeadScore (if person_id) - use pre-calculated delta
+    if payload.person_id and delta_before_update != 0:
+        update_lead_score(db, payload.person_id, delta_before_update, payload.occurred_at)
 
     db.commit()
     db.refresh(email_send)

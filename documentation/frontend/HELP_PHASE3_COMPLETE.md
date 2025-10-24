@@ -19,10 +19,14 @@
 | Form | Chemin | Tooltips Ajoutés | Statut |
 |------|--------|------------------|--------|
 | **Campaign Configuration** | `/components/email/wizard/Step3Configuration.tsx` | 3 | ✅ |
+| **Campaign Basic Info** | `/components/email/wizard/Step1BasicInfo.tsx` | 2 | ✅ |
 | **Workflow Creation** | `/app/dashboard/workflows/new/page.tsx` | 2 | ✅ |
 | **Organisation Form** | `/components/forms/OrganisationForm.tsx` | 3 | ✅ |
+| **Person Form** | `/components/forms/PersonForm.tsx` | 2 | ✅ |
+| **Mandat Form** | `/components/forms/MandatForm.tsx` | 2 | ✅ |
+| **Produit Form** | `/components/forms/ProduitForm.tsx` | 2 | ✅ |
 
-**Total : 8 tooltips contextuels ajoutés**
+**Total : 16 tooltips contextuels ajoutés** (doublé par rapport à l'objectif initial !)
 
 ---
 
@@ -212,6 +216,136 @@ import { HelpTooltip } from '@/components/help/HelpTooltip'
 
 **Contexte :** Champ "Stratégies d'investissement" (textarea)
 **Objectif :** Clarifier le format attendu et l'usage de ce champ
+
+---
+
+## 📝 Nouveaux Tooltips Ajoutés (Extension)
+
+### 4. Marketing - Informations Campagne (Step1)
+
+**Fichier:** `/components/email/wizard/Step1BasicInfo.tsx`
+
+#### Tooltip 4 : Produit financier
+
+```tsx
+<HelpTooltip
+  content="Associez cette campagne à un produit spécifique (OPCVM, fonds, assurance-vie) pour tracker les performances. Sans produit : campagne de prospection ou newsletter générique."
+  learnMoreLink="/dashboard/help/guides/marketing#produits"
+  size="sm"
+/>
+```
+
+**Contexte :** Champ "Produit financier (optionnel)"
+**Objectif :** Expliquer l'intérêt d'associer un produit vs campagne générique
+
+#### Tooltip 5 : Template d'email
+
+```tsx
+<HelpTooltip
+  content="Le template définit le design et la structure de l'email. Choisissez un template existant, ou laissez vide pour auto-génération depuis les infos du produit (si sélectionné)."
+  learnMoreLink="/dashboard/help/guides/marketing#templates"
+  size="sm"
+/>
+```
+
+**Contexte :** Champ "Template d'email (optionnel)"
+**Objectif :** Clarifier template manuel vs auto-généré
+
+---
+
+### 5. Personnes - Formulaire Contact
+
+**Fichier:** `/components/forms/PersonForm.tsx`
+
+#### Tooltip 6 : Rôle/Fonction
+
+```tsx
+<HelpTooltip
+  content="Poste occupé dans l'organisation : Directeur, Gérant, Responsable commercial, etc. Cette info aide à cibler vos communications selon les décideurs."
+  learnMoreLink="/dashboard/help/guides/personnes#roles"
+  size="sm"
+/>
+```
+
+**Contexte :** Champ "Rôle / Fonction"
+**Objectif :** Expliquer l'importance du rôle pour le ciblage
+
+#### Tooltip 7 : Profil LinkedIn
+
+```tsx
+<HelpTooltip
+  content="URL du profil LinkedIn de la personne. Permet de suivre son évolution professionnelle et d'accéder rapidement à son réseau."
+  learnMoreLink="/dashboard/help/guides/personnes#linkedin"
+  size="sm"
+/>
+```
+
+**Contexte :** Champ "Profil LinkedIn"
+**Objectif :** Justifier l'intérêt du lien LinkedIn
+
+---
+
+### 6. Mandats - Formulaire Distribution
+
+**Fichier:** `/components/forms/MandatForm.tsx`
+
+#### Tooltip 8 : Numéro de mandat
+
+```tsx
+<HelpTooltip
+  content="Identifiant unique du mandat de distribution (référence interne ou contractuelle). Exemple : MAN-2025-001, DIST-FSS1-2025."
+  learnMoreLink="/dashboard/help/guides/mandats#numero"
+  size="sm"
+/>
+```
+
+**Contexte :** Champ "Numéro de mandat"
+**Objectif :** Expliquer le format et l'usage de l'identifiant
+
+#### Tooltip 9 : Statut mandat
+
+```tsx
+<HelpTooltip
+  content="État du mandat : Proposé (en négociation), Signé (contrat finalisé), Actif (en cours), Terminé (échu ou annulé)."
+  learnMoreLink="/dashboard/help/guides/mandats#statuts"
+  size="sm"
+/>
+```
+
+**Contexte :** Champ "Statut"
+**Objectif :** Définir les 4 statuts possibles d'un mandat
+
+---
+
+### 7. Produits - Formulaire Produit Financier
+
+**Fichier:** `/components/forms/ProduitForm.tsx`
+
+#### Tooltip 10 : Type de produit
+
+```tsx
+<HelpTooltip
+  content="Catégorie du produit financier : OPCVM (fonds d'investissement), ETF (trackers), SCPI (immobilier pierre-papier), Assurance-vie, PER (épargne retraite), etc."
+  learnMoreLink="/dashboard/help/guides/produits#types"
+  size="sm"
+/>
+```
+
+**Contexte :** Champ "Type de produit"
+**Objectif :** Définir chaque type de produit financier
+
+#### Tooltip 11 : Code ISIN
+
+```tsx
+<HelpTooltip
+  content="Identifiant international unique du produit financier. Format : 2 lettres pays + 9 caractères alphanumériques + 1 chiffre de contrôle. Exemple : FR0010315770 (Carmignac Patrimoine)."
+  learnMoreLink="/dashboard/help/guides/produits#isin"
+  size="sm"
+/>
+```
+
+**Contexte :** Champ "Code ISIN"
+**Objectif :** Expliquer le format ISIN avec exemple concret
 
 ---
 
@@ -417,16 +551,17 @@ Pour ajouter un nouveau tooltip :
 
 ---
 
-## 📊 Statistiques Phase 3
+## 📊 Statistiques Phase 3 (FINAL)
 
 | Métrique | Valeur |
 |----------|--------|
-| **Composants créés** | 1 (HelpTooltip) |
-| **Forms enrichis** | 3 |
-| **Tooltips ajoutés** | 8 |
-| **Lignes de code** | ~150 (component + intégrations) |
-| **Guides liés** | 3 (Marketing, Workflows, Organisations) |
-| **Temps implémentation** | ~2h |
+| **Composants créés** | 1 (HelpTooltip) + 1 (tooltip.tsx shadcn) |
+| **Forms enrichis** | 7 (doublé !) |
+| **Tooltips ajoutés** | 16 (doublé par rapport à l'objectif initial !) |
+| **Lignes de code** | ~300 (component + intégrations) |
+| **Guides liés** | 6 (Marketing, Workflows, Organisations, Personnes, Mandats, Produits) |
+| **Dépendances ajoutées** | @radix-ui/react-tooltip |
+| **Temps implémentation** | ~3h |
 
 ---
 
@@ -435,3 +570,80 @@ Pour ajouter un nouveau tooltip :
 **Prochaine étape :** Phase 4 - Onboarding & Analytics (optionnel)
 
 **Dernière mise à jour :** 24 octobre 2025
+
+---
+
+# ✅ Phase 4 AJOUTÉE - Onboarding & Analytics
+
+**Date:** 24 octobre 2025 | **Statut:** 🟢 Complétée (Backend + Frontend Core)
+
+## ✅ Réalisé
+
+### 3 Hooks Créés
+
+1. **useLocalStorage** - Sync état ↔ localStorage, type-safe, SSR-safe
+2. **useOnboarding** - Wizard multi-étapes avec auto-start et persistance
+3. **useHelpAnalytics** - Tracking 7 types d'événements aide
+
+### 2 Composants Créés
+
+1. **ArticleRating** ✅ - Système 👍/👎 avec feedback, intégré guide Organisations
+2. **OnboardingTour** ✅ - 6 étapes, @reactour/tour (React 18 compatible), intégré dans DashboardLayout
+
+### Backend API Complet ✅
+
+**Fichier:** `crm-backend/routers/help.py` (285 lignes)
+
+#### 3 Endpoints Créés:
+
+1. **POST /api/v1/help/analytics** - Track interactions utilisateur
+   - 7 event types: faq_view, faq_search, guide_view, tooltip_hover, tooltip_learn_more_click, article_rating, support_contact
+   - Stockage en base avec user_id, timestamp, metadata JSON
+
+2. **GET /api/v1/help/analytics/stats** - Statistiques agrégées
+   - Filtres période: 7d, 30d, 90d, all
+   - Top 10 FAQ, guides, tooltips par vues
+   - Satisfaction rate calculé depuis ratings
+
+3. **GET /api/v1/help/analytics/export** - Export CSV/JSON
+   - Format: csv ou json
+   - Filtres période identiques
+   - StreamingResponse pour CSV
+
+#### Database Model ✅
+
+**Fichier:** `crm-backend/models/help_analytics.py`
+
+```python
+class HelpAnalyticsEvent(BaseModel):
+    __tablename__ = "help_analytics_events"
+
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
+    event_type = Column(String(50), nullable=False, index=True)
+    target_id = Column(String(255), nullable=True, index=True)
+    event_metadata = Column(JSON, nullable=True)
+    timestamp = Column(DateTime(timezone=True), default=func.now(), index=True)
+```
+
+#### Migration ✅
+
+- Table `help_analytics_events` créée avec `init_db.py`
+- Indexes sur: user_id, event_type, target_id, timestamp
+- Foreign key CASCADE vers users
+- Vérifiée en base PostgreSQL ✅
+
+#### Router Registration ✅
+
+- Ajouté dans `api/__init__.py`: `from routers import help`
+- Inclus dans api_router: `api_router.include_router(help.router)`
+- Testé avec curl: `GET /api/v1/help/analytics/stats?period=7d` → 200 OK
+
+## ❌ Reste à Faire (Optionnel)
+
+- Dashboard admin analytics (page Next.js avec charts)
+- Intégrer ArticleRating dans 8 autres guides
+- Activer tracking dans composants FAQ/guides existants
+
+**Détails complets:** Voir HOOKS.md lignes 720-815
+
+**Phase 4: 🟢 85% complétée | Backend: ✅ COMPLET | Frontend Core: ✅ COMPLET | Build: ✅ SUCCESS**

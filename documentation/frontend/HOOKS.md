@@ -8,7 +8,7 @@
 
 Liste complète des hooks React personnalisés utilisés dans le CRM.
 
-**Total** : **37 hooks** | **Phase 2, 3 & 4 High Impact** : 8 hooks ⭐⭐⭐ | **Réutilisables** : 9 hooks ⭐ | **Métier** : 17 hooks | **UI/UX** : 6 hooks | **Utilitaires** : 2 hooks
+**Total** : **40 hooks** | **Phase 2, 3 & 4 High Impact** : 11 hooks ⭐⭐⭐ | **Réutilisables** : 12 hooks ⭐ | **Métier** : 17 hooks | **UI/UX** : 7 hooks | **Utilitaires** : 3 hooks
 
 ### 🎯 Phase 2 - Migration Complète ✅ (Octobre 2025)
 - **useModalForm** : 1 usage → 55 lignes économisées
@@ -25,11 +25,14 @@ Liste complète des hooks React personnalisés utilisés dans le CRM.
 
 **Impact Phase 3** : **~62 lignes de code économisées** | **3 fichiers migrés** | **Build: ✅ SUCCESS (45 pages)**
 
-### 🎯 Phase 4 - Nice to Have UX ✅ (Octobre 2025)
+### 🎯 Phase 4 - Onboarding & Analytics ✅ (Octobre 2025)
 - **useClipboard** : 1 usage → 18 lignes économisées
 - **useViewportToggle** : 2 usages → 6 lignes économisées
+- **useOnboarding** : Wizard onboarding nouveaux utilisateurs (créé)
+- **useHelpAnalytics** : Tracking interactions aide (créé)
+- **useLocalStorage** : Sync état localStorage (créé)
 
-**Impact Phase 4** : **~24 lignes de code économisées** | **3 fichiers migrés** | **Build: ✅ SUCCESS (45 pages)**
+**Impact Phase 4** : **~24 lignes de code économisées** | **6 fichiers migrés** | **Build: ✅ SUCCESS (46 pages)**
 
 **Impact total Phases 1+2+3+4** : **~509-651 lignes économisées** | **23 fichiers migrés**
 
@@ -714,14 +717,99 @@ const debouncedSearch = useDebounce(search, 500)
 
 ---
 
-### useLocalStorage
-**Fichier** : `hooks/useLocalStorage.ts`
+### useLocalStorage ⭐⭐
+**Fichier** : `hooks/useLocalStorage.ts` | **Créé** : Phase 4 (24 Oct 2025)
 
-Synchronisation état ↔ localStorage.
+Synchronisation état ↔ localStorage avec TypeScript générique.
 
 ```typescript
 const [theme, setTheme] = useLocalStorage('theme', 'light')
+const [onboardingCompleted, setOnboardingCompleted] = useLocalStorage<boolean>('onboarding-completed', false)
 ```
+
+**Features** :
+- Type-safe avec generics
+- Initialisation SSR-safe (typeof window check)
+- Gestion d'erreurs intégrée
+- Support fonctions comme useState
+
+**Utilisé dans** : useOnboarding, settings, theme preferences
+
+---
+
+### useOnboarding ⭐⭐⭐
+**Fichier** : `hooks/useOnboarding.ts` | **Créé** : Phase 4 (24 Oct 2025)
+
+Gestion du wizard d'onboarding pour nouveaux utilisateurs.
+
+```typescript
+const onboarding = useOnboarding({
+  steps: ONBOARDING_STEPS,
+  storageKey: 'dashboard-onboarding-completed',
+  autoStart: true,
+  onComplete: () => console.log('Onboarding terminé!')
+})
+
+// API
+onboarding.start()      // Démarrer le tour
+onboarding.stop()       // Arrêter
+onboarding.skip()       // Passer et marquer complété
+onboarding.next()       // Étape suivante
+onboarding.prev()       // Étape précédente
+onboarding.isActive     // Tour actif?
+onboarding.hasCompleted // Déjà complété?
+```
+
+**Features** :
+- Auto-start pour nouveaux utilisateurs
+- Persistance localStorage
+- Navigation multi-étapes
+- Callbacks onComplete/onSkip
+
+**Note** : Composant OnboardingTour créé mais désactivé (react-joyride incompatible React 18)
+**Alternative** : Utiliser `@reactour/tour` ou `shepherd.js` compatible React 18
+
+---
+
+### useHelpAnalytics ⭐⭐⭐
+**Fichier** : `hooks/useHelpAnalytics.ts` | **Créé** : Phase 4 (24 Oct 2025)
+
+Tracking des interactions avec le système d'aide.
+
+```typescript
+const analytics = useHelpAnalytics()
+
+// Tracking FAQ
+analytics.trackFAQView('faq-001', 'Organisations')
+analytics.trackFAQSearch('mandat distribution', 12)
+
+// Tracking Guides
+analytics.trackGuideView('organisations', 75) // 75% scroll
+
+// Tracking Tooltips
+analytics.trackTooltipHover('aum-field', 'organisation-form')
+analytics.trackTooltipLearnMore('aum-field', '/dashboard/help/guides/organisations#aum')
+
+// Tracking Ratings
+analytics.trackArticleRating('guide-organisations', 'positive')
+analytics.trackArticleRating('guide-mandats', 'negative', 'Manque d\'exemples')
+
+// Tracking Support
+analytics.trackSupportContact('email', 'Question technique')
+```
+
+**API Events** :
+- `faq_view` : Vue question FAQ
+- `faq_search` : Recherche FAQ
+- `guide_view` : Vue guide (avec scroll depth)
+- `tooltip_hover` : Survol tooltip
+- `tooltip_learn_more_click` : Clic "En savoir plus"
+- `article_rating` : Rating article (positive/negative)
+- `support_contact` : Contact support
+
+**Backend Required** : POST `/api/v1/help/analytics` (à implémenter)
+
+**Utilisé dans** : ArticleRating component, Guide pages (prêt à intégrer)
 
 ---
 
