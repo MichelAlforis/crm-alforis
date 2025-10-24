@@ -129,19 +129,21 @@ export default function WorkflowBuilderClient({
 
   const onConnect = useCallback(
     (connection: Connection) => {
-      const newEdges = addEdge(
-        {
-          ...connection,
-          type: 'smoothstep',
-          animated: true,
-          style: { stroke: '#8B5CF6', strokeWidth: 2 },
-        },
-        edges
-      )
-      setEdges(newEdges)
-      if (onUpdate) onUpdate(nodes, newEdges)
+      setEdges((eds) => {
+        const newEdges = addEdge(
+          {
+            ...connection,
+            type: 'smoothstep',
+            animated: true,
+            style: { stroke: '#8B5CF6', strokeWidth: 2 },
+          },
+          eds
+        )
+        if (onUpdate) onUpdate(nodes, newEdges)
+        return newEdges
+      })
     },
-    [edges, nodes, onUpdate, setEdges]
+    [nodes, onUpdate, setEdges]
   )
 
   // Ajouter une action avec animation
