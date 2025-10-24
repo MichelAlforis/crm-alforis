@@ -1,8 +1,12 @@
 """
-Schémas Pydantic pour Interactions v1
+Schémas Pydantic pour Interactions v2
 
 Validation des données d'entrée/sortie pour l'API Interactions.
 IDs = Integer (cohérence avec le projet existant).
+
+v1: Champs de base
+v1.1: Participants multiples
+v2: Workflow inbox (status, assignee, next_action_at)
 """
 
 from pydantic import BaseModel, Field, field_validator, EmailStr
@@ -11,6 +15,9 @@ from datetime import datetime
 
 # Type littéral pour le type d'interaction (v1.1: ajout 'visio')
 InteractionType = Literal['call', 'email', 'meeting', 'visio', 'note', 'other']
+
+# Type littéral pour le statut (v2: workflow inbox)
+InteractionStatus = Literal['todo', 'in_progress', 'done']
 
 
 class Attachment(BaseModel):
@@ -45,6 +52,11 @@ class InteractionCreate(BaseModel):
     # v1.1: Participants multiples
     participants: Optional[List[ParticipantIn]] = Field(None, description="Participants internes (CRM)")
     external_participants: Optional[List[ExternalParticipant]] = Field(None, description="Invités externes")
+
+    # v2: Workflow inbox
+    status: InteractionStatus = Field('todo', description="Statut de l'interaction")
+    assignee_id: Optional[int] = Field(None, gt=0, description="Utilisateur assigné")
+    next_action_at: Optional[datetime] = Field(None, description="Date/heure de la prochaine action")
 
     @field_validator('org_id', 'person_id')
     @classmethod
@@ -84,6 +96,11 @@ class InteractionUpdate(BaseModel):
     participants: Optional[List[ParticipantIn]] = None
     external_participants: Optional[List[ExternalParticipant]] = None
 
+    # v2: Workflow inbox
+    status: Optional[InteractionStatus] = None
+    assignee_id: Optional[int] = Field(None, gt=0)
+    next_action_at: Optional[datetime] = None
+
     class Config:
         json_schema_extra = {
             "example": {
@@ -109,6 +126,11 @@ class InteractionOut(BaseModel):
     # v1.1: Participants multiples
     participants: List[ParticipantIn] = Field(default_factory=list)
     external_participants: List[ExternalParticipant] = Field(default_factory=list)
+
+    # v2: Workflow inbox
+    status: InteractionStatus
+    assignee_id: Optional[int]
+    next_action_at: Optional[datetime]
 
     class Config:
         from_attributes = True  # Permet de créer depuis un modèle SQLAlchemy
@@ -144,3 +166,18 @@ class InteractionListResponse(BaseModel):
                 "cursor": "123"
             }
         }
+
+
+# ===== V2: Schemas pour actions Inbox =====
+
+class InteractionStatusUpdate(BaseModel):
+    """Update du statut uniquement"""
+    status: InteractionStatus
+
+class InteractionAssigneeUpdate(BaseModel):
+    """Update de l'assignee uniquement"""
+    assignee_id: Optional[int] = Field(None, gt=0, description="User ID ou null pour désassigner")
+
+class InteractionNextActionUpdate(BaseModel):
+    """Update de next_action_at uniquement"""
+    next_action_at: Optional[datetime] = Field(None, description="Date/heure ou null pour retirer")
