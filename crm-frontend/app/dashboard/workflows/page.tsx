@@ -25,6 +25,7 @@ export default function WorkflowsPage() {
   // États des filtres
   const [filter, setFilter] = useState<'all' | 'active' | 'inactive' | 'draft'>('all')
   const [typeFilter, setTypeFilter] = useState<'all' | 'template' | 'custom'>('all')
+  const [triggerFilter, setTriggerFilter] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState('')
 
   // Charger les workflows au démarrage
@@ -71,7 +72,7 @@ export default function WorkflowsPage() {
     }
   }
 
-  // Filtrage combiné (status + type + recherche)
+  // Filtrage combiné (status + type + trigger + recherche)
   const filteredWorkflows = useMemo(() => {
     if (!workflows.data?.items) return []
 
@@ -79,6 +80,9 @@ export default function WorkflowsPage() {
       // Filtre par type (Template/Personnalisé)
       if (typeFilter === 'template' && !w.is_template) return false
       if (typeFilter === 'custom' && w.is_template) return false
+
+      // Filtre par trigger
+      if (triggerFilter !== 'all' && w.trigger_type !== triggerFilter) return false
 
       // Filtre par recherche
       if (searchQuery) {
@@ -92,7 +96,7 @@ export default function WorkflowsPage() {
 
       return true
     })
-  }, [workflows.data?.items, typeFilter, searchQuery])
+  }, [workflows.data?.items, typeFilter, triggerFilter, searchQuery])
 
   const getStatusBadge = (status: string) => {
     const styles = {
@@ -120,13 +124,26 @@ export default function WorkflowsPage() {
   // Stats
   const stats = useMemo(() => {
     const items = workflows.data?.items || []
+
+    // Compter par trigger
+    const triggerCounts: Record<string, number> = {}
+    items.forEach(w => {
+      triggerCounts[w.trigger_type] = (triggerCounts[w.trigger_type] || 0) + 1
+    })
+
     return {
       total: items.length,
       templates: items.filter(w => w.is_template).length,
       custom: items.filter(w => !w.is_template).length,
       active: items.filter(w => w.status === 'active').length,
+      triggerCounts,
     }
   }, [workflows.data?.items])
+
+  // Liste des triggers disponibles
+  const availableTriggers = useMemo(() => {
+    return Object.keys(stats.triggerCounts).sort()
+  }, [stats.triggerCounts])
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
@@ -240,6 +257,36 @@ export default function WorkflowsPage() {
               </span>
             </div>
           </div>
+
+          {/* Ligne filtres Triggers */}
+          {availableTriggers.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2 items-center">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Déclencheurs:</span>
+              <button
+                onClick={() => setTriggerFilter('all')}
+                className={`px-3 py-1.5 rounded-lg text-sm transition ${
+                  triggerFilter === 'all'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-700'
+                }`}
+              >
+                Tous ({stats.total})
+              </button>
+              {availableTriggers.map((trigger) => (
+                <button
+                  key={trigger}
+                  onClick={() => setTriggerFilter(trigger)}
+                  className={`px-3 py-1.5 rounded-lg text-sm transition ${
+                    triggerFilter === trigger
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-700'
+                  }`}
+                >
+                  {getTriggerLabel(trigger)} ({stats.triggerCounts[trigger]})
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Liste workflows */}
@@ -256,17 +303,18 @@ export default function WorkflowsPage() {
           <div className="bg-white dark:bg-gray-800 rounded-lg p-12 text-center">
             <BookTemplate size={48} className="mx-auto text-gray-400 mb-4" />
             <p className="text-gray-600 dark:text-gray-400 mb-4">
-              {searchQuery || typeFilter !== 'all' || filter !== 'all'
+              {searchQuery || typeFilter !== 'all' || filter !== 'all' || triggerFilter !== 'all'
                 ? 'Aucun workflow ne correspond à vos critères'
                 : 'Aucun workflow trouvé'
               }
             </p>
-            {(searchQuery || typeFilter !== 'all' || filter !== 'all') && (
+            {(searchQuery || typeFilter !== 'all' || filter !== 'all' || triggerFilter !== 'all') && (
               <button
                 onClick={() => {
                   setSearchQuery('')
                   setTypeFilter('all')
                   setFilter('all')
+                  setTriggerFilter('all')
                 }}
                 className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
               >
