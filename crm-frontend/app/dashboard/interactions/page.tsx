@@ -43,14 +43,14 @@ export default function InteractionsPage() {
     },
   })
 
-  const activityQuery = selectedOrgId
-    ? useOrganisationActivity(selectedOrgId)
-    : null
+  // ✅ Hook toujours appelé (même si organisationId est null)
+  const activityQuery = useOrganisationActivity(selectedOrgId || 0)
 
-  const activities = useMemo(() =>
-    flattenActivities(activityQuery?.data?.pages),
-    [activityQuery?.data?.pages]
-  )
+  const activities = useMemo(() => {
+    // Ne pas récupérer les activités si aucune org n'est sélectionnée
+    if (!selectedOrgId) return []
+    return flattenActivities(activityQuery?.data?.pages)
+  }, [selectedOrgId, activityQuery?.data?.pages])
 
   // Filtrer les activités
   const filteredActivities = useMemo(() => {
@@ -80,8 +80,8 @@ export default function InteractionsPage() {
     })
   }, [activities, filters.values])
 
-  const activityLoading = activityQuery?.isLoading ?? false
-  const activityError = activityQuery?.error ? String(activityQuery.error) : undefined
+  const activityLoading = selectedOrgId ? activityQuery.isLoading : false
+  const activityError = selectedOrgId && activityQuery.error ? String(activityQuery.error) : undefined
 
   const handleDelete = async (activityId: number) => {
     confirm({
@@ -100,7 +100,7 @@ export default function InteractionsPage() {
               'Authorization': token ? `Bearer ${token}` : '',
             }
           })
-          activityQuery?.refetch?.()
+          activityQuery.refetch?.()
         } catch (err) {
           console.error('Error deleting activity:', err)
         }
@@ -223,7 +223,7 @@ export default function InteractionsPage() {
         </div>
       </Card>
 
-      {selectedOrgId && activityQuery && (
+      {selectedOrgId && (
         <>
           {/* Filtres */}
           <Card>
@@ -329,7 +329,9 @@ export default function InteractionsPage() {
         onClose={() => setIsModalOpen(false)}
         organisationId={selectedOrgId || undefined}
         onSuccess={() => {
-          activityQuery?.refetch?.()
+          if (selectedOrgId) {
+            activityQuery.refetch?.()
+          }
         }}
       />
 
