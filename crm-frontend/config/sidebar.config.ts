@@ -73,12 +73,6 @@ export const SIDEBAR_SECTIONS: SidebarSection[] = [
         description: 'Annuaire des contacts',
       },
       {
-        label: 'Interactions',
-        href: '/dashboard/interactions',
-        icon: MessageSquare,
-        description: 'Emails, appels, réunions, notes',
-      },
-      {
         label: 'Mandats',
         href: '/dashboard/mandats',
         icon: Briefcase,
