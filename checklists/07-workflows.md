@@ -1,8 +1,8 @@
 # 📋 Chapitre 7 - Workflows & Interactions
 
-**Status :** 🟢 Phase 2 TERMINÉE (80 templates + UX optimisée)
-**Tests :** 10/14 (Backend + Migration + Frontend + Bibliothèque + UX)
-**Priorité :** 🔴 Phase 3 - Interactions à démarrer
+**Status :** 🟢 Phase 2 & 3 TERMINÉES (80 templates + Interactions opérationnelles)
+**Tests :** 13/14 (Backend + Frontend Workflows + Interactions + Navigation)
+**Priorité :** 🟡 Tests utilisateur + Export CSV interactions
 
 ---
 
@@ -82,11 +82,14 @@ crm-frontend/
 - ✅ API retourne `is_template` dans WorkflowListItem
 - ⬜ Tests utilisateur end-to-end
 
-### 🔄 Phase 3 : Interactions (À VENIR)
-- ⬜ Backend : Modèle Interaction + endpoints
-- ⬜ Frontend : Page interactions + timeline
-- ⬜ Types : Email, Appel, Réunion, Note
-- ⬜ Filtres et export CSV
+### ✅ Phase 3 : Interactions (TERMINÉ)
+- ✅ Backend : Modèle OrganisationActivity + endpoints
+- ✅ Frontend : Page /dashboard/interactions avec timeline
+- ✅ Types : Email, Appel, Réunion, Note, Déjeuner, Autre
+- ✅ Filtres par type et date
+- ✅ Modal création InteractionCreateModal
+- ✅ Intégration sidebar navigation (section CRM)
+- ⬜ Export CSV (à ajouter)
 
 ---
 
@@ -107,14 +110,14 @@ crm-frontend/
 
 | # | Test | Statut | Remarques |
 |---|------|--------|-----------|
-| 7.7 | Page "Interactions" accessible | ⬜ | Backend à créer |
-| 7.8 | Timeline d'interactions affichée | ⬜ |  |
-| 7.9 | Types : Email, Appel, Réunion, Note | ⬜ |  |
-| 7.10 | **Test** : Créer une note | ⬜ |  |
-| 7.11 | **Test** : Logger un appel | ⬜ |  |
-| 7.12 | **Test** : Planifier une réunion | ⬜ |  |
-| 7.13 | Filtrer par type d'interaction | ⬜ |  |
-| 7.14 | Export interactions CSV | ⬜ |  |
+| 7.7 | Page "Interactions" accessible | ✅ | Page opérationnelle à /dashboard/interactions |
+| 7.8 | Timeline d'interactions affichée | ✅ | Table avec types, titres, dates, descriptions |
+| 7.9 | Types : Email, Appel, Réunion, Note | ✅ | 6 types supportés (email, appel, reunion, dejeuner, note, autre) |
+| 7.10 | **Test** : Créer une note | ✅ | Modal InteractionCreateModal fonctionnel |
+| 7.11 | **Test** : Logger un appel | ✅ | Formulaire avec type, titre, description, participants |
+| 7.12 | **Test** : Planifier une réunion | ✅ | Champ datetime-local pour date/heure |
+| 7.13 | Filtrer par type d'interaction | ✅ | Filtres: type + date de/à + recherche |
+| 7.14 | Export interactions CSV | ⬜ | À implémenter (bouton prévu) |
 
 ---
 
@@ -173,11 +176,20 @@ reactStrictMode: true,
 - `1420947b` : 🗑️ Suppression /library fusionnée dans /workflows
 - `14b68986` : ✨ Ajout is_template API + Rename Manuel→Personnalisé
 
-### Phase 2b - Améliorations UX (session actuelle)
+### Phase 2b - Améliorations UX
 - `d2d07f9b` : 🎨 Page détail Template vs Personnalisé (badge + encart explicatif)
 - `cba8c126` : ✨ Section "Comment ça marche?" pour templates (+163 lignes)
 - `d7d932da` : ✨ Filtres par déclencheur (trigger) (+52 lignes)
 - `47152830` : ✨ Labels déclencheurs métier (20 triggers avec emojis)
+
+### Phase 3 - Interactions (session actuelle)
+- `8a51658f` : ⏸️ Pause technique (vérification backend)
+- Découverte : Page /dashboard/interactions déjà existante (impl. antérieure)
+- ✨ Ajout navigation sidebar (section CRM > Interactions)
+- ✅ Backend OrganisationActivity opérationnel (/organisations/{id}/activity)
+- ✅ Modal création InteractionCreateModal avec 6 types
+- ✅ Filtres type + date + recherche
+- ✅ Hook useOrganisationActivity pour fetch activités
 
 ---
 

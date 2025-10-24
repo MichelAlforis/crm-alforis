@@ -32,6 +32,7 @@ import {
   Plug,
   Shield,
   Palette,
+  MessageSquare,
 } from 'lucide-react'
 import { SidebarSection } from '@/hooks/useSidebar'
 
@@ -70,6 +71,12 @@ export const SIDEBAR_SECTIONS: SidebarSection[] = [
         href: '/dashboard/people',
         icon: UserCircle2,
         description: 'Annuaire des contacts',
+      },
+      {
+        label: 'Interactions',
+        href: '/dashboard/interactions',
+        icon: MessageSquare,
+        description: 'Emails, appels, réunions, notes',
       },
       {
         label: 'Mandats',
