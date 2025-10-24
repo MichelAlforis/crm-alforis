@@ -1,13 +1,19 @@
 """
-Router API pour Interactions v1
+Router API pour Interactions v2
 
-Endpoints:
+Endpoints v1:
 - POST /interactions : Créer une interaction
 - PATCH /interactions/{id} : Modifier une interaction
 - DELETE /interactions/{id} : Supprimer une interaction
 - GET /interactions/recent : 5 dernières interactions (widget dashboard)
 - GET /interactions/by-organisation/{org_id} : Interactions d'une organisation
 - GET /interactions/by-person/{person_id} : Interactions d'une personne
+
+Endpoints v2 (Inbox):
+- GET /interactions/inbox : Inbox avec filtres (assignee, status, due)
+- PATCH /interactions/{id}/status : Changer le statut
+- PATCH /interactions/{id}/assignee : Changer l'assignee
+- PATCH /interactions/{id}/next-action : Définir next_action_at
 
 Permissions:
 - Lecture : équipe (tout le monde)
@@ -21,13 +27,16 @@ from typing import List, Optional
 from datetime import datetime
 
 from core import get_db, get_current_user
-from models.interaction import Interaction, InteractionParticipant
+from models.interaction import Interaction, InteractionParticipant, InteractionStatus
 from schemas.interaction import (
     InteractionCreate,
     InteractionUpdate,
     InteractionOut,
     InteractionListResponse,
     ParticipantIn,
+    InteractionStatusUpdate,
+    InteractionAssigneeUpdate,
+    InteractionNextActionUpdate,
 )
 
 router = APIRouter(prefix="/interactions", tags=["interactions"])
@@ -331,3 +340,206 @@ async def list_by_person(
         limit=limit,
         cursor=new_cursor,
     )
+
+# ===== V2: Inbox Endpoints =====
+
+@router.get("/inbox", response_model=InteractionListResponse)
+async def get_inbox(
+    assignee: Optional[str] = Query(None, description="Filter by assignee: 'me', user_id, or omit for all"),
+    status: Optional[str] = Query(None, description="Filter by status: 'todo', 'in_progress', 'done'"),
+    due: Optional[str] = Query("all", description="Filter by due date: 'overdue', 'today', 'week', 'all'"),
+    limit: int = Query(50, ge=1, le=200),
+    cursor: Optional[str] = Query(None),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    GET /interactions/inbox - Inbox des interactions à traiter
+
+    Filtres:
+    - assignee: 'me' (current user), user_id, or None (all)
+    - status: 'todo', 'in_progress', 'done', or None (all non-done)
+    - due: 'overdue' (next_action_at < now), 'today', 'week', 'all'
+
+    Tri:
+    - next_action_at ASC (NULLS LAST)
+    - puis created_at DESC
+    """
+    user_id = _get_user_id(current_user)
+
+    # Base query
+    query = db.query(Interaction)
+
+    # Filter by assignee
+    if assignee == "me":
+        query = query.filter(Interaction.assignee_id == user_id)
+    elif assignee and assignee.isdigit():
+        query = query.filter(Interaction.assignee_id == int(assignee))
+    # If assignee is None, show all
+
+    # Filter by status (default: non-done)
+    if status:
+        query = query.filter(Interaction.status == status)
+    else:
+        # Default: show todo + in_progress (exclude done)
+        query = query.filter(Interaction.status.in_(['todo', 'in_progress']))
+
+    # Filter by due date
+    now = datetime.utcnow()
+    if due == "overdue":
+        query = query.filter(
+            Interaction.next_action_at.isnot(None),
+            Interaction.next_action_at < now
+        )
+    elif due == "today":
+        from datetime import timedelta
+        end_of_day = now.replace(hour=23, minute=59, second=59)
+        query = query.filter(
+            Interaction.next_action_at.isnot(None),
+            Interaction.next_action_at.between(now, end_of_day)
+        )
+    elif due == "week":
+        from datetime import timedelta
+        end_of_week = now + timedelta(days=7)
+        query = query.filter(
+            Interaction.next_action_at.isnot(None),
+            Interaction.next_action_at.between(now, end_of_week)
+        )
+    # If 'all', no due filter
+
+    # Apply cursor pagination
+    if cursor:
+        try:
+            cursor_id = int(cursor)
+            query = query.filter(Interaction.id < cursor_id)
+        except ValueError:
+            pass
+
+    # Sort: next_action_at ASC NULLS LAST, then created_at DESC
+    query = query.order_by(
+        Interaction.next_action_at.asc().nullslast(),
+        desc(Interaction.created_at)
+    )
+
+    interactions = query.limit(limit).all()
+
+    # Count total (with same filters, without cursor)
+    count_query = db.query(Interaction)
+    if assignee == "me":
+        count_query = count_query.filter(Interaction.assignee_id == user_id)
+    elif assignee and assignee.isdigit():
+        count_query = count_query.filter(Interaction.assignee_id == int(assignee))
+    if status:
+        count_query = count_query.filter(Interaction.status == status)
+    else:
+        count_query = count_query.filter(Interaction.status.in_(['todo', 'in_progress']))
+    total = count_query.count()
+
+    new_cursor = str(interactions[-1].id) if interactions else None
+
+    return InteractionListResponse(
+        items=[_build_interaction_out(it) for it in interactions],
+        total=total,
+        limit=limit,
+        cursor=new_cursor,
+    )
+
+
+@router.patch("/{interaction_id}/status", response_model=InteractionOut)
+async def update_status(
+    interaction_id: int,
+    payload: InteractionStatusUpdate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    PATCH /interactions/{id}/status - Changer le statut d'une interaction
+
+    Statuts possibles: 'todo', 'in_progress', 'done'
+    """
+    user_id = _get_user_id(current_user)
+    user_roles = current_user.get("roles", [])
+
+    interaction = db.query(Interaction).filter(Interaction.id == interaction_id).first()
+    if not interaction:
+        raise HTTPException(status_code=404, detail="Interaction introuvable")
+
+    # Check permissions
+    _check_permissions_write(interaction, user_id, user_roles)
+
+    # Update status
+    interaction.status = InteractionStatus(payload.status)
+    interaction.updated_at = datetime.utcnow()
+
+    db.commit()
+    db.refresh(interaction)
+
+    return _build_interaction_out(interaction)
+
+
+@router.patch("/{interaction_id}/assignee", response_model=InteractionOut)
+async def update_assignee(
+    interaction_id: int,
+    payload: InteractionAssigneeUpdate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    PATCH /interactions/{id}/assignee - Assigner/désassigner une interaction
+
+    assignee_id: user ID or null to unassign
+    """
+    user_id = _get_user_id(current_user)
+    user_roles = current_user.get("roles", [])
+
+    interaction = db.query(Interaction).filter(Interaction.id == interaction_id).first()
+    if not interaction:
+        raise HTTPException(status_code=404, detail="Interaction introuvable")
+
+    # Check permissions
+    _check_permissions_write(interaction, user_id, user_roles)
+
+    # Update assignee
+    interaction.assignee_id = payload.assignee_id
+    interaction.updated_at = datetime.utcnow()
+
+    db.commit()
+    db.refresh(interaction)
+
+    return _build_interaction_out(interaction)
+
+
+@router.patch("/{interaction_id}/next-action", response_model=InteractionOut)
+async def update_next_action(
+    interaction_id: int,
+    payload: InteractionNextActionUpdate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    PATCH /interactions/{id}/next-action - Définir la date de prochaine action
+
+    next_action_at: datetime or null to remove
+    """
+    user_id = _get_user_id(current_user)
+    user_roles = current_user.get("roles", [])
+
+    interaction = db.query(Interaction).filter(Interaction.id == interaction_id).first()
+    if not interaction:
+        raise HTTPException(status_code=404, detail="Interaction introuvable")
+
+    # Check permissions
+    _check_permissions_write(interaction, user_id, user_roles)
+
+    # Update next_action_at
+    interaction.next_action_at = payload.next_action_at
+    interaction.updated_at = datetime.utcnow()
+
+    # Reset notified_at when changing next_action_at
+    if payload.next_action_at:
+        interaction.notified_at = None
+
+    db.commit()
+    db.refresh(interaction)
+
+    return _build_interaction_out(interaction)
