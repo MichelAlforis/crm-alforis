@@ -109,14 +109,37 @@ export default function WorkflowsPage() {
 
   const getTriggerLabel = (triggerType: string) => {
     const labels: Record<string, string> = {
-      organisation_created: 'Organisation créée',
-      organisation_updated: 'Organisation modifiée',
-      deal_created: 'Deal créé',
-      deal_stage_changed: 'Changement de stage',
-      inactivity_delay: 'Inactivité',
-      scheduled: 'Planifié',
-      webhook_received: 'Webhook reçu',
-      manual: 'Manuel',
+      // Entités principales
+      organisation_created: '🏢 Nouvelle Organisation',
+      organisation_updated: '✏️ Modification Organisation',
+      person_created: '👤 Nouvelle Personne',
+      person_updated: '✏️ Modification Personne',
+
+      // Communications
+      email_received: '📧 Nouveau Mail',
+      email_sent: '📨 Mail Envoyé',
+      webhook_received: '🔗 Webhook Externe',
+
+      // Réunions & Appels
+      meeting_created: '📅 Nouvelle Réunion',
+      meeting_completed: '✅ Réunion Terminée',
+      call_completed: '☎️ Appel Terminé',
+
+      // Deals & Pipeline
+      deal_created: '💼 Nouveau Deal',
+      deal_stage_changed: '📊 Changement Statut Deal',
+      deal_won: '🎉 Deal Gagné',
+      deal_lost: '❌ Deal Perdu',
+
+      // Tasks & Interactions
+      task_created: '✅ Nouvelle Tâche',
+      task_completed: '✔️ Tâche Complétée',
+      task_assigned: '👥 Tâche Assignée',
+
+      // Autres
+      inactivity_delay: '⏰ Inactivité Détectée',
+      scheduled: '📅 Planification Automatique',
+      manual: '👤 Déclenchement Manuel',
     }
     return labels[triggerType] || triggerType
   }

@@ -114,14 +114,37 @@ export default function WorkflowDetailPage() {
   // Helper: Traduire trigger en langage naturel
   const getTriggerDescription = (triggerType: string, triggerConfig: any) => {
     const descriptions: Record<string, string> = {
-      organisation_created: '🎯 Quand une nouvelle organisation est créée',
+      // Entités principales
+      organisation_created: '🏢 Quand une nouvelle organisation est créée',
       organisation_updated: '✏️ Quand une organisation est modifiée',
+      person_created: '👤 Quand une nouvelle personne est créée',
+      person_updated: '✏️ Quand une personne est modifiée',
+
+      // Communications
+      email_received: '📧 Quand un nouveau mail est reçu',
+      email_sent: '📨 Quand un mail est envoyé',
+      webhook_received: '🔗 Quand un webhook externe est reçu',
+
+      // Réunions & Appels
+      meeting_created: '📅 Quand une nouvelle réunion est créée',
+      meeting_completed: '✅ Quand une réunion est terminée',
+      call_completed: '☎️ Quand un appel est terminé',
+
+      // Deals & Pipeline
       deal_created: '💼 Quand un nouveau deal est créé',
       deal_stage_changed: '📊 Quand le statut d\'un deal change',
+      deal_won: '🎉 Quand un deal est gagné',
+      deal_lost: '❌ Quand un deal est perdu',
+
+      // Tasks & Interactions
+      task_created: '✅ Quand une nouvelle tâche est créée',
+      task_completed: '✔️ Quand une tâche est complétée',
+      task_assigned: '👥 Quand une tâche est assignée',
+
+      // Autres
       inactivity_delay: '⏰ Quand une organisation est inactive depuis X jours',
-      scheduled: '📅 À intervalles réguliers (planifié)',
-      webhook_received: '🔗 Quand un webhook externe est reçu',
-      manual: '👤 Déclenché manuellement',
+      scheduled: '📅 À intervalles réguliers (planification automatique)',
+      manual: '👤 Déclenché manuellement par un utilisateur',
     }
     return descriptions[triggerType] || `Trigger: ${triggerType}`
   }
