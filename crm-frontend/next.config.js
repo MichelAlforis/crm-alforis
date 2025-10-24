@@ -135,7 +135,6 @@ const withPWA = require('@ducanh2912/next-pwa').default({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
 
   // Désactiver ESLint et TypeScript check en production
   eslint: {
@@ -147,9 +146,6 @@ const nextConfig = {
 
   // Configuration pour @xyflow/react (Next 15)
   transpilePackages: ['@xyflow/react'],
-  experimental: {
-    esmExternals: 'loose',
-  },
 
   // Variables d'environnement
   env: {
