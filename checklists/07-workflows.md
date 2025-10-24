@@ -1,8 +1,8 @@
 # 📋 Chapitre 7 - Workflows & Interactions
 
-**Status :** 🟢 Phase 2 TERMINÉE (80 templates opérationnels)
-**Tests :** 7/14 (Backend + Migration + Frontend + Bibliothèque 80 templates)
-**Priorité :** 🟢 Phase 2 complète → Phase 3 à planifier
+**Status :** 🟢 Phase 2 TERMINÉE (80 templates + UX optimisée)
+**Tests :** 10/14 (Backend + Migration + Frontend + Bibliothèque + UX)
+**Priorité :** 🔴 Phase 3 - Interactions à démarrer
 
 ---
 
@@ -61,19 +61,25 @@ crm-frontend/
 ```
 
 ### ✅ Phase 2 : Frontend UI Workflows + Bibliothèque (TERMINÉ)
-- ✅ Page `/workflows` avec liste paginée et filtres
+- ✅ Page `/workflows` unifiée avec bibliothèque fusionnée
 - ✅ Page `/workflows/new` full-page (stepper 3 étapes)
+- ✅ Page `/workflows/[id]` détail avec section pédagogique
 - ✅ Builder visuel avec @xyflow/react
 - ✅ Mode visuel + mode JSON
 - ✅ Gestion statuts (draft/active/inactive) avec toggle
 - ✅ **80 templates Finance B2B** (20 initiaux + 60 nouveaux)
 - ✅ **10 catégories**: appels, réunions, mailing, relations, prospection, reporting, contrats, conformité, collaboration, partenariats, formation
-- ✅ **Bibliothèque templates** avec recherche fulltext
-- ✅ Hook `useWorkflowTemplates` avec filtres avancés (catégorie, trigger, difficulté)
+- ✅ **Bibliothèque fusionnée** dans page principale (suppression /library)
+- ✅ **Filtres combinables** : Status + Type (Template/Personnalisé) + Déclencheur + Recherche
+- ✅ **Filtres déclencheurs métier** avec emojis (20 triggers: 🏢 Nouvelle Organisation, 📧 Nouveau Mail, etc.)
+- ✅ **Badge Type visible** : Template (purple) vs Personnalisé (blue)
+- ✅ **Section "Comment ça marche?"** pour templates (déclencheur, actions, durée estimée)
+- ✅ **Actions traduites** en langage naturel avec icônes colorées
+- ✅ Hook `useWorkflowTemplates` avec filtres avancés
 - ✅ Composant `WorkflowTemplateCard` avec métadonnées enrichies
-- ✅ Page `/workflows/library` avec filtres et statistiques
 - ✅ Metadata complète pour tous les 80 templates (IDs 21-100)
 - ✅ Base de données avec 80 templates insérés et opérationnels
+- ✅ API retourne `is_template` dans WorkflowListItem
 - ⬜ Tests utilisateur end-to-end
 
 ### 🔄 Phase 3 : Interactions (À VENIR)
@@ -161,11 +167,17 @@ reactStrictMode: true,
 - `65dd7734` : 🔧 Suppression complète système modal
 - `76992c7f` : 🔧 Suppression WorkflowCreateModal
 - `016916b4` : 🗑️ Suppression doublon /dashboard/workflows
-- ✅ **Bibliothèque 80 templates Finance B2B** (IDs 21-100)
-  - 60 nouveaux templates créés
-  - 10 catégories professionnelles
-  - Métadonnées complètes (tags, use cases, difficulté, temps setup)
-  - Filtres avancés (catégorie, trigger, difficulté, recherche fulltext)
+- `12c48c31` : ✨ Création 80 templates Finance B2B (6 fichiers, +2571 lignes)
+- `dee20a6e` : 🐛 Fix workflows.data.items access
+- `47c5e3ba` : ✨ Refonte page unifiée (+170 lignes)
+- `1420947b` : 🗑️ Suppression /library fusionnée dans /workflows
+- `14b68986` : ✨ Ajout is_template API + Rename Manuel→Personnalisé
+
+### Phase 2b - Améliorations UX (session actuelle)
+- `d2d07f9b` : 🎨 Page détail Template vs Personnalisé (badge + encart explicatif)
+- `cba8c126` : ✨ Section "Comment ça marche?" pour templates (+163 lignes)
+- `d7d932da` : ✨ Filtres par déclencheur (trigger) (+52 lignes)
+- `47152830` : ✨ Labels déclencheurs métier (20 triggers avec emojis)
 
 ---
 
