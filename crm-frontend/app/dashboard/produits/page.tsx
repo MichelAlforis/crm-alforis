@@ -7,6 +7,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { useProduits } from '@/hooks/useProduits'
 import { useFilters } from '@/hooks/useFilters'
+import { usePagination } from '@/hooks/usePagination'
 import { Card, Button, Table, Input, Alert, AdvancedFilters } from '@/components/shared'
 import { ProduitType, ProduitStatus } from '@/lib/types'
 
@@ -30,6 +31,7 @@ interface ProduitFilters {
 
 export default function ProduitsPage() {
   const [searchText, setSearchText] = useState('')
+  const pagination = usePagination({ initialLimit: 20 })
 
   const filters = useFilters<ProduitFilters>({
     initialValues: {
@@ -177,9 +179,16 @@ export default function ProduitsPage() {
       <Card>
         <Table
           columns={columns}
-          data={filteredData || []}
+          data={filteredData?.slice(pagination.skip, pagination.skip + pagination.limit) || []}
           isLoading={isLoading}
           isEmpty={!filteredData || filteredData.length === 0}
+          pagination={{
+            total: filteredData?.length || 0,
+            skip: pagination.skip,
+            limit: pagination.limit,
+            onPageChange: pagination.setSkip,
+            onLimitChange: pagination.setLimit,
+          }}
         />
       </Card>
 

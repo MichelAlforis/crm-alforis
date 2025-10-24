@@ -1,117 +1,89 @@
 /**
- * usePagination - Hook pour gérer la pagination client-side
+ * usePagination — Hook de pagination client-side, vitaminé (mais pas plus coloré)
  *
- * Gère les états de pagination (page, limit, skip) avec des méthodes
- * utilitaires pour naviguer entre les pages.
+ * 🎯 Objectif : garder simple, ajouter un peu de fun + quelques helpers DX.
+ * - API compatible avec ta version initiale (aucune rupture)
+ * - Ajouts facultatifs : totalItems, clampPage, first/last, range, pagesArray
  *
  * @example
- * ```tsx
- * const pagination = usePagination({
- *   initialLimit: 50,
- *   initialPage: 1
- * })
+ * const pagination = usePagination({ initialLimit: 50, initialPage: 1, totalItems: data.length, clampPage: true })
  *
- * // Calcul des données paginées
  * const paginatedData = useMemo(() => {
- *   const startIndex = pagination.skip
- *   return data.slice(startIndex, startIndex + pagination.limit)
- * }, [data, pagination.skip, pagination.limit])
+ *   const { start, endExclusive } = pagination.range
+ *   return data.slice(start, endExclusive)
+ * }, [data, pagination.range])
  *
- * // Navigation
- * <Button onClick={pagination.nextPage}>Suivant</Button>
- * <Button onClick={pagination.prevPage}>Précédent</Button>
- * ```
+ * <Button onClick={pagination.prevPage} disabled={!pagination.hasPrevPage}>Précédent</Button>
+ * <span>Page {pagination.page} / {pagination.getTotalPages(data.length)}</span>
+ * <Button onClick={pagination.nextPage} disabled={!pagination.hasNextPage(data.length)}>Suivant</Button>
  */
 
-import { useState, useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 export interface UsePaginationOptions {
-  /**
-   * Nombre d'éléments par page (défaut: 50)
-   */
+  /** Nombre d'éléments par page (défaut: 50) */
   initialLimit?: number
-
-  /**
-   * Page initiale (1-indexed, défaut: 1)
-   */
+  /** Page initiale (1-indexed, défaut: 1) */
   initialPage?: number
-
-  /**
-   * Callback appelé lors du changement de page
-   */
+  /** Callback sur changement de page */
   onPageChange?: (page: number) => void
-
-  /**
-   * Callback appelé lors du changement de limite
-   */
+  /** Callback sur changement de limite */
   onLimitChange?: (limit: number) => void
+  /**
+   * (Optionnel) Total d'items connus. Si fourni, on peut clamp les pages et calculer lastPage sans argument.
+   * Tip: passe data.length ici pour éviter de le répéter partout.
+   */
+  totalItems?: number
+  /**
+   * (Optionnel) Si true, empêche d'aller au-delà de la dernière page et avant la 1re (quand totalItems est fourni).
+   * Par défaut false (liberté totale ✈️).
+   */
+  clampPage?: boolean
 }
 
 export interface UsePaginationReturn {
-  /**
-   * Nombre d'éléments par page
-   */
+  /** Nombre d'éléments par page */
   limit: number
-
-  /**
-   * Changer le nombre d'éléments par page (reset page à 1)
-   */
+  /** Changer le nombre d'éléments par page (reset page à 1) */
   setLimit: (limit: number) => void
-
-  /**
-   * Page actuelle (1-indexed)
-   */
+  /** Page actuelle (1-indexed) */
   page: number
-
-  /**
-   * Changer la page actuelle
-   */
+  /** Changer la page actuelle */
   setPage: (page: number) => void
-
-  /**
-   * Index de début pour slice() (0-indexed)
-   */
+  /** Index de début pour slice() (0-indexed) */
   skip: number
-
-  /**
-   * Changer le skip directement
-   */
+  /** Changer le skip directement (recalcule page) */
   setSkip: (skip: number) => void
-
-  /**
-   * Aller à la page suivante
-   */
+  /** Page suivante */
   nextPage: () => void
-
-  /**
-   * Aller à la page précédente
-   */
+  /** Page précédente */
   prevPage: () => void
-
-  /**
-   * Aller à une page spécifique
-   */
+  /** Aller à une page spécifique */
   goToPage: (page: number) => void
-
-  /**
-   * Réinitialiser à la page 1
-   */
+  /** Première page (si totalItems connu, clamp garanti) */
+  firstPage: () => void
+  /** Dernière page (nécessite totalItems, sinon reste sur la page courante) */
+  lastPage: () => void
+  /** Réinitialiser à la page 1 */
   reset: () => void
-
-  /**
-   * Calculer le nombre total de pages
-   */
+  /** Nombre total de pages pour un total donné (arrondi au supérieur) */
   getTotalPages: (totalItems: number) => number
-
-  /**
-   * Vérifier si on peut aller à la page suivante
-   */
+  /** Peut-on aller à la page suivante ? */
   hasNextPage: (totalItems: number) => boolean
-
-  /**
-   * Vérifier si on peut aller à la page précédente
-   */
+  /** Peut-on revenir en arrière ? */
   hasPrevPage: boolean
+  /**
+   * Range prêt-à-consommer pour slice() et affichage
+   * - start: index de début (inclus)
+   * - endExclusive: index de fin exclusif (parfait pour slice)
+   * - endInclusive: index de fin inclus (pour UI)
+   */
+  range: { start: number; endExclusive: number; endInclusive: number }
+  /**
+   * Tableau [1..N] des pages (⚠️ à utiliser avec parcimonie si N est énorme)
+   * - Utilise totalItems fourni dans le hook, sinon renvoie []
+   */
+  pagesArray: number[]
 }
 
 export function usePagination({
@@ -119,47 +91,62 @@ export function usePagination({
   initialPage = 1,
   onPageChange,
   onLimitChange,
+  totalItems,
+  clampPage = false,
 }: UsePaginationOptions = {}): UsePaginationReturn {
   const [limit, setLimitState] = useState(initialLimit)
-  const [page, setPageState] = useState(initialPage)
+  const [page, setPageState] = useState(Math.max(1, initialPage))
 
-  // Skip calculé à partir de page et limit
+  // Calcul basique
   const skip = useMemo(() => (page - 1) * limit, [page, limit])
 
-  const setLimit = useCallback(
-    (newLimit: number) => {
-      setLimitState(newLimit)
-      setPageState(1) // Reset à la page 1 lors du changement de limite
-      if (onLimitChange) {
-        onLimitChange(newLimit)
-      }
-      if (onPageChange) {
-        onPageChange(1)
-      }
+  // Helpers internes
+  const clampToBounds = useCallback(
+    (targetPage: number) => {
+      if (!clampPage || totalItems == null) return Math.max(1, targetPage)
+      const totalPages = Math.max(1, Math.ceil(totalItems / limit) || 1)
+      return Math.min(Math.max(1, targetPage), totalPages)
     },
-    [onLimitChange, onPageChange]
+    [clampPage, totalItems, limit]
   )
 
-  const setPage = useCallback(
+  const emitPageChange = useCallback(
     (newPage: number) => {
-      if (newPage < 1) return
-      setPageState(newPage)
-      if (onPageChange) {
-        onPageChange(newPage)
-      }
+      onPageChange?.(newPage)
     },
     [onPageChange]
   )
 
+  const setLimit = useCallback(
+    (newLimit: number) => {
+      const safe = Math.max(1, Math.floor(newLimit))
+      setLimitState(safe)
+      // Reset page à 1 (ne discutons pas, c'est la vie)
+      setPageState(1)
+      onLimitChange?.(safe)
+      emitPageChange(1)
+    },
+    [emitPageChange, onLimitChange]
+  )
+
+  const setPage = useCallback(
+    (newPage: number) => {
+      const next = clampToBounds(Math.floor(newPage))
+      if (next < 1) return
+      setPageState(next)
+      emitPageChange(next)
+    },
+    [clampToBounds, emitPageChange]
+  )
+
   const setSkip = useCallback(
     (newSkip: number) => {
-      const newPage = Math.floor(newSkip / limit) + 1
-      setPageState(newPage)
-      if (onPageChange) {
-        onPageChange(newPage)
-      }
+      const safeSkip = Math.max(0, Math.floor(newSkip))
+      const derivedPage = clampToBounds(Math.floor(safeSkip / limit) + 1)
+      setPageState(derivedPage)
+      emitPageChange(derivedPage)
     },
-    [limit, onPageChange]
+    [clampToBounds, emitPageChange, limit]
   )
 
   const nextPage = useCallback(() => {
@@ -167,9 +154,7 @@ export function usePagination({
   }, [page, setPage])
 
   const prevPage = useCallback(() => {
-    if (page > 1) {
-      setPage(page - 1)
-    }
+    if (page > 1) setPage(page - 1)
   }, [page, setPage])
 
   const goToPage = useCallback(
@@ -179,28 +164,48 @@ export function usePagination({
     [setPage]
   )
 
+  const firstPage = useCallback(() => {
+    setPage(1)
+  }, [setPage])
+
+  const lastPage = useCallback(() => {
+    if (totalItems == null) return
+    const total = Math.max(1, Math.ceil(totalItems / limit) || 1)
+    setPage(total)
+  }, [limit, setPage, totalItems])
+
   const reset = useCallback(() => {
     setPageState(1)
-    if (onPageChange) {
-      onPageChange(1)
-    }
-  }, [onPageChange])
+    emitPageChange(1)
+  }, [emitPageChange])
 
   const getTotalPages = useCallback(
-    (totalItems: number) => {
-      return Math.ceil(totalItems / limit)
-    },
+    (total: number) => Math.max(1, Math.ceil(total / limit) || 1),
     [limit]
   )
 
   const hasNextPage = useCallback(
-    (totalItems: number) => {
-      return page < getTotalPages(totalItems)
-    },
-    [page, getTotalPages]
+    (total: number) => page < getTotalPages(total),
+    [getTotalPages, page]
   )
 
   const hasPrevPage = page > 1
+
+  const range = useMemo(() => {
+    const start = skip
+    // endExclusive ne dépasse jamais totalItems si fourni (pratique pour l'UI)
+    const rawEnd = start + limit
+    const endExclusive =
+      totalItems == null ? rawEnd : Math.min(rawEnd, totalItems)
+    const endInclusive = Math.max(start, endExclusive - 1)
+    return { start, endExclusive, endInclusive }
+  }, [limit, skip, totalItems])
+
+  const pagesArray = useMemo(() => {
+    if (totalItems == null) return []
+    const total = Math.max(1, Math.ceil(totalItems / limit) || 1)
+    return Array.from({ length: total }, (_, i) => i + 1)
+  }, [limit, totalItems])
 
   return {
     limit,
@@ -212,9 +217,13 @@ export function usePagination({
     nextPage,
     prevPage,
     goToPage,
+    firstPage,
+    lastPage,
     reset,
     getTotalPages,
     hasNextPage,
     hasPrevPage,
+    range,
+    pagesArray,
   }
 }

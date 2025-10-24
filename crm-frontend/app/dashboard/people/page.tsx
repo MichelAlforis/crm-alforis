@@ -11,6 +11,7 @@ import { usePeople } from '@/hooks/usePeople'
 import { useTableColumns } from '@/hooks/useTableColumns'
 import { useClientSideTable } from '@/hooks/useClientSideTable'
 import { useFilters } from '@/hooks/useFilters'
+import { usePagination } from '@/hooks/usePagination'
 import { Card, Button, Table, Alert, AdvancedFilters, ColumnSelector, ExportButtons } from '@/components/shared'
 import SearchBar from '@/components/search/SearchBar'
 import { Person } from '@/lib/types'
@@ -50,6 +51,9 @@ interface PeopleFilters {
 export default function PeoplePage() {
   const router = useRouter()
   const { people, fetchPeople } = usePeople()
+
+  // Pagination hook
+  const pagination = usePagination({ initialLimit: 20 })
 
   // Use new hooks for cleaner state management
   const filters = useFilters<PeopleFilters>({
@@ -275,11 +279,18 @@ export default function PeoplePage() {
       <Card>
         <Table
           columns={visibleColumns}
-          data={table.filteredData}
+          data={table.filteredData.slice(pagination.skip, pagination.skip + pagination.limit)}
           isLoading={people.isLoading}
           isEmpty={table.filteredData.length === 0}
           sortConfig={table.sortConfig}
           onSort={table.handleSort}
+          pagination={{
+            total: table.filteredData.length,
+            skip: pagination.skip,
+            limit: pagination.limit,
+            onPageChange: pagination.setSkip,
+            onLimitChange: pagination.setLimit,
+          }}
         />
       </Card>
     </div>

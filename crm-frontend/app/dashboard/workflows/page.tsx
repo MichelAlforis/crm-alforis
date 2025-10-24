@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useWorkflows } from '@/hooks/useWorkflows'
 import { useConfirm } from '@/hooks/useConfirm'
+import { usePagination } from '@/hooks/usePagination'
 import {
   Play, Plus, Power, PowerOff, Trash2, Eye, TrendingUp, Copy,
   Search, Filter, Sparkles, BookTemplate, User
@@ -21,6 +22,7 @@ export default function WorkflowsPage() {
   } = useWorkflows()
 
   const { confirm, ConfirmDialogComponent } = useConfirm()
+  const pagination = usePagination({ initialLimit: 20 })
 
   // États des filtres
   const [filter, setFilter] = useState<'all' | 'active' | 'inactive' | 'draft'>('all')
@@ -346,8 +348,9 @@ export default function WorkflowsPage() {
             )}
           </div>
         ) : (
+          <>
           <div className="grid gap-4">
-            {filteredWorkflows.map((workflow) => (
+            {filteredWorkflows.slice(pagination.skip, pagination.skip + pagination.limit).map((workflow) => (
               <div
                 key={workflow.id}
                 className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow hover:shadow-lg transition"
@@ -481,6 +484,51 @@ export default function WorkflowsPage() {
               </div>
             ))}
           </div>
+
+          {/* Pagination Controls */}
+          {filteredWorkflows.length > pagination.limit && (
+            <div className="flex items-center justify-between px-6 py-4 bg-white dark:bg-gray-800 rounded-lg mt-4">
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Affichage <span className="font-semibold text-gray-900 dark:text-white">{pagination.skip + 1}-{Math.min(pagination.skip + pagination.limit, filteredWorkflows.length)}</span> sur{' '}
+                <span className="font-semibold text-gray-900 dark:text-white">{filteredWorkflows.length}</span> résultats
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => pagination.setSkip(0)}
+                  disabled={pagination.skip === 0}
+                  className="px-3 py-1.5 text-sm font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600"
+                >
+                  «
+                </button>
+                <button
+                  onClick={() => pagination.setSkip(Math.max(0, pagination.skip - pagination.limit))}
+                  disabled={pagination.skip === 0}
+                  className="px-3 py-1.5 text-sm font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600"
+                >
+                  ‹ Précédent
+                </button>
+                <div className="px-4 py-1.5 text-sm font-medium bg-purple-600 text-white rounded-md">
+                  Page {Math.floor(pagination.skip / pagination.limit) + 1} / {Math.ceil(filteredWorkflows.length / pagination.limit)}
+                </div>
+                <button
+                  onClick={() => pagination.setSkip(pagination.skip + pagination.limit)}
+                  disabled={pagination.skip + pagination.limit >= filteredWorkflows.length}
+                  className="px-3 py-1.5 text-sm font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600"
+                >
+                  Suivant ›
+                </button>
+                <button
+                  onClick={() => pagination.setSkip((Math.ceil(filteredWorkflows.length / pagination.limit) - 1) * pagination.limit)}
+                  disabled={pagination.skip + pagination.limit >= filteredWorkflows.length}
+                  className="px-3 py-1.5 text-sm font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600"
+                >
+                  »
+                </button>
+              </div>
+            </div>
+          )}
+          </>
         )}
       </div>
 
