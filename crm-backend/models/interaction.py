@@ -22,6 +22,7 @@ from sqlalchemy import (
     ForeignKey,
     DateTime,
     JSON,
+    Boolean,
     Index,
     CheckConstraint,
 )

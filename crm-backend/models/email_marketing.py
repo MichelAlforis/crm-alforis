@@ -65,6 +65,7 @@ class EmailSend(BaseModel):
         Index('idx_email_sends_person_sent', 'person_id', 'sent_at'),
         Index('idx_email_sends_status', 'status'),
         Index('idx_email_sends_provider_ext', 'provider', 'external_id'),
+        {'extend_existing': True}
     )
 
     # Relation avec Organisation/Personne (nullable)
@@ -136,6 +137,7 @@ class LeadScore(BaseModel):
     __tablename__ = "lead_scores"
     __table_args__ = (
         Index('idx_lead_scores_score', 'score'),
+        {'extend_existing': True}
     )
 
     # PK = person_id (relation 1-to-1)
