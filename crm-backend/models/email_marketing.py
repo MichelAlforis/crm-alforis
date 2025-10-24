@@ -39,9 +39,9 @@ class EmailStatus(str, enum.Enum):
     BOUNCED = "bounced"
 
 
-class EmailSend(BaseModel):
+class EmailEventTracking(BaseModel):
     """
-    Historique des emails marketing envoyés.
+    Historique des emails marketing envoyés (V2 - Tracking webhooks).
 
     Lié à une organisation OU une personne.
     Provider: resend, sendgrid, etc.
@@ -54,17 +54,20 @@ class EmailSend(BaseModel):
 
     Liaison avec Interaction:
     - interaction_id: Si l'email génère une interaction (première ouverture)
+
+    Note: Renamed from EmailSend to avoid SQLAlchemy registry collision
+    with models.email.EmailSend (which is for campaign automation).
     """
 
-    __tablename__ = "email_sends"
+    __tablename__ = "email_event_tracking"
     __table_args__ = (
         CheckConstraint(
             '(organisation_id IS NOT NULL) OR (person_id IS NOT NULL)',
             name='chk_email_org_or_person'
         ),
-        Index('idx_email_sends_person_sent', 'person_id', 'sent_at'),
-        Index('idx_email_sends_status', 'status'),
-        Index('idx_email_sends_provider_ext', 'provider', 'external_id'),
+        Index('idx_email_event_tracking_person_sent', 'person_id', 'sent_at'),
+        Index('idx_email_event_tracking_status', 'status'),
+        Index('idx_email_event_tracking_provider_ext', 'provider', 'external_id'),
         {'extend_existing': True}
     )
 

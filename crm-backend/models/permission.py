@@ -92,11 +92,8 @@ class Permission(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relations
-    roles = relationship(
-        "Role",
-        secondary=role_permissions,
-        back_populates="permissions"
-    )
+    # Note: 'roles' relationship is defined via backref in Role model
+    # to avoid circular import issues
 
     def __repr__(self):
         return f"<Permission {self.name}>"

@@ -204,8 +204,10 @@ class Interaction(BaseModel):
     linked_event_id = Column(Integer, nullable=True)
 
     # Relations SQLAlchemy
-    organisation = relationship("Organisation", back_populates="interactions")
-    person = relationship("Person", back_populates="interactions")
+    # Note: Using backref instead of back_populates to avoid collision with
+    # Organisation.interactions (which references OrganisationInteraction, not Interaction)
+    organisation = relationship("Organisation", backref="crm_interactions")
+    person = relationship("Person", backref="crm_interactions")
     creator = relationship("User", foreign_keys=[created_by])
     assignee = relationship("User", foreign_keys=[assignee_id])
 

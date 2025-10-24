@@ -27,9 +27,9 @@ def upgrade() -> None:
         END$;
     """)
 
-    # Create email_sends table
+    # Create email_event_tracking table (V2 - renamed to avoid collision with email_sends from campaigns)
     op.execute("""
-        CREATE TABLE IF NOT EXISTS email_sends (
+        CREATE TABLE IF NOT EXISTS email_event_tracking (
             id SERIAL PRIMARY KEY,
             organisation_id INTEGER NULL
                 REFERENCES organisations(id) ON DELETE CASCADE,
@@ -55,27 +55,27 @@ def upgrade() -> None:
         );
     """)
 
-    # Indexes for email_sends
+    # Indexes for email_event_tracking
     op.execute("""
-        CREATE INDEX IF NOT EXISTS idx_email_sends_person_sent
-        ON email_sends(person_id, sent_at DESC NULLS LAST)
+        CREATE INDEX IF NOT EXISTS idx_email_event_tracking_person_sent
+        ON email_event_tracking(person_id, sent_at DESC NULLS LAST)
         WHERE person_id IS NOT NULL;
     """)
 
     op.execute("""
-        CREATE INDEX IF NOT EXISTS idx_email_sends_org
-        ON email_sends(organisation_id)
+        CREATE INDEX IF NOT EXISTS idx_email_event_tracking_org
+        ON email_event_tracking(organisation_id)
         WHERE organisation_id IS NOT NULL;
     """)
 
     op.execute("""
-        CREATE INDEX IF NOT EXISTS idx_email_sends_status
-        ON email_sends(status);
+        CREATE INDEX IF NOT EXISTS idx_email_event_tracking_status
+        ON email_event_tracking(status);
     """)
 
     op.execute("""
-        CREATE INDEX IF NOT EXISTS idx_email_sends_provider_ext
-        ON email_sends(provider, external_id);
+        CREATE INDEX IF NOT EXISTS idx_email_event_tracking_provider_ext
+        ON email_event_tracking(provider, external_id);
     """)
 
     # Create lead_scores table
@@ -101,7 +101,7 @@ def upgrade() -> None:
 def downgrade() -> None:
     # Drop tables
     op.execute("DROP TABLE IF EXISTS lead_scores CASCADE;")
-    op.execute("DROP TABLE IF EXISTS email_sends CASCADE;")
+    op.execute("DROP TABLE IF EXISTS email_event_tracking CASCADE;")
 
     # Drop ENUM type
     op.execute("DROP TYPE IF EXISTS email_status;")

@@ -6,7 +6,7 @@ Endpoints:
 - GET /marketing/leads-hot : Top N leads par score DESC
 
 Business Logic:
-- Ingest: upsert EmailSend, create Interaction si first open, update LeadScore
+- Ingest: upsert EmailEventTracking, create Interaction si first open, update LeadScore
 - Scoring: opened (+3 first, +1 after), clicked (+8 first, +2 after), bounced (-10)
 
 Security:
@@ -23,7 +23,7 @@ import os
 
 from core import get_db, get_current_user
 from core.webhook_security import verify_webhook_signature, validate_webhook_timestamp
-from models.email_marketing import EmailSend, EmailStatus, LeadScore
+from models.email_marketing import EmailEventTracking, EmailStatus, LeadScore
 from models.interaction import Interaction, InteractionType, InteractionStatus
 from models.person import Person
 from schemas.email_marketing import (
@@ -38,7 +38,7 @@ router = APIRouter(prefix="/marketing", tags=["email-marketing"])
 
 # ===== Lead Scoring Service =====
 
-def calculate_score_delta(email_send: EmailSend, event: str) -> int:
+def calculate_score_delta(email_send: EmailEventTracking, event: str) -> int:
     """
     Calcule le delta de score selon l'événement.
 
@@ -85,7 +85,7 @@ def update_lead_score(db: Session, person_id: int, delta: int, event_at: datetim
 
 def create_interaction_from_email(
     db: Session,
-    email_send: EmailSend,
+    email_send: EmailEventTracking,
     user_id: int = 1  # Default system user
 ) -> Interaction:
     """
@@ -109,7 +109,7 @@ def create_interaction_from_email(
     db.add(interaction)
     db.flush()  # Get ID
 
-    # Link EmailSend to Interaction
+    # Link EmailEventTracking to Interaction
     email_send.interaction_id = interaction.id
 
     return interaction
@@ -134,7 +134,7 @@ async def ingest_email_event(
     - Validates timestamp (X-Timestamp header, max 5min old)
 
     Logic:
-    1. Upsert EmailSend via (provider, external_id)
+    1. Upsert EmailEventTracking via (provider, external_id)
     2. Update status, compteurs, timestamps
     3. Si premier open ET interaction_id NULL => créer Interaction
     4. Update LeadScore (si person_id existe)
@@ -161,15 +161,15 @@ async def ingest_email_event(
     # Security: Validate timestamp (reject old events)
     if x_timestamp:
         validate_webhook_timestamp(x_timestamp, max_age_seconds=300)  # 5 min
-    # 1. Upsert EmailSend
-    email_send = db.query(EmailSend).filter(
+    # 1. Upsert EmailEventTracking
+    email_send = db.query(EmailEventTracking).filter(
         EmailSend.provider == payload.provider,
         EmailSend.external_id == payload.external_id,
     ).first()
 
     if not email_send:
         # Create new
-        email_send = EmailSend(
+        email_send = EmailEventTracking(
             organisation_id=payload.organisation_id,
             person_id=payload.person_id,
             provider=payload.provider,

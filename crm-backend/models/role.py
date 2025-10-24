@@ -61,11 +61,12 @@ class Role(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relations
+    # Using backref to avoid circular import with Permission model
     permissions = relationship(
         "Permission",
         secondary=role_permissions,
-        back_populates="roles",
-        lazy="joined"
+        backref="roles",
+        lazy="selectin"
     )
     users = relationship("User", back_populates="role")
 

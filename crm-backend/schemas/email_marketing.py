@@ -18,7 +18,7 @@ class EmailIngestPayload(BaseModel):
     """
     Payload reçu du webhook provider (Resend, Sendgrid, etc.)
 
-    Permet de créer/update EmailSend + calculer LeadScore
+    Permet de créer/update EmailEventTracking + calculer LeadScore
     """
     provider: str = Field(..., min_length=1, max_length=50, description="Provider name (resend, sendgrid, etc.)")
     external_id: str = Field(..., min_length=1, max_length=255, description="Provider message ID (unique)")
@@ -51,7 +51,7 @@ class EmailIngestPayload(BaseModel):
 
 
 class EmailSendOut(BaseModel):
-    """Réponse d'un EmailSend"""
+    """Réponse d'un EmailEventTracking"""
     id: int
     organisation_id: Optional[int]
     person_id: Optional[int]
