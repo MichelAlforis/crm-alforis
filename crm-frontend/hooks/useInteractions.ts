@@ -18,7 +18,6 @@ import type {
   InteractionUpdateInput,
   InteractionListResponse,
 } from '@/types/interaction'
-import { toast } from 'react-hot-toast'
 
 // ============================================
 // Query Keys
@@ -113,8 +112,6 @@ export function useCreateInteraction() {
       })
     },
     onSuccess: (newInteraction) => {
-      toast.success('Interaction créée')
-
       // Invalidate affected caches
       if (newInteraction.org_id) {
         queryClient.invalidateQueries({
@@ -127,9 +124,6 @@ export function useCreateInteraction() {
         })
       }
       queryClient.invalidateQueries({ queryKey: interactionKeys.all })
-    },
-    onError: (error: any) => {
-      toast.error(error.message || 'Erreur lors de la création')
     },
   })
 }
@@ -154,8 +148,6 @@ export function useUpdateInteraction() {
       })
     },
     onSuccess: (updatedInteraction) => {
-      toast.success('Interaction mise à jour')
-
       // Invalidate affected caches
       if (updatedInteraction.org_id) {
         queryClient.invalidateQueries({
@@ -168,9 +160,6 @@ export function useUpdateInteraction() {
         })
       }
       queryClient.invalidateQueries({ queryKey: interactionKeys.all })
-    },
-    onError: (error: any) => {
-      toast.error(error.message || 'Erreur lors de la mise à jour')
     },
   })
 }
@@ -189,12 +178,8 @@ export function useDeleteInteraction() {
       return id
     },
     onSuccess: () => {
-      toast.success('Interaction supprimée')
       // Invalidate all interaction caches
       queryClient.invalidateQueries({ queryKey: interactionKeys.all })
-    },
-    onError: (error: any) => {
-      toast.error(error.message || 'Erreur lors de la suppression')
     },
   })
 }
