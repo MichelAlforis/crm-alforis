@@ -5,18 +5,32 @@ Validation des données d'entrée/sortie pour l'API Interactions.
 IDs = Integer (cohérence avec le projet existant).
 """
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, EmailStr
 from typing import Optional, List, Literal
 from datetime import datetime
 
-# Type littéral pour le type d'interaction
-InteractionType = Literal['call', 'email', 'meeting', 'note', 'other']
+# Type littéral pour le type d'interaction (v1.1: ajout 'visio')
+InteractionType = Literal['call', 'email', 'meeting', 'visio', 'note', 'other']
 
 
 class Attachment(BaseModel):
     """Pièce jointe (URL uniquement, pas d'upload en v1)"""
     name: str = Field(..., min_length=1, max_length=255, description="Nom du fichier")
     url: str = Field(..., min_length=1, description="URL du fichier")
+
+
+class ParticipantIn(BaseModel):
+    """Participant interne (personne du CRM)"""
+    person_id: int = Field(..., gt=0, description="ID de la personne")
+    role: Optional[str] = Field(None, max_length=80, description="Rôle (CEO, CTO, etc.)")
+    present: bool = Field(True, description="Présent ou absent")
+
+
+class ExternalParticipant(BaseModel):
+    """Participant externe (non dans le CRM)"""
+    name: str = Field(..., min_length=1, max_length=255, description="Nom complet")
+    email: Optional[EmailStr] = Field(None, description="Email (optionnel)")
+    company: Optional[str] = Field(None, max_length=255, description="Entreprise (optionnel)")
 
 
 class InteractionCreate(BaseModel):
@@ -27,6 +41,10 @@ class InteractionCreate(BaseModel):
     title: str = Field(..., min_length=1, max_length=200, description="Titre de l'interaction")
     body: Optional[str] = Field(None, description="Description/notes détaillées")
     attachments: List[Attachment] = Field(default_factory=list, description="Liste de pièces jointes")
+
+    # v1.1: Participants multiples
+    participants: Optional[List[ParticipantIn]] = Field(None, description="Participants internes (CRM)")
+    external_participants: Optional[List[ExternalParticipant]] = Field(None, description="Invités externes")
 
     @field_validator('org_id', 'person_id')
     @classmethod
@@ -62,6 +80,10 @@ class InteractionUpdate(BaseModel):
     body: Optional[str] = None
     attachments: Optional[List[Attachment]] = None
 
+    # v1.1: Participants multiples
+    participants: Optional[List[ParticipantIn]] = None
+    external_participants: Optional[List[ExternalParticipant]] = None
+
     class Config:
         json_schema_extra = {
             "example": {
@@ -83,6 +105,10 @@ class InteractionOut(BaseModel):
     created_at: datetime
     updated_at: Optional[datetime]
     attachments: List[Attachment]
+
+    # v1.1: Participants multiples
+    participants: List[ParticipantIn] = Field(default_factory=list)
+    external_participants: List[ExternalParticipant] = Field(default_factory=list)
 
     class Config:
         from_attributes = True  # Permet de créer depuis un modèle SQLAlchemy

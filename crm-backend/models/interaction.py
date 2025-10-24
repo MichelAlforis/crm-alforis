@@ -33,6 +33,7 @@ from models.constants import (
     FK_ORGANISATIONS_ID,
     FK_PEOPLE_ID,
     ONDELETE_SET_NULL,
+    ONDELETE_CASCADE,
 )
 
 
@@ -44,6 +45,56 @@ class InteractionType(str, enum.Enum):
     MEETING = "meeting"
     NOTE = "note"
     OTHER = "other"
+
+
+class InteractionParticipant(BaseModel):
+    """
+    Participant interne à une interaction (M-N avec Person).
+
+    Utilisé principalement pour les réunions avec plusieurs participants.
+
+    Relations:
+    - interaction: Interaction concernée
+    - person: Personne (collaborateur du CRM)
+
+    Attributs:
+    - role: Rôle du participant (ex: "CEO", "CTO", "Animateur")
+    - present: Présent ou absent (default TRUE)
+    """
+
+    __tablename__ = "interaction_participants"
+    __table_args__ = (
+        # PK composite
+        {"extend_existing": True},
+    )
+
+    interaction_id = Column(
+        Integer,
+        ForeignKey("crm_interactions.id", ondelete=ONDELETE_CASCADE),
+        primary_key=True,
+        nullable=False,
+    )
+    person_id = Column(
+        Integer,
+        ForeignKey(FK_PEOPLE_ID, ondelete=ONDELETE_CASCADE),
+        primary_key=True,
+        nullable=False,
+    )
+
+    role = Column(String(80), nullable=True)
+    present = Column(Boolean, nullable=False, default=True, server_default="true")
+
+    # Pas de created_at/updated_at (relation pure)
+
+    # Relations
+    interaction = relationship("Interaction", back_populates="participants")
+    person = relationship("Person")
+
+    def __repr__(self) -> str:
+        return (
+            f"<InteractionParticipant(interaction_id={self.interaction_id}, "
+            f"person_id={self.person_id}, role={self.role})>"
+        )
 
 
 class Interaction(BaseModel):
@@ -111,10 +162,21 @@ class Interaction(BaseModel):
     # Pièces jointes (liste d'objets { name: str, url: str })
     attachments = Column(JSON, nullable=False, default=list)
 
+    # Participants externes (liste d'objets { name, email, company })
+    external_participants = Column(JSON, nullable=False, default=list)
+
     # Relations SQLAlchemy
     organisation = relationship("Organisation", back_populates="interactions")
     person = relationship("Person", back_populates="interactions")
     creator = relationship("User", foreign_keys=[created_by])
+
+    # Participants internes (M-N avec Person)
+    participants = relationship(
+        "InteractionParticipant",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+        back_populates="interaction",
+    )
 
     def __repr__(self) -> str:
         return (

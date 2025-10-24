@@ -21,12 +21,13 @@ from typing import List, Optional
 from datetime import datetime
 
 from core import get_db, get_current_user
-from models.interaction import Interaction
+from models.interaction import Interaction, InteractionParticipant
 from schemas.interaction import (
     InteractionCreate,
     InteractionUpdate,
     InteractionOut,
     InteractionListResponse,
+    ParticipantIn,
 )
 
 router = APIRouter(prefix="/interactions", tags=["interactions"])
@@ -67,6 +68,41 @@ def _check_permissions_write(interaction: Interaction, user_id: int, user_roles:
         )
 
 
+def _build_interaction_out(interaction: Interaction) -> InteractionOut:
+    """
+    Construit InteractionOut depuis un modèle Interaction.
+
+    Inclut les participants internes et externes (v1.1).
+    """
+    # Participants internes (M-N)
+    participants_list = [
+        ParticipantIn(
+            person_id=p.person_id,
+            role=p.role,
+            present=p.present,
+        )
+        for p in (interaction.participants or [])
+    ]
+
+    # Convertir l'interaction en dict et ajouter les participants
+    data = {
+        "id": interaction.id,
+        "org_id": interaction.org_id,
+        "person_id": interaction.person_id,
+        "type": interaction.type.value,
+        "title": interaction.title,
+        "body": interaction.body,
+        "created_by": interaction.created_by,
+        "created_at": interaction.created_at,
+        "updated_at": interaction.updated_at,
+        "attachments": interaction.attachments or [],
+        "participants": participants_list,
+        "external_participants": interaction.external_participants or [],
+    }
+
+    return InteractionOut(**data)
+
+
 @router.post("", response_model=InteractionOut, status_code=status.HTTP_201_CREATED)
 async def create_interaction(
     payload: InteractionCreate,
@@ -90,13 +126,28 @@ async def create_interaction(
         body=payload.body,  # Alias vers description en base
         created_by=user_id,
         attachments=[att.model_dump() for att in payload.attachments],
+        external_participants=[ep.model_dump() for ep in (payload.external_participants or [])],
     )
 
     db.add(interaction)
+    db.flush()  # Get ID before adding participants
+
+    # v1.1: Ajouter les participants internes
+    if payload.participants:
+        for part in payload.participants:
+            participant = InteractionParticipant(
+                interaction_id=interaction.id,
+                person_id=part.person_id,
+                role=part.role,
+                present=part.present,
+            )
+            db.add(participant)
+
     db.commit()
     db.refresh(interaction)
 
-    return InteractionOut.model_validate(interaction)
+    # Construire la réponse avec participants
+    return _build_interaction_out(interaction)
 
 
 @router.patch("/{interaction_id}", response_model=InteractionOut)
@@ -134,13 +185,32 @@ async def update_interaction(
         interaction.body = payload.body
     if payload.attachments is not None:
         interaction.attachments = [att.model_dump() for att in payload.attachments]
+    if payload.external_participants is not None:
+        interaction.external_participants = [ep.model_dump() for ep in payload.external_participants]
+
+    # v1.1: Remplacer les participants (stratégie simple et sûre)
+    if payload.participants is not None:
+        # Supprimer tous les participants existants
+        db.query(InteractionParticipant).filter(
+            InteractionParticipant.interaction_id == interaction_id
+        ).delete()
+
+        # Ajouter les nouveaux
+        for part in payload.participants:
+            participant = InteractionParticipant(
+                interaction_id=interaction_id,
+                person_id=part.person_id,
+                role=part.role,
+                present=part.present,
+            )
+            db.add(participant)
 
     interaction.updated_at = datetime.utcnow()
 
     db.commit()
     db.refresh(interaction)
 
-    return InteractionOut.model_validate(interaction)
+    return _build_interaction_out(interaction)
 
 
 @router.delete("/{interaction_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -190,7 +260,7 @@ async def get_recent_interactions(
         .all()
     )
 
-    return [InteractionOut.model_validate(it) for it in interactions]
+    return [_build_interaction_out(it) for it in interactions]
 
 
 @router.get("/by-organisation/{org_id}", response_model=InteractionListResponse)
@@ -221,7 +291,7 @@ async def list_by_organisation(
     new_cursor = str(interactions[-1].id) if interactions else None
 
     return InteractionListResponse(
-        items=[InteractionOut.model_validate(it) for it in interactions],
+        items=[_build_interaction_out(it) for it in interactions],
         total=total,
         limit=limit,
         cursor=new_cursor,
@@ -256,7 +326,7 @@ async def list_by_person(
     new_cursor = str(interactions[-1].id) if interactions else None
 
     return InteractionListResponse(
-        items=[InteractionOut.model_validate(it) for it in interactions],
+        items=[_build_interaction_out(it) for it in interactions],
         total=total,
         limit=limit,
         cursor=new_cursor,
