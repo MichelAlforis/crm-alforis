@@ -7,20 +7,20 @@ import React, { useState } from 'react'
 import { X, Zap, AlertCircle, Workflow } from 'lucide-react'
 import { Input } from '@/components/shared/Input'
 import { Select } from '@/components/shared/Select'
-// import dynamic from 'next/dynamic'
+import dynamic from 'next/dynamic'
 
-// TEMPORAIREMENT DÉSACTIVÉ en attente de fix ReactFlow
-// const WorkflowBuilderClient = dynamic(() => import('./WorkflowBuilder.client'), {
-//   ssr: false,
-//   loading: () => (
-//     <div className="h-[600px] flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200">
-//       <div className="text-center">
-//         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-//         <p className="text-gray-600">Chargement du builder visuel...</p>
-//       </div>
-//     </div>
-//   ),
-// })
+// Builder visuel avec @xyflow/react (Next 15 compatible)
+const WorkflowBuilderClient = dynamic(() => import('./WorkflowBuilder.client'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[600px] flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+        <p className="text-gray-600">Chargement du builder visuel...</p>
+      </div>
+    </div>
+  ),
+})
 
 interface WorkflowCreateModalProps {
   isOpen: boolean
@@ -319,12 +319,9 @@ export default function WorkflowCreateModal({
             {useVisualBuilder ? (
               <div className="space-y-3">
                 <h3 className="font-medium text-gray-900 border-b pb-2">Workflow visuel *</h3>
-                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <p className="text-sm text-yellow-800">
-                    ⚠️ Le builder visuel est temporairement désactivé en attente du fix ReactFlow.
-                    Veuillez utiliser le mode JSON.
-                  </p>
-                </div>
+                <WorkflowBuilderClient
+                  onUpdate={(nodes, edges) => setBuilderData({ nodes, edges })}
+                />
               </div>
             ) : (
               <div className="space-y-3">

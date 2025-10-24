@@ -4,7 +4,8 @@
 'use client'
 
 import React, { useCallback } from 'react'
-import ReactFlow, {
+import {
+  ReactFlow,
   Background,
   Controls,
   MiniMap,
@@ -14,8 +15,8 @@ import ReactFlow, {
   type Connection,
   type Edge,
   type Node,
-} from 'reactflow'
-import 'reactflow/dist/style.css'
+} from '@xyflow/react'
+import '@xyflow/react/dist/style.css'
 import { Zap, Mail, Bell, Calendar, User, Tag, Edit2 } from 'lucide-react'
 
 // Types d'actions disponibles

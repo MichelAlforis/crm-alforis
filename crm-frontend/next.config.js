@@ -145,14 +145,10 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
 
-  // Configuration Webpack pour ReactFlow
-  webpack: (config) => {
-    const path = require('path')
-    config.resolve.alias = {
-      ...(config.resolve.alias || {}),
-      reactflow: path.resolve(process.cwd(), 'node_modules/reactflow'),
-    }
-    return config
+  // Configuration pour @xyflow/react (Next 15)
+  transpilePackages: ['@xyflow/react'],
+  experimental: {
+    esmExternals: 'loose',
   },
 
   // Variables d'environnement
