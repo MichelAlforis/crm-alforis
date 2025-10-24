@@ -339,7 +339,8 @@ const {
   createWorkflow,
   updateWorkflow,
   deleteWorkflow,
-  executeWorkflow
+  executeWorkflow,
+  duplicateWorkflow
 } = useWorkflows()
 ```
 
@@ -348,6 +349,47 @@ const {
 - Actions : send_email, create_task, update_field
 - Conditions : AND/OR avec opérateurs
 - Variables dynamiques
+- Duplication workflows
+
+---
+
+### useWorkflowTemplates ⭐⭐
+**Fichier** : `hooks/useWorkflowTemplates.ts` | **Créé** : Chapitre 7 (24 Oct 2025)
+
+Bibliothèque de templates workflows avec recherche et filtres avancés.
+
+```typescript
+const {
+  templates,
+  isLoading,
+  searchTemplates,
+  filterTemplates,
+  duplicateTemplate,
+  stats
+} = useWorkflowTemplates()
+
+// Recherche fulltext
+const results = searchTemplates('newsletter')
+
+// Filtrage combiné
+const filtered = filterTemplates({
+  search: 'relance',
+  category: 'mailing',
+  trigger: 'WEBHOOK_RECEIVED',
+  difficulty: 'facile'
+})
+```
+
+**Features** :
+- 20 templates B2B prêts à l'emploi (appels, réunions, mailings, relations, reporting)
+- Métadonnées enrichies : catégorie, tags, use cases, difficulté, temps setup, prérequis
+- Recherche fulltext (nom, description, tags, use cases, trigger)
+- Filtres: catégorie, trigger, difficulté
+- Statistiques agrégées
+- Duplication avec redirection auto vers édition
+
+**Utilisé dans** : /dashboard/workflows/library
+**Composant associé** : WorkflowTemplateCard.tsx
 
 ---
 

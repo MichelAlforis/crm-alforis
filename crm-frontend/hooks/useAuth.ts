@@ -8,6 +8,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { apiClient } from '@/lib/api'
+import { logger, logError } from '@/lib/logger'
 import { LoginRequest, FormState, AuthState } from '@/lib/types'
 
 export function useAuth() {
@@ -43,7 +44,7 @@ export function useAuth() {
           user: profile || undefined,
         })
       } catch (error: any) {
-        console.error('Failed to fetch current user:', error)
+        logError('useAuth', error, { context: 'Failed to fetch current user' })
         apiClient.clearToken()
         if (!isMounted) return
         setState({
@@ -62,12 +63,12 @@ export function useAuth() {
 
   // ============= LOGIN =============
   const login = useCallback(async (credentials: LoginRequest) => {
-    console.log('🔐 Login attempt:', credentials.email)
+    logger.log('🔐 Login attempt:', credentials.email)
     setFormState({ isSubmitting: true })
     try {
-      console.log('📡 Calling API...')
+      logger.log('📡 Calling API...')
       const response = await apiClient.login(credentials)
-      console.log('✅ Login successful:', response)
+      logger.log('✅ Login successful:', response)
       apiClient.setToken(response.access_token)
 
       const profile = await apiClient.getCurrentUser()
@@ -78,11 +79,11 @@ export function useAuth() {
       })
       setFormState({ isSubmitting: false, success: true })
 
-      console.log('🔄 Redirecting to dashboard...')
+      logger.log('🔄 Redirecting to dashboard...')
       // Redirect to dashboard
       router.push('/dashboard')
     } catch (error: any) {
-      console.error('❌ Login error:', error)
+      logError('useAuth.login', error, { email: credentials.email })
       const errorMessage = error.detail || 'Erreur de connexion'
       setState({
         isAuthenticated: false,

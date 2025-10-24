@@ -25,7 +25,6 @@ export default function DashboardLayout({
 }) {
   const { isAuthenticated, isLoading } = useAuth()
   const router = useRouter()
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -62,8 +61,8 @@ export default function DashboardLayout({
   return (
     <QueryProvider>
       <div className="dashboard-layout flex">
-        {/* Sidebar Navigation */}
-        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+        {/* Sidebar Navigation - État géré par le hook useSidebar */}
+        <Sidebar />
 
         {/* Main Content Area */}
         <div
@@ -73,9 +72,7 @@ export default function DashboardLayout({
           )}
         >
           {/* Top Navbar */}
-          <Navbar
-            onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          />
+          <Navbar />
 
           {/* Page Content */}
           <main className="flex-1 overflow-auto bg-gray-50">
@@ -84,14 +81,6 @@ export default function DashboardLayout({
             </div>
           </main>
         </div>
-
-        {/* Mobile Sidebar Backdrop */}
-        {isSidebarOpen && (
-          <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 lg:hidden animate-in fade-in duration-200"
-            onClick={() => setIsSidebarOpen(false)}
-          />
-        )}
 
         {/* PWA Components */}
         <InstallPrompt />

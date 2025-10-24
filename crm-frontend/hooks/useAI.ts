@@ -54,14 +54,9 @@ function normalizeErrorDetail(detail: any): string {
 }
 
 async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> {
-  // ✅ CORRECTIF: Utiliser apiClient.getToken() au lieu de localStorage direct
+  // ✅ CORRECTIF: Utiliser apiClient directement pour éviter les problèmes de port
   const token = apiClient.getToken()
-
-  // ✅ CORRECTIF: Construire l'URL complète correctement
-  // En production: utiliser chemin relatif, en dev: utiliser localhost
-  const API_BASE = typeof window !== 'undefined' && window.location.hostname !== 'localhost'
-    ? ''  // Production: chemin relatif (le endpoint contient déjà /api/v1)
-    : 'http://localhost:8000'  // Dev: URL complète vers le backend
+  const API_BASE = apiClient.getBaseUrl().replace('/api/v1', '')  // Obtenir l'URL de base sans /api/v1
 
   const res = await fetch(`${API_BASE}${endpoint}`, {
     ...options,

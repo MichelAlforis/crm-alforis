@@ -593,8 +593,12 @@ class WorkflowEngine:
         if total == 0:
             return {
                 "total_executions": 0,
-                "success_rate": 0,
-                "avg_duration_seconds": 0
+                "success_count": 0,
+                "failed_count": 0,
+                "skipped_count": 0,
+                "success_rate": 0.0,
+                "avg_duration_seconds": 0.0,
+                "last_execution": None
             }
 
         success = len([e for e in executions if e.status == WorkflowExecutionStatus.SUCCESS])

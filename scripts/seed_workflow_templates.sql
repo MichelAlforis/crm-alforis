@@ -5,7 +5,7 @@
 -- DELETE FROM workflows WHERE is_template = true;
 
 -- 1. Bienvenue nouveau client
-INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, created_at, updated_at)
+INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, execution_count, created_at, updated_at)
 VALUES (
   'Bienvenue nouveau client',
   'Envoie un email de bienvenue et crée une tâche de suivi lorsqu''une organisation est créée',
@@ -17,12 +17,13 @@ VALUES (
   ]',
   'active',
   true,
+  0,  0,
   NOW(),
   NOW()
 );
 
 -- 2. Relance deal inactif
-INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, created_at, updated_at)
+INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, execution_count, created_at, updated_at)
 VALUES (
   'Relance deal inactif',
   'Notifie le commercial si un deal est inactif depuis 7 jours',
@@ -34,12 +35,12 @@ VALUES (
   ]',
   'active',
   true,
-  NOW(),
+  0,
   NOW()
 );
 
 -- 3. Deal gagné - Félicitations
-INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, created_at, updated_at)
+INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, execution_count, created_at, updated_at)
 VALUES (
   'Deal gagné - Félicitations',
   'Envoie des félicitations et crée les tâches d''onboarding quand un deal passe en "Gagné"',
@@ -53,12 +54,12 @@ VALUES (
   ]',
   'active',
   true,
-  NOW(),
+  0,
   NOW()
 );
 
 -- 4. Deal perdu - Analyse
-INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, created_at, updated_at)
+INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, execution_count, created_at, updated_at)
 VALUES (
   'Deal perdu - Analyse',
   'Crée une tâche d''analyse et tag le contact pour suivi futur',
@@ -71,12 +72,12 @@ VALUES (
   ]',
   'active',
   true,
-  NOW(),
+  0,
   NOW()
 );
 
 -- 5. Nouveau contact - Qualification
-INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, created_at, updated_at)
+INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, execution_count, created_at, updated_at)
 VALUES (
   'Nouveau contact - Qualification',
   'Lance le processus de qualification d''un nouveau contact',
@@ -89,12 +90,12 @@ VALUES (
   ]',
   'active',
   true,
-  NOW(),
+  0,
   NOW()
 );
 
 -- 6. Rappel rendez-vous J-1
-INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, created_at, updated_at)
+INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, execution_count, created_at, updated_at)
 VALUES (
   'Rappel rendez-vous J-1',
   'Envoie un rappel automatique 1 jour avant un rendez-vous',
@@ -106,12 +107,12 @@ VALUES (
   ]',
   'active',
   true,
-  NOW(),
+  0,
   NOW()
 );
 
 -- 7. Deal en négociation - Support
-INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, created_at, updated_at)
+INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, execution_count, created_at, updated_at)
 VALUES (
   'Deal en négociation - Support',
   'Assigne le support technique quand un deal passe en négociation',
@@ -124,12 +125,12 @@ VALUES (
   ]',
   'active',
   true,
-  NOW(),
+  0,
   NOW()
 );
 
 -- 8. Suivi post-vente J+7
-INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, created_at, updated_at)
+INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, execution_count, created_at, updated_at)
 VALUES (
   'Suivi post-vente J+7',
   'Crée une tâche de satisfaction client 7 jours après la signature',
@@ -141,12 +142,12 @@ VALUES (
   ]',
   'active',
   true,
-  NOW(),
+  0,
   NOW()
 );
 
 -- 9. Renouvellement contrat J-30
-INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, created_at, updated_at)
+INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, execution_count, created_at, updated_at)
 VALUES (
   'Renouvellement contrat J-30',
   'Alerte 30 jours avant la fin d''un contrat pour préparer le renouvellement',
@@ -159,12 +160,12 @@ VALUES (
   ]',
   'active',
   true,
-  NOW(),
+  0,
   NOW()
 );
 
 -- 10. Lead scoring - Hot lead
-INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, created_at, updated_at)
+INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, execution_count, created_at, updated_at)
 VALUES (
   'Lead scoring - Hot lead',
   'Actions prioritaires quand un lead atteint un score élevé',
@@ -178,12 +179,12 @@ VALUES (
   ]',
   'active',
   true,
-  NOW(),
+  0,
   NOW()
 );
 
 -- 11. Onboarding client J+0
-INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, created_at, updated_at)
+INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, execution_count, created_at, updated_at)
 VALUES (
   'Onboarding client - Jour 0',
   'Lance le processus d''onboarding dès la signature du contrat',
@@ -197,12 +198,12 @@ VALUES (
   ]',
   'active',
   true,
-  NOW(),
+  0,
   NOW()
 );
 
 -- 12. Escalade deal bloqué
-INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, created_at, updated_at)
+INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, execution_count, created_at, updated_at)
 VALUES (
   'Escalade deal bloqué',
   'Escalade au manager si un deal reste bloqué trop longtemps',
@@ -215,12 +216,12 @@ VALUES (
   ]',
   'active',
   true,
-  NOW(),
+  0,
   NOW()
 );
 
 -- 13. Enrichissement données
-INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, created_at, updated_at)
+INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, execution_count, created_at, updated_at)
 VALUES (
   'Enrichissement données contact',
   'Demande d''enrichir les informations manquantes d''un nouveau contact',
@@ -232,12 +233,12 @@ VALUES (
   ]',
   'active',
   true,
-  NOW(),
+  0,
   NOW()
 );
 
 -- 14. Cross-sell opportunité
-INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, created_at, updated_at)
+INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, execution_count, created_at, updated_at)
 VALUES (
   'Cross-sell - Opportunité détectée',
   'Alerte pour proposition de services complémentaires aux clients existants',
@@ -250,12 +251,12 @@ VALUES (
   ]',
   'active',
   true,
-  NOW(),
+  0,
   NOW()
 );
 
 -- 15. Rapport mensuel automatique
-INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, created_at, updated_at)
+INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, execution_count, created_at, updated_at)
 VALUES (
   'Rapport mensuel commercial',
   'Génère et envoie le rapport d''activité mensuel le 1er de chaque mois',
@@ -267,12 +268,12 @@ VALUES (
   ]',
   'active',
   true,
-  NOW(),
+  0,
   NOW()
 );
 
 -- 16. Abandon panier - Relance
-INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, created_at, updated_at)
+INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, execution_count, created_at, updated_at)
 VALUES (
   'Abandon devis - Relance',
   'Relance automatique si un devis n''a pas été signé sous 3 jours',
@@ -285,12 +286,12 @@ VALUES (
   ]',
   'active',
   true,
-  NOW(),
+  0,
   NOW()
 );
 
 -- 17. NPS après livraison
-INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, created_at, updated_at)
+INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, execution_count, created_at, updated_at)
 VALUES (
   'NPS après livraison projet',
   'Envoie le questionnaire NPS 2 semaines après la fin d''un projet',
@@ -302,12 +303,12 @@ VALUES (
   ]',
   'active',
   true,
-  NOW(),
+  0,
   NOW()
 );
 
 -- 18. Affectation round-robin
-INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, created_at, updated_at)
+INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, execution_count, created_at, updated_at)
 VALUES (
   'Affectation automatique leads',
   'Distribue équitablement les nouveaux leads entre commerciaux (round-robin)',
@@ -320,12 +321,12 @@ VALUES (
   ]',
   'active',
   true,
-  NOW(),
+  0,
   NOW()
 );
 
 -- 19. Alerte budget dépassé
-INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, created_at, updated_at)
+INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, execution_count, created_at, updated_at)
 VALUES (
   'Alerte dépassement budget',
   'Notifie le manager si un deal dépasse le budget autorisé',
@@ -338,12 +339,12 @@ VALUES (
   ]',
   'active',
   true,
-  NOW(),
+  0,
   NOW()
 );
 
 -- 20. Anniversaire client
-INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, created_at, updated_at)
+INSERT INTO workflows (name, description, trigger_type, trigger_config, actions, status, is_template, execution_count, created_at, updated_at)
 VALUES (
   'Anniversaire relation client',
   'Envoie un message personnalisé pour l''anniversaire du début de la relation client',
@@ -356,7 +357,7 @@ VALUES (
   ]',
   'active',
   true,
-  NOW(),
+  0,
   NOW()
 );
 
