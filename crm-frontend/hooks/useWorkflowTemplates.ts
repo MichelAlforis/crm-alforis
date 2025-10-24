@@ -680,19 +680,19 @@ const TEMPLATE_METADATA: Record<number, WorkflowTemplateMetadata> = {
 }
 
 export const useWorkflowTemplates = () => {
-  const { workflows, isLoading, error, duplicateWorkflow, operation } = useWorkflows()
+  const { workflows, duplicateWorkflow, operation } = useWorkflows()
 
   // Filtrer uniquement les templates avec métadonnées enrichies
   const templates = useMemo(() => {
-    if (!workflows) return []
+    if (!workflows.data?.items) return []
 
-    return workflows
+    return workflows.data.items
       .filter(w => w.is_template && TEMPLATE_METADATA[w.id])
       .map(w => ({
         ...w,
         metadata: TEMPLATE_METADATA[w.id],
       }))
-  }, [workflows])
+  }, [workflows.data?.items])
 
   // Fonction de recherche fulltext
   const searchTemplates = useCallback((query: string) => {
@@ -786,8 +786,8 @@ export const useWorkflowTemplates = () => {
 
   return {
     templates,
-    isLoading,
-    error,
+    isLoading: workflows.isLoading,
+    error: workflows.error,
     searchTemplates,
     filterByCategory,
     filterByTrigger,
