@@ -18,11 +18,12 @@ from api.routes import (
     external_webhooks,
     public,
 )
-from routers import search, exports, webhooks, email_config
+from routers import search, exports, webhooks, email_config, help, interactions
 from webhooks import sendgrid as inbound_sendgrid
 
-# ❌ SUPPRIMÉ (20 oct 2024): interactions, kpis
-#    → Migrés vers /dashboards/stats et /organisations/{id}/activity
+# ❌ SUPPRIMÉ (20 oct 2024): kpis
+#    → Migrés vers /dashboards/stats
+# ✅ AJOUTÉ (24 oct 2024): interactions v1 (nouveau module séparé d'OrganisationActivity)
 
 # Créer le routeur principal
 api_router = APIRouter(prefix="/api/v1")
@@ -70,5 +71,11 @@ api_router.include_router(ai_agent.router)
 
 # ⚡ IMPORTS ROUTES (bulk operations)
 api_router.include_router(imports.router)
+
+# ❓ HELP & ANALYTICS (Phase 4)
+api_router.include_router(help.router)
+
+# 💬 INTERACTIONS V1 (Chapitre 7 - Phase 3.1)
+api_router.include_router(interactions.router)
 
 __all__ = ["api_router"]
