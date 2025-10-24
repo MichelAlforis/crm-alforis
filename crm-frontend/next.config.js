@@ -145,6 +145,16 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
 
+  // Configuration Webpack pour ReactFlow
+  webpack: (config) => {
+    const path = require('path')
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      reactflow: path.resolve(process.cwd(), 'node_modules/reactflow'),
+    }
+    return config
+  },
+
   // Variables d'environnement
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1',
