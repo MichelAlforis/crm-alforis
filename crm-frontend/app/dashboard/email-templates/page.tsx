@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { Plus, Mail, Edit, Trash2, Eye } from "lucide-react";
 import { useToast } from "@/hooks/useToast";
+import { useConfirm } from "@/hooks/useConfirm";
 
 interface Template {
   id: number;
@@ -34,6 +35,7 @@ interface Template {
 export default function EmailTemplatesPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { confirm, ConfirmDialogComponent } = useConfirm();
 
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
@@ -129,40 +131,45 @@ export default function EmailTemplatesPage() {
   };
 
   const handleDeleteTemplate = async (id: number) => {
-    if (!confirm("Voulez-vous vraiment supprimer ce template ?")) {
-      return;
-    }
+    confirm({
+      title: "Supprimer le template",
+      message: "Voulez-vous vraiment supprimer ce template ? Cette action est irréversible.",
+      type: "danger",
+      confirmText: "Supprimer",
+      cancelText: "Annuler",
+      onConfirm: async () => {
+        try {
+          const token = localStorage.getItem("token");
+          const response = await fetch(`/email/campaigns/templates/${id}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
 
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`/email/campaigns/templates/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        toast({
-          title: "Succès",
-          description: "Template supprimé",
-        });
-        fetchTemplates();
-      } else {
-        toast({
-          title: "Erreur",
-          description: "Impossible de supprimer le template",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error("Error deleting template:", error);
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue",
-        variant: "destructive",
-      });
-    }
+          if (response.ok) {
+            toast({
+              title: "Succès",
+              description: "Template supprimé",
+            });
+            fetchTemplates();
+          } else {
+            toast({
+              title: "Erreur",
+              description: "Impossible de supprimer le template",
+              variant: "destructive",
+            });
+          }
+        } catch (error) {
+          console.error("Error deleting template:", error);
+          toast({
+            title: "Erreur",
+            description: "Une erreur est survenue",
+            variant: "destructive",
+          });
+        }
+      },
+    });
   };
 
   const resetForm = () => {
@@ -411,6 +418,9 @@ export default function EmailTemplatesPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Confirmation Dialog */}
+      <ConfirmDialogComponent />
     </div>
   );
 }

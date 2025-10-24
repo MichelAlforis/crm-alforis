@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form'
 import { Input, Button, Alert, Select, EntityAutocompleteInput } from '@/components/shared'
 import { MandatDistribution, MandatDistributionCreate, MandatStatus, Organisation } from '@/lib/types'
 import { usePaginatedOptions, type PaginatedFetcherParams } from '@/hooks/usePaginatedOptions'
+import { useEntityPreload } from '@/hooks/useEntityPreload'
 import { apiClient } from '@/lib/api'
 import { useToast } from '@/components/ui/Toast'
 
@@ -91,33 +92,17 @@ export function MandatForm({
     mode: 'onBlur',
   })
 
-  // Pré-charger l'organisation sélectionnée si fournie
-  useEffect(() => {
-    const orgId = initialData?.organisation_id ?? organisationId
-    if (!orgId) return
-
-    let isMounted = true
-
-    void (async () => {
-      try {
-        const organisation = await apiClient.getOrganisation(orgId)
-        if (!isMounted) return
-        upsertOrganisationOption({
-          id: organisation.id,
-          label: organisation.name,
-          sublabel: organisation.category || undefined,
-        })
-        setSelectedOrganisationId(orgId)
-        setSelectedOrganisationLabel(organisation.name)
-      } catch (error) {
-        console.error('Impossible de pré-charger l\'organisation sélectionnée', error)
-      }
-    })()
-
-    return () => {
-      isMounted = false
-    }
-  }, [initialData?.organisation_id, organisationId, upsertOrganisationOption])
+  // Pré-charger l'organisation sélectionnée si fournie (avec useEntityPreload)
+  useEntityPreload<Organisation>({
+    entityId: initialData?.organisation_id ?? organisationId,
+    fetchEntity: (id) => apiClient.getOrganisation(id),
+    mapToOption: mapOrganisationToOption,
+    upsertOption: upsertOrganisationOption,
+    onLoaded: (organisation) => {
+      setSelectedOrganisationId(organisation.id)
+      setSelectedOrganisationLabel(organisation.name)
+    },
+  })
 
   const handleFormSubmit = async (data: MandatDistributionCreate) => {
     if (!selectedOrganisationId) {

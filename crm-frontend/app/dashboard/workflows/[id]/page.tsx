@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useWorkflows } from '@/hooks/useWorkflows'
+import { useConfirm } from '@/hooks/useConfirm'
 import {
   ArrowLeft,
   Play,
@@ -35,6 +36,7 @@ export default function WorkflowDetailPage() {
     executeWorkflow,
   } = useWorkflows()
 
+  const { confirm, ConfirmDialogComponent } = useConfirm()
   const [activeTab, setActiveTab] = useState<'details' | 'executions' | 'stats'>('details')
   const [showExecuteModal, setShowExecuteModal] = useState(false)
   const [entityId, setEntityId] = useState('')
@@ -59,13 +61,21 @@ export default function WorkflowDetailPage() {
   }
 
   const handleDelete = async () => {
-    if (!confirm('Supprimer ce workflow ?')) return
-    try {
-      await deleteWorkflow(workflowId)
-      router.push('/workflows')
-    } catch (error) {
-      console.error('Erreur suppression:', error)
-    }
+    confirm({
+      title: 'Supprimer le workflow',
+      message: 'Êtes-vous sûr de vouloir supprimer ce workflow ? Cette action est irréversible.',
+      type: 'danger',
+      confirmText: 'Supprimer',
+      cancelText: 'Annuler',
+      onConfirm: async () => {
+        try {
+          await deleteWorkflow(workflowId)
+          router.push('/workflows')
+        } catch (error) {
+          console.error('Erreur suppression:', error)
+        }
+      },
+    })
   }
 
   const handleExecute = async () => {
@@ -464,6 +474,9 @@ export default function WorkflowDetailPage() {
           </div>
         )}
       </div>
+
+      {/* Confirmation Dialog */}
+      <ConfirmDialogComponent />
     </div>
   )
 }

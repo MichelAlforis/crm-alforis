@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/shared/Input'
+import { useViewportToggle } from '@/hooks/useViewportToggle'
 import { apiClient } from '@/lib/api'
 
 interface EmailTemplate {
@@ -31,7 +32,10 @@ export function TemplatePreviewModal({
   isOpen,
   onClose,
 }: TemplatePreviewModalProps) {
-  const [viewMode, setViewMode] = React.useState<'desktop' | 'mobile'>('desktop')
+  const viewport = useViewportToggle({
+    defaultMode: 'desktop',
+    modes: ['desktop', 'mobile'],
+  })
   const [testEmail, setTestEmail] = React.useState('')
   const [isSending, setIsSending] = React.useState(false)
   const [sendSuccess, setSendSuccess] = React.useState(false)
@@ -88,8 +92,8 @@ export function TemplatePreviewModal({
               <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
                 <Button
                   size="sm"
-                  variant={viewMode === 'desktop' ? 'default' : 'outline'}
-                  onClick={() => setViewMode('desktop')}
+                  variant={viewport.isMode('desktop') ? 'default' : 'outline'}
+                  onClick={() => viewport.setMode('desktop')}
                   title="Vue Desktop"
                   className="hidden sm:flex"
                 >
@@ -97,8 +101,8 @@ export function TemplatePreviewModal({
                 </Button>
                 <Button
                   size="sm"
-                  variant={viewMode === 'mobile' ? 'default' : 'outline'}
-                  onClick={() => setViewMode('mobile')}
+                  variant={viewport.isMode('mobile') ? 'default' : 'outline'}
+                  onClick={() => viewport.setMode('mobile')}
                   title="Vue Mobile"
                   className="hidden sm:flex"
                 >
@@ -119,7 +123,7 @@ export function TemplatePreviewModal({
 
         {/* Preview Content */}
         <div className="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900 p-3 md:p-6">
-          <div className="mx-auto" style={{ maxWidth: viewMode === 'desktop' ? '100%' : '375px' }}>
+          <div className="mx-auto" style={{ maxWidth: viewport.maxWidth }}>
             {/* Email Preview Frame */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden">
               {/* Fake Email Client Header */}

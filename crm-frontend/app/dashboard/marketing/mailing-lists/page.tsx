@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Plus, Edit, Trash2, List, Users, Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -8,6 +8,8 @@ import { Card, CardHeader, CardBody, Button, Table } from '@/components/shared'
 import { Alert } from '@/components/shared/Alert'
 import { useMailingLists } from '@/hooks/useMailingLists'
 import { useConfirm } from '@/hooks/useConfirm'
+import { useClientSideTable } from '@/hooks/useClientSideTable'
+import { usePagination } from '@/hooks/usePagination'
 
 interface MailingList {
   id: number
@@ -32,12 +34,16 @@ export default function MailingListsPage() {
 
   const { confirm, ConfirmDialogComponent } = useConfirm()
 
-  // Pagination et tri
-  const [currentPage, setCurrentPage] = useState(1)
-  const [itemsPerPage] = useState(20)
-  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' }>({
-    key: 'created_at',
-    direction: 'desc',
+  const table = useClientSideTable<MailingList>({
+    data: lists,
+    defaultSortKey: 'created_at',
+    defaultSortDirection: 'desc',
+  })
+
+  // Pagination avec usePagination
+  const pagination = usePagination({
+    initialLimit: 20,
+    initialPage: 1,
   })
 
   const handleDelete = (list: MailingList) => {
@@ -53,47 +59,12 @@ export default function MailingListsPage() {
     })
   }
 
-  // Tri des données
-  const sortedLists = useMemo(() => {
-    if (!sortConfig) return lists
-
-    const sorted = [...lists].sort((a, b) => {
-      const aValue = a[sortConfig.key as keyof MailingList]
-      const bValue = b[sortConfig.key as keyof MailingList]
-
-      if (aValue === null || aValue === undefined) return 1
-      if (bValue === null || bValue === undefined) return -1
-
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return sortConfig.direction === 'asc'
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue)
-      }
-
-      if (typeof aValue === 'number' && typeof bValue === 'number') {
-        return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue
-      }
-
-      return 0
-    })
-
-    return sorted
-  }, [lists, sortConfig])
-
-  // Pagination
+  // Pagination (applied to sorted data from hook)
   const paginatedLists = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage
-    return sortedLists.slice(startIndex, startIndex + itemsPerPage)
-  }, [sortedLists, currentPage, itemsPerPage])
+    return table.filteredData.slice(pagination.skip, pagination.skip + pagination.limit)
+  }, [table.filteredData, pagination.skip, pagination.limit])
 
-  const totalPages = Math.ceil(sortedLists.length / itemsPerPage)
-
-  const handleSort = (key: string) => {
-    setSortConfig((current) => ({
-      key,
-      direction: current?.key === key && current.direction === 'asc' ? 'desc' : 'asc',
-    }))
-  }
+  const totalPages = pagination.getTotalPages(table.filteredData.length)
 
   const columns = [
     {
@@ -263,22 +234,22 @@ export default function MailingListsPage() {
             isLoading={isLoading}
             isEmpty={!isLoading && lists.length === 0}
             emptyMessage="Aucune liste créée. Créez votre première liste de diffusion !"
-            sortConfig={sortConfig}
-            onSort={handleSort}
+            sortConfig={table.sortConfig}
+            onSort={table.handleSort}
           />
 
           {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
               <div className="text-sm text-text-secondary">
-                Page {currentPage} sur {totalPages} ({sortedLists.length} listes au total)
+                Page {pagination.page} sur {totalPages} ({table.filteredData.length} listes au total)
               </div>
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
+                  onClick={pagination.prevPage}
+                  disabled={!pagination.hasPrevPage}
                 >
                   <ChevronLeft className="w-4 h-4" />
                   Précédent
@@ -286,8 +257,8 @@ export default function MailingListsPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
+                  onClick={pagination.nextPage}
+                  disabled={!pagination.hasNextPage(table.filteredData.length)}
                 >
                   Suivant
                   <ChevronRight className="w-4 h-4 ml-1" />

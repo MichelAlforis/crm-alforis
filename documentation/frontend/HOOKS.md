@@ -8,14 +8,30 @@
 
 Liste complète des hooks React personnalisés utilisés dans le CRM.
 
-**Total** : **32 hooks** | **Phase 2 High Impact** : 3 hooks ⭐⭐⭐ | **Réutilisables** : 4 hooks ⭐ | **Métier** : 17 hooks | **UI/UX** : 6 hooks | **Utilitaires** : 2 hooks
+**Total** : **37 hooks** | **Phase 2, 3 & 4 High Impact** : 8 hooks ⭐⭐⭐ | **Réutilisables** : 9 hooks ⭐ | **Métier** : 17 hooks | **UI/UX** : 6 hooks | **Utilitaires** : 2 hooks
 
-### 🎯 Nouveautés Phase 2 (Octobre 2025)
-- **useModalForm** : Gestion formulaires modals (~195 lignes économisées)
-- **useClientSideTable** : Tables client-side complètes (~375 lignes économisées)
-- **useFilters** : Gestion état filtres (~100 lignes économisées)
+### 🎯 Phase 2 - Migration Complète ✅ (Octobre 2025)
+- **useModalForm** : 1 usage → 55 lignes économisées
+- **useClientSideTable** : 2 usages → 150 lignes économisées
+- **useFilters** : 6 usages → 90-120 lignes économisées
+- **useConfirm** : 16 usages → 128-240 lignes économisées
 
-**Impact total Phase 2** : **~670 lignes de code économisées** ✅
+**Impact Phase 2** : **~423-565 lignes de code économisées** | **17 fichiers migrés** | **Build: ✅ SUCCESS**
+
+### 🎯 Phase 3 - Optimisations ✅ (Octobre 2025)
+- **useEntityPreload** : 2 usages → 52 lignes économisées
+- **useAsyncAction** : 0 usage (créé, disponible)
+- **usePagination** : 1 usage → 10 lignes économisées
+
+**Impact Phase 3** : **~62 lignes de code économisées** | **3 fichiers migrés** | **Build: ✅ SUCCESS (45 pages)**
+
+### 🎯 Phase 4 - Nice to Have UX ✅ (Octobre 2025)
+- **useClipboard** : 1 usage → 18 lignes économisées
+- **useViewportToggle** : 2 usages → 6 lignes économisées
+
+**Impact Phase 4** : **~24 lignes de code économisées** | **3 fichiers migrés** | **Build: ✅ SUCCESS (45 pages)**
+
+**Impact total Phases 1+2+3+4** : **~509-651 lignes économisées** | **23 fichiers migrés**
 
 ---
 
@@ -90,6 +106,124 @@ const { isFocused, handleFocus, handleBlur } = useSearchFocus()
 ```
 
 **Utilisé dans** : SearchBar global
+
+---
+
+### 5. useEntityPreload ⭐⭐⭐
+**Fichier** : `hooks/useEntityPreload.ts` | **Créé** : Phase 3 (24 Oct 2025)
+
+Pré-chargement d'entités pour autocompletes en mode édition.
+
+```typescript
+useEntityPreload<Organisation>({
+  entityId: initialData?.organisation_id,
+  fetchEntity: (id) => apiClient.getOrganisation(id),
+  mapToOption: (org) => ({ id: org.id, label: org.name }),
+  upsertOption: upsertOrganisationOption,
+  onLoaded: (org) => setSelectedLabel(org.name),
+})
+```
+
+**Utilisé dans** : MandatForm (2 fois), TaskForm (2 fois)
+**Gain** : 52 lignes économisées (23 lignes → 11 lignes par usage)
+
+---
+
+### 6. useAsyncAction
+**Fichier** : `hooks/useAsyncAction.ts` | **Créé** : Phase 3 (24 Oct 2025)
+
+Gestion des états loading/error/data pour actions asynchrones.
+
+```typescript
+const { execute, isLoading, error, data, reset } = useAsyncAction({
+  action: apiClient.createTemplate,
+  onSuccess: (result) => toast.success('Créé!'),
+  onError: (err) => console.error(err),
+})
+
+// Dans le composant
+<Button onClick={() => execute(formData)} disabled={isLoading}>
+  {isLoading ? 'Création...' : 'Créer'}
+</Button>
+```
+
+**Utilisé dans** : Aucun usage actuellement (React Query utilisé à la place)
+**Note** : Disponible pour les composants sans React Query
+
+---
+
+### 7. usePagination
+**Fichier** : `hooks/usePagination.ts` | **Créé** : Phase 3 (24 Oct 2025)
+
+Gestion de la pagination client-side avec navigation.
+
+```typescript
+const pagination = usePagination({
+  initialLimit: 20,
+  initialPage: 1,
+})
+
+// Calcul des données paginées
+const paginatedData = data.slice(pagination.skip, pagination.skip + pagination.limit)
+const totalPages = pagination.getTotalPages(data.length)
+
+// Navigation
+<Button onClick={pagination.prevPage} disabled={!pagination.hasPrevPage}>
+  Précédent
+</Button>
+<Button onClick={pagination.nextPage} disabled={!pagination.hasNextPage(data.length)}>
+  Suivant
+</Button>
+```
+
+**Utilisé dans** : mailing-lists/page.tsx
+**Gain** : 10 lignes économisées (7 lignes → 3 lignes + meilleure API)
+
+---
+
+### 8. useClipboard ⭐⭐
+**Fichier** : `hooks/useClipboard.ts` | **Créé** : Phase 4 (24 Oct 2025)
+
+Copie dans le presse-papier avec feedback et gestion d'erreur.
+
+```typescript
+const { copy, isCopied, error } = useClipboard({
+  successDuration: 2000,
+  onSuccess: (text) => toast.success('Copié!'),
+  onError: (err) => toast.error('Échec de la copie'),
+})
+
+<Button onClick={() => copy('Secret HMAC: abc123')}>
+  {isCopied ? 'Copié ✓' : 'Copier'}
+</Button>
+```
+
+**Utilisé dans** : webhooks/page.tsx
+**Gain** : 18 lignes économisées (31 lignes → 13 lignes)
+
+---
+
+### 9. useViewportToggle ⭐
+**Fichier** : `hooks/useViewportToggle.ts` | **Créé** : Phase 4 (24 Oct 2025)
+
+Toggle entre modes desktop/mobile/tablet pour previews.
+
+```typescript
+const viewport = useViewportToggle({
+  defaultMode: 'desktop',
+  modes: ['desktop', 'mobile'],
+})
+
+<Button onClick={() => viewport.setMode('mobile')}>
+  📱 Mobile
+</Button>
+<div style={{ maxWidth: viewport.maxWidth }}>
+  {content}
+</div>
+```
+
+**Utilisé dans** : TemplateEditModal.tsx, TemplatePreviewModal.tsx
+**Gain** : 6 lignes économisées (code plus propre et réutilisable)
 
 ---
 

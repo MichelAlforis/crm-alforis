@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useTasks } from '@/hooks/useTasks'
 import { usePaginatedOptions, type PaginatedFetcherParams } from '@/hooks/usePaginatedOptions'
+import { useEntityPreload } from '@/hooks/useEntityPreload'
 import { apiClient } from '@/lib/api'
 import type {
   TaskInput,
@@ -126,53 +127,21 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
 
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (!initialData?.organisation_id) return
-    const organisationId = initialData.organisation_id
-    let isMounted = true
+  // Pré-charger l'organisation sélectionnée (avec useEntityPreload)
+  useEntityPreload<Organisation>({
+    entityId: initialData?.organisation_id,
+    fetchEntity: (id) => apiClient.getOrganisation(id),
+    mapToOption: mapOrganisationToOption,
+    upsertOption: upsertOrganisationOption,
+  })
 
-    void (async () => {
-      try {
-        const organisation = await apiClient.getOrganisation(organisationId)
-        if (!isMounted) return
-        upsertOrganisationOption({
-          id: organisation.id,
-          label: organisation.name,
-          sublabel: organisation.category || undefined,
-        })
-      } catch (error) {
-        console.error('Impossible de pré-charger l’organisation sélectionnée', error)
-      }
-    })()
-
-    return () => {
-      isMounted = false
-    }
-  }, [initialData?.organisation_id, upsertOrganisationOption])
-
-  useEffect(() => {
-    if (!initialData?.person_id) return
-    const personId = initialData.person_id
-    let isMounted = true
-
-    void (async () => {
-      try {
-        const person = await apiClient.getPerson(personId)
-        if (!isMounted) return
-        upsertPersonOption({
-          id: person.id,
-          label: `${person.first_name} ${person.last_name}`,
-          sublabel: person.role || person.personal_email || undefined,
-        })
-      } catch (error) {
-        console.error('Impossible de pré-charger la personne sélectionnée', error)
-      }
-    })()
-
-    return () => {
-      isMounted = false
-    }
-  }, [initialData?.person_id, upsertPersonOption])
+  // Pré-charger la personne sélectionnée (avec useEntityPreload)
+  useEntityPreload<Person>({
+    entityId: initialData?.person_id,
+    fetchEntity: (id) => apiClient.getPerson(id),
+    mapToOption: mapPersonToOption,
+    upsertOption: upsertPersonOption,
+  })
 
   useEffect(() => {
     if (initialData) {

@@ -13,6 +13,7 @@ import {
   useBatchRejectSuggestions,
   usePreviewSuggestion,
 } from '@/hooks/useAI'
+import { useConfirm } from '@/hooks/useConfirm'
 import { AISuggestionStatus, AISuggestionType } from '@/types/ai'
 import SuggestionsTable from '@/components/ai/SuggestionsTable'
 import SuggestionPreviewModal from '@/components/ai/SuggestionPreviewModal'
@@ -40,6 +41,7 @@ export default function SuggestionsPage() {
   const { data: suggestions, isLoading, refetch } = useAISuggestions(filters)
   const { data: preview, isLoading: previewLoading } = usePreviewSuggestion(previewId)
 
+  const { confirm, ConfirmDialogComponent } = useConfirm()
   const approveSuggestion = useApproveSuggestion()
   const rejectSuggestion = useRejectSuggestion()
   const batchApprove = useBatchApproveSuggestions()
@@ -47,30 +49,46 @@ export default function SuggestionsPage() {
 
   const handleBatchApprove = () => {
     if (selectedIds.length === 0) return
-    if (!confirm(`Approuver ${selectedIds.length} suggestion(s) ?`)) return
 
-    batchApprove.mutate(
-      { suggestion_ids: selectedIds },
-      {
-        onSuccess: () => {
-          setSelectedIds([])
-        },
-      }
-    )
+    confirm({
+      title: 'Approuver les suggestions',
+      message: `Êtes-vous sûr de vouloir approuver ${selectedIds.length} suggestion(s) ?`,
+      type: 'success',
+      confirmText: 'Approuver',
+      cancelText: 'Annuler',
+      onConfirm: () => {
+        batchApprove.mutate(
+          { suggestion_ids: selectedIds },
+          {
+            onSuccess: () => {
+              setSelectedIds([])
+            },
+          }
+        )
+      },
+    })
   }
 
   const handleBatchReject = () => {
     if (selectedIds.length === 0) return
-    if (!confirm(`Rejeter ${selectedIds.length} suggestion(s) ?`)) return
 
-    batchReject.mutate(
-      { suggestion_ids: selectedIds },
-      {
-        onSuccess: () => {
-          setSelectedIds([])
-        },
-      }
-    )
+    confirm({
+      title: 'Rejeter les suggestions',
+      message: `Êtes-vous sûr de vouloir rejeter ${selectedIds.length} suggestion(s) ?`,
+      type: 'warning',
+      confirmText: 'Rejeter',
+      cancelText: 'Annuler',
+      onConfirm: () => {
+        batchReject.mutate(
+          { suggestion_ids: selectedIds },
+          {
+            onSuccess: () => {
+              setSelectedIds([])
+            },
+          }
+        )
+      },
+    })
   }
 
   const handleApprove = (id: number) => {
@@ -251,6 +269,9 @@ export default function SuggestionsPage() {
             }}
           />
         )}
+
+        {/* Confirmation Dialog */}
+        <ConfirmDialogComponent />
       </div>
     </div>
   )

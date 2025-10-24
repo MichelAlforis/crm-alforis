@@ -10,6 +10,7 @@ import { Select } from '@/components/shared/Select'
 import { Alert } from '@/components/shared/Alert'
 import { apiClient } from '@/lib/api'
 import { useToast } from '@/components/ui/Toast'
+import { useConfirm } from '@/hooks/useConfirm'
 
 interface MailingList {
   id: number
@@ -25,6 +26,7 @@ interface MailingList {
 
 export default function MailingListsPage() {
   const { showToast } = useToast()
+  const { confirm, ConfirmDialogComponent } = useConfirm()
   const [lists, setLists] = useState<MailingList[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -95,16 +97,23 @@ export default function MailingListsPage() {
   }
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Voulez-vous vraiment supprimer cette liste?')) return
-
-    try {
-      await apiClient.delete(`/mailing-lists/${id}`)
-      showToast({ type: 'success', title: 'Liste supprimée' })
-      loadLists()
-    } catch (error) {
-      console.error('Failed to delete list:', error)
-      showToast({ type: 'error', title: 'Erreur lors de la suppression' })
-    }
+    confirm({
+      title: 'Supprimer la liste',
+      message: 'Voulez-vous vraiment supprimer cette liste de diffusion ? Cette action est irréversible.',
+      type: 'danger',
+      confirmText: 'Supprimer',
+      cancelText: 'Annuler',
+      onConfirm: async () => {
+        try {
+          await apiClient.delete(`/mailing-lists/${id}`)
+          showToast({ type: 'success', title: 'Liste supprimée' })
+          loadLists()
+        } catch (error) {
+          console.error('Failed to delete list:', error)
+          showToast({ type: 'error', title: 'Erreur lors de la suppression' })
+        }
+      },
+    })
   }
 
   const columns = [
@@ -312,6 +321,9 @@ export default function MailingListsPage() {
           </Select>
         </div>
       </Modal>
+
+      {/* Confirmation Dialog */}
+      <ConfirmDialogComponent />
     </div>
   )
 }

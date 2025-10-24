@@ -25,6 +25,7 @@ import {
 import { useToast } from '@/components/ui/Toast'
 import { useConfirm } from '@/hooks/useConfirm'
 import { useModalForm } from '@/hooks/useModalForm'
+import { useClipboard } from '@/hooks/useClipboard'
 import {
   useWebhooks,
   useWebhookEvents,
@@ -69,6 +70,23 @@ export default function WebhookSettingsPage() {
   const updateWebhook = useUpdateWebhook()
   const deleteWebhook = useDeleteWebhook()
   const rotateWebhookSecret = useRotateWebhookSecret()
+
+  const { copy: copyToClipboard } = useClipboard({
+    onSuccess: () => {
+      showToast({
+        type: 'success',
+        title: 'Secret copié',
+        message: 'Le secret HMAC est dans le presse-papier.',
+      })
+    },
+    onError: () => {
+      showToast({
+        type: 'warning',
+        title: 'Copie indisponible',
+        message: 'Votre navigateur ne supporte pas la copie automatique.',
+      })
+    },
+  })
 
   const [modalMode, setModalMode] = useState<ModalMode>('create')
   const [editingWebhook, setEditingWebhook] = useState<Webhook | null>(null)
@@ -189,9 +207,7 @@ export default function WebhookSettingsPage() {
         title: 'Secret régénéré',
         message: 'Le nouveau secret a été copié dans le presse-papier.',
       })
-      if (navigator?.clipboard) {
-        await navigator.clipboard.writeText(updated.secret)
-      }
+      await copyToClipboard(updated.secret)
     } catch (err: any) {
       showToast({
         type: 'error',
@@ -204,20 +220,7 @@ export default function WebhookSettingsPage() {
   }
 
   const handleCopySecret = async (secret: string) => {
-    if (!navigator?.clipboard) {
-      showToast({
-        type: 'warning',
-        title: 'Copie indisponible',
-        message: 'Votre navigateur ne supporte pas la copie automatique.',
-      })
-      return
-    }
-    await navigator.clipboard.writeText(secret)
-    showToast({
-      type: 'success',
-      title: 'Secret copié',
-      message: 'Le secret HMAC est dans le presse-papier.',
-    })
+    await copyToClipboard(secret)
   }
 
   const isSaving = createWebhook.isPending || updateWebhook.isPending

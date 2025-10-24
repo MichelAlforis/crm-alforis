@@ -8,6 +8,8 @@ import React, { useState, useMemo } from 'react'
 import { Plus, Filter } from 'lucide-react'
 import { useOrganisations } from '@/hooks/useOrganisations'
 import { useOrganisationActivity, flattenActivities } from '@/hooks/useOrganisationActivity'
+import { useFilters } from '@/hooks/useFilters'
+import { useConfirm } from '@/hooks/useConfirm'
 import { Card, Table, Alert, Button } from '@/components/shared'
 import InteractionCreateModal from '@/components/interactions/InteractionCreateModal'
 
@@ -21,15 +23,25 @@ const ACTIVITY_TYPES = [
   { value: 'autre', label: 'Autre' },
 ]
 
+interface InteractionFilters {
+  type: string
+  dateFrom: string
+  dateTo: string
+}
+
 export default function InteractionsPage() {
   const { data: organisations } = useOrganisations()
   const [selectedOrgId, setSelectedOrgId] = useState<number | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { confirm, ConfirmDialogComponent } = useConfirm()
 
-  // Filtres
-  const [filterType, setFilterType] = useState('all')
-  const [filterDateFrom, setFilterDateFrom] = useState('')
-  const [filterDateTo, setFilterDateTo] = useState('')
+  const filters = useFilters<InteractionFilters>({
+    initialValues: {
+      type: 'all',
+      dateFrom: '',
+      dateTo: '',
+    },
+  })
 
   const activityQuery = selectedOrgId
     ? useOrganisationActivity(selectedOrgId)
@@ -46,47 +58,54 @@ export default function InteractionsPage() {
 
     return activities.filter((activity) => {
       // Filtre par type
-      if (filterType !== 'all' && activity.type !== filterType) {
+      if (filters.values.type !== 'all' && activity.type !== filters.values.type) {
         return false
       }
 
       // Filtre par date
       const activityDate = new Date(activity.created_at)
 
-      if (filterDateFrom) {
-        const fromDate = new Date(filterDateFrom)
+      if (filters.values.dateFrom) {
+        const fromDate = new Date(filters.values.dateFrom)
         if (activityDate < fromDate) return false
       }
 
-      if (filterDateTo) {
-        const toDate = new Date(filterDateTo)
+      if (filters.values.dateTo) {
+        const toDate = new Date(filters.values.dateTo)
         toDate.setHours(23, 59, 59, 999)
         if (activityDate > toDate) return false
       }
 
       return true
     })
-  }, [activities, filterType, filterDateFrom, filterDateTo])
+  }, [activities, filters.values])
 
   const activityLoading = activityQuery?.isLoading ?? false
   const activityError = activityQuery?.error ? String(activityQuery.error) : undefined
 
   const handleDelete = async (activityId: number) => {
-    if (confirm('Supprimer cette activité?')) {
-      try {
-        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-        const token = localStorage.getItem('access_token') || localStorage.getItem('auth_token')
-        await fetch(`${API_BASE}/api/v1/organisations/${selectedOrgId}/activity/${activityId}`, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': token ? `Bearer ${token}` : '',
-          }
-        })
-        activityQuery?.refetch?.()
-      } catch (err) {
-        console.error('Error deleting activity:', err)
-      }
-    }
+    confirm({
+      title: 'Supprimer cette activité?',
+      message: 'Cette action est irréversible.',
+      type: 'danger',
+      confirmText: 'Supprimer',
+      cancelText: 'Annuler',
+      onConfirm: async () => {
+        try {
+          const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+          const token = localStorage.getItem('access_token') || localStorage.getItem('auth_token')
+          await fetch(`${API_BASE}/api/v1/organisations/${selectedOrgId}/activity/${activityId}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': token ? `Bearer ${token}` : '',
+            }
+          })
+          activityQuery?.refetch?.()
+        } catch (err) {
+          console.error('Error deleting activity:', err)
+        }
+      },
+    })
   }
 
   const columns = [
@@ -221,8 +240,8 @@ export default function InteractionsPage() {
                     Type d'interaction
                   </label>
                   <select
-                    value={filterType}
-                    onChange={(e) => setFilterType(e.target.value)}
+                    value={filters.values.type}
+                    onChange={(e) => filters.setFilter('type', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-bleu focus:outline-none"
                   >
                     {ACTIVITY_TYPES.map((type) => (
@@ -240,8 +259,8 @@ export default function InteractionsPage() {
                   </label>
                   <input
                     type="date"
-                    value={filterDateFrom}
-                    onChange={(e) => setFilterDateFrom(e.target.value)}
+                    value={filters.values.dateFrom}
+                    onChange={(e) => filters.setFilter('dateFrom', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-bleu focus:outline-none"
                   />
                 </div>
@@ -253,21 +272,17 @@ export default function InteractionsPage() {
                   </label>
                   <input
                     type="date"
-                    value={filterDateTo}
-                    onChange={(e) => setFilterDateTo(e.target.value)}
+                    value={filters.values.dateTo}
+                    onChange={(e) => filters.setFilter('dateTo', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-bleu focus:outline-none"
                   />
                 </div>
               </div>
 
-              {(filterType !== 'all' || filterDateFrom || filterDateTo) && (
+              {filters.hasActiveFilters && (
                 <div className="mt-3 flex items-center gap-2">
                   <button
-                    onClick={() => {
-                      setFilterType('all')
-                      setFilterDateFrom('')
-                      setFilterDateTo('')
-                    }}
+                    onClick={filters.reset}
                     className="text-sm text-bleu hover:underline"
                   >
                     Réinitialiser les filtres
@@ -284,7 +299,7 @@ export default function InteractionsPage() {
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold">
               Historique d'activité
-              {filterType !== 'all' && ` - ${ACTIVITY_TYPES.find(t => t.value === filterType)?.label}`}
+              {filters.values.type !== 'all' && ` - ${ACTIVITY_TYPES.find(t => t.value === filters.values.type)?.label}`}
             </h2>
           </div>
 
@@ -299,7 +314,7 @@ export default function InteractionsPage() {
               isLoading={activityLoading}
               isEmpty={!filteredActivities || filteredActivities.length === 0}
               emptyMessage={
-                filterType !== 'all' || filterDateFrom || filterDateTo
+                filters.hasActiveFilters
                   ? 'Aucune interaction ne correspond aux filtres'
                   : 'Aucune interaction pour cette organisation'
               }
@@ -317,6 +332,9 @@ export default function InteractionsPage() {
           activityQuery?.refetch?.()
         }}
       />
+
+      {/* Confirmation Dialog */}
+      <ConfirmDialogComponent />
     </div>
   )
 }
