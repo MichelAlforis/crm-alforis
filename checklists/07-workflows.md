@@ -1,8 +1,8 @@
 # 📋 Chapitre 7 - Workflows & Interactions
 
-**Status :** 🟡 EN COURS (Phase 2 - Frontend UI Workflows en cours)
-**Tests :** 5/14 (Backend + Migration + Frontend Liste + Builder)
-**Priorité :** 🔴 Haute
+**Status :** 🟢 Phase 2 TERMINÉE (80 templates opérationnels)
+**Tests :** 7/14 (Backend + Migration + Frontend + Bibliothèque 80 templates)
+**Priorité :** 🟢 Phase 2 complète → Phase 3 à planifier
 
 ---
 
@@ -60,12 +60,20 @@ crm-frontend/
     └── WorkflowBuilder.client.tsx    # Builder visuel ReactFlow
 ```
 
-### 🔄 Phase 2 : Frontend UI Workflows (EN COURS)
+### ✅ Phase 2 : Frontend UI Workflows + Bibliothèque (TERMINÉ)
 - ✅ Page `/workflows` avec liste paginée et filtres
 - ✅ Page `/workflows/new` full-page (stepper 3 étapes)
 - ✅ Builder visuel avec @xyflow/react
 - ✅ Mode visuel + mode JSON
 - ✅ Gestion statuts (draft/active/inactive) avec toggle
+- ✅ **80 templates Finance B2B** (20 initiaux + 60 nouveaux)
+- ✅ **10 catégories**: appels, réunions, mailing, relations, prospection, reporting, contrats, conformité, collaboration, partenariats, formation
+- ✅ **Bibliothèque templates** avec recherche fulltext
+- ✅ Hook `useWorkflowTemplates` avec filtres avancés (catégorie, trigger, difficulté)
+- ✅ Composant `WorkflowTemplateCard` avec métadonnées enrichies
+- ✅ Page `/workflows/library` avec filtres et statistiques
+- ✅ Metadata complète pour tous les 80 templates (IDs 21-100)
+- ✅ Base de données avec 80 templates insérés et opérationnels
 - ⬜ Tests utilisateur end-to-end
 
 ### 🔄 Phase 3 : Interactions (À VENIR)
@@ -85,6 +93,8 @@ crm-frontend/
 | 7.3 | Migration Next 15 + @xyflow/react | ✅ | Build Docker réussi, app opérationnelle |
 | 7.4 | Page "Workflows" accessible | ✅ | Liste workflows opérationnelle |
 | 7.5 | **Test** : Créer un workflow via UI | ✅ | Page /workflows/new avec builder visuel FUN |
+| 7.5b | **Test** : Bibliothèque de templates | ✅ | Page /workflows/library avec 20 templates B2B + recherche |
+| 7.5c | **Test** : Dupliquer un template | ✅ | Bouton "Utiliser" → redirection auto vers édition |
 | 7.6 | Assigner workflow à un contact | ⬜ | Logique métier à implémenter |
 
 ## Tests Interactions (8 tests)
@@ -145,14 +155,63 @@ reactStrictMode: true,
 - `a2753428` : 🔧 Nettoyage next.config.js Next 15
 - `55177687` : 💾 Sauvegarde avant migration
 
-### Phase 2 - Frontend UI
+### Phase 2 - Frontend UI + Bibliothèque 80 Templates
 - `652bc6e5` : 📋 Enrichissement checklist Chapitre 7
 - `fbfda43c` : ✨ Page /workflows/new avec builder visuel FUN
 - `65dd7734` : 🔧 Suppression complète système modal
 - `76992c7f` : 🔧 Suppression WorkflowCreateModal
 - `016916b4` : 🗑️ Suppression doublon /dashboard/workflows
+- ✅ **Bibliothèque 80 templates Finance B2B** (IDs 21-100)
+  - 60 nouveaux templates créés
+  - 10 catégories professionnelles
+  - Métadonnées complètes (tags, use cases, difficulté, temps setup)
+  - Filtres avancés (catégorie, trigger, difficulté, recherche fulltext)
+
+---
+
+## 🎯 Récapitulatif Phase 2 (Bibliothèque Templates)
+
+### Ce qui a été créé
+1. **60 nouveaux templates SQL** (`scripts/seed_workflow_templates_finance_60.sql`)
+   - Appels/Réunions: 6 templates (IDs 41-46)
+   - Mailing/Newsletters: 6 templates (IDs 47-52)
+   - Relations Client: 6 templates (IDs 53-58)
+   - Prospection/Leads: 7 templates (IDs 59-65)
+   - Reporting/Pilotage: 5 templates (IDs 66-70)
+   - **Contrats/Mandats**: 8 templates (IDs 71-78)
+   - **Conformité/RGPD**: 6 templates (IDs 79-84)
+   - **Collaboration Interne**: 6 templates (IDs 85-90)
+   - **Partenariats/Réseau**: 5 templates (IDs 91-95)
+   - **Formation/Onboarding**: 5 templates (IDs 96-100)
+
+2. **Script Python de génération** (`scripts/generate_template_metadata.py`)
+   - Génération automatique des métadonnées TypeScript
+   - Évite les erreurs de saisie manuelle
+   - Output: `/tmp/metadata_41_100.txt`
+
+3. **Mise à jour Hook Frontend** (`hooks/useWorkflowTemplates.ts`)
+   - Types étendus: 11 catégories (ajout de 5 nouvelles)
+   - Métadonnées complètes pour IDs 21-100
+   - Fonction de recherche fulltext multi-champs
+   - Filtres combinables (catégorie + trigger + difficulté)
+   - Statistiques automatiques
+
+### Base de données
+- **80 templates insérés** (IDs 21-100)
+- Tous avec trigger_type, actions, status = ACTIVE
+- is_template = true pour tous
+
+### Interface utilisateur
+- Page `/dashboard/workflows/library` opérationnelle
+- Barre de recherche fulltext
+- Filtres par catégorie (11 options)
+- Filtres par trigger (8 types)
+- Filtres par difficulté (facile/intermédiaire/avancé)
+- Affichage statistiques en temps réel
+- Bouton "Utiliser" → duplication automatique
 
 ---
 
 **Dernière mise à jour :** 24 Octobre 2025
+**Status Phase 2 :** ✅ TERMINÉ (80 templates opérationnels)
 **Prochaine étape :** Tests utilisateur end-to-end + Phase 3 Interactions
