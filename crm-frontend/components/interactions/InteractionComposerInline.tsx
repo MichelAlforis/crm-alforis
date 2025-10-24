@@ -13,6 +13,7 @@ import { useCreateInteraction } from '@/hooks/useInteractions'
 import type { InteractionType } from '@/types/interaction'
 import { INTERACTION_TYPE_LABELS, INTERACTION_TYPE_ICONS } from '@/types/interaction'
 import { Send } from 'lucide-react'
+import { useToast } from '@/hooks/useToast'
 
 export interface InteractionComposerInlineProps {
   defaultOrgId?: number
@@ -30,26 +31,40 @@ export default function InteractionComposerInline({
   const [body, setBody] = useState('')
 
   const createMutation = useCreateInteraction()
+  const { showToast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!title.trim()) return
 
-    await createMutation.mutateAsync({
-      org_id: defaultOrgId,
-      person_id: defaultPersonId,
-      type,
-      title: title.trim(),
-      body: body.trim() || undefined,
-    })
+    try {
+      await createMutation.mutateAsync({
+        org_id: defaultOrgId,
+        person_id: defaultPersonId,
+        type,
+        title: title.trim(),
+        body: body.trim() || undefined,
+      })
 
-    // Reset form
-    setTitle('')
-    setBody('')
-    setType('note')
+      // Reset form
+      setTitle('')
+      setBody('')
+      setType('note')
 
-    onCreated?.()
+      showToast({
+        type: 'success',
+        title: 'Interaction créée',
+      })
+
+      onCreated?.()
+    } catch (error: any) {
+      showToast({
+        type: 'error',
+        title: 'Erreur lors de la création',
+        message: error.message,
+      })
+    }
   }
 
   return (
@@ -60,24 +75,27 @@ export default function InteractionComposerInline({
 
       {/* Type selector */}
       <div className="grid grid-cols-3 md:grid-cols-6 gap-2 mb-3">
-        {(['call', 'email', 'meeting', 'visio', 'note', 'other'] as const).map((t) => (
-          <button
-            key={t}
-            type="button"
-            onClick={() => setType(t)}
-            className={`
-              px-3 py-2 rounded-lg text-sm font-medium transition-colors
-              ${
-                type === t
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-              }
-            `}
-          >
-            <span className="mr-1">{INTERACTION_TYPE_ICONS[t]}</span>
-            {INTERACTION_TYPE_LABELS[t]}
-          </button>
-        ))}
+        {(['call', 'email', 'meeting', 'visio', 'note', 'other'] as const).map((t) => {
+          const Icon = INTERACTION_TYPE_ICONS[t]
+          return (
+            <button
+              key={t}
+              type="button"
+              onClick={() => setType(t)}
+              className={`
+                flex items-center justify-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                ${
+                  type === t
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                }
+              `}
+            >
+              <Icon size={16} />
+              <span className="hidden md:inline">{INTERACTION_TYPE_LABELS[t]}</span>
+            </button>
+          )
+        })}
       </div>
 
       {/* Titre */}
