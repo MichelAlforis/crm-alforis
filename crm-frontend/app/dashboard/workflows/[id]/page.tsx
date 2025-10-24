@@ -18,6 +18,14 @@ import {
   MinusCircle,
   Copy,
   BookTemplate,
+  Zap,
+  Target,
+  Users,
+  Mail,
+  ListTodo,
+  Bell,
+  Tag,
+  CalendarClock,
 } from 'lucide-react'
 
 export default function WorkflowDetailPage() {
@@ -101,6 +109,79 @@ export default function WorkflowDetailPage() {
     } catch (error) {
       console.error('Erreur duplication:', error)
     }
+  }
+
+  // Helper: Traduire trigger en langage naturel
+  const getTriggerDescription = (triggerType: string, triggerConfig: any) => {
+    const descriptions: Record<string, string> = {
+      organisation_created: '🎯 Quand une nouvelle organisation est créée',
+      organisation_updated: '✏️ Quand une organisation est modifiée',
+      deal_created: '💼 Quand un nouveau deal est créé',
+      deal_stage_changed: '📊 Quand le statut d\'un deal change',
+      inactivity_delay: '⏰ Quand une organisation est inactive depuis X jours',
+      scheduled: '📅 À intervalles réguliers (planifié)',
+      webhook_received: '🔗 Quand un webhook externe est reçu',
+      manual: '👤 Déclenché manuellement',
+    }
+    return descriptions[triggerType] || `Trigger: ${triggerType}`
+  }
+
+  // Helper: Traduire actions en langage naturel avec icônes
+  const getActionDescription = (action: any) => {
+    const type = action.type || action.config?.type
+
+    switch (type) {
+      case 'send_email':
+      case 'SEND_EMAIL':
+        return {
+          icon: <Mail className="text-blue-600" size={20} />,
+          label: 'Envoi d\'email',
+          description: `Email à ${action.config?.to || 'destinataire'}: "${action.config?.subject || action.config?.template || 'Sujet'}"`,
+        }
+      case 'create_task':
+      case 'CREATE_TASK':
+        return {
+          icon: <ListTodo className="text-green-600" size={20} />,
+          label: 'Création de tâche',
+          description: `"${action.config?.title || 'Nouvelle tâche'}" ${action.config?.due_days ? `(échéance: +${action.config.due_days}j)` : ''}`,
+        }
+      case 'send_notification':
+      case 'SEND_NOTIFICATION':
+        return {
+          icon: <Bell className="text-orange-600" size={20} />,
+          label: 'Notification',
+          description: action.config?.message || 'Notification envoyée',
+        }
+      case 'add_tag':
+      case 'ADD_TAG':
+        return {
+          icon: <Tag className="text-purple-600" size={20} />,
+          label: 'Ajout de tag',
+          description: `Tag: "${action.config?.tag || 'nouveau tag'}"`,
+        }
+      case 'update_field':
+      case 'UPDATE_FIELD':
+        return {
+          icon: <Target className="text-indigo-600" size={20} />,
+          label: 'Mise à jour de champ',
+          description: `${action.config?.field || 'champ'} = ${action.config?.value || 'valeur'}`,
+        }
+      default:
+        return {
+          icon: <Zap className="text-gray-600" size={20} />,
+          label: type || 'Action',
+          description: JSON.stringify(action.config).slice(0, 100),
+        }
+    }
+  }
+
+  // Helper: Calculer temps estimé basé sur nombre d'actions
+  const getEstimatedDuration = (actions: any[]) => {
+    const count = actions.length
+    if (count <= 2) return '< 5 secondes'
+    if (count <= 4) return '5-10 secondes'
+    if (count <= 6) return '10-15 secondes'
+    return '15-30 secondes'
   }
 
   const getStatusIcon = (status: string) => {
@@ -225,6 +306,88 @@ export default function WorkflowDetailPage() {
             </div>
           </div>
         </div>
+
+        {/* Section "Comment ça marche?" pour les templates */}
+        {workflow.is_template && (
+          <div className="mb-8 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/10 dark:to-purple-900/10 border border-blue-200 dark:border-blue-800 rounded-xl p-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
+              <Zap className="text-blue-600" size={28} />
+              Comment ça marche?
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              {/* Déclencheur */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow-sm">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                    <Target className="text-blue-600" size={20} />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Déclencheur</h3>
+                </div>
+                <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                  {getTriggerDescription(workflow.trigger_type, workflow.trigger_config)}
+                </p>
+              </div>
+
+              {/* Actions */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow-sm">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                    <ListTodo className="text-green-600" size={20} />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Actions</h3>
+                </div>
+                <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                  <strong>{workflow.actions.length} action{workflow.actions.length > 1 ? 's' : ''}</strong> seront exécutées automatiquement
+                </p>
+              </div>
+
+              {/* Durée */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow-sm">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                    <CalendarClock className="text-purple-600" size={20} />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Durée</h3>
+                </div>
+                <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                  Temps d'exécution estimé: <strong>{getEstimatedDuration(workflow.actions)}</strong>
+                </p>
+              </div>
+            </div>
+
+            {/* Liste des actions détaillées */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow-sm">
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <Zap className="text-orange-600" size={20} />
+                Ce workflow va automatiquement:
+              </h3>
+              <div className="space-y-3">
+                {workflow.actions.map((action: any, idx: number) => {
+                  const actionInfo = getActionDescription(action)
+                  return (
+                    <div key={idx} className="flex items-start gap-4 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
+                      <div className="flex items-center gap-3 flex-shrink-0">
+                        <span className="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full flex items-center justify-center text-sm font-bold">
+                          {idx + 1}
+                        </span>
+                        {actionInfo.icon}
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-900 dark:text-white text-sm mb-1">
+                          {actionInfo.label}
+                        </p>
+                        <p className="text-gray-600 dark:text-gray-400 text-sm">
+                          {actionInfo.description}
+                        </p>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Tabs */}
         <div className="flex gap-2 mb-6 border-b border-gray-200 dark:border-gray-700">
