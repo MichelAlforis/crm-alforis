@@ -1,7 +1,7 @@
 # 📋 Chapitre 7 - Workflows & Interactions
 
-**Status :** 🟡 EN COURS (Phase 1 - Backend & Migration terminée)
-**Tests :** 3/14 (Backend + Migration)
+**Status :** 🟡 EN COURS (Phase 2 - Frontend UI Workflows en cours)
+**Tests :** 5/14 (Backend + Migration + Frontend Liste + Builder)
 **Priorité :** 🔴 Haute
 
 ---
@@ -47,22 +47,26 @@ crm-api/
 └── alembic/versions/xxx_add_workflow_model.py
 ```
 
-#### 📁 Fichiers Frontend Migrés
+#### 📁 Fichiers Frontend Créés
 ```
 crm-frontend/
 ├── package.json                # Next 15 + @xyflow/react
 ├── next.config.js              # Configuration optimisée
-├── components/workflows/
-│   ├── WorkflowBuilder.client.tsx    # Builder visuel ReactFlow
-│   └── WorkflowCreateModal.tsx       # Modal création workflow
+├── app/workflows/
+│   ├── page.tsx                # Liste workflows avec filtres
+│   ├── new/page.tsx            # Création workflow (stepper 3 étapes)
+│   └── [id]/page.tsx           # Édition workflow
+└── components/workflows/
+    └── WorkflowBuilder.client.tsx    # Builder visuel ReactFlow
 ```
 
 ### 🔄 Phase 2 : Frontend UI Workflows (EN COURS)
-- ⬜ Page `/workflows` avec liste
-- ⬜ Modal création workflow (JSON + Visuel)
-- ⬜ Activation du builder visuel
-- ⬜ Gestion statuts (draft/active/paused)
-- ⬜ Tests utilisateur
+- ✅ Page `/workflows` avec liste paginée et filtres
+- ✅ Page `/workflows/new` full-page (stepper 3 étapes)
+- ✅ Builder visuel avec @xyflow/react
+- ✅ Mode visuel + mode JSON
+- ✅ Gestion statuts (draft/active/inactive) avec toggle
+- ⬜ Tests utilisateur end-to-end
 
 ### 🔄 Phase 3 : Interactions (À VENIR)
 - ⬜ Backend : Modèle Interaction + endpoints
@@ -79,8 +83,8 @@ crm-frontend/
 | 7.1 | API GET /workflows fonctionne | ✅ | Backend testé avec curl |
 | 7.2 | API POST /workflows crée un workflow | ✅ | JSON validé via Pydantic |
 | 7.3 | Migration Next 15 + @xyflow/react | ✅ | Build Docker réussi, app opérationnelle |
-| 7.4 | Page "Workflows" accessible | ⬜ | Frontend UI à créer |
-| 7.5 | **Test** : Créer un workflow via UI | ⬜ | Modal + Builder en attente |
+| 7.4 | Page "Workflows" accessible | ✅ | Liste workflows opérationnelle |
+| 7.5 | **Test** : Créer un workflow via UI | ✅ | Page /workflows/new avec builder visuel FUN |
 | 7.6 | Assigner workflow à un contact | ⬜ | Logique métier à implémenter |
 
 ## Tests Interactions (8 tests)
@@ -135,12 +139,20 @@ reactStrictMode: true,
 
 ## 📝 Commits Importants
 
+### Phase 1 - Migration
 - `080bb387` : ✨ Migration Next 15 + @xyflow/react
 - `29a1660b` : 📦 Update package-lock.json
 - `a2753428` : 🔧 Nettoyage next.config.js Next 15
 - `55177687` : 💾 Sauvegarde avant migration
 
+### Phase 2 - Frontend UI
+- `652bc6e5` : 📋 Enrichissement checklist Chapitre 7
+- `fbfda43c` : ✨ Page /workflows/new avec builder visuel FUN
+- `65dd7734` : 🔧 Suppression complète système modal
+- `76992c7f` : 🔧 Suppression WorkflowCreateModal
+- `016916b4` : 🗑️ Suppression doublon /dashboard/workflows
+
 ---
 
 **Dernière mise à jour :** 24 Octobre 2025
-**Prochaine étape :** Frontend UI page Workflows + Modal création
+**Prochaine étape :** Tests utilisateur end-to-end + Phase 3 Interactions
