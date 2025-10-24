@@ -16,6 +16,8 @@ import {
   XCircle,
   AlertCircle,
   MinusCircle,
+  Copy,
+  BookTemplate,
 } from 'lucide-react'
 
 export default function WorkflowDetailPage() {
@@ -34,6 +36,7 @@ export default function WorkflowDetailPage() {
     toggleWorkflow,
     deleteWorkflow,
     executeWorkflow,
+    duplicateWorkflow,
   } = useWorkflows()
 
   const { confirm, ConfirmDialogComponent } = useConfirm()
@@ -91,6 +94,15 @@ export default function WorkflowDetailPage() {
     }
   }
 
+  const handleDuplicate = async () => {
+    try {
+      const newWorkflow = await duplicateWorkflow(workflowId)
+      router.push(`/dashboard/workflows/${newWorkflow.id}`)
+    } catch (error) {
+      console.error('Erreur duplication:', error)
+    }
+  }
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'success':
@@ -140,45 +152,76 @@ export default function WorkflowDetailPage() {
           </button>
 
           <div className="flex justify-between items-start">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                {workflow.name}
-              </h1>
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                  {workflow.name}
+                </h1>
+                {workflow.is_template && (
+                  <span className="px-3 py-1 rounded-lg text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 flex items-center gap-2">
+                    <BookTemplate size={16} />
+                    Template
+                  </span>
+                )}
+              </div>
               {workflow.description && (
                 <p className="text-gray-600 dark:text-gray-400">{workflow.description}</p>
+              )}
+              {workflow.is_template && (
+                <div className="mt-3 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-3">
+                  <p className="text-sm text-purple-900 dark:text-purple-200">
+                    💡 <strong>Template en lecture seule</strong> - Ce workflow est un modèle prêt à l'emploi.
+                    Utilisez le bouton "Utiliser ce template" pour créer votre propre version personnalisable.
+                  </p>
+                </div>
               )}
             </div>
 
             <div className="flex items-center gap-2">
-              <button
-                onClick={() => setShowExecuteModal(true)}
-                className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-                disabled={operation.isLoading}
-              >
-                <Play size={18} />
-                Exécuter
-              </button>
+              {workflow.is_template ? (
+                // Boutons pour TEMPLATE
+                <button
+                  onClick={handleDuplicate}
+                  className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-purple-700 hover:to-blue-700 transition shadow-lg shadow-purple-500/30"
+                  disabled={operation.isLoading}
+                >
+                  <Copy size={18} />
+                  Utiliser ce template
+                </button>
+              ) : (
+                // Boutons pour WORKFLOW PERSONNALISÉ
+                <>
+                  <button
+                    onClick={() => setShowExecuteModal(true)}
+                    className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                    disabled={operation.isLoading}
+                  >
+                    <Play size={18} />
+                    Exécuter
+                  </button>
 
-              <button
-                onClick={handleToggle}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition ${
-                  workflow.status === 'active'
-                    ? 'bg-green-600 text-white hover:bg-green-700'
-                    : 'bg-gray-600 text-white hover:bg-gray-700'
-                }`}
-                disabled={operation.isLoading}
-              >
-                {workflow.status === 'active' ? <Power size={18} /> : <PowerOff size={18} />}
-                {workflow.status === 'active' ? 'Actif' : 'Inactif'}
-              </button>
+                  <button
+                    onClick={handleToggle}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition ${
+                      workflow.status === 'active'
+                        ? 'bg-green-600 text-white hover:bg-green-700'
+                        : 'bg-gray-600 text-white hover:bg-gray-700'
+                    }`}
+                    disabled={operation.isLoading}
+                  >
+                    {workflow.status === 'active' ? <Power size={18} /> : <PowerOff size={18} />}
+                    {workflow.status === 'active' ? 'Actif' : 'Inactif'}
+                  </button>
 
-              <button
-                onClick={handleDelete}
-                className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition"
-                disabled={operation.isLoading}
-              >
-                <Trash2 size={18} />
-              </button>
+                  <button
+                    onClick={handleDelete}
+                    className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition"
+                    disabled={operation.isLoading}
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
