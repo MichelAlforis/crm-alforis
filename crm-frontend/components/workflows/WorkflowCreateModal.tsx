@@ -9,12 +9,18 @@ import { Input } from '@/components/shared/Input'
 import { Select } from '@/components/shared/Select'
 import dynamic from 'next/dynamic'
 
-// Types pour ReactFlow (définis localement pour éviter l'import SSR)
-type Node = any
-type Edge = any
-
 // Import dynamique pour éviter SSR issues avec ReactFlow
-const WorkflowBuilder = dynamic(() => import('./WorkflowBuilder'), { ssr: false })
+const WorkflowBuilderClient = dynamic(() => import('./WorkflowBuilder.client'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[600px] flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+        <p className="text-gray-600">Chargement du builder visuel...</p>
+      </div>
+    </div>
+  ),
+})
 
 interface WorkflowCreateModalProps {
   isOpen: boolean
@@ -83,16 +89,11 @@ export default function WorkflowCreateModal({
   const [conditions, setConditions] = useState('')
   const [actions, setActions] = useState(EXAMPLE_ACTIONS)
 
-  // Builder visuel
-  const [builderNodes, setBuilderNodes] = useState<Node[]>([
-    {
-      id: 'trigger-1',
-      type: 'trigger',
-      position: { x: 250, y: 50 },
-      data: { label: 'Déclencheur' },
-    },
-  ])
-  const [builderEdges, setBuilderEdges] = useState<Edge[]>([])
+  // Ref pour stocker les nodes/edges du builder visuel
+  const [builderData, setBuilderData] = useState<{ nodes: any[]; edges: any[] }>({
+    nodes: [],
+    edges: [],
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -125,10 +126,10 @@ export default function WorkflowCreateModal({
 
       // Si mode visuel, convertir les nodes en actions
       if (useVisualBuilder) {
-        parsedActions = builderNodes
-          .filter(node => node.type === 'action')
-          .map(node => ({
-            type: node.data.type,
+        parsedActions = builderData.nodes
+          .filter((node) => node.type !== 'input') // Exclure le trigger
+          .map((node) => ({
+            type: node.data.label || 'custom_action',
             config: node.data.config || {},
           }))
 
@@ -318,12 +319,9 @@ export default function WorkflowCreateModal({
             {useVisualBuilder ? (
               <div className="space-y-3">
                 <h3 className="font-medium text-gray-900 border-b pb-2">Workflow visuel *</h3>
-                <WorkflowBuilder
-                  initialNodes={builderNodes}
-                  initialEdges={builderEdges}
+                <WorkflowBuilderClient
                   onUpdate={(nodes, edges) => {
-                    setBuilderNodes(nodes)
-                    setBuilderEdges(edges)
+                    setBuilderData({ nodes, edges })
                   }}
                 />
               </div>
@@ -365,7 +363,7 @@ export default function WorkflowCreateModal({
               </button>
               <button
                 type="submit"
-                disabled={loading || !name || (useVisualBuilder && builderNodes.filter(n => n.type === 'action').length === 0)}
+                disabled={loading || !name || (useVisualBuilder && builderData.nodes.filter((n) => n.type !== 'input').length === 0)}
                 className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {loading ? 'Création...' : 'Créer le workflow'}

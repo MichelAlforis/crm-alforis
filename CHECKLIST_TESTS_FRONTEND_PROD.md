@@ -1664,12 +1664,12 @@ Statut: ✅ IMPLÉMENTÉ - ⏳ TESTS EN COURS
 
 | # | Test | Statut | Remarques |
 |---|------|--------|-----------|
-| 7.1 | Page "Workflows" accessible | ⬜ |  |
-| 7.2 | Liste des workflows affichée | ⬜ |  |
-| 7.3 | Bouton "Nouveau Workflow" visible | ⬜ |  |
-| 7.4 | **Test** : Créer un workflow simple | ⬜ |  |
-| 7.5 | Définir étapes du workflow | ⬜ |  |
-| 7.6 | Assigner workflow à un contact | ⬜ |  |
+| 7.1 | Page "Workflows" accessible | ⚠️ | erreur 404 |
+| 7.2 | Liste des workflows affichée | ⚠️ | Erreur lors du chargement des workflows |
+| 7.3 | Bouton "Nouveau Workflow" visible | ✅ |  |
+| 7.4 | **Test** : Créer un workflow simple | ❌ | passer de json à un builder UI +++ |
+| 7.5 | Définir étapes du workflow | ❌ | en JSON liberté mais difficile à lire |
+| 7.6 | Assigner workflow à un contact | ❌ | trop complexe |
 
 ### Tests Interactions
 
