@@ -143,6 +143,7 @@ class WorkflowListItem(BaseSchema):
     description: Optional[str]
     status: WorkflowStatus
     trigger_type: WorkflowTriggerType
+    is_template: bool
     execution_count: int
     last_executed_at: Optional[datetime]
     created_at: datetime

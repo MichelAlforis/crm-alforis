@@ -24,7 +24,7 @@ export default function WorkflowsPage() {
 
   // États des filtres
   const [filter, setFilter] = useState<'all' | 'active' | 'inactive' | 'draft'>('all')
-  const [typeFilter, setTypeFilter] = useState<'all' | 'template' | 'manual'>('all')
+  const [typeFilter, setTypeFilter] = useState<'all' | 'template' | 'custom'>('all')
   const [searchQuery, setSearchQuery] = useState('')
 
   // Charger les workflows au démarrage
@@ -76,9 +76,9 @@ export default function WorkflowsPage() {
     if (!workflows.data?.items) return []
 
     return workflows.data.items.filter(w => {
-      // Filtre par type (Template/Manuel)
+      // Filtre par type (Template/Personnalisé)
       if (typeFilter === 'template' && !w.is_template) return false
-      if (typeFilter === 'manual' && w.is_template) return false
+      if (typeFilter === 'custom' && w.is_template) return false
 
       // Filtre par recherche
       if (searchQuery) {
@@ -123,7 +123,7 @@ export default function WorkflowsPage() {
     return {
       total: items.length,
       templates: items.filter(w => w.is_template).length,
-      manual: items.filter(w => !w.is_template).length,
+      custom: items.filter(w => !w.is_template).length,
       active: items.filter(w => w.status === 'active').length,
     }
   }, [workflows.data?.items])
@@ -140,7 +140,7 @@ export default function WorkflowsPage() {
                 Workflows Automatisés
               </h1>
               <p className="text-gray-600 dark:text-gray-400 mt-2">
-                {stats.total} workflows disponibles ({stats.templates} templates + {stats.manual} personnalisés)
+                {stats.total} workflows disponibles ({stats.templates} templates + {stats.custom} personnalisés)
               </p>
             </div>
             <a
@@ -195,7 +195,7 @@ export default function WorkflowsPage() {
             {/* Séparateur */}
             <div className="h-8 w-px bg-gray-300 dark:bg-gray-700"></div>
 
-            {/* Filtre Type (Template/Manuel) */}
+            {/* Filtre Type (Template/Personnalisé) */}
             <div className="flex gap-2">
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300 self-center">Type:</span>
               <button
@@ -220,15 +220,15 @@ export default function WorkflowsPage() {
                 Templates ({stats.templates})
               </button>
               <button
-                onClick={() => setTypeFilter('manual')}
+                onClick={() => setTypeFilter('custom')}
                 className={`px-4 py-2 rounded-lg transition flex items-center gap-2 ${
-                  typeFilter === 'manual'
+                  typeFilter === 'custom'
                     ? 'bg-purple-600 text-white'
                     : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-700'
                 }`}
               >
                 <User size={16} />
-                Manuels ({stats.manual})
+                Personnalisés ({stats.custom})
               </button>
             </div>
 
@@ -306,7 +306,7 @@ export default function WorkflowsPage() {
                       ) : (
                         <span className="px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 flex items-center gap-1">
                           <User size={12} />
-                          Manuel
+                          Personnalisé
                         </span>
                       )}
                     </div>
