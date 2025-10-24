@@ -15,6 +15,7 @@ import Sidebar from '@/components/shared/Sidebar'
 import QueryProvider from '@/components/providers/QueryProvider'
 import InstallPrompt from '@/components/pwa/InstallPrompt'
 import OfflineIndicator from '@/components/pwa/OfflineIndicator'
+import { OnboardingTour } from '@/components/onboarding/OnboardingTour'
 import { Loader2 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -60,32 +61,34 @@ export default function DashboardLayout({
   // Main dashboard layout
   return (
     <QueryProvider>
-      <div className="dashboard-layout flex">
-        {/* Sidebar Navigation - État géré par le hook useSidebar */}
-        <Sidebar />
+      <OnboardingTour>
+        <div className="dashboard-layout flex">
+          {/* Sidebar Navigation - État géré par le hook useSidebar */}
+          <Sidebar />
 
-        {/* Main Content Area */}
-        <div
-          className={clsx(
-            'flex flex-col min-h-screen flex-1 transition-all duration-300 ease-in-out',
-            'w-full lg:w-auto'
-          )}
-        >
-          {/* Top Navbar */}
-          <Navbar />
+          {/* Main Content Area */}
+          <div
+            className={clsx(
+              'flex flex-col min-h-screen flex-1 transition-all duration-300 ease-in-out',
+              'w-full lg:w-auto'
+            )}
+          >
+            {/* Top Navbar */}
+            <Navbar />
 
-          {/* Page Content */}
-          <main className="flex-1 overflow-auto bg-gray-50">
-            <div className="dashboard-content animate-fadeIn">
-              {children}
-            </div>
-          </main>
+            {/* Page Content */}
+            <main className="flex-1 overflow-auto bg-gray-50">
+              <div className="dashboard-content animate-fadeIn">
+                {children}
+              </div>
+            </main>
+          </div>
+
+          {/* PWA Components */}
+          <InstallPrompt />
+          <OfflineIndicator />
         </div>
-
-        {/* PWA Components */}
-        <InstallPrompt />
-        <OfflineIndicator />
-      </div>
+      </OnboardingTour>
     </QueryProvider>
   )
 }

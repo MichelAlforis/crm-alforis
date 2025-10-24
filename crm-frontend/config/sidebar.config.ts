@@ -26,6 +26,12 @@ import {
   Link as LinkIcon,
   Zap,
   Database,
+  HelpCircle,
+  User,
+  CreditCard,
+  Plug,
+  Shield,
+  Palette,
 } from 'lucide-react'
 import { SidebarSection } from '@/hooks/useSidebar'
 
@@ -162,6 +168,56 @@ export const SIDEBAR_SECTIONS: SidebarSection[] = [
         description: 'Templates email',
       },
     ],
+  },
+
+  // ========================================
+  // 6. PARAMÈTRES - Configuration & Admin
+  // ========================================
+  {
+    label: 'Paramètres',
+    href: '/dashboard/settings',
+    icon: Settings,
+    description: 'Configuration & admin',
+    badge: null,
+    gradient: 'from-gray-500 to-slate-600',
+    submenu: [
+      {
+        label: 'Général',
+        href: '/dashboard/settings',
+        icon: User,
+        description: 'Profil, notifications, sécurité',
+      },
+      {
+        label: 'Équipe & Facturation',
+        href: '/dashboard/settings/team',
+        icon: CreditCard,
+        description: 'Abonnement, utilisateurs',
+      },
+      {
+        label: 'Intégrations',
+        href: '/dashboard/settings/integrations',
+        icon: Plug,
+        description: 'APIs, webhooks, connecteurs',
+      },
+      {
+        label: 'Analytics Sidebar',
+        href: '/dashboard/settings/sidebar-analytics',
+        icon: BarChart3,
+        description: 'Statistiques navigation',
+      },
+    ],
+  },
+
+  // ========================================
+  // 7. CENTRE D'AIDE
+  // ========================================
+  {
+    label: "Centre d'aide",
+    href: '/dashboard/help',
+    icon: HelpCircle,
+    description: 'FAQ & guides',
+    badge: null,
+    gradient: 'from-amber-500 to-orange-500',
   },
 
 ]

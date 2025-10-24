@@ -17,10 +17,11 @@ COPY package*.json ./
 # --- STAGE 2: DEVELOPMENT ---
 FROM base AS development
 
-# Installer TOUTES les dépendances (dev + prod)
-RUN npm ci
+# OPTIMISATION: Installer les dépendances avec cache npm
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci
 
-# Copier le code source
+# Copier le code source (après les deps pour profiter du cache)
 COPY . .
 
 # Rendre le script exécutable
@@ -39,14 +40,16 @@ CMD ["npm", "run", "dev"]
 # --- STAGE 3: DEPENDENCIES (pour prod) ---
 FROM base AS dependencies
 
-# Installer uniquement les dépendances de production
-RUN npm ci --only=production
+# OPTIMISATION: Installer uniquement les dépendances de production avec cache
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --only=production
 
 # --- STAGE 4: BUILD ---
 FROM base AS builder
 
-# Installer toutes les dépendances pour le build
-RUN npm ci
+# OPTIMISATION: Installer toutes les dépendances pour le build avec cache
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci
 
 # Copier le code source
 COPY . .
@@ -55,8 +58,9 @@ COPY . .
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 
-# Build de production
-RUN npm run build
+# OPTIMISATION: Build de production avec cache Next.js
+RUN --mount=type=cache,target=/app/.next/cache \
+    npm run build
 
 # --- STAGE 5: PRODUCTION ---
 FROM node:20-slim AS production

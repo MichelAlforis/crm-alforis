@@ -5,6 +5,7 @@ import { TrendingUp, Mail } from 'lucide-react'
 import { Input } from '@/components/shared/Input'
 import { Select } from '@/components/shared/Select'
 import { Alert } from '@/components/shared/Alert'
+import { HelpTooltip } from '@/components/help/HelpTooltip'
 import { apiClient } from '@/lib/api'
 import { logger } from '@/lib/logger'
 
@@ -128,9 +129,16 @@ export const Step1BasicInfo: React.FC<Step1BasicInfoProps> = ({
 
       {/* Sélection du produit financier (optionnel) */}
       <div className="space-y-spacing-sm">
-        <label className="block text-sm font-medium text-text-primary">
-          Produit financier (optionnel)
-        </label>
+        <div className="flex items-center gap-2 mb-1">
+          <label className="block text-sm font-medium text-text-primary">
+            Produit financier (optionnel)
+          </label>
+          <HelpTooltip
+            content="Associez cette campagne à un produit spécifique (OPCVM, fonds, assurance-vie) pour tracker les performances. Sans produit : campagne de prospection ou newsletter générique."
+            learnMoreLink="/dashboard/help/guides/marketing#produits"
+            size="sm"
+          />
+        </div>
         <p className="text-xs text-text-secondary mb-2">
           Sélectionnez un produit si cette campagne vise à promouvoir un produit spécifique. Laissez vide pour une campagne de prospection ou newsletter.
         </p>
@@ -151,9 +159,16 @@ export const Step1BasicInfo: React.FC<Step1BasicInfoProps> = ({
 
       {/* Sélection du template email (optionnel) */}
       <div className="space-y-spacing-sm">
-        <label className="block text-sm font-medium text-text-primary">
-          Template d'email (optionnel)
-        </label>
+        <div className="flex items-center gap-2 mb-1">
+          <label className="block text-sm font-medium text-text-primary">
+            Template d'email (optionnel)
+          </label>
+          <HelpTooltip
+            content="Le template définit le design et la structure de l'email. Choisissez un template existant, ou laissez vide pour auto-génération depuis les infos du produit (si sélectionné)."
+            learnMoreLink="/dashboard/help/guides/marketing#templates"
+            size="sm"
+          />
+        </div>
         <p className="text-xs text-text-secondary mb-2">
           Sélectionnez un template existant ou laissez vide pour génération automatique (si produit sélectionné).
         </p>

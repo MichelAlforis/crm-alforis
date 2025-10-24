@@ -12,7 +12,7 @@ import { KPIForm } from '@/components/forms'
 import { KPI, KPICreate } from '@/lib/types'
 
 export default function KPIsPage() {
-  const { data: organisations } = useOrganisations({ limit: 1000 })
+  const { data: organisations } = useOrganisations({ limit: 200 })
   const { confirm, ConfirmDialogComponent } = useConfirm()
   const [selectedFournisseurId, setSelectedFournisseurId] = useState<number | null>(null)
   const [kpis, setKpis] = useState<KPI[]>([])

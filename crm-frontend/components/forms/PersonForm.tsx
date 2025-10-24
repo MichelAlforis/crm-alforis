@@ -9,6 +9,7 @@ import { Input, Button, Alert, Select } from '@/components/shared'
 import { Person, PersonInput } from '@/lib/types'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import { useToast } from '@/components/ui/Toast'
+import { HelpTooltip } from '@/components/help/HelpTooltip'
 
 interface PersonFormProps {
   initialData?: Person
@@ -81,12 +82,23 @@ export function PersonForm({
         />
       </div>
 
-      <Input
-        label="Rôle / Fonction"
-        {...register('role')}
-        error={errors.role?.message}
-        placeholder="ex: Directeur des partenariats"
-      />
+      <div>
+        <div className="flex items-center gap-2 mb-2">
+          <label className="block text-sm font-medium text-gray-700">
+            Rôle / Fonction
+          </label>
+          <HelpTooltip
+            content="Poste occupé dans l'organisation : Directeur, Gérant, Responsable commercial, etc. Cette info aide à cibler vos communications selon les décideurs."
+            learnMoreLink="/dashboard/help/guides/personnes#roles"
+            size="sm"
+          />
+        </div>
+        <Input
+          {...register('role')}
+          error={errors.role?.message}
+          placeholder="ex: Directeur des partenariats"
+        />
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Input
@@ -105,12 +117,23 @@ export function PersonForm({
         />
       </div>
 
-      <Input
-        label="Profil LinkedIn"
-        {...register('linkedin_url')}
-        error={errors.linkedin_url?.message}
-        placeholder="https://www.linkedin.com/in/..."
-      />
+      <div>
+        <div className="flex items-center gap-2 mb-2">
+          <label className="block text-sm font-medium text-gray-700">
+            Profil LinkedIn
+          </label>
+          <HelpTooltip
+            content="URL du profil LinkedIn de la personne. Permet de suivre son évolution professionnelle et d'accéder rapidement à son réseau."
+            learnMoreLink="/dashboard/help/guides/personnes#linkedin"
+            size="sm"
+          />
+        </div>
+        <Input
+          {...register('linkedin_url')}
+          error={errors.linkedin_url?.message}
+          placeholder="https://www.linkedin.com/in/..."
+        />
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Select

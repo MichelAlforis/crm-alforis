@@ -10,6 +10,7 @@ import { ArrowLeft } from 'lucide-react'
 import { useMandats } from '@/hooks/useMandats'
 import { useTableColumns } from '@/hooks/useTableColumns'
 import { useFilters } from '@/hooks/useFilters'
+import { usePagination } from '@/hooks/usePagination'
 import { Card, Button, Table, Alert, AdvancedFilters, ExportButtons, ColumnSelector } from '@/components/shared'
 import SearchBar from '@/components/search/SearchBar'
 import { MandatStatus } from '@/lib/types'
@@ -31,6 +32,9 @@ export default function MandatsPage() {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | undefined>()
+
+  // Use pagination hook
+  const pagination = usePagination({ initialLimit: 20 })
 
   // Use new useFilters hook
   const filters = useFilters<MandatFilters>({
@@ -216,6 +220,9 @@ export default function MandatsPage() {
       return 0
     })
 
+  // Paginate filtered and sorted data
+  const paginatedMandats = filteredMandats.slice(pagination.skip, pagination.skip + pagination.limit)
+
   const exportParams = {
     status: filters.values.status || undefined,
   }
@@ -284,17 +291,17 @@ export default function MandatsPage() {
       <Card>
         <Table
           columns={visibleColumns}
-          data={filteredMandats}
+          data={paginatedMandats}
           isLoading={isLoading}
           isEmpty={filteredMandats.length === 0}
           sortConfig={sortConfig}
           onSort={handleSort}
           pagination={{
-            total: data?.total || 0,
-            skip: skip,
-            limit: limit,
-            onPageChange: (newSkip) => setSkip(newSkip),
-            onLimitChange: (newLimit) => setLimit(newLimit),
+            total: filteredMandats.length,
+            skip: pagination.skip,
+            limit: pagination.limit,
+            onPageChange: pagination.setSkip,
+            onLimitChange: pagination.setLimit,
           }}
         />
       </Card>

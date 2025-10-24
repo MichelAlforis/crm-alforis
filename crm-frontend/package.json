@@ -18,7 +18,10 @@
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
     "@hookform/resolvers": "^3.3.0",
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "@reactour/tour": "^3.8.0",
     "@tanstack/react-query": "^5.90.5",
+    "@xyflow/react": "^12.0.0",
     "autoprefixer": "^10.4.0",
     "axios": "^1.6.0",
     "clsx": "^2.1.1",
@@ -31,7 +34,6 @@
     "react-dom": "^18.3.1",
     "react-email-editor": "^1.7.11",
     "react-hook-form": "^7.48.0",
-    "@xyflow/react": "^12.0.0",
     "recharts": "^2.10.0",
     "tailwindcss": "^3.3.0",
     "typescript": "^5.3.0",

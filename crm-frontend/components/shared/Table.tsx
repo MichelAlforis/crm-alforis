@@ -128,13 +128,12 @@ const Pagination = ({ total, skip, limit, onPageChange, onLimitChange }: Paginat
   const endItem = Math.min(skip + limit, total)
 
   return (
-    <div className="flex items-center justify-between px-6 py-3 border-t border-gray-200 bg-white">
+    <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-gradient-to-r from-white via-blue-50/30 to-white">
       {/* Left: Info + Limit Selector */}
       <div className="flex items-center gap-4">
-        <div className="text-sm text-gray-600">
-          Affichage de <span className="font-medium text-gray-900">{startItem}</span> à{' '}
-          <span className="font-medium text-gray-900">{endItem}</span> sur{' '}
-          <span className="font-medium text-gray-900">{total}</span> résultats
+        <div className="text-sm text-gray-700">
+          Affichage <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">{startItem}-{endItem}</span> sur{' '}
+          <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">{total}</span>
         </div>
 
         {/* Limit selector */}
@@ -144,10 +143,10 @@ const Pagination = ({ total, skip, limit, onPageChange, onLimitChange }: Paginat
             <select
               value={limit}
               onChange={(e) => handleLimitChange(Number(e.target.value))}
-              className="px-2 py-1 text-sm border border-gray-300 rounded bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-3 py-1.5 text-sm font-medium border-2 border-blue-200 rounded-lg bg-white text-gray-800 hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md"
             >
               <option value={10}>10</option>
-              <option value={25}>25</option>
+              <option value={20}>20</option>
               <option value={50}>50</option>
               <option value={100}>100</option>
             </select>
@@ -157,20 +156,20 @@ const Pagination = ({ total, skip, limit, onPageChange, onLimitChange }: Paginat
       </div>
 
       {/* Right: Controls */}
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-2">
         {/* First page */}
         <button
           onClick={handleFirst}
           disabled={!hasPrev}
           className={clsx(
-            'px-2.5 py-1.5 text-sm rounded transition-colors',
+            'px-3 py-2 text-sm font-semibold rounded-lg transition-all duration-200 transform',
             hasPrev
-              ? 'text-gray-700 hover:bg-gray-100 border border-gray-300'
-              : 'text-gray-400 cursor-not-allowed border border-gray-200'
+              ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 hover:scale-105 hover:shadow-lg active:scale-95'
+              : 'bg-gray-100 text-gray-400 cursor-not-allowed'
           )}
           title="Première page"
         >
-          ««
+          ⏮️
         </button>
 
         {/* Previous */}
@@ -178,34 +177,34 @@ const Pagination = ({ total, skip, limit, onPageChange, onLimitChange }: Paginat
           onClick={handlePrev}
           disabled={!hasPrev}
           className={clsx(
-            'px-3 py-1.5 text-sm rounded transition-colors',
+            'px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 transform',
             hasPrev
-              ? 'text-gray-700 hover:bg-gray-100 border border-gray-300'
-              : 'text-gray-400 cursor-not-allowed border border-gray-200'
+              ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white hover:from-purple-600 hover:to-purple-700 hover:scale-105 hover:shadow-lg active:scale-95'
+              : 'bg-gray-100 text-gray-400 cursor-not-allowed'
           )}
           title="Page précédente"
         >
-          « Précédent
+          ⬅️ Précédent
         </button>
 
         {/* Page info */}
-        <span className="px-4 py-1.5 text-sm text-gray-700">
+        <div className="px-5 py-2 text-sm font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white rounded-full shadow-md">
           Page {currentPage} / {totalPages}
-        </span>
+        </div>
 
         {/* Next */}
         <button
           onClick={handleNext}
           disabled={!hasNext}
           className={clsx(
-            'px-3 py-1.5 text-sm rounded transition-colors',
+            'px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 transform',
             hasNext
-              ? 'text-gray-700 hover:bg-gray-100 border border-gray-300'
-              : 'text-gray-400 cursor-not-allowed border border-gray-200'
+              ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-600 hover:to-pink-700 hover:scale-105 hover:shadow-lg active:scale-95'
+              : 'bg-gray-100 text-gray-400 cursor-not-allowed'
           )}
           title="Page suivante"
         >
-          Suivant »
+          Suivant ➡️
         </button>
 
         {/* Last page */}
@@ -213,14 +212,14 @@ const Pagination = ({ total, skip, limit, onPageChange, onLimitChange }: Paginat
           onClick={handleLast}
           disabled={!hasNext}
           className={clsx(
-            'px-2.5 py-1.5 text-sm rounded transition-colors',
+            'px-3 py-2 text-sm font-semibold rounded-lg transition-all duration-200 transform',
             hasNext
-              ? 'text-gray-700 hover:bg-gray-100 border border-gray-300'
-              : 'text-gray-400 cursor-not-allowed border border-gray-200'
+              ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white hover:from-orange-600 hover:to-red-700 hover:scale-105 hover:shadow-lg active:scale-95'
+              : 'bg-gray-100 text-gray-400 cursor-not-allowed'
           )}
           title="Dernière page"
         >
-          »»
+          ⏭️
         </button>
       </div>
     </div>

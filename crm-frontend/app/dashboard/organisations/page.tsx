@@ -1,15 +1,17 @@
 // app/dashboard/organisations/page.tsx
 // ============= ORGANISATIONS LIST PAGE =============
+// Updated: Pagination with fun design
 
 'use client'
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { useOrganisations } from '@/hooks/useOrganisations'
 import { useTableColumns } from '@/hooks/useTableColumns'
 import { useFilters } from '@/hooks/useFilters'
+import { usePagination } from '@/hooks/usePagination'
 import { Card, Button, Table, Alert, AdvancedFilters, ExportButtons } from '@/components/shared'
 import { ColumnSelector } from '@/components/shared/ColumnSelector'
 import SearchBar from '@/components/search/SearchBar'
@@ -38,6 +40,16 @@ interface OrganisationFilters {
 export default function OrganisationsPage() {
   const router = useRouter()
 
+  // Local state for search and sorting
+  const [searchText, setSearchText] = useState('')
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' }>({
+    key: 'name',
+    direction: 'asc',
+  })
+
+  // Use pagination hook
+  const pagination = usePagination({ initialLimit: 20 })
+
   // Use new useFilters hook for cleaner state management
   const filters = useFilters<OrganisationFilters>({
     initialValues: {
@@ -52,7 +64,7 @@ export default function OrganisationsPage() {
 
   const { data, isLoading, error } = useOrganisations({
     skip: 0,
-    limit: 1000, // Fetch more for better UX
+    limit: 200, // API max limit is 200
     category: filters.values.category || undefined,
     is_active:
       filters.values.status === ''
@@ -285,32 +297,32 @@ export default function OrganisationsPage() {
           org.email?.toLowerCase().includes(search) ||
           ''
 
-        const matchesCategory = filtersState.category
-          ? org.category === filtersState.category
+        const matchesCategory = filters.values.category
+          ? org.category === filters.values.category
           : true
 
         const matchesStatus =
-          filtersState.status === ''
+          filters.values.status === ''
             ? true
-            : filtersState.status === 'active'
+            : filters.values.status === 'active'
               ? org.is_active
               : !org.is_active
 
-        const matchesCountry = filtersState.country
-          ? org.country_code === filtersState.country
+        const matchesCountry = filters.values.country
+          ? org.country_code === filters.values.country
           : true
 
-        const matchesLanguage = filtersState.language
-          ? (org.language || '').toUpperCase() === filtersState.language
+        const matchesLanguage = filters.values.language
+          ? (org.language || '').toUpperCase() === filters.values.language
           : true
 
         const createdAt = org.created_at ? new Date(org.created_at) : null
-        const matchesCreatedFrom = filtersState.createdFrom
-          ? createdAt && createdAt >= new Date(filtersState.createdFrom)
+        const matchesCreatedFrom = filters.values.createdFrom
+          ? createdAt && createdAt >= new Date(filters.values.createdFrom)
           : true
 
-        const matchesCreatedTo = filtersState.createdTo
-          ? createdAt && createdAt <= new Date(filtersState.createdTo)
+        const matchesCreatedTo = filters.values.createdTo
+          ? createdAt && createdAt <= new Date(filters.values.createdTo)
           : true
 
         return (
@@ -362,7 +374,20 @@ export default function OrganisationsPage() {
 
       return 0
     })
-  }, [data?.items, searchText, filtersState, sortConfig])
+  }, [data?.items, searchText, filters.values, sortConfig])
+
+  // Paginate the filtered and sorted data (client-side pagination)
+  const paginatedData = useMemo(() => {
+    const sliced = filteredAndSortedData.slice(pagination.skip, pagination.skip + pagination.limit)
+    console.log('🎯 PAGINATION:', {
+      total: filteredAndSortedData.length,
+      skip: pagination.skip,
+      limit: pagination.limit,
+      showing: sliced.length,
+      page: Math.floor(pagination.skip / pagination.limit) + 1
+    })
+    return sliced
+  }, [filteredAndSortedData, pagination.skip, pagination.limit])
 
   return (
     <div className="space-y-6">
@@ -430,17 +455,17 @@ export default function OrganisationsPage() {
       <Card>
         <Table
           columns={visibleColumns}
-          data={filteredAndSortedData || []}
+          data={paginatedData || []}
           isLoading={isLoading}
           isEmpty={!filteredAndSortedData || filteredAndSortedData.length === 0}
           sortConfig={sortConfig}
           onSort={handleSort}
           pagination={{
-            total: data?.total || 0,
-            skip: skip,
-            limit: limit,
-            onPageChange: (newSkip) => setSkip(newSkip),
-            onLimitChange: (newLimit) => setLimit(newLimit),
+            total: filteredAndSortedData.length,
+            skip: pagination.skip,
+            limit: pagination.limit,
+            onPageChange: pagination.setSkip,
+            onLimitChange: pagination.setLimit,
           }}
         />
       </Card>

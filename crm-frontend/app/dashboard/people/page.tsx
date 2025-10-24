@@ -161,7 +161,7 @@ export default function PeoplePage() {
 
   // Fetch people from API (server-side pagination)
   useEffect(() => {
-    fetchPeople(0, 1000) // Fetch more data for client-side filtering
+    fetchPeople(0, 200) // API max limit is 200
   }, [fetchPeople])
 
   const advancedFilterDefinitions = [

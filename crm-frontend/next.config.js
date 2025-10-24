@@ -136,12 +136,26 @@ const withPWA = require('@ducanh2912/next-pwa').default({
 const nextConfig = {
   reactStrictMode: true,
 
+  // Fix warning lockfiles multiples (monorepo avec scripts à la racine)
+  outputFileTracingRoot: require('path').join(__dirname, '..'),
+
   // Désactiver ESLint et TypeScript check en production
   eslint: {
     ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
+  },
+
+  // Optimisation: webpack en dev (faster rebuilds)
+  webpack: (config, { dev, isServer }) => {
+    if (dev && !isServer) {
+      config.watchOptions = {
+        poll: 1000, // Check for changes every second (macOS Docker)
+        aggregateTimeout: 300, // Delay before rebuilding
+      };
+    }
+    return config;
   },
 
   // Configuration pour @xyflow/react (Next 15)

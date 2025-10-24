@@ -11,6 +11,7 @@ import { usePaginatedOptions, type PaginatedFetcherParams } from '@/hooks/usePag
 import { useEntityPreload } from '@/hooks/useEntityPreload'
 import { apiClient } from '@/lib/api'
 import { useToast } from '@/components/ui/Toast'
+import { HelpTooltip } from '@/components/help/HelpTooltip'
 
 interface MandatFormProps {
   initialData?: MandatDistribution
@@ -171,25 +172,47 @@ export function MandatForm({
         minSearchLength={2}
       />
 
-      <Input
-        label="Numéro de mandat"
-        {...register('numero_mandat')}
-        error={errors.numero_mandat?.message}
-        placeholder="ex: MAN-2025-001"
-      />
+      <div>
+        <div className="flex items-center gap-2 mb-2">
+          <label className="block text-sm font-medium text-gray-700">
+            Numéro de mandat
+          </label>
+          <HelpTooltip
+            content="Identifiant unique du mandat de distribution (référence interne ou contractuelle). Exemple : MAN-2025-001, DIST-FSS1-2025."
+            learnMoreLink="/dashboard/help/guides/mandats#numero"
+            size="sm"
+          />
+        </div>
+        <Input
+          {...register('numero_mandat')}
+          error={errors.numero_mandat?.message}
+          placeholder="ex: MAN-2025-001"
+        />
+      </div>
 
-      <Select
-        label="Statut *"
-        {...register('status', { required: 'Statut requis' })}
-        error={errors.status?.message}
-      >
-        <option value="">-- Sélectionner --</option>
-        {STATUS_OPTIONS.map((status) => (
-          <option key={status.value} value={status.value}>
-            {status.label}
-          </option>
-        ))}
-      </Select>
+      <div>
+        <div className="flex items-center gap-2 mb-2">
+          <label className="block text-sm font-medium text-gray-700">
+            Statut *
+          </label>
+          <HelpTooltip
+            content="État du mandat : Proposé (en négociation), Signé (contrat finalisé), Actif (en cours), Terminé (échu ou annulé)."
+            learnMoreLink="/dashboard/help/guides/mandats#statuts"
+            size="sm"
+          />
+        </div>
+        <Select
+          {...register('status', { required: 'Statut requis' })}
+          error={errors.status?.message}
+        >
+          <option value="">-- Sélectionner --</option>
+          {STATUS_OPTIONS.map((status) => (
+            <option key={status.value} value={status.value}>
+              {status.label}
+            </option>
+          ))}
+        </Select>
+      </div>
 
       <div className="grid grid-cols-2 gap-4">
         <Input

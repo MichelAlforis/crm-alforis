@@ -250,8 +250,19 @@ export default function Sidebar() {
 
               const isFav = sidebar.isFavorite(item.href)
 
+              // Ajouter data-tour attributes pour onboarding
+              const getTourAttribute = () => {
+                if (item.href === '/dashboard/crm') return 'crm-section'
+                if (item.href === '/dashboard/automation') return 'automation-section'
+                if (item.href === '/dashboard/marketing') return 'marketing-section'
+                if (item.href === '/dashboard/ai') return 'ai-link'
+                if (item.href === '/dashboard/workflows') return 'workflows-link'
+                if (item.label === 'Centre d\'aide' || item.href === '/dashboard/help') return 'help-link'
+                return undefined
+              }
+
               return (
-                <div key={item.href}>
+                <div key={item.href} data-tour={getTourAttribute()}>
                   {/* Parent Item */}
                   {hasSubmenu && !sidebar.collapsed ? (
                     <div className="relative group/item">
@@ -487,33 +498,7 @@ export default function Sidebar() {
             <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
           </div>
 
-          {/* Secondary Navigation */}
-          <div className="px-3 py-3 space-y-1">
-            <Link
-              href="/dashboard/settings"
-              className={clsx(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg',
-                'text-slate-300 hover:text-white hover:bg-white/10',
-                'transition-all duration-200',
-                sidebar.collapsed && 'justify-center'
-              )}
-            >
-              <Settings className="w-4 h-4" />
-              {!sidebar.collapsed && <span className="text-sm">Paramètres</span>}
-            </Link>
-            <Link
-              href="/dashboard/help"
-              className={clsx(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg',
-                'text-slate-300 hover:text-white hover:bg-white/10',
-                'transition-all duration-200',
-                sidebar.collapsed && 'justify-center'
-              )}
-            >
-              <HelpCircle className="w-4 h-4" />
-              {!sidebar.collapsed && <span className="text-sm">Aide</span>}
-            </Link>
-          </div>
+          {/* Secondary Navigation - vide maintenant, tout est dans le menu principal */}
 
           {/* Footer - User Profile */}
           <div className="px-3 py-4 border-t border-white/10">

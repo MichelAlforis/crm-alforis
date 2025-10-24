@@ -2,6 +2,7 @@
 
 import { Building2, ArrowLeft, CheckCircle2, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
+import { ArticleRating } from '@/components/help/ArticleRating'
 
 export default function GuideOrganisations() {
   return (
@@ -328,6 +329,9 @@ export default function GuideOrganisations() {
           </li>
         </ul>
       </section>
+
+      {/* Rating */}
+      <ArticleRating articleId="guide-organisations" articleTitle="Gérer les Organisations" />
 
       {/* Guides connexes */}
       <section className="border-t pt-8">
