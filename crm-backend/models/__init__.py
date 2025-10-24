@@ -78,6 +78,16 @@ from models.ai_agent import (
     AITaskType,
     AIProvider,
 )
+from models.help_analytics import HelpAnalyticsEvent
+from models.interaction import (
+    Interaction,
+    InteractionParticipant,
+    InteractionType,
+    InteractionStatus,
+)
+from models.email_marketing import (
+    LeadScore,
+)
 
 __all__ = [
     # Base
@@ -161,6 +171,18 @@ __all__ = [
     "AIExecutionStatus",
     "AITaskType",
     "AIProvider",
+
+    # Help Analytics
+    "HelpAnalyticsEvent",
+
+    # Interactions V2
+    "Interaction",
+    "InteractionParticipant",
+    "InteractionType",
+    "InteractionStatus",
+
+    # Lead Scoring
+    "LeadScore",
 ]
 
 # Backwards compatibility aliases (legacy spelling)

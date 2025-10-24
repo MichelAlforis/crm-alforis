@@ -1,8 +1,9 @@
 """
 Modèle Interaction - Historique des communications et activités
 
-v1 : Champs de base uniquement (type, title, body, attachments)
-v2 : Ajout prévu : status, assignee, next_action_at (workflow inbox)
+v1 : Champs de base (type, title, body, attachments)
+v1.1 : Participants multiples (M-N avec Person + external_participants JSON)
+v2 : Workflow inbox (status, assignee, next_action_at)
 
 Contrainte métier :
 - Chaque interaction doit être liée à une organisation OU une personne
@@ -43,8 +44,17 @@ class InteractionType(str, enum.Enum):
     CALL = "call"
     EMAIL = "email"
     MEETING = "meeting"
+    VISIO = "visio"
     NOTE = "note"
     OTHER = "other"
+
+
+class InteractionStatus(str, enum.Enum):
+    """Statuts d'une interaction (workflow inbox)."""
+
+    TODO = "todo"
+    IN_PROGRESS = "in_progress"
+    DONE = "done"
 
 
 class InteractionParticipant(BaseModel):
@@ -165,10 +175,38 @@ class Interaction(BaseModel):
     # Participants externes (liste d'objets { name, email, company })
     external_participants = Column(JSON, nullable=False, default=list)
 
+    # ===== V2: Workflow Inbox =====
+    # Status de l'interaction (workflow)
+    status = Column(
+        Enum(InteractionStatus, name="interaction_status"),
+        nullable=False,
+        default=InteractionStatus.TODO,
+        index=True,
+    )
+
+    # Assignee (utilisateur responsable)
+    assignee_id = Column(
+        Integer,
+        ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL),
+        nullable=True,
+        index=True,
+    )
+
+    # Date/heure de la prochaine action à faire
+    next_action_at = Column(DateTime(timezone=True), nullable=True, index=True)
+
+    # Timestamp de la dernière notification envoyée (évite re-notification)
+    notified_at = Column(DateTime(timezone=True), nullable=True)
+
+    # Optional: Links vers Tasks et Events (future)
+    linked_task_id = Column(Integer, nullable=True)
+    linked_event_id = Column(Integer, nullable=True)
+
     # Relations SQLAlchemy
     organisation = relationship("Organisation", back_populates="interactions")
     person = relationship("Person", back_populates="interactions")
     creator = relationship("User", foreign_keys=[created_by])
+    assignee = relationship("User", foreign_keys=[assignee_id])
 
     # Participants internes (M-N avec Person)
     participants = relationship(
