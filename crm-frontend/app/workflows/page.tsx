@@ -11,21 +11,13 @@ export default function WorkflowsPage() {
     fetchWorkflows,
     toggleWorkflow,
     deleteWorkflow,
-    fetchTemplates,
-    createFromTemplate,
-    templates,
   } = useWorkflows()
 
   const [filter, setFilter] = useState<'all' | 'active' | 'inactive' | 'draft'>('all')
-  const [showTemplateModal, setShowTemplateModal] = useState(false)
 
   useEffect(() => {
     fetchWorkflows(0, 100, filter !== 'all' ? { status: filter } : undefined)
   }, [filter, fetchWorkflows])
-
-  useEffect(() => {
-    fetchTemplates()
-  }, [fetchTemplates])
 
   const handleToggle = async (id: number, currentStatus: string) => {
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active'
@@ -44,16 +36,6 @@ export default function WorkflowsPage() {
       fetchWorkflows(0, 100, filter !== 'all' ? { status: filter } : undefined)
     } catch (error) {
       console.error('Erreur suppression:', error)
-    }
-  }
-
-  const handleCreateFromTemplate = async (templateId: string) => {
-    try {
-      await createFromTemplate(templateId)
-      setShowTemplateModal(false)
-      fetchWorkflows(0, 100, filter !== 'all' ? { status: filter } : undefined)
-    } catch (error) {
-      console.error('Erreur création:', error)
     }
   }
 
@@ -133,12 +115,12 @@ export default function WorkflowsPage() {
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               Aucun workflow trouvé
             </p>
-            <button
-              onClick={() => setShowTemplateModal(true)}
-              className="text-blue-600 hover:underline"
+            <a
+              href="/workflows/new"
+              className="inline-block text-blue-600 hover:underline font-medium"
             >
-              Créer votre premier workflow
-            </button>
+              Créer votre premier workflow →
+            </a>
           </div>
         ) : (
           <div className="grid gap-4">
@@ -229,60 +211,6 @@ export default function WorkflowsPage() {
                 </div>
               </div>
             ))}
-          </div>
-        )}
-
-        {/* Modal Templates */}
-        {showTemplateModal && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                  Choisir un template
-                </h2>
-                <button
-                  onClick={() => setShowTemplateModal(false)}
-                  className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                >
-                  ✕
-                </button>
-              </div>
-
-              {templates.isLoading ? (
-                <div className="text-center py-8 text-gray-600 dark:text-gray-400">
-                  Chargement des templates...
-                </div>
-              ) : templates.data && templates.data.length > 0 ? (
-                <div className="grid gap-4">
-                  {templates.data.map((template) => (
-                    <div
-                      key={template.id}
-                      className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-blue-500 dark:hover:border-blue-500 transition cursor-pointer"
-                      onClick={() => handleCreateFromTemplate(template.id)}
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
-                            {template.name}
-                          </h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                            {template.description}
-                          </p>
-                          <span className="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded">
-                            {template.category}
-                          </span>
-                        </div>
-                        <Plus className="text-blue-600" size={20} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8 text-gray-600 dark:text-gray-400">
-                  Aucun template disponible
-                </div>
-              )}
-            </div>
           </div>
         )}
       </div>
