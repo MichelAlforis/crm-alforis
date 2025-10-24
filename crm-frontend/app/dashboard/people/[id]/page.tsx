@@ -16,6 +16,7 @@ import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import { useToast } from '@/components/ui/Toast'
 import { extractIdFromSlug } from '@/lib/utils'
 import { CampaignSubscriptionManager } from '@/components/email/CampaignSubscriptionManager'
+import { ActivityTab } from '@/components/interactions/ActivityTab'
 
 // ✅ MIGRATION 2025-10-20: ORGANIZATION_OPTIONS supprimé
 // Le type d'organisation est maintenant stocké dans Organisation.category
@@ -24,11 +25,15 @@ import { CampaignSubscriptionManager } from '@/components/email/CampaignSubscrip
 //   { value: 'fournisseur', label: 'Fournisseur' },
 // ]
 
+type TabType = 'informations' | 'activite'
+
 export default function PersonDetailPage() {
   const params = useParams<{ id?: string }>()
   const router = useRouter()
   const { showToast } = useToast()
   const { confirm, ConfirmDialogComponent } = useConfirm()
+  const [activeTab, setActiveTab] = useState<TabType>('informations')
+
   const personId = useMemo(() => {
     const rawId = params?.id
     if (!rawId) return null
@@ -267,8 +272,37 @@ export default function PersonDetailPage() {
         </div>
       </div>
 
-      <Card padding="lg">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Tabs */}
+      <div className="border-b border-gray-200">
+        <nav className="flex gap-8">
+          <button
+            onClick={() => setActiveTab('informations')}
+            className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${
+              activeTab === 'informations'
+                ? 'border-bleu text-bleu'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Informations
+          </button>
+          <button
+            onClick={() => setActiveTab('activite')}
+            className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${
+              activeTab === 'activite'
+                ? 'border-bleu text-bleu'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Activité
+          </button>
+        </nav>
+      </div>
+
+      {/* Tab Content - Informations */}
+      {activeTab === 'informations' && (
+        <>
+          <Card padding="lg">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <p className="text-sm text-gray-600">Email personnel</p>
             <p className="font-medium text-sm">{person.personal_email || '-'}</p>
@@ -340,14 +374,21 @@ export default function PersonDetailPage() {
           isLoading={single.isLoading}
           isEmpty={organizationRows.length === 0}
         />
-      </Card>
+          </Card>
 
-      {/* Campaign Subscriptions */}
-      <CampaignSubscriptionManager
-        entityType="person"
-        entityId={personId}
-        entityName={`${person.first_name} ${person.last_name}`}
-      />
+          {/* Campaign Subscriptions */}
+          <CampaignSubscriptionManager
+            entityType="person"
+            entityId={personId}
+            entityName={`${person.first_name} ${person.last_name}`}
+          />
+        </>
+      )}
+
+      {/* Tab Content - Activité */}
+      {activeTab === 'activite' && personId && (
+        <ActivityTab personId={personId} canCreate={true} />
+      )}
 
       {/* Edit Modal */}
       <Modal
