@@ -1,8 +1,8 @@
 # 📋 Chapitre 7 - Workflows & Interactions
 
-**Status :** 🟢 Phase 2 & 3 TERMINÉES (80 templates + Interactions opérationnelles)
-**Tests :** 13/14 (Backend + Frontend Workflows + Interactions + Navigation)
-**Priorité :** 🟡 Tests utilisateur + Export CSV interactions
+**Status :** 🟢 Phase 2 & 3.1 TERMINÉES (80 templates + Interactions v1.1 complètes)
+**Tests :** 17/20 (Backend + Frontend + Participants + Composants UI)
+**Priorité :** 🟡 Phase 3.2: Intégration ActivityTab dans fiches + Widget Dashboard
 
 ---
 
@@ -82,14 +82,60 @@ crm-frontend/
 - ✅ API retourne `is_template` dans WorkflowListItem
 - ⬜ Tests utilisateur end-to-end
 
-### ✅ Phase 3 : Interactions (TERMINÉ)
-- ✅ Backend : Modèle OrganisationActivity + endpoints
-- ✅ Frontend : Page /dashboard/interactions avec timeline
-- ✅ Types : Email, Appel, Réunion, Note, Déjeuner, Autre
-- ✅ Filtres par type et date
-- ✅ Modal création InteractionCreateModal
-- ✅ Intégration sidebar navigation (section CRM)
-- ⬜ Export CSV (à ajouter)
+### ✅ Phase 3.1 : Interactions v1.1 - Backend & Composants (TERMINÉ)
+
+#### 🎯 Backend Interactions v1.1
+- ✅ **Modèle Interaction** créé avec SQLAlchemy (table: `crm_interactions`)
+  - Types: call, email, meeting, visio, note, other
+  - Support org_id OU person_id (CHECK constraint)
+  - Attachments: JSON array {name, url}
+  - Relations: M-N avec Person via `interaction_participants`
+- ✅ **Participants multiples** (v1.1)
+  - Table M-N `interaction_participants` (person_id, role, present)
+  - JSONB `external_participants` (name, email, company)
+  - CASCADE DELETE sur foreign keys
+- ✅ **Endpoints REST** complets (`/api/v1/interactions`)
+  - POST /interactions (création avec participants batch)
+  - PATCH /interactions/{id} (update avec replace strategy)
+  - DELETE /interactions/{id}
+  - GET /interactions/recent?limit=X
+  - GET /interactions/by-organisation/{orgId}
+  - GET /interactions/by-person/{personId}
+- ✅ **Migrations Alembic** : 2 migrations créées et appliquées via psql
+- ✅ **Schémas Pydantic** alignés avec Zod frontend
+
+#### 🎨 Frontend Interactions v1.1
+- ✅ **Types TypeScript** (`types/interaction.ts`)
+  - Interfaces: Interaction, ParticipantIn, ExternalParticipant
+  - Schémas Zod: InteractionCreateSchema, InteractionUpdateSchema
+  - Type guards & validation
+- ✅ **Hooks React Query** (`hooks/useInteractions.ts`)
+  - useRecentInteractions(limit)
+  - useOrgInteractions(orgId, options)
+  - usePersonInteractions(personId, options)
+  - useCreateInteraction() avec optimistic updates
+  - useUpdateInteraction(), useDeleteInteraction()
+- ✅ **Composants UI**
+  - `InteractionCard.tsx` : Display interaction avec type icon, participants, actions
+  - `InteractionComposerInline.tsx` : Quick create form (6 types)
+  - `ActivityTab.tsx` : Timeline groupée par jour (Aujourd'hui, Hier, dates)
+- ✅ **Cleanup architecture**
+  - Suppression page standalone `/dashboard/interactions`
+  - Suppression lien sidebar "Interactions"
+  - Solution 1 appliquée: Interactions uniquement en contexte (fiches)
+
+### 🟡 Phase 3.2 : Intégration & Widgets (EN COURS)
+- ⬜ **Intégrer ActivityTab dans fiches**
+  - Ajouter onglet "Activité" dans `/dashboard/organisations/[id]`
+  - Ajouter onglet "Activité" dans `/dashboard/people/[id]`
+- ⬜ **Widget Dashboard**
+  - Créer `DashboardInteractionsWidget` (5 dernières interactions)
+  - Afficher sur page `/dashboard` principale
+- ⬜ **Command Palette** (⌘K)
+  - Quick create interaction via raccourci clavier
+- ⬜ **Export CSV**
+  - Endpoint backend `/interactions/export`
+  - Bouton download dans interface
 
 ---
 
@@ -106,18 +152,33 @@ crm-frontend/
 | 7.5c | **Test** : Dupliquer un template | ✅ | Bouton "Utiliser" → redirection auto vers édition |
 | 7.6 | Assigner workflow à un contact | ⬜ | Logique métier à implémenter |
 
-## Tests Interactions (8 tests)
+## Tests Interactions v1.1 (14 tests)
 
+### Backend (6 tests)
 | # | Test | Statut | Remarques |
 |---|------|--------|-----------|
-| 7.7 | Page "Interactions" accessible | ✅ | Page opérationnelle à /dashboard/interactions |
-| 7.8 | Timeline d'interactions affichée | ✅ | Table avec types, titres, dates, descriptions |
-| 7.9 | Types : Email, Appel, Réunion, Note | ✅ | 6 types supportés (email, appel, reunion, dejeuner, note, autre) |
-| 7.10 | **Test** : Créer une note | ✅ | Modal InteractionCreateModal fonctionnel |
-| 7.11 | **Test** : Logger un appel | ✅ | Formulaire avec type, titre, description, participants |
-| 7.12 | **Test** : Planifier une réunion | ✅ | Champ datetime-local pour date/heure |
-| 7.13 | Filtrer par type d'interaction | ✅ | Filtres: type + date de/à + recherche |
-| 7.14 | Export interactions CSV | ⬜ | À implémenter (bouton prévu) |
+| 7.7 | API POST /interactions fonctionne | ✅ | Création avec participants multiples |
+| 7.8 | API PATCH /interactions/{id} | ✅ | Update avec replace strategy participants |
+| 7.9 | API DELETE /interactions/{id} | ✅ | CASCADE delete des participants |
+| 7.10 | GET /interactions/by-organisation/{id} | ✅ | Retourne interactions paginées |
+| 7.11 | GET /interactions/by-person/{id} | ✅ | Retourne interactions paginées |
+| 7.12 | Participants M-N fonctionnels | ✅ | Table `interaction_participants` opérationnelle |
+
+### Frontend Composants (4 tests)
+| # | Test | Statut | Remarques |
+|---|------|--------|-----------|
+| 7.13 | InteractionCard affiche type + participants | ✅ | Icônes, compteur participants, actions |
+| 7.14 | InteractionComposerInline crée interaction | ✅ | 6 types, titre, description, auto-reset |
+| 7.15 | ActivityTab affiche timeline groupée | ✅ | Groupement par jour (Aujourd'hui, Hier, dates) |
+| 7.16 | Hooks React Query fonctionnels | ✅ | useOrgInteractions, useCreateInteraction |
+
+### Intégration (4 tests à faire)
+| # | Test | Statut | Remarques |
+|---|------|--------|-----------|
+| 7.17 | Onglet Activité dans fiche Organisation | ⬜ | Phase 3.2 - À intégrer |
+| 7.18 | Onglet Activité dans fiche Personne | ⬜ | Phase 3.2 - À intégrer |
+| 7.19 | Widget Dashboard (5 récentes) | ⬜ | Phase 3.2 - À créer |
+| 7.20 | Export CSV interactions | ⬜ | Phase 3.2 - À implémenter |
 
 ---
 
@@ -128,6 +189,9 @@ crm-frontend/
 - **Frontend** : Next.js 15.5.6 + React 18.3.1
 - **Builder Workflow** : @xyflow/react 12.9.0
 - **Base de données** : PostgreSQL 16
+- **Data Fetching** : @tanstack/react-query (React Query)
+- **Validation** : Pydantic (backend) + Zod (frontend)
+- **Dates** : date-fns avec locale fr
 
 ### Configuration Next.js 15
 ```javascript
@@ -153,6 +217,35 @@ reactStrictMode: true,
 - `update_field` : Modifier un champ
 - `assign_user` : Assigner un utilisateur
 - `add_tag` : Ajouter un tag
+
+### Interactions v1.1 - Architecture
+**Table principale** : `crm_interactions`
+- org_id (FK nullable vers organisations)
+- person_id (FK nullable vers people)
+- type (ENUM: call, email, meeting, visio, note, other)
+- title (varchar 200)
+- body (text nullable)
+- attachments (JSON: array of {name, url})
+- external_participants (JSON: array of {name, email, company})
+- created_by, created_at, updated_at
+
+**Table M-N Participants** : `interaction_participants`
+- Composite PK (interaction_id, person_id)
+- role (varchar 80 nullable)
+- present (boolean default true)
+- CASCADE DELETE
+
+**Contraintes**:
+- CHECK: (org_id IS NOT NULL) OR (person_id IS NOT NULL)
+- Au moins une entité liée obligatoire
+
+**Types d'Interactions**:
+- ☎️ `call` : Appel téléphonique
+- 📧 `email` : Email
+- 📅 `meeting` : Réunion présentielle
+- 🎥 `visio` : Visioconférence
+- 📝 `note` : Note interne
+- 📄 `other` : Autre type
 
 ---
 
@@ -182,14 +275,13 @@ reactStrictMode: true,
 - `d7d932da` : ✨ Filtres par déclencheur (trigger) (+52 lignes)
 - `47152830` : ✨ Labels déclencheurs métier (20 triggers avec emojis)
 
-### Phase 3 - Interactions (session actuelle)
-- `8a51658f` : ⏸️ Pause technique (vérification backend)
-- Découverte : Page /dashboard/interactions déjà existante (impl. antérieure)
-- ✨ Ajout navigation sidebar (section CRM > Interactions)
-- ✅ Backend OrganisationActivity opérationnel (/organisations/{id}/activity)
-- ✅ Modal création InteractionCreateModal avec 6 types
-- ✅ Filtres type + date + recherche
-- ✅ Hook useOrganisationActivity pour fetch activités
+### Phase 3.1 - Interactions v1.1 Refactoring (session actuelle)
+- `02a5c490` : ✨ Backend Interactions v1.1 (modèle + participants M-N + endpoints)
+- `2e46f3cf` : ✨ Backend Interactions v1.1 - Ajout participants + external_participants
+- `7598a96c` : ✨ Frontend Interactions v1.1 - Types + Hooks React Query
+- `bcd9a3c0` : ✨ Frontend Interactions v1.1 - Composants UI (Card, Composer, ActivityTab)
+- `9333bde5` : 🗑️ Cleanup - Suppression page /dashboard/interactions standalone
+- Architecture: Solution 1 appliquée (Interactions uniquement en contexte fiches)
 
 ---
 
@@ -236,6 +328,31 @@ reactStrictMode: true,
 
 ---
 
-**Dernière mise à jour :** 24 Octobre 2025
+**Dernière mise à jour :** 24 Octobre 2025 - 18:30
 **Status Phase 2 :** ✅ TERMINÉ (80 templates opérationnels)
-**Prochaine étape :** Tests utilisateur end-to-end + Phase 3 Interactions
+**Status Phase 3.1 :** ✅ TERMINÉ (Interactions v1.1 - Backend + Composants)
+**Prochaine étape :** Phase 3.2 - Intégration ActivityTab dans fiches + Widget Dashboard
+
+## 📦 Fichiers Créés Phase 3.1
+
+### Backend
+```
+crm-backend/
+├── models/interaction.py                    # Modèle Interaction + InteractionParticipant
+├── schemas/interaction.py                   # Pydantic schemas v1.1
+├── routers/interactions.py                  # REST API endpoints
+└── alembic/versions/
+    ├── add_interactions_v1.py              # Migration table principale
+    └── add_interaction_participants.py     # Migration participants M-N
+```
+
+### Frontend
+```
+crm-frontend/
+├── types/interaction.ts                     # Types TS + Zod schemas
+├── hooks/useInteractions.ts                 # React Query hooks
+└── components/interactions/
+    ├── InteractionCard.tsx                 # Display card avec actions
+    ├── InteractionComposerInline.tsx       # Quick create form
+    └── ActivityTab.tsx                     # Timeline groupée par jour
+```
