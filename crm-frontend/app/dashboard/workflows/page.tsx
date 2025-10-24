@@ -1,17 +1,20 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useWorkflows } from '@/hooks/useWorkflows'
 import { useConfirm } from '@/hooks/useConfirm'
-import { Play, Plus, Power, PowerOff, Trash2, Eye, TrendingUp } from 'lucide-react'
+import { Play, Plus, Power, PowerOff, Trash2, Eye, TrendingUp, Copy } from 'lucide-react'
 
 export default function WorkflowsPage() {
+  const router = useRouter()
   const {
     workflows,
     operation,
     fetchWorkflows,
     toggleWorkflow,
     deleteWorkflow,
+    duplicateWorkflow,
   } = useWorkflows()
 
   const { confirm, ConfirmDialogComponent } = useConfirm()
@@ -47,6 +50,17 @@ export default function WorkflowsPage() {
         }
       },
     })
+  }
+
+  const handleDuplicate = async (id: number) => {
+    try {
+      const newWorkflow = await duplicateWorkflow(id)
+      fetchWorkflows(0, 100, filter !== 'all' ? { status: filter } : undefined)
+      // Rediriger vers la page d'édition du nouveau workflow
+      router.push(`/dashboard/workflows/${newWorkflow.id}`)
+    } catch (error) {
+      console.error('Erreur duplication:', error)
+    }
   }
 
   const getStatusBadge = (status: string) => {
@@ -191,6 +205,24 @@ export default function WorkflowsPage() {
                     >
                       <Eye size={18} />
                     </a>
+
+                    {/* Bouton Dupliquer - toujours visible, highlight pour templates */}
+                    <button
+                      onClick={() => handleDuplicate(workflow.id)}
+                      className={`p-2 rounded transition ${
+                        workflow.is_template
+                          ? 'text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20 ring-2 ring-purple-200 dark:ring-purple-800'
+                          : 'text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'
+                      }`}
+                      title={
+                        workflow.is_template
+                          ? 'Dupliquer ce template pour le personnaliser'
+                          : 'Dupliquer ce workflow'
+                      }
+                      disabled={operation.isLoading}
+                    >
+                      <Copy size={18} />
+                    </button>
 
                     <button
                       onClick={() => handleToggle(workflow.id, workflow.status)}

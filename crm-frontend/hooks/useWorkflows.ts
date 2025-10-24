@@ -382,6 +382,55 @@ export function useWorkflows() {
     }
   }, [])
 
+  // Dupliquer un workflow (utile pour personnaliser les templates)
+  const duplicateWorkflow = useCallback(async (workflowId: number) => {
+    setOperation({ isLoading: true, success: false })
+    try {
+      // 1. Récupérer le workflow source
+      const response = await authFetch(`${API_BASE_URL}/workflows/${workflowId}`)
+      if (!response.ok) {
+        throw new Error('Erreur lors de la récupération du workflow')
+      }
+
+      const sourceWorkflow = await response.json()
+
+      // 2. Créer une copie avec un nouveau nom
+      const duplicatedData = {
+        name: `${sourceWorkflow.name} (Copie)`,
+        description: sourceWorkflow.description,
+        trigger_type: sourceWorkflow.trigger_type,
+        trigger_config: sourceWorkflow.trigger_config,
+        conditions: sourceWorkflow.conditions,
+        actions: sourceWorkflow.actions,
+        status: 'DRAFT', // Toujours en draft par défaut
+        is_template: false, // Les copies ne sont jamais des templates
+      }
+
+      // 3. Créer le nouveau workflow
+      const createResponse = await authFetch(`${API_BASE_URL}/workflows`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(duplicatedData),
+      })
+
+      if (!createResponse.ok) {
+        const errorData = await createResponse.json()
+        throw new Error(errorData.detail || 'Erreur lors de la duplication')
+      }
+
+      const newWorkflow = await createResponse.json()
+      setOperation({ isLoading: false, success: true })
+      return newWorkflow
+    } catch (error: any) {
+      setOperation({
+        isLoading: false,
+        error: error.message || 'Erreur lors de la duplication',
+        success: false,
+      })
+      throw error
+    }
+  }, [])
+
   return {
     // States
     workflows,
@@ -403,5 +452,6 @@ export function useWorkflows() {
     fetchStats,
     fetchTemplates,
     createFromTemplate,
+    duplicateWorkflow,
   }
 }
