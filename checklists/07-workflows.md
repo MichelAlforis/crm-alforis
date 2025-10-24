@@ -1,8 +1,8 @@
 # 📋 Chapitre 7 - Workflows & Interactions
 
-**Status :** 🟢 Phase 2 & 3.1 TERMINÉES (80 templates + Interactions v1.1 complètes)
-**Tests :** 17/20 (Backend + Frontend + Participants + Composants UI)
-**Priorité :** 🟡 Phase 3.2: Intégration ActivityTab dans fiches + Widget Dashboard
+**Status :** 🟢 Phase 2 & 3.1 & 3.2 TERMINÉES (80 templates + Interactions v1.1 + Intégration complète)
+**Tests :** 19/20 (Backend + Frontend + Intégration fiches + Widget Dashboard)
+**Priorité :** 🟡 Phase 3.3: Emails Marketing tracking (Lead Scoring)
 
 ---
 
@@ -124,18 +124,23 @@ crm-frontend/
   - Suppression lien sidebar "Interactions"
   - Solution 1 appliquée: Interactions uniquement en contexte (fiches)
 
-### 🟡 Phase 3.2 : Intégration & Widgets (EN COURS)
-- ⬜ **Intégrer ActivityTab dans fiches**
-  - Ajouter onglet "Activité" dans `/dashboard/organisations/[id]`
-  - Ajouter onglet "Activité" dans `/dashboard/people/[id]`
-- ⬜ **Widget Dashboard**
-  - Créer `DashboardInteractionsWidget` (5 dernières interactions)
-  - Afficher sur page `/dashboard` principale
-- ⬜ **Command Palette** (⌘K)
-  - Quick create interaction via raccourci clavier
-- ⬜ **Export CSV**
-  - Endpoint backend `/interactions/export`
-  - Bouton download dans interface
+### ✅ Phase 3.2 : Intégration & Widgets (TERMINÉ)
+- ✅ **Intégrer ActivityTab dans fiches**
+  - Onglet "Activité" dans `/dashboard/organisations/[id]` (tabs Informations|Activité)
+  - Onglet "Activité" dans `/dashboard/people/[id]` (tabs Informations|Activité)
+- ✅ **Widget Dashboard**
+  - `DashboardInteractionsWidget` créé (5 dernières interactions)
+  - Affiché sur page `/dashboard` après "Actions rapides"
+  - Format compact: type icon, titre, participants, date FR, link fiche
+- ⬜ **Command Palette** (⌘K) - Reporter à v2
+- ⬜ **Export CSV** - Reporter à v2
+
+### 🟡 Phase 3.3 : Emails Marketing (EN COURS)
+- ⬜ **Suivi emails marketing dans Interactions**
+  - Backend: Link EmailSend → Interaction (type=email)
+  - Afficher statuts: envoyé, ouvert, cliqué, rebond
+  - Timeline unifiée appels + emails + réunions
+  - Lead Scoring: identifier Leads Chauds (ouvertures + clics)
 
 ---
 
@@ -172,13 +177,13 @@ crm-frontend/
 | 7.15 | ActivityTab affiche timeline groupée | ✅ | Groupement par jour (Aujourd'hui, Hier, dates) |
 | 7.16 | Hooks React Query fonctionnels | ✅ | useOrgInteractions, useCreateInteraction |
 
-### Intégration (4 tests à faire)
+### Intégration (4 tests)
 | # | Test | Statut | Remarques |
 |---|------|--------|-----------|
-| 7.17 | Onglet Activité dans fiche Organisation | ⬜ | Phase 3.2 - À intégrer |
-| 7.18 | Onglet Activité dans fiche Personne | ⬜ | Phase 3.2 - À intégrer |
-| 7.19 | Widget Dashboard (5 récentes) | ⬜ | Phase 3.2 - À créer |
-| 7.20 | Export CSV interactions | ⬜ | Phase 3.2 - À implémenter |
+| 7.17 | Onglet Activité dans fiche Organisation | ✅ | Tabs Informations\|Activité opérationnels |
+| 7.18 | Onglet Activité dans fiche Personne | ✅ | Tabs Informations\|Activité opérationnels |
+| 7.19 | Widget Dashboard (5 récentes) | ✅ | DashboardInteractionsWidget intégré |
+| 7.20 | Export CSV interactions | ⬜ | Reporter à v2 |
 
 ---
 
@@ -275,13 +280,18 @@ reactStrictMode: true,
 - `d7d932da` : ✨ Filtres par déclencheur (trigger) (+52 lignes)
 - `47152830` : ✨ Labels déclencheurs métier (20 triggers avec emojis)
 
-### Phase 3.1 - Interactions v1.1 Refactoring (session actuelle)
+### Phase 3.1 - Interactions v1.1 Refactoring
 - `02a5c490` : ✨ Backend Interactions v1.1 (modèle + participants M-N + endpoints)
 - `2e46f3cf` : ✨ Backend Interactions v1.1 - Ajout participants + external_participants
 - `7598a96c` : ✨ Frontend Interactions v1.1 - Types + Hooks React Query
 - `bcd9a3c0` : ✨ Frontend Interactions v1.1 - Composants UI (Card, Composer, ActivityTab)
 - `9333bde5` : 🗑️ Cleanup - Suppression page /dashboard/interactions standalone
+- `efd131fa` : 📋 Checklist: Update Phase 3.1 completion
 - Architecture: Solution 1 appliquée (Interactions uniquement en contexte fiches)
+
+### Phase 3.2 - Intégration & Widgets (session actuelle)
+- `47c8b438` : ✨ Intégration ActivityTab dans fiches Organisation & Personne (tabs)
+- `d42812fa` : ✨ Widget Interactions récentes sur Dashboard (5 dernières)
 
 ---
 
@@ -328,10 +338,11 @@ reactStrictMode: true,
 
 ---
 
-**Dernière mise à jour :** 24 Octobre 2025 - 18:30
+**Dernière mise à jour :** 24 Octobre 2025 - 19:15
 **Status Phase 2 :** ✅ TERMINÉ (80 templates opérationnels)
 **Status Phase 3.1 :** ✅ TERMINÉ (Interactions v1.1 - Backend + Composants)
-**Prochaine étape :** Phase 3.2 - Intégration ActivityTab dans fiches + Widget Dashboard
+**Status Phase 3.2 :** ✅ TERMINÉ (Intégration fiches + Widget Dashboard)
+**Prochaine étape :** Phase 3.3 - Emails Marketing tracking + Lead Scoring
 
 ## 📦 Fichiers Créés Phase 3.1
 
@@ -354,5 +365,16 @@ crm-frontend/
 └── components/interactions/
     ├── InteractionCard.tsx                 # Display card avec actions
     ├── InteractionComposerInline.tsx       # Quick create form
-    └── ActivityTab.tsx                     # Timeline groupée par jour
+    ├── ActivityTab.tsx                     # Timeline groupée par jour
+    └── DashboardInteractionsWidget.tsx     # Widget 5 récentes (Phase 3.2)
+```
+
+## 📦 Fichiers Modifiés Phase 3.2
+
+### Pages avec intégration ActivityTab
+```
+crm-frontend/
+├── app/dashboard/organisations/[id]/page.tsx    # Tabs Informations|Activité
+├── app/dashboard/people/[id]/page.tsx           # Tabs Informations|Activité
+└── app/dashboard/page.tsx                       # + DashboardInteractionsWidget
 ```
