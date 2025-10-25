@@ -18,7 +18,6 @@ from sqlalchemy import (
     Integer,
     String,
     Text,
-    Enum,
     ForeignKey,
     DateTime,
     JSON,
@@ -26,6 +25,7 @@ from sqlalchemy import (
     Index,
     CheckConstraint,
 )
+from sqlalchemy import Enum as SAEnum
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
@@ -56,6 +56,10 @@ class InteractionStatus(str, enum.Enum):
     TODO = "todo"
     IN_PROGRESS = "in_progress"
     DONE = "done"
+
+
+# Constantes pour mapping SQL (évite binding sur noms Python)
+STATUS_VALUES = ("todo", "in_progress", "done")
 
 
 class InteractionParticipant(BaseModel):
@@ -153,7 +157,7 @@ class Interaction(BaseModel):
 
     # Type d'interaction
     type = Column(
-        Enum(InteractionType, name="interaction_type"),
+        SAEnum(InteractionType, name="interaction_type"),
         nullable=False,
         default=InteractionType.NOTE,
     )
@@ -178,10 +182,17 @@ class Interaction(BaseModel):
 
     # ===== V2: Workflow Inbox =====
     # Status de l'interaction (workflow)
+    # Note: Utilise SAEnum avec valeurs string pour éviter binding sur noms Python (TODO→todo)
     status = Column(
-        Enum(InteractionStatus, name="interaction_status"),
+        SAEnum(
+            *STATUS_VALUES,
+            name="interaction_status",
+            native_enum=True,
+            create_type=False,  # Type ENUM existe déjà en DB
+            validate_strings=True,
+        ),
         nullable=False,
-        default=InteractionStatus.TODO,
+        server_default="todo",
         index=True,
     )
 
