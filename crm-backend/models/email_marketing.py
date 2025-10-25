@@ -21,7 +21,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
-from models.base import BaseModel
+from models.base import Base, BaseModel
 from models.constants import (
     FK_ORGANISATIONS_ID,
     FK_PEOPLE_ID,
