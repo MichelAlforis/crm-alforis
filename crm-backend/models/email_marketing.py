@@ -124,7 +124,7 @@ class EmailEventTracking(BaseModel):
         )
 
 
-class LeadScore(BaseModel):
+class LeadScore(Base):
     """
     Score d'engagement pour chaque personne (lead scoring).
 
@@ -135,6 +135,8 @@ class LeadScore(BaseModel):
     - Décroissance: -1/semaine sans event (job hebdo)
 
     Seuil "hot lead": 15+ points (configurable)
+
+    Note: Hérite de Base (pas BaseModel) car PK = person_id, pas id auto-increment
     """
 
     __tablename__ = "lead_scores"

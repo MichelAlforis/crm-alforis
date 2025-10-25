@@ -382,6 +382,7 @@ async def get_inbox(
         query = query.filter(Interaction.status == status)
     else:
         # Default: show todo + in_progress (exclude done)
+        # Use string literals to match PostgreSQL ENUM values (lowercase)
         query = query.filter(Interaction.status.in_(['todo', 'in_progress']))
 
     # Filter by due date
@@ -432,6 +433,7 @@ async def get_inbox(
     if status:
         count_query = count_query.filter(Interaction.status == status)
     else:
+        # Use string literals to match PostgreSQL ENUM values (lowercase)
         count_query = count_query.filter(Interaction.status.in_(['todo', 'in_progress']))
     total = count_query.count()
 
