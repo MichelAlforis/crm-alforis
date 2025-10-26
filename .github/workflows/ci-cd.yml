@@ -18,6 +18,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# Permissions nécessaires pour le Security Scan
+permissions:
+  contents: read
+  security-events: write
+
 env:
   PYTHON_VERSION: "3.12"
   NODE_VERSION: "20"
