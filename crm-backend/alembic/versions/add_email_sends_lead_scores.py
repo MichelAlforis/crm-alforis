@@ -10,25 +10,28 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = 'email_marketing_lite'
-down_revision = 'interactions_v2'
+revision = "email_marketing_lite"
+down_revision = "interactions_v2"
 branch_labels = None
 depends_on = None
 
 
 def upgrade() -> None:
     # Create email_status ENUM type
-    op.execute("""
+    op.execute(
+        """
         DO $
         BEGIN
             IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'email_status') THEN
                 CREATE TYPE email_status AS ENUM ('sent', 'opened', 'clicked', 'bounced');
             END IF;
         END$;
-    """)
+    """
+    )
 
     # Create email_event_tracking table (V2 - renamed to avoid collision with email_sends from campaigns)
-    op.execute("""
+    op.execute(
+        """
         CREATE TABLE IF NOT EXISTS email_event_tracking (
             id SERIAL PRIMARY KEY,
             organisation_id INTEGER NULL
@@ -53,33 +56,43 @@ def upgrade() -> None:
                 (organisation_id IS NOT NULL) OR (person_id IS NOT NULL)
             )
         );
-    """)
+    """
+    )
 
     # Indexes for email_event_tracking
-    op.execute("""
+    op.execute(
+        """
         CREATE INDEX IF NOT EXISTS idx_email_event_tracking_person_sent
         ON email_event_tracking(person_id, sent_at DESC NULLS LAST)
         WHERE person_id IS NOT NULL;
-    """)
+    """
+    )
 
-    op.execute("""
+    op.execute(
+        """
         CREATE INDEX IF NOT EXISTS idx_email_event_tracking_org
         ON email_event_tracking(organisation_id)
         WHERE organisation_id IS NOT NULL;
-    """)
+    """
+    )
 
-    op.execute("""
+    op.execute(
+        """
         CREATE INDEX IF NOT EXISTS idx_email_event_tracking_status
         ON email_event_tracking(status);
-    """)
+    """
+    )
 
-    op.execute("""
+    op.execute(
+        """
         CREATE INDEX IF NOT EXISTS idx_email_event_tracking_provider_ext
         ON email_event_tracking(provider, external_id);
-    """)
+    """
+    )
 
     # Create lead_scores table
-    op.execute("""
+    op.execute(
+        """
         CREATE TABLE IF NOT EXISTS lead_scores (
             person_id INTEGER PRIMARY KEY
                 REFERENCES people(id) ON DELETE CASCADE,
@@ -88,14 +101,17 @@ def upgrade() -> None:
             created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
             updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
         );
-    """)
+    """
+    )
 
     # Index for lead_scores (hot leads query)
-    op.execute("""
+    op.execute(
+        """
         CREATE INDEX IF NOT EXISTS idx_lead_scores_score
         ON lead_scores(score DESC)
         WHERE score > 0;
-    """)
+    """
+    )
 
 
 def downgrade() -> None:
