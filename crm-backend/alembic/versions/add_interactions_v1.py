@@ -14,8 +14,8 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = 'add_interactions_v1'
-down_revision = 'add_help_analytics_events'
+revision = "add_interactions_v1'
+down_revision = "add_help_analytics_events'
 branch_labels = None
 depends_on = None
 
@@ -23,7 +23,7 @@ depends_on = None
 def upgrade():
     # Enum type pour les types d'interaction
     interaction_type_enum = postgresql.ENUM(
-        'call', 'email', 'meeting', 'note', 'other',
+        'call", "email", "meeting", "note", "other',
         name='interaction_type'
     )
     interaction_type_enum.create(op.get_bind())
@@ -34,20 +34,20 @@ def upgrade():
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('org_id', sa.Integer(), nullable=True),
         sa.Column('person_id', sa.Integer(), nullable=True),
-        sa.Column('type', interaction_type_enum, nullable=False, server_default='note'),
+        sa.Column('type', interaction_type_enum, nullable=False, server_default='note"),
         sa.Column('title', sa.String(length=200), nullable=False),
         sa.Column('body', sa.Text(), nullable=True),
         sa.Column('created_by', sa.Integer(), nullable=False),
-        sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+        sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()"), nullable=False),
         sa.Column('updated_at', sa.DateTime(timezone=True), nullable=True),
-        sa.Column('attachments', postgresql.JSON(astext_type=sa.Text()), nullable=False, server_default='[]'),
+        sa.Column('attachments', postgresql.JSON(astext_type=sa.Text()), nullable=False, server_default='[]"),
 
         # Primary key
-        sa.PrimaryKeyConstraint('id'),
+        sa.PrimaryKeyConstraint("id"),
 
         # Foreign keys
-        sa.ForeignKeyConstraint(['org_id'], ['organisations.id'], ondelete='SET NULL'),
-        sa.ForeignKeyConstraint(['person_id'], ['people.id'], ondelete='SET NULL'),
+        sa.ForeignKeyConstraint(['org_id'], ['organisations.id'], ondelete='SET NULL"),
+        sa.ForeignKeyConstraint(['person_id'], ['people.id'], ondelete='SET NULL"),
         sa.ForeignKeyConstraint(['created_by'], ['users.id']),
 
         # Contrainte CHECK: au moins org_id OU person_id
@@ -61,12 +61,12 @@ def upgrade():
     op.create_index(
         'idx_crm_interactions_org_created_at',
         'crm_interactions',
-        ['org_id', 'created_at'],
+        ['org_id", "created_at'],
     )
     op.create_index(
         'idx_crm_interactions_person_created_at',
         'crm_interactions',
-        ['person_id', 'created_at'],
+        ['person_id", "created_at'],
     )
     op.create_index(
         'idx_crm_interactions_created_at',
@@ -82,15 +82,15 @@ def upgrade():
 
 def downgrade():
     # Drop table
-    op.drop_index('idx_crm_interactions_created_by', table_name='crm_interactions')
-    op.drop_index('idx_crm_interactions_created_at', table_name='crm_interactions')
-    op.drop_index('idx_crm_interactions_person_created_at', table_name='crm_interactions')
-    op.drop_index('idx_crm_interactions_org_created_at', table_name='crm_interactions')
-    op.drop_table('crm_interactions')
+    op.drop_index('idx_crm_interactions_created_by', table_name='crm_interactions")
+    op.drop_index('idx_crm_interactions_created_at', table_name='crm_interactions")
+    op.drop_index('idx_crm_interactions_person_created_at', table_name='crm_interactions")
+    op.drop_index('idx_crm_interactions_org_created_at', table_name='crm_interactions")
+    op.drop_table('crm_interactions")
 
     # Drop enum type
     interaction_type_enum = postgresql.ENUM(
-        'call', 'email', 'meeting', 'note', 'other',
+        'call", "email", "meeting", "note", "other',
         name='interaction_type'
     )
     interaction_type_enum.drop(op.get_bind())

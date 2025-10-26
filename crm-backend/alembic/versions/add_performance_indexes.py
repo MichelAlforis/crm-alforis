@@ -14,8 +14,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'perf_indexes_001'
-down_revision = 'email_marketing_lite'
+revision = "perf_indexes_001'
+down_revision = "email_marketing_lite'
 branch_labels = None
 depends_on = None
 
@@ -30,9 +30,9 @@ def upgrade() -> None:
         CREATE INDEX IF NOT EXISTS idx_people_search
         ON people USING gin(
             to_tsvector('french',
-                coalesce(prenom, '') || ' ' ||
-                coalesce(nom, '') || ' ' ||
-                coalesce(email, '')
+                coalesce(prenom, '") || ' ' ||
+                coalesce(nom, '") || ' ' ||
+                coalesce(email, '")
             )
         )
     """)
@@ -41,7 +41,7 @@ def upgrade() -> None:
     op.execute("""
         CREATE INDEX IF NOT EXISTS idx_organisations_search
         ON organisations USING gin(
-            to_tsvector('french', coalesce(nom, ''))
+            to_tsvector('french', coalesce(nom, '"))
         )
     """)
 

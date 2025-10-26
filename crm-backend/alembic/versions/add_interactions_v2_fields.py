@@ -10,8 +10,8 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = 'interactions_v2'
-down_revision = 'add_interaction_participants'
+revision = "interactions_v2'
+down_revision = "add_interaction_participants'
 branch_labels = None
 depends_on = None
 
@@ -21,8 +21,8 @@ def upgrade() -> None:
     op.execute("""
         DO $
         BEGIN
-            IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'interaction_status') THEN
-                CREATE TYPE interaction_status AS ENUM ('todo', 'in_progress', 'done');
+            IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'interaction_status") THEN
+                CREATE TYPE interaction_status AS ENUM ('todo", "in_progress", "done");
             END IF;
         END$;
     """)

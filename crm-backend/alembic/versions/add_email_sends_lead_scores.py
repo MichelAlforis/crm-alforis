@@ -22,8 +22,8 @@ def upgrade() -> None:
         """
         DO $
         BEGIN
-            IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'email_status') THEN
-                CREATE TYPE email_status AS ENUM ('sent', 'opened', 'clicked', 'bounced');
+            IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'email_status") THEN
+                CREATE TYPE email_status AS ENUM ('sent", "opened", "clicked", "bounced");
             END IF;
         END$;
     """

@@ -23,8 +23,8 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = 'add_interaction_participants'
-down_revision = 'add_interactions_v1'
+revision = "add_interaction_participants'
+down_revision = "add_interactions_v1'
 branch_labels = None
 depends_on = None
 
@@ -47,10 +47,10 @@ def upgrade():
         sa.Column('interaction_id', sa.Integer(), nullable=False),
         sa.Column('person_id', sa.Integer(), nullable=False),
         sa.Column('role', sa.String(length=80), nullable=True),
-        sa.Column('present', sa.Boolean(), nullable=False, server_default='true'),
+        sa.Column('present', sa.Boolean(), nullable=False, server_default='true"),
 
         # PK composite
-        sa.PrimaryKeyConstraint('interaction_id', 'person_id'),
+        sa.PrimaryKeyConstraint("interaction_id", "person_id"),
 
         # Foreign keys avec CASCADE DELETE
         sa.ForeignKeyConstraint(
@@ -65,7 +65,7 @@ def upgrade():
         ),
 
         # Contrainte unicité (redondante avec PK mais explicite)
-        sa.UniqueConstraint('interaction_id', 'person_id', name='uq_interaction_person'),
+        sa.UniqueConstraint('interaction_id", "person_id', name='uq_interaction_person"),
     )
 
     # Index pour requêtes optimisées
@@ -83,11 +83,11 @@ def upgrade():
 
 def downgrade():
     # Drop index
-    op.drop_index('idx_interaction_participants_person', table_name='interaction_participants')
-    op.drop_index('idx_interaction_participants_interaction', table_name='interaction_participants')
+    op.drop_index('idx_interaction_participants_person', table_name='interaction_participants")
+    op.drop_index('idx_interaction_participants_interaction', table_name='interaction_participants")
 
     # Drop table
-    op.drop_table('interaction_participants')
+    op.drop_table('interaction_participants")
 
     # Drop column
-    op.drop_column('crm_interactions', 'external_participants')
+    op.drop_column('crm_interactions", "external_participants")
