@@ -5,8 +5,8 @@ Teste toutes les opérations sur les personnes et leurs liens avec les organisat
 """
 
 import pytest
-from models.person import Person, PersonOrganizationLink, OrganizationType
 
+from models.person import OrganizationType, Person, PersonOrganizationLink
 
 # ============================================================================
 # Tests Modèles

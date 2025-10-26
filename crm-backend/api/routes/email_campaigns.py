@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from pydantic import BaseModel
 from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
 
@@ -9,6 +10,10 @@ from core.events import EventType, emit_event
 from models.email import EmailCampaignStatus, EmailProvider, EmailSend, EmailSendStatus
 from schemas.base import PaginatedResponse
 from schemas.email import (
+    CampaignSubscriptionBulkCreate,
+    CampaignSubscriptionBulkResponse,
+    CampaignSubscriptionCreate,
+    CampaignSubscriptionResponse,
     EmailCampaignCreate,
     EmailCampaignResponse,
     EmailCampaignScheduleRequest,
@@ -19,12 +24,7 @@ from schemas.email import (
     EmailTemplateCreate,
     EmailTemplateResponse,
     EmailTemplateUpdate,
-    CampaignSubscriptionCreate,
-    CampaignSubscriptionResponse,
-    CampaignSubscriptionBulkCreate,
-    CampaignSubscriptionBulkResponse,
 )
-from pydantic import BaseModel
 from services.email_service import (
     EmailAnalyticsService,
     EmailCampaignService,
@@ -106,8 +106,9 @@ async def delete_template(
     current_user: dict = Depends(get_current_user),
 ):
     """Supprimer un template email"""
-    from models.email import EmailTemplate
     from fastapi import HTTPException
+
+    from models.email import EmailTemplate
 
     # Récupérer le template
     template = db.query(EmailTemplate).filter(EmailTemplate.id == template_id).first()
@@ -141,8 +142,9 @@ async def send_test_email_from_template(
     current_user: dict = Depends(get_current_user),
 ):
     """Envoie un email de test à partir d'un template"""
-    from models.email import EmailTemplate
     from fastapi import HTTPException
+
+    from models.email import EmailTemplate
 
     # Récupérer le template
     template = db.query(EmailTemplate).filter(EmailTemplate.id == template_id).first()
@@ -170,10 +172,12 @@ async def send_test_email_from_template(
 
     try:
         # Récupérer la configuration email active
+        import os
+
+        import requests
+
         from models.email_config import EmailConfiguration
         from services.email_config_service import EmailConfigurationService
-        import os
-        import requests
 
         email_config = db.query(EmailConfiguration).filter(
             EmailConfiguration.is_active == True
@@ -255,9 +259,10 @@ async def count_recipients(
     Compter le nombre de destinataires correspondant aux filtres
     Utilisé pour prévisualiser le nombre de destinataires d'une campagne
     """
+    from sqlalchemy import and_
+
     from models.organisation import Organisation
     from models.person import Person, PersonOrganizationLink
-    from sqlalchemy import and_
 
     if filters.target_type == 'organisations':
         query = db.query(Organisation).filter(Organisation.email.isnot(None))
@@ -379,6 +384,7 @@ async def list_recipients(
 
     elif filters.target_type == 'contacts':
         from sqlalchemy import or_
+
         # Récupérer TOUS les contacts avec email, pas seulement les contacts principaux
         # LEFT JOIN pour avoir l'organisation si elle existe
         query = db.query(Person, Organisation).outerjoin(
@@ -504,8 +510,9 @@ async def delete_campaign(
     current_user: dict = Depends(get_current_user),
 ):
     """Supprimer une campagne (seulement si draft, paused, completed ou failed)"""
-    from models.email import EmailCampaign, EmailCampaignStatus
     from fastapi import HTTPException
+
+    from models.email import EmailCampaign, EmailCampaignStatus
 
     # Récupérer la campagne
     campaign = db.query(EmailCampaign).filter(EmailCampaign.id == campaign_id).first()
@@ -709,11 +716,13 @@ async def subscribe_to_campaign(
     current_user: dict = Depends(get_current_user),
 ):
     """Abonner une personne ou organisation à une campagne."""
-    from models.email import EmailCampaign, CampaignSubscription
-    from models.person import Person
-    from models.organisation import Organisation
+    from datetime import UTC, datetime
+
     from fastapi import HTTPException
-    from datetime import datetime, UTC
+
+    from models.email import CampaignSubscription, EmailCampaign
+    from models.organisation import Organisation
+    from models.person import Person
 
     # Vérifier que la campagne existe
     campaign = db.query(EmailCampaign).filter(EmailCampaign.id == campaign_id).first()
@@ -797,9 +806,11 @@ async def unsubscribe_from_campaign(
     current_user: dict = Depends(get_current_user),
 ):
     """Désabonner une entité d'une campagne."""
-    from models.email import CampaignSubscription
+    from datetime import UTC, datetime
+
     from fastapi import HTTPException
-    from datetime import datetime, UTC
+
+    from models.email import CampaignSubscription
 
     subscription = db.query(CampaignSubscription).filter(
         CampaignSubscription.id == subscription_id,
@@ -832,10 +843,11 @@ async def list_campaign_subscriptions(
     current_user: dict = Depends(get_current_user),
 ):
     """Lister les abonnements d'une campagne."""
-    from models.email import CampaignSubscription, EmailCampaign
-    from models.person import Person
-    from models.organisation import Organisation
     from fastapi import HTTPException
+
+    from models.email import CampaignSubscription, EmailCampaign
+    from models.organisation import Organisation
+    from models.person import Person
 
     # Vérifier que la campagne existe
     campaign = db.query(EmailCampaign).filter(EmailCampaign.id == campaign_id).first()
@@ -905,9 +917,10 @@ async def list_person_subscriptions(
     current_user: dict = Depends(get_current_user),
 ):
     """Lister les abonnements d'une personne."""
+    from fastapi import HTTPException
+
     from models.email import CampaignSubscription, EmailCampaign
     from models.person import Person
-    from fastapi import HTTPException
 
     # Vérifier que la personne existe
     person = db.query(Person).filter(Person.id == person_id).first()
@@ -946,9 +959,10 @@ async def list_organisation_subscriptions(
     current_user: dict = Depends(get_current_user),
 ):
     """Lister les abonnements d'une organisation."""
+    from fastapi import HTTPException
+
     from models.email import CampaignSubscription, EmailCampaign
     from models.organisation import Organisation
-    from fastapi import HTTPException
 
     # Vérifier que l'organisation existe
     org = db.query(Organisation).filter(Organisation.id == organisation_id).first()
@@ -986,10 +1000,11 @@ async def bulk_subscribe_to_campaign(
     current_user: dict = Depends(get_current_user),
 ):
     """Abonner plusieurs personnes/organisations à une campagne en une fois."""
-    from models.email import EmailCampaign, CampaignSubscription
-    from models.person import Person
-    from models.organisation import Organisation
     from fastapi import HTTPException
+
+    from models.email import CampaignSubscription, EmailCampaign
+    from models.organisation import Organisation
+    from models.person import Person
 
     # Vérifier que la campagne existe
     campaign = db.query(EmailCampaign).filter(EmailCampaign.id == payload.campaign_id).first()
@@ -1135,11 +1150,13 @@ async def get_batch_recipients_with_tracking(
     - name: Par nom alphabétique
     - date: Par date de dernier événement
     """
-    from models.email import EmailEvent, EmailEventType, EmailSendBatch
-    from models.person import Person
-    from models.organisation import Organisation
-    from sqlalchemy.orm import joinedload
     from datetime import datetime, timezone
+
+    from sqlalchemy.orm import joinedload
+
+    from models.email import EmailEvent, EmailEventType, EmailSendBatch
+    from models.organisation import Organisation
+    from models.person import Person
 
     # Vérifier que le batch appartient bien à la campagne
     batch = db.query(EmailSendBatch).filter(

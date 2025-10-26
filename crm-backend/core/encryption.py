@@ -5,9 +5,10 @@ Utilise Fernet (AES-256) pour chiffrer/déchiffrer de manière symétrique.
 La clé de chiffrement doit être stockée dans .env (ENCRYPTION_KEY).
 """
 
-from cryptography.fernet import Fernet
-from typing import Optional
 import os
+from typing import Optional
+
+from cryptography.fernet import Fernet
 
 
 class EncryptionService:

@@ -27,15 +27,16 @@ Usage:
     )
 """
 
-from typing import Optional, List, Dict, Any, Union
-from sqlalchemy import func, or_, and_, text
-from sqlalchemy.orm import Session
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Union
 
+from sqlalchemy import and_, func, or_, text
+from sqlalchemy.orm import Session
+
+from core.permissions import filter_query_by_team
+from models.mandat import Mandat
 from models.organisation import Organisation, OrganisationCategory
 from models.person import Person
-from models.mandat import Mandat
-from core.permissions import filter_query_by_team
 
 
 class SearchService:

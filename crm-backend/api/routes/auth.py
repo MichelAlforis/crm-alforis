@@ -1,16 +1,17 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Request, Form
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from pydantic import BaseModel, EmailStr, Field, field_validator
-from datetime import timedelta, datetime
-from sqlalchemy.orm import Session
 from collections import defaultdict
+from datetime import datetime, timedelta
 from typing import Dict
 
-from core.security import create_access_token, decode_token, verify_password, get_password_hash
+from fastapi import APIRouter, Depends, Form, HTTPException, Request, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from pydantic import BaseModel, EmailStr, Field, field_validator
+from sqlalchemy.orm import Session
+
 from core.config import settings
 from core.database import get_db
-from models.user import User
+from core.security import create_access_token, decode_token, get_password_hash, verify_password
 from models.role import Role, UserRole
+from models.user import User
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 security = HTTPBearer()

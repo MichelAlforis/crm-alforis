@@ -5,12 +5,13 @@
 #   POST /api/v1/imports/organisations/bulk (NEW: import unifié)
 #   POST /api/v1/imports/people/bulk (NEW: import personnes physiques)
 
-from fastapi import APIRouter, HTTPException, Depends, status, Query
-from sqlalchemy.orm import Session
+import logging
+from typing import Any, Dict, List, Optional, Set
+
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
-from typing import List, Optional, Dict, Any, Set
-import logging
+from sqlalchemy.orm import Session
 
 # ---- Dépendances / modèles / schémas
 from core.database import get_db

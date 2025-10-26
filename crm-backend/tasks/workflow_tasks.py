@@ -21,20 +21,21 @@ except ImportError:  # pragma: no cover
 
     def get_task_logger(name):
         return logging.getLogger(name)
-from sqlalchemy.orm import Session
-from datetime import datetime, timezone, timedelta
-from typing import Dict, Any, Optional
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, Optional
 
-from tasks.celery_app import celery_app
+from sqlalchemy.orm import Session
+
 from core.database import get_db
 from models.workflow import (
     Workflow,
     WorkflowExecution,
+    WorkflowExecutionStatus,
     WorkflowStatus,
     WorkflowTriggerType,
-    WorkflowExecutionStatus
 )
 from services.workflow_engine import WorkflowEngine
+from tasks.celery_app import celery_app
 
 logger = get_task_logger(__name__)
 
@@ -239,7 +240,7 @@ def check_inactivity_workflows(self):
                 cutoff_date = datetime.now(timezone.utc) - timedelta(days=inactivity_days)
 
                 # Sous-requête pour trouver la dernière activité par organisation
-                from sqlalchemy import func, and_
+                from sqlalchemy import and_, func
                 from sqlalchemy.orm import aliased
 
                 last_activity = (

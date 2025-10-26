@@ -3,6 +3,7 @@ Health check endpoint pour monitoring et Docker healthcheck
 """
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+
 from core.database import get_db
 
 router = APIRouter(tags=["health"])

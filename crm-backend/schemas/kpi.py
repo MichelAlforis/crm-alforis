@@ -1,6 +1,9 @@
-from pydantic import Field
 from typing import Optional
-from schemas.base import TimestampedSchema, BaseSchema
+
+from pydantic import Field
+
+from schemas.base import BaseSchema, TimestampedSchema
+
 
 class KPICreate(BaseSchema):
     """Création d'un KPI"""

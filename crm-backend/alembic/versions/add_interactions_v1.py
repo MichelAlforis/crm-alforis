@@ -9,9 +9,10 @@ Interactions v1 : Communication et activités liées aux organisations/personnes
 - Contrainte: au moins org_id OU person_id
 - Pas de champs inbox (status, assignee, next_action_at) en v1
 """
-from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
+
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "add_interactions_v1'

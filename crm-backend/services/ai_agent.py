@@ -11,31 +11,32 @@ Ce service fournit des fonctionnalités d'IA pour:
 Utilise les API Claude (Anthropic), OpenAI ou Ollama selon configuration.
 """
 
-from typing import Dict, Any, List, Optional, Tuple
-from datetime import datetime, timedelta, UTC
-from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_, func
-import json
-import hashlib
-import httpx
 import asyncio
+import hashlib
+import json
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
+from typing import Any, Dict, List, Optional, Tuple
 
+import httpx
+from sqlalchemy import and_, func, or_
+from sqlalchemy.orm import Session
+
+from core.config import settings
+from core.notifications import NotificationManager
 from models.ai_agent import (
-    AISuggestion,
-    AIExecution,
-    AIConfiguration,
     AICache,
-    AISuggestionType,
-    AISuggestionStatus,
+    AIConfiguration,
+    AIExecution,
     AIExecutionStatus,
-    AITaskType,
     AIProvider,
+    AISuggestion,
+    AISuggestionStatus,
+    AISuggestionType,
+    AITaskType,
 )
 from models.organisation import Organisation
 from models.person import Person
-from core.config import settings
-from core.notifications import NotificationManager
 
 
 class AIAgentService:

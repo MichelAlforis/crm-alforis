@@ -1,21 +1,21 @@
-from typing import List, Tuple, Dict, Any, Optional
+import logging
+from typing import Any, Dict, List, Optional, Tuple
 
 from sqlalchemy import or_
 from sqlalchemy.orm import Session, joinedload
-import logging
 
-from services.base import BaseService
-from models.person import Person, PersonOrganizationLink
+from core.exceptions import ConflictError, ResourceNotFound
 from models.organisation import Organisation, OrganisationType
+from models.person import Person, PersonOrganizationLink
 from schemas.person import (
     PersonCreate,
-    PersonUpdate,
     PersonOrganizationLinkCreate,
-    PersonOrganizationLinkUpdate,
     PersonOrganizationLinkResponse,
+    PersonOrganizationLinkUpdate,
     PersonResponse,
+    PersonUpdate,
 )
-from core.exceptions import ResourceNotFound, ConflictError
+from services.base import BaseService
 
 logger = logging.getLogger(__name__)
 

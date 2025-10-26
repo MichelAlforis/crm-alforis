@@ -9,9 +9,10 @@ v1.1: Participants multiples
 v2: Workflow inbox (status, assignee, next_action_at)
 """
 
-from pydantic import BaseModel, Field, field_validator, EmailStr
-from typing import Optional, List, Literal
 from datetime import datetime
+from typing import List, Literal, Optional
+
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 # Type littéral pour le type d'interaction (v1.1: ajout 'visio')
 InteractionType = Literal['call', 'email', 'meeting', 'visio', 'note', 'other']

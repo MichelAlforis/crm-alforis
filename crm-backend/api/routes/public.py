@@ -5,20 +5,19 @@ Ces endpoints sont utilisés par le site public alforis.fr pour:
 - Désinscription depuis les emails
 """
 
+import logging
 from datetime import datetime, timezone
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status, Header
+from fastapi import APIRouter, Depends, Header, HTTPException, status
 from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy.orm import Session
-
-import logging
 
 from core import get_db
 from core.config import settings
 from models.email import UnsubscribedEmail
-from models.person import Person
 from models.organisation import Organisation
+from models.person import Person
 
 logger = logging.getLogger(__name__)
 

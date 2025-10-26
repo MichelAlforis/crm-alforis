@@ -1,22 +1,22 @@
-from fastapi import APIRouter, Depends, status, Query
-from sqlalchemy.orm import Session
 from typing import Optional
 
-from core import get_db, get_current_user
-from core.events import emit_event, EventType
-from schemas.task import (
+from fastapi import APIRouter, Depends, Query, status
+from sqlalchemy.orm import Session
+
+from core import get_current_user, get_db
+from core.events import EventType, emit_event
+from schemas.base import PaginatedResponse
+from schemas.task import (  # TaskCategory  # N'existe pas
     TaskCreate,
-    TaskUpdate,
+    TaskPriority,
+    TaskQuickActionRequest,
     TaskResponse,
-    TaskWithRelations,
     TaskSnoozeRequest,
     TaskStatsResponse,
-    TaskQuickActionRequest,
     TaskStatus,
-    TaskPriority,
-    # TaskCategory  # N'existe pas
+    TaskUpdate,
+    TaskWithRelations,
 )
-from schemas.base import PaginatedResponse
 from services.task import TaskService
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])

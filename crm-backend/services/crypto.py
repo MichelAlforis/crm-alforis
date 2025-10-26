@@ -4,10 +4,12 @@ Service de cryptage/décryptage pour les clés API
 Utilise Fernet (cryptage symétrique) pour sécuriser les clés API en base de données
 """
 
-from cryptography.fernet import Fernet
-from core.config import settings
 import base64
 import hashlib
+
+from cryptography.fernet import Fernet
+
+from core.config import settings
 
 
 class CryptoService:

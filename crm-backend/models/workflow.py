@@ -1,15 +1,17 @@
-from sqlalchemy import Column, String, Integer, Text, Enum, ForeignKey, Boolean, JSON, DateTime
+import enum
+from datetime import datetime
+
+from sqlalchemy import JSON, Boolean, Column, DateTime, Enum, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
+
 from models.base import BaseModel
 from models.constants import (
+    ENUM_WORKFLOW_STATUS,
+    ENUM_WORKFLOW_TRIGGER,
     FK_USERS_ID,
     FK_WORKFLOWS_ID,
     ONDELETE_CASCADE,
-    ENUM_WORKFLOW_STATUS,
-    ENUM_WORKFLOW_TRIGGER,
 )
-import enum
-from datetime import datetime
 
 # =======================
 # Enums

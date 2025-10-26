@@ -4,12 +4,13 @@ Rate Limiting pour l'API - Protection anti-abus
 Utilise slowapi pour limiter les requêtes par IP/User
 """
 
-from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
-from slowapi.errors import RateLimitExceeded
-from fastapi import Request
-from typing import Optional
 import logging
+from typing import Optional
+
+from fastapi import Request
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 
 logger = logging.getLogger(__name__)
 

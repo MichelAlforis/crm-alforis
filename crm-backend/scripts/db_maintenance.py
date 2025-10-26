@@ -23,8 +23,8 @@ Cron (quotidien 3AM):
     0 3 * * * cd /app && python scripts/db_maintenance.py --execute >> /var/log/crm/maintenance.log 2>&1
 """
 
-import sys
 import os
+import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -33,7 +33,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import argparse
 import logging
-from sqlalchemy import text, func
+
+from sqlalchemy import func, text
 from sqlalchemy.orm import Session
 
 from core.database import SessionLocal

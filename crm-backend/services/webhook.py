@@ -1,14 +1,14 @@
 from __future__ import annotations
 
-from typing import List, Optional
 import secrets
+from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
+from core.exceptions import DatabaseError
 from models.webhook import Webhook
 from schemas.webhook import WebhookCreate, WebhookUpdate
 from services.base import BaseService
-from core.exceptions import DatabaseError
 
 
 class WebhookService(BaseService[Webhook, WebhookCreate, WebhookUpdate]):

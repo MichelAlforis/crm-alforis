@@ -1,10 +1,12 @@
-from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
-from jose import JWTError, jwt
-from core.config import settings
-from core.exceptions import UnauthorizedError, ForbiddenError
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
 from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from jose import JWTError, jwt
+from passlib.context import CryptContext
+
+from core.config import settings
+from core.exceptions import ForbiddenError, UnauthorizedError
 
 # Configuration du hachage des mots de passe
 pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
@@ -53,7 +55,7 @@ def decode_token(token: str) -> dict:
         raise UnauthorizedError(f"Invalid token: {str(e)}")
 
 from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 security = HTTPBearer(auto_error=False)  # auto_error=False pour rendre l'auth optionnelle
 

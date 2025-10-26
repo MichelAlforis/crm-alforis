@@ -22,25 +22,26 @@ Usage:
 """
 
 from __future__ import annotations
-import atexit
+
 import asyncio
+import atexit
 import json
 import time
-from typing import Optional, List, Dict, Any, Union, Set
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, List, Optional, Set, Union
+
+from anyio import from_thread as anyio_from_thread
+from anyio.from_thread import BlockingPortal, start_blocking_portal
 from fastapi import WebSocket, WebSocketDisconnect
 from sqlalchemy.orm import Session
-from anyio import from_thread as anyio_from_thread
-from anyio.from_thread import start_blocking_portal, BlockingPortal
 
 from models.notification import (
+    NOTIFICATION_TEMPLATES,
     Notification,
-    NotificationType,
     NotificationPriority,
-    NOTIFICATION_TEMPLATES
+    NotificationType,
 )
 from models.user import User
-
 
 # ============================================
 # WebSocket Connection Manager (Multi-Tenant)
@@ -635,6 +636,63 @@ async def notify_user(
     # Envoyer en temps réel si demandé
     if send_realtime:
         await NotificationService.send_notification(notification, user_id)
+
+    return notification
+
+
+def create_notification(
+    db: Session,
+    user_id: int,
+    title: str,
+    message: str,
+    type: str = "reminder",
+    priority: str = "normal",
+    link: Optional[str] = None,
+) -> Notification:
+    """
+    Version synchrone pour créer une notification (sans WebSocket)
+
+    Utilisé par les workers synchrones (reminder_worker, etc.)
+
+    Args:
+        db: Session database
+        user_id: ID utilisateur
+        title: Titre
+        message: Message
+        type: Type ('reminder', 'task', etc.)
+        priority: Priorité ('low', 'normal', 'high', 'urgent')
+        link: Lien optionnel
+
+    Returns:
+        Notification créée
+    """
+    # Mapper les types string vers enum
+    type_map = {
+        "reminder": NotificationType.INTERACTION_REMINDER,
+        "task": NotificationType.TASK_ASSIGNED,
+        "mention": NotificationType.MENTION,
+    }
+
+    priority_map = {
+        "low": NotificationPriority.LOW,
+        "normal": NotificationPriority.NORMAL,
+        "high": NotificationPriority.HIGH,
+        "urgent": NotificationPriority.URGENT,
+    }
+
+    notification = Notification(
+        user_id=user_id,
+        type=type_map.get(type, NotificationType.INTERACTION_REMINDER),
+        priority=priority_map.get(priority, NotificationPriority.NORMAL),
+        title=title,
+        message=message,
+        link=link,
+        created_at=datetime.now(timezone.utc),
+    )
+
+    db.add(notification)
+    db.commit()
+    db.refresh(notification)
 
     return notification
 

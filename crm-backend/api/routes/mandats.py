@@ -1,18 +1,19 @@
-from fastapi import APIRouter, Depends, status, HTTPException, Query
-from sqlalchemy.orm import Session
 from typing import List, Optional
 
-from core import get_db, get_current_user
-from core.events import emit_event, EventType
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy.orm import Session
+
+from core import get_current_user, get_db
+from core.events import EventType, emit_event
+from models.organisation import MandatStatus
 from schemas.base import PaginatedResponse
 from schemas.organisation import (
     MandatDistributionCreate,
-    MandatDistributionUpdate,
-    MandatDistributionResponse,
     MandatDistributionDetailResponse,
+    MandatDistributionResponse,
+    MandatDistributionUpdate,
 )
 from services.organisation import MandatDistributionService
-from models.organisation import MandatStatus
 
 router = APIRouter(prefix="/mandats", tags=["mandats"])
 

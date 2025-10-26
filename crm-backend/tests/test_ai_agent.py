@@ -3,17 +3,14 @@ Tests pour l'Agent IA
 Tests unitaires du service AI et des endpoints
 """
 
-import pytest
-from unittest.mock import Mock, patch, MagicMock
 from datetime import datetime, timezone
+from unittest.mock import MagicMock, Mock, patch
+
+import pytest
+
+from models.ai_agent import AICache, AIConfiguration, AIExecution, AISuggestion
+from schemas.ai_agent import AIProvider, AISuggestionStatus, AISuggestionType, AITaskType
 from services.ai_agent import AIAgentService
-from models.ai_agent import AISuggestion, AIExecution, AIConfiguration, AICache
-from schemas.ai_agent import (
-    AISuggestionType,
-    AISuggestionStatus,
-    AITaskType,
-    AIProvider,
-)
 
 
 class TestAIAgentService:

@@ -1,17 +1,31 @@
-from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_
-from typing import List, Dict, Any, Optional
-from models.email_campaign import EmailTemplate, EmailCampaign, CampaignEmail, CampaignStatus, EmailStatus
-from models.organisation import Organisation
-from models.person import Person
-from models.contact import Contact
-from schemas.email_campaign import (
-    EmailTemplateCreate, EmailTemplateUpdate,
-    EmailCampaignCreate, EmailCampaignUpdate,
-    RecipientFilters, EmailPreview, EmailPreviewRecipient, EmailPreviewList
-)
 import re
 from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+from sqlalchemy import and_, or_
+from sqlalchemy.orm import Session
+
+from models.contact import Contact
+from models.email_campaign import (
+    CampaignEmail,
+    CampaignStatus,
+    EmailCampaign,
+    EmailStatus,
+    EmailTemplate,
+)
+from models.organisation import Organisation
+from models.person import Person
+from schemas.email_campaign import (
+    EmailCampaignCreate,
+    EmailCampaignUpdate,
+    EmailPreview,
+    EmailPreviewList,
+    EmailPreviewRecipient,
+    EmailTemplateCreate,
+    EmailTemplateUpdate,
+    RecipientFilters,
+)
+
 
 class EmailTemplateService:
     @staticmethod

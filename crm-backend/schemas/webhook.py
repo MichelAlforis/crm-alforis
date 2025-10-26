@@ -1,8 +1,9 @@
 from typing import List, Optional
+
 from pydantic import AnyHttpUrl, Field, field_validator
 
-from schemas.base import BaseSchema, TimestampedSchema
 from core.events import EventType
+from schemas.base import BaseSchema, TimestampedSchema
 
 
 class WebhookBase(BaseSchema):

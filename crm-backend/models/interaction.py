@@ -13,29 +13,20 @@ Contrainte métier :
 from __future__ import annotations
 
 import enum
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    Text,
-    ForeignKey,
-    DateTime,
-    JSON,
-    Boolean,
-    Index,
-    CheckConstraint,
-)
-from sqlalchemy import Enum as SAEnum
-from sqlalchemy.orm import relationship
 from datetime import datetime
+
+from sqlalchemy import JSON, Boolean, CheckConstraint, Column, DateTime
+from sqlalchemy import Enum as SAEnum
+from sqlalchemy import ForeignKey, Index, Integer, String, Text
+from sqlalchemy.orm import relationship
 
 from models.base import BaseModel
 from models.constants import (
-    FK_USERS_ID,
     FK_ORGANISATIONS_ID,
     FK_PEOPLE_ID,
-    ONDELETE_SET_NULL,
+    FK_USERS_ID,
     ONDELETE_CASCADE,
+    ONDELETE_SET_NULL,
 )
 
 

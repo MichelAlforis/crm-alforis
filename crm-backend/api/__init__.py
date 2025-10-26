@@ -1,24 +1,25 @@
 from fastapi import APIRouter
+
 from api.routes import (
+    ai_agent,
     auth,
+    dashboards,
+    email_campaigns,
+    external_webhooks,
     health,
     imports,
-    people,
-    org_links,
-    tasks,
-    organisations,
-    mandats,
-    users,
-    produits,
-    dashboards,
-    workflows,
-    email_campaigns,
-    ai_agent,
     mailing_lists,
-    external_webhooks,
+    mandats,
+    org_links,
+    organisations,
+    people,
+    produits,
     public,
+    tasks,
+    users,
+    workflows,
 )
-from routers import search, exports, webhooks, email_config, help, interactions, email_marketing
+from routers import email_config, email_marketing, exports, help, interactions, search, webhooks
 from webhooks import sendgrid as inbound_sendgrid
 
 # ❌ SUPPRIMÉ (20 oct 2024): kpis

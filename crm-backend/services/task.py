@@ -1,15 +1,16 @@
-from typing import Optional, List, Tuple, Dict, Any
-from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import func, or_, and_
-from datetime import date, timedelta, datetime, UTC
+import logging
+from datetime import UTC, date, datetime, timedelta
+from typing import Any, Dict, List, Optional, Tuple
 
-from models.task import Task, TaskStatus, TaskPriority, TaskCategory
-from schemas.task import TaskCreate, TaskUpdate, TaskFilterParams
+from sqlalchemy import and_, func, or_
+from sqlalchemy.orm import Session, joinedload
+
+from core.exceptions import ResourceNotFound, ValidationError
+from models.organisation_activity import OrganisationActivityType
+from models.task import Task, TaskCategory, TaskPriority, TaskStatus
+from schemas.task import TaskCreate, TaskFilterParams, TaskUpdate
 from services.base import BaseService
 from services.organisation_activity import OrganisationActivityService
-from models.organisation_activity import OrganisationActivityType
-from core.exceptions import ResourceNotFound, ValidationError
-import logging
 
 logger = logging.getLogger(__name__)
 

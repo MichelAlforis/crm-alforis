@@ -1,98 +1,85 @@
-from models.base import Base, BaseModel
-
-from models.person import (
-    Person,
-    PersonOrganizationLink,
-    PersonRole,
-)
-from models.user import User
-from models.team import Team
-from models.task import (
-    Task,
-    TaskPriority,
-    TaskStatus,
-)
-from models.webhook import Webhook
-from models.organisation import (
-    Organisation,
-    OrganisationContact,
-    OrganisationCategory,
-    OrganisationType,
-    PipelineStage,
-    MandatDistribution,
-    MandatStatus,
-    Produit,
-    ProduitStatus,
-    ProduitType,
-    MandatProduit,
-    OrganisationInteraction,
-    InteractionPipeline,
-    InteractionStatus,
-)
-from models.organisation_activity import (
-    OrganisationActivity,
-    OrganisationActivityType,
-)
-from models.kpi import DashboardKPI
-from models.notification import (
-    Notification,
-    NotificationType,
-    NotificationPriority,
-)
-from models.mandat import (
-    Mandat,
-    MandatType,
-    MandatStatus,
-)
-from models.workflow import (
-    Workflow,
-    WorkflowExecution,
-    WorkflowTriggerType,
-    WorkflowActionType,
-    WorkflowStatus,
-    WorkflowExecutionStatus,
-)
-from models.email import (
-    EmailTemplate,
-    EmailCampaign,
-    EmailCampaignStep,
-    EmailSend,
-    EmailEvent,
-    CampaignSubscription,
-    EmailTemplateCategory,
-    EmailProvider,
-    EmailCampaignStatus,
-    EmailScheduleType,
-    EmailVariant,
-    EmailSendStatus,
-    EmailEventType,
-)
 from models.ai_agent import (
-    AISuggestion,
-    AIExecution,
-    AIConfiguration,
     AICache,
-    AISuggestionType,
-    AISuggestionStatus,
+    AIConfiguration,
+    AIExecution,
     AIExecutionStatus,
-    AITaskType,
     AIProvider,
+    AISuggestion,
+    AISuggestionStatus,
+    AISuggestionType,
+    AITaskType,
 )
+from models.base import Base, BaseModel
+from models.email import (
+    CampaignSubscription,
+    EmailCampaign,
+    EmailCampaignStatus,
+    EmailCampaignStep,
+    EmailEvent,
+    EmailEventType,
+    EmailProvider,
+    EmailScheduleType,
+    EmailSend,
+    EmailSendStatus,
+    EmailTemplate,
+    EmailTemplateCategory,
+    EmailVariant,
+)
+from models.email_marketing import LeadScore
 from models.help_analytics import HelpAnalyticsEvent
 from models.interaction import (
     Interaction,
     InteractionParticipant,
-    InteractionType,
     InteractionStatus,
+    InteractionType,
 )
-from models.email_marketing import (
-    LeadScore,
+from models.kpi import DashboardKPI
+from models.mandat import Mandat, MandatStatus, MandatType
+from models.notification import Notification, NotificationPriority, NotificationType
+from models.organisation import (
+    InteractionPipeline,
+    InteractionStatus,
+    MandatDistribution,
+    MandatProduit,
+    MandatStatus,
+    Organisation,
+    OrganisationCategory,
+    OrganisationContact,
+    OrganisationInteraction,
+    OrganisationType,
+    PipelineStage,
+    Produit,
+    ProduitStatus,
+    ProduitType,
+)
+from models.organisation_activity import OrganisationActivity, OrganisationActivityType
+from models.permission import Permission, PermissionAction, PermissionResource
+from models.person import Person, PersonOrganizationLink, PersonRole
+from models.role import Role, UserRole
+from models.task import Task, TaskPriority, TaskStatus
+from models.team import Team
+from models.user import User
+from models.webhook import Webhook
+from models.workflow import (
+    Workflow,
+    WorkflowActionType,
+    WorkflowExecution,
+    WorkflowExecutionStatus,
+    WorkflowStatus,
+    WorkflowTriggerType,
 )
 
 __all__ = [
     # Base
     "Base",
     "BaseModel",
+
+    # Permissions & Roles
+    "Permission",
+    "PermissionAction",
+    "PermissionResource",
+    "Role",
+    "UserRole",
 
     # Organisation (nouveau modèle unif ié)
     "Organisation",

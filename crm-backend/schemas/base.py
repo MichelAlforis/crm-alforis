@@ -1,6 +1,8 @@
-from pydantic import BaseModel as PydanticBaseModel, ConfigDict
 from datetime import datetime
-from typing import Generic, TypeVar, Optional
+from typing import Generic, Optional, TypeVar
+
+from pydantic import BaseModel as PydanticBaseModel
+from pydantic import ConfigDict
 
 T = TypeVar("T")
 

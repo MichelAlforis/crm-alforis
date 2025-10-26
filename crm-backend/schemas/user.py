@@ -1,9 +1,11 @@
 """Schemas Pydantic pour User."""
 
 from typing import Optional
+
 from pydantic import EmailStr, Field, field_validator
-from schemas.base import BaseSchema, TimestampedSchema
+
 from models.role import UserRole
+from schemas.base import BaseSchema, TimestampedSchema
 
 
 class UserBase(BaseSchema):

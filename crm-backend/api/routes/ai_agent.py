@@ -8,34 +8,35 @@ Endpoints pour:
 - Configurer l'agent IA
 """
 
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, Query
-from sqlalchemy.orm import Session
-from typing import List, Optional
 import asyncio
+from typing import List, Optional
 
-from core import get_db, get_current_user
-from core.events import emit_event, EventType
-from services.ai_agent import AIAgentService
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
+
+from core import get_current_user, get_db
+from core.events import EventType, emit_event
+from models.ai_agent import AIConfiguration, AIExecution, AISuggestion
 from schemas.ai_agent import (
-    DetectDuplicatesRequest,
-    EnrichOrganisationsRequest,
-    CheckDataQualityRequest,
-    ApproveSuggestionRequest,
-    RejectSuggestionRequest,
-    BatchApproveSuggestionsRequest,
-    BatchRejectSuggestionsRequest,
-    UpdateAIConfigurationRequest,
-    AISuggestionResponse,
-    AIExecutionResponse,
     AIConfigurationResponse,
+    AIExecutionResponse,
     AIStatisticsResponse,
-    AITaskStatusResponse,
-    BatchOperationResponse,
-    SuggestionPreviewResponse,
+    AISuggestionResponse,
     AISuggestionStatusEnum,
     AISuggestionTypeEnum,
+    AITaskStatusResponse,
+    ApproveSuggestionRequest,
+    BatchApproveSuggestionsRequest,
+    BatchOperationResponse,
+    BatchRejectSuggestionsRequest,
+    CheckDataQualityRequest,
+    DetectDuplicatesRequest,
+    EnrichOrganisationsRequest,
+    RejectSuggestionRequest,
+    SuggestionPreviewResponse,
+    UpdateAIConfigurationRequest,
 )
-from models.ai_agent import AISuggestion, AIExecution, AIConfiguration
+from services.ai_agent import AIAgentService
 
 router = APIRouter(prefix="/ai", tags=["AI Agent"])
 
@@ -90,8 +91,9 @@ async def detect_duplicates(
     background_tasks.add_task(run_detection)
 
     # Créer une exécution "pending" immédiatement
-    from models.ai_agent import AIExecution, AIExecutionStatus, AITaskType, AIProvider
-    from datetime import datetime, UTC
+    from datetime import UTC, datetime
+
+    from models.ai_agent import AIExecution, AIExecutionStatus, AIProvider, AITaskType
 
     execution = AIExecution(
         task_type=AITaskType.DUPLICATE_SCAN,
@@ -138,8 +140,9 @@ async def enrich_organisations(
 
     background_tasks.add_task(run_enrichment)
 
-    from models.ai_agent import AIExecution, AIExecutionStatus, AITaskType, AIProvider
-    from datetime import datetime, UTC
+    from datetime import UTC, datetime
+
+    from models.ai_agent import AIExecution, AIExecutionStatus, AIProvider, AITaskType
 
     execution = AIExecution(
         task_type=AITaskType.BULK_ENRICHMENT,
@@ -186,8 +189,9 @@ async def check_data_quality(
 
     background_tasks.add_task(run_quality_check)
 
-    from models.ai_agent import AIExecution, AIExecutionStatus, AITaskType, AIProvider
-    from datetime import datetime, UTC
+    from datetime import UTC, datetime
+
+    from models.ai_agent import AIExecution, AIExecutionStatus, AIProvider, AITaskType
 
     execution = AIExecution(
         task_type=AITaskType.QUALITY_CHECK,
@@ -600,7 +604,8 @@ async def get_ai_statistics(
     - Tokens utilisés
     """
     from sqlalchemy import func
-    from models.ai_agent import AISuggestionStatus, AIExecutionStatus
+
+    from models.ai_agent import AIExecutionStatus, AISuggestionStatus
 
     # Suggestions totales
     total_suggestions = db.query(func.count(AISuggestion.id)).scalar() or 0
@@ -698,6 +703,7 @@ async def get_ai_statistics(
 
 from pydantic import BaseModel, field_validator
 
+
 class SaveAPIKeysRequest(BaseModel):
     """Requête pour sauvegarder les clés API depuis le frontend"""
     anthropic_key: Optional[str] = None
@@ -757,8 +763,9 @@ async def save_api_keys(
     })
     ```
     """
+    from datetime import UTC, datetime
+
     from core.encryption import get_encryption_service
-    from datetime import datetime, UTC
 
     user_id = _extract_user_id(current_user)
 
@@ -852,7 +859,7 @@ async def delete_api_key(
     DELETE /api/v1/ai/config/api-keys/anthropic
     ```
     """
-    from datetime import datetime, UTC
+    from datetime import UTC, datetime
 
     user_id = _extract_user_id(current_user)
 

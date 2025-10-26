@@ -8,27 +8,21 @@ Notifications principales gérées:
 - system_error / workflow_executed
 """
 
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    Boolean,
-    DateTime,
-    ForeignKey,
-    Enum as SQLEnum,
-    JSON,
-)
-from sqlalchemy.orm import relationship
-from datetime import datetime, timezone
 import enum
-from typing import Dict, Any, TYPE_CHECKING
+from datetime import datetime, timezone
+from typing import TYPE_CHECKING, Any, Dict
+
+from sqlalchemy import JSON, Boolean, Column, DateTime
+from sqlalchemy import Enum as SQLEnum
+from sqlalchemy import ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 
 from models.base import BaseModel
 from models.constants import (
+    ENUM_NOTIFICATION_PRIORITY,
+    ENUM_NOTIFICATION_TYPE,
     FK_USERS_ID,
     ONDELETE_CASCADE,
-    ENUM_NOTIFICATION_TYPE,
-    ENUM_NOTIFICATION_PRIORITY,
 )
 
 if TYPE_CHECKING:

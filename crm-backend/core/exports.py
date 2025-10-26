@@ -26,33 +26,38 @@ Usage:
     )
 """
 
-from typing import Optional, List, Dict, Any
-from datetime import datetime, date
-from io import BytesIO, StringIO
 import csv
 import enum
-from sqlalchemy.orm import Session
+from datetime import date, datetime
+from io import BytesIO, StringIO
+from typing import Any, Dict, List, Optional
 
 # Excel
 from openpyxl import Workbook
-from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.chart import BarChart, PieChart, Reference
+from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
+from reportlab.lib import colors
 
 # PDF
 from reportlab.lib.pagesizes import A4, letter
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
-from reportlab.platypus import (
-    SimpleDocTemplate, Table, TableStyle, Paragraph,
-    Spacer, Image, PageBreak
-)
 from reportlab.pdfgen import canvas
+from reportlab.platypus import (
+    Image,
+    PageBreak,
+    Paragraph,
+    SimpleDocTemplate,
+    Spacer,
+    Table,
+    TableStyle,
+)
+from sqlalchemy.orm import Session
 
+from models.mandat import Mandat
 from models.organisation import Organisation
 from models.person import Person
-from models.mandat import Mandat
 
 
 def _normalize_value(value: Any) -> Any:

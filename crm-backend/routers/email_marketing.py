@@ -14,24 +14,20 @@ Security:
 - Timestamp validation (reject events > 5min old)
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Header, status
-from sqlalchemy.orm import Session
-from sqlalchemy import desc
-from typing import List, Optional
-from datetime import datetime
 import os
+from datetime import datetime
+from typing import List, Optional
 
-from core import get_db, get_current_user
-from core.webhook_security import verify_webhook_signature, validate_webhook_timestamp
+from fastapi import APIRouter, Depends, Header, HTTPException, Query, status
+from sqlalchemy import desc
+from sqlalchemy.orm import Session
+
+from core import get_current_user, get_db
+from core.webhook_security import validate_webhook_timestamp, verify_webhook_signature
 from models.email_marketing import EmailEventTracking, EmailStatus, LeadScore
-from models.interaction import Interaction, InteractionType, InteractionStatus
+from models.interaction import Interaction, InteractionStatus, InteractionType
 from models.person import Person
-from schemas.email_marketing import (
-    EmailIngestPayload,
-    EmailSendOut,
-    LeadScoreOut,
-    HotLeadsResponse,
-)
+from schemas.email_marketing import EmailIngestPayload, EmailSendOut, HotLeadsResponse, LeadScoreOut
 
 router = APIRouter(prefix="/marketing", tags=["email-marketing"])
 
@@ -145,8 +141,8 @@ async def ingest_email_event(
     webhook_secret = os.getenv("WEBHOOK_SECRET")
     if webhook_secret and x_signature:
         # Verify HMAC signature
-        # Use model_dump(mode='json') to serialize datetime objects properly
-        payload_dict = payload.model_dump(mode='json')
+        # Use model_dump(mode='json', exclude_none=True) to match incoming payload format
+        payload_dict = payload.model_dump(mode='json', exclude_none=True)
         if not verify_webhook_signature(payload_dict, x_signature, webhook_secret):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -164,8 +160,8 @@ async def ingest_email_event(
         validate_webhook_timestamp(x_timestamp, max_age_seconds=300)  # 5 min
     # 1. Upsert EmailEventTracking
     email_send = db.query(EmailEventTracking).filter(
-        EmailSend.provider == payload.provider,
-        EmailSend.external_id == payload.external_id,
+        EmailEventTracking.provider == payload.provider,
+        EmailEventTracking.external_id == payload.external_id,
     ).first()
 
     if not email_send:

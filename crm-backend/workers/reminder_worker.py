@@ -13,21 +13,22 @@ Déploiement:
     Ajouter cron job ou supervisord task
 """
 
-import sys
-import os
-from pathlib import Path
-from datetime import datetime, timedelta
-import time
 import logging
+import os
+import sys
+import time
+from datetime import datetime, timedelta
+from pathlib import Path
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+from core.notifications import create_notification  # Assume exists
 from models.interaction import Interaction
 from models.user import User
-from core.notifications import create_notification  # Assume exists
 
 # Configure logging
 logging.basicConfig(

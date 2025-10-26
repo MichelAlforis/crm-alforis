@@ -8,17 +8,17 @@ Fonctionnalités:
 - Métriques (hit/miss rate)
 """
 
-import redis
-import json
 import hashlib
+import json
 import logging
-from functools import wraps
-from typing import Any, Optional, Callable
 from datetime import timedelta
+from functools import wraps
+from typing import Any, Callable, Optional
 
-from core.config import settings
+import redis
 from fastapi.encoders import jsonable_encoder
 
+from core.config import settings
 
 # ============================================================================
 # Redis Client

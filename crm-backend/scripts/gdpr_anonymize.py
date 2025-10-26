@@ -25,22 +25,23 @@ Notes:
 """
 
 import argparse
-import sys
+import hashlib
 import logging
+import sys
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import List, Dict, Any, Tuple
-import hashlib
+from typing import Any, Dict, List, Tuple
 
 # Setup path pour imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from sqlalchemy import and_, or_, func, select, update
+from sqlalchemy import and_, func, or_, select, update
 from sqlalchemy.orm import Session
-from core.database import get_db, engine
-from models.person import Person
-from models.organisation import Organisation
+
+from core.database import engine, get_db
 from models.audit_log import AuditLog
+from models.organisation import Organisation
+from models.person import Person
 
 # Configuration logging
 logging.basicConfig(

@@ -1,13 +1,15 @@
 """
 Tâches Celery pour l'envoi d'emails par lots
 """
+import logging
 import time
 from typing import List
+
 from sqlalchemy.orm import Session
+
 from models.database import SessionLocal
-from models.email_campaign import EmailCampaign, CampaignEmail, CampaignStatus, EmailStatus
+from models.email_campaign import CampaignEmail, CampaignStatus, EmailCampaign, EmailStatus
 from services.email_service import EmailService
-import logging
 
 logger = logging.getLogger(__name__)
 

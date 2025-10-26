@@ -1,8 +1,13 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, JSON, Enum as SQLEnum, ForeignKey, Boolean
+import enum
+
+from sqlalchemy import JSON, Boolean, Column, DateTime
+from sqlalchemy import Enum as SQLEnum
+from sqlalchemy import ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+
 from .database import Base
-import enum
+
 
 class CampaignStatus(str, enum.Enum):
     DRAFT = "draft"

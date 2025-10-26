@@ -1,35 +1,37 @@
-from typing import List, Optional, Tuple, Dict, Any
+import logging
+from datetime import UTC, datetime
+from typing import Any, Dict, List, Optional, Tuple
+
+from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import and_, or_, func
-from datetime import datetime, UTC
+
+from core.exceptions import DatabaseError, ResourceNotFound, ValidationError
 from models.organisation import (
-    Organisation,
-    OrganisationContact,
     MandatDistribution,
-    Produit,
     MandatProduit,
-    OrganisationInteraction,
-    OrganisationCategory,
     MandatStatus,
+    Organisation,
+    OrganisationCategory,
+    OrganisationContact,
+    OrganisationInteraction,
+    Produit,
 )
+from models.organisation_activity import OrganisationActivityType
 from schemas.organisation import (
-    OrganisationCreate,
-    OrganisationUpdate,
-    OrganisationContactCreate,
-    OrganisationContactUpdate,
-    MandatDistributionCreate,
-    MandatDistributionUpdate,
-    ProduitCreate,
-    ProduitUpdate,
-    MandatProduitCreate,
     InteractionCreate,
     InteractionUpdate,
+    MandatDistributionCreate,
+    MandatDistributionUpdate,
+    MandatProduitCreate,
+    OrganisationContactCreate,
+    OrganisationContactUpdate,
+    OrganisationCreate,
+    OrganisationUpdate,
+    ProduitCreate,
+    ProduitUpdate,
 )
 from services.base import BaseService
 from services.organisation_activity import OrganisationActivityService
-from models.organisation_activity import OrganisationActivityType
-from core.exceptions import ResourceNotFound, ValidationError, DatabaseError
-import logging
 
 logger = logging.getLogger(__name__)
 

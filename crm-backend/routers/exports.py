@@ -10,18 +10,19 @@ Endpoints:
 """
 
 from typing import Optional
-from fastapi import APIRouter, Depends, Query, HTTPException
+
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
-from core.database import get_db
 from core.auth import get_current_user
+from core.database import get_db
 from core.exports import ExportService
 from core.permissions import filter_query_by_team
-from models.user import User
+from models.mandat import Mandat, MandatStatus, MandatType
 from models.organisation import Organisation, OrganisationCategory
-from models.mandat import Mandat, MandatType, MandatStatus
 from models.person import Person
+from models.user import User
 
 router = APIRouter(prefix="/exports", tags=["exports"])
 
@@ -480,13 +481,14 @@ async def export_people_pdf(
         raise HTTPException(404, "Aucune personne à exporter")
 
     # Préparer les données pour le PDF (format similaire à export_organisations_pdf)
-    from io import BytesIO
-    from reportlab.lib.pagesizes import A4
-    from reportlab.lib import colors
-    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-    from reportlab.lib.units import inch
-    from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
     from datetime import datetime
+    from io import BytesIO
+
+    from reportlab.lib import colors
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+    from reportlab.lib.units import inch
+    from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
     output = BytesIO()
     doc = SimpleDocTemplate(output, pagesize=A4)

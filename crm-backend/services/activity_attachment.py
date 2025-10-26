@@ -1,19 +1,17 @@
 """Service pour gérer les pièces jointes d'activités."""
 
-from typing import List, Optional
-from sqlalchemy.orm import Session
-from pathlib import Path
 import os
 import uuid
 from datetime import datetime
+from pathlib import Path
+from typing import List, Optional
 
-from services.base import BaseService
-from models.activity_attachment import ActivityAttachment
-from schemas.activity_attachment import (
-    ActivityAttachmentCreate,
-    ActivityAttachmentUpdate,
-)
+from sqlalchemy.orm import Session
+
 from core.exceptions import ResourceNotFound, ValidationError
+from models.activity_attachment import ActivityAttachment
+from schemas.activity_attachment import ActivityAttachmentCreate, ActivityAttachmentUpdate
+from services.base import BaseService
 
 
 class ActivityAttachmentService(BaseService[ActivityAttachment, ActivityAttachmentCreate, ActivityAttachmentUpdate]):

@@ -9,15 +9,16 @@ Endpoints:
 - GET /search/autocomplete : Suggestions autocomplete
 """
 
-from typing import Optional, List
-from fastapi import APIRouter, Depends, Query, HTTPException
+from typing import List, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
-from core.database import get_db
 from core.auth import get_current_user
-from core.search import SearchService, search_all, autocomplete
-from models.user import User
+from core.database import get_db
+from core.search import SearchService, autocomplete, search_all
 from models.organisation import OrganisationCategory
+from models.user import User
 
 router = APIRouter(prefix="/search", tags=["search"])
 

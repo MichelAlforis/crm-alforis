@@ -8,25 +8,26 @@ Ce module contient la logique métier pour:
 - Gérer les erreurs et retries
 """
 
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timedelta, UTC
-from sqlalchemy.orm import Session
-from sqlalchemy import and_
-import re
 import json
+import re
+from datetime import UTC, datetime, timedelta
+from typing import Any, Dict, List, Optional
 
+from sqlalchemy import and_
+from sqlalchemy.orm import Session
+
+from core.notifications import NotificationManager
+from models.notification import Notification, NotificationType
+from models.organisation import Organisation
+from models.task import Task, TaskPriority, TaskStatus
 from models.workflow import (
     Workflow,
-    WorkflowExecution,
-    WorkflowStatus,
-    WorkflowExecutionStatus,
-    WorkflowTriggerType,
     WorkflowActionType,
+    WorkflowExecution,
+    WorkflowExecutionStatus,
+    WorkflowStatus,
+    WorkflowTriggerType,
 )
-from models.organisation import Organisation
-from models.task import Task, TaskStatus, TaskPriority
-from models.notification import Notification, NotificationType
-from core.notifications import NotificationManager
 
 
 class WorkflowEngine:

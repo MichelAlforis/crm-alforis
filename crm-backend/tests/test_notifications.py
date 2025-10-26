@@ -9,25 +9,25 @@ Tests pour:
 - Helpers de notifications
 """
 
+from datetime import UTC, datetime, timedelta
+
 import pytest
-from datetime import datetime, timedelta, UTC
 from sqlalchemy.orm import Session
 
+from core.notifications import (
+    ConnectionManager,
+    NotificationService,
+    manager,
+    notify_from_template,
+    notify_user,
+)
 from models.notification import (
-    Notification,
-    NotificationType,
-    NotificationPriority,
     NOTIFICATION_TEMPLATES,
+    Notification,
+    NotificationPriority,
+    NotificationType,
 )
 from models.user import User
-from core.notifications import (
-    NotificationService,
-    ConnectionManager,
-    manager,
-    notify_user,
-    notify_from_template,
-)
-
 
 # ============================================
 # Tests Modèle Notification
@@ -492,8 +492,8 @@ def test_notification_without_link(test_db: Session, test_user: User):
 
 def test_multiple_users_notifications(test_db: Session):
     """Test notifications pour plusieurs utilisateurs"""
-    from models.user import User
     from models.role import Role, UserRole
+    from models.user import User
 
     # Créer 2 utilisateurs
     role = Role(name=UserRole.USER, display_name="User", level=1)

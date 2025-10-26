@@ -4,11 +4,12 @@ Script simplifié de génération de données de test pour le CRM Alforis
 Usage: docker exec -i v1--api-1 python3 /app/scripts/seed_local_db_simple.py
 """
 
+import os
+import random
+from datetime import datetime, timedelta
+
 import psycopg2
 from psycopg2.extras import execute_values
-import os
-from datetime import datetime, timedelta
-import random
 
 # Configuration DB
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://crm_user:crm_password@postgres:5432/crm_db")

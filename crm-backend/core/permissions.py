@@ -17,15 +17,15 @@ Usage:
 """
 
 from functools import wraps
-from typing import Optional, List, Callable
-from fastapi import HTTPException, Depends, status
+from typing import Callable, List, Optional
+
+from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from core.database import get_db
-from models.user import User
-from models.role import Role, UserRole
 from models.permission import Permission, PermissionAction, PermissionResource
-
+from models.role import Role, UserRole
+from models.user import User
 
 # ============================================
 # Vérification des Permissions

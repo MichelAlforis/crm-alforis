@@ -10,20 +10,21 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from core.database import get_db
 from core.security import get_password_hash
+from models.email import EmailTemplate
+from models.kpi import DashboardKPI
+from models.mandat import Mandat
+from models.notification import Notification
 
 # Importer TOUS les modèles pour initialiser les relations
 from models.organisation import Organisation
+from models.permission import Permission
 from models.person import Person
+from models.role import Role
 from models.task import Task
 from models.user import User
-from models.role import Role
-from models.permission import Permission
-from models.notification import Notification
-from models.workflow import Workflow
 from models.webhook import Webhook
-from models.email import EmailTemplate
-from models.mandat import Mandat
-from models.kpi import DashboardKPI
+from models.workflow import Workflow
+
 
 def create_admin():
     """Créer l'utilisateur admin"""

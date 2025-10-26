@@ -8,14 +8,7 @@ Ce modèle permet de gérer les interactions multi-participants :
 
 from __future__ import annotations
 
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    ForeignKey,
-    Index,
-    Boolean,
-)
+from sqlalchemy import Boolean, Column, ForeignKey, Index, Integer, String
 from sqlalchemy.orm import relationship
 
 from models.base import BaseModel

@@ -5,13 +5,13 @@ Decorator et helpers pour logger automatiquement les changements critiques
 """
 
 import json
+import logging
 from datetime import datetime
-from typing import Optional, Dict, Any, Callable
 from functools import wraps
+from typing import Any, Callable, Dict, Optional
+
 from fastapi import Request
 from sqlalchemy.orm import Session
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -228,10 +228,10 @@ def audit_changes(entity_type: str, action: str = "update"):
 
 def _get_entity(db: Session, entity_type: str, entity_id: int):
     """Helper pour récupérer une entité par type"""
-    from models.person import Person
-    from models.organisation import Organisation
-    from models.user import User
     from models.email import EmailCampaign
+    from models.organisation import Organisation
+    from models.person import Person
+    from models.user import User
 
     entity_map = {
         "person": Person,

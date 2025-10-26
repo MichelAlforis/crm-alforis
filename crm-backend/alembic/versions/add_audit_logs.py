@@ -5,9 +5,9 @@ Revises: perf_indexes_001
 Create Date: 2025-10-26
 
 """
-from alembic import op
 import sqlalchemy as sa
 
+from alembic import op
 
 # revision identifiers
 revision = "audit_logs_001'

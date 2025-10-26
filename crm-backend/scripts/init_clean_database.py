@@ -8,21 +8,27 @@ from pathlib import Path
 # Ajouter le chemin parent pour les imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from core.database import engine, Base
+from core.database import Base, engine
+from models.email import EmailCampaign, EmailSend, EmailTemplate
+from models.kpi import DashboardKPI
+from models.mandat import Mandat
+from models.notification import Notification
 
 # Import de TOUS les modèles (architecture unifiée uniquement)
-from models.organisation import Organisation, OrganisationActivity, OrganisationContact, OrganisationInteraction
+from models.organisation import (
+    Organisation,
+    OrganisationActivity,
+    OrganisationContact,
+    OrganisationInteraction,
+)
+from models.permission import Permission
 from models.person import Person, PersonOrganizationLink
+from models.role import Role
 from models.task import Task
 from models.user import User
-from models.role import Role
-from models.permission import Permission
-from models.notification import Notification
-from models.workflow import Workflow, WorkflowExecution
 from models.webhook import Webhook
-from models.email import EmailTemplate, EmailCampaign, EmailSend
-from models.mandat import Mandat
-from models.kpi import DashboardKPI
+from models.workflow import Workflow, WorkflowExecution
+
 
 def init_database():
     """Créer toutes les tables"""

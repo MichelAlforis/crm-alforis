@@ -1,14 +1,15 @@
 # routers/help.py
 # API endpoints pour le système d'aide et analytics
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-from typing import Literal, Optional, Dict, Any, List
 from datetime import datetime, timedelta
-from pydantic import BaseModel
+from typing import Any, Dict, List, Literal, Optional
 
-from core.database import get_db
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+
 from core.auth import get_current_user
+from core.database import get_db
 from models import User
 
 router = APIRouter(prefix="/help", tags=["help"])
@@ -109,8 +110,9 @@ async def get_help_analytics_stats(
     - Statistiques complètes : top FAQ, guides, tooltips, ratings
     """
     try:
+        from sqlalchemy import desc, func
+
         from models import HelpAnalyticsEvent
-        from sqlalchemy import func, desc
 
         # Calculer date de début selon période
         if period == "7d":
@@ -214,10 +216,12 @@ async def export_help_analytics(
     - Fichier CSV ou JSON des événements
     """
     try:
-        from models import HelpAnalyticsEvent
         import csv
         import io
+
         from fastapi.responses import StreamingResponse
+
+        from models import HelpAnalyticsEvent
 
         # Calculer date de début
         if period == "7d":

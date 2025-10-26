@@ -3,22 +3,24 @@ Service pour les statistiques Dashboard
 Remplace progressivement le système KPI legacy
 """
 
-from collections import defaultdict
-from sqlalchemy.orm import Session
-from sqlalchemy import func, and_
-from typing import List, Optional, Dict, Any, Tuple
-from datetime import datetime, timedelta, timezone
 import logging
+from collections import defaultdict
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, List, Optional, Tuple
 
+from sqlalchemy import and_, func
+from sqlalchemy.orm import Session
+
+from models.kpi import DashboardKPI
+from models.kpi import DashboardKPI as OrganisationKPI
 from models.organisation import Organisation
-from models.kpi import DashboardKPI as OrganisationKPI, DashboardKPI
-from models.task import Task, TaskStatus
 from models.organisation_activity import OrganisationActivity, OrganisationActivityType
+from models.task import Task, TaskStatus
 from schemas.dashboard_stats import (
     GlobalDashboardStats,
-    OrganisationStatsResponse,
-    OrganisationMonthlyKPI,
     MonthlyAggregateStats,
+    OrganisationMonthlyKPI,
+    OrganisationStatsResponse,
     YearlyAggregateStats,
 )
 from services.kpi import OrganisationKPIService

@@ -9,6 +9,7 @@ import re
 from pathlib import Path
 from typing import List, Tuple
 
+
 def comment_multiline_import(content: str, module_name: str) -> str:
     """
 

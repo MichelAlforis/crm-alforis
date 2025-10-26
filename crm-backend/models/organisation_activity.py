@@ -8,27 +8,13 @@ tâche, mandat, email, etc.) afin de fournir un flux chronologique unifié.
 from __future__ import annotations
 
 import enum
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    Enum,
-    ForeignKey,
-    Text,
-    JSON,
-    Index,
-    DateTime,
-)
-from sqlalchemy.orm import relationship
 from datetime import datetime
 
+from sqlalchemy import JSON, Column, DateTime, Enum, ForeignKey, Index, Integer, String, Text
+from sqlalchemy.orm import relationship
+
 from models.base import BaseModel
-from models.constants import (
-    FK_USERS_ID,
-    FK_ORGANISATIONS_ID,
-    ONDELETE_SET_NULL,
-    ONDELETE_CASCADE,
-)
+from models.constants import FK_ORGANISATIONS_ID, FK_USERS_ID, ONDELETE_CASCADE, ONDELETE_SET_NULL
 
 
 class OrganisationActivityType(str, enum.Enum):

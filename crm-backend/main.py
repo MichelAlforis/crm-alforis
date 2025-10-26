@@ -1,5 +1,5 @@
-import os
 import json
+import os
 import time
 import traceback
 from contextlib import asynccontextmanager
@@ -136,9 +136,10 @@ app.add_middleware(GZipMiddleware, minimum_size=1024)
 
 # --- Rate Limiting ---
 try:
-    from core.rate_limit import limiter, custom_rate_limit_exceeded_handler
     from slowapi.errors import RateLimitExceeded
     from slowapi.middleware import SlowAPIMiddleware
+
+    from core.rate_limit import custom_rate_limit_exceeded_handler, limiter
 
     app.state.limiter = limiter
     app.add_exception_handler(RateLimitExceeded, custom_rate_limit_exceeded_handler)
@@ -201,7 +202,10 @@ async def ready():
 # On isole les imports pour éviter qu’un module optionnel (ex: events/redis) ne fasse planter tout le boot.
 # Ajoute/retire les lignes selon ce que tu as réellement.
 try:
-    from api import api_router  # ton APIRouter principal qui inclut people, organisations, kpis, auth, etc.
+    from api import (
+        api_router,  # ton APIRouter principal qui inclut people, organisations, kpis, auth, etc.
+    )
+
     # api_router a déjà le prefix="/api/v1" dans api/__init__.py, ne pas le redoubler !
     app.include_router(api_router)
 except Exception as e:
@@ -213,10 +217,11 @@ except Exception as e:
 # ============================================================
 
 try:
-    from fastapi import WebSocket, WebSocketDisconnect, Query
+    from fastapi import Query, WebSocket, WebSocketDisconnect
+
+    from core.database import get_db
     from core.notifications import websocket_endpoint
     from core.security import decode_token
-    from core.database import get_db
 
     @app.websocket("/ws/notifications")
     async def notifications_websocket(
@@ -292,6 +297,7 @@ except Exception as e:
 # ============================================================
 
 from core.exceptions import APIException
+
 
 @app.exception_handler(APIException)
 async def api_exception_handler(request: Request, exc: APIException):

@@ -4,9 +4,10 @@ Script pour corriger automatiquement datetime.now(UTC) → datetime.now(UTC)
 Correction SonarQube CRITICAL issue (49 occurrences)
 """
 
-import re
 import os
+import re
 from pathlib import Path
+
 
 def fix_datetime_utcnow(file_path):
     """Remplace datetime.now(UTC) par datetime.now(UTC) dans un fichier."""

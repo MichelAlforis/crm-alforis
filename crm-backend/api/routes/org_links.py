@@ -1,17 +1,18 @@
-from fastapi import APIRouter, Depends, status, HTTPException
-from sqlalchemy.orm import Session
-from typing import List, Dict, Any, Set, Optional, Tuple
 import logging
+from typing import Any, Dict, List, Optional, Set, Tuple
 
-from core import get_db, get_current_user, get_current_user_optional
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+
+from core import get_current_user, get_current_user_optional, get_db
+from core.exceptions import ConflictError, ResourceNotFound
+from models.person import PersonOrganizationLink
 from schemas.person import (
     PersonOrganizationLinkCreate,
-    PersonOrganizationLinkUpdate,
     PersonOrganizationLinkResponse,
+    PersonOrganizationLinkUpdate,
 )
 from services.person import PersonOrganizationLinkService
-from models.person import PersonOrganizationLink
-from core.exceptions import ConflictError, ResourceNotFound
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/org-links", tags=["people"])

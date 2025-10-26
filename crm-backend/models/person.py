@@ -1,19 +1,12 @@
 import enum
-from sqlalchemy import (
-    Column,
-    String,
-    Integer,
-    Boolean,
-    Enum,
-    ForeignKey,
-    UniqueConstraint,
-    Text,
-)
-from sqlalchemy.orm import relationship
+from typing import TYPE_CHECKING, Optional
+
+from sqlalchemy import Boolean, Column, Enum, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.orm import relationship
+
 from models.base import BaseModel
 from models.organisation import OrganisationType
-from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from models.organisation import Organisation

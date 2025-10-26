@@ -1,7 +1,7 @@
 import hashlib
 import logging
 import re
-from datetime import datetime, timedelta, UTC
+from datetime import UTC, datetime, timedelta
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
 from sqlalchemy import case, distinct, func
@@ -9,8 +9,6 @@ from sqlalchemy.orm import Session, selectinload
 
 from core.config import settings
 from core.exceptions import DatabaseError, ResourceNotFound, ValidationError
-from models.email_config import EmailConfiguration
-from services.email_config_service import EmailConfigurationService
 from models.email import (
     EmailCampaign,
     EmailCampaignStatus,
@@ -24,6 +22,7 @@ from models.email import (
     EmailTemplate,
     EmailVariant,
 )
+from models.email_config import EmailConfiguration
 from schemas.email import (
     EmailCampaignCreate,
     EmailCampaignScheduleRequest,
@@ -35,6 +34,7 @@ from schemas.email import (
     EmailTemplateUpdate,
 )
 from services.base import BaseService
+from services.email_config_service import EmailConfigurationService
 
 logger = logging.getLogger(__name__)
 
@@ -612,8 +612,9 @@ class EmailDeliveryService:
         separator = "&" if "?" in unsubscribe_base else "?"
 
         # Générer token JWT pour désinscription avec secret partagé alforis.fr
-        from jose import jwt
         from datetime import datetime, timedelta
+
+        from jose import jwt
 
         # Utiliser le secret partagé avec alforis.fr (pas le SECRET_KEY principal du CRM)
         unsubscribe_secret = settings.unsubscribe_jwt_secret

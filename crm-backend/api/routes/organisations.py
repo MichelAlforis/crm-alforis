@@ -1,22 +1,23 @@
-from fastapi import APIRouter, Depends, status, HTTPException, Query
-from sqlalchemy.orm import Session
-from typing import List, Optional, Dict, Any
+from typing import Any, Dict, List, Optional
 
-from core import get_db, get_current_user
-from core.events import emit_event, EventType
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy.orm import Session
+
+from core import get_current_user, get_db
 from core.cache import cache_response, invalidate_organisation_cache
+from core.events import EventType, emit_event
+from models.organisation_activity import OrganisationActivityType
 from schemas.base import PaginatedResponse
 from schemas.organisation import (
     OrganisationCreate,
-    OrganisationUpdate,
-    OrganisationResponse,
     OrganisationDetailResponse,
+    OrganisationResponse,
+    OrganisationUpdate,
 )
 from schemas.organisation_activity import OrganisationActivityResponse
 from services.organisation import OrganisationService
-from services.person import PersonOrganizationLinkService
 from services.organisation_activity import OrganisationActivityService
-from models.organisation_activity import OrganisationActivityType
+from services.person import PersonOrganizationLinkService
 
 router = APIRouter(prefix="/organisations", tags=["organisations"])
 

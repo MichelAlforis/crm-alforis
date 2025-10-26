@@ -7,11 +7,12 @@ Fonctions pour valider les webhooks entrants:
 - Replay attack prevention
 """
 
-import hmac
 import hashlib
+import hmac
 import json
 from datetime import datetime, timedelta
 from typing import Any, Dict, Optional
+
 from fastapi import HTTPException, status
 
 

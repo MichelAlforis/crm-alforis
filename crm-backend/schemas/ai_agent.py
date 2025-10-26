@@ -4,11 +4,11 @@ Schemas Pydantic pour l'Agent IA
 Schémas de validation pour les requêtes et réponses API de l'agent IA.
 """
 
-from pydantic import BaseModel, Field, field_validator
-from typing import Optional, List, Dict, Any
 from datetime import datetime
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
+from pydantic import BaseModel, Field, field_validator
 
 # ======================
 # Enums

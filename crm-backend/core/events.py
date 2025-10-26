@@ -21,11 +21,12 @@ Usage:
         await notify_user(...)
 """
 
-from typing import Callable, Dict, List, Any, Optional
-from datetime import datetime, timezone
+import asyncio
 import enum
 import json
-import asyncio
+from datetime import datetime, timezone
+from typing import Any, Callable, Dict, List, Optional
+
 import redis.asyncio as aioredis
 
 from core.config import settings
@@ -389,9 +390,9 @@ async def on_mandat_signed(event: Event):
 
     Déclenché automatiquement quand un mandat est signé.
     """
+    from core.database import SessionLocal
     from core.notifications import notify_from_template
     from models.notification import NotificationType
-    from core.database import SessionLocal
 
     print(f"🎉 Mandat signé: {event.data.get('mandat_id')}")
 
@@ -429,9 +430,9 @@ async def on_task_assigned(event: Event):
     """
     Listener: Tâche assignée -> Notifier l'utilisateur assigné
     """
+    from core.database import SessionLocal
     from core.notifications import notify_from_template
     from models.notification import NotificationType
-    from core.database import SessionLocal
 
     print(f"📋 Tâche assignée: {event.data.get('task_id')}")
 
@@ -463,9 +464,9 @@ async def on_pipeline_changed(event: Event):
     """
     Listener: Pipeline changé -> Notifier l'équipe
     """
+    from core.database import SessionLocal
     from core.notifications import notify_from_template
     from models.notification import NotificationType
-    from core.database import SessionLocal
 
     print(f"📊 Pipeline changé: {event.data.get('organisation_id')}")
 

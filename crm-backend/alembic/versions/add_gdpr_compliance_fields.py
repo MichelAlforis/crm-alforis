@@ -11,9 +11,10 @@ Ajoute les champs RGPD pour la conformité GDPR:
 - anonymized_at: Date d'anonymisation
 - last_activity_date: Dernière activité (pour calcul d'inactivité)
 """
-from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
+
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "gdpr_001'

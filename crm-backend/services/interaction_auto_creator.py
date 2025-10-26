@@ -1,15 +1,16 @@
 """Service pour créer automatiquement des interactions depuis les hooks."""
 
 import logging
-from typing import Optional, List
 from datetime import datetime
+from typing import List, Optional
+
 from sqlalchemy.orm import Session
 
-from models.organisation_activity import OrganisationActivity, OrganisationActivityType
 from models.activity_participant import ActivityParticipant
 from models.email import EmailSend
+from models.organisation_activity import OrganisationActivity, OrganisationActivityType
+from schemas.activity_participant import ActivityParticipantBase, ActivityWithParticipantsCreate
 from services.activity_participant import ActivityParticipantService
-from schemas.activity_participant import ActivityWithParticipantsCreate, ActivityParticipantBase
 
 logger = logging.getLogger(__name__)
 

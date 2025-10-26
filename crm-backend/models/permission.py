@@ -11,13 +11,18 @@ Resources:
 - organisations, people, mandats, interactions, tasks, users, etc.
 """
 
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, Enum as SQLEnum
-from sqlalchemy.orm import relationship
-from datetime import datetime
 import enum
+from datetime import datetime
+
+from sqlalchemy import Boolean, Column, DateTime
+from sqlalchemy import Enum as SQLEnum
+from sqlalchemy import Integer, String, Text
+from sqlalchemy.orm import relationship
 
 from models.base import Base
-from models.role import role_permissions
+
+# Import de la table d'association depuis role.py (définie là-bas)
+# Pour éviter l'import circulaire, on la référence par son nom dans relationship
 
 
 class PermissionAction(str, enum.Enum):
@@ -92,8 +97,13 @@ class Permission(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relations
-    # Note: 'roles' relationship is defined via backref in Role model
-    # to avoid circular import issues
+    # Utilisation de back_populates pour éviter les imports circulaires
+    roles = relationship(
+        "Role",
+        secondary="role_permissions",
+        back_populates="permissions",
+        lazy="selectin"
+    )
 
     def __repr__(self):
         return f"<Permission {self.name}>"

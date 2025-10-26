@@ -5,9 +5,10 @@ Revises: interactions_v2
 Create Date: 2025-10-24 20:15:00.000000
 
 """
-from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
+
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "email_marketing_lite"

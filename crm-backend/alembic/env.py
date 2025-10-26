@@ -3,13 +3,12 @@ Alembic Environment Configuration — CRM Alforis
 Gère la connexion à la base de données et l'import des modèles SQLAlchemy
 """
 
-from logging.config import fileConfig
 import os
 import sys
+from logging.config import fileConfig
 from pathlib import Path
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from sqlalchemy import engine_from_config, pool
 
 from alembic import context
 

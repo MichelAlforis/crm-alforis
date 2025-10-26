@@ -2,21 +2,22 @@
 Routes API pour la gestion des configurations email
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
 from typing import List
 
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+
 from core.database import get_db
+from core.exceptions import ResourceNotFound, ValidationError
+from core.security import get_current_user
 from schemas.email_config import (
     EmailConfigurationCreate,
-    EmailConfigurationUpdate,
     EmailConfigurationResponse,
     EmailConfigurationTestRequest,
     EmailConfigurationTestResponse,
+    EmailConfigurationUpdate,
 )
 from services.email_config_service import EmailConfigurationService
-from core.security import get_current_user
-from core.exceptions import ResourceNotFound, ValidationError
 
 router = APIRouter(prefix="/email-config", tags=["Email Configuration"])
 

@@ -1,11 +1,11 @@
 """Routes API pour les listes de diffusion."""
-from typing import List
-
-from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
-from sqlalchemy.orm import Session
-import pandas as pd
 import io
 import json
+from typing import List
+
+import pandas as pd
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
+from sqlalchemy.orm import Session
 
 from core import get_current_user, get_db
 from schemas.mailing_list import (

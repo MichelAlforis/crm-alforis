@@ -4,19 +4,19 @@ Schemas Pydantic pour les workflows
 Gère la validation des données entrantes/sortantes pour l'API workflows
 """
 
-from pydantic import BaseModel, Field, field_validator
-from typing import Optional, List, Dict, Any
 from datetime import datetime
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
-from schemas.base import BaseSchema, TimestampedSchema
+from pydantic import BaseModel, Field, field_validator
+
 from models.workflow import (
-    WorkflowTriggerType,
     WorkflowActionType,
+    WorkflowExecutionStatus,
     WorkflowStatus,
-    WorkflowExecutionStatus
+    WorkflowTriggerType,
 )
-
+from schemas.base import BaseSchema, TimestampedSchema
 
 # =======================
 # Schemas d'entrée (création/mise à jour)

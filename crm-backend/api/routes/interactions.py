@@ -1,16 +1,17 @@
 """Routes API pour création simplifiée d'interactions."""
 
-from fastapi import APIRouter, Depends, status, HTTPException
-from sqlalchemy.orm import Session
-from typing import List, Optional
 from datetime import datetime
-from pydantic import BaseModel, Field
+from typing import List, Optional
 
-from core import get_db, get_current_user
-from core.events import emit_event, EventType
+from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel, Field
+from sqlalchemy.orm import Session
+
+from core import get_current_user, get_db
 from core.cache import invalidate_organisation_cache
-from services.interaction_auto_creator import InteractionAutoCreatorService
+from core.events import EventType, emit_event
 from schemas.activity_participant import ActivityWithParticipantsResponse
+from services.interaction_auto_creator import InteractionAutoCreatorService
 
 router = APIRouter(prefix="/interactions", tags=["interactions"])
 

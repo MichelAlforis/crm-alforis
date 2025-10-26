@@ -5,28 +5,36 @@ Script d'initialisation de la base de données
 - Crée un utilisateur admin par défaut
 """
 
+from core.database import Base, SessionLocal, engine
+from core.security import hash_password
+from models.ai_agent import AICache, AIConfiguration, AIExecution, AISuggestion
+from models.email import (
+    CampaignSubscription,
+    EmailCampaign,
+    EmailCampaignStep,
+    EmailEvent,
+    EmailSend,
+    EmailTemplate,
+)
+from models.email_config import EmailConfiguration
+from models.help_analytics import HelpAnalyticsEvent
+from models.kpi import DashboardKPI
+from models.mailing_list import MailingList
+from models.mandat import Mandat
+from models.notification import Notification
+from models.organisation import Organisation
+from models.organisation_activity import OrganisationActivity
+from models.permission import Permission
+from models.person import Person, PersonOrganizationLink
+from models.role import Role
+from models.task import Task
+from models.team import Team
+
 # Import tous les models pour éviter les problèmes de dépendances circulaires
 from models.user import User
-from models.team import Team
-from models.organisation import Organisation
-from models.person import Person, PersonOrganizationLink
-from models.task import Task
-from models.workflow import Workflow, WorkflowExecution
-from models.role import Role
-from models.permission import Permission
-from models.notification import Notification
-from models.organisation_activity import OrganisationActivity
-from models.email import EmailTemplate, EmailCampaign, EmailCampaignStep, EmailSend, EmailEvent, CampaignSubscription
-from models.email_config import EmailConfiguration
-from models.mailing_list import MailingList
-from models.ai_agent import AISuggestion, AIExecution, AIConfiguration, AICache
-from models.mandat import Mandat
-from models.kpi import DashboardKPI
 from models.webhook import Webhook
-from models.help_analytics import HelpAnalyticsEvent
+from models.workflow import Workflow, WorkflowExecution
 
-from core.database import Base, engine, SessionLocal
-from core.security import hash_password
 
 def init_database():
     """Initialise la base de données"""

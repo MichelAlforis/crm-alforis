@@ -8,12 +8,12 @@ from typing import Optional
 
 from celery import Task
 
+from core.config import settings
+from core.database import SessionLocal
+from core.exceptions import ValidationError
 from models.email import EmailCampaign, EmailCampaignStatus, EmailSend, EmailSendStatus
 from services.email_service import EmailDeliveryService
 from tasks.celery_app import celery_app
-from core.database import SessionLocal
-from core.config import settings
-from core.exceptions import ValidationError
 
 logger = logging.getLogger(__name__)
 

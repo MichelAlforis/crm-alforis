@@ -6,15 +6,7 @@ Ce modèle permet d'attacher plusieurs fichiers (documents, images, PDF, etc.)
 
 from __future__ import annotations
 
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    Text,
-    ForeignKey,
-    Index,
-    BigInteger,
-)
+from sqlalchemy import BigInteger, Column, ForeignKey, Index, Integer, String, Text
 from sqlalchemy.orm import relationship
 
 from models.base import BaseModel

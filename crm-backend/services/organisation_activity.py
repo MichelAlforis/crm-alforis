@@ -1,20 +1,17 @@
 from __future__ import annotations
 
-from typing import Optional, Iterable, Tuple, List, Dict, Any
-from datetime import datetime, UTC
-
-from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_, func
-
-from services.base import BaseService
-from models.organisation_activity import OrganisationActivity, OrganisationActivityType
-from schemas.organisation_activity import (
-    OrganisationActivityCreate,
-    OrganisationActivityUpdate,
-)
-from core.exceptions import ResourceNotFound, DatabaseError
-from core.cache import delete_cache
 import logging
+from datetime import UTC, datetime
+from typing import Any, Dict, Iterable, List, Optional, Tuple
+
+from sqlalchemy import and_, func, or_
+from sqlalchemy.orm import Session
+
+from core.cache import delete_cache
+from core.exceptions import DatabaseError, ResourceNotFound
+from models.organisation_activity import OrganisationActivity, OrganisationActivityType
+from schemas.organisation_activity import OrganisationActivityCreate, OrganisationActivityUpdate
+from services.base import BaseService
 
 logger = logging.getLogger(__name__)
 

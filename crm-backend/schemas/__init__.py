@@ -1,49 +1,47 @@
 from schemas.base import (
     BaseSchema,
-    TimestampedSchema,
-    PaginationParams,
-    PaginatedResponse,
     HealthCheckResponse,
-)
-
-from schemas.person import (
-    PersonCreate,
-    PersonUpdate,
-    PersonResponse,
-    PersonDetailResponse,
-    PersonOrganizationLinkCreate,
-    PersonOrganizationLinkUpdate,
-    PersonOrganizationLinkResponse,
-)
-from schemas.task import (
-    TaskCreate,
-    TaskUpdate,
-    TaskResponse,
-    TaskWithRelations,
-    TaskSnoozeRequest,
-    TaskStatsResponse,
-    TaskFilterParams,
-    TaskQuickActionRequest,
-)
-
-from schemas.organisation_activity import (
-    OrganisationActivityCreate,
-    OrganisationActivityUpdate,
-    OrganisationActivityResponse,
+    PaginatedResponse,
+    PaginationParams,
+    TimestampedSchema,
 )
 from schemas.email import (
-    EmailTemplateCreate,
-    EmailTemplateUpdate,
-    EmailTemplateResponse,
     EmailCampaignCreate,
-    EmailCampaignUpdate,
     EmailCampaignResponse,
     EmailCampaignScheduleRequest,
     EmailCampaignStatsResponse,
     EmailCampaignStepResponse,
-    EmailSendResponse,
+    EmailCampaignUpdate,
     EmailEventResponse,
     EmailSendFilterParams,
+    EmailSendResponse,
+    EmailTemplateCreate,
+    EmailTemplateResponse,
+    EmailTemplateUpdate,
+)
+from schemas.organisation_activity import (
+    OrganisationActivityCreate,
+    OrganisationActivityResponse,
+    OrganisationActivityUpdate,
+)
+from schemas.person import (
+    PersonCreate,
+    PersonDetailResponse,
+    PersonOrganizationLinkCreate,
+    PersonOrganizationLinkResponse,
+    PersonOrganizationLinkUpdate,
+    PersonResponse,
+    PersonUpdate,
+)
+from schemas.task import (
+    TaskCreate,
+    TaskFilterParams,
+    TaskQuickActionRequest,
+    TaskResponse,
+    TaskSnoozeRequest,
+    TaskStatsResponse,
+    TaskUpdate,
+    TaskWithRelations,
 )
 
 __all__ = [

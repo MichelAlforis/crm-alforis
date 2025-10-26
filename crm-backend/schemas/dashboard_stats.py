@@ -3,10 +3,11 @@ Schémas pour les statistiques Dashboard
 Remplace progressivement les endpoints KPI legacy
 """
 
-from pydantic import Field
 from typing import List, Optional
-from schemas.base import BaseSchema
 
+from pydantic import Field
+
+from schemas.base import BaseSchema
 
 # ============= STATISTIQUES PAR ORGANISATION =============
 

@@ -1,13 +1,24 @@
+from typing import List, Optional
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
-from typing import List, Optional
+
 from models.database import get_db
 from schemas.email_campaign import (
-    EmailTemplate, EmailTemplateCreate, EmailTemplateUpdate,
-    EmailCampaign, EmailCampaignCreate, EmailCampaignUpdate, EmailCampaignWithTemplate,
-    EmailPreviewList, CampaignEmail, CampaignStatistics, EmailStatus, RecipientFilters
+    CampaignEmail,
+    CampaignStatistics,
+    EmailCampaign,
+    EmailCampaignCreate,
+    EmailCampaignUpdate,
+    EmailCampaignWithTemplate,
+    EmailPreviewList,
+    EmailStatus,
+    EmailTemplate,
+    EmailTemplateCreate,
+    EmailTemplateUpdate,
+    RecipientFilters,
 )
-from services.email_campaign_service import EmailTemplateService, EmailCampaignService
+from services.email_campaign_service import EmailCampaignService, EmailTemplateService
 
 router = APIRouter(prefix="/email-campaigns", tags=["Email Campaigns"])
 
@@ -73,8 +84,8 @@ def send_test_email_from_template(
     db: Session = Depends(get_db)
 ):
     """Envoie un email de test à partir d'un template"""
-    from services.email_service import EmailService
     from models.email_campaign import EmailTemplate as EmailTemplateModel
+    from services.email_service import EmailService
 
     # Récupérer le template
     template = db.query(EmailTemplateModel).filter(EmailTemplateModel.id == template_id).first()
@@ -270,7 +281,7 @@ def pause_email_campaign(
     if campaign.status != "sending":
         raise HTTPException(status_code=400, detail="Campaign is not currently sending")
 
-    from models.email_campaign import EmailCampaign, CampaignStatus
+    from models.email_campaign import CampaignStatus, EmailCampaign
     db.query(EmailCampaign).filter(EmailCampaign.id == campaign_id).update({
         "status": CampaignStatus.PAUSED
     })
@@ -295,8 +306,8 @@ def send_test_email(
     db: Session = Depends(get_db)
 ):
     """Envoie un email de test à l'adresse spécifiée"""
-    from services.email_service import EmailService
     from models.email_campaign import EmailCampaign as EmailCampaignModel
+    from services.email_service import EmailService
 
     # Récupérer la campagne
     campaign = db.query(EmailCampaignModel).filter(EmailCampaignModel.id == campaign_id).first()

@@ -5,9 +5,10 @@ EmailIngest: Webhook pour tracking emails (Resend, etc.)
 LeadScore: Score d'engagement calculé
 """
 
-from pydantic import BaseModel, Field
-from typing import Optional, List, Literal
 from datetime import datetime
+from typing import List, Literal, Optional
+
+from pydantic import BaseModel, Field
 
 # Types littéraux
 EmailEventType = Literal['sent', 'opened', 'clicked', 'bounced']

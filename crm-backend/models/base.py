@@ -1,7 +1,9 @@
-from sqlalchemy import Column, Integer, DateTime, String, func
+from datetime import datetime
+
+from sqlalchemy import Column, DateTime, Integer, String, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import DeclarativeBase
-from datetime import datetime
+
 
 class Base(DeclarativeBase):
     """Base class pour tous les modèles SQLAlchemy"""

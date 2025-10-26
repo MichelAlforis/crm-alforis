@@ -14,34 +14,35 @@ Endpoints:
 - GET /workflows/templates - Templates prédéfinis
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy.orm import Session
-from typing import List, Optional
 from datetime import datetime
+from typing import List, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy.orm import Session
 
 from core.database import get_db
 from models.workflow import (
     Workflow,
     WorkflowExecution,
+    WorkflowExecutionStatus,
     WorkflowStatus,
     WorkflowTriggerType,
-    WorkflowExecutionStatus
-)
-from schemas.workflow import (
-    WorkflowCreate,
-    WorkflowUpdate,
-    WorkflowActivate,
-    WorkflowResponse,
-    WorkflowListItem,
-    WorkflowExecutionResponse,
-    WorkflowExecutionListItem,
-    WorkflowStats,
-    WorkflowExecuteRequest,
-    WorkflowExecuteResponse,
-    WorkflowTemplate,
-    WORKFLOW_TEMPLATES
 )
 from schemas.base import PaginatedResponse
+from schemas.workflow import (
+    WORKFLOW_TEMPLATES,
+    WorkflowActivate,
+    WorkflowCreate,
+    WorkflowExecuteRequest,
+    WorkflowExecuteResponse,
+    WorkflowExecutionListItem,
+    WorkflowExecutionResponse,
+    WorkflowListItem,
+    WorkflowResponse,
+    WorkflowStats,
+    WorkflowTemplate,
+    WorkflowUpdate,
+)
 from services.workflow_engine import WorkflowEngine
 from tasks.workflow_tasks import execute_workflow_async
 

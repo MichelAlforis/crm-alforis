@@ -1,10 +1,12 @@
 """Service pour gérer les participants aux activités."""
 
+from datetime import datetime
 from typing import List, Optional
-from sqlalchemy.orm import Session
-from sqlalchemy import desc
 
-from services.base import BaseService
+from sqlalchemy import desc
+from sqlalchemy.orm import Session
+
+from core.exceptions import ResourceNotFound, ValidationError
 from models.activity_participant import ActivityParticipant
 from models.organisation_activity import OrganisationActivity, OrganisationActivityType
 from schemas.activity_participant import (
@@ -12,8 +14,7 @@ from schemas.activity_participant import (
     ActivityParticipantUpdate,
     ActivityWithParticipantsCreate,
 )
-from core.exceptions import ResourceNotFound, ValidationError
-from datetime import datetime
+from services.base import BaseService
 
 
 class ActivityParticipantService(BaseService[ActivityParticipant, ActivityParticipantCreate, ActivityParticipantUpdate]):

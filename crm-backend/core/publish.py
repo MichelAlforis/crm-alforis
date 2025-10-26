@@ -14,11 +14,10 @@ Usage:
     )
 """
 
-from typing import Any, Dict, Optional
 from datetime import datetime, timezone
+from typing import Any, Dict, Optional
 
 from core.notifications import manager
-
 
 # ============================================
 # Helpers de publication d'événements

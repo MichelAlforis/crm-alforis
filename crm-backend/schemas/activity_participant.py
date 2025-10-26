@@ -1,8 +1,9 @@
 """Schemas Pydantic pour les participants aux activités."""
 
-from typing import Optional
 from datetime import datetime
-from pydantic import BaseModel, Field, ConfigDict
+from typing import Optional
+
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ActivityParticipantBase(BaseModel):

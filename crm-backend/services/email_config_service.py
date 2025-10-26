@@ -4,22 +4,23 @@ Service de gestion des configurations email
 CRUD et gestion des clés API cryptées pour les providers d'email
 """
 
-from typing import List, Optional
-from sqlalchemy.orm import Session
-from sqlalchemy import and_
-from datetime import datetime, UTC
 import json
+import logging
+from datetime import UTC, datetime
+from typing import List, Optional
 
+from sqlalchemy import and_
+from sqlalchemy.orm import Session
+
+from core.exceptions import ResourceNotFound, ValidationError
 from models.email_config import EmailConfiguration, EmailProvider
 from schemas.email_config import (
     EmailConfigurationCreate,
-    EmailConfigurationUpdate,
     EmailConfigurationTestRequest,
     EmailConfigurationTestResponse,
+    EmailConfigurationUpdate,
 )
 from services.crypto import crypto_service
-from core.exceptions import ResourceNotFound, ValidationError
-import logging
 
 logger = logging.getLogger(__name__)
 

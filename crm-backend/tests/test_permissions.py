@@ -12,19 +12,18 @@ import pytest
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from models.role import Role, UserRole
-from models.permission import Permission, PermissionAction, PermissionResource
-from models.user import User
-from models.team import Team
 from core.permissions import (
-    has_permission,
-    has_any_permission,
-    check_role_level,
     can_access_organisation,
+    check_role_level,
     filter_query_by_team,
+    has_any_permission,
+    has_permission,
     init_default_permissions,
 )
-
+from models.permission import Permission, PermissionAction, PermissionResource
+from models.role import Role, UserRole
+from models.team import Team
+from models.user import User
 
 # ============================================
 # Tests Modèles

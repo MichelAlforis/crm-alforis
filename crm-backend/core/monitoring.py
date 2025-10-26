@@ -5,16 +5,16 @@ Sentry pour capturer les erreurs en production.
 Structured logging pour des logs exploitables.
 """
 
-import sentry_sdk
-from sentry_sdk.integrations.fastapi import FastApiIntegration
-from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
-from sentry_sdk.integrations.logging import LoggingIntegration
 import logging
-import structlog
 from typing import Optional
 
-from core.config import settings
+import sentry_sdk
+import structlog
+from sentry_sdk.integrations.fastapi import FastApiIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration
+from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
+from core.config import settings
 
 # ============================================================================
 # Sentry Configuration
@@ -221,8 +221,8 @@ def init_structured_logging():
     - Corrélation avec Sentry
     - Rotation automatique des fichiers
     """
-    from logging.handlers import RotatingFileHandler
     import os
+    from logging.handlers import RotatingFileHandler
 
     structlog.configure(
         processors=[

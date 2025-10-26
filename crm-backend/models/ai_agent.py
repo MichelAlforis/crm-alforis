@@ -7,12 +7,15 @@ Ce module contient les modèles pour:
 - AI Configuration: Configuration et règles de l'agent IA
 """
 
-from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Text, JSON, ForeignKey, Enum as SQLEnum
-from sqlalchemy.orm import relationship
-from datetime import datetime
 import enum
-from models.base import BaseModel
+from datetime import datetime
 
+from sqlalchemy import JSON, Boolean, Column, DateTime
+from sqlalchemy import Enum as SQLEnum
+from sqlalchemy import Float, ForeignKey, Integer, String, Text
+from sqlalchemy.orm import relationship
+
+from models.base import BaseModel
 
 # ======================
 # Enums

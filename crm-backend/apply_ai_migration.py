@@ -5,8 +5,11 @@ Lance quand PostgreSQL est disponible
 
 import sys
 from pathlib import Path
+
 from sqlalchemy import create_engine, text
+
 from core.config import settings
+
 
 def apply_migration():
     """Applique la migration 001_add_ai_agent_tables.sql"""

@@ -1,27 +1,29 @@
+import enum
+from typing import TYPE_CHECKING
+
 from sqlalchemy import (
+    JSON,
+    Boolean,
+    CheckConstraint,
     Column,
-    String,
-    Integer,
     Date,
-    Text,
     Enum,
     ForeignKey,
-    Boolean,
     Index,
+    Integer,
     Numeric,
-    CheckConstraint,
-    JSON,
+    String,
+    Text,
 )
 from sqlalchemy.orm import relationship, validates
-from typing import TYPE_CHECKING
+
 from models.base import BaseModel
 from models.constants import (
+    ENUM_ORGANISATION_TYPE,
+    ENUM_PIPELINE_STAGE,
     FK_USERS_ID,
     ONDELETE_SET_NULL,
-    ENUM_PIPELINE_STAGE,
-    ENUM_ORGANISATION_TYPE,
 )
-import enum
 from models.organisation_activity import OrganisationActivity
 
 if TYPE_CHECKING:

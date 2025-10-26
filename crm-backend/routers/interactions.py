@@ -20,23 +20,24 @@ Permissions:
 - Écriture : créateur + rôles sales/admin
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy.orm import Session
-from sqlalchemy import desc
-from typing import List, Optional
 from datetime import datetime
+from typing import List, Optional
 
-from core import get_db, get_current_user
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy import desc
+from sqlalchemy.orm import Session
+
+from core import get_current_user, get_db
 from models.interaction import Interaction, InteractionParticipant, InteractionStatus
 from schemas.interaction import (
-    InteractionCreate,
-    InteractionUpdate,
-    InteractionOut,
-    InteractionListResponse,
-    ParticipantIn,
-    InteractionStatusUpdate,
     InteractionAssigneeUpdate,
+    InteractionCreate,
+    InteractionListResponse,
     InteractionNextActionUpdate,
+    InteractionOut,
+    InteractionStatusUpdate,
+    InteractionUpdate,
+    ParticipantIn,
 )
 
 router = APIRouter(prefix="/interactions", tags=["interactions"])

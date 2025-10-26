@@ -8,26 +8,13 @@ LeadScore: Score d'engagement calculé automatiquement
 from __future__ import annotations
 
 import enum
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    Enum,
-    ForeignKey,
-    DateTime,
-    Index,
-    CheckConstraint,
-)
-from sqlalchemy.orm import relationship
 from datetime import datetime
 
+from sqlalchemy import CheckConstraint, Column, DateTime, Enum, ForeignKey, Index, Integer, String
+from sqlalchemy.orm import relationship
+
 from models.base import Base, BaseModel
-from models.constants import (
-    FK_ORGANISATIONS_ID,
-    FK_PEOPLE_ID,
-    ONDELETE_CASCADE,
-    ONDELETE_SET_NULL,
-)
+from models.constants import FK_ORGANISATIONS_ID, FK_PEOPLE_ID, ONDELETE_CASCADE, ONDELETE_SET_NULL
 
 
 class EmailStatus(str, enum.Enum):

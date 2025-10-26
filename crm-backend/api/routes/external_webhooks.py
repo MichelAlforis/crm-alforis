@@ -6,22 +6,21 @@ Endpoints sécurisés par Bearer Token pour recevoir:
 2. Désabonnements depuis le site web
 """
 
-from datetime import datetime, timezone
-from typing import Dict, Any
-
-from fastapi import APIRouter, Depends, HTTPException, status, Request
-from sqlalchemy import and_
-from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError
-
 import logging
+from datetime import datetime, timezone
+from typing import Any, Dict
+
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from sqlalchemy import and_
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
 
 from core import get_db, verify_webhook_token
 from core.exceptions import ConflictError
-from core.rate_limit import limiter, PUBLIC_WEBHOOK_LIMIT
-from models.email import EmailEvent, EmailSend, UnsubscribedEmail, EmailEventType
-from models.person import Person
+from core.rate_limit import PUBLIC_WEBHOOK_LIMIT, limiter
+from models.email import EmailEvent, EmailEventType, EmailSend, UnsubscribedEmail
 from models.organisation import Organisation
+from models.person import Person
 from schemas.email import (
     ResendWebhookEvent,
     ResendWebhookResponse,

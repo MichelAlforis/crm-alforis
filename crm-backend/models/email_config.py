@@ -5,10 +5,14 @@ Gestion des clés API et configuration des providers d'email avec cryptage
 Similaire à AIConfiguration pour la cohérence
 """
 
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, Enum as SQLEnum, ForeignKey
-from sqlalchemy.orm import relationship
-from datetime import datetime
 import enum
+from datetime import datetime
+
+from sqlalchemy import Boolean, Column, DateTime
+from sqlalchemy import Enum as SQLEnum
+from sqlalchemy import ForeignKey, Integer, String, Text
+from sqlalchemy.orm import relationship
+
 from models.base import BaseModel
 
 

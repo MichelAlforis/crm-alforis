@@ -86,11 +86,8 @@ RUN mkdir -p /app/uploads /app/backups /app/logs /var/log/supervisor \
  && adduser --disabled-password --gecos "" appuser \
  && chown -R appuser:appuser /app
 
-# Copier la configuration supervisord et scripts
+# Copier la configuration supervisord
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY scripts/backup-db.sh /app/scripts/backup-db.sh
-COPY scripts/restore-db.sh /app/scripts/restore-db.sh
-RUN chmod +x /app/scripts/*.sh
 
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --retries=5 --start-period=60s \

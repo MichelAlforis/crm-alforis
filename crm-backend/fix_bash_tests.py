@@ -7,6 +7,7 @@ Correction SonarQube issue (21 occurrences)
 import re
 from pathlib import Path
 
+
 def fix_bash_test(file_path):
     """Remplace [ par [[ dans les conditions bash."""
     with open(file_path, 'r', encoding='utf-8') as f:

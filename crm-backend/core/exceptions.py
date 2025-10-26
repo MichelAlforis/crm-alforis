@@ -1,5 +1,6 @@
 from fastapi import status
 
+
 class APIException(Exception):
     """Exception de base pour toutes les erreurs API"""
     def __init__(self, message: str, status_code: int = status.HTTP_400_BAD_REQUEST):

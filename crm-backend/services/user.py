@@ -1,16 +1,17 @@
 """Service pour la gestion des utilisateurs."""
 
-from typing import List, Tuple, Optional
-from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import or_
+from typing import List, Optional, Tuple
 
-from services.base import BaseService
-from models.user import User
+from sqlalchemy import or_
+from sqlalchemy.orm import Session, joinedload
+
+from core.exceptions import ConflictError, ResourceNotFound
+from core.security import get_password_hash
 from models.role import Role
 from models.team import Team
+from models.user import User
 from schemas.user import UserCreate, UserUpdate
-from core.security import get_password_hash
-from core.exceptions import ResourceNotFound, ConflictError
+from services.base import BaseService
 
 
 class UserService(BaseService[User, UserCreate, UserUpdate]):

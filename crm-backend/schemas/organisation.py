@@ -1,15 +1,14 @@
+import json
+from datetime import date
 from decimal import Decimal
 from typing import List, Optional
-from datetime import date
-import json
 
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
 from models.organisation import OrganisationCategory, OrganisationType, PipelineStage
 from schemas.base import TimestampedSchema
-from schemas.person import PersonOrganizationLinkResponse, PersonResponse
 from schemas.organisation_activity import OrganisationActivityResponse
-
+from schemas.person import PersonOrganizationLinkResponse, PersonResponse
 
 # =======================
 # Organisation Schemas

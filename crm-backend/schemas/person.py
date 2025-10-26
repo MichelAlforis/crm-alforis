@@ -1,9 +1,8 @@
 from typing import List, Optional
 
-from pydantic import AliasChoices, EmailStr, Field
-from pydantic import ConfigDict
+from pydantic import AliasChoices, ConfigDict, EmailStr, Field
 
-from models.person import PersonRole, OrganizationType
+from models.person import OrganizationType, PersonRole
 from schemas.base import BaseSchema, TimestampedSchema
 
 

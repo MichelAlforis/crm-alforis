@@ -3,14 +3,15 @@ Service pour la gestion des KPIs (Organisation)
 Remplace l'ancien KPIService qui utilisait les modèles legacy
 """
 
-from sqlalchemy.orm import Session
-from sqlalchemy import and_, func
-from typing import List, Optional, Dict, Any
 import logging
+from typing import Any, Dict, List, Optional
 
+from sqlalchemy import and_, func
+from sqlalchemy.orm import Session
+
+from core.exceptions import ResourceNotFound, ValidationError
 from models.kpi import DashboardKPI as OrganisationKPI
 from models.organisation import Organisation
-from core.exceptions import ValidationError, ResourceNotFound
 
 logger = logging.getLogger(__name__)
 

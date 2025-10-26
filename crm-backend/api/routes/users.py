@@ -1,15 +1,16 @@
 """Routes API pour la gestion des utilisateurs."""
 
-from fastapi import APIRouter, Depends, Query, status, HTTPException
-from sqlalchemy.orm import Session
 from typing import Optional
-from pydantic import BaseModel, Field
 
-from core import get_db, get_current_user
-from core.permissions import require_permission, require_admin
-from schemas.user import UserCreate, UserUpdate, UserResponse, UserListResponse
-from services.user import UserService
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from pydantic import BaseModel, Field
+from sqlalchemy.orm import Session
+
+from core import get_current_user, get_db
+from core.permissions import require_admin, require_permission
 from models.user import User
+from schemas.user import UserCreate, UserListResponse, UserResponse, UserUpdate
+from services.user import UserService
 
 router = APIRouter(prefix="/users", tags=["users"])
 

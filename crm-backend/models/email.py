@@ -1,8 +1,9 @@
 import enum
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from typing import Optional
 
 from sqlalchemy import (
+    JSON,
     Boolean,
     Column,
     DateTime,
@@ -10,7 +11,6 @@ from sqlalchemy import (
     ForeignKey,
     Index,
     Integer,
-    JSON,
     String,
     Text,
 )
@@ -19,13 +19,13 @@ from sqlalchemy.sql import func
 
 from models.base import BaseModel
 from models.constants import (
-    FK_USERS_ID,
-    FK_EMAIL_TEMPLATES_ID,
-    FK_EMAIL_CAMPAIGNS_ID,
-    ONDELETE_SET_NULL,
-    ONDELETE_CASCADE,
     ENUM_EMAIL_CAMPAIGN_STATUS,
     ENUM_EMAIL_SEND_STATUS,
+    FK_EMAIL_CAMPAIGNS_ID,
+    FK_EMAIL_TEMPLATES_ID,
+    FK_USERS_ID,
+    ONDELETE_CASCADE,
+    ONDELETE_SET_NULL,
 )
 
 

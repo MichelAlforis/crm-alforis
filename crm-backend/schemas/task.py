@@ -1,9 +1,10 @@
-from pydantic import Field, field_validator
-from typing import Optional
 from datetime import date, datetime, timedelta
-from schemas.base import TimestampedSchema, BaseSchema
-from models.task import TaskPriority, TaskStatus, TaskCategory
+from typing import Optional
 
+from pydantic import Field, field_validator
+
+from models.task import TaskCategory, TaskPriority, TaskStatus
+from schemas.base import BaseSchema, TimestampedSchema
 
 # =====================================================
 # TASK SCHEMAS
