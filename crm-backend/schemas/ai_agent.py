@@ -14,6 +14,7 @@ from pydantic import BaseModel, Field, field_validator
 # Enums
 # ======================
 
+
 class AISuggestionTypeEnum(str, Enum):
     DUPLICATE_DETECTION = "duplicate_detection"
     DATA_ENRICHMENT = "data_enrichment"
@@ -60,50 +61,36 @@ class AIProviderEnum(str, Enum):
 # Request Schemas
 # ======================
 
+
 class DetectDuplicatesRequest(BaseModel):
     entity_type: str = Field(default="organisation", description="Type d'entité à analyser")
     limit: Optional[int] = Field(None, ge=1, le=1000, description="Nombre max d'entités à analyser")
 
     class Config:
-        json_schema_extra = {
-            "example": {
-                "entity_type": "organisation",
-                "limit": 100
-            }
-        }
+        json_schema_extra = {"example": {"entity_type": "organisation", "limit": 100}}
 
 
 class EnrichOrganisationsRequest(BaseModel):
-    organisation_ids: Optional[List[int]] = Field(None, description="IDs spécifiques à enrichir (vide = toutes)")
+    organisation_ids: Optional[List[int]] = Field(
+        None, description="IDs spécifiques à enrichir (vide = toutes)"
+    )
 
     class Config:
-        json_schema_extra = {
-            "example": {
-                "organisation_ids": [1, 2, 3, 10]
-            }
-        }
+        json_schema_extra = {"example": {"organisation_ids": [1, 2, 3, 10]}}
 
 
 class CheckDataQualityRequest(BaseModel):
     organisation_ids: Optional[List[int]] = Field(None, description="IDs à vérifier")
 
     class Config:
-        json_schema_extra = {
-            "example": {
-                "organisation_ids": None
-            }
-        }
+        json_schema_extra = {"example": {"organisation_ids": None}}
 
 
 class ApproveSuggestionRequest(BaseModel):
     notes: Optional[str] = Field(None, max_length=1000, description="Notes de validation")
 
     class Config:
-        json_schema_extra = {
-            "example": {
-                "notes": "Vérifié manuellement, fusion approuvée"
-            }
-        }
+        json_schema_extra = {"example": {"notes": "Vérifié manuellement, fusion approuvée"}}
 
 
 class RejectSuggestionRequest(BaseModel):
@@ -111,9 +98,7 @@ class RejectSuggestionRequest(BaseModel):
 
     class Config:
         json_schema_extra = {
-            "example": {
-                "notes": "Ce ne sont pas des doublons, entreprises différentes"
-            }
+            "example": {"notes": "Ce ne sont pas des doublons, entreprises différentes"}
         }
 
 
@@ -125,7 +110,7 @@ class BatchApproveSuggestionsRequest(BaseModel):
         json_schema_extra = {
             "example": {
                 "suggestion_ids": [1, 2, 3, 4, 5],
-                "notes": "Vérifié en masse, tous corrects"
+                "notes": "Vérifié en masse, tous corrects",
             }
         }
 
@@ -136,10 +121,7 @@ class BatchRejectSuggestionsRequest(BaseModel):
 
     class Config:
         json_schema_extra = {
-            "example": {
-                "suggestion_ids": [10, 11, 12],
-                "notes": "Faux positifs détectés"
-            }
+            "example": {"suggestion_ids": [10, 11, 12], "notes": "Faux positifs détectés"}
         }
 
 
@@ -159,7 +141,7 @@ class UpdateAIConfigurationRequest(BaseModel):
             "example": {
                 "auto_apply_enabled": True,
                 "auto_apply_confidence_threshold": 0.95,
-                "daily_budget_usd": 10.0
+                "daily_budget_usd": 10.0,
             }
         }
 
@@ -167,6 +149,7 @@ class UpdateAIConfigurationRequest(BaseModel):
 # ======================
 # Response Schemas
 # ======================
+
 
 class AISuggestionResponse(BaseModel):
     id: int
@@ -280,19 +263,11 @@ class AIStatisticsResponse(BaseModel):
                 "suggestions_by_type": {
                     "duplicate_detection": 45,
                     "data_enrichment": 150,
-                    "data_quality": 52
+                    "data_quality": 52,
                 },
-                "executions_by_status": {
-                    "success": 42,
-                    "failed": 3
-                },
-                "cost_by_provider": {
-                    "claude": 12.45
-                },
-                "config": {
-                    "provider": "claude",
-                    "auto_apply_enabled": False
-                }
+                "executions_by_status": {"success": 42, "failed": 3},
+                "cost_by_provider": {"claude": 12.45},
+                "config": {"provider": "claude", "auto_apply_enabled": False},
             }
         }
 
@@ -319,7 +294,7 @@ class AITaskStatusResponse(BaseModel):
                 "items_total": 200,
                 "suggestions_created": 12,
                 "estimated_time_remaining_seconds": 180,
-                "current_step": "Analyse des organisations 91/200"
+                "current_step": "Analyse des organisations 91/200",
             }
         }
 
@@ -342,7 +317,7 @@ class BatchOperationResponse(BaseModel):
                     {"suggestion_id": 1, "status": "success"},
                     {"suggestion_id": 2, "status": "success"},
                     {"suggestion_id": 3, "status": "failed", "error": "Already applied"},
-                ]
+                ],
             }
         }
 
@@ -362,21 +337,32 @@ class SuggestionPreviewResponse(BaseModel):
                 "suggestion_id": 123,
                 "entity_type": "organisation",
                 "entity_id": 45,
-                "current_data": {
-                    "nom": "BNP AM",
-                    "website": None,
-                    "email": None
-                },
+                "current_data": {"nom": "BNP AM", "website": None, "email": None},
                 "proposed_changes": {
                     "nom": "BNP Paribas Asset Management",
                     "website": "https://www.bnpparibas-am.com",
-                    "email": "contact@bnpparibas-am.com"
+                    "email": "contact@bnpparibas-am.com",
                 },
                 "changes_summary": [
-                    {"field": "nom", "from": "BNP AM", "to": "BNP Paribas Asset Management", "type": "update"},
-                    {"field": "website", "from": None, "to": "https://www.bnpparibas-am.com", "type": "add"},
-                    {"field": "email", "from": None, "to": "contact@bnpparibas-am.com", "type": "add"}
+                    {
+                        "field": "nom",
+                        "from": "BNP AM",
+                        "to": "BNP Paribas Asset Management",
+                        "type": "update",
+                    },
+                    {
+                        "field": "website",
+                        "from": None,
+                        "to": "https://www.bnpparibas-am.com",
+                        "type": "add",
+                    },
+                    {
+                        "field": "email",
+                        "from": None,
+                        "to": "contact@bnpparibas-am.com",
+                        "type": "add",
+                    },
                 ],
-                "impact_assessment": "3 champs seront modifiés/ajoutés"
+                "impact_assessment": "3 champs seront modifiés/ajoutés",
             }
         }

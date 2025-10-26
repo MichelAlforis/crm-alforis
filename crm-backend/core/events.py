@@ -251,6 +251,7 @@ class EventBus:
         Args:
             event_type: Type d'événement à écouter
         """
+
         def decorator(func: Callable):
             if event_type not in self.subscribers:
                 self.subscribers[event_type] = []
@@ -359,6 +360,7 @@ event_bus = EventBus()
 # Helpers Utilitaires
 # ============================================
 
+
 async def emit_event(
     event_type: EventType,
     data: dict,
@@ -381,6 +383,7 @@ async def emit_event(
 # ============================================
 # Listeners par Défaut
 # ============================================
+
 
 # Exemple: Écouter les mandats signés pour notifier
 @event_bus.subscribe(EventType.MANDAT_SIGNED)

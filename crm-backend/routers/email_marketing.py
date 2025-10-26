@@ -34,6 +34,7 @@ router = APIRouter(prefix="/marketing", tags=["email-marketing"])
 
 # ===== Lead Scoring Service =====
 
+
 def calculate_score_delta(email_send: EmailEventTracking, event: str) -> int:
     """
     Calcule le delta de score selon l'événement.
@@ -80,9 +81,7 @@ def update_lead_score(db: Session, person_id: int, delta: int, event_at: datetim
 
 
 def create_interaction_from_email(
-    db: Session,
-    email_send: EmailEventTracking,
-    user_id: int = 1  # Default system user
+    db: Session, email_send: EmailEventTracking, user_id: int = 1  # Default system user
 ) -> Interaction:
     """
     Crée une Interaction automatique lors du premier open d'un email.
@@ -113,10 +112,13 @@ def create_interaction_from_email(
 
 # ===== Endpoints =====
 
+
 @router.post("/email/ingest", response_model=EmailSendOut, status_code=status.HTTP_200_OK)
 async def ingest_email_event(
     payload: EmailIngestPayload,
-    x_signature: Optional[str] = Header(None, description="HMAC signature (provider-specific format)"),
+    x_signature: Optional[str] = Header(
+        None, description="HMAC signature (provider-specific format)"
+    ),
     x_timestamp: Optional[str] = Header(None, description="Event timestamp (ISO 8601 or Unix)"),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
@@ -142,27 +144,29 @@ async def ingest_email_event(
     if webhook_secret and x_signature:
         # Verify HMAC signature
         # Use model_dump(mode='json', exclude_none=True) to match incoming payload format
-        payload_dict = payload.model_dump(mode='json', exclude_none=True)
+        payload_dict = payload.model_dump(mode="json", exclude_none=True)
         if not verify_webhook_signature(payload_dict, x_signature, webhook_secret):
             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Invalid webhook signature"
+                status_code=status.HTTP_403_FORBIDDEN, detail="Invalid webhook signature"
             )
     elif webhook_secret:
         # Secret configured but signature missing
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Missing X-Signature header"
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Missing X-Signature header"
         )
 
     # Security: Validate timestamp (reject old events)
     if x_timestamp:
         validate_webhook_timestamp(x_timestamp, max_age_seconds=300)  # 5 min
     # 1. Upsert EmailEventTracking
-    email_send = db.query(EmailEventTracking).filter(
-        EmailEventTracking.provider == payload.provider,
-        EmailEventTracking.external_id == payload.external_id,
-    ).first()
+    email_send = (
+        db.query(EmailEventTracking)
+        .filter(
+            EmailEventTracking.provider == payload.provider,
+            EmailEventTracking.external_id == payload.external_id,
+        )
+        .first()
+    )
 
     if not email_send:
         # Create new
@@ -183,7 +187,7 @@ async def ingest_email_event(
 
     # 3. Update status, compteurs, timestamps
     if payload.event == "opened":
-        is_first_open = (email_send.open_count == 0)
+        is_first_open = email_send.open_count == 0
         email_send.status = EmailStatus.OPENED
         email_send.open_count += 1
         email_send.last_open_at = payload.occurred_at

@@ -76,7 +76,7 @@ class EmailCampaignStepBase(BaseSchema):
     send_window_hours: Optional[int] = Field(
         None, ge=1, le=168, description="Fenêtre maximale pour l'envoi (heures)"
     )
-    metadata: Optional[Dict[str, Any]] = Field(None, alias='step_metadata')
+    metadata: Optional[Dict[str, Any]] = Field(None, alias="step_metadata")
 
 
 class EmailCampaignStepCreate(EmailCampaignStepBase):
@@ -96,7 +96,7 @@ class EmailCampaignStepUpdate(BaseSchema):
     wait_for_event: Optional[EmailEventType] = None
     variant: Optional[EmailVariant] = None
     send_window_hours: Optional[int] = Field(None, ge=1, le=168)
-    metadata: Optional[Dict[str, Any]] = Field(None, alias='step_metadata')
+    metadata: Optional[Dict[str, Any]] = Field(None, alias="step_metadata")
 
 
 class EmailCampaignStepResponse(TimestampedSchema, EmailCampaignStepBase):
@@ -330,14 +330,14 @@ class CampaignSubscriptionCreate(BaseSchema):
     person_id: Optional[int] = Field(None, gt=0)
     organisation_id: Optional[int] = Field(None, gt=0)
 
-    @model_validator(mode='after')
+    @model_validator(mode="after")
     def validate_entity(self):
         """Valider qu'au moins une entité est fournie."""
         if not self.person_id and not self.organisation_id:
-            raise ValueError('Au moins person_id ou organisation_id doit être fourni')
+            raise ValueError("Au moins person_id ou organisation_id doit être fourni")
 
         if self.person_id and self.organisation_id:
-            raise ValueError('Seul person_id ou organisation_id peut être fourni, pas les deux')
+            raise ValueError("Seul person_id ou organisation_id peut être fourni, pas les deux")
 
         return self
 
@@ -366,11 +366,11 @@ class CampaignSubscriptionBulkCreate(BaseSchema):
     person_ids: Optional[List[int]] = Field(default_factory=list)
     organisation_ids: Optional[List[int]] = Field(default_factory=list)
 
-    @model_validator(mode='after')
+    @model_validator(mode="after")
     def validate_not_empty(self):
         """Valider qu'au moins une liste n'est pas vide."""
         if not self.person_ids and not self.organisation_ids:
-            raise ValueError('Au moins person_ids ou organisation_ids doit contenir des IDs')
+            raise ValueError("Au moins person_ids ou organisation_ids doit contenir des IDs")
 
         return self
 
@@ -422,6 +422,7 @@ class UnsubscribeRequest(BaseSchema):
     def validate_email_format(cls, v: str) -> str:
         """Valider le format de l'email."""
         import re
+
         if not re.match(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", v):
             raise ValueError("Format d'email invalide")
         return v.lower()

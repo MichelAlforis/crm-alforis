@@ -12,9 +12,11 @@ from sqlalchemy.dialects.sqlite import JSON as SQLITE_JSON
 def _json_column():
     try:
         from sqlalchemy import JSON
+
         return JSON
     except ImportError:
         return SQLITE_JSON
+
 
 from models.base import BaseModel
 

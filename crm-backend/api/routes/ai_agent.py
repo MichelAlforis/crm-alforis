@@ -56,6 +56,7 @@ def _extract_user_id(current_user: dict) -> Optional[int]:
 # Tâches IA
 # ======================
 
+
 @router.post("/duplicates/detect", response_model=AIExecutionResponse, status_code=202)
 async def detect_duplicates(
     request: DetectDuplicatesRequest,
@@ -82,11 +83,14 @@ async def detect_duplicates(
             triggered_by=user_id,
         )
         # Émettre un événement
-        emit_event(EventType.AI_TASK_COMPLETED, {
-            "execution_id": execution.id,
-            "task_type": "duplicate_scan",
-            "user_id": user_id,
-        })
+        emit_event(
+            EventType.AI_TASK_COMPLETED,
+            {
+                "execution_id": execution.id,
+                "task_type": "duplicate_scan",
+                "user_id": user_id,
+            },
+        )
 
     background_tasks.add_task(run_detection)
 
@@ -132,11 +136,14 @@ async def enrich_organisations(
             organisation_ids=request.organisation_ids,
             triggered_by=user_id,
         )
-        emit_event(EventType.AI_TASK_COMPLETED, {
-            "execution_id": execution.id,
-            "task_type": "bulk_enrichment",
-            "user_id": user_id,
-        })
+        emit_event(
+            EventType.AI_TASK_COMPLETED,
+            {
+                "execution_id": execution.id,
+                "task_type": "bulk_enrichment",
+                "user_id": user_id,
+            },
+        )
 
     background_tasks.add_task(run_enrichment)
 
@@ -181,11 +188,14 @@ async def check_data_quality(
             organisation_ids=request.organisation_ids,
             triggered_by=user_id,
         )
-        emit_event(EventType.AI_TASK_COMPLETED, {
-            "execution_id": execution.id,
-            "task_type": "quality_check",
-            "user_id": user_id,
-        })
+        emit_event(
+            EventType.AI_TASK_COMPLETED,
+            {
+                "execution_id": execution.id,
+                "task_type": "quality_check",
+                "user_id": user_id,
+            },
+        )
 
     background_tasks.add_task(run_quality_check)
 
@@ -210,6 +220,7 @@ async def check_data_quality(
 # ======================
 # Gestion des suggestions
 # ======================
+
 
 @router.get("/suggestions", response_model=List[AISuggestionResponse])
 async def list_suggestions(
@@ -239,10 +250,11 @@ async def list_suggestions(
     if entity_type:
         query = query.filter(AISuggestion.entity_type == entity_type)
 
-    suggestions = query.order_by(
-        AISuggestion.confidence_score.desc(),
-        AISuggestion.created_at.desc()
-    ).limit(limit).all()
+    suggestions = (
+        query.order_by(AISuggestion.confidence_score.desc(), AISuggestion.created_at.desc())
+        .limit(limit)
+        .all()
+    )
 
     return suggestions
 
@@ -282,12 +294,15 @@ async def approve_suggestion(
 
         suggestion = db.query(AISuggestion).filter(AISuggestion.id == suggestion_id).first()
 
-        emit_event(EventType.AI_SUGGESTION_APPROVED, {
-            "suggestion_id": suggestion_id,
-            "type": suggestion.type.value,
-            "entity_id": suggestion.entity_id,
-            "user_id": user_id,
-        })
+        emit_event(
+            EventType.AI_SUGGESTION_APPROVED,
+            {
+                "suggestion_id": suggestion_id,
+                "type": suggestion.type.value,
+                "entity_id": suggestion.entity_id,
+                "user_id": user_id,
+            },
+        )
 
         return suggestion
 
@@ -318,12 +333,15 @@ async def reject_suggestion(
 
         suggestion = db.query(AISuggestion).filter(AISuggestion.id == suggestion_id).first()
 
-        emit_event(EventType.AI_SUGGESTION_REJECTED, {
-            "suggestion_id": suggestion_id,
-            "type": suggestion.type.value,
-            "entity_id": suggestion.entity_id,
-            "user_id": user_id,
-        })
+        emit_event(
+            EventType.AI_SUGGESTION_REJECTED,
+            {
+                "suggestion_id": suggestion_id,
+                "type": suggestion.type.value,
+                "entity_id": suggestion.entity_id,
+                "user_id": user_id,
+            },
+        )
 
         return suggestion
 
@@ -355,19 +373,20 @@ async def batch_approve_suggestions(
     ai_service = AIAgentService(db)
 
     result = ai_service.batch_approve_suggestions(
-        suggestion_ids=request.suggestion_ids,
-        user_id=user_id,
-        notes=request.notes
+        suggestion_ids=request.suggestion_ids, user_id=user_id, notes=request.notes
     )
 
     # Émettre événements pour chaque succès
     for item in result["results"]:
         if item["status"] == "success":
-            emit_event(EventType.AI_SUGGESTION_APPROVED, {
-                "suggestion_id": item["suggestion_id"],
-                "user_id": user_id,
-                "batch": True,
-            })
+            emit_event(
+                EventType.AI_SUGGESTION_APPROVED,
+                {
+                    "suggestion_id": item["suggestion_id"],
+                    "user_id": user_id,
+                    "batch": True,
+                },
+            )
 
     return result
 
@@ -395,19 +414,20 @@ async def batch_reject_suggestions(
     ai_service = AIAgentService(db)
 
     result = ai_service.batch_reject_suggestions(
-        suggestion_ids=request.suggestion_ids,
-        user_id=user_id,
-        notes=request.notes
+        suggestion_ids=request.suggestion_ids, user_id=user_id, notes=request.notes
     )
 
     # Émettre événements pour chaque succès
     for item in result["results"]:
         if item["status"] == "success":
-            emit_event(EventType.AI_SUGGESTION_REJECTED, {
-                "suggestion_id": item["suggestion_id"],
-                "user_id": user_id,
-                "batch": True,
-            })
+            emit_event(
+                EventType.AI_SUGGESTION_REJECTED,
+                {
+                    "suggestion_id": item["suggestion_id"],
+                    "user_id": user_id,
+                    "batch": True,
+                },
+            )
 
     return result
 
@@ -481,9 +501,7 @@ async def get_suggestions_for_entity(
         status_filter = AISuggestionStatus[status.value.upper()]
 
     suggestions = ai_service.get_suggestions_for_entity(
-        entity_type=entity_type,
-        entity_id=entity_id,
-        status=status_filter
+        entity_type=entity_type, entity_id=entity_id, status=status_filter
     )
 
     return suggestions
@@ -492,6 +510,7 @@ async def get_suggestions_for_entity(
 # ======================
 # Exécutions et logs
 # ======================
+
 
 @router.get("/executions", response_model=List[AIExecutionResponse])
 async def list_executions(
@@ -532,6 +551,7 @@ async def get_execution(
 # ======================
 # Configuration
 # ======================
+
 
 @router.get("/config", response_model=AIConfigurationResponse)
 async def get_ai_configuration(
@@ -575,11 +595,14 @@ async def update_ai_configuration(
     db.commit()
     db.refresh(config)
 
-    emit_event(EventType.AI_CONFIG_UPDATED, {
-        "config_id": config.id,
-        "user_id": _extract_user_id(current_user),
-        "updated_fields": list(update_data.keys()),
-    })
+    emit_event(
+        EventType.AI_CONFIG_UPDATED,
+        {
+            "config_id": config.id,
+            "user_id": _extract_user_id(current_user),
+            "updated_fields": list(update_data.keys()),
+        },
+    )
 
     return config
 
@@ -587,6 +610,7 @@ async def update_ai_configuration(
 # ======================
 # Statistiques
 # ======================
+
 
 @router.get("/statistics", response_model=AIStatisticsResponse)
 async def get_ai_statistics(
@@ -609,46 +633,75 @@ async def get_ai_statistics(
 
     # Suggestions totales
     total_suggestions = db.query(func.count(AISuggestion.id)).scalar() or 0
-    pending_suggestions = db.query(func.count(AISuggestion.id)).filter(
-        AISuggestion.status == AISuggestionStatus.PENDING
-    ).scalar() or 0
-    approved_suggestions = db.query(func.count(AISuggestion.id)).filter(
-        AISuggestion.status == AISuggestionStatus.APPROVED
-    ).scalar() or 0
-    rejected_suggestions = db.query(func.count(AISuggestion.id)).filter(
-        AISuggestion.status == AISuggestionStatus.REJECTED
-    ).scalar() or 0
-    applied_suggestions = db.query(func.count(AISuggestion.id)).filter(
-        AISuggestion.status == AISuggestionStatus.APPLIED
-    ).scalar() or 0
+    pending_suggestions = (
+        db.query(func.count(AISuggestion.id))
+        .filter(AISuggestion.status == AISuggestionStatus.PENDING)
+        .scalar()
+        or 0
+    )
+    approved_suggestions = (
+        db.query(func.count(AISuggestion.id))
+        .filter(AISuggestion.status == AISuggestionStatus.APPROVED)
+        .scalar()
+        or 0
+    )
+    rejected_suggestions = (
+        db.query(func.count(AISuggestion.id))
+        .filter(AISuggestion.status == AISuggestionStatus.REJECTED)
+        .scalar()
+        or 0
+    )
+    applied_suggestions = (
+        db.query(func.count(AISuggestion.id))
+        .filter(AISuggestion.status == AISuggestionStatus.APPLIED)
+        .scalar()
+        or 0
+    )
 
     # Exécutions
     total_executions = db.query(func.count(AIExecution.id)).scalar() or 0
-    success_executions = db.query(func.count(AIExecution.id)).filter(
-        AIExecution.status == AIExecutionStatus.SUCCESS
-    ).scalar() or 0
-    failed_executions = db.query(func.count(AIExecution.id)).filter(
-        AIExecution.status == AIExecutionStatus.FAILED
-    ).scalar() or 0
+    success_executions = (
+        db.query(func.count(AIExecution.id))
+        .filter(AIExecution.status == AIExecutionStatus.SUCCESS)
+        .scalar()
+        or 0
+    )
+    failed_executions = (
+        db.query(func.count(AIExecution.id))
+        .filter(AIExecution.status == AIExecutionStatus.FAILED)
+        .scalar()
+        or 0
+    )
 
     # Coûts et tokens
     total_cost = db.query(func.sum(AIExecution.estimated_cost_usd)).scalar() or 0.0
-    total_tokens = db.query(
-        func.sum(AIExecution.total_prompt_tokens) + func.sum(AIExecution.total_completion_tokens)
-    ).scalar() or 0
+    total_tokens = (
+        db.query(
+            func.sum(AIExecution.total_prompt_tokens)
+            + func.sum(AIExecution.total_completion_tokens)
+        ).scalar()
+        or 0
+    )
 
     # Score de confiance moyen
-    avg_confidence = db.query(func.avg(AISuggestion.confidence_score)).filter(
-        AISuggestion.confidence_score.isnot(None)
-    ).scalar() or 0.0
+    avg_confidence = (
+        db.query(func.avg(AISuggestion.confidence_score))
+        .filter(AISuggestion.confidence_score.isnot(None))
+        .scalar()
+        or 0.0
+    )
 
     # Suggestions par type
     from models.ai_agent import AISuggestionType
+
     suggestions_by_type = {}
     for suggestion_type in AISuggestionType:
-        count = db.query(func.count(AISuggestion.id)).filter(
-            AISuggestion.type == suggestion_type
-        ).scalar() or 0
+        count = (
+            db.query(func.count(AISuggestion.id))
+            .filter(AISuggestion.type == suggestion_type)
+            .scalar()
+            or 0
+        )
         if count > 0:
             suggestions_by_type[suggestion_type.value] = count
 
@@ -656,18 +709,23 @@ async def get_ai_statistics(
     executions_by_status = {
         "success": success_executions,
         "failed": failed_executions,
-        "running": db.query(func.count(AIExecution.id)).filter(
-            AIExecution.status == AIExecutionStatus.RUNNING
-        ).scalar() or 0,
+        "running": db.query(func.count(AIExecution.id))
+        .filter(AIExecution.status == AIExecutionStatus.RUNNING)
+        .scalar()
+        or 0,
     }
 
     # Coûts par provider (simplifié)
     from models.ai_agent import AIProvider
+
     cost_by_provider = {}
     for provider in AIProvider:
-        cost = db.query(func.sum(AIExecution.estimated_cost_usd)).filter(
-            AIExecution.ai_provider == provider
-        ).scalar() or 0.0
+        cost = (
+            db.query(func.sum(AIExecution.estimated_cost_usd))
+            .filter(AIExecution.ai_provider == provider)
+            .scalar()
+            or 0.0
+        )
         if cost > 0:
             cost_by_provider[provider.value] = round(cost, 2)
 
@@ -706,27 +764,29 @@ from pydantic import BaseModel, field_validator
 
 class SaveAPIKeysRequest(BaseModel):
     """Requête pour sauvegarder les clés API depuis le frontend"""
+
     anthropic_key: Optional[str] = None
     openai_key: Optional[str] = None
     ollama_url: Optional[str] = None
 
-    @field_validator('anthropic_key')
+    @field_validator("anthropic_key")
     @classmethod
     def validate_anthropic_key(cls, v):
-        if v and not v.startswith('sk-ant-'):
-            raise ValueError('Clé Anthropic invalide (doit commencer par sk-ant-)')
+        if v and not v.startswith("sk-ant-"):
+            raise ValueError("Clé Anthropic invalide (doit commencer par sk-ant-)")
         return v
 
-    @field_validator('openai_key')
+    @field_validator("openai_key")
     @classmethod
     def validate_openai_key(cls, v):
-        if v and not v.startswith('sk-'):
-            raise ValueError('Clé OpenAI invalide (doit commencer par sk-)')
+        if v and not v.startswith("sk-"):
+            raise ValueError("Clé OpenAI invalide (doit commencer par sk-)")
         return v
 
 
 class APIKeysStatusResponse(BaseModel):
     """Statut des clés API (sans exposer les clés)"""
+
     anthropic_configured: bool
     openai_configured: bool
     ollama_configured: bool
@@ -797,7 +857,7 @@ async def save_api_keys(
             "anthropic_configured": bool(config.encrypted_anthropic_key),
             "openai_configured": bool(config.encrypted_openai_key),
             "ollama_configured": bool(config.encrypted_ollama_url),
-        }
+        },
     }
 
 
@@ -834,12 +894,16 @@ async def get_api_keys_status(
         anthropic_configured=bool(config.encrypted_anthropic_key),
         openai_configured=bool(config.encrypted_openai_key),
         ollama_configured=bool(config.encrypted_ollama_url),
-        last_updated_at=config.api_keys_updated_at.isoformat() if config.api_keys_updated_at else None,
-        using_env_fallback=not any([
-            config.encrypted_anthropic_key,
-            config.encrypted_openai_key,
-            config.encrypted_ollama_url
-        ]),
+        last_updated_at=(
+            config.api_keys_updated_at.isoformat() if config.api_keys_updated_at else None
+        ),
+        using_env_fallback=not any(
+            [
+                config.encrypted_anthropic_key,
+                config.encrypted_openai_key,
+                config.encrypted_ollama_url,
+            ]
+        ),
     )
 
 

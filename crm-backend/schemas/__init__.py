@@ -51,7 +51,6 @@ __all__ = [
     "PaginationParams",
     "PaginatedResponse",
     "HealthCheckResponse",
-
     # ---------- Person ----------
     "PersonCreate",
     "PersonUpdate",
@@ -60,7 +59,6 @@ __all__ = [
     "PersonOrganizationLinkCreate",
     "PersonOrganizationLinkUpdate",
     "PersonOrganizationLinkResponse",
-
     # ---------- Task ----------
     "TaskCreate",
     "TaskUpdate",
@@ -70,12 +68,10 @@ __all__ = [
     "TaskStatsResponse",
     "TaskFilterParams",
     "TaskQuickActionRequest",
-
     # ---------- Organisation Activity ----------
     "OrganisationActivityCreate",
     "OrganisationActivityUpdate",
     "OrganisationActivityResponse",
-
     # ---------- Email ----------
     "EmailTemplateCreate",
     "EmailTemplateUpdate",

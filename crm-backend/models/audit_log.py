@@ -35,11 +35,15 @@ class AuditLog(Base):
     id = Column(Integer, primary_key=True, index=True)
 
     # Entité modifiée
-    entity_type = Column(String(50), nullable=False, index=True)  # "person", "organisation", "user", "campaign"
+    entity_type = Column(
+        String(50), nullable=False, index=True
+    )  # "person", "organisation", "user", "campaign"
     entity_id = Column(Integer, nullable=False, index=True)
 
     # Action
-    action = Column(String(20), nullable=False, index=True)  # "create", "update", "delete", "login", "logout"
+    action = Column(
+        String(20), nullable=False, index=True
+    )  # "create", "update", "delete", "login", "logout"
 
     # Champ modifié (pour update)
     field_name = Column(String(100), nullable=True)  # ex: "status", "assigned_to_id", "role_id"
@@ -61,9 +65,9 @@ class AuditLog(Base):
 
     # Indexes composites pour queries fréquentes
     __table_args__ = (
-        Index('idx_audit_entity', 'entity_type', 'entity_id', 'created_at'),
-        Index('idx_audit_user_date', 'user_id', 'created_at'),
-        Index('idx_audit_action_date', 'action', 'created_at'),
+        Index("idx_audit_entity", "entity_type", "entity_id", "created_at"),
+        Index("idx_audit_user_date", "user_id", "created_at"),
+        Index("idx_audit_action_date", "action", "created_at"),
     )
 
     def __repr__(self):

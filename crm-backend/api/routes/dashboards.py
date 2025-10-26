@@ -103,8 +103,7 @@ async def get_organisation_dashboard_stats(
 
 
 @router.get(
-    "/stats/organisation/{organisation_id}/kpis",
-    response_model=List[OrganisationMonthlyKPI]
+    "/stats/organisation/{organisation_id}/kpis", response_model=List[OrganisationMonthlyKPI]
 )
 async def get_organisation_monthly_kpis(
     organisation_id: int = Path(..., gt=0),
@@ -185,10 +184,8 @@ async def delete_dashboard_kpi(
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc))
 
-@router.get(
-    "/stats/month/{year}/{month}",
-    response_model=MonthlyAggregateStats
-)
+
+@router.get("/stats/month/{year}/{month}", response_model=MonthlyAggregateStats)
 @cache_response(ttl=300, key_prefix="dashboards:monthly_aggregate")
 async def get_monthly_aggregate_stats(
     year: int = Path(..., ge=2020, le=2100),
@@ -205,8 +202,7 @@ async def get_monthly_aggregate_stats(
 
 
 @router.get(
-    "/stats/organisation/{organisation_id}/year/{year}",
-    response_model=YearlyAggregateStats
+    "/stats/organisation/{organisation_id}/year/{year}", response_model=YearlyAggregateStats
 )
 @cache_response(ttl=300, key_prefix="dashboards:yearly_aggregate")
 async def get_yearly_aggregate_stats(

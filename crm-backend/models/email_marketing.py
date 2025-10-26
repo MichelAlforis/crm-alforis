@@ -49,13 +49,13 @@ class EmailEventTracking(BaseModel):
     __tablename__ = "email_event_tracking"
     __table_args__ = (
         CheckConstraint(
-            '(organisation_id IS NOT NULL) OR (person_id IS NOT NULL)',
-            name='chk_email_org_or_person'
+            "(organisation_id IS NOT NULL) OR (person_id IS NOT NULL)",
+            name="chk_email_org_or_person",
         ),
-        Index('idx_email_event_tracking_person_sent', 'person_id', 'sent_at'),
-        Index('idx_email_event_tracking_status', 'status'),
-        Index('idx_email_event_tracking_provider_ext', 'provider', 'external_id'),
-        {'extend_existing': True}
+        Index("idx_email_event_tracking_person_sent", "person_id", "sent_at"),
+        Index("idx_email_event_tracking_status", "status"),
+        Index("idx_email_event_tracking_provider_ext", "provider", "external_id"),
+        {"extend_existing": True},
     )
 
     # Relation avec Organisation/Personne (nullable)
@@ -127,10 +127,7 @@ class LeadScore(Base):
     """
 
     __tablename__ = "lead_scores"
-    __table_args__ = (
-        Index('idx_lead_scores_score', 'score'),
-        {'extend_existing': True}
-    )
+    __table_args__ = (Index("idx_lead_scores_score", "score"), {"extend_existing": True})
 
     # PK = person_id (relation 1-to-1)
     person_id = Column(

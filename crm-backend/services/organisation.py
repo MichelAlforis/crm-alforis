@@ -137,21 +137,15 @@ class OrganisationService(BaseService[Organisation, OrganisationCreate, Organisa
         return organisation
 
     async def get_all(
-        self,
-        skip: int = 0,
-        limit: int = 100,
-        filters: Optional[dict] = None
+        self, skip: int = 0, limit: int = 100, filters: Optional[dict] = None
     ) -> Tuple[List[Organisation], int]:
         """
         Récupérer les organisations avec leurs relations clés préchargées pour éviter le N+1.
         """
         try:
-            query = (
-                self.db.query(Organisation)
-                .options(
-                    joinedload(Organisation.mandats),
-                    joinedload(Organisation.contacts),
-                )
+            query = self.db.query(Organisation).options(
+                joinedload(Organisation.mandats),
+                joinedload(Organisation.contacts),
             )
 
             if filters:
@@ -182,8 +176,7 @@ class OrganisationService(BaseService[Organisation, OrganisationCreate, Organisa
             return organisation
 
         previous_values = {
-            field: getattr(organisation, field, None)
-            for field in update_data.keys()
+            field: getattr(organisation, field, None) for field in update_data.keys()
         }
 
         for key, value in update_data.items():
@@ -209,9 +202,7 @@ class OrganisationService(BaseService[Organisation, OrganisationCreate, Organisa
                 )
 
         if changes:
-            preview = " • ".join(
-                f"{change['field']} → {change['new']}" for change in changes[:3]
-            )
+            preview = " • ".join(f"{change['field']} → {change['new']}" for change in changes[:3])
             await self._record_activity(
                 organisation,
                 OrganisationActivityType.ORGANISATION_UPDATED,
@@ -224,10 +215,7 @@ class OrganisationService(BaseService[Organisation, OrganisationCreate, Organisa
         return organisation
 
     async def get_by_category(
-        self,
-        category: OrganisationCategory,
-        skip: int = 0,
-        limit: int = 100
+        self, category: OrganisationCategory, skip: int = 0, limit: int = 100
     ) -> Tuple[List[Organisation], int]:
         """Récupérer les organisations par catégorie"""
         try:
@@ -258,10 +246,7 @@ class OrganisationService(BaseService[Organisation, OrganisationCreate, Organisa
             raise
 
     async def search(
-        self,
-        query: str,
-        skip: int = 0,
-        limit: int = 100
+        self, query: str, skip: int = 0, limit: int = 100
     ) -> Tuple[List[Organisation], int]:
         """Recherche d'organisations par nom, website ou notes"""
         try:
@@ -280,10 +265,7 @@ class OrganisationService(BaseService[Organisation, OrganisationCreate, Organisa
             raise
 
     async def get_by_language(
-        self,
-        language: str,
-        skip: int = 0,
-        limit: int = 100
+        self, language: str, skip: int = 0, limit: int = 100
     ) -> Tuple[List[Organisation], int]:
         """Récupérer les organisations par langue (pour newsletters)"""
         try:
@@ -300,18 +282,12 @@ class OrganisationService(BaseService[Organisation, OrganisationCreate, Organisa
         try:
             total = self.db.query(Organisation).count()
             by_category = (
-                self.db.query(
-                    Organisation.category,
-                    func.count(Organisation.id).label("count")
-                )
+                self.db.query(Organisation.category, func.count(Organisation.id).label("count"))
                 .group_by(Organisation.category)
                 .all()
             )
             by_language = (
-                self.db.query(
-                    Organisation.language,
-                    func.count(Organisation.id).label("count")
-                )
+                self.db.query(Organisation.language, func.count(Organisation.id).label("count"))
                 .group_by(Organisation.language)
                 .all()
             )
@@ -335,7 +311,7 @@ class OrganisationService(BaseService[Organisation, OrganisationCreate, Organisa
             countries = (
                 self.db.query(Organisation.country_code)
                 .filter(Organisation.country_code.isnot(None))
-                .filter(Organisation.country_code != '')
+                .filter(Organisation.country_code != "")
                 .distinct()
                 .order_by(Organisation.country_code)
                 .all()
@@ -347,16 +323,15 @@ class OrganisationService(BaseService[Organisation, OrganisationCreate, Organisa
             raise
 
 
-class OrganisationContactService(BaseService[OrganisationContact, OrganisationContactCreate, OrganisationContactUpdate]):
+class OrganisationContactService(
+    BaseService[OrganisationContact, OrganisationContactCreate, OrganisationContactUpdate]
+):
     """Service pour la gestion des contacts d'organisations"""
 
     def __init__(self, db: Session):
         super().__init__(OrganisationContact, db)
 
-    async def get_by_organisation(
-        self,
-        organisation_id: int
-    ) -> List[OrganisationContact]:
+    async def get_by_organisation(self, organisation_id: int) -> List[OrganisationContact]:
         """Récupérer tous les contacts d'une organisation"""
         try:
             contacts = (
@@ -370,7 +345,9 @@ class OrganisationContactService(BaseService[OrganisationContact, OrganisationCo
             raise
 
 
-class MandatDistributionService(BaseService[MandatDistribution, MandatDistributionCreate, MandatDistributionUpdate]):
+class MandatDistributionService(
+    BaseService[MandatDistribution, MandatDistributionCreate, MandatDistributionUpdate]
+):
     """Service pour la gestion des mandats de distribution"""
 
     def __init__(self, db: Session):
@@ -414,10 +391,7 @@ class MandatDistributionService(BaseService[MandatDistribution, MandatDistributi
         if not update_data:
             return mandat
 
-        previous_values = {
-            field: getattr(mandat, field, None)
-            for field in update_data.keys()
-        }
+        previous_values = {field: getattr(mandat, field, None) for field in update_data.keys()}
 
         for key, value in update_data.items():
             if hasattr(mandat, key):
@@ -448,9 +422,7 @@ class MandatDistributionService(BaseService[MandatDistribution, MandatDistributi
                 else OrganisationActivityType.MANDAT_UPDATED
             )
 
-            preview = " • ".join(
-                f"{change['field']} → {change['new']}" for change in changes[:3]
-            )
+            preview = " • ".join(f"{change['field']} → {change['new']}" for change in changes[:3])
 
             await self._record_activity(
                 mandat,
@@ -469,8 +441,14 @@ class MandatDistributionService(BaseService[MandatDistribution, MandatDistributi
             "mandat_id": mandat.id,
             "organisation_id": mandat.organisation_id,
             "status": mandat.status.value if getattr(mandat, "status", None) else None,
-            "date_signature": mandat.date_signature.isoformat() if getattr(mandat, "date_signature", None) else None,
-            "date_debut": mandat.date_debut.isoformat() if getattr(mandat, "date_debut", None) else None,
+            "date_signature": (
+                mandat.date_signature.isoformat()
+                if getattr(mandat, "date_signature", None)
+                else None
+            ),
+            "date_debut": (
+                mandat.date_debut.isoformat() if getattr(mandat, "date_debut", None) else None
+            ),
             "date_fin": mandat.date_fin.isoformat() if getattr(mandat, "date_fin", None) else None,
             "organisation_name": getattr(getattr(mandat, "organisation", None), "name", None),
         }
@@ -508,10 +486,7 @@ class MandatDistributionService(BaseService[MandatDistribution, MandatDistributi
             metadata=payload,
         )
 
-    async def get_by_organisation(
-        self,
-        organisation_id: int
-    ) -> List[MandatDistribution]:
+    async def get_by_organisation(self, organisation_id: int) -> List[MandatDistribution]:
         """Récupérer tous les mandats d'une organisation"""
         try:
             mandats = (
@@ -525,8 +500,7 @@ class MandatDistributionService(BaseService[MandatDistribution, MandatDistributi
             raise
 
     async def get_active_mandats(
-        self,
-        organisation_id: Optional[int] = None
+        self, organisation_id: Optional[int] = None
     ) -> List[MandatDistribution]:
         """Récupérer les mandats actifs (signés ou actifs)"""
         try:
@@ -582,12 +556,7 @@ class ProduitService(BaseService[Produit, ProduitCreate, ProduitUpdate]):
             logger.error(f"Error fetching produit by ISIN {isin}: {e}")
             raise
 
-    def search(
-        self,
-        query: str,
-        skip: int = 0,
-        limit: int = 100
-    ) -> Tuple[List[Produit], int]:
+    def search(self, query: str, skip: int = 0, limit: int = 100) -> Tuple[List[Produit], int]:
         """Recherche de produits par nom, ISIN ou notes"""
         try:
             search_query = self.db.query(Produit).filter(
@@ -647,11 +616,7 @@ class MandatProduitService(BaseService[MandatProduit, MandatProduitCreate, Manda
                 )
 
             # Vérifier que le produit existe
-            produit = (
-                self.db.query(Produit)
-                .filter(Produit.id == schema.produit_id)
-                .first()
-            )
+            produit = self.db.query(Produit).filter(Produit.id == schema.produit_id).first()
             if not produit:
                 raise ResourceNotFound("Produit", schema.produit_id)
 
@@ -685,11 +650,7 @@ class MandatProduitService(BaseService[MandatProduit, MandatProduitCreate, Manda
             self.db.rollback()
             raise
 
-    def get_by_mandat_and_produit(
-        self,
-        mandat_id: int,
-        produit_id: int
-    ) -> Optional[MandatProduit]:
+    def get_by_mandat_and_produit(self, mandat_id: int, produit_id: int) -> Optional[MandatProduit]:
         """Récupérer une association spécifique"""
         try:
             return (
@@ -707,7 +668,9 @@ class MandatProduitService(BaseService[MandatProduit, MandatProduitCreate, Manda
             raise
 
 
-class InteractionService(BaseService[OrganisationInteraction, InteractionCreate, InteractionUpdate]):
+class InteractionService(
+    BaseService[OrganisationInteraction, InteractionCreate, InteractionUpdate]
+):
     """Service pour la gestion des interactions"""
 
     def __init__(self, db: Session):
@@ -729,7 +692,7 @@ class InteractionService(BaseService[OrganisationInteraction, InteractionCreate,
                         and_(
                             MandatProduit.produit_id == schema.produit_id,
                             MandatDistribution.organisation_id == schema.organisation_id,
-                            MandatDistribution.status.in_([MandatStatus.SIGNE, MandatStatus.ACTIF])
+                            MandatDistribution.status.in_([MandatStatus.SIGNE, MandatStatus.ACTIF]),
                         )
                     )
                     .first()
@@ -751,16 +714,12 @@ class InteractionService(BaseService[OrganisationInteraction, InteractionCreate,
             raise
 
     async def get_by_organisation(
-        self,
-        organisation_id: int,
-        skip: int = 0,
-        limit: int = 100
+        self, organisation_id: int, skip: int = 0, limit: int = 100
     ) -> Tuple[List[OrganisationInteraction], int]:
         """Récupérer toutes les interactions d'une organisation"""
         try:
-            query = (
-                self.db.query(OrganisationInteraction)
-                .filter(OrganisationInteraction.organisation_id == organisation_id)
+            query = self.db.query(OrganisationInteraction).filter(
+                OrganisationInteraction.organisation_id == organisation_id
             )
             total = query.count()
             items = query.offset(skip).limit(limit).all()
@@ -770,16 +729,12 @@ class InteractionService(BaseService[OrganisationInteraction, InteractionCreate,
             raise
 
     async def get_by_personne(
-        self,
-        personne_id: int,
-        skip: int = 0,
-        limit: int = 100
+        self, personne_id: int, skip: int = 0, limit: int = 100
     ) -> Tuple[List[OrganisationInteraction], int]:
         """Récupérer toutes les interactions d'une personne"""
         try:
-            query = (
-                self.db.query(OrganisationInteraction)
-                .filter(OrganisationInteraction.personne_id == personne_id)
+            query = self.db.query(OrganisationInteraction).filter(
+                OrganisationInteraction.personne_id == personne_id
             )
             total = query.count()
             items = query.offset(skip).limit(limit).all()
@@ -789,16 +744,12 @@ class InteractionService(BaseService[OrganisationInteraction, InteractionCreate,
             raise
 
     async def get_by_pipeline(
-        self,
-        pipeline: str,
-        skip: int = 0,
-        limit: int = 100
+        self, pipeline: str, skip: int = 0, limit: int = 100
     ) -> Tuple[List[OrganisationInteraction], int]:
         """Récupérer toutes les interactions d'un pipeline"""
         try:
-            query = (
-                self.db.query(OrganisationInteraction)
-                .filter(OrganisationInteraction.pipeline == pipeline)
+            query = self.db.query(OrganisationInteraction).filter(
+                OrganisationInteraction.pipeline == pipeline
             )
             total = query.count()
             items = query.offset(skip).limit(limit).all()

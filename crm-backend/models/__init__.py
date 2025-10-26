@@ -34,6 +34,7 @@ from models.interaction import (
     InteractionType,
 )
 from models.kpi import DashboardKPI
+from models.mailing_list import MailingList
 from models.mandat import Mandat, MandatStatus, MandatType
 from models.notification import Notification, NotificationPriority, NotificationType
 from models.organisation import (
@@ -73,14 +74,12 @@ __all__ = [
     # Base
     "Base",
     "BaseModel",
-
     # Permissions & Roles
     "Permission",
     "PermissionAction",
     "PermissionResource",
     "Role",
     "UserRole",
-
     # Organisation (nouveau modèle unif ié)
     "Organisation",
     "OrganisationContact",
@@ -99,32 +98,26 @@ __all__ = [
     "OrganisationActivity",
     "OrganisationActivityType",
     "DashboardKPI",
-
     # People
     "Person",
     "PersonOrganizationLink",
     "PersonRole",
     "User",
     "Team",
-
     # Tasks
     "Task",
     "TaskPriority",
     "TaskStatus",
-
     # Notifications
     "Notification",
     "NotificationType",
     "NotificationPriority",
-
     # Mandats (legacy compatibility)
     "Mandat",
     "MandatType",
     "MandatStatus",
-
     # Webhooks
     "Webhook",
-
     # Workflows
     "Workflow",
     "WorkflowExecution",
@@ -132,7 +125,6 @@ __all__ = [
     "WorkflowActionType",
     "WorkflowStatus",
     "WorkflowExecutionStatus",
-
     # Email Automation
     "EmailTemplate",
     "EmailCampaign",
@@ -140,6 +132,7 @@ __all__ = [
     "EmailSend",
     "EmailEvent",
     "CampaignSubscription",
+    "MailingList",
     "EmailTemplateCategory",
     "EmailProvider",
     "EmailCampaignStatus",
@@ -147,7 +140,6 @@ __all__ = [
     "EmailVariant",
     "EmailSendStatus",
     "EmailEventType",
-
     # AI Agent
     "AISuggestion",
     "AIExecution",
@@ -158,16 +150,13 @@ __all__ = [
     "AIExecutionStatus",
     "AITaskType",
     "AIProvider",
-
     # Help Analytics
     "HelpAnalyticsEvent",
-
     # Interactions V2
     "Interaction",
     "InteractionParticipant",
     "InteractionType",
     "InteractionStatus",
-
     # Lead Scoring
     "LeadScore",
 ]

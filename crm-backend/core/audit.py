@@ -20,6 +20,7 @@ logger = logging.getLogger(__name__)
 # Création d'entrée d'audit
 # ============================================================================
 
+
 def create_audit_log(
     db: Session,
     entity_type: str,
@@ -77,7 +78,7 @@ def create_audit_log(
             "action": action,
             "user_id": user_id,
             "field": field_name,
-        }
+        },
     )
 
 
@@ -95,6 +96,7 @@ def _serialize_value(value: Any) -> Optional[str]:
 # ============================================================================
 # Extraction des changements
 # ============================================================================
+
 
 def detect_changes(old_obj: Any, new_data: Dict[str, Any]) -> Dict[str, tuple]:
     """
@@ -124,6 +126,7 @@ def detect_changes(old_obj: Any, new_data: Dict[str, Any]) -> Dict[str, tuple]:
 # Decorator pour audit automatique
 # ============================================================================
 
+
 def audit_changes(entity_type: str, action: str = "update"):
     """
     Decorator pour auditer automatiquement les modifications
@@ -148,16 +151,17 @@ def audit_changes(entity_type: str, action: str = "update"):
     3. Capturer l'état APRÈS
     4. Logger les différences dans audit_logs
     """
+
     def decorator(func: Callable):
         @wraps(func)
         async def wrapper(*args, **kwargs):
             # Extraire request, db, current_user des kwargs
-            request: Optional[Request] = kwargs.get('request')
-            db: Optional[Session] = kwargs.get('db')
-            current_user = kwargs.get('current_user')
+            request: Optional[Request] = kwargs.get("request")
+            db: Optional[Session] = kwargs.get("db")
+            current_user = kwargs.get("current_user")
 
             # Extraire entity_id (premier arg ou dans kwargs)
-            entity_id = args[0] if args else kwargs.get('id') or kwargs.get(f'{entity_type}_id')
+            entity_id = args[0] if args else kwargs.get("id") or kwargs.get(f"{entity_type}_id")
 
             # Capturer état AVANT (si update/delete)
             old_obj = None
@@ -187,8 +191,8 @@ def audit_changes(entity_type: str, action: str = "update"):
 
                 elif action == "update" and old_obj:
                     # Update: logger chaque champ modifié
-                    new_data = kwargs.get('data')
-                    if hasattr(new_data, 'dict'):
+                    new_data = kwargs.get("data")
+                    if hasattr(new_data, "dict"):
                         new_data = new_data.dict(exclude_unset=True)
 
                     if new_data:
@@ -223,6 +227,7 @@ def audit_changes(entity_type: str, action: str = "update"):
             return result
 
         return wrapper
+
     return decorator
 
 
@@ -251,12 +256,8 @@ def _get_entity(db: Session, entity_type: str, entity_id: int):
 # Helpers pour consulter l'audit trail
 # ============================================================================
 
-def get_audit_history(
-    db: Session,
-    entity_type: str,
-    entity_id: int,
-    limit: int = 100
-):
+
+def get_audit_history(db: Session, entity_type: str, entity_id: int, limit: int = 100):
     """
     Récupère l'historique d'audit pour une entité
 
@@ -273,10 +274,7 @@ def get_audit_history(
 
     logs = (
         db.query(AuditLog)
-        .filter(
-            AuditLog.entity_type == entity_type,
-            AuditLog.entity_id == entity_id
-        )
+        .filter(AuditLog.entity_type == entity_type, AuditLog.entity_id == entity_id)
         .order_by(AuditLog.created_at.desc())
         .limit(limit)
         .all()
@@ -285,11 +283,7 @@ def get_audit_history(
     return logs
 
 
-def get_user_activity(
-    db: Session,
-    user_id: int,
-    limit: int = 100
-):
+def get_user_activity(db: Session, user_id: int, limit: int = 100):
     """
     Récupère l'activité d'un utilisateur
 

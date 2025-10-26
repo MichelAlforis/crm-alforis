@@ -8,6 +8,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class ActivityAttachmentBase(BaseModel):
     """Base schema pour les pièces jointes."""
+
     filename: str = Field(..., min_length=1, max_length=255)
     file_path: str = Field(..., min_length=1, max_length=500)
     file_size: Optional[int] = Field(None, ge=0)
@@ -18,11 +19,13 @@ class ActivityAttachmentBase(BaseModel):
 
 class ActivityAttachmentCreate(ActivityAttachmentBase):
     """Schema pour créer une pièce jointe."""
+
     activity_id: int = Field(..., gt=0)
 
 
 class ActivityAttachmentUpdate(BaseModel):
     """Schema pour mettre à jour une pièce jointe."""
+
     filename: Optional[str] = Field(None, min_length=1, max_length=255)
     title: Optional[str] = Field(None, max_length=255)
     notes: Optional[str] = Field(None)
@@ -30,6 +33,7 @@ class ActivityAttachmentUpdate(BaseModel):
 
 class ActivityAttachmentResponse(ActivityAttachmentBase):
     """Schema de réponse pour une pièce jointe."""
+
     model_config = ConfigDict(from_attributes=True)
 
     id: int
@@ -47,6 +51,7 @@ class ActivityAttachmentResponse(ActivityAttachmentBase):
 
 class ActivityAttachmentUploadResponse(BaseModel):
     """Schema de réponse après upload d'un fichier."""
+
     attachment_id: int
     filename: str
     file_path: str

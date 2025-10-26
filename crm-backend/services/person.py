@@ -128,7 +128,9 @@ class PersonOrganizationLinkService:
         self.db.refresh(link)
         return link
 
-    async def update_link(self, link_id: int, schema: PersonOrganizationLinkUpdate) -> PersonOrganizationLink:
+    async def update_link(
+        self, link_id: int, schema: PersonOrganizationLinkUpdate
+    ) -> PersonOrganizationLink:
         link = (
             self.db.query(PersonOrganizationLink)
             .options(joinedload(PersonOrganizationLink.organisation))
@@ -147,7 +149,11 @@ class PersonOrganizationLinkService:
         return link
 
     async def delete_link(self, link_id: int) -> None:
-        link = self.db.query(PersonOrganizationLink).filter(PersonOrganizationLink.id == link_id).first()
+        link = (
+            self.db.query(PersonOrganizationLink)
+            .filter(PersonOrganizationLink.id == link_id)
+            .first()
+        )
         if not link:
             raise ResourceNotFound("PersonOrganizationLink", link_id)
         self.db.delete(link)
@@ -188,6 +194,8 @@ class PersonOrganizationLinkService:
             if link.organisation:
                 payload["organisation_name"] = getattr(link.organisation, "name", None)
             if getattr(link, "person", None):
-                payload["person"] = PersonResponse.model_validate(link.person).model_dump(by_alias=True)
+                payload["person"] = PersonResponse.model_validate(link.person).model_dump(
+                    by_alias=True
+                )
             serialized.append(payload)
         return serialized

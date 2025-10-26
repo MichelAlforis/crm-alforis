@@ -23,17 +23,18 @@ logger = logging.getLogger(__name__)
 DEFAULT_LIMIT = "200/minute"
 
 # Limites par type d'endpoint
-PUBLIC_WEBHOOK_LIMIT = "10/minute"      # Webhooks publics (non auth)
-AUTHENTICATED_LIMIT = "60/minute"        # API authentifiée standard
-ADMIN_LIMIT = "1000/minute"              # Admins (ops intensives)
-SEARCH_LIMIT = "30/minute"               # Recherche (queries lourdes)
-EMAIL_SEND_LIMIT = "20/minute"           # Envoi d'emails
-AI_AGENT_LIMIT = "10/minute"             # AI agent (coût élevé)
+PUBLIC_WEBHOOK_LIMIT = "10/minute"  # Webhooks publics (non auth)
+AUTHENTICATED_LIMIT = "60/minute"  # API authentifiée standard
+ADMIN_LIMIT = "1000/minute"  # Admins (ops intensives)
+SEARCH_LIMIT = "30/minute"  # Recherche (queries lourdes)
+EMAIL_SEND_LIMIT = "20/minute"  # Envoi d'emails
+AI_AGENT_LIMIT = "10/minute"  # AI agent (coût élevé)
 
 
 # ============================================================================
 # Key functions pour identifier les clients
 # ============================================================================
+
 
 def get_remote_address_or_user(request: Request) -> str:
     """
@@ -47,6 +48,7 @@ def get_remote_address_or_user(request: Request) -> str:
         auth_header = request.headers.get("Authorization", "")
         if auth_header.startswith("Bearer "):
             from core.security import decode_token
+
             token = auth_header.replace("Bearer ", "")
             payload = decode_token(token)
             user_id = payload.get("sub")
@@ -71,6 +73,7 @@ def get_user_id_key(request: Request) -> str:
             raise ValueError("Missing Bearer token")
 
         from core.security import decode_token
+
         token = auth_header.replace("Bearer ", "")
         payload = decode_token(token)
         user_id = payload.get("sub")
@@ -103,6 +106,7 @@ limiter = Limiter(
 # Custom rate limit exceeded handler
 # ============================================================================
 
+
 async def custom_rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
     """
     Handler personnalisé pour les erreurs de rate limiting
@@ -111,10 +115,7 @@ async def custom_rate_limit_exceeded_handler(request: Request, exc: RateLimitExc
     """
     # Log l'abus
     client = get_remote_address(request)
-    logger.warning(
-        f"Rate limit exceeded: {request.method} {request.url.path} "
-        f"from {client}"
-    )
+    logger.warning(f"Rate limit exceeded: {request.method} {request.url.path} " f"from {client}")
 
     # Extraire les headers de limite
     retry_after = exc.headers.get("Retry-After", "60")
@@ -131,6 +132,7 @@ async def custom_rate_limit_exceeded_handler(request: Request, exc: RateLimitExc
 # Helpers pour vérifier les limites
 # ============================================================================
 
+
 def is_admin_user(request: Request) -> bool:
     """
     Vérifie si l'utilisateur est admin
@@ -141,6 +143,7 @@ def is_admin_user(request: Request) -> bool:
         auth_header = request.headers.get("Authorization", "")
         if auth_header.startswith("Bearer "):
             from core.security import decode_token
+
             token = auth_header.replace("Bearer ", "")
             payload = decode_token(token)
             return payload.get("is_admin", False)
@@ -158,6 +161,7 @@ def get_client_identifier(request: Request) -> str:
         auth_header = request.headers.get("Authorization", "")
         if auth_header.startswith("Bearer "):
             from core.security import decode_token
+
             token = auth_header.replace("Bearer ", "")
             payload = decode_token(token)
             user_id = payload.get("sub")
@@ -173,6 +177,7 @@ def get_client_identifier(request: Request) -> str:
 # ============================================================================
 # Decorator pour exemptions conditionnelles
 # ============================================================================
+
 
 def exempt_if_admin(func):
     """

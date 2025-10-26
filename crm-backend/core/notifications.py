@@ -47,12 +47,13 @@ from models.user import User
 # WebSocket Connection Manager (Multi-Tenant)
 # ============================================
 
-HEARTBEAT_TIMEOUT_SEC = 90          # Ferme si pas d'activité depuis N sec
-HEARTBEAT_SWEEP_INTERVAL_SEC = 20   # Fréquence de vérification des timeouts
+HEARTBEAT_TIMEOUT_SEC = 90  # Ferme si pas d'activité depuis N sec
+HEARTBEAT_SWEEP_INTERVAL_SEC = 20  # Fréquence de vérification des timeouts
 
 
 class ClientMeta:
     """Métadonnées d'un client WebSocket connecté"""
+
     __slots__ = ("ws", "org_id", "user_id", "rooms", "last_seen")
 
     def __init__(self, ws: WebSocket, org_id: int, user_id: int):
@@ -296,6 +297,7 @@ manager = ConnectionManager()
 # Service de Notifications
 # ============================================
 
+
 class NotificationService:
     """
     Service pour créer et envoyer des notifications
@@ -376,10 +378,7 @@ class NotificationService:
             user_id: ID de l'utilisateur
         """
         # Construire le message WebSocket
-        message = {
-            "type": "notification",
-            "data": notification.to_dict()
-        }
+        message = {"type": "notification", "data": notification.to_dict()}
 
         # Envoyer via WebSocket si l'utilisateur est connecté
         await manager.send_personal_message(message, user_id)
@@ -447,13 +446,15 @@ class NotificationService:
         Returns:
             int: Nombre de notifications non lues
         """
-        return db.query(Notification)\
+        return (
+            db.query(Notification)
             .filter(
                 Notification.user_id == user_id,
                 Notification.is_read == False,
-                Notification.is_archived == False
-            )\
+                Notification.is_archived == False,
+            )
             .count()
+        )
 
     @staticmethod
     def get_user_notifications(
@@ -476,8 +477,7 @@ class NotificationService:
         Returns:
             List[Notification]: Liste des notifications
         """
-        query = db.query(Notification)\
-            .filter(Notification.user_id == user_id)
+        query = db.query(Notification).filter(Notification.user_id == user_id)
 
         if not include_read:
             query = query.filter(Notification.is_read == False)
@@ -499,15 +499,9 @@ class NotificationService:
             db: Session database
             user_id: ID de l'utilisateur
         """
-        db.query(Notification)\
-            .filter(
-                Notification.user_id == user_id,
-                Notification.is_read == False
-            )\
-            .update({
-                "is_read": True,
-                "read_at": datetime.now(timezone.utc)
-            })
+        db.query(Notification).filter(
+            Notification.user_id == user_id, Notification.is_read == False
+        ).update({"is_read": True, "read_at": datetime.now(timezone.utc)})
         db.commit()
 
     @staticmethod
@@ -515,12 +509,11 @@ class NotificationService:
         """Supprime les notifications archivées plus anciennes que ``days`` jours."""
         cutoff_date = datetime.now(timezone.utc) - timedelta(days=days)
 
-        deleted_count = db.query(Notification)\
-            .filter(
-                Notification.created_at < cutoff_date,
-                Notification.is_archived.is_(True)
-            )\
+        deleted_count = (
+            db.query(Notification)
+            .filter(Notification.created_at < cutoff_date, Notification.is_archived.is_(True))
             .delete()
+        )
 
         db.commit()
         return deleted_count
@@ -572,10 +565,7 @@ class NotificationManager:
         return NotificationService.get_unread_count(self.db, user_id)
 
     @staticmethod
-    def cleanup_old_notifications(
-        db: Session,
-        days: int = 30
-    ):
+    def cleanup_old_notifications(db: Session, days: int = 30):
         """
         Supprime les notifications anciennes
 
@@ -589,6 +579,7 @@ class NotificationManager:
 # ============================================
 # Helpers Simplifiés
 # ============================================
+
 
 async def notify_user(
     user_id: int,
@@ -742,6 +733,7 @@ async def notify_from_template(
 # WebSocket Endpoint Handler
 # ============================================
 
+
 async def websocket_endpoint(websocket: WebSocket, user_id: int, org_id: int):
     """
     Handler pour l'endpoint WebSocket des notifications (multi-tenant)
@@ -772,14 +764,16 @@ async def websocket_endpoint(websocket: WebSocket, user_id: int, org_id: int):
 
     try:
         # Envoyer un message de connexion réussie
-        await websocket.send_json({
-            "type": "connected",
-            "data": {
-                "user_id": user_id,
-                "org_id": org_id,
-                "connected_at": datetime.now(timezone.utc).isoformat()
+        await websocket.send_json(
+            {
+                "type": "connected",
+                "data": {
+                    "user_id": user_id,
+                    "org_id": org_id,
+                    "connected_at": datetime.now(timezone.utc).isoformat(),
+                },
             }
-        })
+        )
 
         # Boucle de réception des messages
         while True:

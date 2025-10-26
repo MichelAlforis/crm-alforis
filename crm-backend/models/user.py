@@ -40,10 +40,14 @@ class User(BaseModel):
 
     last_login_at = Column(DateTime(timezone=True), nullable=True)
 
-    role_id = Column(Integer, ForeignKey("roles.id", ondelete="SET NULL"), nullable=True, index=True)
+    role_id = Column(
+        Integer, ForeignKey("roles.id", ondelete="SET NULL"), nullable=True, index=True
+    )
     role = relationship(Role, back_populates="users")
 
-    team_id = Column(Integer, ForeignKey("teams.id", ondelete="SET NULL"), nullable=True, index=True)
+    team_id = Column(
+        Integer, ForeignKey("teams.id", ondelete="SET NULL"), nullable=True, index=True
+    )
     team = relationship(Team, back_populates="members")
 
     organisations_owned = relationship(
@@ -63,8 +67,12 @@ class User(BaseModel):
     )
 
     legacy_mandats = relationship("Mandat", back_populates="owner", cascade="all, delete-orphan")
-    notifications = relationship("Notification", back_populates="user", cascade="all, delete-orphan")
-    mailing_lists = relationship("MailingList", back_populates="creator", foreign_keys="MailingList.created_by")
+    notifications = relationship(
+        "Notification", back_populates="user", cascade="all, delete-orphan"
+    )
+    mailing_lists = relationship(
+        "MailingList", back_populates="creator", foreign_keys="MailingList.created_by"
+    )
 
     def __repr__(self) -> str:
         return f"<User(id={self.id}, email='{self.email}')>"

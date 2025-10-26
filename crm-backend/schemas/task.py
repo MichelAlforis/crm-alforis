@@ -10,8 +10,10 @@ from schemas.base import BaseSchema, TimestampedSchema
 # TASK SCHEMAS
 # =====================================================
 
+
 class TaskCreate(BaseSchema):
     """Création d'une tâche"""
+
     title: str = Field(..., min_length=1, max_length=255)
     description: Optional[str] = None
     due_date: Optional[datetime] = Field(None, description="Date d'échéance (ISO format)")
@@ -31,12 +33,13 @@ class TaskCreate(BaseSchema):
         if v is None:
             return v
         if isinstance(v, str):
-            return datetime.fromisoformat(v.replace('Z', '+00:00'))
+            return datetime.fromisoformat(v.replace("Z", "+00:00"))
         return v
 
 
 class TaskUpdate(BaseSchema):
     """Mise à jour d'une tâche"""
+
     title: Optional[str] = Field(None, min_length=1, max_length=255)
     description: Optional[str] = None
     due_date: Optional[datetime] = None
@@ -53,12 +56,13 @@ class TaskUpdate(BaseSchema):
         if v is None:
             return v
         if isinstance(v, str):
-            return datetime.fromisoformat(v.replace('Z', '+00:00'))
+            return datetime.fromisoformat(v.replace("Z", "+00:00"))
         return v
 
 
 class TaskResponse(TimestampedSchema):
     """Réponse tâche simple"""
+
     title: str
     description: Optional[str]
     due_date: Optional[datetime]  # Changed from date to datetime to match model
@@ -83,6 +87,7 @@ class TaskResponse(TimestampedSchema):
 
 class TaskWithRelations(TaskResponse):
     """Réponse tâche avec informations des entités liées"""
+
     person_name: Optional[str] = None
     organisation_name: Optional[str] = None
     assigned_to_name: Optional[str] = None
@@ -91,11 +96,13 @@ class TaskWithRelations(TaskResponse):
 
 class TaskSnoozeRequest(BaseSchema):
     """Requête pour snoozer une tâche"""
+
     days: int = Field(..., ge=1, le=365, description="Nombre de jours à snoozer")
 
 
 class TaskStatsResponse(BaseSchema):
     """Statistiques des tâches"""
+
     total: int = 0
     overdue: int = 0
     today: int = 0
@@ -106,6 +113,7 @@ class TaskStatsResponse(BaseSchema):
 
 class TaskFilterParams(BaseSchema):
     """Paramètres de filtrage pour les tâches"""
+
     status: Optional[TaskStatus] = None
     priority: Optional[TaskPriority] = None
     category: Optional[TaskCategory] = None
@@ -119,9 +127,13 @@ class TaskFilterParams(BaseSchema):
 # QUICK ACTIONS
 # =====================================================
 
+
 class TaskQuickActionRequest(BaseSchema):
     """Actions rapides sur une tâche"""
-    action: str = Field(..., description="Action: 'snooze_1d', 'snooze_1w', 'mark_done', 'next_day'")
+
+    action: str = Field(
+        ..., description="Action: 'snooze_1d', 'snooze_1w', 'mark_done', 'next_day'"
+    )
 
 
 # Export des enums pour le frontend

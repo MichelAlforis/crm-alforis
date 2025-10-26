@@ -38,6 +38,7 @@ def _enum_value(value):
 
 # ============= HELPER =============
 
+
 def enrich_task_response(task) -> dict:
     """Enrichir une tâche avec les noms des entités liées"""
     response = TaskResponse.model_validate(task)
@@ -55,6 +56,7 @@ def enrich_task_response(task) -> dict:
 
 
 # ============= GET ROUTES =============
+
 
 @router.get("", response_model=PaginatedResponse[TaskResponse])
 async def list_tasks(
@@ -132,6 +134,7 @@ async def get_task(
 
 # ============= POST ROUTES =============
 
+
 @router.post("", response_model=TaskResponse, status_code=status.HTTP_201_CREATED)
 async def create_task(
     task_create: TaskCreate,
@@ -147,7 +150,11 @@ async def create_task(
             "task_id": task.id,
             "title": task.title,
             "status": _enum_value(getattr(task, "status", None)),
-            "due_date": getattr(task, "due_date", None).isoformat() if getattr(task, "due_date", None) else None,
+            "due_date": (
+                getattr(task, "due_date", None).isoformat()
+                if getattr(task, "due_date", None)
+                else None
+            ),
             "priority": _enum_value(getattr(task, "priority", None)),
         },
         user_id=_extract_user_id(current_user),
@@ -192,7 +199,11 @@ async def task_quick_action(
             data={
                 "task_id": task.id,
                 "title": task.title,
-                "completed_at": getattr(task, "completed_at", None).isoformat() if getattr(task, "completed_at", None) else None,
+                "completed_at": (
+                    getattr(task, "completed_at", None).isoformat()
+                    if getattr(task, "completed_at", None)
+                    else None
+                ),
             },
             user_id=_extract_user_id(current_user),
         )
@@ -200,6 +211,7 @@ async def task_quick_action(
 
 
 # ============= PUT ROUTES =============
+
 
 @router.put("/{task_id}", response_model=TaskResponse)
 async def update_task(
@@ -217,7 +229,11 @@ async def update_task(
             data={
                 "task_id": task.id,
                 "title": task.title,
-                "completed_at": getattr(task, "completed_at", None).isoformat() if getattr(task, "completed_at", None) else None,
+                "completed_at": (
+                    getattr(task, "completed_at", None).isoformat()
+                    if getattr(task, "completed_at", None)
+                    else None
+                ),
             },
             user_id=_extract_user_id(current_user),
         )
@@ -225,6 +241,7 @@ async def update_task(
 
 
 # ============= DELETE ROUTES =============
+
 
 @router.delete("/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_task(

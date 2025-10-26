@@ -25,10 +25,7 @@ class OrganisationKPIService:
     # ============= LECTURE =============
 
     async def get_kpis_by_organisation(
-        self,
-        organisation_id: int,
-        year: Optional[int] = None,
-        month: Optional[int] = None
+        self, organisation_id: int, year: Optional[int] = None, month: Optional[int] = None
     ) -> List[OrganisationKPI]:
         """
         Récupère les KPIs d'une organisation pour une période donnée
@@ -49,10 +46,7 @@ class OrganisationKPIService:
             if month is not None:
                 query = query.filter(OrganisationKPI.month == month)
 
-            kpis = query.order_by(
-                OrganisationKPI.year.desc(),
-                OrganisationKPI.month.desc()
-            ).all()
+            kpis = query.order_by(OrganisationKPI.year.desc(), OrganisationKPI.month.desc()).all()
 
             return kpis
 
@@ -78,11 +72,7 @@ class OrganisationKPIService:
     # ============= CRÉATION / MISE À JOUR =============
 
     async def create_or_update_kpi(
-        self,
-        organisation_id: int,
-        year: int,
-        month: int,
-        data: Dict[str, Any]
+        self, organisation_id: int, year: int, month: int, data: Dict[str, Any]
     ) -> OrganisationKPI:
         """
         Crée ou met à jour un KPI (upsert)
@@ -101,13 +91,17 @@ class OrganisationKPIService:
                 raise ValidationError(f"Invalid year: {year}. Must be between 2020 and 2100.")
 
             # Chercher un KPI existant
-            existing_kpi = self.db.query(OrganisationKPI).filter(
-                and_(
-                    OrganisationKPI.organisation_id == organisation_id,
-                    OrganisationKPI.year == year,
-                    OrganisationKPI.month == month
+            existing_kpi = (
+                self.db.query(OrganisationKPI)
+                .filter(
+                    and_(
+                        OrganisationKPI.organisation_id == organisation_id,
+                        OrganisationKPI.year == year,
+                        OrganisationKPI.month == month,
+                    )
                 )
-            ).first()
+                .first()
+            )
 
             if existing_kpi:
                 # Mise à jour
@@ -148,11 +142,7 @@ class OrganisationKPIService:
             logger.error(f"Error creating/updating KPI: {e}")
             raise
 
-    async def update_kpi(
-        self,
-        kpi_id: int,
-        data: Dict[str, Any]
-    ) -> OrganisationKPI:
+    async def update_kpi(self, kpi_id: int, data: Dict[str, Any]) -> OrganisationKPI:
         """Met à jour un KPI existant par son ID"""
         try:
             kpi = await self.get_kpi_by_id(kpi_id)
@@ -193,19 +183,16 @@ class OrganisationKPIService:
 
     # ============= AGRÉGATIONS =============
 
-    async def get_monthly_aggregate(
-        self, year: int, month: int
-    ) -> Dict[str, Any]:
+    async def get_monthly_aggregate(self, year: int, month: int) -> Dict[str, Any]:
         """
         Agrège les KPIs de toutes les organisations pour un mois donné
         """
         try:
-            kpis = self.db.query(OrganisationKPI).filter(
-                and_(
-                    OrganisationKPI.year == year,
-                    OrganisationKPI.month == month
-                )
-            ).all()
+            kpis = (
+                self.db.query(OrganisationKPI)
+                .filter(and_(OrganisationKPI.year == year, OrganisationKPI.month == month))
+                .all()
+            )
 
             total_rdv = sum(kpi.rdv_count for kpi in kpis)
             total_pitchs = sum(kpi.pitchs for kpi in kpis)
@@ -220,8 +207,7 @@ class OrganisationKPIService:
                 if kpi.commission_rate is not None and kpi.commission_rate > 0
             ]
             avg_commission_rate = (
-                sum(commission_rates) / len(commission_rates)
-                if commission_rates else 0.0
+                sum(commission_rates) / len(commission_rates) if commission_rates else 0.0
             )
 
             return {
@@ -240,9 +226,7 @@ class OrganisationKPIService:
             logger.error(f"Error getting monthly aggregate for {year}-{month}: {e}")
             raise
 
-    async def get_yearly_aggregate(
-        self, organisation_id: int, year: int
-    ) -> Dict[str, Any]:
+    async def get_yearly_aggregate(self, organisation_id: int, year: int) -> Dict[str, Any]:
         """
         Agrège les KPIs d'une organisation pour une année complète
         """
@@ -267,8 +251,7 @@ class OrganisationKPIService:
                 if kpi.commission_rate is not None and kpi.commission_rate > 0
             ]
             avg_commission_rate = (
-                sum(commission_rates) / len(commission_rates)
-                if commission_rates else 0.0
+                sum(commission_rates) / len(commission_rates) if commission_rates else 0.0
             )
 
             # Données mensuelles
@@ -307,5 +290,7 @@ class OrganisationKPIService:
         except ResourceNotFound:
             raise
         except Exception as e:
-            logger.error(f"Error getting yearly aggregate for org {organisation_id}, year {year}: {e}")
+            logger.error(
+                f"Error getting yearly aggregate for org {organisation_id}, year {year}: {e}"
+            )
             raise

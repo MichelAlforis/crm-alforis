@@ -19,19 +19,22 @@ from models.base import Base
 
 class UserRole(str, enum.Enum):
     """Énumération des rôles disponibles"""
-    ADMIN = "admin"           # Administrateur système
-    MANAGER = "manager"       # Manager d'équipe
-    USER = "user"             # Utilisateur standard
-    VIEWER = "viewer"         # Lecture seule
+
+    ADMIN = "admin"  # Administrateur système
+    MANAGER = "manager"  # Manager d'équipe
+    USER = "user"  # Utilisateur standard
+    VIEWER = "viewer"  # Lecture seule
 
 
 # Table d'association Role <-> Permission (many-to-many)
 role_permissions = Table(
-    'role_permissions',
+    "role_permissions",
     Base.metadata,
-    Column('role_id', Integer, ForeignKey('roles.id', ondelete='CASCADE'), primary_key=True),
-    Column('permission_id', Integer, ForeignKey('permissions.id', ondelete='CASCADE'), primary_key=True),
-    Column('created_at', DateTime, default=datetime.utcnow)
+    Column("role_id", Integer, ForeignKey("roles.id", ondelete="CASCADE"), primary_key=True),
+    Column(
+        "permission_id", Integer, ForeignKey("permissions.id", ondelete="CASCADE"), primary_key=True
+    ),
+    Column("created_at", DateTime, default=datetime.utcnow),
 )
 
 
@@ -42,6 +45,7 @@ class Role(Base):
     Chaque rôle a un ensemble de permissions qui définissent
     ce que les utilisateurs avec ce rôle peuvent faire.
     """
+
     __tablename__ = "roles"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -64,10 +68,7 @@ class Role(Base):
     # Relations
     # Utilisation de back_populates pour éviter les imports circulaires
     permissions = relationship(
-        "Permission",
-        secondary="role_permissions",
-        back_populates="roles",
-        lazy="selectin"
+        "Permission", secondary="role_permissions", back_populates="roles", lazy="selectin"
     )
     users = relationship("User", back_populates="role")
 
@@ -112,10 +113,7 @@ class Role(Base):
         Returns:
             list: Liste des actions permises ["create", "read", ...]
         """
-        return [
-            p.action for p in self.permissions
-            if p.resource == resource
-        ]
+        return [p.action for p in self.permissions if p.resource == resource]
 
     @classmethod
     def get_role_level(cls, role_name: str) -> int:

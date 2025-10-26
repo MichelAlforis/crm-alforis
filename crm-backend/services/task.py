@@ -130,18 +130,12 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
         active_statuses = [TaskStatus.TODO, TaskStatus.DOING]
 
         view_conditions = {
-            "overdue": and_(
-                self.model.due_date < today,
-                self.model.status.in_(active_statuses)
-            ),
-            "today": and_(
-                self.model.due_date == today,
-                self.model.status.in_(active_statuses)
-            ),
+            "overdue": and_(self.model.due_date < today, self.model.status.in_(active_statuses)),
+            "today": and_(self.model.due_date == today, self.model.status.in_(active_statuses)),
             "next7": and_(
                 self.model.due_date > today,
                 self.model.due_date <= today + timedelta(days=7),
-                self.model.status.in_(active_statuses)
+                self.model.status.in_(active_statuses),
             ),
         }
 
@@ -314,7 +308,9 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
             task,
             OrganisationActivityType.TASK_UPDATED,
             title=f"Tâche reportée • {task.title}",
-            preview=f"Nouvelle échéance {task.due_date.strftime('%d/%m/%Y')}" if task.due_date else None,
+            preview=(
+                f"Nouvelle échéance {task.due_date.strftime('%d/%m/%Y')}" if task.due_date else None
+            ),
             actor=actor,
             extra_metadata={"snoozed_days": days},
         )
@@ -346,7 +342,9 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
             title=f"Tâche terminée • {task.title}",
             preview=self._task_preview(task, ["Complétée"]),
             actor=actor,
-            extra_metadata={"completed_at": task.completed_at.isoformat() if task.completed_at else None},
+            extra_metadata={
+                "completed_at": task.completed_at.isoformat() if task.completed_at else None
+            },
         )
 
         logger.info(f"Task {task_id} marked as done and interaction created")

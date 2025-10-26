@@ -64,7 +64,9 @@ class PersonOrganizationLinkBase(BaseSchema):
     """Données communes pour un lien Personne <-> Organisation."""
 
     organisation_id: int = Field(..., ge=1, alias="organization_id")
-    organization_type: OrganizationType = Field(default=OrganizationType.CLIENT, alias="organization_type")
+    organization_type: OrganizationType = Field(
+        default=OrganizationType.CLIENT, alias="organization_type"
+    )
     role: PersonRole = Field(default=PersonRole.CONTACT_SECONDAIRE)
     is_primary: bool = Field(default=False)
     job_title: Optional[str] = Field(None, max_length=200)

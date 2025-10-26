@@ -17,6 +17,7 @@ router = APIRouter(prefix="/users", tags=["users"])
 
 class UpdateProfileRequest(BaseModel):
     """Requête de mise à jour du profil utilisateur."""
+
     full_name: Optional[str] = Field(None, max_length=255, description="Nom complet")
     email: Optional[str] = Field(None, description="Adresse email")
 
@@ -37,10 +38,7 @@ async def update_my_profile(
     # Récupérer l'utilisateur
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Utilisateur non trouvé"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Utilisateur non trouvé")
 
     # Mettre à jour les champs fournis
     if payload.full_name is not None:
@@ -48,14 +46,12 @@ async def update_my_profile(
 
     if payload.email is not None:
         # Vérifier si l'email n'est pas déjà utilisé
-        existing = db.query(User).filter(
-            User.email == payload.email.lower(),
-            User.id != user_id
-        ).first()
+        existing = (
+            db.query(User).filter(User.email == payload.email.lower(), User.id != user_id).first()
+        )
         if existing:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Cet email est déjà utilisé"
+                status_code=status.HTTP_400_BAD_REQUEST, detail="Cet email est déjà utilisé"
             )
         user.email = payload.email.lower()
 
@@ -67,7 +63,7 @@ async def update_my_profile(
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Erreur lors de la mise à jour: {str(e)}"
+            detail=f"Erreur lors de la mise à jour: {str(e)}",
         )
 
 
@@ -118,7 +114,12 @@ async def list_users(
     )
 
 
-@router.post("", response_model=UserResponse, status_code=status.HTTP_201_CREATED, dependencies=[Depends(require_admin())])
+@router.post(
+    "",
+    response_model=UserResponse,
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(require_admin())],
+)
 async def create_user(
     payload: UserCreate,
     db: Session = Depends(get_db),
@@ -188,7 +189,9 @@ async def update_user(
     return UserResponse(**user_dict)
 
 
-@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_admin())])
+@router.delete(
+    "/{user_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_admin())]
+)
 async def delete_user(
     user_id: int,
     hard_delete: bool = Query(False, description="Suppression définitive (sinon soft delete)"),

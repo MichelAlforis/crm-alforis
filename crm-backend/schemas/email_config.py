@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field, field_validator
 
 class EmailProviderEnum(str, Enum):
     """Fournisseurs d'email supportés"""
+
     RESEND = "resend"
     SENDGRID = "sendgrid"
     MAILGUN = "mailgun"
@@ -18,6 +19,7 @@ class EmailProviderEnum(str, Enum):
 
 class EmailConfigurationBase(BaseModel):
     """Schéma de base pour EmailConfiguration"""
+
     name: str = Field(..., min_length=1, max_length=100)
     description: Optional[str] = None
     provider: EmailProviderEnum
@@ -29,16 +31,17 @@ class EmailConfigurationBase(BaseModel):
     track_opens: bool = True
     track_clicks: bool = True
 
-    @field_validator('from_email', 'reply_to')
+    @field_validator("from_email", "reply_to")
     @classmethod
     def validate_email(cls, v: Optional[str]) -> Optional[str]:
-        if v and '@' not in v:
-            raise ValueError('Email invalide')
+        if v and "@" not in v:
+            raise ValueError("Email invalide")
         return v
 
 
 class EmailConfigurationCreate(EmailConfigurationBase):
     """Schéma pour créer une configuration email"""
+
     api_key: str = Field(..., min_length=10)  # Clé API en clair (sera cryptée)
     mailgun_domain: Optional[str] = None  # Seulement pour Mailgun
     is_active: bool = False
@@ -46,6 +49,7 @@ class EmailConfigurationCreate(EmailConfigurationBase):
 
 class EmailConfigurationUpdate(BaseModel):
     """Schéma pour mettre à jour une configuration email"""
+
     name: Optional[str] = Field(None, min_length=1, max_length=100)
     description: Optional[str] = None
     api_key: Optional[str] = Field(None, min_length=10)  # Si fourni, sera crypté
@@ -59,16 +63,17 @@ class EmailConfigurationUpdate(BaseModel):
     track_clicks: Optional[bool] = None
     is_active: Optional[bool] = None
 
-    @field_validator('from_email', 'reply_to')
+    @field_validator("from_email", "reply_to")
     @classmethod
     def validate_email(cls, v: Optional[str]) -> Optional[str]:
-        if v and '@' not in v:
-            raise ValueError('Email invalide')
+        if v and "@" not in v:
+            raise ValueError("Email invalide")
         return v
 
 
 class EmailConfigurationResponse(EmailConfigurationBase):
     """Schéma de réponse pour EmailConfiguration"""
+
     id: int
     is_active: bool
     created_at: datetime
@@ -86,18 +91,20 @@ class EmailConfigurationResponse(EmailConfigurationBase):
 
 class EmailConfigurationTestRequest(BaseModel):
     """Requête pour tester une configuration email"""
+
     test_email: str = Field(..., description="Email de destination pour le test")
 
-    @field_validator('test_email')
+    @field_validator("test_email")
     @classmethod
     def validate_test_email(cls, v: str) -> str:
-        if '@' not in v:
-            raise ValueError('Email invalide')
+        if "@" not in v:
+            raise ValueError("Email invalide")
         return v
 
 
 class EmailConfigurationTestResponse(BaseModel):
     """Réponse après test d'une configuration"""
+
     success: bool
     message: str
     provider: EmailProviderEnum

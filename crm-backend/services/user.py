@@ -70,27 +70,29 @@ class UserService(BaseService[User, UserCreate, UserUpdate]):
 
         # Vérifier unicité email si modifié
         if schema.email and schema.email.lower() != user.email:
-            existing = self.db.query(User).filter(
-                User.email == schema.email.lower(),
-                User.id != user_id
-            ).first()
+            existing = (
+                self.db.query(User)
+                .filter(User.email == schema.email.lower(), User.id != user_id)
+                .first()
+            )
             if existing:
                 raise ConflictError(f"L'email {schema.email} est déjà utilisé")
 
         # Vérifier unicité username si modifié
         if schema.username and schema.username != user.username:
-            existing = self.db.query(User).filter(
-                User.username == schema.username,
-                User.id != user_id
-            ).first()
+            existing = (
+                self.db.query(User)
+                .filter(User.username == schema.username, User.id != user_id)
+                .first()
+            )
             if existing:
                 raise ConflictError(f"Le nom d'utilisateur {schema.username} est déjà utilisé")
 
         # Mettre à jour les champs
-        update_data = schema.model_dump(exclude_unset=True, exclude={'password'})
+        update_data = schema.model_dump(exclude_unset=True, exclude={"password"})
 
         for field, value in update_data.items():
-            if field == 'email' and value:
+            if field == "email" and value:
                 setattr(user, field, value.lower())
             else:
                 setattr(user, field, value)
@@ -113,10 +115,7 @@ class UserService(BaseService[User, UserCreate, UserUpdate]):
         team_id: Optional[int] = None,
     ) -> Tuple[List[User], int]:
         """Liste tous les utilisateurs avec filtres."""
-        query = self.db.query(User).options(
-            joinedload(User.role),
-            joinedload(User.team)
-        )
+        query = self.db.query(User).options(joinedload(User.role), joinedload(User.team))
 
         if not include_inactive:
             query = query.filter(User.is_active == True)
@@ -139,14 +138,15 @@ class UserService(BaseService[User, UserCreate, UserUpdate]):
     ) -> Tuple[List[User], int]:
         """Rechercher des utilisateurs par email, username ou nom."""
         pattern = f"%{search_term}%"
-        query = self.db.query(User).options(
-            joinedload(User.role),
-            joinedload(User.team)
-        ).filter(
-            or_(
-                User.email.ilike(pattern),
-                User.username.ilike(pattern),
-                User.full_name.ilike(pattern),
+        query = (
+            self.db.query(User)
+            .options(joinedload(User.role), joinedload(User.team))
+            .filter(
+                or_(
+                    User.email.ilike(pattern),
+                    User.username.ilike(pattern),
+                    User.full_name.ilike(pattern),
+                )
             )
         )
 
@@ -156,10 +156,12 @@ class UserService(BaseService[User, UserCreate, UserUpdate]):
 
     async def get_by_id(self, user_id: int) -> User:
         """Récupérer un utilisateur par ID avec relations."""
-        user = self.db.query(User).options(
-            joinedload(User.role),
-            joinedload(User.team)
-        ).filter(User.id == user_id).first()
+        user = (
+            self.db.query(User)
+            .options(joinedload(User.role), joinedload(User.team))
+            .filter(User.id == user_id)
+            .first()
+        )
 
         if not user:
             raise ResourceNotFound("User", user_id)

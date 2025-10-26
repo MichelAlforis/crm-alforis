@@ -20,6 +20,7 @@ from core.config import settings
 # Sentry Configuration
 # ============================================================================
 
+
 def init_sentry():
     """
     Initialise Sentry pour le monitoring d'erreurs
@@ -37,43 +38,34 @@ def init_sentry():
 
     sentry_sdk.init(
         dsn=settings.sentry_dsn,
-
         # Environment
         environment=settings.environment,  # "production", "staging", "development"
-
         # Release tracking (pour suivre les versions)
         release=f"crm-backend@{settings.api_version}",
-
         # Intégrations
         integrations=[
             # FastAPI
             FastApiIntegration(
                 transaction_style="endpoint",  # Grouper par endpoint
             ),
-
             # SQLAlchemy
             SqlalchemyIntegration(),
-
             # Logging
             LoggingIntegration(
-                level=logging.INFO,        # Capturer INFO et plus
-                event_level=logging.ERROR  # Envoyer à Sentry si ERROR+
+                level=logging.INFO,  # Capturer INFO et plus
+                event_level=logging.ERROR,  # Envoyer à Sentry si ERROR+
             ),
         ],
-
         # Performance Monitoring (traces)
         traces_sample_rate=get_traces_sample_rate(),
-
         # Profiling (optionnel)
         profiles_sample_rate=0.1 if settings.environment == "production" else 0,
-
         # Filtrer les données sensibles
         before_send=filter_sensitive_data,
-
         # Options avancées
         attach_stacktrace=True,  # Stack trace même pour messages
         send_default_pii=False,  # Ne pas envoyer d'infos perso par défaut
-        max_breadcrumbs=50,      # Historique avant erreur
+        max_breadcrumbs=50,  # Historique avant erreur
     )
 
     logging.info(f"✅ Sentry initialisé - Env: {settings.environment}")
@@ -87,11 +79,11 @@ def get_traces_sample_rate() -> float:
         0.0 à 1.0 (% de requêtes à tracer)
     """
     if settings.environment == "production":
-        return 0.1   # 10% des requêtes en prod
+        return 0.1  # 10% des requêtes en prod
     elif settings.environment == "staging":
-        return 0.5   # 50% en staging
+        return 0.5  # 50% en staging
     else:
-        return 1.0   # 100% en dev
+        return 1.0  # 100% en dev
 
 
 def filter_sensitive_data(event, hint):
@@ -130,6 +122,7 @@ def filter_sensitive_data(event, hint):
 # User Context
 # ============================================================================
 
+
 def set_user_context(user_id: Optional[int] = None, email: Optional[str] = None):
     """
     Définit le contexte utilisateur pour Sentry
@@ -138,10 +131,12 @@ def set_user_context(user_id: Optional[int] = None, email: Optional[str] = None)
         user_id: ID de l'utilisateur
         email: Email de l'utilisateur
     """
-    sentry_sdk.set_user({
-        "id": user_id,
-        "email": email,
-    })
+    sentry_sdk.set_user(
+        {
+            "id": user_id,
+            "email": email,
+        }
+    )
 
 
 def clear_user_context():
@@ -152,6 +147,7 @@ def clear_user_context():
 # ============================================================================
 # Tags & Context
 # ============================================================================
+
 
 def set_transaction_context(name: str, operation: str = "http.request"):
     """
@@ -211,6 +207,7 @@ def capture_exception(exception: Exception, **extra):
 # Structured Logging
 # ============================================================================
 
+
 def init_structured_logging():
     """
     Initialise le logging structuré avec structlog
@@ -228,18 +225,14 @@ def init_structured_logging():
         processors=[
             # Ajouter le niveau de log
             structlog.stdlib.add_log_level,
-
             # Ajouter le timestamp
             structlog.processors.TimeStamper(fmt="iso"),
-
             # Ajouter le contexte
             structlog.processors.StackInfoRenderer(),
             structlog.processors.format_exc_info,
-
             # Formatter en JSON
-            structlog.processors.JSONRenderer()
+            structlog.processors.JSONRenderer(),
         ],
-
         # Utiliser le logging standard de Python
         wrapper_class=structlog.stdlib.BoundLogger,
         logger_factory=structlog.stdlib.LoggerFactory(),
@@ -257,8 +250,8 @@ def init_structured_logging():
     file_handler = RotatingFileHandler(
         filename=f"{log_dir}/app.log",
         maxBytes=10 * 1024 * 1024,  # 10 MB
-        backupCount=5,              # Garder 5 fichiers de backup
-        encoding="utf-8"
+        backupCount=5,  # Garder 5 fichiers de backup
+        encoding="utf-8",
     )
     file_handler.setLevel(log_level)
     file_handler.setFormatter(logging.Formatter("%(message)s"))
@@ -268,7 +261,7 @@ def init_structured_logging():
         filename=f"{log_dir}/error.log",
         maxBytes=10 * 1024 * 1024,  # 10 MB
         backupCount=5,
-        encoding="utf-8"
+        encoding="utf-8",
     )
     error_handler.setLevel(logging.ERROR)
     error_handler.setFormatter(logging.Formatter("%(message)s"))
@@ -279,10 +272,7 @@ def init_structured_logging():
     console_handler.setFormatter(logging.Formatter("%(message)s"))
 
     # Configuration finale
-    logging.basicConfig(
-        level=log_level,
-        handlers=[file_handler, error_handler, console_handler]
-    )
+    logging.basicConfig(level=log_level, handlers=[file_handler, error_handler, console_handler])
 
     logging.info("✅ Structured logging initialisé avec rotation (10MB x 5 fichiers)")
 
@@ -307,6 +297,7 @@ def get_logger(name: str = __name__):
 # ============================================================================
 # Performance Monitoring
 # ============================================================================
+
 
 class PerformanceMonitor:
     """
@@ -347,6 +338,7 @@ class PerformanceMonitor:
 # Health Check
 # ============================================================================
 
+
 def check_monitoring_health() -> dict:
     """
     Vérifie l'état du monitoring
@@ -363,7 +355,7 @@ def check_monitoring_health() -> dict:
         "logging": {
             "level": logging.getLevelName(logging.root.level),
             "structured": True,
-        }
+        },
     }
 
     return health

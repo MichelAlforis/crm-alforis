@@ -74,11 +74,7 @@ def _row_from_item(item: Any) -> Dict[str, Any]:
     elif hasattr(item, "to_dict"):
         source = item.to_dict()
     else:
-        source = {
-            key: value
-            for key, value in vars(item).items()
-            if not key.startswith("_")
-        }
+        source = {key: value for key, value in vars(item).items() if not key.startswith("_")}
     return {key: _normalize_value(value) for key, value in source.items()}
 
 
@@ -128,7 +124,7 @@ class ExportService:
         writer.writerows(rows)
 
         output = BytesIO()
-        output.write(b'\xef\xbb\xbf')  # UTF-8 BOM pour Excel
+        output.write(b"\xef\xbb\xbf")  # UTF-8 BOM pour Excel
         output.write(text_buffer.getvalue().encode("utf-8"))
         output.seek(0)
         return output
@@ -184,7 +180,7 @@ class ExportService:
         # Écrire données
         for row_idx, row_data in enumerate(rows, 2):
             for col_idx, field in enumerate(headers, 1):
-                value = row_data.get(field, '')
+                value = row_data.get(field, "")
                 ws.cell(row_idx, col_idx, value)
 
         # Auto-ajuster largeurs
@@ -220,8 +216,8 @@ class ExportService:
             getattr(org, "city", "") or "",
             getattr(org, "annual_revenue", ""),
             getattr(org, "employee_count", ""),
-            created_at.strftime('%Y-%m-%d') if created_at else '',
-            "Oui" if getattr(org, "is_active", False) else "Non"
+            created_at.strftime("%Y-%m-%d") if created_at else "",
+            "Oui" if getattr(org, "is_active", False) else "Non",
         ]
 
     @staticmethod
@@ -263,9 +259,18 @@ class ExportService:
 
         # En-têtes
         headers = [
-            "ID", "Nom", "Type", "Catégorie", "Pipeline",
-            "Email", "Téléphone", "Ville", "Revenus Annuels",
-            "Nb Employés", "Date Création", "Actif"
+            "ID",
+            "Nom",
+            "Type",
+            "Catégorie",
+            "Pipeline",
+            "Email",
+            "Téléphone",
+            "Ville",
+            "Revenus Annuels",
+            "Nb Employés",
+            "Date Création",
+            "Actif",
         ]
         ExportService._setup_excel_headers(ws_data, headers)
 
@@ -286,10 +291,10 @@ class ExportService:
             # Compter par catégorie
             category_counts = {}
             for org in organisations:
-                cat = getattr(org, 'category', 'Autre')
+                cat = getattr(org, "category", "Autre")
                 if isinstance(cat, enum.Enum):
                     cat = cat.value
-                category_counts[cat or 'Autre'] = category_counts.get(cat or 'Autre', 0) + 1
+                category_counts[cat or "Autre"] = category_counts.get(cat or "Autre", 0) + 1
 
             # Écrire stats
             ws_stats.cell(1, 1, "Catégorie").font = Font(bold=True)
@@ -351,36 +356,36 @@ class ExportService:
         # Styles
         styles = getSampleStyleSheet()
         title_style = ParagraphStyle(
-            'CustomTitle',
-            parent=styles['Heading1'],
+            "CustomTitle",
+            parent=styles["Heading1"],
             fontSize=24,
-            textColor=colors.HexColor('#2C3E50'),
+            textColor=colors.HexColor("#2C3E50"),
             spaceAfter=30,
             alignment=1,  # Center
         )
 
         heading_style = ParagraphStyle(
-            'CustomHeading',
-            parent=styles['Heading2'],
+            "CustomHeading",
+            parent=styles["Heading2"],
             fontSize=16,
-            textColor=colors.HexColor('#34495E'),
+            textColor=colors.HexColor("#34495E"),
             spaceAfter=12,
         )
 
         # Titre
         story.append(Paragraph(title, title_style))
-        story.append(Paragraph(
-            f"Généré le {datetime.now().strftime('%d/%m/%Y à %H:%M')}",
-            styles['Normal']
-        ))
+        story.append(
+            Paragraph(f"Généré le {datetime.now().strftime('%d/%m/%Y à %H:%M')}", styles["Normal"])
+        )
         story.append(Spacer(1, 20))
 
         # Résumé
         story.append(Paragraph("Résumé Exécutif", heading_style))
-        story.append(Paragraph(
-            f"Nombre total d'organisations: <b>{len(organisations)}</b>",
-            styles['Normal']
-        ))
+        story.append(
+            Paragraph(
+                f"Nombre total d'organisations: <b>{len(organisations)}</b>", styles["Normal"]
+            )
+        )
         story.append(Spacer(1, 10))
 
         active_count = sum(1 for org in organisations if org.is_active)
@@ -389,63 +394,78 @@ class ExportService:
         else:
             active_ratio = 0.0
 
-        story.append(Paragraph(
-            f"Organisations actives: <b>{active_count}</b> ({active_ratio:.1f}%)",
-            styles['Normal']
-        ))
+        story.append(
+            Paragraph(
+                f"Organisations actives: <b>{active_count}</b> ({active_ratio:.1f}%)",
+                styles["Normal"],
+            )
+        )
         story.append(Spacer(1, 20))
 
         # Table des organisations
         story.append(Paragraph("Liste des Organisations", heading_style))
 
         # Préparer données table
-        table_data = [['Nom', 'Type', 'Catégorie', 'Email', 'Actif']]
+        table_data = [["Nom", "Type", "Catégorie", "Email", "Actif"]]
 
         for org in organisations[:50]:  # Limiter à 50 pour PDF
-            org_type = getattr(org, 'type', '')
+            org_type = getattr(org, "type", "")
             if isinstance(org_type, enum.Enum):
                 org_type = org_type.value
-            category = getattr(org, 'category', '')
+            category = getattr(org, "category", "")
             if isinstance(category, enum.Enum):
                 category = category.value
-            email = getattr(org, 'email', '') or ''
+            email = getattr(org, "email", "") or ""
 
-            table_data.append([
-                (getattr(org, 'name', '') or '')[:30],
-                org_type,
-                category,
-                email[:25],
-                '✓' if getattr(org, 'is_active', False) else '✗',
-            ])
+            table_data.append(
+                [
+                    (getattr(org, "name", "") or "")[:30],
+                    org_type,
+                    category,
+                    email[:25],
+                    "✓" if getattr(org, "is_active", False) else "✗",
+                ]
+            )
 
         # Créer table
-        table = Table(table_data, colWidths=[2.5*inch, 1.2*inch, 1.2*inch, 1.8*inch, 0.5*inch])
-        table.setStyle(TableStyle([
-            # En-tête
-            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#34495E')),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('FONTSIZE', (0, 0), (-1, 0), 10),
-            ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
-
-            # Corps
-            ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
-            ('FONTSIZE', (0, 1), (-1, -1), 9),
-            ('ALIGN', (4, 1), (4, -1), 'CENTER'),
-
-            # Bordures
-            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
-            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#ECF0F1')]),
-        ]))
+        table = Table(
+            table_data, colWidths=[2.5 * inch, 1.2 * inch, 1.2 * inch, 1.8 * inch, 0.5 * inch]
+        )
+        table.setStyle(
+            TableStyle(
+                [
+                    # En-tête
+                    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#34495E")),
+                    ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+                    ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                    ("FONTSIZE", (0, 0), (-1, 0), 10),
+                    ("ALIGN", (0, 0), (-1, 0), "CENTER"),
+                    # Corps
+                    ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
+                    ("FONTSIZE", (0, 1), (-1, -1), 9),
+                    ("ALIGN", (4, 1), (4, -1), "CENTER"),
+                    # Bordures
+                    ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
+                    (
+                        "ROWBACKGROUNDS",
+                        (0, 1),
+                        (-1, -1),
+                        [colors.white, colors.HexColor("#ECF0F1")],
+                    ),
+                ]
+            )
+        )
 
         story.append(table)
 
         if len(organisations) > 50:
             story.append(Spacer(1, 10))
-            story.append(Paragraph(
-                f"<i>Note: Seules les 50 premières organisations sont affichées. Total: {len(organisations)}</i>",
-                styles['Normal']
-            ))
+            story.append(
+                Paragraph(
+                    f"<i>Note: Seules les 50 premières organisations sont affichées. Total: {len(organisations)}</i>",
+                    styles["Normal"],
+                )
+            )
 
         # Générer PDF
         doc.build(story)
@@ -475,27 +495,33 @@ class ExportService:
         styles = getSampleStyleSheet()
 
         # Titre
-        story.append(Paragraph("Rapport Mandats", styles['Title']))
+        story.append(Paragraph("Rapport Mandats", styles["Title"]))
         story.append(Spacer(1, 20))
 
         # Table
-        table_data = [['Numéro', 'Type', 'Status', 'Organisation', 'Montant']]
+        table_data = [["Numéro", "Type", "Status", "Organisation", "Montant"]]
 
         for mandat in mandats[:50]:
-            table_data.append([
-                mandat.number if hasattr(mandat, 'number') else '',
-                mandat.type if hasattr(mandat, 'type') else '',
-                mandat.status if hasattr(mandat, 'status') else '',
-                mandat.organisation.name if hasattr(mandat, 'organisation') else '',
-                f"{mandat.amount} €" if hasattr(mandat, 'amount') else '',
-            ])
+            table_data.append(
+                [
+                    mandat.number if hasattr(mandat, "number") else "",
+                    mandat.type if hasattr(mandat, "type") else "",
+                    mandat.status if hasattr(mandat, "status") else "",
+                    mandat.organisation.name if hasattr(mandat, "organisation") else "",
+                    f"{mandat.amount} €" if hasattr(mandat, "amount") else "",
+                ]
+            )
 
         table = Table(table_data)
-        table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black),
-        ]))
+        table.setStyle(
+            TableStyle(
+                [
+                    ("BACKGROUND", (0, 0), (-1, 0), colors.grey),
+                    ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+                    ("GRID", (0, 0), (-1, -1), 1, colors.black),
+                ]
+            )
+        )
 
         story.append(table)
 
@@ -508,6 +534,7 @@ class ExportService:
 # ============================================
 # Helpers Simplifiés
 # ============================================
+
 
 async def export_organisations_csv(
     organisations: List[Organisation],

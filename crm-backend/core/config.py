@@ -23,18 +23,22 @@ class Settings(BaseSettings):
     jwt_expiration_hours: int = 24
 
     # CORS - Accepte string ou list
-    allowed_origins: Union[str, List[str]] = ["http://localhost:3000", "http://localhost:3010", "http://localhost:5173"]
+    allowed_origins: Union[str, List[str]] = [
+        "http://localhost:3000",
+        "http://localhost:3010",
+        "http://localhost:5173",
+    ]
 
-    @field_validator('allowed_origins', mode='before')
+    @field_validator("allowed_origins", mode="before")
     @classmethod
     def parse_allowed_origins(cls, v):
         """Parser ALLOWED_ORIGINS depuis .env (string ou JSON)"""
         if isinstance(v, str):
             # Si c'est une string JSON, la parser
-            if v.startswith('['):
+            if v.startswith("["):
                 return json.loads(v)
             # Sinon, split par virgule
-            return [origin.strip() for origin in v.split(',')]
+            return [origin.strip() for origin in v.split(",")]
         return v
 
     # Files
@@ -113,9 +117,11 @@ class Settings(BaseSettings):
         env_file = ".env"
         case_sensitive = False
 
+
 @lru_cache()
 def get_settings() -> Settings:
     """Retourner une instance unique de Settings (singleton)"""
     return Settings()
+
 
 settings = get_settings()

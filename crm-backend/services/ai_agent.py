@@ -62,9 +62,7 @@ class AIAgentService:
 
     def _load_configuration(self) -> Optional[AIConfiguration]:
         """Charge la configuration active de l'agent IA"""
-        config = self.db.query(AIConfiguration).filter(
-            AIConfiguration.is_active == True
-        ).first()
+        config = self.db.query(AIConfiguration).filter(AIConfiguration.is_active == True).first()
 
         if not config:
             # Créer une configuration par défaut
@@ -141,6 +139,7 @@ class AIAgentService:
         api_key = None
         if self.config and self.config.encrypted_anthropic_key:
             from core.encryption import get_encryption_service
+
             encryption = get_encryption_service()
             try:
                 api_key = encryption.decrypt(self.config.encrypted_anthropic_key)
@@ -172,10 +171,9 @@ class AIAgentService:
                     "model": model,
                     "max_tokens": max_tokens,
                     "temperature": temperature,
-                    "system": system_prompt or "Tu es un assistant IA expert en gestion de données CRM.",
-                    "messages": [
-                        {"role": "user", "content": prompt}
-                    ],
+                    "system": system_prompt
+                    or "Tu es un assistant IA expert en gestion de données CRM.",
+                    "messages": [{"role": "user", "content": prompt}],
                 },
             )
             response.raise_for_status()
@@ -208,6 +206,7 @@ class AIAgentService:
         api_key = None
         if self.config and self.config.encrypted_openai_key:
             from core.encryption import get_encryption_service
+
             encryption = get_encryption_service()
             try:
                 api_key = encryption.decrypt(self.config.encrypted_openai_key)
@@ -238,7 +237,11 @@ class AIAgentService:
                     "max_tokens": max_tokens,
                     "temperature": temperature,
                     "messages": [
-                        {"role": "system", "content": system_prompt or "Tu es un assistant IA expert en gestion de données CRM."},
+                        {
+                            "role": "system",
+                            "content": system_prompt
+                            or "Tu es un assistant IA expert en gestion de données CRM.",
+                        },
                         {"role": "user", "content": prompt},
                     ],
                 },
@@ -311,12 +314,16 @@ class AIAgentService:
         """Récupère un résultat depuis le cache s'il existe et n'est pas expiré"""
         cache_key = self._get_cache_key(request_type, request_data)
 
-        cached = self.db.query(AICache).filter(
-            and_(
-                AICache.cache_key == cache_key,
-                AICache.expires_at > datetime.now(UTC),
+        cached = (
+            self.db.query(AICache)
+            .filter(
+                and_(
+                    AICache.cache_key == cache_key,
+                    AICache.expires_at > datetime.now(UTC),
+                )
             )
-        ).first()
+            .first()
+        )
 
         if cached:
             cached.increment_hit()
@@ -411,9 +418,7 @@ class AIAgentService:
             self.db.commit()
             raise
 
-    async def _detect_organisation_duplicates(
-        self, execution: AIExecution, limit: Optional[int]
-    ):
+    async def _detect_organisation_duplicates(self, execution: AIExecution, limit: Optional[int]):
         """Détecte les doublons d'organisations"""
         # Récupérer toutes les organisations actives
         query = self.db.query(Organisation).filter(Organisation.is_active == True)
@@ -428,7 +433,7 @@ class AIAgentService:
         duplicates_found = []
 
         for i, org1 in enumerate(organisations):
-            for org2 in organisations[i + 1:]:
+            for org2 in organisations[i + 1 :]:
                 # Vérifier cache
                 cache_request = {
                     "org1_id": org1.id,
@@ -483,7 +488,9 @@ class AIAgentService:
             execution.total_suggestions_created += 1
 
         self.db.commit()
-        self._log_execution(execution, "info", f"{len(duplicates_found)} doublons potentiels détectés")
+        self._log_execution(
+            execution, "info", f"{len(duplicates_found)} doublons potentiels détectés"
+        )
 
     async def _compare_organisations(
         self, org1: Organisation, org2: Organisation, execution: AIExecution
@@ -662,7 +669,9 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
             # Mise à jour métriques
             execution.total_prompt_tokens += result["prompt_tokens"]
             execution.total_completion_tokens += result["completion_tokens"]
-            execution.estimated_cost_usd = (execution.estimated_cost_usd or 0.0) + result["cost_usd"]
+            execution.estimated_cost_usd = (execution.estimated_cost_usd or 0.0) + result[
+                "cost_usd"
+            ]
 
         except json.JSONDecodeError:
             self._log_execution(execution, "error", f"Erreur parsing JSON pour org {org.id}")
@@ -841,11 +850,9 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
                 results.append({"suggestion_id": suggestion_id, "status": "success"})
                 successful += 1
             except Exception as e:
-                results.append({
-                    "suggestion_id": suggestion_id,
-                    "status": "failed",
-                    "error": str(e)
-                })
+                results.append(
+                    {"suggestion_id": suggestion_id, "status": "failed", "error": str(e)}
+                )
                 failed += 1
 
         return {
@@ -880,11 +887,9 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
                 results.append({"suggestion_id": suggestion_id, "status": "success"})
                 successful += 1
             except Exception as e:
-                results.append({
-                    "suggestion_id": suggestion_id,
-                    "status": "failed",
-                    "error": str(e)
-                })
+                results.append(
+                    {"suggestion_id": suggestion_id, "status": "failed", "error": str(e)}
+                )
                 failed += 1
 
         return {
@@ -923,7 +928,9 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
         changes_summary = []
 
         if suggestion.entity_type == "organisation":
-            org = self.db.query(Organisation).filter(Organisation.id == suggestion.entity_id).first()
+            org = (
+                self.db.query(Organisation).filter(Organisation.id == suggestion.entity_id).first()
+            )
             if org:
                 # Données actuelles
                 current_data = {
@@ -940,12 +947,14 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
                         old_value = current_data[field]
                         if old_value != new_value:
                             change_type = "update" if old_value else "add"
-                            changes_summary.append({
-                                "field": field,
-                                "from": old_value,
-                                "to": new_value,
-                                "type": change_type
-                            })
+                            changes_summary.append(
+                                {
+                                    "field": field,
+                                    "from": old_value,
+                                    "to": new_value,
+                                    "type": change_type,
+                                }
+                            )
 
         # Impact assessment
         impact = f"{len(changes_summary)} champ(s) seront modifié(s)"
@@ -975,8 +984,7 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
             Liste des suggestions
         """
         query = self.db.query(AISuggestion).filter(
-            AISuggestion.entity_type == entity_type,
-            AISuggestion.entity_id == entity_id
+            AISuggestion.entity_type == entity_type, AISuggestion.entity_id == entity_id
         )
 
         if status:
@@ -995,7 +1003,9 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
     def _apply_enrichment(self, suggestion: AISuggestion):
         """Applique un enrichissement de données"""
         if suggestion.entity_type == "organisation":
-            org = self.db.query(Organisation).filter(Organisation.id == suggestion.entity_id).first()
+            org = (
+                self.db.query(Organisation).filter(Organisation.id == suggestion.entity_id).first()
+            )
             if org:
                 for field, value in suggestion.suggestion_data.items():
                     if hasattr(org, field):
@@ -1016,18 +1026,22 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
         if execution.execution_logs is None:
             execution.execution_logs = []
 
-        execution.execution_logs.append({
-            "timestamp": datetime.now(UTC).isoformat(),
-            "level": level,
-            "message": message,
-        })
+        execution.execution_logs.append(
+            {
+                "timestamp": datetime.now(UTC).isoformat(),
+                "level": level,
+                "message": message,
+            }
+        )
 
     def get_statistics(self) -> Dict[str, Any]:
         """Retourne les statistiques globales de l'agent IA"""
         total_suggestions = self.db.query(func.count(AISuggestion.id)).scalar()
-        pending_suggestions = self.db.query(func.count(AISuggestion.id)).filter(
-            AISuggestion.status == AISuggestionStatus.PENDING
-        ).scalar()
+        pending_suggestions = (
+            self.db.query(func.count(AISuggestion.id))
+            .filter(AISuggestion.status == AISuggestionStatus.PENDING)
+            .scalar()
+        )
 
         total_executions = self.db.query(func.count(AIExecution.id)).scalar()
         total_cost = self.db.query(func.sum(AIExecution.estimated_cost_usd)).scalar() or 0.0

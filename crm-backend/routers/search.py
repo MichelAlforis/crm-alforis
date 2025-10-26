@@ -26,7 +26,9 @@ router = APIRouter(prefix="/search", tags=["search"])
 @router.get("")
 async def global_search(
     q: str = Query(..., min_length=2, description="Texte de recherche (min 2 caractères)"),
-    types: Optional[str] = Query(None, description="Types d'entités séparés par virgule (organisations,people,mandats)"),
+    types: Optional[str] = Query(
+        None, description="Types d'entités séparés par virgule (organisations,people,mandats)"
+    ),
     limit_per_type: int = Query(5, ge=1, le=20, description="Limite par type d'entité"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
@@ -110,13 +112,13 @@ async def search_organisations(
     # Construire filtres
     filters = {}
     if category:
-        filters['category'] = category
+        filters["category"] = category
     if city:
-        filters['city'] = city
+        filters["city"] = city
     if is_active is not None:
-        filters['is_active'] = is_active
+        filters["is_active"] = is_active
     if pipeline_stage:
-        filters['pipeline_stage'] = pipeline_stage
+        filters["pipeline_stage"] = pipeline_stage
 
     # Recherche
     results = SearchService.search_organisations(
@@ -204,7 +206,9 @@ async def search_mandats(
 @router.get("/autocomplete")
 async def autocomplete_endpoint(
     q: str = Query(..., min_length=2, description="Texte pour suggestions (min 2 chars)"),
-    type: str = Query("organisations", description="Type d'entité (organisations, people, mandats)"),
+    type: str = Query(
+        "organisations", description="Type d'entité (organisations, people, mandats)"
+    ),
     limit: int = Query(10, ge=1, le=50, description="Nombre max de suggestions"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),

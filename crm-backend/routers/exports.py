@@ -64,10 +64,22 @@ async def export_organisations_csv(
 
     # Export CSV with explicit columns (noms d'attributs Python, pas noms DB)
     headers = [
-        "id", "name", "type", "category", "pipeline_stage",
-        "email", "phone", "website", "address", "city",
-        "country_code", "language", "aum", "domicile",
-        "created_at", "is_active"
+        "id",
+        "name",
+        "type",
+        "category",
+        "pipeline_stage",
+        "email",
+        "phone",
+        "website",
+        "address",
+        "city",
+        "country_code",
+        "language",
+        "aum",
+        "domicile",
+        "created_at",
+        "is_active",
     ]
 
     buffer = ExportService.export_csv(
@@ -80,9 +92,7 @@ async def export_organisations_csv(
     return StreamingResponse(
         buffer,
         media_type="text/csv",
-        headers={
-            "Content-Disposition": "attachment; filename=organisations.csv"
-        }
+        headers={"Content-Disposition": "attachment; filename=organisations.csv"},
     )
 
 
@@ -139,9 +149,7 @@ async def export_organisations_excel(
     return StreamingResponse(
         buffer,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        headers={
-            "Content-Disposition": "attachment; filename=organisations.xlsx"
-        }
+        headers={"Content-Disposition": "attachment; filename=organisations.xlsx"},
     )
 
 
@@ -187,7 +195,7 @@ async def export_organisations_pdf(
 
     # Gérer current_user comme dict ou objet pour l'auteur du PDF
     if isinstance(current_user, dict):
-        author_name = current_user.get('username', current_user.get('email', 'CRM User'))
+        author_name = current_user.get("username", current_user.get("email", "CRM User"))
     else:
         author_name = current_user.username
 
@@ -203,9 +211,7 @@ async def export_organisations_pdf(
     return StreamingResponse(
         buffer,
         media_type="application/pdf",
-        headers={
-            "Content-Disposition": "attachment; filename=organisations.pdf"
-        }
+        headers={"Content-Disposition": "attachment; filename=organisations.pdf"},
     )
 
 
@@ -242,9 +248,15 @@ async def export_mandats_csv(
 
     # Export CSV with explicit columns
     headers = [
-        "id", "numero_mandat", "type", "status",
-        "date_debut", "date_fin", "organisation_id",
-        "created_at", "updated_at"
+        "id",
+        "numero_mandat",
+        "type",
+        "status",
+        "date_debut",
+        "date_fin",
+        "organisation_id",
+        "created_at",
+        "updated_at",
     ]
 
     buffer = ExportService.export_csv(
@@ -257,9 +269,7 @@ async def export_mandats_csv(
     return StreamingResponse(
         buffer,
         media_type="text/csv",
-        headers={
-            "Content-Disposition": "attachment; filename=mandats.csv"
-        }
+        headers={"Content-Disposition": "attachment; filename=mandats.csv"},
     )
 
 
@@ -312,9 +322,7 @@ async def export_mandats_pdf(
     return StreamingResponse(
         buffer,
         media_type="application/pdf",
-        headers={
-            "Content-Disposition": "attachment; filename=mandats.pdf"
-        }
+        headers={"Content-Disposition": "attachment; filename=mandats.pdf"},
     )
 
 
@@ -355,10 +363,21 @@ async def export_people_csv(
 
     # Export CSV with explicit columns (noms d'attributs Python)
     headers = [
-        "id", "first_name", "last_name", "role", "job_title",
-        "email", "personal_email", "phone", "personal_phone", "mobile",
-        "country_code", "language", "linkedin_url",
-        "created_at", "is_active"
+        "id",
+        "first_name",
+        "last_name",
+        "role",
+        "job_title",
+        "email",
+        "personal_email",
+        "phone",
+        "personal_phone",
+        "mobile",
+        "country_code",
+        "language",
+        "linkedin_url",
+        "created_at",
+        "is_active",
     ]
 
     buffer = ExportService.export_csv(
@@ -371,9 +390,7 @@ async def export_people_csv(
     return StreamingResponse(
         buffer,
         media_type="text/csv",
-        headers={
-            "Content-Disposition": "attachment; filename=people.csv"
-        }
+        headers={"Content-Disposition": "attachment; filename=people.csv"},
     )
 
 
@@ -418,9 +435,19 @@ async def export_people_excel(
 
     # Export Excel with explicit columns (noms d'attributs Python)
     headers = [
-        "id", "first_name", "last_name", "role", "job_title",
-        "email", "personal_email", "phone", "mobile",
-        "country_code", "language", "created_at", "is_active"
+        "id",
+        "first_name",
+        "last_name",
+        "role",
+        "job_title",
+        "email",
+        "personal_email",
+        "phone",
+        "mobile",
+        "country_code",
+        "language",
+        "created_at",
+        "is_active",
     ]
 
     buffer = ExportService.export_excel_simple(
@@ -434,9 +461,7 @@ async def export_people_excel(
     return StreamingResponse(
         buffer,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        headers={
-            "Content-Disposition": "attachment; filename=people.xlsx"
-        }
+        headers={"Content-Disposition": "attachment; filename=people.xlsx"},
     )
 
 
@@ -497,80 +522,82 @@ async def export_people_pdf(
     # Styles
     styles = getSampleStyleSheet()
     title_style = ParagraphStyle(
-        'CustomTitle',
-        parent=styles['Heading1'],
+        "CustomTitle",
+        parent=styles["Heading1"],
         fontSize=24,
-        textColor=colors.HexColor('#2C3E50'),
+        textColor=colors.HexColor("#2C3E50"),
         spaceAfter=30,
         alignment=1,
     )
     heading_style = ParagraphStyle(
-        'CustomHeading',
-        parent=styles['Heading2'],
+        "CustomHeading",
+        parent=styles["Heading2"],
         fontSize=16,
-        textColor=colors.HexColor('#34495E'),
+        textColor=colors.HexColor("#34495E"),
         spaceAfter=12,
     )
 
     # Titre
     story.append(Paragraph("Rapport Personnes Physiques", title_style))
-    story.append(Paragraph(
-        f"Généré le {datetime.now().strftime('%d/%m/%Y à %H:%M')}",
-        styles['Normal']
-    ))
+    story.append(
+        Paragraph(f"Généré le {datetime.now().strftime('%d/%m/%Y à %H:%M')}", styles["Normal"])
+    )
     story.append(Spacer(1, 20))
 
     # Résumé
     story.append(Paragraph("Résumé Exécutif", heading_style))
-    story.append(Paragraph(
-        f"Nombre total de personnes: <b>{len(people)}</b>",
-        styles['Normal']
-    ))
+    story.append(Paragraph(f"Nombre total de personnes: <b>{len(people)}</b>", styles["Normal"]))
     story.append(Spacer(1, 20))
 
     # Table des personnes
     story.append(Paragraph("Liste des Personnes", heading_style))
 
     # Préparer données table
-    table_data = [['Nom', 'Prénom', 'Rôle', 'Email', 'Pays']]
+    table_data = [["Nom", "Prénom", "Rôle", "Email", "Pays"]]
 
     for person in people[:50]:  # Limiter à 50 pour PDF
-        country = getattr(person, 'country_code', '') or ''
-        table_data.append([
-            (getattr(person, 'last_name', '') or '')[:20],
-            (getattr(person, 'first_name', '') or '')[:20],
-            (getattr(person, 'role', '') or '')[:25],
-            (getattr(person, 'personal_email', '') or '')[:30],
-            country,
-        ])
+        country = getattr(person, "country_code", "") or ""
+        table_data.append(
+            [
+                (getattr(person, "last_name", "") or "")[:20],
+                (getattr(person, "first_name", "") or "")[:20],
+                (getattr(person, "role", "") or "")[:25],
+                (getattr(person, "personal_email", "") or "")[:30],
+                country,
+            ]
+        )
 
     # Créer table
-    table = Table(table_data, colWidths=[1.5*inch, 1.5*inch, 1.8*inch, 2*inch, 0.8*inch])
-    table.setStyle(TableStyle([
-        # En-tête
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#34495E')),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, 0), 10),
-        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
-
-        # Corps
-        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 1), (-1, -1), 8),
-
-        # Bordures
-        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
-        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#ECF0F1')]),
-    ]))
+    table = Table(table_data, colWidths=[1.5 * inch, 1.5 * inch, 1.8 * inch, 2 * inch, 0.8 * inch])
+    table.setStyle(
+        TableStyle(
+            [
+                # En-tête
+                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#34495E")),
+                ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                ("FONTSIZE", (0, 0), (-1, 0), 10),
+                ("ALIGN", (0, 0), (-1, 0), "CENTER"),
+                # Corps
+                ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
+                ("FONTSIZE", (0, 1), (-1, -1), 8),
+                # Bordures
+                ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
+                ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#ECF0F1")]),
+            ]
+        )
+    )
 
     story.append(table)
 
     if len(people) > 50:
         story.append(Spacer(1, 10))
-        story.append(Paragraph(
-            f"<i>Note: Seules les 50 premières personnes sont affichées. Total: {len(people)}</i>",
-            styles['Normal']
-        ))
+        story.append(
+            Paragraph(
+                f"<i>Note: Seules les 50 premières personnes sont affichées. Total: {len(people)}</i>",
+                styles["Normal"],
+            )
+        )
 
     # Générer PDF
     doc.build(story)
@@ -579,7 +606,5 @@ async def export_people_pdf(
     return StreamingResponse(
         output,
         media_type="application/pdf",
-        headers={
-            "Content-Disposition": "attachment; filename=people.pdf"
-        }
+        headers={"Content-Disposition": "attachment; filename=people.pdf"},
     )

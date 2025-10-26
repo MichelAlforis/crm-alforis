@@ -15,20 +15,22 @@ from typing import List, Literal, Optional
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
 # Type littéral pour le type d'interaction (v1.1: ajout 'visio')
-InteractionType = Literal['call', 'email', 'meeting', 'visio', 'note', 'other']
+InteractionType = Literal["call", "email", "meeting", "visio", "note", "other"]
 
 # Type littéral pour le statut (v2: workflow inbox)
-InteractionStatus = Literal['todo', 'in_progress', 'done']
+InteractionStatus = Literal["todo", "in_progress", "done"]
 
 
 class Attachment(BaseModel):
     """Pièce jointe (URL uniquement, pas d'upload en v1)"""
+
     name: str = Field(..., min_length=1, max_length=255, description="Nom du fichier")
     url: str = Field(..., min_length=1, description="URL du fichier")
 
 
 class ParticipantIn(BaseModel):
     """Participant interne (personne du CRM)"""
+
     person_id: int = Field(..., gt=0, description="ID de la personne")
     role: Optional[str] = Field(None, max_length=80, description="Rôle (CEO, CTO, etc.)")
     present: bool = Field(True, description="Présent ou absent")
@@ -36,6 +38,7 @@ class ParticipantIn(BaseModel):
 
 class ExternalParticipant(BaseModel):
     """Participant externe (non dans le CRM)"""
+
     name: str = Field(..., min_length=1, max_length=255, description="Nom complet")
     email: Optional[EmailStr] = Field(None, description="Email (optionnel)")
     company: Optional[str] = Field(None, max_length=255, description="Entreprise (optionnel)")
@@ -43,23 +46,32 @@ class ExternalParticipant(BaseModel):
 
 class InteractionCreate(BaseModel):
     """Schéma de création d'une interaction"""
+
     org_id: Optional[int] = Field(None, gt=0, description="ID de l'organisation")
     person_id: Optional[int] = Field(None, gt=0, description="ID de la personne")
-    type: InteractionType = Field('note', description="Type d'interaction")
+    type: InteractionType = Field("note", description="Type d'interaction")
     title: str = Field(..., min_length=1, max_length=200, description="Titre de l'interaction")
     body: Optional[str] = Field(None, description="Description/notes détaillées")
-    attachments: List[Attachment] = Field(default_factory=list, description="Liste de pièces jointes")
+    attachments: List[Attachment] = Field(
+        default_factory=list, description="Liste de pièces jointes"
+    )
 
     # v1.1: Participants multiples
-    participants: Optional[List[ParticipantIn]] = Field(None, description="Participants internes (CRM)")
-    external_participants: Optional[List[ExternalParticipant]] = Field(None, description="Invités externes")
+    participants: Optional[List[ParticipantIn]] = Field(
+        None, description="Participants internes (CRM)"
+    )
+    external_participants: Optional[List[ExternalParticipant]] = Field(
+        None, description="Invités externes"
+    )
 
     # v2: Workflow inbox
-    status: InteractionStatus = Field('todo', description="Statut de l'interaction")
+    status: InteractionStatus = Field("todo", description="Statut de l'interaction")
     assignee_id: Optional[int] = Field(None, gt=0, description="Utilisateur assigné")
-    next_action_at: Optional[datetime] = Field(None, description="Date/heure de la prochaine action")
+    next_action_at: Optional[datetime] = Field(
+        None, description="Date/heure de la prochaine action"
+    )
 
-    @field_validator('org_id', 'person_id')
+    @field_validator("org_id", "person_id")
     @classmethod
     def validate_at_least_one(cls, v, info):
         """Valide qu'au moins org_id OU person_id est fourni"""
@@ -81,13 +93,14 @@ class InteractionCreate(BaseModel):
                 "body": "Discussion sur leurs besoins en CRM, très intéressés",
                 "attachments": [
                     {"name": "compte-rendu.pdf", "url": "https://example.com/files/cr.pdf"}
-                ]
+                ],
             }
         }
 
 
 class InteractionUpdate(BaseModel):
     """Schéma de mise à jour d'une interaction"""
+
     type: Optional[InteractionType] = None
     title: Optional[str] = Field(None, min_length=1, max_length=200)
     body: Optional[str] = None
@@ -106,13 +119,14 @@ class InteractionUpdate(BaseModel):
         json_schema_extra = {
             "example": {
                 "title": "Appel découverte produit (suivi)",
-                "body": "Décision positive, signature prévue mardi prochain"
+                "body": "Décision positive, signature prévue mardi prochain",
             }
         }
 
 
 class InteractionOut(BaseModel):
     """Schéma de réponse d'une interaction"""
+
     id: int
     org_id: Optional[int]
     person_id: Optional[int]
@@ -146,39 +160,39 @@ class InteractionOut(BaseModel):
                 "created_by": 1,
                 "created_at": "2025-10-24T14:30:00Z",
                 "updated_at": None,
-                "attachments": []
+                "attachments": [],
             }
         }
 
 
 class InteractionListResponse(BaseModel):
     """Réponse paginée d'interactions"""
+
     items: List[InteractionOut]
     total: int
     limit: int
     cursor: Optional[str] = None  # Cursor pour pagination (peut être l'ID du dernier élément)
 
     class Config:
-        json_schema_extra = {
-            "example": {
-                "items": [],
-                "total": 45,
-                "limit": 50,
-                "cursor": "123"
-            }
-        }
+        json_schema_extra = {"example": {"items": [], "total": 45, "limit": 50, "cursor": "123"}}
 
 
 # ===== V2: Schemas pour actions Inbox =====
 
+
 class InteractionStatusUpdate(BaseModel):
     """Update du statut uniquement"""
+
     status: InteractionStatus
+
 
 class InteractionAssigneeUpdate(BaseModel):
     """Update de l'assignee uniquement"""
+
     assignee_id: Optional[int] = Field(None, gt=0, description="User ID ou null pour désassigner")
+
 
 class InteractionNextActionUpdate(BaseModel):
     """Update de next_action_at uniquement"""
+
     next_action_at: Optional[datetime] = Field(None, description="Date/heure ou null pour retirer")

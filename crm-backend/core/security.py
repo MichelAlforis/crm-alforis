@@ -12,17 +12,21 @@ from core.exceptions import ForbiddenError, UnauthorizedError
 pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 security = HTTPBearer()
 
+
 def hash_password(password: str) -> str:
     """Hasher un mot de passe"""
     return pwd_context.hash(password)
+
 
 def get_password_hash(password: str) -> str:
     """Alias compatibilité legacy."""
     return hash_password(password)
 
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Vérifier un mot de passe contre son hash"""
     return pwd_context.verify(plain_password, hashed_password)
+
 
 def create_access_token(data: dict, expires_delta: timedelta = None) -> str:
     """Créer un token JWT"""
@@ -32,37 +36,32 @@ def create_access_token(data: dict, expires_delta: timedelta = None) -> str:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
         expire = datetime.now(timezone.utc) + timedelta(hours=settings.jwt_expiration_hours)
-    
+
     to_encode.update({"exp": expire})
-    
-    encoded_jwt = jwt.encode(
-        to_encode,
-        settings.secret_key,
-        algorithm=settings.jwt_algorithm
-    )
+
+    encoded_jwt = jwt.encode(to_encode, settings.secret_key, algorithm=settings.jwt_algorithm)
     return encoded_jwt
+
 
 def decode_token(token: str) -> dict:
     """Décoder et valider un token JWT"""
     try:
-        payload = jwt.decode(
-            token,
-            settings.secret_key,
-            algorithms=[settings.jwt_algorithm]
-        )
+        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_algorithm])
         return payload
     except JWTError as e:
         raise UnauthorizedError(f"Invalid token: {str(e)}")
+
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 security = HTTPBearer(auto_error=False)  # auto_error=False pour rendre l'auth optionnelle
 
+
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict:
     """
     Dependency pour vérifier le token et obtenir l'utilisateur
-    
+
     Usage:
         def my_endpoint(current_user: dict = Depends(get_current_user)):
             print(current_user)  # {'user_id': '...', 'email': '...', ...}
@@ -80,7 +79,7 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
             detail="Not authenticated",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     token = credentials.credentials
     try:
         payload = decode_token(token)
@@ -94,52 +93,64 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
             }
         raise
     user_id: str = payload.get("sub")
-    
+
     if user_id is None:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token payload"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload"
         )
-    
+
     return {"user_id": user_id, **payload}
 
-async def get_current_user_optional(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict:
+
+async def get_current_user_optional(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+) -> dict:
     """
     Dependency pour authentification OPTIONNELLE
-    
+
     Retourne les infos utilisateur si le token est valide,
     sinon retourne None (utile pour routes publiques avec data optionnelle)
     """
     if not credentials:
-        return {
-            "user_id": "dev-user",
-            "email": "dev@local",
-            "is_admin": True,
-            "environment": "debug",
-        } if settings.debug else None
-    
+        return (
+            {
+                "user_id": "dev-user",
+                "email": "dev@local",
+                "is_admin": True,
+                "environment": "debug",
+            }
+            if settings.debug
+            else None
+        )
+
     try:
         payload = decode_token(credentials.credentials)
         return {"user_id": payload.get("sub"), **payload}
     except Exception:
-        return {
-            "user_id": "dev-user",
-            "email": "dev@local",
-            "is_admin": True,
-            "environment": "debug",
-        } if settings.debug else None
+        return (
+            {
+                "user_id": "dev-user",
+                "email": "dev@local",
+                "is_admin": True,
+                "environment": "debug",
+            }
+            if settings.debug
+            else None
+        )
+
 
 async def verify_admin_user(current_user: dict = Depends(get_current_user)) -> dict:
     """Dependency pour vérifier que l'utilisateur est admin"""
     if not current_user.get("is_admin", False):
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Admin privileges required"
+            status_code=status.HTTP_403_FORBIDDEN, detail="Admin privileges required"
         )
     return current_user
 
 
-async def verify_webhook_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> bool:
+async def verify_webhook_token(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+) -> bool:
     """
     Dependency pour vérifier le token Bearer des webhooks externes (alforis.fr -> CRM).
 

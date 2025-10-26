@@ -29,6 +29,7 @@ def _extract_user_id(current_user: dict) -> Optional[int]:
 
 class SimpleRecipient(BaseModel):
     """Destinataire simplifié pour création rapide d'interaction."""
+
     email: Optional[str] = None
     name: Optional[str] = None
     person_id: Optional[int] = None
@@ -38,11 +39,14 @@ class SimpleRecipient(BaseModel):
 
 class SimpleInteractionCreate(BaseModel):
     """Schema simplifié pour créer une interaction rapidement."""
+
     organisation_id: int = Field(..., gt=0, description="ID de l'organisation")
     type: str = Field(..., description="Type: email, appel, reunion, dejeuner, note, autre")
     title: str = Field(..., min_length=1, max_length=500, description="Titre de l'interaction")
     description: Optional[str] = Field(None, description="Description détaillée")
-    recipients: Optional[List[SimpleRecipient]] = Field(default_factory=list, description="Destinataires/participants")
+    recipients: Optional[List[SimpleRecipient]] = Field(
+        default_factory=list, description="Destinataires/participants"
+    )
     metadata: Optional[dict] = Field(None, description="Métadonnées additionnelles")
     occurred_at: Optional[datetime] = Field(None, description="Date/heure de l'événement")
 
@@ -98,7 +102,7 @@ class SimpleInteractionCreate(BaseModel):
       "description": "Le client a validé le contrat, signature prévue mardi"
     }
     ```
-    """
+    """,
 )
 async def create_simple_interaction(
     interaction: SimpleInteractionCreate,
@@ -116,13 +120,14 @@ async def create_simple_interaction(
     """
     # Vérifier que l'organisation existe
     from services.organisation import OrganisationService
+
     org_service = OrganisationService(db)
     organisation = await org_service.get(interaction.organisation_id)
 
     if not organisation:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Organisation {interaction.organisation_id} not found"
+            detail=f"Organisation {interaction.organisation_id} not found",
         )
 
     # Convertir recipients en dict
@@ -132,7 +137,7 @@ async def create_simple_interaction(
             "name": r.name,
             "person_id": r.person_id,
             "role": r.role,
-            "is_organizer": r.is_organizer
+            "is_organizer": r.is_organizer,
         }
         for r in (interaction.recipients or [])
     ]
@@ -149,19 +154,18 @@ async def create_simple_interaction(
         recipients=recipients_dict,
         metadata=interaction.metadata,
         created_by=user_id,
-        occurred_at=interaction.occurred_at
+        occurred_at=interaction.occurred_at,
     )
 
     if not activity:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Failed to create interaction"
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Failed to create interaction"
         )
 
     # Émettre l'événement
     await emit_event(
         EventType.ACTIVITY_CREATED,
-        {"organisation_id": interaction.organisation_id, "activity_id": activity.id}
+        {"organisation_id": interaction.organisation_id, "activity_id": activity.id},
     )
 
     # Invalider le cache
@@ -194,11 +198,11 @@ async def create_simple_interaction(
                 notes=p.notes,
                 created_at=p.created_at,
                 updated_at=p.updated_at,
-                display_name=p.display_name
+                display_name=p.display_name,
             )
             for p in (activity.participants or [])
         ],
-        attachments_count=len(activity.attachments) if activity.attachments else 0
+        attachments_count=len(activity.attachments) if activity.attachments else 0,
     )
 
 
@@ -207,7 +211,7 @@ async def create_simple_interaction(
     response_model=ActivityWithParticipantsResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Créer interaction depuis un EmailSend",
-    description="Hook appelé automatiquement quand un email est envoyé via le système de campagne"
+    description="Hook appelé automatiquement quand un email est envoyé via le système de campagne",
 )
 async def create_interaction_from_email_send(
     send_id: int,
@@ -228,35 +232,31 @@ async def create_interaction_from_email_send(
 
     if not send:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"EmailSend {send_id} not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"EmailSend {send_id} not found"
         )
 
     if not send.organisation_id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="EmailSend must have an organisation_id to create interaction"
+            detail="EmailSend must have an organisation_id to create interaction",
         )
 
     # Créer l'interaction
     user_id = _extract_user_id(current_user)
     auto_creator = InteractionAutoCreatorService(db)
 
-    activity = await auto_creator.create_from_email_send(
-        email_send=send,
-        created_by=user_id
-    )
+    activity = await auto_creator.create_from_email_send(email_send=send, created_by=user_id)
 
     if not activity:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Failed to create interaction from email send"
+            detail="Failed to create interaction from email send",
         )
 
     # Émettre l'événement
     await emit_event(
         EventType.ACTIVITY_CREATED,
-        {"organisation_id": send.organisation_id, "activity_id": activity.id}
+        {"organisation_id": send.organisation_id, "activity_id": activity.id},
     )
 
     # Invalider le cache
@@ -289,9 +289,9 @@ async def create_interaction_from_email_send(
                 notes=p.notes,
                 created_at=p.created_at,
                 updated_at=p.updated_at,
-                display_name=p.display_name
+                display_name=p.display_name,
             )
             for p in (activity.participants or [])
         ],
-        attachments_count=len(activity.attachments) if activity.attachments else 0
+        attachments_count=len(activity.attachments) if activity.attachments else 0,
     )

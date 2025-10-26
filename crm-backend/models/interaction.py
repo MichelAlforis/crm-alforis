@@ -123,13 +123,12 @@ class Interaction(BaseModel):
     __table_args__ = (
         # Contrainte métier: au moins organisation OU personne
         CheckConstraint(
-            '(org_id IS NOT NULL) OR (person_id IS NOT NULL)',
-            name='chk_interaction_org_or_person'
+            "(org_id IS NOT NULL) OR (person_id IS NOT NULL)", name="chk_interaction_org_or_person"
         ),
         # Index pour requêtes optimisées
-        Index('idx_interactions_org_created_at', 'org_id', 'created_at'),
-        Index('idx_interactions_person_created_at', 'person_id', 'created_at'),
-        Index('idx_interactions_created_at', 'created_at'),
+        Index("idx_interactions_org_created_at", "org_id", "created_at"),
+        Index("idx_interactions_person_created_at", "person_id", "created_at"),
+        Index("idx_interactions_created_at", "created_at"),
     )
 
     # Relations avec Organisation/Personne (nullable)

@@ -1,4 +1,5 @@
 """Service pour gérer les listes de diffusion."""
+
 from datetime import UTC, datetime
 from typing import List, Optional
 
@@ -106,9 +107,7 @@ class MailingListService:
         """Obtenir des statistiques sur les listes."""
         total = self.db.query(func.count(MailingList.id)).scalar()
         active = (
-            self.db.query(func.count(MailingList.id))
-            .filter(MailingList.is_active == True)
-            .scalar()
+            self.db.query(func.count(MailingList.id)).filter(MailingList.is_active == True).scalar()
         )
         total_recipients = self.db.query(func.sum(MailingList.recipient_count)).scalar() or 0
 

@@ -174,7 +174,7 @@ class EmailCampaignService(BaseService[EmailCampaign, EmailCampaignCreate, Email
         # Au lieu de ça, on récupère directement les attributs du payload pour garder les objets Enum Python
         data = {}
         for field_name in payload.model_fields:
-            if field_name != 'steps':
+            if field_name != "steps":
                 field_value = getattr(payload, field_name, None)
                 if field_value is not None:
                     data[field_name] = field_value
@@ -218,7 +218,11 @@ class EmailCampaignService(BaseService[EmailCampaign, EmailCampaignCreate, Email
             if steps_payload is not None:
                 self._sync_steps(campaign, steps_payload)
             # Si default_template_id est défini et qu'il n'y a pas de steps existants, créer un step par défaut
-            elif "default_template_id" in data and campaign.default_template_id and not campaign.steps:
+            elif (
+                "default_template_id" in data
+                and campaign.default_template_id
+                and not campaign.steps
+            ):
                 default_steps = [
                     EmailCampaignStepCreate(
                         template_id=campaign.default_template_id,
@@ -241,7 +245,9 @@ class EmailCampaignService(BaseService[EmailCampaign, EmailCampaignCreate, Email
             logger.exception("email_campaign_update_failed: %s", exc)
             raise DatabaseError("Failed to update email campaign") from exc
 
-    def _sync_steps(self, campaign: EmailCampaign, steps_payload: Sequence[EmailCampaignStepCreate]) -> None:
+    def _sync_steps(
+        self, campaign: EmailCampaign, steps_payload: Sequence[EmailCampaignStepCreate]
+    ) -> None:
         """Synchroniser les steps d'une campagne."""
         existing = list(campaign.steps)
         for step in existing:
@@ -252,7 +258,11 @@ class EmailCampaignService(BaseService[EmailCampaign, EmailCampaignCreate, Email
             return
 
         for index, step_payload in enumerate(steps_payload, start=1):
-            step_data = step_payload.model_dump(exclude_unset=True) if hasattr(step_payload, "model_dump") else step_payload
+            step_data = (
+                step_payload.model_dump(exclude_unset=True)
+                if hasattr(step_payload, "model_dump")
+                else step_payload
+            )
             order_index = step_data.get("order_index") or index
             template_id = step_data.get("template_id") or campaign.default_template_id
             if not template_id:
@@ -308,7 +318,7 @@ class EmailCampaignService(BaseService[EmailCampaign, EmailCampaignCreate, Email
                 "campaign_id": campaign.id,
                 "count": len(specific_ids),
                 "target_type": target_type,
-            }
+            },
         )
 
 
@@ -318,7 +328,9 @@ class EmailDeliveryService:
     def __init__(self, db: Session):
         self.db = db
 
-    def schedule_campaign(self, campaign_id: int, payload: EmailCampaignScheduleRequest) -> Tuple[EmailCampaign, List[EmailSend]]:
+    def schedule_campaign(
+        self, campaign_id: int, payload: EmailCampaignScheduleRequest
+    ) -> Tuple[EmailCampaign, List[EmailSend]]:
         from models.email import EmailSendBatch
 
         campaign = (
@@ -351,7 +363,9 @@ class EmailDeliveryService:
             campaign_id=campaign_id,
             name=payload.name,
             status=batch_status,
-            scheduled_at=scheduled_at if payload.schedule_type == EmailScheduleType.SCHEDULED else None,
+            scheduled_at=(
+                scheduled_at if payload.schedule_type == EmailScheduleType.SCHEDULED else None
+            ),
             total_recipients=len(recipients),
         )
         self.db.add(batch)
@@ -360,7 +374,9 @@ class EmailDeliveryService:
         # Mettre à jour la campagne
         campaign.scheduled_at = scheduled_at
         campaign.timezone = payload.timezone or campaign.timezone
-        campaign.rate_limit_per_minute = payload.rate_limit_per_minute or campaign.rate_limit_per_minute
+        campaign.rate_limit_per_minute = (
+            payload.rate_limit_per_minute or campaign.rate_limit_per_minute
+        )
         campaign.schedule_type = payload.schedule_type
         campaign.audience_snapshot = (
             payload.audience_snapshot.model_dump() if payload.audience_snapshot else None
@@ -374,7 +390,9 @@ class EmailDeliveryService:
 
         created_sends: List[EmailSend] = []
         for recipient in recipients:
-            send_created = self._create_sends_for_recipient(campaign, recipient, scheduled_at, batch.id)
+            send_created = self._create_sends_for_recipient(
+                campaign, recipient, scheduled_at, batch.id
+            )
             created_sends.extend(send_created)
 
         try:
@@ -398,16 +416,17 @@ class EmailDeliveryService:
             logger.exception("email_campaign_schedule_failed: %s", exc)
             raise DatabaseError("Failed to schedule email campaign") from exc
 
-    def _assign_ab_test_variant(self, campaign: EmailCampaign, recipient: EmailRecipient) -> Optional[EmailVariant]:
+    def _assign_ab_test_variant(
+        self, campaign: EmailCampaign, recipient: EmailRecipient
+    ) -> Optional[EmailVariant]:
         """Détermine la variante A/B test pour un destinataire."""
         if not campaign.is_ab_test:
             return None
 
         split = campaign.ab_test_split_percentage or 50
         token_source = (
-            (recipient.email or "").lower()
-            or f"{recipient.person_id or ''}:{recipient.organisation_id or ''}:{recipient.full_name or ''}"
-        )
+            recipient.email or ""
+        ).lower() or f"{recipient.person_id or ''}:{recipient.organisation_id or ''}:{recipient.full_name or ''}"
         digest = hashlib.sha1(token_source.encode("utf-8")).hexdigest()
         bucket = int(digest[:2], 16) % 100
         return EmailVariant.A if bucket < split else EmailVariant.B
@@ -431,7 +450,9 @@ class EmailDeliveryService:
             "recipient": recipient.custom_data or {},
         }
 
-    def _should_skip_step(self, step, campaign: EmailCampaign, assigned_variant: Optional[EmailVariant]) -> bool:
+    def _should_skip_step(
+        self, step, campaign: EmailCampaign, assigned_variant: Optional[EmailVariant]
+    ) -> bool:
         """Détermine si une étape doit être ignorée (A/B test filtering)."""
         return (
             step.variant
@@ -457,7 +478,11 @@ class EmailDeliveryService:
 
             delay = step.delay_hours or 0
             send_time = scheduled_at + timedelta(hours=delay)
-            status = EmailSendStatus.QUEUED if send_time <= datetime.now(UTC) else EmailSendStatus.SCHEDULED
+            status = (
+                EmailSendStatus.QUEUED
+                if send_time <= datetime.now(UTC)
+                else EmailSendStatus.SCHEDULED
+            )
             variant = step.variant or assigned_variant
 
             send = EmailSend(
@@ -498,8 +523,16 @@ class EmailDeliveryService:
         if not send:
             raise ResourceNotFound("EmailSend", send_id)
 
-        if send.status in {EmailSendStatus.SENT, EmailSendStatus.DELIVERED, EmailSendStatus.CLICKED, EmailSendStatus.OPENED}:
-            logger.info("email_send_already_processed", extra={"send_id": send.id, "status": send.status.value})
+        if send.status in {
+            EmailSendStatus.SENT,
+            EmailSendStatus.DELIVERED,
+            EmailSendStatus.CLICKED,
+            EmailSendStatus.OPENED,
+        }:
+            logger.info(
+                "email_send_already_processed",
+                extra={"send_id": send.id, "status": send.status.value},
+            )
             return send
 
         # ⚠️ RGPD: Vérifier si le destinataire s'est désabonné
@@ -511,18 +544,24 @@ class EmailDeliveryService:
         # 1. Vérifier Person.email_unsubscribed
         if send.recipient_person and send.recipient_person.email_unsubscribed:
             is_unsubscribed = True
-            unsubscribe_reason = f"Person {send.recipient_person.id} a le flag email_unsubscribed = True"
+            unsubscribe_reason = (
+                f"Person {send.recipient_person.id} a le flag email_unsubscribed = True"
+            )
 
         # 2. Vérifier Organisation.email_unsubscribed
         if send.organisation and send.organisation.email_unsubscribed:
             is_unsubscribed = True
-            unsubscribe_reason = f"Organisation {send.organisation.id} a le flag email_unsubscribed = True"
+            unsubscribe_reason = (
+                f"Organisation {send.organisation.id} a le flag email_unsubscribed = True"
+            )
 
         # 3. Vérifier la blacklist globale unsubscribed_emails
         if send.recipient_email and not is_unsubscribed:
-            unsubscribed_entry = self.db.query(UnsubscribedEmail).filter(
-                UnsubscribedEmail.email == send.recipient_email.lower()
-            ).first()
+            unsubscribed_entry = (
+                self.db.query(UnsubscribedEmail)
+                .filter(UnsubscribedEmail.email == send.recipient_email.lower())
+                .first()
+            )
             if unsubscribed_entry:
                 is_unsubscribed = True
                 unsubscribe_reason = f"Email dans la blacklist globale (unsubscribed_at: {unsubscribed_entry.unsubscribed_at})"
@@ -530,14 +569,16 @@ class EmailDeliveryService:
         # Si désabonné, marquer comme FAILED et ne pas envoyer
         if is_unsubscribed:
             send.status = EmailSendStatus.FAILED
-            send.error_message = f"RGPD: Email bloqué - Destinataire désabonné. {unsubscribe_reason}"
+            send.error_message = (
+                f"RGPD: Email bloqué - Destinataire désabonné. {unsubscribe_reason}"
+            )
             logger.warning(
                 "email_send_blocked_unsubscribed",
                 extra={
                     "send_id": send.id,
                     "recipient_email": send.recipient_email,
-                    "reason": unsubscribe_reason
-                }
+                    "reason": unsubscribe_reason,
+                },
             )
             self.db.add(send)
             self.db.commit()
@@ -550,7 +591,11 @@ class EmailDeliveryService:
 
         context = self._build_context(send)
         html_content = render_dynamic_content(template.html_content, context)
-        subject = send.step.subject if send.step and send.step.subject else send.campaign.subject or template.subject
+        subject = (
+            send.step.subject
+            if send.step and send.step.subject
+            else send.campaign.subject or template.subject
+        )
 
         send.status = EmailSendStatus.SENDING
         send.error_message = None
@@ -581,11 +626,7 @@ class EmailDeliveryService:
             return send.step.template
         if send.campaign.default_template:
             return send.campaign.default_template
-        return (
-            self.db.query(EmailTemplate)
-            .filter(EmailTemplate.id == send.template_id)
-            .first()
-        )
+        return self.db.query(EmailTemplate).filter(EmailTemplate.id == send.template_id).first()
 
     def _build_context(self, send: EmailSend) -> Dict[str, Any]:
         context = send.metadata.get("context", {}) if send.metadata else {}
@@ -619,7 +660,9 @@ class EmailDeliveryService:
         # Utiliser le secret partagé avec alforis.fr (pas le SECRET_KEY principal du CRM)
         unsubscribe_secret = settings.unsubscribe_jwt_secret
         if not unsubscribe_secret:
-            logger.warning("UNSUBSCRIBE_JWT_SECRET non configuré, utilisation du SECRET_KEY par défaut")
+            logger.warning(
+                "UNSUBSCRIBE_JWT_SECRET non configuré, utilisation du SECRET_KEY par défaut"
+            )
             unsubscribe_secret = settings.secret_key
 
         # Token avec expiration longue (1 an) pour permettre désabonnement tardif
@@ -629,10 +672,10 @@ class EmailDeliveryService:
                 "email": send.recipient_email,
                 "send_id": send.id,
                 "type": "unsubscribe",
-                "exp": expire
+                "exp": expire,
             },
             unsubscribe_secret,
-            algorithm="HS256"
+            algorithm="HS256",
         )
         unsubscribe_url = f"{unsubscribe_base}{separator}token={unsubscribe_token}"
         system_ctx.setdefault("unsubscribe_url", unsubscribe_url)
@@ -672,7 +715,9 @@ class EmailDeliveryService:
 
         return None, None
 
-    def _send_via_sendgrid(self, send: EmailSend, subject: str, html_content: str) -> Dict[str, Any]:
+    def _send_via_sendgrid(
+        self, send: EmailSend, subject: str, html_content: str
+    ) -> Dict[str, Any]:
         api_key, _ = self._get_api_credentials(EmailProvider.SENDGRID)
 
         if not api_key:
@@ -710,7 +755,11 @@ class EmailDeliveryService:
         try:
             client = SendGridAPIClient(api_key)
             response = client.send(mail)
-            message_id = response.headers.get(SENDGRID_HEADER_MESSAGE_ID) if response and response.headers else None
+            message_id = (
+                response.headers.get(SENDGRID_HEADER_MESSAGE_ID)
+                if response and response.headers
+                else None
+            )
             if message_id:
                 send.provider_message_id = message_id
             send.status = EmailSendStatus.SENT
@@ -725,7 +774,10 @@ class EmailDeliveryService:
                     "status_code": getattr(response, "status_code", None),
                 },
             )
-            return {"message_id": send.provider_message_id, "status_code": getattr(response, "status_code", None)}
+            return {
+                "message_id": send.provider_message_id,
+                "status_code": getattr(response, "status_code", None),
+            }
         except Exception as exc:
             send.status = EmailSendStatus.FAILED
             send.error_message = str(exc)
@@ -751,9 +803,15 @@ class EmailDeliveryService:
             "to": [send.recipient_email],
             "subject": subject,
             "html": html_content,
-            "o:tracking": "yes" if send.campaign.track_opens or send.campaign.track_clicks else "no",
+            "o:tracking": (
+                "yes" if send.campaign.track_opens or send.campaign.track_clicks else "no"
+            ),
             "o:tag": [f"campaign:{send.campaign_id}"],
-            "o:deliverytime": send.scheduled_at.isoformat() if send.scheduled_at and send.scheduled_at > datetime.now(UTC) else None,
+            "o:deliverytime": (
+                send.scheduled_at.isoformat()
+                if send.scheduled_at and send.scheduled_at > datetime.now(UTC)
+                else None
+            ),
             "o:tracking-clicks": "yes" if send.campaign.track_clicks else "no",
             "o:tracking-opens": "yes" if send.campaign.track_opens else "no",
             "v:campaign_id": str(send.campaign_id),
@@ -849,11 +907,7 @@ class EmailAnalyticsService:
         self.db = db
 
     def get_campaign_stats(self, campaign_id: int) -> EmailCampaignStatsResponse:
-        campaign = (
-            self.db.query(EmailCampaign)
-            .filter(EmailCampaign.id == campaign_id)
-            .first()
-        )
+        campaign = self.db.query(EmailCampaign).filter(EmailCampaign.id == campaign_id).first()
         if not campaign:
             raise ResourceNotFound("EmailCampaign", campaign_id)
 
@@ -932,10 +986,18 @@ class EmailAnalyticsService:
             self.db.query(
                 EmailSend.variant,
                 func.count(EmailSend.id).label("total_sent"),
-                func.sum(case((EmailEvent.event_type == EmailEventType.OPENED, 1), else_=0)).label("opens"),
-                func.sum(case((EmailEvent.event_type == EmailEventType.CLICKED, 1), else_=0)).label("clicks"),
-                func.sum(case((EmailEvent.event_type == EmailEventType.BOUNCED, 1), else_=0)).label("bounces"),
-                func.sum(case((EmailEvent.event_type == EmailEventType.UNSUBSCRIBED, 1), else_=0)).label("unsubs"),
+                func.sum(case((EmailEvent.event_type == EmailEventType.OPENED, 1), else_=0)).label(
+                    "opens"
+                ),
+                func.sum(case((EmailEvent.event_type == EmailEventType.CLICKED, 1), else_=0)).label(
+                    "clicks"
+                ),
+                func.sum(case((EmailEvent.event_type == EmailEventType.BOUNCED, 1), else_=0)).label(
+                    "bounces"
+                ),
+                func.sum(
+                    case((EmailEvent.event_type == EmailEventType.UNSUBSCRIBED, 1), else_=0)
+                ).label("unsubs"),
             )
             .outerjoin(EmailEvent, EmailEvent.send_id == EmailSend.id)
             .filter(
@@ -1051,9 +1113,7 @@ class EmailEventIngestionService:
             message_id = message_id.split(".")[0]
         if message_id:
             send = (
-                self.db.query(EmailSend)
-                .filter(EmailSend.provider_message_id == message_id)
-                .first()
+                self.db.query(EmailSend).filter(EmailSend.provider_message_id == message_id).first()
             )
             if send:
                 return send

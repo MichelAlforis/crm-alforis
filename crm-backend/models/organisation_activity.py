@@ -64,9 +64,15 @@ class OrganisationActivity(BaseModel):
     )
     title = Column(String(500), nullable=True)
     description = Column(Text, nullable=True)
-    activity_metadata = Column("metadata", JSON, nullable=True)  # Renommé: 'metadata' est réservé par SQLAlchemy
-    created_by = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True, index=True)
-    occurred_at = Column(DateTime(timezone=True), nullable=False, default=datetime.utcnow, index=True)
+    activity_metadata = Column(
+        "metadata", JSON, nullable=True
+    )  # Renommé: 'metadata' est réservé par SQLAlchemy
+    created_by = Column(
+        Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True, index=True
+    )
+    occurred_at = Column(
+        DateTime(timezone=True), nullable=False, default=datetime.utcnow, index=True
+    )
 
     organisation = relationship("Organisation", back_populates="activities")
 

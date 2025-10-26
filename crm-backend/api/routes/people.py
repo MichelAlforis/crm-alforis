@@ -144,10 +144,7 @@ async def list_person_organisations(
 ):
     link_service = PersonOrganizationLinkService(db)
     links = await link_service.list_for_person(person_id)
-    return [
-        PersonOrganizationLinkResponse.model_validate(link)
-        for link in links
-    ]
+    return [PersonOrganizationLinkResponse.model_validate(link) for link in links]
 
 
 @router.put("/{person_id}", response_model=PersonResponse)

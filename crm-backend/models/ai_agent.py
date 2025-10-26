@@ -21,8 +21,10 @@ from models.base import BaseModel
 # Enums
 # ======================
 
+
 class AISuggestionType(str, enum.Enum):
     """Types de suggestions de l'IA"""
+
     DUPLICATE_DETECTION = "duplicate_detection"  # Détection de doublons
     DATA_ENRICHMENT = "data_enrichment"  # Enrichissement de données
     DATA_QUALITY = "data_quality"  # Contrôle qualité
@@ -34,6 +36,7 @@ class AISuggestionType(str, enum.Enum):
 
 class AISuggestionStatus(str, enum.Enum):
     """Statut d'une suggestion"""
+
     PENDING = "pending"  # En attente de validation
     APPROVED = "approved"  # Approuvée par l'utilisateur
     REJECTED = "rejected"  # Rejetée par l'utilisateur
@@ -43,6 +46,7 @@ class AISuggestionStatus(str, enum.Enum):
 
 class AIExecutionStatus(str, enum.Enum):
     """Statut d'exécution de l'agent IA"""
+
     PENDING = "pending"  # En file d'attente
     RUNNING = "running"  # En cours d'exécution
     SUCCESS = "success"  # Succès
@@ -53,6 +57,7 @@ class AIExecutionStatus(str, enum.Enum):
 
 class AITaskType(str, enum.Enum):
     """Types de tâches IA"""
+
     DUPLICATE_SCAN = "duplicate_scan"  # Scan de doublons
     BULK_ENRICHMENT = "bulk_enrichment"  # Enrichissement en masse
     QUALITY_CHECK = "quality_check"  # Vérification qualité
@@ -62,6 +67,7 @@ class AITaskType(str, enum.Enum):
 
 class AIProvider(str, enum.Enum):
     """Fournisseurs d'API IA"""
+
     CLAUDE = "claude"  # Anthropic Claude
     OPENAI = "openai"  # OpenAI GPT
     OLLAMA = "ollama"  # Ollama (local)
@@ -72,6 +78,7 @@ class AIProvider(str, enum.Enum):
 # Modèles
 # ======================
 
+
 class AISuggestion(BaseModel):
     """
     Suggestions générées par l'agent IA
@@ -79,11 +86,14 @@ class AISuggestion(BaseModel):
     Stocke toutes les suggestions faites par l'IA qui nécessitent
     une validation manuelle ou qui ont été appliquées automatiquement.
     """
+
     __tablename__ = "ai_suggestions"
 
     # Type et statut
     type = Column(SQLEnum(AISuggestionType), nullable=False, index=True)
-    status = Column(SQLEnum(AISuggestionStatus), nullable=False, default=AISuggestionStatus.PENDING, index=True)
+    status = Column(
+        SQLEnum(AISuggestionStatus), nullable=False, default=AISuggestionStatus.PENDING, index=True
+    )
 
     # Entité concernée
     entity_type = Column(String(50), nullable=False, index=True)  # organisation, person, etc.
@@ -130,11 +140,14 @@ class AIExecution(BaseModel):
     - Résultats et métriques
     - Erreurs éventuelles
     """
+
     __tablename__ = "ai_executions"
 
     # Type de tâche
     task_type = Column(SQLEnum(AITaskType), nullable=False, index=True)
-    status = Column(SQLEnum(AIExecutionStatus), nullable=False, default=AIExecutionStatus.PENDING, index=True)
+    status = Column(
+        SQLEnum(AIExecutionStatus), nullable=False, default=AIExecutionStatus.PENDING, index=True
+    )
 
     # Configuration
     config = Column(JSON, nullable=True)  # Configuration utilisée pour l'exécution
@@ -186,6 +199,7 @@ class AIConfiguration(BaseModel):
     - Règles d'auto-application
     - Préférences utilisateur
     """
+
     __tablename__ = "ai_configurations"
 
     # Identification
@@ -202,7 +216,9 @@ class AIConfiguration(BaseModel):
 
     # Règles d'auto-application
     auto_apply_enabled = Column(Boolean, default=False)
-    auto_apply_confidence_threshold = Column(Float, default=0.95)  # Seuil de confiance pour auto-appliquer
+    auto_apply_confidence_threshold = Column(
+        Float, default=0.95
+    )  # Seuil de confiance pour auto-appliquer
 
     # Seuils de détection
     duplicate_similarity_threshold = Column(Float, default=0.85)  # Similarité pour doublons
@@ -250,6 +266,7 @@ class AICache(BaseModel):
     Stocke les résultats d'appels IA fréquents pour éviter
     de réinterroger l'API pour les mêmes requêtes.
     """
+
     __tablename__ = "ai_cache"
 
     # Clé de cache (hash de la requête)

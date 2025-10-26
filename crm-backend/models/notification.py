@@ -67,9 +67,13 @@ class Notification(BaseModel):
     __tablename__ = "notifications"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_CASCADE), nullable=False, index=True)
+    user_id = Column(
+        Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_CASCADE), nullable=False, index=True
+    )
 
-    type = Column(SQLEnum(NotificationType, name=ENUM_NOTIFICATION_TYPE), nullable=False, index=True)
+    type = Column(
+        SQLEnum(NotificationType, name=ENUM_NOTIFICATION_TYPE), nullable=False, index=True
+    )
     priority = Column(
         SQLEnum(NotificationPriority, name=ENUM_NOTIFICATION_PRIORITY),
         nullable=False,
@@ -89,9 +93,12 @@ class Notification(BaseModel):
     archived_at = Column(DateTime(timezone=True), nullable=True)
 
     expires_at = Column(DateTime(timezone=True), nullable=True)
-    created_at = Column(DateTime(timezone=True), default=datetime.utcnow, nullable=False, index=True)
+    created_at = Column(
+        DateTime(timezone=True), default=datetime.utcnow, nullable=False, index=True
+    )
 
     user = relationship("User", back_populates="notifications")
+
     def __init__(self, **kwargs):
         metadata = kwargs.pop("metadata", None)
         super().__init__(**kwargs)
@@ -174,13 +181,13 @@ class Notification(BaseModel):
 NOTIFICATION_TEMPLATES: Dict[NotificationType, Dict[str, Any]] = {
     NotificationType.TASK_ASSIGNED: {
         "title": "Nouvelle tâche : {task_title}",
-        "message": "{assigner_name} vous a assigné la tâche \"{task_title}\"",
+        "message": '{assigner_name} vous a assigné la tâche "{task_title}"',
         "link": "/dashboard/tasks/{task_id}",
         "priority": NotificationPriority.HIGH,
     },
     NotificationType.TASK_DUE: {
         "title": "Tâche en retard : {task_title}",
-        "message": "La tâche \"{task_title}\" est échue depuis le {due_date}",
+        "message": 'La tâche "{task_title}" est échue depuis le {due_date}',
         "link": "/dashboard/tasks/{task_id}",
         "priority": NotificationPriority.HIGH,
     },
@@ -204,7 +211,7 @@ NOTIFICATION_TEMPLATES: Dict[NotificationType, Dict[str, Any]] = {
     },
     NotificationType.EXPORT_READY: {
         "title": "Export prêt au téléchargement",
-        "message": "Votre export \"{export_name}\" est prêt.",
+        "message": 'Votre export "{export_name}" est prêt.',
         "link": "/dashboard/exports/{export_id}",
         "priority": NotificationPriority.NORMAL,
     },

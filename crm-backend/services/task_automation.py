@@ -148,7 +148,9 @@ class TaskAutomationService:
 
         # Déterminer l'entité concernée
         if Organisation_id:
-            Organisation = self.db.query(Organisation).filter(Organisation.id == Organisation_id).first()
+            Organisation = (
+                self.db.query(Organisation).filter(Organisation.id == Organisation_id).first()
+            )
             if Organisation:
                 entity_name = Organisation.name
                 entity_id_Organisation = Organisation_id

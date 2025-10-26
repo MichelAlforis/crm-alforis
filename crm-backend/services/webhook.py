@@ -58,9 +58,9 @@ class WebhookService(BaseService[Webhook, WebhookCreate, WebhookUpdate]):
         try:
             return (
                 self.db.query(self.model)
-                    .filter(Webhook.is_active.is_(True))
-                    .filter(Webhook.events.contains([event]))
-                    .all()
+                .filter(Webhook.is_active.is_(True))
+                .filter(Webhook.events.contains([event]))
+                .all()
             )
         except Exception as exc:
             raise DatabaseError("Failed to fetch webhooks") from exc

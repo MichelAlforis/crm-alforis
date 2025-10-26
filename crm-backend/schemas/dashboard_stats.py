@@ -11,8 +11,10 @@ from schemas.base import BaseSchema
 
 # ============= STATISTIQUES PAR ORGANISATION =============
 
+
 class OrganisationStatsResponse(BaseSchema):
     """Statistiques pour une organisation spécifique"""
+
     organisation_id: int
     organisation_name: str
 
@@ -36,6 +38,7 @@ class OrganisationStatsResponse(BaseSchema):
 
 class OrganisationMonthlyKPI(BaseSchema):
     """KPI mensuels pour une organisation (compatible avec l'ancien système KPI)"""
+
     id: Optional[int] = None
     organisation_id: int
     year: int = Field(..., ge=2020, le=2100)
@@ -60,6 +63,7 @@ class OrganisationMonthlyKPI(BaseSchema):
 
 
 # ============= STATISTIQUES GLOBALES =============
+
 
 class GlobalDashboardStats(BaseSchema):
     """Statistiques globales pour le dashboard principal"""
@@ -93,6 +97,7 @@ class GlobalDashboardStats(BaseSchema):
 
 class MonthlyAggregateStats(BaseSchema):
     """Statistiques agrégées pour un mois donné"""
+
     year: int
     month: int
 
@@ -113,6 +118,7 @@ class MonthlyAggregateStats(BaseSchema):
 
 class YearlyAggregateStats(BaseSchema):
     """Statistiques agrégées pour une année donnée"""
+
     organisation_id: int
     organisation_name: str
     year: int
@@ -132,8 +138,10 @@ class YearlyAggregateStats(BaseSchema):
 
 # ============= FILTRES ET PARAMÈTRES =============
 
+
 class DashboardStatsFilters(BaseSchema):
     """Filtres pour requêtes de statistiques"""
+
     organisation_ids: Optional[List[int]] = None
     categories: Optional[List[str]] = None  # ["DISTRIBUTEUR", "EMETTEUR", ...]
     pipeline_stages: Optional[List[str]] = None
@@ -143,6 +151,7 @@ class DashboardStatsFilters(BaseSchema):
 
 class TimeRangeStats(BaseSchema):
     """Statistiques sur une période donnée"""
+
     start_date: str
     end_date: str
 

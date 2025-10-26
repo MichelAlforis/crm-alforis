@@ -32,7 +32,9 @@ def _extract_user_id(current_user: dict) -> Optional[int]:
     except (TypeError, ValueError):
         return None
 
+
 # ============= GET ROUTES =============
+
 
 @router.get("", response_model=PaginatedResponse[OrganisationResponse])
 @cache_response(ttl=300, key_prefix="organisations:list")
@@ -170,6 +172,7 @@ async def get_organisation(
 
     return OrganisationDetailResponse.model_validate(organisation)
 
+
 @router.get(
     "/{organisation_id}/activity",
     response_model=PaginatedResponse[OrganisationActivityResponse],
@@ -223,6 +226,7 @@ async def get_organisation_activity(
 
 # ============= POST ROUTES =============
 
+
 @router.post("", response_model=OrganisationResponse, status_code=status.HTTP_201_CREATED)
 async def create_organisation(
     organisation: OrganisationCreate,
@@ -266,6 +270,7 @@ async def create_organisation(
 
 # ============= PUT ROUTES =============
 
+
 @router.put("/{organisation_id}", response_model=OrganisationResponse)
 async def update_organisation(
     organisation_id: int,
@@ -294,6 +299,7 @@ async def update_organisation(
 
 # ============= DELETE ROUTES =============
 
+
 @router.delete("/{organisation_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_organisation(
     organisation_id: int,
@@ -320,6 +326,7 @@ async def delete_organisation(
 
 # ============= ACTIVITY ROUTES =============
 
+
 @router.get("/{organisation_id}/activity", response_model=List[OrganisationActivityResponse])
 async def get_organisation_activities(
     organisation_id: int,
@@ -337,9 +344,7 @@ async def get_organisation_activities(
     """
     activity_service = OrganisationActivityService(db)
     activities = await activity_service.get_timeline(
-        organisation_id=organisation_id,
-        limit=limit,
-        before_id=before_id
+        organisation_id=organisation_id, limit=limit, before_id=before_id
     )
     return [OrganisationActivityResponse.model_validate(a) for a in activities]
 
@@ -364,14 +369,13 @@ async def delete_organisation_activity(
     activity = await activity_service.get(activity_id)
     if not activity:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Activity {activity_id} not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Activity {activity_id} not found"
         )
 
     if activity.organisation_id != organisation_id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"Activity {activity_id} does not belong to organisation {organisation_id}"
+            detail=f"Activity {activity_id} does not belong to organisation {organisation_id}",
         )
 
     await activity_service.delete(activity_id)

@@ -20,12 +20,14 @@ router = APIRouter(prefix="/org-links", tags=["people"])
 
 # -------- Utils communs --------
 
+
 def _index_to_row(idx: int) -> int:
     """Convertir index (0-based) à numéro de ligne (1-based, +1 pour header)."""
     return idx + 2
 
 
 # ============= BULK CREATE ORG-LINKS =============
+
 
 @router.post("/bulk", status_code=status.HTTP_200_OK)
 async def bulk_create_links(
@@ -35,28 +37,23 @@ async def bulk_create_links(
 ) -> Dict[str, Any]:
     """
     Créer plusieurs liens personne ↔ organisation en une seule requête.
-    
+
     Paramètres:
     - links: liste de PersonOrganizationLinkCreate avec person_id et organisation_id
-    
+
     Résultat:
     - total: nombre total de liens à créer
     - created: liste des IDs de liens créés
     - failed: nombre de liens échoués
     - errors: liste détaillée des erreurs avec index, row, et message
     """
-    
+
     total = len(links)
-    result: Dict[str, Any] = {
-        "total": total,
-        "created": [],
-        "failed": 0,
-        "errors": []
-    }
-    
+    result: Dict[str, Any] = {"total": total, "created": [], "failed": 0, "errors": []}
+
     if total == 0:
         return result
-    
+
     # -------- Déduplication payload --------
     # Key: (person_id, organisation_id) pour détecter les doublons
     seen_pairs: Set[Tuple[int, int]] = set()
@@ -64,92 +61,93 @@ async def bulk_create_links(
         pair = (link.person_id, link.organisation_id)
         if pair in seen_pairs:
             result["failed"] += 1
-            result["errors"].append({
-                "index": idx,
-                "row": _index_to_row(idx),
-                "error": f"Doublon dans le payload: personne {link.person_id} déjà associée à organisation {link.organisation_id}"
-            })
+            result["errors"].append(
+                {
+                    "index": idx,
+                    "row": _index_to_row(idx),
+                    "error": f"Doublon dans le payload: personne {link.person_id} déjà associée à organisation {link.organisation_id}",
+                }
+            )
         else:
             seen_pairs.add(pair)
-    
+
     if result["failed"] == total:
         return result
-    
+
     # -------- Précharger les liens existants en base --------
     payload_pairs = {(link.person_id, link.organisation_id) for link in links}
     existing_pairs: Set[Tuple[int, int]] = set()
     if payload_pairs:
-        existing_links = db.query(
-            PersonOrganizationLink.person_id,
-            PersonOrganizationLink.organisation_id
-        ).filter(
-            PersonOrganizationLink.person_id.in_({p[0] for p in payload_pairs}),
-            PersonOrganizationLink.organisation_id.in_({p[1] for p in payload_pairs}),
-        ).all()
+        existing_links = (
+            db.query(PersonOrganizationLink.person_id, PersonOrganizationLink.organisation_id)
+            .filter(
+                PersonOrganizationLink.person_id.in_({p[0] for p in payload_pairs}),
+                PersonOrganizationLink.organisation_id.in_({p[1] for p in payload_pairs}),
+            )
+            .all()
+        )
         existing_pairs = {(p[0], p[1]) for p in existing_links}
-    
+
     try:
         service = PersonOrganizationLinkService(db)
-        
+
         for idx, link_data in enumerate(links):
             try:
                 # Skip si doublon payload déjà détecté
                 if any(e["index"] == idx for e in result["errors"]):
                     continue
-                
+
                 pair = (link_data.person_id, link_data.organisation_id)
-                
+
                 # Vérifier si le lien existe déjà en base
                 if pair in existing_pairs:
                     result["failed"] += 1
-                    result["errors"].append({
-                        "index": idx,
-                        "row": _index_to_row(idx),
-                        "error": f"Lien déjà existant: personne {link_data.person_id} ↔ organisation {link_data.organisation_id}"
-                    })
+                    result["errors"].append(
+                        {
+                            "index": idx,
+                            "row": _index_to_row(idx),
+                            "error": f"Lien déjà existant: personne {link_data.person_id} ↔ organisation {link_data.organisation_id}",
+                        }
+                    )
                     continue
-                
+
                 # Créer le lien (la méthode vérifie l'existence de person et organisation)
                 new_link = await service.create_link(link_data)
                 result["created"].append(new_link.id)
                 existing_pairs.add(pair)
-                
+
             except ConflictError as ce:
                 db.rollback()
                 result["failed"] += 1
-                result["errors"].append({
-                    "index": idx,
-                    "row": _index_to_row(idx),
-                    "error": f"Conflit: {str(ce)}"
-                })
+                result["errors"].append(
+                    {"index": idx, "row": _index_to_row(idx), "error": f"Conflit: {str(ce)}"}
+                )
             except ResourceNotFound as rnf:
                 db.rollback()
                 result["failed"] += 1
-                result["errors"].append({
-                    "index": idx,
-                    "row": _index_to_row(idx),
-                    "error": f"Ressource introuvable: {str(rnf)}"
-                })
+                result["errors"].append(
+                    {
+                        "index": idx,
+                        "row": _index_to_row(idx),
+                        "error": f"Ressource introuvable: {str(rnf)}",
+                    }
+                )
             except Exception as e:
                 db.rollback()
                 result["failed"] += 1
-                result["errors"].append({
-                    "index": idx,
-                    "row": _index_to_row(idx),
-                    "error": str(e)
-                })
-        
+                result["errors"].append({"index": idx, "row": _index_to_row(idx), "error": str(e)})
+
         # Commit final (utile si create_link ne commit pas immédiatement)
         db.commit()
-        
+
     except Exception as e:
         db.rollback()
         logger.exception("Erreur lors du bulk_create_links")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Erreur lors de l'enregistrement: {str(e)}"
+            detail=f"Erreur lors de l'enregistrement: {str(e)}",
         )
-    
+
     return result
 
 

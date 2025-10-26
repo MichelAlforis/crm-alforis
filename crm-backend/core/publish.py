@@ -23,6 +23,7 @@ from core.notifications import manager
 # Helpers de publication d'événements
 # ============================================
 
+
 async def notify_lead_updated(org_id: int, lead_id: int, payload: Dict[str, Any]):
     """
     Notifie qu'un lead a été modifié
@@ -32,26 +33,32 @@ async def notify_lead_updated(org_id: int, lead_id: int, payload: Dict[str, Any]
         lead_id: ID du lead
         payload: Données de la modification
     """
-    await manager.send_to_room(f"org:{org_id}:resource:lead:{lead_id}", {
-        "type": "lead.updated",
-        "orgId": org_id,
-        "entityType": "lead",
-        "entityId": lead_id,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "payload": payload,
-    })
+    await manager.send_to_room(
+        f"org:{org_id}:resource:lead:{lead_id}",
+        {
+            "type": "lead.updated",
+            "orgId": org_id,
+            "entityType": "lead",
+            "entityId": lead_id,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "payload": payload,
+        },
+    )
 
 
 async def notify_contact_updated(org_id: int, contact_id: int, payload: Dict[str, Any]):
     """Notifie qu'un contact a été modifié"""
-    await manager.send_to_room(f"org:{org_id}:resource:contact:{contact_id}", {
-        "type": "contact.updated",
-        "orgId": org_id,
-        "entityType": "contact",
-        "entityId": contact_id,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "payload": payload,
-    })
+    await manager.send_to_room(
+        f"org:{org_id}:resource:contact:{contact_id}",
+        {
+            "type": "contact.updated",
+            "orgId": org_id,
+            "entityType": "contact",
+            "entityId": contact_id,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "payload": payload,
+        },
+    )
 
 
 async def notify_task_assigned(org_id: int, user_id: int, task_id: int, payload: Dict[str, Any]):
@@ -64,15 +71,19 @@ async def notify_task_assigned(org_id: int, user_id: int, task_id: int, payload:
         task_id: ID de la tâche
         payload: Données de la tâche
     """
-    await manager.send_to_user(org_id, user_id, {
-        "type": "task.assigned",
-        "orgId": org_id,
-        "userId": user_id,
-        "entityType": "task",
-        "entityId": task_id,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "payload": payload,
-    })
+    await manager.send_to_user(
+        org_id,
+        user_id,
+        {
+            "type": "task.assigned",
+            "orgId": org_id,
+            "userId": user_id,
+            "entityType": "task",
+            "entityId": task_id,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "payload": payload,
+        },
+    )
 
 
 async def notify_job_progress(
@@ -81,7 +92,7 @@ async def notify_job_progress(
     progress: int,
     status: str,
     message: Optional[str] = None,
-    errors: Optional[list] = None
+    errors: Optional[list] = None,
 ):
     """
     Notifie de la progression d'un job asynchrone (import, export, etc.)
@@ -94,16 +105,19 @@ async def notify_job_progress(
         message: Message optionnel
         errors: Liste d'erreurs optionnelle
     """
-    await manager.send_to_room(f"org:{org_id}:job:{job_id}", {
-        "type": "job.progress",
-        "orgId": org_id,
-        "jobId": job_id,
-        "progress": progress,
-        "status": status,
-        "message": message,
-        "errors": errors,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-    })
+    await manager.send_to_room(
+        f"org:{org_id}:job:{job_id}",
+        {
+            "type": "job.progress",
+            "orgId": org_id,
+            "jobId": job_id,
+            "progress": progress,
+            "status": status,
+            "message": message,
+            "errors": errors,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        },
+    )
 
 
 async def notify_presence(
@@ -112,7 +126,7 @@ async def notify_presence(
     resource_id: int,
     user_id: int,
     action: str,  # "viewing", "editing", "left"
-    username: Optional[str] = None
+    username: Optional[str] = None,
 ):
     """
     Notifie de la présence d'un utilisateur sur une ressource
@@ -125,16 +139,19 @@ async def notify_presence(
         action: Action (viewing, editing, left)
         username: Nom de l'utilisateur (optionnel)
     """
-    await manager.send_to_room(f"org:{org_id}:resource:{resource_type}:{resource_id}:presence", {
-        "type": "presence",
-        "orgId": org_id,
-        "resourceType": resource_type,
-        "resourceId": resource_id,
-        "userId": user_id,
-        "username": username,
-        "action": action,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-    })
+    await manager.send_to_room(
+        f"org:{org_id}:resource:{resource_type}:{resource_id}:presence",
+        {
+            "type": "presence",
+            "orgId": org_id,
+            "resourceType": resource_type,
+            "resourceId": resource_id,
+            "userId": user_id,
+            "username": username,
+            "action": action,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        },
+    )
 
 
 async def notify_activity_feed(
@@ -144,7 +161,7 @@ async def notify_activity_feed(
     entity_id: int,
     user_id: int,
     message: str,
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: Optional[Dict[str, Any]] = None,
 ):
     """
     Notifie d'une nouvelle activité dans le feed d'audit
@@ -158,26 +175,24 @@ async def notify_activity_feed(
         message: Message descriptif
         metadata: Métadonnées additionnelles
     """
-    await manager.broadcast_org(org_id, {
-        "type": "activity.feed",
-        "orgId": org_id,
-        "activityType": activity_type,
-        "entityType": entity_type,
-        "entityId": entity_id,
-        "userId": user_id,
-        "message": message,
-        "metadata": metadata or {},
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-    })
+    await manager.broadcast_org(
+        org_id,
+        {
+            "type": "activity.feed",
+            "orgId": org_id,
+            "activityType": activity_type,
+            "entityType": entity_type,
+            "entityId": entity_id,
+            "userId": user_id,
+            "message": message,
+            "metadata": metadata or {},
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        },
+    )
 
 
 async def notify_workflow_execution(
-    org_id: int,
-    workflow_id: int,
-    run_id: str,
-    step: str,
-    status: str,
-    payload: Dict[str, Any]
+    org_id: int, workflow_id: int, run_id: str, step: str, status: str, payload: Dict[str, Any]
 ):
     """
     Notifie de l'exécution d'un workflow
@@ -190,16 +205,19 @@ async def notify_workflow_execution(
         status: Statut (running, completed, failed)
         payload: Données de l'étape
     """
-    await manager.send_to_room(f"org:{org_id}:workflow:{workflow_id}:run:{run_id}", {
-        "type": "workflow.execution",
-        "orgId": org_id,
-        "workflowId": workflow_id,
-        "runId": run_id,
-        "step": step,
-        "status": status,
-        "payload": payload,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-    })
+    await manager.send_to_room(
+        f"org:{org_id}:workflow:{workflow_id}:run:{run_id}",
+        {
+            "type": "workflow.execution",
+            "orgId": org_id,
+            "workflowId": workflow_id,
+            "runId": run_id,
+            "step": step,
+            "status": status,
+            "payload": payload,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        },
+    )
 
 
 async def notify_kpi_update(org_id: int, dashboard_id: str, kpis: Dict[str, Any]):
@@ -211,10 +229,13 @@ async def notify_kpi_update(org_id: int, dashboard_id: str, kpis: Dict[str, Any]
         dashboard_id: ID du dashboard
         kpis: Dictionnaire des KPIs mis à jour
     """
-    await manager.send_to_room(f"org:{org_id}:kpi:dashboard:{dashboard_id}", {
-        "type": "kpi.update",
-        "orgId": org_id,
-        "dashboardId": dashboard_id,
-        "kpis": kpis,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-    })
+    await manager.send_to_room(
+        f"org:{org_id}:kpi:dashboard:{dashboard_id}",
+        {
+            "type": "kpi.update",
+            "orgId": org_id,
+            "dashboardId": dashboard_id,
+            "kpis": kpis,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        },
+    )

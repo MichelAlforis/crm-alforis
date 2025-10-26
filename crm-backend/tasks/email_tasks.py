@@ -22,7 +22,9 @@ def _get_db_session():
     return SessionLocal()
 
 
-def _dispatch_campaign_queue(db_session, campaign: EmailCampaign, override_batch_size: Optional[int] = None) -> int:
+def _dispatch_campaign_queue(
+    db_session, campaign: EmailCampaign, override_batch_size: Optional[int] = None
+) -> int:
     now = datetime.now(timezone.utc)
     rate_limit = campaign.rate_limit_per_minute or settings.email_rate_limit_per_minute or 60
     batch_size = min(rate_limit, settings.email_batch_size)
@@ -45,7 +47,9 @@ def _dispatch_campaign_queue(db_session, campaign: EmailCampaign, override_batch
     for send in sends:
         send_email_send.delay(send.id)
         if send.status == EmailSendStatus.QUEUED:
-            send.status = EmailSendStatus.SCHEDULED  # éviter double envoi pendant la processing window
+            send.status = (
+                EmailSendStatus.SCHEDULED
+            )  # éviter double envoi pendant la processing window
         dispatched += 1
     if dispatched:
         logger.info(
@@ -55,7 +59,13 @@ def _dispatch_campaign_queue(db_session, campaign: EmailCampaign, override_batch
     return dispatched
 
 
-@celery_app.task(name="tasks.email_tasks.send_email_send", bind=True, autoretry_for=(Exception,), max_retries=3, default_retry_delay=60)
+@celery_app.task(
+    name="tasks.email_tasks.send_email_send",
+    bind=True,
+    autoretry_for=(Exception,),
+    max_retries=3,
+    default_retry_delay=60,
+)
 def send_email_send(self: Task, send_id: int) -> dict:
     """Envoi d'un email unique."""
     db = _get_db_session()
@@ -80,11 +90,7 @@ def dispatch_campaign_queue(campaign_id: int, batch_size: Optional[int] = None) 
     """Déclencher un batch d'envoi pour une campagne spécifique."""
     db = _get_db_session()
     try:
-        campaign = (
-            db.query(EmailCampaign)
-            .filter(EmailCampaign.id == campaign_id)
-            .first()
-        )
+        campaign = db.query(EmailCampaign).filter(EmailCampaign.id == campaign_id).first()
         if not campaign:
             return {"campaign_id": campaign_id, "dispatched": 0, "detail": "campaign_not_found"}
         dispatched = _dispatch_campaign_queue(db, campaign, override_batch_size=batch_size)

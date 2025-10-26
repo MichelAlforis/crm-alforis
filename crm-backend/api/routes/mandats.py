@@ -27,7 +27,9 @@ def _extract_user_id(current_user: dict) -> Optional[int]:
     except (TypeError, ValueError):
         return None
 
+
 # ============= GET ROUTES =============
+
 
 @router.get("", response_model=PaginatedResponse[MandatDistributionResponse])
 async def list_mandats(
@@ -59,7 +61,7 @@ async def list_mandats(
         total=total,
         skip=skip,
         limit=limit,
-        items=[MandatDistributionResponse.model_validate(item) for item in items]
+        items=[MandatDistributionResponse.model_validate(item) for item in items],
     )
 
 
@@ -127,6 +129,7 @@ async def check_mandat_actif(
 
 # ============= POST ROUTES =============
 
+
 @router.post("", response_model=MandatDistributionResponse, status_code=status.HTTP_201_CREATED)
 async def create_mandat(
     mandat: MandatDistributionCreate,
@@ -156,7 +159,11 @@ async def create_mandat(
             "mandat_id": new_mandat.id,
             "organisation_id": new_mandat.organisation_id,
             "status": new_mandat.status.value if getattr(new_mandat, "status", None) else None,
-            "date_signature": getattr(new_mandat, "date_signature", None).isoformat() if getattr(new_mandat, "date_signature", None) else None,
+            "date_signature": (
+                getattr(new_mandat, "date_signature", None).isoformat()
+                if getattr(new_mandat, "date_signature", None)
+                else None
+            ),
         },
         user_id=_extract_user_id(current_user),
     )
@@ -167,7 +174,11 @@ async def create_mandat(
             data={
                 "mandat_id": new_mandat.id,
                 "organisation_id": new_mandat.organisation_id,
-                "date_signature": getattr(new_mandat, "date_signature", None).isoformat() if getattr(new_mandat, "date_signature", None) else None,
+                "date_signature": (
+                    getattr(new_mandat, "date_signature", None).isoformat()
+                    if getattr(new_mandat, "date_signature", None)
+                    else None
+                ),
             },
             user_id=_extract_user_id(current_user),
         )
@@ -175,6 +186,7 @@ async def create_mandat(
 
 
 # ============= PUT ROUTES =============
+
 
 @router.put("/{mandat_id}", response_model=MandatDistributionResponse)
 async def update_mandat(
@@ -198,8 +210,14 @@ async def update_mandat(
         data={
             "mandat_id": updated_mandat.id,
             "organisation_id": updated_mandat.organisation_id,
-            "status": updated_mandat.status.value if getattr(updated_mandat, "status", None) else None,
-            "date_signature": getattr(updated_mandat, "date_signature", None).isoformat() if getattr(updated_mandat, "date_signature", None) else None,
+            "status": (
+                updated_mandat.status.value if getattr(updated_mandat, "status", None) else None
+            ),
+            "date_signature": (
+                getattr(updated_mandat, "date_signature", None).isoformat()
+                if getattr(updated_mandat, "date_signature", None)
+                else None
+            ),
         },
         user_id=_extract_user_id(current_user),
     )
@@ -213,7 +231,11 @@ async def update_mandat(
             data={
                 "mandat_id": updated_mandat.id,
                 "organisation_id": updated_mandat.organisation_id,
-                "date_signature": getattr(updated_mandat, "date_signature", None).isoformat() if getattr(updated_mandat, "date_signature", None) else None,
+                "date_signature": (
+                    getattr(updated_mandat, "date_signature", None).isoformat()
+                    if getattr(updated_mandat, "date_signature", None)
+                    else None
+                ),
             },
             user_id=_extract_user_id(current_user),
         )
@@ -221,6 +243,7 @@ async def update_mandat(
 
 
 # ============= DELETE ROUTES =============
+
 
 @router.delete("/{mandat_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_mandat(

@@ -19,8 +19,10 @@ router = APIRouter(prefix="/help", tags=["help"])
 # SCHEMAS
 # ===============================
 
+
 class HelpAnalyticsEvent(BaseModel):
     """Événement d'interaction avec le système d'aide"""
+
     event_type: Literal[
         "faq_view",
         "faq_search",
@@ -28,7 +30,7 @@ class HelpAnalyticsEvent(BaseModel):
         "tooltip_hover",
         "tooltip_learn_more_click",
         "article_rating",
-        "support_contact"
+        "support_contact",
     ]
     target_id: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
@@ -37,6 +39,7 @@ class HelpAnalyticsEvent(BaseModel):
 
 class HelpAnalyticsStats(BaseModel):
     """Statistiques agrégées du système d'aide"""
+
     total_events: int
     top_faq: List[Dict[str, Any]]
     top_guides: List[Dict[str, Any]]
@@ -49,11 +52,12 @@ class HelpAnalyticsStats(BaseModel):
 # ENDPOINTS
 # ===============================
 
+
 @router.post("/analytics", status_code=201)
 async def track_help_event(
     event: HelpAnalyticsEvent,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """
     Track une interaction avec le système d'aide
@@ -77,17 +81,14 @@ async def track_help_event(
             event_type=event.event_type,
             target_id=event.target_id,
             event_metadata=event.metadata,
-            timestamp=datetime.fromisoformat(event.timestamp.replace('Z', '+00:00'))
+            timestamp=datetime.fromisoformat(event.timestamp.replace("Z", "+00:00")),
         )
 
         db.add(db_event)
         db.commit()
         db.refresh(db_event)
 
-        return {
-            "status": "tracked",
-            "event_id": db_event.id
-        }
+        return {"status": "tracked", "event_id": db_event.id}
 
     except Exception as e:
         db.rollback()
@@ -98,7 +99,7 @@ async def track_help_event(
 async def get_help_analytics_stats(
     period: Literal["7d", "30d", "90d", "all"] = "30d",
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """
     Récupère les statistiques agrégées du système d'aide
@@ -125,56 +126,54 @@ async def get_help_analytics_stats(
             start_date = datetime.min
 
         # Query de base avec filtre période
-        base_query = db.query(HelpAnalyticsEvent).filter(
-            HelpAnalyticsEvent.timestamp >= start_date
-        )
+        base_query = db.query(HelpAnalyticsEvent).filter(HelpAnalyticsEvent.timestamp >= start_date)
 
         # Total événements
         total_events = base_query.count()
 
         # Top 10 FAQ vues
-        top_faq = base_query.filter(
-            HelpAnalyticsEvent.event_type == "faq_view"
-        ).with_entities(
-            HelpAnalyticsEvent.target_id,
-            func.count().label('count')
-        ).group_by(
-            HelpAnalyticsEvent.target_id
-        ).order_by(
-            desc('count')
-        ).limit(10).all()
+        top_faq = (
+            base_query.filter(HelpAnalyticsEvent.event_type == "faq_view")
+            .with_entities(HelpAnalyticsEvent.target_id, func.count().label("count"))
+            .group_by(HelpAnalyticsEvent.target_id)
+            .order_by(desc("count"))
+            .limit(10)
+            .all()
+        )
 
         # Top 10 Guides consultés
-        top_guides = base_query.filter(
-            HelpAnalyticsEvent.event_type == "guide_view"
-        ).with_entities(
-            HelpAnalyticsEvent.target_id,
-            func.count().label('count')
-        ).group_by(
-            HelpAnalyticsEvent.target_id
-        ).order_by(
-            desc('count')
-        ).limit(10).all()
+        top_guides = (
+            base_query.filter(HelpAnalyticsEvent.event_type == "guide_view")
+            .with_entities(HelpAnalyticsEvent.target_id, func.count().label("count"))
+            .group_by(HelpAnalyticsEvent.target_id)
+            .order_by(desc("count"))
+            .limit(10)
+            .all()
+        )
 
         # Top 10 Tooltips survolés
-        top_tooltips = base_query.filter(
-            HelpAnalyticsEvent.event_type == "tooltip_hover"
-        ).with_entities(
-            HelpAnalyticsEvent.target_id,
-            func.count().label('count')
-        ).group_by(
-            HelpAnalyticsEvent.target_id
-        ).order_by(
-            desc('count')
-        ).limit(10).all()
+        top_tooltips = (
+            base_query.filter(HelpAnalyticsEvent.event_type == "tooltip_hover")
+            .with_entities(HelpAnalyticsEvent.target_id, func.count().label("count"))
+            .group_by(HelpAnalyticsEvent.target_id)
+            .order_by(desc("count"))
+            .limit(10)
+            .all()
+        )
 
         # Ratings summary
-        ratings_events = base_query.filter(
-            HelpAnalyticsEvent.event_type == "article_rating"
-        ).all()
+        ratings_events = base_query.filter(HelpAnalyticsEvent.event_type == "article_rating").all()
 
-        positive_ratings = sum(1 for e in ratings_events if e.event_metadata and e.event_metadata.get('rating') == 'positive')
-        negative_ratings = sum(1 for e in ratings_events if e.event_metadata and e.event_metadata.get('rating') == 'negative')
+        positive_ratings = sum(
+            1
+            for e in ratings_events
+            if e.event_metadata and e.event_metadata.get("rating") == "positive"
+        )
+        negative_ratings = sum(
+            1
+            for e in ratings_events
+            if e.event_metadata and e.event_metadata.get("rating") == "negative"
+        )
         total_ratings = positive_ratings + negative_ratings
         satisfaction_rate = (positive_ratings / total_ratings * 100) if total_ratings > 0 else 0
 
@@ -182,7 +181,7 @@ async def get_help_analytics_stats(
             "total": total_ratings,
             "positive": positive_ratings,
             "negative": negative_ratings,
-            "satisfaction_rate": round(satisfaction_rate, 1)
+            "satisfaction_rate": round(satisfaction_rate, 1),
         }
 
         return HelpAnalyticsStats(
@@ -191,7 +190,7 @@ async def get_help_analytics_stats(
             top_guides=[{"id": item[0], "views": item[1]} for item in top_guides],
             top_tooltips=[{"id": item[0], "hovers": item[1]} for item in top_tooltips],
             ratings_summary=ratings_summary,
-            period=period
+            period=period,
         )
 
     except Exception as e:
@@ -203,7 +202,7 @@ async def export_help_analytics(
     period: Literal["7d", "30d", "90d", "all"] = "30d",
     format: Literal["csv", "json"] = "csv",
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """
     Exporte les données analytics en CSV ou JSON
@@ -234,11 +233,12 @@ async def export_help_analytics(
             start_date = datetime.min
 
         # Query événements
-        events = db.query(HelpAnalyticsEvent).filter(
-            HelpAnalyticsEvent.timestamp >= start_date
-        ).order_by(
-            HelpAnalyticsEvent.timestamp.desc()
-        ).all()
+        events = (
+            db.query(HelpAnalyticsEvent)
+            .filter(HelpAnalyticsEvent.timestamp >= start_date)
+            .order_by(HelpAnalyticsEvent.timestamp.desc())
+            .all()
+        )
 
         if format == "csv":
             # Export CSV
@@ -246,25 +246,29 @@ async def export_help_analytics(
             writer = csv.writer(output)
 
             # Headers
-            writer.writerow(['ID', 'User ID', 'Event Type', 'Target ID', 'Metadata', 'Timestamp'])
+            writer.writerow(["ID", "User ID", "Event Type", "Target ID", "Metadata", "Timestamp"])
 
             # Data
             for event in events:
-                writer.writerow([
-                    event.id,
-                    event.user_id,
-                    event.event_type,
-                    event.target_id or '',
-                    str(event.event_metadata) if event.event_metadata else '',
-                    event.timestamp.isoformat()
-                ])
+                writer.writerow(
+                    [
+                        event.id,
+                        event.user_id,
+                        event.event_type,
+                        event.target_id or "",
+                        str(event.event_metadata) if event.event_metadata else "",
+                        event.timestamp.isoformat(),
+                    ]
+                )
 
             output.seek(0)
 
             return StreamingResponse(
                 iter([output.getvalue()]),
                 media_type="text/csv",
-                headers={"Content-Disposition": f"attachment; filename=help_analytics_{period}.csv"}
+                headers={
+                    "Content-Disposition": f"attachment; filename=help_analytics_{period}.csv"
+                },
             )
 
         else:  # JSON
@@ -278,10 +282,10 @@ async def export_help_analytics(
                         "event_type": e.event_type,
                         "target_id": e.target_id,
                         "metadata": e.event_metadata,
-                        "timestamp": e.timestamp.isoformat()
+                        "timestamp": e.timestamp.isoformat(),
                     }
                     for e in events
-                ]
+                ],
             }
 
     except Exception as e:

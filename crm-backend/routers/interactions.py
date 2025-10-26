@@ -48,16 +48,12 @@ def _get_user_id(current_user: dict) -> int:
     user_id = current_user.get("user_id")
     if not user_id:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="User ID manquant dans le token"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="User ID manquant dans le token"
         )
     try:
         return int(user_id)
     except (TypeError, ValueError):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="User ID invalide"
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User ID invalide")
 
 
 def _check_permissions_write(interaction: Interaction, user_id: int, user_roles: List[str]):
@@ -74,7 +70,7 @@ def _check_permissions_write(interaction: Interaction, user_id: int, user_roles:
     if not (is_creator or is_sales or is_admin):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Permissions insuffisantes pour modifier cette interaction"
+            detail="Permissions insuffisantes pour modifier cette interaction",
         )
 
 
@@ -180,7 +176,7 @@ async def update_interaction(
     if not interaction:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Interaction {interaction_id} introuvable"
+            detail=f"Interaction {interaction_id} introuvable",
         )
 
     # Vérifier les permissions
@@ -196,7 +192,9 @@ async def update_interaction(
     if payload.attachments is not None:
         interaction.attachments = [att.model_dump() for att in payload.attachments]
     if payload.external_participants is not None:
-        interaction.external_participants = [ep.model_dump() for ep in payload.external_participants]
+        interaction.external_participants = [
+            ep.model_dump() for ep in payload.external_participants
+        ]
 
     # v1.1: Remplacer les participants (stratégie simple et sûre)
     if payload.participants is not None:
@@ -242,7 +240,7 @@ async def delete_interaction(
     if not interaction:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Interaction {interaction_id} introuvable"
+            detail=f"Interaction {interaction_id} introuvable",
         )
 
     # Vérifier les permissions
@@ -263,12 +261,7 @@ async def get_recent_interactions(
 
     Utilisé par le widget Dashboard.
     """
-    interactions = (
-        db.query(Interaction)
-        .order_by(desc(Interaction.created_at))
-        .limit(limit)
-        .all()
-    )
+    interactions = db.query(Interaction).order_by(desc(Interaction.created_at)).limit(limit).all()
 
     return [_build_interaction_out(it) for it in interactions]
 
@@ -342,13 +335,21 @@ async def list_by_person(
         cursor=new_cursor,
     )
 
+
 # ===== V2: Inbox Endpoints =====
+
 
 @router.get("/inbox", response_model=InteractionListResponse)
 async def get_inbox(
-    assignee: Optional[str] = Query(None, description="Filter by assignee: 'me', user_id, or omit for all"),
-    status: Optional[str] = Query(None, description="Filter by status: 'todo', 'in_progress', 'done'"),
-    due: Optional[str] = Query("all", description="Filter by due date: 'overdue', 'today', 'week', 'all'"),
+    assignee: Optional[str] = Query(
+        None, description="Filter by assignee: 'me', user_id, or omit for all"
+    ),
+    status: Optional[str] = Query(
+        None, description="Filter by status: 'todo', 'in_progress', 'done'"
+    ),
+    due: Optional[str] = Query(
+        "all", description="Filter by due date: 'overdue', 'today', 'week', 'all'"
+    ),
     limit: int = Query(50, ge=1, le=200),
     cursor: Optional[str] = Query(None),
     db: Session = Depends(get_db),
@@ -384,28 +385,29 @@ async def get_inbox(
     else:
         # Default: show todo + in_progress (exclude done)
         # Use string literals to match PostgreSQL ENUM values (lowercase)
-        query = query.filter(Interaction.status.in_(['todo', 'in_progress']))
+        query = query.filter(Interaction.status.in_(["todo", "in_progress"]))
 
     # Filter by due date
     now = datetime.utcnow()
     if due == "overdue":
         query = query.filter(
-            Interaction.next_action_at.isnot(None),
-            Interaction.next_action_at < now
+            Interaction.next_action_at.isnot(None), Interaction.next_action_at < now
         )
     elif due == "today":
         from datetime import timedelta
+
         end_of_day = now.replace(hour=23, minute=59, second=59)
         query = query.filter(
             Interaction.next_action_at.isnot(None),
-            Interaction.next_action_at.between(now, end_of_day)
+            Interaction.next_action_at.between(now, end_of_day),
         )
     elif due == "week":
         from datetime import timedelta
+
         end_of_week = now + timedelta(days=7)
         query = query.filter(
             Interaction.next_action_at.isnot(None),
-            Interaction.next_action_at.between(now, end_of_week)
+            Interaction.next_action_at.between(now, end_of_week),
         )
     # If 'all', no due filter
 
@@ -419,8 +421,7 @@ async def get_inbox(
 
     # Sort: next_action_at ASC NULLS LAST, then created_at DESC
     query = query.order_by(
-        Interaction.next_action_at.asc().nullslast(),
-        desc(Interaction.created_at)
+        Interaction.next_action_at.asc().nullslast(), desc(Interaction.created_at)
     )
 
     interactions = query.limit(limit).all()
@@ -435,7 +436,7 @@ async def get_inbox(
         count_query = count_query.filter(Interaction.status == status)
     else:
         # Use string literals to match PostgreSQL ENUM values (lowercase)
-        count_query = count_query.filter(Interaction.status.in_(['todo', 'in_progress']))
+        count_query = count_query.filter(Interaction.status.in_(["todo", "in_progress"]))
     total = count_query.count()
 
     new_cursor = str(interactions[-1].id) if interactions else None

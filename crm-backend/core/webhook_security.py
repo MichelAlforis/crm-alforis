@@ -28,23 +28,18 @@ def compute_hmac_signature(payload: Dict[str, Any], secret: str) -> str:
         Signature HMAC en hexadécimal
     """
     # Serialize payload to JSON (sorted keys for consistency)
-    payload_bytes = json.dumps(payload, sort_keys=True).encode('utf-8')
+    payload_bytes = json.dumps(payload, sort_keys=True).encode("utf-8")
 
     # Compute HMAC
     signature = hmac.new(
-        key=secret.encode('utf-8'),
-        msg=payload_bytes,
-        digestmod=hashlib.sha256
+        key=secret.encode("utf-8"), msg=payload_bytes, digestmod=hashlib.sha256
     ).hexdigest()
 
     return signature
 
 
 def verify_webhook_signature(
-    payload: Dict[str, Any],
-    received_signature: Optional[str],
-    secret: str,
-    header_prefix: str = ""
+    payload: Dict[str, Any], received_signature: Optional[str], secret: str, header_prefix: str = ""
 ) -> bool:
     """
     Vérifie la signature HMAC d'un webhook.
@@ -63,7 +58,7 @@ def verify_webhook_signature(
 
     # Remove prefix if present (ex: "sha256=abc123" → "abc123")
     if header_prefix and received_signature.startswith(header_prefix):
-        received_signature = received_signature[len(header_prefix):]
+        received_signature = received_signature[len(header_prefix) :]
 
     # Compute expected signature
     expected_signature = compute_hmac_signature(payload, secret)
@@ -73,8 +68,7 @@ def verify_webhook_signature(
 
 
 def validate_webhook_timestamp(
-    timestamp_str: Optional[str],
-    max_age_seconds: int = 300
+    timestamp_str: Optional[str], max_age_seconds: int = 300
 ) -> datetime:
     """
     Valide le timestamp d'un webhook (reject events trop anciens).
@@ -92,7 +86,7 @@ def validate_webhook_timestamp(
     if not timestamp_str:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Missing webhook timestamp (X-Timestamp header required)"
+            detail="Missing webhook timestamp (X-Timestamp header required)",
         )
 
     try:
@@ -101,11 +95,10 @@ def validate_webhook_timestamp(
             event_time = datetime.utcfromtimestamp(int(timestamp_str))
         else:
             # Try to parse as ISO 8601
-            event_time = datetime.fromisoformat(timestamp_str.replace('Z', '+00:00'))
+            event_time = datetime.fromisoformat(timestamp_str.replace("Z", "+00:00"))
     except (ValueError, OSError) as e:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Invalid timestamp format: {e}"
+            status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid timestamp format: {e}"
         )
 
     # Check age
@@ -115,23 +108,19 @@ def validate_webhook_timestamp(
     if age_seconds > max_age_seconds:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Webhook event too old ({int(age_seconds)}s > {max_age_seconds}s)"
+            detail=f"Webhook event too old ({int(age_seconds)}s > {max_age_seconds}s)",
         )
 
     if age_seconds < -60:  # Future event (tolerate 1min clock drift)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Webhook event timestamp is in the future"
+            detail="Webhook event timestamp is in the future",
         )
 
     return event_time
 
 
-def verify_resend_webhook(
-    payload: Dict[str, Any],
-    signature: Optional[str],
-    secret: str
-) -> bool:
+def verify_resend_webhook(payload: Dict[str, Any], signature: Optional[str], secret: str) -> bool:
     """
     Vérifie un webhook Resend (format spécifique).
 
@@ -146,17 +135,12 @@ def verify_resend_webhook(
         True si valide
     """
     return verify_webhook_signature(
-        payload=payload,
-        received_signature=signature,
-        secret=secret,
-        header_prefix="v1="
+        payload=payload, received_signature=signature, secret=secret, header_prefix="v1="
     )
 
 
 def verify_sendgrid_webhook(
-    payload: Dict[str, Any],
-    signature: Optional[str],
-    public_key: str
+    payload: Dict[str, Any], signature: Optional[str], public_key: str
 ) -> bool:
     """
     Vérifie un webhook Sendgrid (signature ECDSA + public key).

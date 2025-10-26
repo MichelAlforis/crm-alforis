@@ -53,6 +53,7 @@ router = APIRouter(prefix="/workflows", tags=["workflows"])
 # CRUD Workflows
 # =======================
 
+
 @router.get("", response_model=PaginatedResponse[WorkflowListItem])
 async def list_workflows(
     skip: int = Query(0, ge=0),
@@ -60,7 +61,7 @@ async def list_workflows(
     status: Optional[WorkflowStatus] = None,
     trigger_type: Optional[WorkflowTriggerType] = None,
     is_template: Optional[bool] = None,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """
     Liste tous les workflows avec pagination et filtres
@@ -90,15 +91,12 @@ async def list_workflows(
         total=total,
         skip=skip,
         limit=limit,
-        items=[WorkflowListItem.model_validate(w) for w in workflows]
+        items=[WorkflowListItem.model_validate(w) for w in workflows],
     )
 
 
 @router.post("", response_model=WorkflowResponse, status_code=status.HTTP_201_CREATED)
-async def create_workflow(
-    workflow_data: WorkflowCreate,
-    db: Session = Depends(get_db)
-):
+async def create_workflow(workflow_data: WorkflowCreate, db: Session = Depends(get_db)):
     """
     Crée un nouveau workflow
 
@@ -110,7 +108,7 @@ async def create_workflow(
     if workflow_data.conditions:
         conditions_dict = {
             "operator": workflow_data.conditions.operator,
-            "rules": [rule.model_dump() for rule in workflow_data.conditions.rules]
+            "rules": [rule.model_dump() for rule in workflow_data.conditions.rules],
         }
 
     # Convertir les actions en dict
@@ -126,7 +124,7 @@ async def create_workflow(
         conditions=conditions_dict,
         actions=actions_dict,
         is_template=workflow_data.is_template,
-        execution_count=0
+        execution_count=0,
     )
 
     db.add(workflow)
@@ -137,10 +135,7 @@ async def create_workflow(
 
 
 @router.get("/{workflow_id}", response_model=WorkflowResponse)
-async def get_workflow(
-    workflow_id: int,
-    db: Session = Depends(get_db)
-):
+async def get_workflow(workflow_id: int, db: Session = Depends(get_db)):
     """
     Récupère les détails complets d'un workflow
     """
@@ -148,8 +143,7 @@ async def get_workflow(
 
     if not workflow:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Workflow #{workflow_id} introuvable"
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Workflow #{workflow_id} introuvable"
         )
 
     return WorkflowResponse.model_validate(workflow)
@@ -157,9 +151,7 @@ async def get_workflow(
 
 @router.put("/{workflow_id}", response_model=WorkflowResponse)
 async def update_workflow(
-    workflow_id: int,
-    workflow_data: WorkflowUpdate,
-    db: Session = Depends(get_db)
+    workflow_id: int, workflow_data: WorkflowUpdate, db: Session = Depends(get_db)
 ):
     """
     Met à jour un workflow existant
@@ -170,8 +162,7 @@ async def update_workflow(
 
     if not workflow:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Workflow #{workflow_id} introuvable"
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Workflow #{workflow_id} introuvable"
         )
 
     # Mettre à jour les champs fournis
@@ -181,7 +172,7 @@ async def update_workflow(
     if "conditions" in update_data and update_data["conditions"]:
         update_data["conditions"] = {
             "operator": update_data["conditions"].operator,
-            "rules": [rule.model_dump() for rule in update_data["conditions"].rules]
+            "rules": [rule.model_dump() for rule in update_data["conditions"].rules],
         }
 
     # Convertir les actions si fournies
@@ -198,10 +189,7 @@ async def update_workflow(
 
 
 @router.delete("/{workflow_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_workflow(
-    workflow_id: int,
-    db: Session = Depends(get_db)
-):
+async def delete_workflow(workflow_id: int, db: Session = Depends(get_db)):
     """
     Supprime un workflow
 
@@ -211,8 +199,7 @@ async def delete_workflow(
 
     if not workflow:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Workflow #{workflow_id} introuvable"
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Workflow #{workflow_id} introuvable"
         )
 
     db.delete(workflow)
@@ -225,11 +212,10 @@ async def delete_workflow(
 # Activation / Exécution
 # =======================
 
+
 @router.post("/{workflow_id}/activate", response_model=WorkflowResponse)
 async def activate_workflow(
-    workflow_id: int,
-    activation_data: WorkflowActivate,
-    db: Session = Depends(get_db)
+    workflow_id: int, activation_data: WorkflowActivate, db: Session = Depends(get_db)
 ):
     """
     Active ou désactive un workflow
@@ -242,8 +228,7 @@ async def activate_workflow(
 
     if not workflow:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Workflow #{workflow_id} introuvable"
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Workflow #{workflow_id} introuvable"
         )
 
     workflow.status = activation_data.status
@@ -255,9 +240,7 @@ async def activate_workflow(
 
 @router.post("/{workflow_id}/execute", response_model=WorkflowExecuteResponse)
 async def execute_workflow_manually(
-    workflow_id: int,
-    execution_request: WorkflowExecuteRequest,
-    db: Session = Depends(get_db)
+    workflow_id: int, execution_request: WorkflowExecuteRequest, db: Session = Depends(get_db)
 ):
     """
     Exécute manuellement un workflow
@@ -273,8 +256,7 @@ async def execute_workflow_manually(
 
     if not workflow:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Workflow #{workflow_id} introuvable"
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Workflow #{workflow_id} introuvable"
         )
 
     # Lancer l'exécution asynchrone
@@ -282,7 +264,7 @@ async def execute_workflow_manually(
         workflow_id=workflow_id,
         trigger_entity_type=execution_request.trigger_entity_type,
         trigger_entity_id=execution_request.trigger_entity_id,
-        trigger_data=execution_request.trigger_data
+        trigger_data=execution_request.trigger_data,
     )
 
     # Créer une exécution en attente
@@ -291,7 +273,7 @@ async def execute_workflow_manually(
         status=WorkflowExecutionStatus.PENDING,
         trigger_entity_type=execution_request.trigger_entity_type,
         trigger_entity_id=execution_request.trigger_entity_id,
-        execution_logs=[]
+        execution_logs=[],
     )
     db.add(execution)
     db.commit()
@@ -301,7 +283,7 @@ async def execute_workflow_manually(
         workflow_id=workflow_id,
         execution_id=execution.id,
         task_id=task.id,
-        message=f"Workflow en cours d'exécution (task: {task.id})"
+        message=f"Workflow en cours d'exécution (task: {task.id})",
     )
 
 
@@ -309,13 +291,16 @@ async def execute_workflow_manually(
 # Exécutions (historique)
 # =======================
 
-@router.get("/{workflow_id}/executions", response_model=PaginatedResponse[WorkflowExecutionListItem])
+
+@router.get(
+    "/{workflow_id}/executions", response_model=PaginatedResponse[WorkflowExecutionListItem]
+)
 async def list_workflow_executions(
     workflow_id: int,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     status: Optional[WorkflowExecutionStatus] = None,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """
     Liste l'historique des exécutions d'un workflow
@@ -327,8 +312,7 @@ async def list_workflow_executions(
     workflow = db.query(Workflow).filter(Workflow.id == workflow_id).first()
     if not workflow:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Workflow #{workflow_id} introuvable"
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Workflow #{workflow_id} introuvable"
         )
 
     query = db.query(WorkflowExecution).filter(WorkflowExecution.workflow_id == workflow_id)
@@ -343,15 +327,13 @@ async def list_workflow_executions(
         total=total,
         skip=skip,
         limit=limit,
-        items=[WorkflowExecutionListItem.model_validate(e) for e in executions]
+        items=[WorkflowExecutionListItem.model_validate(e) for e in executions],
     )
 
 
 @router.get("/{workflow_id}/executions/{execution_id}", response_model=WorkflowExecutionResponse)
 async def get_workflow_execution(
-    workflow_id: int,
-    execution_id: int,
-    db: Session = Depends(get_db)
+    workflow_id: int, execution_id: int, db: Session = Depends(get_db)
 ):
     """
     Récupère les détails complets d'une exécution
@@ -360,17 +342,14 @@ async def get_workflow_execution(
     """
     execution = (
         db.query(WorkflowExecution)
-        .filter(
-            WorkflowExecution.id == execution_id,
-            WorkflowExecution.workflow_id == workflow_id
-        )
+        .filter(WorkflowExecution.id == execution_id, WorkflowExecution.workflow_id == workflow_id)
         .first()
     )
 
     if not execution:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Exécution #{execution_id} introuvable pour workflow #{workflow_id}"
+            detail=f"Exécution #{execution_id} introuvable pour workflow #{workflow_id}",
         )
 
     return WorkflowExecutionResponse.model_validate(execution)
@@ -380,11 +359,9 @@ async def get_workflow_execution(
 # Statistiques
 # =======================
 
+
 @router.get("/{workflow_id}/stats", response_model=WorkflowStats)
-async def get_workflow_stats(
-    workflow_id: int,
-    db: Session = Depends(get_db)
-):
+async def get_workflow_stats(workflow_id: int, db: Session = Depends(get_db)):
     """
     Récupère les statistiques d'un workflow
 
@@ -397,8 +374,7 @@ async def get_workflow_stats(
     workflow = db.query(Workflow).filter(Workflow.id == workflow_id).first()
     if not workflow:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Workflow #{workflow_id} introuvable"
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Workflow #{workflow_id} introuvable"
         )
 
     engine = WorkflowEngine(db)
@@ -410,6 +386,7 @@ async def get_workflow_stats(
 # =======================
 # Templates
 # =======================
+
 
 @router.get("/templates/list", response_model=List[WorkflowTemplate])
 async def list_workflow_templates():
@@ -426,11 +403,12 @@ async def list_workflow_templates():
     return WORKFLOW_TEMPLATES
 
 
-@router.post("/templates/{template_id}/create", response_model=WorkflowResponse, status_code=status.HTTP_201_CREATED)
-async def create_workflow_from_template(
-    template_id: str,
-    db: Session = Depends(get_db)
-):
+@router.post(
+    "/templates/{template_id}/create",
+    response_model=WorkflowResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+async def create_workflow_from_template(template_id: str, db: Session = Depends(get_db)):
     """
     Crée un workflow à partir d'un template prédéfini
 
@@ -442,8 +420,7 @@ async def create_workflow_from_template(
 
     if not template:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Template '{template_id}' introuvable"
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Template '{template_id}' introuvable"
         )
 
     # Créer le workflow depuis le template
@@ -454,7 +431,7 @@ async def create_workflow_from_template(
     if workflow_data.conditions:
         conditions_dict = {
             "operator": workflow_data.conditions.operator,
-            "rules": [rule.model_dump() for rule in workflow_data.conditions.rules]
+            "rules": [rule.model_dump() for rule in workflow_data.conditions.rules],
         }
 
     # Convertir les actions en dict
@@ -469,7 +446,7 @@ async def create_workflow_from_template(
         conditions=conditions_dict,
         actions=actions_dict,
         is_template=False,  # Ce n'est plus un template, c'est une instance
-        execution_count=0
+        execution_count=0,
     )
 
     db.add(workflow)

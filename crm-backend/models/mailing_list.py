@@ -1,4 +1,5 @@
 """Modèles pour les listes de diffusion."""
+
 from datetime import datetime
 from typing import TYPE_CHECKING
 
@@ -21,7 +22,9 @@ class MailingList(BaseModel):
     description = Column(Text, nullable=True)
 
     # Type de destinataires
-    target_type = Column(String(50), nullable=False, default='contacts')  # 'contacts' ou 'organisations'
+    target_type = Column(
+        String(50), nullable=False, default="contacts"
+    )  # 'contacts' ou 'organisations'
 
     # Filtres sauvegardés (JSON)
     filters = Column(JSON, nullable=False, default={})
@@ -47,6 +50,7 @@ class MailingList(BaseModel):
     def mark_used(self):
         """Marquer la liste comme utilisée."""
         from datetime import UTC
+
         self.last_used_at = datetime.now(UTC)
 
     def __repr__(self) -> str:

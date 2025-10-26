@@ -33,8 +33,10 @@ if TYPE_CHECKING:
 # Enums
 # =======================
 
+
 class OrganisationCategory(str, enum.Enum):
     """Catégories d'organisations"""
+
     INSTITUTION = "Institution"
     WHOLESALE = "Wholesale"
     SDG = "SDG"
@@ -46,6 +48,7 @@ class OrganisationCategory(str, enum.Enum):
 
 class OrganisationType(str, enum.Enum):
     """Types unifiés d'organisation"""
+
     INVESTOR = "investor"
     CLIENT = "client"
     FOURNISSEUR = "fournisseur"
@@ -57,6 +60,7 @@ class OrganisationType(str, enum.Enum):
 
 class PipelineStage(str, enum.Enum):
     """Pipeline commercial global"""
+
     LEAD = "lead"
     QUALIFIED = "qualified"
     PROSPECT = "prospect"
@@ -70,6 +74,7 @@ class PipelineStage(str, enum.Enum):
 
 class MandatStatus(str, enum.Enum):
     """Statut du mandat de distribution"""
+
     PROPOSE = "proposé"
     SIGNE = "signé"
     ACTIF = "actif"
@@ -78,6 +83,7 @@ class MandatStatus(str, enum.Enum):
 
 class ProduitStatus(str, enum.Enum):
     """Statut du produit"""
+
     ACTIF = "actif"
     INACTIF = "inactif"
     EN_ATTENTE = "en_attente"
@@ -85,6 +91,7 @@ class ProduitStatus(str, enum.Enum):
 
 class ProduitType(str, enum.Enum):
     """Type de produit financier"""
+
     OPCVM = "OPCVM"
     FCP = "FCP"
     SICAV = "SICAV"
@@ -95,6 +102,7 @@ class ProduitType(str, enum.Enum):
 
 class InteractionType(str, enum.Enum):
     """Types d'interactions possibles"""
+
     APPEL = "appel"
     EMAIL = "email"
     REUNION = "reunion"
@@ -104,12 +112,14 @@ class InteractionType(str, enum.Enum):
 
 class InteractionPipeline(str, enum.Enum):
     """Pipeline de l'interaction"""
+
     FOURNISSEUR = "fournisseur"
     VENTE = "vente"
 
 
 class InteractionStatus(str, enum.Enum):
     """Statut de l'interaction dans le pipeline fournisseur (FSS)"""
+
     PROSPECT_FROID = "prospect_froid"
     PROSPECT_CHAUD = "prospect_chaud"
     REFUS = "refus"
@@ -120,6 +130,7 @@ class InteractionStatus(str, enum.Enum):
 # =======================
 # Modèles
 # =======================
+
 
 class Organisation(BaseModel):
     """
@@ -134,6 +145,7 @@ class Organisation(BaseModel):
         - Métadonnées (domicile, pays, notes)
         - Relations (mandats, interactions, contacts)
     """
+
     __tablename__ = "organisations"
     __table_args__ = (
         Index("idx_org_type_active", "type", "is_active"),
@@ -174,7 +186,9 @@ class Organisation(BaseModel):
     country = Column("pays", String(100), nullable=True)
     country_code = Column(String(2), nullable=True, index=True)
     domicile = Column(String(255), nullable=True)  # Domiciliation juridique
-    language = Column(String(5), nullable=False, default='FR', index=True)  # Langue principale de l'organisation
+    language = Column(
+        String(5), nullable=False, default="FR", index=True
+    )  # Langue principale de l'organisation
 
     # Métadonnées
     notes = Column(Text, nullable=True)
@@ -183,8 +197,12 @@ class Organisation(BaseModel):
     is_active = Column(Boolean, default=True, index=True)
     email_unsubscribed = Column(Boolean, default=False, nullable=False)
     created_by = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True)
-    assigned_to = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True)
-    owner_id = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True, index=True)
+    assigned_to = Column(
+        Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True
+    )
+    owner_id = Column(
+        Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True, index=True
+    )
 
     # Pipeline commercial
     pipeline_stage = Column(
@@ -199,15 +217,11 @@ class Organisation(BaseModel):
 
     # Relations
     mandats = relationship(
-        "MandatDistribution",
-        back_populates="organisation",
-        cascade="all, delete-orphan"
+        "MandatDistribution", back_populates="organisation", cascade="all, delete-orphan"
     )
 
     contacts = relationship(
-        "OrganisationContact",
-        back_populates="organisation",
-        cascade="all, delete-orphan"
+        "OrganisationContact", back_populates="organisation", cascade="all, delete-orphan"
     )
 
     kpis = relationship(
@@ -218,15 +232,11 @@ class Organisation(BaseModel):
     )
 
     interactions = relationship(
-        "OrganisationInteraction",
-        back_populates="organisation",
-        cascade="all, delete-orphan"
+        "OrganisationInteraction", back_populates="organisation", cascade="all, delete-orphan"
     )
 
     activities = relationship(
-        "OrganisationActivity",
-        back_populates="organisation",
-        cascade="all, delete-orphan"
+        "OrganisationActivity", back_populates="organisation", cascade="all, delete-orphan"
     )
 
     people_links = relationship(
@@ -250,8 +260,12 @@ class Organisation(BaseModel):
     )
 
     owner = relationship("User", foreign_keys=[owner_id], back_populates="organisations_owned")
-    created_by_user = relationship("User", foreign_keys=[created_by], back_populates="organisations_created")
-    assigned_user = relationship("User", foreign_keys=[assigned_to], back_populates="organisations_assigned")
+    created_by_user = relationship(
+        "User", foreign_keys=[created_by], back_populates="organisations_created"
+    )
+    assigned_user = relationship(
+        "User", foreign_keys=[assigned_to], back_populates="organisations_assigned"
+    )
 
     _PLACEHOLDER_EMAILS = {"default@company.com"}
 
@@ -278,6 +292,7 @@ class OrganisationContact(BaseModel):
     Contact lié à une organisation
     Note: Cette table sera progressivement remplacée par PersonOrganizationLink
     """
+
     __tablename__ = "organisation_contacts"
 
     organisation_id = Column(Integer, ForeignKey("organisations.id"), nullable=False, index=True)
@@ -311,6 +326,7 @@ class MandatDistribution(BaseModel):
         - date_fin: Date de fin (si applicable)
         - notes: Conditions particulières, commentaires
     """
+
     __tablename__ = "mandats_distribution"
 
     organisation_id = Column(Integer, ForeignKey("organisations.id"), nullable=False, index=True)
@@ -323,11 +339,7 @@ class MandatDistribution(BaseModel):
 
     # Relations
     organisation = relationship("Organisation", back_populates="mandats")
-    produits = relationship(
-        "MandatProduit",
-        back_populates="mandat",
-        cascade="all, delete-orphan"
-    )
+    produits = relationship("MandatProduit", back_populates="mandat", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<MandatDistribution(id={self.id}, organisation_id={self.organisation_id}, status={self.status})>"
@@ -352,25 +364,21 @@ class Produit(BaseModel):
         - status: État du produit (actif, inactif, en_attente)
         - notes: Description, caractéristiques
     """
+
     __tablename__ = "produits"
 
     name = Column(String(255), nullable=False, index=True)
     isin = Column(String(12), unique=True, nullable=True, index=True)  # Code ISIN unique
     type = Column(Enum(ProduitType), nullable=False, index=True)
-    status = Column(Enum(ProduitStatus), nullable=False, default=ProduitStatus.EN_ATTENTE, index=True)
+    status = Column(
+        Enum(ProduitStatus), nullable=False, default=ProduitStatus.EN_ATTENTE, index=True
+    )
     notes = Column(Text, nullable=True)
 
     # Relations
-    mandats = relationship(
-        "MandatProduit",
-        back_populates="produit",
-        cascade="all, delete-orphan"
-    )
+    mandats = relationship("MandatProduit", back_populates="produit", cascade="all, delete-orphan")
 
-    interactions = relationship(
-        "OrganisationInteraction",
-        back_populates="produit"
-    )
+    interactions = relationship("OrganisationInteraction", back_populates="produit")
 
     def __repr__(self):
         return f"<Produit(id={self.id}, name='{self.name}', isin='{self.isin}', type={self.type})>"
@@ -389,6 +397,7 @@ class MandatProduit(BaseModel):
         - date_ajout: Date d'ajout du produit au mandat
         - notes: Conditions spécifiques pour ce produit dans ce mandat
     """
+
     __tablename__ = "mandat_produits"
 
     mandat_id = Column(Integer, ForeignKey("mandats_distribution.id"), nullable=False, index=True)
@@ -427,8 +436,9 @@ class OrganisationInteraction(BaseModel):
         - status: Statut dans le pipeline fournisseur (si applicable)
         - notes: Détails de l'interaction
     """
+
     __tablename__ = "organisation_interactions"
-    
+
     organisation_id = Column(Integer, ForeignKey("organisations.id"), nullable=False, index=True)
     personne_id = Column(Integer, ForeignKey("people.id"), nullable=True, index=True)
     produit_id = Column(Integer, ForeignKey("produits.id"), nullable=True, index=True)
@@ -436,7 +446,9 @@ class OrganisationInteraction(BaseModel):
     date = Column(Date, nullable=False, index=True)
     type = Column(Enum(InteractionType), nullable=False, index=True)
     pipeline = Column(Enum(InteractionPipeline), nullable=False, index=True)
-    status = Column(Enum(InteractionStatus), nullable=True, index=True)  # Utilisé pour pipeline fournisseur
+    status = Column(
+        Enum(InteractionStatus), nullable=True, index=True
+    )  # Utilisé pour pipeline fournisseur
 
     duration_minutes = Column(Integer, nullable=True)
     subject = Column(String(255), nullable=True)

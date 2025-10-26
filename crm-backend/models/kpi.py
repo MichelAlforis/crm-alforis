@@ -58,4 +58,3 @@ class DashboardKPI(BaseModel):
         """Convenience helper pour marquer le KPI comme saisi manuellement."""
         self.auto_generated = False
         self.data_source = "manual"
-

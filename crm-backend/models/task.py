@@ -88,8 +88,12 @@ class Task(BaseModel):
     due_date = Column(DateTime(timezone=True), nullable=True, index=True)
     completed_at = Column(DateTime(timezone=True), nullable=True)
 
-    assigned_to = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True, index=True)
-    created_by = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True, index=True)
+    assigned_to = Column(
+        Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True, index=True
+    )
+    created_by = Column(
+        Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True, index=True
+    )
 
     organisation_id = Column(
         Integer,

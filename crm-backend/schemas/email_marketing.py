@@ -11,8 +11,8 @@ from typing import List, Literal, Optional
 from pydantic import BaseModel, Field
 
 # Types littéraux
-EmailEventType = Literal['sent', 'opened', 'clicked', 'bounced']
-EmailStatus = Literal['sent', 'opened', 'clicked', 'bounced']
+EmailEventType = Literal["sent", "opened", "clicked", "bounced"]
+EmailStatus = Literal["sent", "opened", "clicked", "bounced"]
 
 
 class EmailIngestPayload(BaseModel):
@@ -21,8 +21,13 @@ class EmailIngestPayload(BaseModel):
 
     Permet de créer/update EmailEventTracking + calculer LeadScore
     """
-    provider: str = Field(..., min_length=1, max_length=50, description="Provider name (resend, sendgrid, etc.)")
-    external_id: str = Field(..., min_length=1, max_length=255, description="Provider message ID (unique)")
+
+    provider: str = Field(
+        ..., min_length=1, max_length=50, description="Provider name (resend, sendgrid, etc.)"
+    )
+    external_id: str = Field(
+        ..., min_length=1, max_length=255, description="Provider message ID (unique)"
+    )
     event: EmailEventType = Field(..., description="Event type")
     occurred_at: datetime = Field(..., description="When the event occurred")
 
@@ -46,13 +51,14 @@ class EmailIngestPayload(BaseModel):
                 "event": "opened",
                 "occurred_at": "2025-10-24T15:30:00Z",
                 "person_id": 42,
-                "subject": "Nouvelle offre produit"
+                "subject": "Nouvelle offre produit",
             }
         }
 
 
 class EmailSendOut(BaseModel):
     """Réponse d'un EmailEventTracking"""
+
     id: int
     organisation_id: Optional[int]
     person_id: Optional[int]
@@ -75,6 +81,7 @@ class EmailSendOut(BaseModel):
 
 class LeadScoreOut(BaseModel):
     """Réponse d'un LeadScore"""
+
     person_id: int
     score: int
     last_event_at: Optional[datetime]
@@ -91,6 +98,7 @@ class LeadScoreOut(BaseModel):
 
 class HotLeadsResponse(BaseModel):
     """Réponse de l'endpoint /marketing/leads-hot"""
+
     items: List[LeadScoreOut]
     threshold: int = Field(15, description="Score threshold pour Hot Lead")
     total: int
@@ -104,10 +112,10 @@ class HotLeadsResponse(BaseModel):
                         "score": 23,
                         "last_event_at": "2025-10-24T15:30:00Z",
                         "person_name": "Jean Dupont",
-                        "person_email": "jean@example.com"
+                        "person_email": "jean@example.com",
                     }
                 ],
                 "threshold": 15,
-                "total": 8
+                "total": 8,
             }
         }

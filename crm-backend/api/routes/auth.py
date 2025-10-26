@@ -19,8 +19,10 @@ security = HTTPBearer()
 # ============= RATE LIMITING =============
 # Rate limiting simple en mémoire (pour prod: utiliser Redis)
 
+
 class RateLimiter:
     """Rate limiter simple pour protéger /login contre le brute-force"""
+
     def __init__(self, max_attempts: int = 5, window_seconds: int = 300):
         self.max_attempts = max_attempts
         self.window_seconds = window_seconds  # 5 minutes par défaut
@@ -31,7 +33,8 @@ class RateLimiter:
         now = datetime.now()
         # Nettoyer les anciennes tentatives
         self.attempts[identifier] = [
-            attempt for attempt in self.attempts[identifier]
+            attempt
+            for attempt in self.attempts[identifier]
             if (now - attempt).total_seconds() < self.window_seconds
         ]
 
@@ -48,38 +51,50 @@ class RateLimiter:
         if identifier in self.attempts:
             del self.attempts[identifier]
 
+
 # Singleton rate limiter (5 tentatives par IP sur 5 minutes)
 login_rate_limiter = RateLimiter(max_attempts=5, window_seconds=300)
 
 # ============= SCHEMAS =============
 
+
 class LoginRequest(BaseModel):
     """Requête de login"""
+
     email: EmailStr
     password: str
 
+
 class TokenResponse(BaseModel):
     """Réponse contenant le token"""
+
     access_token: str
     token_type: str = "bearer"
     expires_in: int  # en secondes
 
+
 class UserInfo(BaseModel):
     """Informations utilisateur"""
+
     email: str
     is_admin: bool = False
 
+
 class ChangePasswordRequest(BaseModel):
     """Requête de changement de mot de passe"""
-    current_password: str = Field(..., description="Mot de passe actuel")
-    new_password: str = Field(..., min_length=6, max_length=100, description="Nouveau mot de passe (min 6 caractères)")
 
-    @field_validator('new_password')
+    current_password: str = Field(..., description="Mot de passe actuel")
+    new_password: str = Field(
+        ..., min_length=6, max_length=100, description="Nouveau mot de passe (min 6 caractères)"
+    )
+
+    @field_validator("new_password")
     @classmethod
     def validate_new_password(cls, v: str) -> str:
         if len(v) < 6:
-            raise ValueError('Le mot de passe doit contenir au moins 6 caractères')
+            raise ValueError("Le mot de passe doit contenir au moins 6 caractères")
         return v
+
 
 # ============= UTILISATEURS DE TEST =============
 # TODO: Remplacer par une vraie table User en BD
@@ -89,21 +104,21 @@ TEST_USERS = {
         "password": "admin123",
         "email": "admin@tpmfinance.com",
         "is_admin": True,
-        "name": "Administrator"
+        "name": "Administrator",
     },
     "user@tpmfinance.com": {
         "password": "user123",
         "email": "user@tpmfinance.com",
         "is_admin": False,
-        "name": "Regular User"
-    }
+        "name": "Regular User",
+    },
 }
 
 # ============= ROUTES =============
 
+
 @router.post("/login", response_model=TokenResponse)
 async def login(request: Request, db: Session = Depends(get_db)):
-
     """
     Authentifier un utilisateur et retourner un token JWT
 
@@ -177,10 +192,7 @@ async def login(request: Request, db: Session = Depends(get_db)):
 
         role = (
             db.query(Role)
-            .filter(
-                Role.name
-                == (UserRole.ADMIN if seed.get("is_admin") else UserRole.USER)
-            )
+            .filter(Role.name == (UserRole.ADMIN if seed.get("is_admin") else UserRole.USER))
             .first()
         )
 
@@ -211,7 +223,11 @@ async def login(request: Request, db: Session = Depends(get_db)):
 
     # Déterminer is_admin : utiliser le rôle si disponible, sinon is_superuser
     is_admin_flag = False
-    if user.role and getattr(user.role, "name", None) in {UserRole.ADMIN, UserRole.ADMIN.value, "admin"}:
+    if user.role and getattr(user.role, "name", None) in {
+        UserRole.ADMIN,
+        UserRole.ADMIN.value,
+        "admin",
+    }:
         is_admin_flag = True
     elif user.is_superuser:
         is_admin_flag = True
@@ -225,12 +241,16 @@ async def login(request: Request, db: Session = Depends(get_db)):
             "email": user.email,
             "is_admin": is_admin_flag,
             "name": user.display_name,
-            "role": {
-                "name": user.role.name if user.role else None,
-                "level": user.role.level if user.role else 0,
-            } if user.role else None,
+            "role": (
+                {
+                    "name": user.role.name if user.role else None,
+                    "level": user.role.level if user.role else 0,
+                }
+                if user.role
+                else None
+            ),
         },
-        expires_delta=timedelta(hours=settings.jwt_expiration_hours)
+        expires_delta=timedelta(hours=settings.jwt_expiration_hours),
     )
 
     # Login réussi: réinitialiser le rate limiter
@@ -239,8 +259,9 @@ async def login(request: Request, db: Session = Depends(get_db)):
     return TokenResponse(
         access_token=access_token,
         token_type="bearer",
-        expires_in=settings.jwt_expiration_hours * 3600
+        expires_in=settings.jwt_expiration_hours * 3600,
     )
+
 
 @router.get("/me", response_model=UserInfo)
 async def get_current_user_info(credentials: HTTPAuthorizationCredentials = Depends(security)):
@@ -262,16 +283,14 @@ async def get_current_user_info(credentials: HTTPAuthorizationCredentials = Depe
     """
     try:
         payload = decode_token(credentials.credentials)
-        return UserInfo(
-            email=payload.get("email", ""),
-            is_admin=payload.get("is_admin", False)
-        )
+        return UserInfo(email=payload.get("email", ""), is_admin=payload.get("is_admin", False))
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token invalide ou expiré",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
 
 @router.post("/refresh", response_model=TokenResponse)
 async def refresh_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
@@ -288,22 +307,22 @@ async def refresh_token(credentials: HTTPAuthorizationCredentials = Depends(secu
     try:
         # Décoder le token actuel
         payload = decode_token(credentials.credentials)
-        
+
         # Créer un nouveau token avec les mêmes données
         new_token = create_access_token(
             data={
                 "sub": payload.get("sub"),
                 "email": payload.get("email"),
                 "is_admin": payload.get("is_admin", False),
-                "name": payload.get("name", "")
+                "name": payload.get("name", ""),
             },
-            expires_delta=timedelta(hours=settings.jwt_expiration_hours)
+            expires_delta=timedelta(hours=settings.jwt_expiration_hours),
         )
-        
+
         return TokenResponse(
             access_token=new_token,
             token_type="bearer",
-            expires_in=settings.jwt_expiration_hours * 3600
+            expires_in=settings.jwt_expiration_hours * 3600,
         )
     except Exception as e:
         raise HTTPException(
@@ -311,6 +330,7 @@ async def refresh_token(credentials: HTTPAuthorizationCredentials = Depends(secu
             detail=f"Token invalide ou expiré: {str(e)}",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
 
 @router.post("/logout")
 async def logout():
@@ -323,11 +343,12 @@ async def logout():
     """
     return {"message": "Logged out successfully"}
 
+
 @router.put("/change-password")
 async def change_password(
     request: ChangePasswordRequest,
     credentials: HTTPAuthorizationCredentials = Depends(security),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """
     Changer le mot de passe de l'utilisateur connecté
@@ -361,15 +382,13 @@ async def change_password(
         user = db.query(User).filter(User.id == user_id).first()
         if not user:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Utilisateur non trouvé"
+                status_code=status.HTTP_404_NOT_FOUND, detail="Utilisateur non trouvé"
             )
 
         # Vérifier l'ancien mot de passe
         if not verify_password(request.current_password, user.hashed_password):
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Mot de passe actuel incorrect"
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Mot de passe actuel incorrect"
             )
 
         # Hasher et sauvegarder le nouveau mot de passe
@@ -384,5 +403,5 @@ async def change_password(
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Erreur lors du changement de mot de passe: {str(e)}"
+            detail=f"Erreur lors du changement de mot de passe: {str(e)}",
         )

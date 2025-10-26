@@ -145,10 +145,7 @@ async def trigger_webhooks_for_event(
     timeout = httpx.Timeout(HTTP_TIMEOUT_SECONDS)
     async with httpx.AsyncClient(timeout=timeout) as client:
         await asyncio.gather(
-            *[
-                _deliver_webhook(client, webhook, payload, timestamp)
-                for webhook in webhooks
-            ]
+            *[_deliver_webhook(client, webhook, payload, timestamp) for webhook in webhooks]
         )
 
 

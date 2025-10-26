@@ -37,10 +37,7 @@ class HelpAnalyticsEvent(BaseModel):
 
     # User qui a déclenché l'événement
     user_id = Column(
-        Integer,
-        ForeignKey("users.id", ondelete="CASCADE"),
-        nullable=False,
-        index=True
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
     )
     user = relationship("User", backref="help_analytics_events")
 
@@ -49,7 +46,7 @@ class HelpAnalyticsEvent(BaseModel):
         String(50),
         nullable=False,
         index=True,
-        comment="Type: faq_view, faq_search, guide_view, tooltip_hover, tooltip_learn_more_click, article_rating, support_contact"
+        comment="Type: faq_view, faq_search, guide_view, tooltip_hover, tooltip_learn_more_click, article_rating, support_contact",
     )
 
     # ID de la cible (optionnel, dépend du type)
@@ -58,7 +55,7 @@ class HelpAnalyticsEvent(BaseModel):
         String(255),
         nullable=True,
         index=True,
-        comment="Identifiant de l'élément ciblé (FAQ, guide, tooltip, etc.)"
+        comment="Identifiant de l'élément ciblé (FAQ, guide, tooltip, etc.)",
     )
 
     # Métadonnées JSON (contexte additionnel)
@@ -66,7 +63,7 @@ class HelpAnalyticsEvent(BaseModel):
     event_metadata = Column(
         JSON,
         nullable=True,
-        comment="Contexte additionnel: catégorie, recherche, rating, feedback, etc."
+        comment="Contexte additionnel: catégorie, recherche, rating, feedback, etc.",
     )
 
     # Timestamp de l'événement
@@ -75,7 +72,7 @@ class HelpAnalyticsEvent(BaseModel):
         nullable=False,
         default=func.now(),
         index=True,
-        comment="Date/heure de l'événement"
+        comment="Date/heure de l'événement",
     )
 
     def __repr__(self) -> str:

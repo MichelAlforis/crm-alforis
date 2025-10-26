@@ -1,6 +1,7 @@
 """
 Tâches Celery pour l'envoi d'emails par lots
 """
+
 import logging
 import time
 from typing import List
@@ -18,16 +19,14 @@ try:
     from celery import Celery, Task
 
     celery_app = Celery(
-        'email_tasks',
-        broker='redis://redis:6379/0',
-        backend='redis://redis:6379/0'
+        "email_tasks", broker="redis://redis:6379/0", backend="redis://redis:6379/0"
     )
 
     celery_app.conf.update(
-        task_serializer='json',
-        accept_content=['json'],
-        result_serializer='json',
-        timezone='UTC',
+        task_serializer="json",
+        accept_content=["json"],
+        result_serializer="json",
+        timezone="UTC",
         enable_utc=True,
     )
 
@@ -42,17 +41,23 @@ try:
                 return
 
             # Récupérer les emails du batch
-            emails = db.query(CampaignEmail).filter(
-                CampaignEmail.campaign_id == campaign_id,
-                CampaignEmail.batch_number == batch_number,
-                CampaignEmail.status == EmailStatus.PENDING
-            ).all()
+            emails = (
+                db.query(CampaignEmail)
+                .filter(
+                    CampaignEmail.campaign_id == campaign_id,
+                    CampaignEmail.batch_number == batch_number,
+                    CampaignEmail.status == EmailStatus.PENDING,
+                )
+                .all()
+            )
 
             if not emails:
                 logger.info(f"No pending emails in batch {batch_number} for campaign {campaign_id}")
                 return
 
-            logger.info(f"Sending batch {batch_number} for campaign {campaign_id} ({len(emails)} emails)")
+            logger.info(
+                f"Sending batch {batch_number} for campaign {campaign_id} ({len(emails)} emails)"
+            )
 
             email_service = EmailService()
 
@@ -66,7 +71,7 @@ try:
                         html_content=email.body_html,
                         text_content=email.body_text,
                         campaign_id=campaign_id,
-                        email_id=email.id
+                        email_id=email.id,
                     )
 
                     if success:
@@ -93,10 +98,14 @@ try:
             logger.info(f"Batch {batch_number} completed for campaign {campaign_id}")
 
             # Vérifier si la campagne est terminée
-            remaining = db.query(CampaignEmail).filter(
-                CampaignEmail.campaign_id == campaign_id,
-                CampaignEmail.status == EmailStatus.PENDING
-            ).count()
+            remaining = (
+                db.query(CampaignEmail)
+                .filter(
+                    CampaignEmail.campaign_id == campaign_id,
+                    CampaignEmail.status == EmailStatus.PENDING,
+                )
+                .count()
+            )
 
             if remaining == 0:
                 campaign.status = CampaignStatus.COMPLETED
@@ -122,13 +131,18 @@ try:
 
             # Vérifier que la campagne est prête
             if campaign.status not in [CampaignStatus.DRAFT, CampaignStatus.SCHEDULED]:
-                logger.error(f"Campaign {campaign_id} is not ready to send (status: {campaign.status})")
+                logger.error(
+                    f"Campaign {campaign_id} is not ready to send (status: {campaign.status})"
+                )
                 return
 
             # Compter le nombre de lots
-            max_batch = db.query(db.func.max(CampaignEmail.batch_number)).filter(
-                CampaignEmail.campaign_id == campaign_id
-            ).scalar() or 0
+            max_batch = (
+                db.query(db.func.max(CampaignEmail.batch_number))
+                .filter(CampaignEmail.campaign_id == campaign_id)
+                .scalar()
+                or 0
+            )
 
             num_batches = max_batch + 1
 
@@ -143,8 +157,7 @@ try:
             for batch_num in range(num_batches):
                 delay_seconds = batch_num * campaign.delay_between_batches
                 send_campaign_batch.apply_async(
-                    args=[campaign_id, batch_num],
-                    countdown=delay_seconds
+                    args=[campaign_id, batch_num], countdown=delay_seconds
                 )
 
             logger.info(f"Scheduled {num_batches} batches for campaign {campaign_id}")
@@ -168,11 +181,15 @@ except ImportError:
                 logger.error(f"Campaign {campaign_id} not found")
                 return
 
-            emails = db.query(CampaignEmail).filter(
-                CampaignEmail.campaign_id == campaign_id,
-                CampaignEmail.batch_number == batch_number,
-                CampaignEmail.status == EmailStatus.PENDING
-            ).all()
+            emails = (
+                db.query(CampaignEmail)
+                .filter(
+                    CampaignEmail.campaign_id == campaign_id,
+                    CampaignEmail.batch_number == batch_number,
+                    CampaignEmail.status == EmailStatus.PENDING,
+                )
+                .all()
+            )
 
             if not emails:
                 return
@@ -188,7 +205,7 @@ except ImportError:
                         html_content=email.body_html,
                         text_content=email.body_text,
                         campaign_id=campaign_id,
-                        email_id=email.id
+                        email_id=email.id,
                     )
 
                     if success:
@@ -210,10 +227,14 @@ except ImportError:
                     db.commit()
 
             # Vérifier si terminé
-            remaining = db.query(CampaignEmail).filter(
-                CampaignEmail.campaign_id == campaign_id,
-                CampaignEmail.status == EmailStatus.PENDING
-            ).count()
+            remaining = (
+                db.query(CampaignEmail)
+                .filter(
+                    CampaignEmail.campaign_id == campaign_id,
+                    CampaignEmail.status == EmailStatus.PENDING,
+                )
+                .count()
+            )
 
             if remaining == 0:
                 campaign.status = CampaignStatus.COMPLETED
@@ -234,9 +255,12 @@ except ImportError:
             if campaign.status not in [CampaignStatus.DRAFT, CampaignStatus.SCHEDULED]:
                 return
 
-            max_batch = db.query(db.func.max(CampaignEmail.batch_number)).filter(
-                CampaignEmail.campaign_id == campaign_id
-            ).scalar() or 0
+            max_batch = (
+                db.query(db.func.max(CampaignEmail.batch_number))
+                .filter(CampaignEmail.campaign_id == campaign_id)
+                .scalar()
+                or 0
+            )
 
             num_batches = max_batch + 1
 
@@ -265,7 +289,7 @@ class EmailService:
         html_content: str,
         text_content: str = None,
         campaign_id: int = None,
-        email_id: int = None
+        email_id: int = None,
     ) -> bool:
         """
         Envoie un email via votre provider (SendGrid, AWS SES, etc.)

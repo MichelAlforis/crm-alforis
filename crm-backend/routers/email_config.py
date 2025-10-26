@@ -24,8 +24,7 @@ router = APIRouter(prefix="/email-config", tags=["Email Configuration"])
 
 @router.get("/", response_model=List[EmailConfigurationResponse])
 def list_email_configurations(
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
+    db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)
 ):
     """Liste toutes les configurations email"""
     service = EmailConfigurationService(db)
@@ -35,24 +34,21 @@ def list_email_configurations(
 
 @router.get("/active", response_model=EmailConfigurationResponse)
 def get_active_configuration(
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
+    db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)
 ):
     """Récupère la configuration email active"""
     service = EmailConfigurationService(db)
     config = service.get_active()
     if not config:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Aucune configuration email active"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Aucune configuration email active"
         )
     return config
 
 
 @router.get("/available-providers", response_model=List[str])
 def get_available_providers(
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
+    db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)
 ):
     """Retourne la liste des providers configurés (via DB ou .env)"""
     from core.config import settings
@@ -79,9 +75,7 @@ def get_available_providers(
 
 @router.get("/{config_id}", response_model=EmailConfigurationResponse)
 def get_email_configuration(
-    config_id: int,
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
+    config_id: int, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)
 ):
     """Récupère une configuration email par ID"""
     service = EmailConfigurationService(db)
@@ -96,7 +90,7 @@ def get_email_configuration(
 def create_email_configuration(
     data: EmailConfigurationCreate,
     db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(get_current_user),
 ):
     """Crée une nouvelle configuration email"""
     service = EmailConfigurationService(db)
@@ -113,7 +107,7 @@ def update_email_configuration(
     config_id: int,
     data: EmailConfigurationUpdate,
     db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(get_current_user),
 ):
     """Met à jour une configuration email"""
     service = EmailConfigurationService(db)
@@ -129,9 +123,7 @@ def update_email_configuration(
 
 @router.delete("/{config_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_email_configuration(
-    config_id: int,
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
+    config_id: int, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)
 ):
     """Supprime une configuration email"""
     service = EmailConfigurationService(db)
@@ -145,9 +137,7 @@ def delete_email_configuration(
 
 @router.post("/{config_id}/activate", response_model=EmailConfigurationResponse)
 def activate_email_configuration(
-    config_id: int,
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
+    config_id: int, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)
 ):
     """Active une configuration email (désactive les autres)"""
     service = EmailConfigurationService(db)
@@ -160,9 +150,7 @@ def activate_email_configuration(
 
 @router.post("/{config_id}/deactivate", response_model=EmailConfigurationResponse)
 def deactivate_email_configuration(
-    config_id: int,
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
+    config_id: int, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)
 ):
     """Désactive une configuration email"""
     service = EmailConfigurationService(db)
@@ -178,7 +166,7 @@ def test_email_configuration(
     config_id: int,
     test_request: EmailConfigurationTestRequest,
     db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(get_current_user),
 ):
     """Teste une configuration email en envoyant un email"""
     service = EmailConfigurationService(db)

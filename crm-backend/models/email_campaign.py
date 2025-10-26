@@ -17,6 +17,7 @@ class CampaignStatus(str, enum.Enum):
     PAUSED = "paused"
     CANCELLED = "cancelled"
 
+
 class EmailStatus(str, enum.Enum):
     PENDING = "pending"
     SENT = "sent"
@@ -24,6 +25,7 @@ class EmailStatus(str, enum.Enum):
     BOUNCED = "bounced"
     OPENED = "opened"
     CLICKED = "clicked"
+
 
 class EmailTemplate(Base):
     __tablename__ = "email_templates"
@@ -38,6 +40,7 @@ class EmailTemplate(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     campaigns = relationship("EmailCampaign", back_populates="template")
+
 
 class EmailCampaign(Base):
     __tablename__ = "email_campaigns"
@@ -81,6 +84,7 @@ class EmailCampaign(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     emails = relationship("CampaignEmail", back_populates="campaign")
+
 
 class CampaignEmail(Base):
     __tablename__ = "campaign_emails"
