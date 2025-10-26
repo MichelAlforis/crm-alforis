@@ -10,8 +10,8 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers
-revision = "audit_logs_001'
-down_revision = "perf_indexes_001'
+revision = "audit_logs_001"
+down_revision = "perf_indexes_001"
 branch_labels = None
 depends_on = None
 

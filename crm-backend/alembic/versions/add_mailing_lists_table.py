@@ -11,8 +11,8 @@ from sqlalchemy.dialects import postgresql
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = "add_mailing_lists'
-down_revision = "add_email_campaigns'
+revision = "add_mailing_lists"
+down_revision = "add_email_campaigns"
 branch_labels = None
 depends_on = None
 
