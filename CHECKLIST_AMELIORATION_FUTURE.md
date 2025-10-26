@@ -92,6 +92,32 @@
 
 **Déclenchement**: Push main/develop/feature/* • Pull requests • Manuel
 
+### 🔐 7. RGPD / GDPR Compliance ✅ **(26 Oct 2025)**
+**Fichiers**:
+- [crm-backend/alembic/versions/add_gdpr_compliance_fields.py](crm-backend/alembic/versions/add_gdpr_compliance_fields.py) - Migration
+- [crm-backend/scripts/gdpr_anonymize.py](crm-backend/scripts/gdpr_anonymize.py) - Script d'anonymisation
+
+**Fonctionnalités**:
+- Champs RGPD: `is_anonymized`, `gdpr_consent`, `gdpr_consent_date`, `anonymized_at`, `last_activity_date`
+- Anonymisation automatique des contacts inactifs >18 mois
+- Audit trail complet pour conformité
+- Dry-run mode pour simulation
+- Hash déterministe pour traçabilité
+
+**Usage**:
+```bash
+# Simulation
+python scripts/gdpr_anonymize.py --dry-run
+
+# Anonymisation réelle (contacts >18 mois)
+python scripts/gdpr_anonymize.py
+
+# Période personnalisée (24 mois)
+python scripts/gdpr_anonymize.py --inactive-months 24
+```
+
+**Cron**: Exécution mensuelle recommandée (1er de chaque mois à 2h)
+
 ---
 
 ## 📝 Instructions d'utilisation
