@@ -72,6 +72,26 @@
 
 **Usage**: `python scripts/db_maintenance.py --execute` (cron quotidien 3AM)
 
+### 🔐 5. Secrets GitHub ✅ **(26 Oct 2025)**
+**Fichiers**:
+- [.github/SECRETS.md](.github/SECRETS.md) - Documentation complète
+- [scripts/setup_github_secrets.sh](scripts/setup_github_secrets.sh) - Script automatisé
+- [.env.production.example](.env.production.example) - Template production
+
+**Secrets**: 20+ variables • Database, APIs, Auth, Monitoring, Docker, SonarQube
+
+**Setup**: `./scripts/setup_github_secrets.sh --org alforis --repo crm-v1 --interactive`
+
+### 🚀 6. CI/CD Workflows ✅ **(26 Oct 2025)**
+**Fichiers**:
+- [.github/workflows/ci-cd.yml](.github/workflows/ci-cd.yml) - Pipeline complet
+- [.github/workflows/test.yml](.github/workflows/test.yml) - Tests rapides
+- [.github/LOT_A_INTEGRATION.md](.github/LOT_A_INTEGRATION.md) - Guide intégration
+
+**Pipeline**: Lint (black, flake8, eslint) • Tests (pytest, jest) • SonarQube • Security (Trivy) • Build Docker • Deploy staging
+
+**Déclenchement**: Push main/develop/feature/* • Pull requests • Manuel
+
 ---
 
 ## 📝 Instructions d'utilisation
