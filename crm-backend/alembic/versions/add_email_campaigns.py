@@ -27,11 +27,11 @@ def upgrade():
         sa.Column('body_html', sa.Text(), nullable=False),
         sa.Column('body_text', sa.Text(), nullable=True),
         sa.Column('variables', postgresql.JSON(astext_type=sa.Text()), nullable=True),
-        sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()"), nullable=True),
+        sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
         sa.Column('updated_at', sa.DateTime(timezone=True), nullable=True),
-        sa.PrimaryKeyConstraint("id")
+        sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_email_templates_id"), 'email_templates', ['id'], unique=False)
+    op.create_index(op.f('ix_email_templates_id'), 'email_templates', ['id'], unique=False)
 
     # Email Campaigns
     op.create_table(
@@ -52,13 +52,13 @@ def upgrade():
         sa.Column('scheduled_at', sa.DateTime(timezone=True), nullable=True),
         sa.Column('started_at', sa.DateTime(timezone=True), nullable=True),
         sa.Column('completed_at', sa.DateTime(timezone=True), nullable=True),
-        sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()"), nullable=True),
+        sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
         sa.Column('updated_at', sa.DateTime(timezone=True), nullable=True),
         sa.ForeignKeyConstraint(['template_id'], ['email_templates.id'], ),
-        sa.PrimaryKeyConstraint("id")
+        sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_email_campaigns_id"), 'email_campaigns', ['id'], unique=False)
-    op.create_index(op.f('ix_email_campaigns_status"), 'email_campaigns', ['status'], unique=False)
+    op.create_index(op.f('ix_email_campaigns_id'), 'email_campaigns', ['id'], unique=False)
+    op.create_index(op.f('ix_email_campaigns_status'), 'email_campaigns', ['status'], unique=False)
 
     # Campaign Emails
     op.create_table(
@@ -79,27 +79,27 @@ def upgrade():
         sa.Column('clicked_at', sa.DateTime(timezone=True), nullable=True),
         sa.Column('error_message', sa.Text(), nullable=True),
         sa.Column('batch_number', sa.Integer(), nullable=True),
-        sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()"), nullable=True),
+        sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
         sa.Column('updated_at', sa.DateTime(timezone=True), nullable=True),
         sa.ForeignKeyConstraint(['campaign_id'], ['email_campaigns.id'], ),
-        sa.PrimaryKeyConstraint("id")
+        sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_campaign_emails_id"), 'campaign_emails', ['id'], unique=False)
-    op.create_index(op.f('ix_campaign_emails_campaign_id"), 'campaign_emails', ['campaign_id'], unique=False)
-    op.create_index(op.f('ix_campaign_emails_status"), 'campaign_emails', ['status'], unique=False)
-    op.create_index(op.f('ix_campaign_emails_batch_number"), 'campaign_emails', ['batch_number'], unique=False)
+    op.create_index(op.f('ix_campaign_emails_id'), 'campaign_emails', ['id'], unique=False)
+    op.create_index(op.f('ix_campaign_emails_campaign_id'), 'campaign_emails', ['campaign_id'], unique=False)
+    op.create_index(op.f('ix_campaign_emails_status'), 'campaign_emails', ['status'], unique=False)
+    op.create_index(op.f('ix_campaign_emails_batch_number'), 'campaign_emails', ['batch_number'], unique=False)
 
 
 def downgrade():
-    op.drop_index(op.f('ix_campaign_emails_batch_number"), table_name='campaign_emails")
-    op.drop_index(op.f('ix_campaign_emails_status"), table_name='campaign_emails")
-    op.drop_index(op.f('ix_campaign_emails_campaign_id"), table_name='campaign_emails")
-    op.drop_index(op.f('ix_campaign_emails_id"), table_name='campaign_emails")
-    op.drop_table('campaign_emails")
+    op.drop_index(op.f('ix_campaign_emails_batch_number'), table_name='campaign_emails')
+    op.drop_index(op.f('ix_campaign_emails_status'), table_name='campaign_emails')
+    op.drop_index(op.f('ix_campaign_emails_campaign_id'), table_name='campaign_emails')
+    op.drop_index(op.f('ix_campaign_emails_id'), table_name='campaign_emails')
+    op.drop_table('campaign_emails')
 
-    op.drop_index(op.f('ix_email_campaigns_status"), table_name='email_campaigns")
-    op.drop_index(op.f('ix_email_campaigns_id"), table_name='email_campaigns")
-    op.drop_table('email_campaigns")
+    op.drop_index(op.f('ix_email_campaigns_status'), table_name='email_campaigns')
+    op.drop_index(op.f('ix_email_campaigns_id'), table_name='email_campaigns')
+    op.drop_table('email_campaigns')
 
-    op.drop_index(op.f('ix_email_templates_id"), table_name='email_templates")
-    op.drop_table('email_templates")
+    op.drop_index(op.f('ix_email_templates_id'), table_name='email_templates')
+    op.drop_table('email_templates')

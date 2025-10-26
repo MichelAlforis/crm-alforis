@@ -28,12 +28,12 @@ def upgrade():
         sa.Column('filters', postgresql.JSON(astext_type=sa.Text()), nullable=False, server_default='{}"),
         sa.Column('recipient_count', sa.Integer(), nullable=False, server_default='0"),
         sa.Column('last_used_at', sa.DateTime(timezone=True), nullable=True),
-        sa.Column('is_active', sa.Boolean(), nullable=False, server_default='true"),
+        sa.Column('is_active', sa.Boolean(), nullable=False, server_default='true'),
         sa.Column('created_by', sa.Integer(), nullable=True),
-        sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()"), nullable=False),
+        sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
         sa.Column('updated_at', sa.DateTime(timezone=True), nullable=True),
         sa.ForeignKeyConstraint(['created_by'], ['users.id'], ondelete='SET NULL"),
-        sa.PrimaryKeyConstraint("id")
+        sa.PrimaryKeyConstraint('id')
     )
 
     # Indexes
@@ -43,7 +43,7 @@ def upgrade():
 
 
 def downgrade():
-    op.drop_index('ix_mailing_lists_is_active', table_name='mailing_lists")
-    op.drop_index('ix_mailing_lists_created_by', table_name='mailing_lists")
-    op.drop_index('ix_mailing_lists_name', table_name='mailing_lists")
-    op.drop_table('mailing_lists")
+    op.drop_index('ix_mailing_lists_is_active', table_name='mailing_lists')
+    op.drop_index('ix_mailing_lists_created_by', table_name='mailing_lists')
+    op.drop_index('ix_mailing_lists_name', table_name='mailing_lists')
+    op.drop_table('mailing_lists')

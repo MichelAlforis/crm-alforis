@@ -39,16 +39,16 @@ def upgrade():
         sa.Column('title', sa.String(length=200), nullable=False),
         sa.Column('body', sa.Text(), nullable=True),
         sa.Column('created_by', sa.Integer(), nullable=False),
-        sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()"), nullable=False),
+        sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
         sa.Column('updated_at', sa.DateTime(timezone=True), nullable=True),
         sa.Column('attachments', postgresql.JSON(astext_type=sa.Text()), nullable=False, server_default='[]"),
 
         # Primary key
-        sa.PrimaryKeyConstraint("id"),
+        sa.PrimaryKeyConstraint('id'),
 
         # Foreign keys
-        sa.ForeignKeyConstraint(['org_id'], ['organisations.id'], ondelete='SET NULL"),
-        sa.ForeignKeyConstraint(['person_id'], ['people.id'], ondelete='SET NULL"),
+        sa.ForeignKeyConstraint(['org_id'], ['organisations.id'], ondelete='SET NULL'),
+        sa.ForeignKeyConstraint(['person_id'], ['people.id'], ondelete='SET NULL'),
         sa.ForeignKeyConstraint(['created_by'], ['users.id']),
 
         # Contrainte CHECK: au moins org_id OU person_id
@@ -83,11 +83,11 @@ def upgrade():
 
 def downgrade():
     # Drop table
-    op.drop_index('idx_crm_interactions_created_by', table_name='crm_interactions")
-    op.drop_index('idx_crm_interactions_created_at', table_name='crm_interactions")
-    op.drop_index('idx_crm_interactions_person_created_at', table_name='crm_interactions")
-    op.drop_index('idx_crm_interactions_org_created_at', table_name='crm_interactions")
-    op.drop_table('crm_interactions")
+    op.drop_index('idx_crm_interactions_created_by', table_name='crm_interactions')
+    op.drop_index('idx_crm_interactions_created_at', table_name='crm_interactions')
+    op.drop_index('idx_crm_interactions_person_created_at', table_name='crm_interactions')
+    op.drop_index('idx_crm_interactions_org_created_at', table_name='crm_interactions')
+    op.drop_table('crm_interactions')
 
     # Drop enum type
     interaction_type_enum = postgresql.ENUM(
