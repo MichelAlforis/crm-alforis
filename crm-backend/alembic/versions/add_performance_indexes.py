@@ -9,6 +9,7 @@ Indexes créés:
 - Foreign keys sur interactions, email_sends
 - Composite indexes pour requêtes fréquentes
 """
+
 import sqlalchemy as sa
 
 from alembic import op
@@ -26,7 +27,8 @@ def upgrade() -> None:
     # ========================================================================
 
     # People - recherche sur prenom, nom, email
-    op.execute("""
+    op.execute(
+        """
         CREATE INDEX IF NOT EXISTS idx_people_search
         ON people USING gin(
             to_tsvector('french',
@@ -35,15 +37,18 @@ def upgrade() -> None:
                 coalesce(email, '")
             )
         )
-    """)
+    """
+    )
 
     # Organisations - recherche sur nom (search_vector déjà existe)
-    op.execute("""
+    op.execute(
+        """
         CREATE INDEX IF NOT EXISTS idx_organisations_search
         ON organisations USING gin(
             to_tsvector('french', coalesce(nom, '"))
         )
-    """)
+    """
+    )
 
     # ========================================================================
     # 2. INDEX DE PERFORMANCE SUPPLÉMENTAIRE

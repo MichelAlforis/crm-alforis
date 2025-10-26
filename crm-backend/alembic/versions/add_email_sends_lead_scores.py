@@ -5,6 +5,7 @@ Revises: interactions_v2
 Create Date: 2025-10-24 20:15:00.000000
 
 """
+
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
