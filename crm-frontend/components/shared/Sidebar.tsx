@@ -12,10 +12,8 @@ import {
   ChevronDown,
   X,
   LogOut,
-  HelpCircle,
   Bell,
   Star,
-  Settings,
 } from 'lucide-react'
 import { useTaskViews } from '@/hooks/useTasks'
 import { useAuth } from '@/hooks/useAuth'
