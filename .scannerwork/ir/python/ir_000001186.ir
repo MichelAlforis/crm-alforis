@@ -1,25 +1,0 @@
-
-ÞÔ"
-    :param appname: See `appname <platformdirs.api.PlatformDirsABC.appname>`.
-    :param appauthor: See `appauthor <platformdirs.api.PlatformDirsABC.appauthor>`.
-    :param version: See `version <platformdirs.api.PlatformDirsABC.version>`.
-    :param opinion: See `roaming <platformdirs.api.PlatformDirsABC.opinion>`.
-    :param ensure_exists: See `ensure_exists <platformdirs.api.PlatformDirsABC.ensure_exists>`.
-    :returns: cache directory tied to the user
-    "strappname
-– –(	appauthor
-— —(1version
-˜ ˜(opinion
-™ ™(ensure_exists
-š š("”#
-!
-
-¤ ¤("#unknown-value#(
-&
-
-¤ ª("PlatformDirs:1
-/
-
-¤ ª(	"#get-field# user_cache_dir:
-
-¤ ª(	*ˆ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/__init__.py

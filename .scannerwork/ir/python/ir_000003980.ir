@@ -1,14 +1,0 @@
-
-/&":return: music path tied to the user"strself
-ò ò(" 1
-/
-
-ô ô('"#get-field# user_music_dir:.
-,
-
-ô ô('"?python-partial-apply?:)
-'
-
-ô ô(("Path:Bpathlib.Path
-
-ô ô((*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/api.py

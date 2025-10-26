@@ -1,23 +1,0 @@
-
-
-0int
-6-"non-zero flags not allowed in calls to send"strselfc c(datac c(flagsc c( "J*
-(
-d d("
-#binop !=#2!=:Bbool"
-d d( *d d(
-"B.
-,
-e e(K"
-ValueError*:B
-ValueError2
-e e(K"–'
-%
-f% f(0"#get-field# sslobj:&
-$
-f% f(6	"#get-field# write:1
-/
-f f(=
-response"?python-unknown?:	
-g g(
-*Œ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/util/ssltransport.py

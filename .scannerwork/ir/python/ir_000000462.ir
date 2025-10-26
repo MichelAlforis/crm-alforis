@@ -1,49 +1,0 @@
-
-&"<ExportEntry %s = %s:%s %s>"str
-
-0intself
-» »(	tuple"Æ'
-%
-
-¼0 ¼(9"#get-field# name:)
-'
-
-¼; ¼(F"#get-field# prefix:)
-'
-
-¼H ¼(S"#get-field# suffix:(
-&
-
-¼U ¼(_"#get-field# flags:*
-(
-
-¼/ ¼(`"#unknown-value#Btuple(
-&
-
-¼/ ¼(`	"
-#is-exact#:Bbool
-
-
-¼/ ¼(`
-"
-#assume#:	:
-8
-
-¼/ ¼(`"#set-field# __collection_size:Bint(
-&
-
-¼/ ¼(`"#array-add-last#:(
-&
-
-¼/ ¼(`"#array-add-last#:(
-&
-
-¼/ ¼(`"#array-add-last#:(
-&
-
-¼/ ¼(`"#array-add-last#:.
-,
-
-¼ ¼(`"?python-str-format?*:
-
-¼ ¼(`*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/distlib/util.py

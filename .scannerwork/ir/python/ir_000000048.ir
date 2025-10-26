@@ -1,13 +1,0 @@
-
-á×"
-        Retourne toutes les permissions pour une ressource donnÃ©e
-
-        Args:
-            resource: La ressource
-
-        Returns:
-            list: Liste des actions permises ["create", "read", ...]
-        "strselfg% g()resourceg+ g(8">,
-*
-q t(	"?python-unknown?:Blist
-q t(	*K/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/role.py

@@ -1,25 +1,0 @@
-
-×Í"
-    :param appname: See `appname <platformdirs.api.PlatformDirsABC.appname>`.
-    :param appauthor: See `appauthor <platformdirs.api.PlatformDirsABC.appauthor>`.
-    :param version: See `version <platformdirs.api.PlatformDirsABC.version>`.
-    :param opinion: See `roaming <platformdirs.api.PlatformDirsABC.opinion>`.
-    :param ensure_exists: See `ensure_exists <platformdirs.api.PlatformDirsABC.ensure_exists>`.
-    :returns: log path tied to the user
-    "strappname
-ì ì(	appauthor
-í í(1version
-î î(opinion
-ï ï(ensure_exists
-ð ð("“#
-!
-
-ú ú("#unknown-value#(
-&
-
-ú €("PlatformDirs:0
-.
-
-ú €(	"#get-field# user_log_path:
-
-ú €(	*ˆ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/__init__.py

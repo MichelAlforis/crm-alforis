@@ -145,7 +145,8 @@ async def ingest_email_event(
     webhook_secret = os.getenv("WEBHOOK_SECRET")
     if webhook_secret and x_signature:
         # Verify HMAC signature
-        payload_dict = payload.dict()
+        # Use model_dump(mode='json') to serialize datetime objects properly
+        payload_dict = payload.model_dump(mode='json')
         if not verify_webhook_signature(payload_dict, x_signature, webhook_secret):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,

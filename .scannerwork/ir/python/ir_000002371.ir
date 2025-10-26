@@ -1,30 +1,0 @@
-self
-à à(other
-à à("MIpip._internal.resolution.resolvelib.requirements.UnsatisfiableRequirement"|+
-)
-
-á á(:"#is-instance#:Bbool+
-)
-
-á á(:"#unaryop !#2!:Bbool "
-
-á á(: *
-á á(
-"9#
-!
-
-â â(!"#unknown-value#
-
-â â(!"–(
-&
-
-ã ã("#get-field# _name:(
-&
-
-ã ã(("#get-field# _name:,
-*
-
-ã ã((	"
-#binop ==#2==:Bbool
-
-ã ã((	*—/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/resolution/resolvelib/requirements.py

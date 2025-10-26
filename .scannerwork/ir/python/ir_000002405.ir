@@ -1,41 +1,0 @@
-
-
-0int
-<3"VÃ©rifie si le mandat est actif (signÃ© ou actif)"strself
-Í Í(	tuple$ models.organisation.MandatStatus"Æ)
-'
-
-Ï Ï("#get-field# status:(
-&
-
-Ï Ï(1"#get-field# SIGNE:(
-&
-
-Ï3 Ï(E"#get-field# ACTIF:*
-(
-
-Ï Ï(F"#unknown-value#Btuple(
-&
-
-Ï Ï(F	"
-#is-exact#:Bbool
-
-
-Ï Ï(F
-"
-#assume#:	:
-8
-
-Ï Ï(F"#set-field# __collection_size:Bint(
-&
-
-Ï Ï(F"#array-add-last#:(
-&
-
-Ï Ï(F"#array-add-last#:,
-*
-
-Ï Ï(F"
-#binop in#2in:Bbool
-
-Ï Ï(F*S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.py

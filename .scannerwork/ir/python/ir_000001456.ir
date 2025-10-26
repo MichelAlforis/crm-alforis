@@ -1,26 +1,0 @@
-
-"1"str
-	"version"str
-"pip_version"str
-"environment"str
-		"install"strself+ +("’$
-"
-, 9(	"#new-object#Bdict 
-
-- -("	#map-set#:!
-
-. .(&"#unknown-value# 
-
-. .(&"	#map-set#:,
-*
-/ 1(
-"?python-unknown?:Blist 
-
-/ 1("	#map-set#:	
-D
-B
-8 8(0"4
-pip._vendor.packaging.markersdefault_environment 
-
-8 8(0"	#map-set#:
-, 9(	*è/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/models/installation_report.py

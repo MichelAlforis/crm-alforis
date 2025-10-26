@@ -1,162 +1,0 @@
-
-
-0int
-""bool
-"extra"strlhs
-Å Å(rhs
-Å Å()key
-Å+ Å(3	tuplestr"P,
-*
-
-Ë Ë("
-#binop ==#2==:Bbool "
-
-Ë Ë( *
-Ë Ë("Ï+
-)
-
-Ì Ì(#"#is-instance#:Bbool+
-)
-
-Ì Ì(C	"#built-in-assert#:#
-!
-
-Í Í(&
-"#unknown-value#F
-D
-
-Í Í(&"0
-pip._vendor.packaging.utilscanonicalize_name:
-#
-!
-
-Í( Í(>"#unknown-value#F
-D
-
-Í( Í(>"0
-pip._vendor.packaging.utilscanonicalize_name:*
-(
-
-Í Í(?"#unknown-value#Btuple(
-&
-
-Í Í(?"
-#is-exact#:Bbool
-
-
-Í Í(?"
-#assume#::
-8
-
-Í Í(?"#set-field# __collection_size:Bint(
-&
-
-Í Í(?"#array-add-last#:(
-&
-
-Í Í(?"#array-add-last#:
-
-Í Í(?"w#
-!
-
-Î Î(""#unknown-value#,
-*
-
-Î Î(""
-#binop in#2in:Bbool "
-
-Î Î(" *
-Î Î("]+
-)
-
-Ï Ï("#is-instance#:Bbool,"*
-
-Ï Ï( *
-Ï Ï(
-2
-Ñ Ñ("Â*1rhs0*.lhs-*
-(
-
-Õ Õ(,"#unknown-value#Btuple(
-&
-
-Õ Õ(/"#array-add-last#:,.(
-&
-
-Õ Õ(2"#array-add-last#:,1
-
-Õ Õ(,"õ#
-!
-
-Ð Ð(*"#unknown-value#F
-D
-
-Ð Ð(*"0
-pip._vendor.packaging.utilscanonicalize_name:#
-!
-
-Ð, Ð(B"#unknown-value#F
-D
-
-Ð, Ð(B"0
-pip._vendor.packaging.utilscanonicalize_name:*
-(
-
-Ð Ð(C"#unknown-value#Btuple(
-&
-
-Ð Ð(C"
-#is-exact#:Bbool
-
-
-Ð Ð(C"
-#assume#::
-8
-
-Ð Ð(C "#set-field# __collection_size:Bint(
-&
-
-Ð Ð(C!"#array-add-last#:(
-&
-
-Ð Ð(C""#array-add-last#:
-
-Ð Ð(C"¶#
-!
-
-Ò Ò(*#"#unknown-value#F
-D
-
-Ò Ò(*$"0
-pip._vendor.packaging.utilscanonicalize_name:#,
-*
-
-Ò, Ò(O%"?python-unknown?:Bset*
-(
-
-Ò Ò(P&"#unknown-value#Btuple(
-&
-
-Ò Ò(P'"
-#is-exact#:&Bbool
-
-
-Ò Ò(P("
-#assume#:':
-8
-
-Ò Ò(P)"#set-field# __collection_size:&Bint(
-&
-
-Ò Ò(P*"#array-add-last#:&$(
-&
-
-Ò Ò(P+"#array-add-last#:&%
-
-Ò Ò(P&"R#
-!
-
-Õ Õ(0"#unknown-value##
-!
-
-Õ Õ(-"#unknown-value#*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/packaging/markers.py

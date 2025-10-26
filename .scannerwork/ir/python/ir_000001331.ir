@@ -1,13 +1,0 @@
-
-¸®"
-        Return whether the id of the current commit equals the given name.
-
-        Args:
-          dest: the repository directory.
-          name: a string name.
-        "strcls
-å å(dest
-å  å()name
-å+ å(;NotImplementedError"2
-
-í í(!*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/vcs/versioncontrol.py

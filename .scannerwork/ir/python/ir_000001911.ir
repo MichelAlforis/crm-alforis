@@ -1,40 +1,0 @@
-
-"python-requests"str
-D;"
-    :rtype: requests.structures.CaseInsensitiveDict
-    "str
-"User-Agent"str
-"keep-alive"str
-"*/*"str
-"Connection"str
-
-"Accept"str
-"Accept-Encoding"str"—&
-$
-
-ÿ „(	"#new-object#BdictE
-C
-
-€ €(."0
-pip._vendor.requests.utilsdefault_user_agent:"
- 
-
-€ €(."	#map-set#:#
-!
-
- (6"#unknown-value#"
- 
-
- (6	"	#map-set#:"
- 
-
-‚ ‚("	#map-set#:
-"
- 
-
-ƒ ƒ(&"	#map-set#:_
-]
-
-ş …("CaseInsensitiveDict:B3pip._vendor.requests.structures.CaseInsensitiveDict
-
-ş …(*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/requests/utils.py

@@ -25,6 +25,9 @@ sendgrid==6.11.0
 sentry-sdk[fastapi]==1.39.1
 structlog==23.2.0
 
+# Rate Limiting
+slowapi==0.1.9
+
 # Cache
 redis==5.0.0
 

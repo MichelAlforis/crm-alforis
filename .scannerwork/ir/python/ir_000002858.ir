@@ -1,20 +1,0 @@
-
-"-r"str
-
-0intrev* *("list"Š'
-%
-+ +("#unknown-value#Blist&
-$
-+ +("
-#is-exact#:Bbool
-
-+ +("
-#assume#:8
-6
-+ +("#set-field# __collection_size:Bint&
-$
-+ +(	"#array-add-last#:&
-$
-+ +(
-"#array-add-last#:
-+ +(*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/vcs/subversion.py

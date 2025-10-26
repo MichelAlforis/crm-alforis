@@ -1,7 +1,0 @@
-organization=michelalforis
-projectKey=MichelAlforis_crm-alforis
-serverUrl=https://sonarcloud.io
-serverVersion=8.0.0.68867
-dashboardUrl=https://sonarcloud.io/dashboard?id=MichelAlforis_crm-alforis
-ceTaskId=AZoAcZRfK1yL4-7u0iR7
-ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZoAcZRfK1yL4-7u0iR7

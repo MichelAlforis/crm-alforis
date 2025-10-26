@@ -1,32 +1,0 @@
-
-
-0int
-"<%s %d/%d>"strselfc c(	tuple"Œ*
-(
-e e("#get-field# __class__:)
-'
-e e(#"#get-field# __name__:$
-"
-f f("#get-field# pos:,
-*
-g g("#get-field# data_length:(
-&
-d h(	"#unknown-value#Btuple&
-$
-d h(		"
-#is-exact#:Bbool
-
-d h(	
-"
-#assume#:	8
-6
-d h(	"#set-field# __collection_size:Bint&
-$
-d h(	"#array-add-last#:&
-$
-d h(	"#array-add-last#:&
-$
-d h(	"#array-add-last#:,
-*
-d h(	"?python-str-format?*:
-d h(	*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pygments/scanner.py

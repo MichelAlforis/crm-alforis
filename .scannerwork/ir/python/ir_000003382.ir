@@ -1,69 +1,0 @@
-selfQ Q(otherQ Q(2.pip._vendor.packaging.requirements.Requirement"t)
-'
-R R(-"#is-instance#:Bbool)
-'
-R R(-"#unaryop !#2!:Bbool"
-R R(- *R R(
-"5!
-
-S S(!"#unknown-value#
-S S(!"‚%
-#
-V V('"#get-field# name:!
-
-V V(("#unknown-value#D
-B
-V V((	"0
-pip._vendor.packaging.utilscanonicalize_name:%
-#
-V> V(H
-"#get-field# name:!
-
-V, V(I"#unknown-value#D
-B
-V, V(I"0
-pip._vendor.packaging.utilscanonicalize_name:
-*
-(
-V V(I"
-#binop ==#2==:	Bbool"
-V V(I "ê'
-%
-W W("#get-field# extras:'
-%
-W W(+"#get-field# extras:*
-(
-W W(+"
-#binop ==#2==:Bbool
-V W(+"(*"
-V W(+ "ñ*
-(
-X X("#get-field# specifier:*
-(
-X" X(1"#get-field# specifier:*
-(
-X X(1"
-#binop ==#2==:Bbool
-V X(1"(*"
-V X(1 "ä$
-"
-Y Y("#get-field# url:$
-"
-Y Y(%"#get-field# url:*
-(
-Y Y(%"
-#binop ==#2==:Bbool
-V Y(%"(*"
-V Y(%	 
-"ê	'
-%
-Z Z("#get-field# marker:'
-%
-Z Z(+"#get-field# marker:*
-(
-Z Z(+"
-#binop ==#2==:Bbool
-V Z(+
-"$
-*	
-U [(	*â/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/packaging/requirements.py

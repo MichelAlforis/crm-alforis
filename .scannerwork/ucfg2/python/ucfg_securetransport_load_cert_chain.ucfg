@@ -1,51 +1,0 @@
-
-Rpip._vendor.urllib3.contrib.securetransport.SecureTransportContext.load_cert_chainŸ
-’/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/contrib/securetransport.pyè è("2*ë
-2
-é é($—
-”
-
-é é($VD
-Bpip._vendor.urllib3.contrib.securetransport.SecureTransportContext"
-_client_cert"__id*(
-
-__unknown_file (
-
-
-certfile•
-’
-
-ê ê("UD
-Bpip._vendor.urllib3.contrib.securetransport.SecureTransportContext"
-_client_key"__id*'
-
-__unknown_file (
-	
-keyfile¢
-Ÿ
-
-ë ë(/aD
-Bpip._vendor.urllib3.contrib.securetransport.SecureTransportContext"
-_client_cert_passphrase"__id*(
-
-__unknown_file (
-
-
-password*
-3*:
-3
-securetransport.py"
-í í(
-implicit return:
-
-è è(&
-
-certfile:
-
-è( è(4	
-keyfile:
-
-è6 è(C
-
-passwordBFD
-Bpip._vendor.urllib3.contrib.securetransport.SecureTransportContextH

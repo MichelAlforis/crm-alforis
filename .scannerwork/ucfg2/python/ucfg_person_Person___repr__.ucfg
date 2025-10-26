@@ -1,38 +1,0 @@
-
-models.person.Person.__repr__W
-M/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/person.pyA A("2*ì
-2B B(AV
-T
-B B($
-%1"__id*<
-
-__unknown_file ( *
-models.person.Person"
-id]
-[
-B. B(<
-%2"__id*C
-
-__unknown_file ('*%
-models.person.Person"
-	full_name‘
-Ž
-B B(A
-%3"__concat*
-B B(
-<Person(id=*
-B B($
-
-%1*
-B% B(-
-
-, name='*
-B. B(<
-
-%2*
-B= B(@
-')>"
-B B(A
-
-%3B
-models.person.PersonH

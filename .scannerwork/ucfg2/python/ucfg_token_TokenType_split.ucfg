@@ -1,60 +1,0 @@
-
-+pip._vendor.pygments.token._TokenType.splitŒ
-/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pygments/token.py ("2*Ñ
-2 (
- (
-%4"list=
-;
- (
-buf"__id*"
-
-__unknown_file (
-
-%4a
-_
- (
-node"__id*E
-
-__unknown_file ()'
-%pip._vendor.pygments.token._TokenType*
-4
-6*„
-4 (`^
- (
-%1"typing.MutableSequence.reverse*#
-
-__unknown_file (
-
-buf2reverse"
- (
-
-buf*•
-6 (rp
- (
-%2"list.append*#
-
-__unknown_file (
-
-buf*$
-
-__unknown_file (
-
-node2appendJ
-H
- (
-%3"__id*0
-
-__unknown_file (*
-
-node"
-parent>
-<
- (
-node"__id*"
-
-__unknown_file (
-
-%3*
-4
-6B)'
-%pip._vendor.pygments.token._TokenTypeH

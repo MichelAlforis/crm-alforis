@@ -1,277 +1,0 @@
-
-1.0PythonFrontend"1760943908528*py2.BÒ	
-
-imports1
-
-extends2
-
-returns3
-
-	has param4
-
-module5
-
-
-class6
-
-function7
-%
- crm-backend/tests/test_search.py9
-
-tests.test_search11
-
-sqlalchemy.orm12
-
-
-sqlalchemy14
-
-models.organisation16
-
-models.person18
-
-models.mandat20
-
-models.user22
-
-core.search24
-
-
-time26
-2
-,tests.test_search.test_search_empty_database28
-$
-sqlalchemy.orm.session.Session30
-
-models.user.User32
-6
-0tests.test_search.test_search_special_characters34
-7
-1tests.test_search.test_search_organisations_basic36
-0
-*tests.test_search.test_autocomplete_people38
->
-8tests.test_search.test_search_organisations_with_filters40
-4
-.tests.test_search.test_autocomplete_min_length42
--
-'tests.test_search.setup_fulltext_search44
-=
-7tests.test_search.test_search_organisations_empty_query46
-6
-0tests.test_search.test_search_all_specific_types48
-2
-,tests.test_search.test_search_people_by_name50
-3
--tests.test_search.test_search_people_by_email52
-.
-(tests.test_search.test_search_pagination54
-7
-1tests.test_search.test_autocomplete_organisations56
-6
-0tests.test_search.test_search_all_multi_entities58
-4
-.tests.test_search.test_search_case_insensitive60
-=
-7tests.test_search.test_search_performance_large_dataset62J
-
-8
-89j
- 
-10
-10115 *
-8 (
-
-13
-13125
-
-15
-15145
-
-17
-17165
-
-19
-19185
-
-21
-21205
-
-23
-23225
-
-25
-25245
-
-27
-27265
-
-29
-29287 210
-
-31
-31306
-
-33
-33326
-
-35
-35347 210
-
-37
-37367 210
-
-39
-39387 210
-
-41
-41407 210
-
-43
-43427 210
-
-45
-45447 210
-
-47
-47467 210
-
-49
-49487 210
-
-51
-51507 210
-
-53
-53527 210
-
-55
-55547 210
-
-57
-57567 210
-
-59
-59587 210
-
-61
-61607 210
-
-63
-63627 210r¨
-
-10131*
-8 (#
-
-10151*
-8 (
-
-10171*
-8 (C
-
-10191*
-8 (!
-
-10211*
-8 (!
-
-10231*
-8 (
-
-10251*
-8 (@
-
-10271*
-8ñ ñ(
-
-29314*
-8Ñ Ñ(
-
-29334*
-8Ñ Ñ(
-
-35314*
-8‰ ‰(#
-
-35334*
-8‰ ‰(#
-
-37314*
-8N N($
-
-37334*
-8N N($
-
-39314*
-8® ®(#
-
-39334*
-8® ®(#
-
-41314*
-8q q(+
-
-41334*
-8q q(+
-
-43314*
-8ö ö('
-
-43334*
-8ö ö('
-
-45314*
-8 (
-
-47314*
-8ê ê(*
-
-47334*
-8ê ê(*
-
-49314*
-8Ê Ê()
-
-49334*
-8Ê Ê()
-
-51314*
-8† †(
-
-51334*
-8† †(
-
-53314*
-8∏ ∏( 
-
-53334*
-8∏ ∏( 
-
-55314*
-8¿ ¿(
-
-55334*
-8¿ ¿(
-
-57314*
-8ˇ ˇ(*
-
-57334*
-8ˇ ˇ(*
-
-59314*
-8Œ Œ()
-
-59334*
-8Œ Œ()
-
-61314*
-8Ù Ù(!
-
-61334*
-8Ù Ù(!
-
-63314*
-8î î(*
-
-63334*
-8î î(*

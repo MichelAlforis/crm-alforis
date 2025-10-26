@@ -1,22 +1,0 @@
-
-∏Æ"
-    D√©corateur pour exiger le r√¥le ADMIN
-
-    Usage:
-        @router.delete("/users/{id}")
-        @require_admin()
-        async def delete_user(id: int, current_user: User = Depends(get_current_user)):
-            ...
-
-    Raises:
-        HTTPException: 403 si l'utilisateur n'est pas admin
-    "strmodels.role.UserRole"s(
-&
-
-” ”(&"#get-field# ADMIN:5
-3
-
-” ”('" 
-core.permissionsrequire_role:
-
-” ”('*P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/core/permissions.py

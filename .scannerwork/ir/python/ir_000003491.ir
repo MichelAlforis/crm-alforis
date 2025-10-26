@@ -1,15 +1,0 @@
-
-’ˆ"Waits for writing to be available on a given socket.
-    Returns True if the socket is readable, or False if the timeout expired.
-    "str
-trueboolsock
-” ”(timeout
-” ”(%"b#
-!
-
-˜ ˜("#unknown-value#)
-'
-
-˜ ˜(="wait_for_socket:
-
-˜ ˜(=*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/util/wait.py

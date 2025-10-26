@@ -1,30 +1,0 @@
-
-´ª"Find all possible candidates that satisfy the given constraints.
-
-        :param identifier: An identifier as returned by ``identify()``. All
-            candidates returned by this method should produce the same
-            identifier.
-        :param requirements: A mapping of requirements that all returned
-            candidates must satisfy. Each key is an identifier, and the value
-            an iterator of requirements for that dependency.
-        :param incompatibilities: A mapping of known incompatibile candidates of
-            each dependency. Each key is an identifier, and the value an
-            iterator of incompatibilities known to the resolver. All
-            incompatibilities *must* be excluded from the return value.
-
-        This should try to get candidates based on the requirements' types.
-        For VCS, local, and archive requirements, the one-and-only match is
-        returned, and for a "named" requirement, the index(es) should be
-        consulted to find concrete candidates for this requirement.
-
-        The return value should produce candidates ordered by preference; the
-        most preferred candidate should come first. The return type may be one
-        of the following:
-
-        * A callable that returns an iterator that yields candidates.
-        * An collection of candidates.
-        * An iterable of candidates. This will be consumed immediately into a
-          list of candidates.
-        "strself] ](
-identifier^ ^(requirements_ _(/incompatibilities` `(4NotImplementedError"2
-} }(!*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/resolvelib/providers.py

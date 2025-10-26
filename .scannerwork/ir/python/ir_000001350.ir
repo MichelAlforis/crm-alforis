@@ -1,15 +1,0 @@
-
-pg"
-    Return the major-minor version of the current Python as a string, e.g.
-    "3.7" or "3.10".
-    "str
-"{}.{}"str"·!
-
- ("#unknown-value#-
-+
- (+"#get-field# version_info:#
-!
- (+"#unaryop *#2*:.
-,
- (,"?python-unknown?*:Bstr
- (,*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/locations/base.py

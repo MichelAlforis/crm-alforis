@@ -1,69 +1,0 @@
-
-@7"{path} is a symlink; Will not return uid for symlinks"str
-µ´"
-    Return path's uid.
-
-    Does not follow symlinks:
-        https://github.com/pypa/pip/pull/935#discussion_r5307003
-
-    Placed this function in compat due to differences on AIX and
-    Jython, that should eventually go away.
-
-    :raises OSError: When path is a symlink or can't be read.
-    "str
-"O_NOFOLLOW"strpath ("}!
-
-) )("#unknown-value#0
-.
-) )( "
-builtinshasattr*:Bbool&"$
-) )(  *) )(2- -("Õ!
-
-* *("#unknown-value#)
-'
-* *(&"#get-field# O_RDONLY:!
-
-*) *(+"#unknown-value#+
-)
-*) *(6	"#get-field# O_NOFOLLOW:!
-
-* *(6
-"#unknown-value#&
-$
-* *(7"#unknown-value#Bint!
-
-* *(7"#unknown-value#)
-'
-* *(7fd"
-
-osopen:
-Bint/
--
-+ +(file_uid"
-osfstat:Btuple1
-/
-+ +(&file_uid"#get-field# st_uid:(
-&
-, ,("
-osclose:BNoneType"Å*
-(
-/ /(#"
-os.pathislink:Bbool)
-'
-/ /(#"#unaryop !#2!:Bbool&"$
-/ /(# */ /(
-22 2("π!
-
-1 1($"#unknown-value#'
-%
-1 1($"#unknown-value#Bbool0
-.
-1 1($file_uid"
-
-osstat:Btuple1
-/
-1 1(+file_uid"#get-field# st_uid:"<(
-&
-4 4(S"	OSError*:BOSError2
-4 4(S"".*file_uid
-5 5(*Å/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/compat.py

@@ -30,6 +30,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     zlib1g-dev \
     libfreetype6-dev \
     curl \
+    supervisor \
+    postgresql-client \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -50,10 +52,14 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 COPY . .
 
 # Dossiers
-RUN mkdir -p /app/uploads /app/backups \
+RUN mkdir -p /app/uploads /app/backups /app/logs /var/log/supervisor \
  && adduser --disabled-password --gecos "" appuser \
  && chown -R appuser:appuser /app
 
+# Copier la configuration supervisord
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Pour dev, on reste en mode simple (pas de supervisord)
 USER appuser
 
 EXPOSE 8000
@@ -76,15 +82,19 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 COPY . .
 
 # Dossiers et permissions
-RUN mkdir -p /app/uploads /app/backups \
+RUN mkdir -p /app/uploads /app/backups /app/logs /var/log/supervisor \
  && adduser --disabled-password --gecos "" appuser \
  && chown -R appuser:appuser /app
 
-USER appuser
+# Copier la configuration supervisord et scripts
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY scripts/backup-db.sh /app/scripts/backup-db.sh
+COPY scripts/restore-db.sh /app/scripts/restore-db.sh
+RUN chmod +x /app/scripts/*.sh
 
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --retries=5 --start-period=60s \
   CMD python -c 'import urllib.request; urllib.request.urlopen("http://localhost:8000/api/v1/health")' || exit 1
 
-# Mode production avec workers multiples, sans reload
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
+# Mode production avec supervisord (gère API + workers)
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

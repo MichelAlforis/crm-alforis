@@ -1,12 +1,0 @@
-
-7."Retourne le nombre d'utilisateurs connect√©s"strself
-á" á(&"w5
-3
-
-â â(*" #get-field# active_connections:,
-*
-
-â â(+"
-builtinslen*:Bint
-
-â â(+*R/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/core/notifications.py

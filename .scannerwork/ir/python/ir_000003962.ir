@@ -1,61 +1,0 @@
-
-21int
-
-2int
-
-0int
-48int
-
-1int
-">BBBH"str
-">BB"str
-A8"
-    Builds a TLS alert record for an unknown CA.
-    "strversion
-Ç  Ç('"â#
-!
-
-Ü Ü(,"#unknown-value#-
-+
-
-Ü Ü(5ver_maj"#array-read#:1
-/
-
-Ü Ü(5ver_maj"#python-unpack#:1
-/
-
-Ü Ü(5	ver_min"#python-unpack#:0
-.
-
-á á(
-severity_fatal"#id#:Bint8
-6
-
-à à(!description_unknown_ca"#id#:Bint#
-!
-
-â
- â("#unknown-value#6
-4
-
-â
- â(Dmsg"?python-unknown?:
-Bbytes5
-3
-
-ä ä(msg_len"
-builtinslen*:Bint3
-1
-
-ã ã(record_type_alert"#id#:Bint#
-!
-
-å å("#unknown-value#3
-1
-
-å å(O"?python-unknown?:	Bbytes,
-*
-
-å å(Urecord"	#binop +#2+:
-
-ç ç(*ù/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/contrib/_securetransport/low_level.py

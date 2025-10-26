@@ -1,17 +1,0 @@
-
-ƒù"Replace emoji markup with corresponding unicode characters.
-
-        Args:
-            text (str): A string with emojis codes, e.g. "Hello :smiley:!"
-
-        Returns:
-            str: A string with emoji codes replaces with actual emoji.
-        "strcls5 5(text5 5("ž!
-
-> >(#"#unknown-value#!
-
-> >(#"#unknown-value#F
-D
-> >(#"1
-pip._vendor.rich._emoji_replace_emoji_replace:
-> >(#*}/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/emoji.py

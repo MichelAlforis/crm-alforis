@@ -1,60 +1,0 @@
-
-
-	0int
-"x"strcls
-õ õ(extras_spec
-õ õ(&
-ValueError	tuple"|+
-)
-
-ö ö("
-__bool__*:BboolH+
-)
-
-ö ö("#unaryop !#2!:Bbool "
-
-ö ö( *
-ö ö(
-"Ç*
-(
-
-÷ ÷("#unknown-value#Btuple(
-&
-
-÷ ÷("
-#is-exact#:Bbool
-
-
-÷ ÷("
-#assume#::
-8
-
-÷ ÷(
-"#set-field# __collection_size:	Bint
-
-÷ ÷("ë$
-"
-
-ø  ø(1"	#binop +#2+:H
-F
-
-ø ø(2req".
-%pip._vendor.pkg_resources.Requirementparse:(
-&
-
-ù ù("#get-field# specs:+
-)
-
-ù ù("
-__bool__*:BboolH "
-
-ù ù( *
-ù ù(
-"2
-
-ú ú("?)
-'
-
-û û("#get-field# extras:
-
-û û(*‰/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pkg_resources/__init__.py

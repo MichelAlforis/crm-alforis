@@ -1,14 +1,0 @@
-
-1(":return: desktop path tied to the user"strself
-÷ ÷("¢3
-1
-
-ù ù()"#get-field# user_desktop_dir:.
-,
-
-ù ù()"?python-partial-apply?:)
-'
-
-ù ù(*"Path:Bpathlib.Path
-
-ù ù(**ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/api.py

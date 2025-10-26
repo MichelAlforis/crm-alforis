@@ -1,16 +1,0 @@
-
-8schemas.organisation.OrganisationBase.normalize_language^
-T/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/schemas/organisation.py; ;("2*n
-2< <(KI
-< <(
-%1"	str.upper*%
-
-__unknown_file (	
-
-value2upper"
-< <(
-
-%1:
-;  ;(*
-valueB)'
-%schemas.organisation.OrganisationBaseH

@@ -1,63 +1,0 @@
-
-‡÷"Create a traceback from exception info
-
-        Args:
-            exc_type (Type[BaseException]): Exception type.
-            exc_value (BaseException): Exception value.
-            traceback (TracebackType): Python Traceback object.
-            width (Optional[int], optional): Number of characters used to traceback. Defaults to 100.
-            code_width (Optional[int], optional): Number of code characters used to traceback. Defaults to 88.
-            extra_lines (int, optional): Additional lines of code to render. Defaults to 3.
-            theme (str, optional): Override pygments theme used in traceback.
-            word_wrap (bool, optional): Enable word wrapping of long lines. Defaults to False.
-            show_locals (bool, optional): Enable display of local variables. Defaults to False.
-            indent_guides (bool, optional): Enable indent guides in code and locals. Defaults to True.
-            locals_max_length (int, optional): Maximum length of containers before abbreviating, or None for no abbreviation.
-                Defaults to 10.
-            locals_max_string (int, optional): Maximum length of string before truncating, or None to disable. Defaults to 80.
-            locals_hide_dunder (bool, optional): Hide locals prefixed with double underscore. Defaults to True.
-            locals_hide_sunder (bool, optional): Hide locals prefixed with single underscore. Defaults to False.
-            suppress (Iterable[Union[str, ModuleType]]): Optional sequence of modules or paths to exclude from traceback.
-            max_frames (int): Maximum number of frames to show in a traceback, 0 for no maximum. Defaults to 100.
-
-        Returns:
-            Traceback: A Traceback instance that may be printed.
-        "strcls
-’ ’(exc_type
-÷ ÷(	exc_value
-◊ ◊( 	traceback
-ÿ ÿ(*width
-⁄ ⁄("
-code_width
-€ €(&extra_lines
-‹ ‹(theme
-› ›(#		word_wrap
-ﬁ ﬁ(
-show_locals
-ﬂ ﬂ(!!locals_max_length
-‡ ‡(2!locals_max_string
-· ·(2"locals_hide_dunder
-‚ ‚('"locals_hide_sunder
-„ „((indent_guides
-‰ ‰("suppress
-Â Â(7
-max_frames
-Ê Ê("Î)
-'
-
-Ä â(	"#unknown-value#Btype#
-!
-
-Ä â(	"#unknown-value#]
-[
-
-Ä â(	rich_traceback"/
-$pip._vendor.rich.traceback.Tracebackextract:
-
-(
-&
-
-ã ö(	"cls:	
-
-
-ã ö(	*Å/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/traceback.py

@@ -1,15 +1,0 @@
-
-I@"
-        Fetch an HTML page containing package links.
-        "strself
-· ·(location
-· ·(+"‰*
-(
-
-»4 »(@"#get-field# session:I
-G
-
-» »(A"3
-pip._internal.index.collector_get_index_content:
-
-» »(A*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/index/collector.py

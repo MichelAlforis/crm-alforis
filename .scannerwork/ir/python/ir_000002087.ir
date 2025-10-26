@@ -1,63 +1,0 @@
-
-	"__str__"str
-d["@python_2_unicode_compatible cannot be applied to %s because it doesn't define __str__()."str
-’ˆ"
-    A class decorator that defines __unicode__ and __str__ methods under Python 2.
-    Under Python 3 it does nothing.
-
-    To support Python 2 and 3 with a single code base, define a __str__ method
-    returning text and apply this decorator to the class.
-    "strklass
-‰  ‰(%"t#
-!
-
-‘ ‘(
-"#unknown-value#+
-)
-
-‘ ‘(
-"
-__bool__*:BboolH "
-
-‘ ‘(
- *
-‘ ‘("‡+
-)
-
-’ ’(*"#get-field# __dict__:4
-2
-
-’ ’(*"#binop not in#2not in:Bbool "
-
-’ ’(* *
-’ ’(
-"
-
-™ ™("£+
-)
-
-•? •(M	"#get-field# __name__:.
-,
-
-” •(M
-"?python-str-format?*:	0
-.
-
-“ –("
-ValueError*:
-B
-ValueError2
-
-“ –("·*
-(
-
-— —()"#get-field# __str__:/
--
-
-— —("#set-field# __unicode__:#
-!
-
-˜ ˜(G"#unknown-value#+
-)
-
-˜ ˜("#set-field# __str__:*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/packages/six.py

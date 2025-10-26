@@ -1,23 +1,0 @@
-
-B9"Import module, returning the module after the last dot."strnameU U("ç!
-
-W W("#unknown-value#!
-
-W W("#unknown-value#2
-0
-W W("#unknown-value#Btyping.Sequence&
-$
-W W("#unknown-value#BintB
-@
-W W("
-builtins
-__import__*:Btypes.ModuleType!
-
-X X("#unknown-value#(
-&
-X X(	"#get-field# modules:"
- 
-X X(
-"#array-read#:	
-X X(
-*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/packages/six.py

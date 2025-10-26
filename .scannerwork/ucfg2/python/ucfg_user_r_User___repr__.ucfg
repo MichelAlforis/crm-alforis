@@ -1,37 +1,0 @@
-
-models.user.User.__repr__U
-K/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/user.pyK K("2*ß
-2L L(<R
-P
-L L("
-%1"__id*8
-
-__unknown_file (*
-models.user.User"
-idU
-S
-L- L(7
-%2"__id*;
-
-__unknown_file (*
-models.user.User"
-email
-
-L L(<
-%3"__concat*
-L L(
-	<User(id=*
-L L("
-
-%1*
-L# L(,
-	, email='*
-L- L(7
-
-%2*
-L8 L(;
-')>"
-L L(<
-
-%3B
-models.user.UserH

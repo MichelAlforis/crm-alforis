@@ -1,38 +1,0 @@
-
-QH"
-    Create an instance of the Command class with the given name.
-    "str
-
-3int
-
-0int
-
-	1int
-
-2intnamet t(kwargst t(+"dict"ü!
-
-x' x(4"#unknown-value#/
--
-x' x(:module_path"#array-read#:3
-1
-x x(:module_path"#python-unpack#:2
-0
-x x(:
-
-class_name"#python-unpack#:	/
--
-x x(:summary"#python-unpack#:!
-
-y y(1"#unknown-value#H
-F
-y y(1module"
-	importlibimport_module:Btypes.ModuleType9
-7
-z z(/command_class"
-builtinsgetattr*:
-%
-#
-{8 {(@"#unaryop **#2**:-
-+
-{ {(Acommand"command_class:
-} }(*†/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/commands/__init__.py

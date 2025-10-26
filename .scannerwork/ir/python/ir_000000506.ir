@@ -1,50 +1,0 @@
-
-
-3int
-	"newline"str
-
-0int
-"utf-8"str
-
-"b"str
-
-"encoding"str
-""strfn
-Á Á(mode
-Á Á(kwargs
-Á Á( "dict"Ö#
-!
-
-Â Â(
-"#unknown-value#/
--
-
-Â Â("#get-field# version_info:$
-"
-
-Â Â("#array-read#:*
-(
-
-Â Â(	"	#binop <#2<:Bbool,"*
-
-Â Â(	 *
-Â Â(2
-Ä Ä("7-
-+
-
-Ã Ã(mode"	#binop +#*2+:
-"X&
-$
-
-Å Å("#array-write#:&
-$
-
-È È($"#array-write#:"w*mode'
-%
-
-É É(""#unaryop **#2**: 
-
-
-É É(#"open*:
-
-É É(#*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/distlib/util.py

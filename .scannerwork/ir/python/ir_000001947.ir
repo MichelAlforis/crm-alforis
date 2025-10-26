@@ -1,73 +1,0 @@
-
-?6"Label has disallowed hyphens in 3rd and 4th position"str
-
-1int
-
-2int
-truebool
-
-3int
-4+"Label must not start or end with a hyphen"str
-"-"str
-	"--"str
-
-0int
--1intlabel
-’ ’("›)
-'
-
-“ “("#unknown-value#Blist$
-"
-
-“ “("#array-read#:(
-&
-
-“ “("#array-add-last#:$
-"
-
-“ “("#array-read#:(
-&
-
-“ “("#array-add-last#:,
-*
-
-“ “(
-"
-#binop ==#2==:	Bbool "
-
-“ “(
- *
-“ “("WA
-?
-
-” ”(O"	IDNAError:Bpip._vendor.idna.core.IDNAError2
-
-” ”(O"l$
-"
-
-• •("#array-read#:,
-*
-
-• •("
-#binop ==#2==:Bbool"
-
-• •( "h$
-"
-
-• •(#"#array-read#:,
-*
-
-• •(*"
-#binop ==#2==:Bbool
-
-• •(*"6* "
-
-• •(* *
-• •("WA
-?
-
-– –(D"	IDNAError:Bpip._vendor.idna.core.IDNAError2
-
-– –(D"
-
-— —(*|/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/idna/core.py

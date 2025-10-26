@@ -1,16 +1,0 @@
-
-|s"Get a Color instance representing the default color.
-
-        Returns:
-            Color: Default color.
-        "str
-	"default"strcls
-§ §($ pip._vendor.rich.color.ColorType"\*
-(
-
-­( ­(9"#get-field# DEFAULT:
-
-
-­ ­(:"cls:
-
-­ ­(:*}/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/color.py

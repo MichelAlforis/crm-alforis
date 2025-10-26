@@ -1,13 +1,0 @@
-
-ÙÍ"Take a collection of constraints, spit out the resolution result.
-
-        This returns a representation of the final resolution state, with one
-        guarenteed attribute ``mapping`` that contains resolved candidates as
-        values. The keys are their respective identifiers.
-
-        :param requirements: A collection of constraints.
-        :param kwargs: Additional keyword arguments that subclasses may accept.
-
-        :raises: ``self.base_exception`` or its subclass.
-        "strself# #(requirements# #(0kwargs#2 #(?"dictNotImplementedError"2
-/ /(!*ê/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/resolvelib/resolvers/abstract.py

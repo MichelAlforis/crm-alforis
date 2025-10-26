@@ -1,14 +1,0 @@
-
-3*":return: config path shared by the users"strself
-Å Å("¡2
-0
-
-Ç Ç(("#get-field# site_config_dir:.
-,
-
-Ç Ç(("?python-partial-apply?:)
-'
-
-Ç Ç()"Path:Bpathlib.Path
-
-Ç Ç()*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/api.py

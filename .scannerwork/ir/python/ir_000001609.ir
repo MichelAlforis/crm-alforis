@@ -1,17 +1,0 @@
-
-
-0int
-kb"The operator of this specifier.
-
-        >>> Specifier("==1.2.3").operator
-        '=='
-        "strself
-• •("b(
-&
-
-› ›("#get-field# _spec:$
-"
-
-› ›("#array-read#:
-
-› ›(*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/packaging/specifiers.py

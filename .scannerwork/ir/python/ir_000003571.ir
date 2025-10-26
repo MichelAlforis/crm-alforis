@@ -1,34 +1,0 @@
-
-YP"
-    Convert a path to its canonical, case-normalized, absolute version.
-
-    "strpath
-π π( resolve_symlinks
-π π(;"ç0
-.
-
-æ æ(#path"
-os.path
-expanduser:+
-)
-
-ø ø("
-__bool__*:BboolH,"*
-
-ø ø( *
-ø ø(2
-¡ ¡("8.
-,
-
-¿ ¿(%path"
-os.pathrealpath:"7-
-+
-
-¬ ¬($path"
-os.pathabspath:"V*path(
-&
-
-√ √(!	"
-os.pathnormcase:
-
-√ √(!	*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/misc.py

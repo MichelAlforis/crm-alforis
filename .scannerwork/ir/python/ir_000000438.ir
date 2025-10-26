@@ -1,45 +1,0 @@
-
-truebool
-"real_prefix"str
-	"base_prefix"str"‡#
-!
-
-§ §("#unknown-value#2
-0
-
-§ §(""
-builtinshasattr*:Bbool,"*
-
-§ §(" *
-§ §(2
-ª ª("3)
-'
-
-© ©(result"#id#:Bbool"²#
-!
-
-¬ ¬("#unknown-value#)
-'
-
-¬ ¬("#get-field# prefix:#
-!
-
-¬' ¬(*"#unknown-value##
-!
-
-¬; ¬(>
-"#unknown-value#)
-'
-
-¬; ¬(E"#get-field# prefix:
--
-+
-
-¬ ¬(F"
-builtinsgetattr*:	4
-2
-
-¬ ¬(Fresult"
-#binop !=#2!=:Bbool".*result
-
-­ ­(*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/distlib/util.py

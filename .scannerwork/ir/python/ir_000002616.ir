@@ -1,7 +1,0 @@
-
-X	O"Classes extending RequestMethods must implement their own ``urlopen`` method."strself/ /(method0 0(url1 1(body2 2(headers3 3(encode_multipart4 4( multipart_boundary5 5(kw6 6("dict"R@
->
-8 ;(	
-"NotImplementedError*:	BNotImplementedError2
-8 ;(	
-*‚/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/request.py

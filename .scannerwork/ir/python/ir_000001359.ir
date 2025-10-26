@@ -1,18 +1,0 @@
-selfl l(otherl l(".*pip._vendor.packaging.version._BaseVersion"t)
-'
-m m(."#is-instance#:Bbool)
-'
-m m(."#unaryop !#2!:Bbool"
-m m(. *m m(
-"5!
-
-n n(!"#unknown-value#
-n n(!"Œ%
-#
-p p("#get-field# _key:%
-#
-p p(&"#get-field# _key:*
-(
-p p(&	"
-#binop !=#2!=:Bbool
-p p(&	*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/packaging/version.py

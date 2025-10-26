@@ -1,79 +1,0 @@
-
-$models.organisation.Produit.__repr___
-S/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation.pyô ô("2*´
-2
-õ õ(c_
-]
-
-õ õ(%
-%1"__id*C
-
-__unknown_file ('*%
-models.organisation.Produit"
-ida
-_
-
-õ/ õ(8
-%2"__id*E
-
-__unknown_file ()*'
-models.organisation.Produit"
-namea
-_
-
-õC õ(L
-%3"__id*E
-
-__unknown_file ()*'
-models.organisation.Produit"
-isina
-_
-
-õV õ(_
-%4"__id*E
-
-__unknown_file ()*'
-models.organisation.Produit"
-type‚
-ÿ
-
-õ õ(c
-%5"__concat*
-
-õ õ(
-<Produit(id=*
-
-õ õ(%
-
-%1*
-
-õ& õ(.
-
-, name='*
-
-õ/ õ(8
-
-%2*
-
-õ9 õ(B
-	', isin='*
-
-õC õ(L
-
-%3*
-
-õM õ(U
-
-', type=*
-
-õV õ(_
-
-%4*
-
-õ` õ(b
-)>"
-
-õ õ(c
-
-%5B
-models.organisation.ProduitH

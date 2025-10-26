@@ -1,24 +1,0 @@
-
-
-3int
-
-0int
-
-1int
-
-2int
-yp"The color in RGB format.
-
-        Returns:
-            str: An rgb color, e.g. ``"rgb(100,23,255)"``.
-        "str
-$
-"rgb({red},{green},{blue})"strself ("š+
-)
- (red"#python-unpack#:-
-+
- (green"#python-unpack#:,
-*
- (	blue"#python-unpack#:
- (+
-*…/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/color_triplet.py

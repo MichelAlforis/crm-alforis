@@ -1,42 +1,0 @@
-
-	"request"str
-
-"response"str
-"parse"str
-"error"str
-
-0int
-"robotparser"strself
-— —(list"–)
-'
-
-˜ ˜(G"#unknown-value#Blist(
-&
-
-˜ ˜(G	"
-#is-exact#:Bbool
-
-
-˜ ˜(G
-"
-#assume#:	:
-8
-
-˜ ˜(G"#set-field# __collection_size:Bint(
-&
-
-˜ ˜(G"#array-add-last#:(
-&
-
-˜ ˜(G"#array-add-last#:(
-&
-
-˜ ˜(G"#array-add-last#:(
-&
-
-˜ ˜(G"#array-add-last#:(
-&
-
-˜ ˜(G"#array-add-last#:
-
-˜ ˜(G*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/packages/six.py

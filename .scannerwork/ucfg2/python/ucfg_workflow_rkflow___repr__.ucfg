@@ -1,51 +1,0 @@
-
-!models.workflow.Workflow.__repr__Y
-O/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/workflow.pyj j("2*€
-2k k(TZ
-X
-k k(&
-%1"__id*@
-
-__unknown_file ($*"
-models.workflow.Workflow"
-id\
-Z
-k0 k(9
-%2"__id*B
-
-__unknown_file (&*$
-models.workflow.Workflow"
-name^
-\
-kE k(P
-%3"__id*D
-
-__unknown_file ((*&
-models.workflow.Workflow"
-statusÂ
-¿
-k k(T
-%4"__concat*
-k k(
-<Workflow(id=*
-k k(&
-
-%1*
-k' k(/
-
-, name='*
-k0 k(9
-
-%2*
-k: k(D
-
-', status=*
-kE k(P
-
-%3*
-kQ k(S
-)>"
-k k(T
-
-%4B
-models.workflow.WorkflowH

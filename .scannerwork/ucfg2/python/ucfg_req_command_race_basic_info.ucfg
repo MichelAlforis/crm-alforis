@@ -1,62 +1,0 @@
-
-Apip._internal.cli.req_command.RequirementCommand.trace_basic_info‘
-„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/cli/req_command.py» »("2*Û
-2
-¼ ¾(T
-R
-
-À À(*
-%2"__id*8
-
-__unknown_file (*
-
-finder"
-search_scopeH
-F
-
-À À(*
-search_scope"__id*"
-
-__unknown_file (
-
-%2[Y
-
-Á Á(:
-%3*,
-
-__unknown_file (
-
-search_scope2get_formatted_locationsE
-C
-
-Á Á(:
-	locations"__id*"
-
-__unknown_file (
-
-%3*
-3
-4*6
-3
-req_command.py"
-Å Å(
-implicit return*ƒ
-4
-Ã Ã("mk
-
-Ã Ã("
-%1*&
-
-__unknown_file (
-
-
-logger*)
-
-__unknown_file (
-
-	locations2info*
-3:
-
-» »(.
-finderB42
-0pip._internal.cli.req_command.RequirementCommandH

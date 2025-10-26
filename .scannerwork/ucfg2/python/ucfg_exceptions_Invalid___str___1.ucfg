@@ -1,45 +1,0 @@
-
-0pip._internal.exceptions.MetadataInvalid.__str__‹
-/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/exceptions.pyò ò("2*
-2
-ó ó(Jn
-l
-
-ó ó(%
-%1"__id*R
-
-__unknown_file (6*4*
-(pip._internal.exceptions.MetadataInvalid"
-ireqo
-m
-
-ó> ó(H
-%2"__id*S
-
-__unknown_file (7*5*
-(pip._internal.exceptions.MetadataInvalid"
-error”
-‘
-
-ó ó(J
-%3"__concat*
-
-ó ó(
-
-Requested *
-
-ó ó(%
-
-%1*)
-
-ó& ó(=
- has invalid metadata: *
-
-ó> ó(H
-
-%2"
-
-ó ó(J
-
-%3B,*
-(pip._internal.exceptions.MetadataInvalidH

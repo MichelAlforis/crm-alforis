@@ -1,7 +1,0 @@
-
-QH":return: runtime directory shared by users, same as `user_runtime_dir`"strselfr r("q1
-/
-t t($"#get-field# user_runtime_dir:,
-*
-t t($"?python-partial-apply?:
-t t($*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/android.py

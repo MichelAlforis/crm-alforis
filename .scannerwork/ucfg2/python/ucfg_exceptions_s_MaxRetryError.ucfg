@@ -1,68 +1,0 @@
-
-,pip._vendor.urllib3.exceptions.MaxRetryErrorê
-Ö/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/exceptions.pyW W("2*˚
-2X X(v
-t
-X X(:.
-,pip._vendor.urllib3.exceptions.MaxRetryError"
-reason"__id*&
-
-__unknown_file (
-
-
-reasonå
-â
-Z Z(T
-%2"__concat*@
-Z Z(D42
-0Max retries exceeded with url: %s (Caused by %r)*
-ZH Z(K
-
-url*
-ZM Z(S
-
-
-reasonA
-?
-Z Z(T	
-message"__id*"
-
-__unknown_file (
-
-%2úô
-\ \(7
-%3"type.__init__*,
-
-__unknown_file (
-
-RequestError*L
-
-__unknown_file (0.
-,pip._vendor.urllib3.exceptions.MaxRetryError*$
-
-__unknown_file (
-
-pool*#
-
-__unknown_file (
-
-url*'
-
-__unknown_file (
-	
-message2__init__*
-3*b
-3
-exceptions.py<:
-_ _
-%1",pip._vendor.urllib3.exceptions.MaxRetryError"
-_ _
-
-%1:
-W W(
-pool:
-W W( 
-url:
-W" W(-
-reasonB0.
-,pip._vendor.urllib3.exceptions.MaxRetryErrorH

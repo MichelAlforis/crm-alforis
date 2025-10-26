@@ -1,50 +1,0 @@
-
-0'"{dist.canonical_name}=={dist.version}"str
-6	-"{dist.canonical_name} @ {template.link.url}"strdisti i(templatei i(8"y$
-"
-k k("#get-field# req:)
-'
-k k("
-__bool__*:BboolH&"$
-k k( *k k(2m m("d$
-"
-l l("#get-field# req:4
-2
-l l( line"#dependent-value#*:Bstr"|%
-#
-m	 m("#get-field# link:)
-'
-m	 m("
-__bool__*:BboolH&"$
-m	 m( *m m(2o o(".$
-"
-n n(=
-line"#id#:	Bstr".$
-"
-p p(7line"#id#:Bstr"Ò*line
-+
-)
-t t(&"#get-field# comes_from:+
-)
-u u(&"#get-field# use_pep517:)
-'
-v v(""#get-field# isolated:/
--
-x x(."#get-field# global_options:-
-+
-y y(*"#get-field# hash_options:+
-)
-w w(&"#get-field# constraint:!
-
-q {("#unknown-value#.
-,
-s s(,"#get-field# user_supplied:0
-.
-z z(0"#get-field# config_settings:Y
-W
-q {(ireq"7
-pip._internal.req.constructorsinstall_req_from_line:
-.
-,
-| |("#set-field# satisfied_by:
-} }(*•/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/resolution/resolvelib/candidates.py

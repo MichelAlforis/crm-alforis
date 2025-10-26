@@ -1,41 +1,0 @@
-
-+pip._vendor.rich.console.Console.push_theme‹
-/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/console.py÷ ÷("2*‹
-2
-ø ÿ(n
-l
-
-€ €(
-%1"__id*R
-
-__unknown_file (6*4"
- pip._vendor.rich.console.Console"
-_theme_stack„
-
-€ €(<
-%2*"
-
-__unknown_file (
-
-%1*%
-
-__unknown_file (	
-
-theme2
-push_theme:
-inherit
-	
-inherit*
-3*2
-3
-
-console.py"
-‚ ‚(
-implicit return:
-
-÷ ÷(%
-theme:
-
-÷* ÷(>	
-inheritB$"
- pip._vendor.rich.console.ConsoleH

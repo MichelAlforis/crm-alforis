@@ -1,13 +1,0 @@
-
-/&"
-    Helper export PDF mandats.
-    "strmandats
-Ã Ã(db
-Ä Ä(filename
-Å Å(!"ZF
-D
-
-Ê Í("0
-core.exports.ExportServiceexport_mandats_pdf:
-
-Ê Í(*L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/core/exports.py

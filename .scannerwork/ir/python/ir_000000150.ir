@@ -1,137 +1,0 @@
-
-
-)4int
-D8;"1, 2 or 4 integers required for padding; {len(pad)} given"str
-
-	0int
-
-2int
-
-.3int
-
-1int
-1("Unpack padding specified in CSS style."strpad= =('int	tuple"I)
-'
-? ?("#is-instance#:Bbool"
-? ?( *? ?(
-"Ý(
-&
-@ @('"#unknown-value#Btuple&
-$
-@ @('"
-#is-exact#:Bbool
-
-@ @('"
-#assume#:8
-6
-@ @('
-"#set-field# __collection_size:	Bint&
-$
-@ @('"#array-add-last#:&
-$
-@ @('"#array-add-last#:&
-$
-@ @('"#array-add-last#:&
-$
-@ @('"#array-add-last#:
-@ @('"x*
-(
-A A("
-builtinslen*:Bint*
-(
-A A("
-#binop ==#2==:Bbool"
-A A( *A A(
-"‡(
-&
-B B(_pad"#array-read#:	(
-&
-C C(+"#unknown-value#Btuple&
-$
-C C(+"
-#is-exact#:Bbool
-
-C C(+"
-#assume#:8
-6
-C C(+"#set-field# __collection_size:	Bint&
-$
-C C(+"#array-add-last#:&
-$
-C C(+"#array-add-last#:&
-$
-C C(+"#array-add-last#:&
-$
-C C(+"#array-add-last#:
-C C(+"x*
-(
-D D("
-builtinslen*:Bint*
-(
-D D("
-#binop ==#2==:Bbool"
-D D( *D D(
-"Á/
--
-E E($pad_top"#python-unpack#:	1
-/
-E E($	pad_right"#python-unpack#:(
-&
-F F(; "#unknown-value#Btuple&
-$
-F F(;!"
-#is-exact#: Bbool
-
-F F(;""
-#assume#:!8
-6
-F F(;#"#set-field# __collection_size: 	Bint&
-$
-F F(;$"#array-add-last#: &
-$
-F F(;%"#array-add-last#: &
-$
-F F(;&"#array-add-last#: &
-$
-F F(;'"#array-add-last#: 
-F F(; "x*
-(
-G G(("
-builtinslen*:Bint*
-(
-G G(*"
-#binop ==#2==:()Bbool"
-G G(* *G G(
-"—+
-)
-H H(*+top"#python-unpack#:	)-
-+
-H H(*,right"#python-unpack#:).
-,
-H H(*-bottom"#python-unpack#:),
-*
-H H(*/left"#python-unpack#:.)(
-&
-I I(-0"#unknown-value#Btuple&
-$
-I I(-1"
-#is-exact#:0Bbool
-
-I I(-2"
-#assume#:18
-6
-I I(-3"#set-field# __collection_size:0	Bint&
-$
-I I(-4"#array-add-last#:0+&
-$
-I I(-5"#array-add-last#:0,&
-$
-I I(-6"#array-add-last#:0-&
-$
-I I(-7"#array-add-last#:0/
-I I(-0"B.
-,
-J J(V9"
-ValueError*:8B
-ValueError2
-J J(V9*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/padding.py

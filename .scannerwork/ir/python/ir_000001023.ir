@@ -1,7 +1,0 @@
-
-SJ":return: config directory shared by the users, same as `user_config_dir`"strself* *("p0
-.
-, ,(#"#get-field# user_config_dir:,
-*
-, ,(#"?python-partial-apply?:
-, ,(#*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/android.py

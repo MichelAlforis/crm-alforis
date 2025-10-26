@@ -1,54 +1,0 @@
-
-v"
-        If required_by is non-empty, return a version of self that is a
-        ContextualVersionConflict.
-        "str
-
-0intself
-Ñ Ñ(required_by
-Ñ Ñ(?	tuple"|+
-)
-
-Ö Ö("
-__bool__*:BboolH+
-)
-
-Ö Ö("#unaryop !#2!:Bbool "
-
-Ö Ö( *
-Ö Ö(
-"
-
-× ×("Ô'
-%
-
-Ø Ø("#get-field# args:*
-(
-
-Ø Ø()"#unknown-value#Btuple(
-&
-
-Ø Ø()	"
-#is-exact#:Bbool
-
-
-Ø Ø()
-"
-#assume#:	:
-8
-
-Ø Ø()"#set-field# __collection_size:Bint(
-&
-
-Ø Ø()"#array-add-last#:*
-(
-
-Ø Ø()args"	#binop +#2+:%
-#
-
-Ù) Ù(."#unaryop *#2*:e
-c
-
-Ù Ù(/"ContextualVersionConflict:B3pip._vendor.pkg_resources.ContextualVersionConflict
-
-Ù Ù(/*‰/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pkg_resources/__init__.py

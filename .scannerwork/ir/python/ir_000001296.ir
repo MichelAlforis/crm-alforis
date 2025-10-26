@@ -1,53 +1,0 @@
-
-
-0int
-"ftp"str
-"http"str
-	"https"str
-
-"file"str
-falsebool
->5"
-    Return true if the name looks like a URL.
-    "strname- -(list"á:
-8
-1 1((scheme"
-urllib.parseurlsplit:Btuple/
--
-1 1(/scheme"#get-field# scheme:)
-'
-2 2("
-__bool__*:BboolH)
-'
-2 2("#unaryop !#2!:Bbool"
-2 2( *2 2("
-3 3("ý'
-%
-4 4(5"#unknown-value#Blist&
-$
-4 4(5"
-#is-exact#:Bbool
-
-4 4(5"
-#assume#:8
-6
-4 4(5"#set-field# __collection_size:Bint&
-$
-4 4(5"#array-add-last#:&
-$
-4 4(5"#array-add-last#:	&
-$
-4 4(5"#array-add-last#:
-&
-$
-4 4(5"#array-add-last#:!
-
-48 4(;"#unknown-value#,
-*
-48 4(G"#get-field# all_schemes:"
- 
-4 4(G"	#binop +#2+:*
-(
-4 4(G"
-#binop in#2in:Bbool
-4 4(G*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/vcs/versioncontrol.py

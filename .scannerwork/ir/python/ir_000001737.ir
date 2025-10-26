@@ -1,35 +1,0 @@
-
->5"Extrait la valeur d'un enum ou retourne une string."strobj
-Æ Æ(	attr_name
-Æ Æ(+default
-Æ- Æ(7	enum.Enum"‘4
-2
-
-È È(0value"
-builtinsgetattr*:+
-)
-
-É É(:"#is-instance#:Bbool,"*
-
-É É(: *
-É É(2
-É; É(?">(
-&
-
-É É("#get-field# value:
-
-É É(R"E+
-)
-
-ÉA É(F	"
-__bool__*:BboolH"
-
-ÉA É(F	 "&*
-
-
-É É(R"
-
-ÉA É(Q"&*
-
-
-É É(R*L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/core/exports.py

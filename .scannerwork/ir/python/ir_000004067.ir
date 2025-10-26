@@ -1,123 +1,0 @@
-
-	"[\'"\\]"str
-RI"%(\(\w+\))?[-#0 +]*([0-9]+|[*])?(\.([0-9]+|[*]))?[hlL]?[E-GXc-giorsux%]"str
-
-	0int
-"[^\\\'"%\n]+"str
-"%"strttype
-± ±(#list	tuple"Ú#
-!
-
-µ' µ(-"#unknown-value#+
-)
-
-µ' µ(6"#get-field# Interpol:*
-(
-
-´ µ(7"#unknown-value#Btuple(
-&
-
-´ µ(7"
-#is-exact#:Bbool
-
-
-´ µ(7"
-#assume#::
-8
-
-´ µ(7
-"#set-field# __collection_size:	Bint(
-&
-
-´ µ(7"#array-add-last#:(
-&
-
-´ µ(7"#array-add-last#:*
-(
-
-· ·($"#unknown-value#Btuple(
-&
-
-· ·($"
-#is-exact#:Bbool
-
-
-· ·($"
-#assume#::
-8
-
-· ·($"#set-field# __collection_size:	Bint(
-&
-
-· ·($"#array-add-last#:(
-&
-
-· ·($"#array-add-last#:*
-(
-
-¸ ¸("#unknown-value#Btuple(
-&
-
-¸ ¸("
-#is-exact#:Bbool
-
-
-¸ ¸("
-#assume#::
-8
-
-¸ ¸("#set-field# __collection_size:	Bint(
-&
-
-¸ ¸("#array-add-last#:(
-&
-
-¸ ¸("#array-add-last#:*
-(
-
-º º("#unknown-value#Btuple(
-&
-
-º º("
-#is-exact#:Bbool
-
-
-º º("
-#assume#::
-8
-
-º º("#set-field# __collection_size:	Bint(
-&
-
-º º( "#array-add-last#:(
-&
-
-º º(!"#array-add-last#:)
-'
-
-² ¼(	""#unknown-value#Blist(
-&
-
-² ¼(	$"
-#is-exact#:"#Bbool
-
-
-² ¼(	%"
-#assume#:$:
-8
-
-² ¼(	&"#set-field# __collection_size:"	Bint(
-&
-
-² ¼(	'"#array-add-last#:"(
-&
-
-² ¼(	("#array-add-last#:"(
-&
-
-² ¼(	)"#array-add-last#:"(
-&
-
-² ¼(	*"#array-add-last#:"
-
-² ¼(	"*‰/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexers/python.py

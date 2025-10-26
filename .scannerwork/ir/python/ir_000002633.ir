@@ -1,11 +1,0 @@
-
-"XDG_DOCUMENTS_DIR"str
-"~/Documents"str
-NE":return: documents directory tied to the user, e.g. ``~/Documents``"strself
-Š Š("^J
-H
-
-Œ Œ(F"4
-pip._vendor.platformdirs.unix_get_user_media_dir:
-
-Œ Œ(F*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/unix.py

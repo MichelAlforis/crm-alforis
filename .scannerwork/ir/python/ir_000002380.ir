@@ -1,37 +1,0 @@
-
-""bool
-MD"Return whether an InstallRequirement should be built into a wheel."str
-truebool
-
-falseboolreq/ /("¢+
-)
-2 2("#get-field# constraint:)
-'
-2 2("
-__bool__*:BboolH)
-'
-2 2("#unaryop !#2!:Bbool)
-'
-2 2("#built-in-assert#:)
-'
-4 4("#get-field# is_wheel:)
-'
-4 4(	"
-__bool__*:BboolH"
-4 4(	 *4 4("
-5 5(
-"Î+
-)
-7 7("#get-field# source_dir:)
-'
-7 7("#built-in-assert#:)
-'
-9 9("#get-field# editable:)
-'
-9 9("
-__bool__*:BboolH"
-9 9( *9 9("P<
-:
-; ;(.")'#get-field# supports_pyproject_editable:
-; ;(."
-= =(*‚/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/wheel_builder.py

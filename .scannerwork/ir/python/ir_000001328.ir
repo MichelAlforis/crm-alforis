@@ -1,17 +1,0 @@
-
-¢˜"
-        Fetch a revision from a repository, in the case that this is the
-        first fetch from the repository.
-
-        Args:
-          dest: the directory to fetch the repository to.
-          rev_options: a RevOptions object.
-          verbosity: verbosity level.
-        "strself
-¹ ¹(dest
-¹ ¹(url
-¹ ¹((rev_options
-¹* ¹(A	verbosity
-¹C ¹(QNotImplementedError"2
-
-Ä Ä(!*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/vcs/versioncontrol.py

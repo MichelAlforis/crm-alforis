@@ -1,43 +1,0 @@
-
-truebool
-
-1int
-"'"strsrc
-Ø Ø(pos
-Ø  Ø(("Ÿ,
-*
-
-Ù Ù(pos"	#binop +#*2+:&
-$
-
-Ú Ú(	start_pos"#id#:#
-!
-
-Ü  Ü(9"#unknown-value#E
-C
-
-Û
- Ý(	pos"'
-pip._vendor.tomli._parser
-skip_until:*
-(
-
-Þ Þ(&
-"#unknown-value#Btuple$
-"
-
-Þ Þ("	#binop +#2+:	(
-&
-
-Þ Þ(&"#array-add-last#:
-#
-!
-
-Þ Þ(&"#unknown-value#(
-&
-
-Þ Þ(&"#array-add-last#:
-
-
-Þ Þ(&
-*€/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/tomli/_parser.py

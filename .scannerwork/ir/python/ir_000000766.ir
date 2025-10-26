@@ -1,29 +1,0 @@
-
-"find_links"str
-
-	0int
-Ž„"If a URL or path to an html file, then parse for links to archives such as sdist (.tar.gz) or wheel (.whl) files. If a local path or file:// URL that's a directory, then look for archives in the directory listing. Links to VCS project URLs are not supported."str
-"append"str
-"url"str
-"--find-links"str
-"-f"strlist"ú)
-'
-
-Ž Ž("#unknown-value#Blist(
-&
-
-Ž Ž("
-#is-exact#:Bbool
-
-
-Ž Ž("
-#assume#::
-8
-
-Ž Ž(
-"#set-field# __collection_size:	Bint4
-2
-
-‰ •("Option:Boptparse.Option
-
-‰ •(*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/cli/cmdoptions.py

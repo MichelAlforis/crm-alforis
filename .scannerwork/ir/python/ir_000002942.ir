@@ -1,11 +1,0 @@
-
-!"CSIDL_DESKTOPDIRECTORY"str
-WN":return: desktop directory tied to the user, e.g. ``%USERPROFILE%\\Desktop``"strself| |("Å!
-
-~  ~(."#unknown-value#$
-"
-~  ~(H"get_win_folder:&
-$
-~ ~(I"
-os.pathnormpath:
-~ ~(I*á/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/windows.py

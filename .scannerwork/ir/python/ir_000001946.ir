@@ -1,33 +1,0 @@
-
-
-0int
-
-truebool
-;2"Label begins with an illegal combining character"str
-"M"strlabel
-å å(%"œ$
-"
-
-ç ç($"#array-read#:1
-/
-
-ç ç(%"
-unicodedatacategory:Bstr$
-"
-
-ç ç(("#array-read#:,
-*
-
-ç ç(/"
-#binop ==#2==:Bbool "
-
-ç ç(/ *
-ç ç("WA
-?
-
-é é(K	"	IDNAError:Bpip._vendor.idna.core.IDNAError2
-
-é é(K	"
-
-è è(
-*|/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/idna/core.py

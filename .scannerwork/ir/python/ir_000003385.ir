@@ -1,36 +1,0 @@
-
-90"Find an .egg-info subdirectory in `directory`."str
-A8"More than one .egg-info directory found in {directory}"str
-
-	1int
-6-"No .egg-info directory found in {directory}"str
-
-0int	directory (!"¬6
-4
- (M	filenames"?python-unknown?:Blist)
-'
- ("
-__bool__*:BboolH)
-'
- ("#unaryop !#2!:Bbool"
- ( * ("fR
-P
- (O"InstallationError:B*pip._internal.exceptions.InstallationError2
- (O"v*
-(
- ("
-builtinslen*:Bint(
-&
- (
-"	#binop >#2>:	Bbool"
- (
- * ("fR
-P
- (	"InstallationError:B*pip._internal.exceptions.InstallationError2
- (	"["
- 
- #  (/"#array-read#:#
-!
-   (0"
-os.pathjoin:
-   (0*•/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/operations/build/metadata_legacy.py

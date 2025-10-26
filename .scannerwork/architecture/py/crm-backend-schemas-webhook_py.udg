@@ -1,132 +1,0 @@
-
-1.0PythonFrontend"1760943912951*py2.Bë
-
-imports1
-
-extends2
-
-returns3
-
-	has param4
-
-module5
-
-
-class6
-
-function7
-#
-crm-backend/schemas/webhook.py9
-
-schemas.webhook11
-
-typing12
-
-pydantic14
-
-schemas.base16
-
-core.events18
-#
-schemas.webhook.WebhookCreate20
-!
-schemas.webhook.WebhookBase22
-
-schemas.base.BaseSchema24
-1
-+schemas.webhook.WebhookBase.validate_events26
-
-
-list28
-%
-schemas.webhook.WebhookResponse30
-$
-schemas.base.TimestampedSchema32
-0
-*schemas.webhook.WebhookRotateSecretRequest34
-#
-schemas.webhook.WebhookUpdate36
-<
-6schemas.webhook.WebhookUpdate.validate_optional_events38J
-
-8
-89jÖ
- 
-10
-10115 *
-8 (
-
-13
-13125
-
-15
-15145
-
-17
-17165
-
-19
-19185
-
-21
-21206 210
-
-23
-23226 210
-
-25
-25246
-
-27
-27267 223
-
-29
-29286
-
-31
-31306 210
-
-33
-33326
-
-35
-35346 210
-
-37
-37366 210
-
-39
-39387 237rž
-
-10131*
-8 ("
-
-10151*
-8 (8
-
-10171*
-8 (7
-
-10191*
-8 ("
-
-21232*
-8) )(
-
-23252*
-8 (
-
-27293*
-8	 (
-
-27294*
-8	 (
-
-31332*
-8L L(
-
-35252*
-8W W(!
-
-37252*
-84 4(

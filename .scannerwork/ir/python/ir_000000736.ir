@@ -1,23 +1,0 @@
-
-sj"
-    Convert a path to a file: URL.  The path will be made absolute and have
-    quoted path parts.
-    "str
-	"file://"strpath	 	("ù%
-#
- (1"
-os.pathabspath:,
-*
- (2path"
-os.pathnormpath:6
-4
-* (K"
-urllib.requestpathname2url:Bstr'
-%
-
- (L"#unknown-value#Bbool1
-/
-
- (Lurl"
-urllib.parseurljoin:
- (*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/urls.py

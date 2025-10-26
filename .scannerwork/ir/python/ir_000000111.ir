@@ -1,48 +1,0 @@
-
-"getsitepackages"str
-îä"Get system site packages
-
-    Usually from site.getsitepackages,
-    but fallback on `get_purelib()/get_platlib()` if unavailable
-    (e.g. in a virtualenv created by virtualenv<20)
-
-    Returns normalized set of strings.
-    "str
-
-0int
-list"}!
-
-H H("#unknown-value#0
-.
-H H('"
-builtinshasattr*:Bbool&"$
-H H(' *H H(2J J("k!
-
-I I(-"#unknown-value#>
-<
-I I(-system_sites"
-sitegetsitepackages:Blist"€6
-4
-O O(%"&
-pip._internal.locationsget_purelib6
-4
-O' O(4"&
-pip._internal.locationsget_platlib5
-3
-O O(5	system_sites"#unknown-value#Blist&
-$
-O O(5"
-#is-exact#:	
-Bbool
-
-O O(5"
-#assume#:8
-6
-O O(5"#set-field# __collection_size:	Bint&
-$
-O O(5"#array-add-last#:	&
-$
-O O(5"#array-add-last#:	"^*system_sites	*
-(
-P P(<"?python-unknown?:Bset
-P P(<*~/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/build_env.py

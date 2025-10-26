@@ -1,94 +1,0 @@
-
-
-"Invalid group name"str
- "Duplicate entry point"str
-%"Parse an entry point group"strcls
-ˇ ˇ(group
-Ä Ä(lines
-Å Å(dist
-Ç Ç(("¡#
-!
-
-Ö Ö("#unknown-value#
-
-
-Ö Ö("MODULE:+
-)
-
-Ö Ö("
-__bool__*:BboolH+
-)
-
-Ö Ö(	"#unaryop !#2!:Bbool "
-
-Ö Ö(	 *
-Ö Ö(
-"G1
-/
-
-Ü Ü(9"
-ValueError*:
-B
-ValueError2
-
-Ü Ü(9"√,
-*
-
-á  á("this"#new-object#BdictD
-B
-
-à à(&"/
- pip._internal.utils._jaraco_textyield_lines:9
-7
-
-à à(&"
-builtinsiter*:Btyping.Iterator
-
-à à(&"•*group*this*dist4
-2
-
-à à(&"
-builtins
-__has_next*:Bbool"" 
-
-à à(& *
-à à(H"†.
-,
-
-â å(line"
-builtinsnext*:)
-'
-
-â â(&"#unknown-value#BtypeH
-F
-
-â â(&ep"-
-$pip._vendor.pkg_resources.EntryPointparse:'
-%
-
-ä ä("#get-field# name:,
-*
-
-ä ä("
-#binop in#2in:Bbool "
-
-ä ä( *
-ä ä("
-
-ç ç("q'
-%
-
-ãA ã(H"#get-field# name:2
-0
-
-ã ã(I"
-ValueError*:B
-ValueError2
-
-ã ã(I"Y'
-%
-
-å å("#get-field# name:&
-$
-
-å å("#array-write#:*â/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pkg_resources/__init__.py

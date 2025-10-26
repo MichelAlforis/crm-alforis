@@ -1,44 +1,0 @@
-
-´ª"
-    Helper pour crÃ©er une notification depuis un template
-
-    Args:
-        user_id: ID de l'utilisateur
-        type: Type de notification
-        params: ParamÃ¨tres du template
-        db: Session database
-        resource_type: Type de ressource (optionnel)
-        resource_id: ID de la ressource (optionnel)
-        send_realtime: Envoyer en temps rÃ©el
-
-    Returns:
-        Notification: Notification crÃ©Ã©e
-    "struser_id
-• •(type
-– –(params
-— —(db
-˜ ˜(resource_type
-™ ™('resource_id
-š š(%send_realtime
-› ›("·f
-d
-
-­ ´(	notification">
-&core.notifications.NotificationServicecreate_from_template:+
-)
-
-· ·(
-"
-__bool__*:BboolH "
-
-· ·(
- *
-· ·("R#
-!
-
-¸ ¸(J"#unknown-value##
-!
-
-¸ ¸(J"#unknown-value#"
-
-º º(	*R/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/core/notifications.py

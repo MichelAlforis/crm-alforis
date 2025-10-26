@@ -1,13 +1,0 @@
-
-ÍÃ"Load the distribution from the contents of a METADATA file.
-
-        This is used to implement PEP 658 by generating a "shallow" dist object that can
-        be used for resolution without downloading or building the actual dist yet.
-
-        :param metadata_contents: The contents of a METADATA file.
-        :param filename: File name for the dist with this metadata.
-        :param project_name: Name of the project this dist represents.
-        "strclsi i(metadata_contentsj j( filenamek k(project_namel l("O=
-;
-w w(#"NotImplementedError*BNotImplementedError2
-w w(#*‚/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/metadata/base.py

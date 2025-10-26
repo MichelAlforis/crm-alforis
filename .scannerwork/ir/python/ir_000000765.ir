@@ -1,28 +1,0 @@
-
-"--extra-index-url"str
-"URL"str
-"extra_index_urls"str
-xo"Extra URLs of package indexes to use in addition to --index-url. Should follow the same rules as --index-url."str
-
-	0int
-"append"strlist"ù)
-'
-
-÷ ÷("#unknown-value#Blist(
-&
-
-÷ ÷("
-#is-exact#:Bbool
-
-
-÷ ÷("
-#assume#::
-8
-
-÷ ÷(
-"#set-field# __collection_size:	Bint3
-1
-
-ò û("Option:Boptparse.Option
-
-ò û(*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/cli/cmdoptions.py

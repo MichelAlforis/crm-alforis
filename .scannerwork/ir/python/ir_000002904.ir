@@ -1,11 +1,0 @@
-
-¸Ú"The "project name" of the candidate.
-
-        This is different from ``name`` if this candidate contains extras,
-        in which case ``name`` would contain the ``[...]`` part, while this
-        refers to the name of the project.
-        "str
-"Override in subclass"strselfe e("R@
->
-l l(9"NotImplementedError*:BNotImplementedError2
-l l(9*è/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/resolution/resolvelib/base.py

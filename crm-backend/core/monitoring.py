@@ -219,7 +219,11 @@ def init_structured_logging():
     - Logs en JSON (parsable)
     - Context automatique
     - Corrélation avec Sentry
+    - Rotation automatique des fichiers
     """
+    from logging.handlers import RotatingFileHandler
+    import os
+
     structlog.configure(
         processors=[
             # Ajouter le niveau de log
@@ -244,12 +248,43 @@ def init_structured_logging():
 
     # Configuration du niveau de log
     log_level = logging.DEBUG if settings.debug else logging.INFO
+
+    # Créer le répertoire de logs si nécessaire
+    log_dir = "/app/logs"
+    os.makedirs(log_dir, exist_ok=True)
+
+    # Handler pour fichier avec rotation
+    file_handler = RotatingFileHandler(
+        filename=f"{log_dir}/app.log",
+        maxBytes=10 * 1024 * 1024,  # 10 MB
+        backupCount=5,              # Garder 5 fichiers de backup
+        encoding="utf-8"
+    )
+    file_handler.setLevel(log_level)
+    file_handler.setFormatter(logging.Formatter("%(message)s"))
+
+    # Handler pour erreurs séparées
+    error_handler = RotatingFileHandler(
+        filename=f"{log_dir}/error.log",
+        maxBytes=10 * 1024 * 1024,  # 10 MB
+        backupCount=5,
+        encoding="utf-8"
+    )
+    error_handler.setLevel(logging.ERROR)
+    error_handler.setFormatter(logging.Formatter("%(message)s"))
+
+    # Handler console (stdout)
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(log_level)
+    console_handler.setFormatter(logging.Formatter("%(message)s"))
+
+    # Configuration finale
     logging.basicConfig(
-        format="%(message)s",
         level=log_level,
+        handlers=[file_handler, error_handler, console_handler]
     )
 
-    logging.info("✅ Structured logging initialisé")
+    logging.info("✅ Structured logging initialisé avec rotation (10MB x 5 fichiers)")
 
 
 def get_logger(name: str = __name__):

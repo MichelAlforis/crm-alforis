@@ -1,81 +1,0 @@
-
-'models.email.EmailCampaignStep.__repr__X
-L/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/email.pyü ü("2*ò
-2
-ý €(	b
-`
-
-þ% þ(,
-%1"__id*F
-
-__unknown_file (**( 
-models.email.EmailCampaignStep"
-idk
-i
-
-þ; þ(K
-%2"__id*O
-
-__unknown_file (3*1 
-models.email.EmailCampaignStep"
-campaign_idk
-i
-
-ÿ ÿ(%
-%3"__id*O
-
-__unknown_file (3*1 
-models.email.EmailCampaignStep"
-order_indexg
-e
-
-ÿ0 ÿ(<
-%4"__id*K
-
-__unknown_file (/*- 
-models.email.EmailCampaignStep"	
-variant£
- 
-
-þ ÿ(?
-%5"__concat*(
-
-þ þ($
-<EmailCampaignStep id=*
-
-þ% þ(,
-
-%1*
-
-þ- þ(:
- campaign_id=*
-
-þ; þ(K
-
-%2*
-
-þL þ(M
- *
-
-ÿ ÿ(
-
-order=*
-
-ÿ ÿ(%
-
-%3*
-
-ÿ& ÿ(/
-	 variant=*
-
-ÿ0 ÿ(<
-
-%4*
-
-ÿ= ÿ(>
->"
-
-ý €(	
-
-%5B" 
-models.email.EmailCampaignStepH

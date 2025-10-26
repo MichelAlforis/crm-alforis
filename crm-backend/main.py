@@ -134,6 +134,21 @@ print(f"✅ Middleware CORS ajouté pour: {ALLOWED_ORIGINS}")
 # --- GZip (utile pour grosses réponses JSON) ---
 app.add_middleware(GZipMiddleware, minimum_size=1024)
 
+# --- Rate Limiting ---
+try:
+    from core.rate_limit import limiter, custom_rate_limit_exceeded_handler
+    from slowapi.errors import RateLimitExceeded
+    from slowapi.middleware import SlowAPIMiddleware
+
+    app.state.limiter = limiter
+    app.add_exception_handler(RateLimitExceeded, custom_rate_limit_exceeded_handler)
+    app.add_middleware(SlowAPIMiddleware)
+    print("✅ Rate limiting activé (slowapi)")
+except ImportError:
+    print("⚠️ slowapi non disponible - rate limiting désactivé")
+except Exception as e:
+    print(f"⚠️ Rate limiting setup failed: {e}")
+
 # --- Metrics simple (temps de réponse) ---
 if ENABLE_METRICS_MIDDLEWARE:
     @app.middleware("http")

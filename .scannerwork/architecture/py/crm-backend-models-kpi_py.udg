@@ -1,82 +1,0 @@
-
-1.0PythonFrontend"1760943907348*py2.BÈ
-
-imports1
-
-extends2
-
-returns3
-
-	has param4
-
-module5
-
-
-class6
-
-function7
-
-crm-backend/models/kpi.py9
-
-
-models.kpi11
-
-
-__future__12
-
-
-sqlalchemy14
-
-sqlalchemy.orm16
-
-models.base18
-
-models.kpi.DashboardKPI20
-
-models.base.BaseModel22
-)
-#models.kpi.DashboardKPI.mark_manual24J
-
-8
-89j³
- 
-10
-10115 *
-8 (
-
-13
-13125
-
-15
-15145
-
-17
-17165
-
-19
-19185
-
-21
-21206 210
-
-23
-23226
-
-25
-25247 221r‚
-
-10131*
-8 (#
-
-10151*
-8 (
-
-
-10171*
-8 ((
-
-10191*
-8 ("
-
-21232*
-8 (

@@ -1,20 +1,0 @@
-
-@pip._vendor.resolvelib.providers.AbstractProvider.get_preference’
-‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/resolvelib/providers.py! !("3*2
-3
-providers.py"
-\ \(
-implicit return:
-# #(
-
-identifier:
-$ $($
-resolutions:
-% %(-
-
-candidates:
-& &(J
-information:
-' '(B
-backtrack_causesB53
-1pip._vendor.resolvelib.providers.AbstractProviderH

@@ -1,11 +1,0 @@
-
-RI":return: music directory tied to the user e.g. ``%USERPROFILE%\\Music``"str
-"CSIDL_MYMUSIC"strselfw w("Å!
-
-y  y(."#unknown-value#$
-"
-y  y(?"get_win_folder:&
-$
-y y(@"
-os.pathnormpath:
-y y(@*á/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/windows.py

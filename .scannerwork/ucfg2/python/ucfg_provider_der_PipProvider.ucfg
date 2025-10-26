@@ -1,64 +1,0 @@
-
-8pip._internal.resolution.resolvelib.provider.PipProviderž
-“/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/resolution/resolvelib/provider.pyY Y("2*ÿ
-2a a(†
-ƒ
-a a(H:
-8pip._internal.resolution.resolvelib.provider.PipProvider"
-
-_factory"__id*'
-
-__unknown_file (
-	
-factoryŽ
-‹
-b b('L:
-8pip._internal.resolution.resolvelib.provider.PipProvider"
-_constraints"__id*+
-
-__unknown_file (
-
-constraintsž
-›
-c c(7T:
-8pip._internal.resolution.resolvelib.provider.PipProvider"
-_ignore_dependencies"__id*3
-
-__unknown_file (
-
-ignore_dependencies˜
-•
-d d(1Q:
-8pip._internal.resolution.resolvelib.provider.PipProvider"
-_upgrade_strategy"__id*0
-
-__unknown_file (
-
-upgrade_strategy”
-‘
-e e(-O:
-8pip._internal.resolution.resolvelib.provider.PipProvider"
-_user_requested"__id*.
-
-__unknown_file (
-
-user_requested*
-3*p
-3
-provider.pyJH
-g g(
-%1"8pip._internal.resolution.resolvelib.provider.PipProvider"
-g g(
-
-%1:
-[ [(	
-factory:
-\ \(*
-constraints:!
-] ](!
-ignore_dependencies:
-^ ^(
-upgrade_strategy:
-_ _(&
-user_requestedB<:
-8pip._internal.resolution.resolvelib.provider.PipProviderH

@@ -1,58 +1,0 @@
-
-""boollink< <(template< <(,"¥)
-'
-> >( "#get-field# editable:)
-'
-> >( "
-__bool__*:BboolH)
-'
-> >( "#unaryop !#2!:Bbool)
-'
-> >(8"#built-in-assert#:$
-"
-? ?("#get-field# req:)
-'
-? ?(	"
-__bool__*:BboolH&"$
-? ?(	 *? ?(2A A("d$
-"
-@ @(
-"#get-field# req:4
-2
-@ @( line"#dependent-value#*:
-Bstr"4*
-(
-B B(line"#get-field# url:"ø*line+
-)
-F F(&"#get-field# comes_from:+
-)
-G G(&"#get-field# use_pep517:)
-'
-H H(""#get-field# isolated:/
--
-J J(."#get-field# global_options:-
-+
-K K(*"#get-field# hash_options:+
-)
-I I(&"#get-field# constraint:!
-
-C M("#unknown-value#.
-,
-E E(,"#get-field# user_supplied:0
-.
-L L(0"#get-field# config_settings:Y
-W
-C M(ireq"7
-pip._internal.req.constructorsinstall_req_from_line:
-.
-,
-N N(/"#get-field# original_link:/
--
-N N("#set-field# original_link:&
-$
-O O("#set-field# link:'
-%
-P P(!"#get-field# extras:(
-&
-P P("#set-field# extras:
-Q Q(*•/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/resolution/resolvelib/candidates.py

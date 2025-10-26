@@ -1,130 +1,0 @@
-
-"win-arm64"str
-"%s%s%s.exe"str
-"-arm"str
-
-0int
-3*"Unable to find resource %s in package %s"str
-"64"str
-
-8int
-""str
-	"32"str
-"P"strself
-î î(kind
-î  î($	tuple"ä,
-*
-
-ï ï(#"
-structcalcsize:Bint,
-*
-
-ï ï(("
-#binop ==#2==:Bbool,"*
-
-ï ï(( *
-ï ï(2
-ó ó("0&
-$
-
-ñ ñ(bits"#id#:Bstr"0&
-$
-
-ò ò(
-bits"#id#:	Bstr"√*bits
-:
-8
-
-ô( ô(6"(
-pip._vendor.distlib.utilget_platform=
-;
-
-ô( ô(Eplatform_suffix"
-#binop ==#2==:Bbool,"*
-
-ô( ô(E *
-ô% ô('2
-ôF ô(J"
-
-ô ô(M"
-
-ô ô(M"â!*platform_suffix*
-(
-
-ö" ö(?"#unknown-value#Btuple(
-&
-
-ö" ö(?"
-#is-exact#:Bbool
-
-
-ö" ö(?"
-#assume#::
-8
-
-ö" ö(?"#set-field# __collection_size:Bint(
-&
-
-ö" ö(?"#array-add-last#:(
-&
-
-ö" ö(?"#array-add-last#:(
-&
-
-ö" ö(?"#array-add-last#:4
-2
-
-ö ö(?name"?python-str-format?*:#
-!
-
-õ õ(#"#unknown-value#4
-2
-
-õ õ(#"#binop not in#2not in:Bbool "
-
-õ õ(# *
-õ õ("ƒ#
-!
-
-ù ù(- "#unknown-value#*
-(
-
-ù ù(.!"#unknown-value#Btuple(
-&
-
-ù ù(.""
-#is-exact#:!Bbool
-
-
-ù ù(.#"
-#assume#:":
-8
-
-ù ù(.$"#set-field# __collection_size:!Bint(
-&
-
-ù ù(.%"#array-add-last#:!(
-&
-
-ù ù(.&"#array-add-last#:! .
-,
-
-ú ù(.'"?python-str-format?*:! 
-
-
-ú ù(/(msg"#id#:'0
-.
-
-û û(%)"
-ValueError*:(B
-ValueError2
-
-û û(%)"_#
-!
-
-ü ü(*"#unknown-value#$
-"
-
-ü ü(!+"#array-read#:*
-
-ü ü(!+*Ç/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/distlib/scripts.py

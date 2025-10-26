@@ -1,33 +1,0 @@
-
-"https"str
-=4"
-    Return the host-port pair from a netloc.
-    "strnetloc
-   ("ôL
-J
-
-¤
- ¤('url"1
-pip._internal.utils.miscbuild_url_from_netloc:<
-:
-
-¥ ¥('parsed"
-urllib.parseurlparse:Btuple*
-(
-
-¦ ¦('"#unknown-value#Btuple+
-)
-
-¦ ¦("#get-field# hostname:(
-&
-
-¦ ¦('"#array-add-last#:'
-%
-
-¦ ¦('	"#get-field# port:(
-&
-
-¦ ¦('
-"#array-add-last#:	
-
-¦ ¦('*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/misc.py

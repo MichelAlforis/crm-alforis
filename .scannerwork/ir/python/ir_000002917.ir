@@ -1,21 +1,0 @@
-
-ëá"Provide a subprocess_runner that shows a spinner message.
-
-    Intended for use with for BuildBackendHookCaller. Thus, the runner has
-    an API that matches what's expected by BuildBackendHookCaller.subprocess_runner.
-    "strmessage
-ã  ã(,"¿#
-!
-
-ø ø("#unknown-value#*
-(
-
-ê ø(%closure"#new-object#+
-)
-
-ê ø("#set-field# message:-
-+
-
-ê ø("?python-partial-apply?:
-
-ø ø(*…/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/subprocess.py

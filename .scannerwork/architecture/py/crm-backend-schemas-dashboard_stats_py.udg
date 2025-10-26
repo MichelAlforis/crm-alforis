@@ -1,113 +1,0 @@
-
-1.0PythonFrontend"1760943903451*py2.BÓ
-
-imports1
-
-extends2
-
-returns3
-
-	has param4
-
-module5
-
-
-class6
-
-function7
-+
-&crm-backend/schemas/dashboard_stats.py9
-
-schemas.dashboard_stats11
-
-pydantic12
-
-typing14
-
-schemas.base16
-4
-.schemas.dashboard_stats.OrganisationMonthlyKPI18
-
-schemas.base.BaseSchema20
-,
-&schemas.dashboard_stats.TimeRangeStats22
-2
-,schemas.dashboard_stats.GlobalDashboardStats24
-3
--schemas.dashboard_stats.DashboardStatsFilters26
-3
--schemas.dashboard_stats.MonthlyAggregateStats28
-2
-,schemas.dashboard_stats.YearlyAggregateStats30
-7
-1schemas.dashboard_stats.OrganisationStatsResponse32J
-
-8
-89jù
- 
-10
-10115 *
-8 (
-
-13
-13125
-
-15
-15145
-
-17
-17165
-
-19
-19186 210
-
-21
-21206
-
-23
-23226 210
-
-25
-25246 210
-
-27
-27266 210
-
-29
-29286 210
-
-31
-31306 210
-
-33
-33326 210rà
-
-10131*
-8 (
-
-10151*
-8 ("
-
-10171*
-8 ($
-
-19212*
-8$ $(
-
-23212*
-8è è(
-
-25212*
-8? ?(
-
-27212*
-8Ü Ü(
-
-29212*
-8] ](
-
-31212*
-8q q(
-
-33212*
-8 ( 

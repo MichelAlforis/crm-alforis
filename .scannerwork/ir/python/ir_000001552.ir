@@ -1,18 +1,0 @@
-selfv v(otherv v("%!pip._internal.utils.hashes.Hashes"t)
-'
-w w(("#is-instance#:Bbool)
-'
-w w(("#unaryop !#2!:Bbool"
-w w(( *w w(
-"5!
-
-x x(!"#unknown-value#
-x x(!"î)
-'
-y y("#get-field# _allowed:)
-'
-y  y(."#get-field# _allowed:*
-(
-y y(.	"
-#binop ==#2==:Bbool
-y y(.	*Å/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/hashes.py

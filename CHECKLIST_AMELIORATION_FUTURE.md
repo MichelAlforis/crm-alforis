@@ -42,6 +42,38 @@
 
 ---
 
+## ✅ PRIORITÉ 2 - IMPLÉMENTÉ (26 Oct 2025)
+
+### 🔒 1. Rate Limiting (Anti-abus)
+**Fichiers**:
+- [crm-backend/core/rate_limit.py](crm-backend/core/rate_limit.py) - Config slowapi
+- [crm-backend/main.py](crm-backend/main.py) - Intégration middleware
+- [crm-backend/api/routes/external_webhooks.py](crm-backend/api/routes/external_webhooks.py) - Application
+
+**Limites**: Webhooks 10/min • API 60/min • Admins 1000/min • Recherche 30/min • AI 10/min
+
+### ⚡ 2. Indexes de Performance
+**Fichier**: [crm-backend/alembic/versions/add_performance_indexes.py](crm-backend/alembic/versions/add_performance_indexes.py)
+
+**Indexes**: Full-text search (GIN) • Foreign keys • Composite • Email tracking
+
+### 📋 3. Audit Trail
+**Fichiers**:
+- [crm-backend/models/audit_log.py](crm-backend/models/audit_log.py) - Modèle
+- [crm-backend/core/audit.py](crm-backend/core/audit.py) - Decorator
+- [crm-backend/alembic/versions/add_audit_logs.py](crm-backend/alembic/versions/add_audit_logs.py) - Migration
+
+**Traçabilité**: user_id, IP, user-agent, old/new values • Decorator `@audit_changes()`
+
+### 🧹 4. Script Maintenance DB
+**Fichier**: [crm-backend/scripts/db_maintenance.py](crm-backend/scripts/db_maintenance.py)
+
+**Fonctions**: Purge logs >90j • Sessions expirées • Notifications >30j • VACUUM
+
+**Usage**: `python scripts/db_maintenance.py --execute` (cron quotidien 3AM)
+
+---
+
 ## 📝 Instructions d'utilisation
 
 1. **Suivez l'ordre de priorité** (Chapitres 1-4 en premier)

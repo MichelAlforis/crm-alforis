@@ -1,11 +1,0 @@
-
-"XDG_DESKTOP_DIR"str
-JA":return: desktop directory tied to the user, e.g. ``~/Desktop``"str
-"~/Desktop"strself
-£ £("^J
-H
-
-¥ ¥(B"4
-pip._vendor.platformdirs.unix_get_user_media_dir:
-
-¥ ¥(B*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/unix.py

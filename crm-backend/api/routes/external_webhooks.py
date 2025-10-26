@@ -9,7 +9,7 @@ Endpoints sécurisés par Bearer Token pour recevoir:
 from datetime import datetime, timezone
 from typing import Dict, Any
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
@@ -18,6 +18,7 @@ import logging
 
 from core import get_db, verify_webhook_token
 from core.exceptions import ConflictError
+from core.rate_limit import limiter, PUBLIC_WEBHOOK_LIMIT
 from models.email import EmailEvent, EmailSend, UnsubscribedEmail, EmailEventType
 from models.person import Person
 from models.organisation import Organisation
@@ -50,7 +51,9 @@ RESEND_EVENT_MAPPING = {
 
 
 @router.post("/resend", response_model=ResendWebhookResponse)
+@limiter.limit(PUBLIC_WEBHOOK_LIMIT)  # 10 req/min max
 async def receive_resend_webhook(
+    request: Request,
     event: ResendWebhookEvent,
     db: Session = Depends(get_db),
     _auth: bool = Depends(verify_webhook_token),

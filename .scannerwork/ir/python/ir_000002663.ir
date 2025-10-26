@@ -1,56 +1,0 @@
-
-"!Iq"str
-34int
-"!L"str
-
-0int
-ÎÄ"Pack this Timestamp object into bytes.
-
-        Used for pure-Python msgpack packing.
-
-        :returns data: Payload for EXT message with code -1 (timestamp type)
-        :rtype: bytes
-        "str
-18446744069414584320int
-"!Q"strselfa a("¡(
-&
-i i("#get-field# seconds:!
-
-i i("#unknown-value#*
-(
-i i($"
-#binop ==#2==:Bbool&"$
-i i($ *i i(
-2q q("Ÿ,
-*
-j j(%"#get-field# nanoseconds:!
-
-j j(+	"#unknown-value#(
-&
-j. j(:
-"#get-field# seconds:)
-'
-j j(:data64"#unknown-value#!
-
-k k(*"#unknown-value#*
-(
-k k(/"
-#binop ==#2==:Bbool&"$
-k k(/ *k k(2n n("º,
-*
-s& s(6"#get-field# nanoseconds:(
-&
-s8 s(D"#get-field# seconds:!
-
-s s("#unknown-value#5
-3
-s s(Edata"?python-unknown?:Bbytes"a!
-
-m m("#unknown-value#4
-2
-m m(0data"?python-unknown?:Bbytes"a!
-
-p p("#unknown-value#4
-2
-p p(0data"?python-unknown?:Bbytes" *data"**data
-t t(*~/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/msgpack/ext.py

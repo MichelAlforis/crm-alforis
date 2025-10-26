@@ -1,11 +1,0 @@
-
-¦œ"Whether the given requirement can be satisfied by a candidate.
-
-        The candidate is guaranteed to have been generated from the
-        requirement.
-
-        A boolean should be returned to indicate whether ``candidate`` is a
-        viable solution to the requirement.
-        "strself (requirement (-	candidate/ (<NotImplementedError"2
-
-ˆ ˆ(!*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/resolvelib/providers.py

@@ -1,141 +1,0 @@
-
-1.0PythonFrontend"1760943928835*py2.B¯
-
-imports1
-
-extends2
-
-returns3
-
-	has param4
-
-module5
-
-
-class6
-
-function7
-?
-:crm-backend/scripts/migrate_fournisseur_to_organisation.py9
-)
-#migrate_fournisseur_to_organisation11
-	
-sys12
-
-os14
-
-argparse16
-
-datetime18
-
-
-sqlalchemy20
-
-sqlalchemy.orm22
-
-core.database24
-
-models26
-
-models.organisation28
-.
-(migrate_fournisseur_to_organisation.main30
-:
-4migrate_fournisseur_to_organisation.migrate_contacts32
-$
-sqlalchemy.orm.session.Session34
-9
-3migrate_fournisseur_to_organisation.generate_report36
->
-8migrate_fournisseur_to_organisation.migrate_fournisseurs38
-7
-1migrate_fournisseur_to_organisation.create_tables40J
-
-8
-89jİ
- 
-10
-10115 *
-8 (
-
-13
-13125
-
-15
-15145
-
-17
-17165
-
-19
-19185
-
-21
-21205
-
-23
-23225
-
-25
-25245
-
-27
-27265
-
-29
-29285
-
-31
-31307 210
-
-33
-33327 210
-
-35
-35346
-
-37
-37367 210
-
-39
-39387 210
-
-41
-41407 210r¼
-
-10131*
-8 (
-
-10151*
-8 (
-
-
-10171*
-8 (
-
-10191*
-8 (
-
-10211*
-8 (+
-
-10231*
-8 (#
-
-10251*
-8 (/
-
-10271*
-8 (\
-
-10291*
-8   (C
-
-33354*
-8 (
-
-37354*
-8Ì Ì(
-
-39354*
-8B B(

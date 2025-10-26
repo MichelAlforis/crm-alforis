@@ -1,37 +1,0 @@
-
-16int
-"color({number})"str
-ÍÃ"Create a Color number from it's 8-bit ansi number.
-
-        Args:
-            number (int): A number between 0-255 inclusive.
-
-        Returns:
-            Color: A new Color instance.
-        "strcls
-ý ý(number
-ý ý("$ pip._vendor.rich.color.ColorType"Z*
-(
-
-ˆ( ˆ(3"	#binop <#2<:Bbool,"*
-
-ˆ( ˆ(3 *
-ˆ% ˆ('2
-ˆ4 ˆ(8"A+
-)
-
-ˆ ˆ($"#get-field# STANDARD:
-
-ˆ ˆ(L"B,
-*
-
-ˆ9 ˆ(L	"#get-field# EIGHT_BIT:
-
-ˆ ˆ(L"E*
-	
-
-
-† Š(	"cls:
-
-
-† Š(	*}/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/color.py

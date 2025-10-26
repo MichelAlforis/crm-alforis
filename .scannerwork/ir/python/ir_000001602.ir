@@ -1,123 +1,0 @@
-
-" "str
-
-0int
-ùï"Aligns render to bottom (adds extra lines above as required).
-
-        Args:
-            lines (List[List[Segment]]): A list of lines.
-            width (int): Desired width.
-            height (int, optional): Desired height or None for no change.
-            style (Style): Style of any padding added. Defaults to None.
-            new_lines (bool, optional): Padded lines should include "\n". Defaults to False.
-
-        Returns:
-            List[List[Segment]]: New list of lines.
-        "str
-"\n"strcls
-Ð Ð(lines
-Ñ Ñ($width
-Ò Ò(height
-Ó Ó(style
-Ô Ô(	new_lines
-Õ Õ(list"à,
-*
-
-ã ã()"
-builtinslen*:Bint4
-2
-
-ã ã()	extra_lines"	#binop -#*2-:+
-)
-
-ä ä(
-"
-__bool__*:	BboolH+
-)
-
-ä ä("#unaryop !#2!:
-Bbool "
-
-ä ä( *
-ä ä(
-"i)
-'
-
-å å("#unknown-value#Blist(
-&
-
-å å("#array-add-all#:
-
-å å("‰*
-(
-
-æ æ(lines"#unknown-value#+
-)
-
-ç2 ç(;"
-__bool__*:BboolH,"*
-
-ç2 ç(; *
-ç/ ç(12
-ç< ç(@"'
-%
-
-ç ç("	#binop *#*2*:$
-"
-
-ç ç(&"	#binop +#2+:
-
-
-ç ç(."cls:
-
-ç ç(X"['
-%
-
-çE ç(P"	#binop *#*2*:
-
-
-çA ç(X"cls:
-
-ç ç(X"»*blank)
-'
-
-è è("#unknown-value#Blist(
-&
-
-è è("
-#is-exact#:Bbool
-
-
-è è("
-#assume#::
-8
-
-è è("#set-field# __collection_size:Bint(
-&
-
-è è("#array-add-last#:)
-'
-
-è è("#unknown-value#Blist(
-&
-
-è è( "
-#is-exact#:Bbool
-
-
-è è(!"
-#assume#: :
-8
-
-è è(""#set-field# __collection_size:Bint(
-&
-
-è è(#"#array-add-last#:'
-%
-
-è è('$"	#binop *#*2*:	+
-)
-
-è è(/%lines"	#binop +#2+:$
-
-é é(%*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/segment.py
