@@ -38,9 +38,9 @@ def upgrade() -> None:
     op.add_column('people', sa.Column('last_activity_date', sa.DateTime(timezone=True), nullable=True))
 
     # Indexes pour optimiser les requêtes d'anonymisation
-    op.create_index('idx_people_anonymized", "people', ['is_anonymized'])
+    op.create_index('idx_people_anonymized', 'people', ['is_anonymized'])
     op.create_index('idx_people_last_activity", "people', ['last_activity_date'])
-    op.create_index('idx_people_gdpr_consent", "people', ['gdpr_consent'])
+    op.create_index('idx_people_gdpr_consent', 'people', ['gdpr_consent'])
 
     # ========================================
     # Table: organisations
@@ -53,7 +53,7 @@ def upgrade() -> None:
 
     # Indexes
     op.create_index('idx_organisations_anonymized", "organisations', ['is_anonymized'])
-    op.create_index('idx_organisations_last_activity", "organisations', ['last_activity_date'])
+    op.create_index('idx_organisations_last_activity', 'organisations', ['last_activity_date'])
     op.create_index('idx_organisations_gdpr_consent", "organisations', ['gdpr_consent'])
 
     # ========================================

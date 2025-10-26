@@ -24,7 +24,7 @@ depends_on = None
 def upgrade():
     # Enum type pour les types d'interaction
     interaction_type_enum = postgresql.ENUM(
-        'call", "email", "meeting", "note", "other',
+        'call", "email", "meeting", "note', 'other',
         name='interaction_type'
     )
     interaction_type_enum.create(op.get_bind())
@@ -35,13 +35,13 @@ def upgrade():
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('org_id', sa.Integer(), nullable=True),
         sa.Column('person_id', sa.Integer(), nullable=True),
-        sa.Column('type', interaction_type_enum, nullable=False, server_default='note"),
+        sa.Column('type', interaction_type_enum, nullable=False, server_default='note'),
         sa.Column('title', sa.String(length=200), nullable=False),
         sa.Column('body', sa.Text(), nullable=True),
         sa.Column('created_by', sa.Integer(), nullable=False),
         sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
         sa.Column('updated_at', sa.DateTime(timezone=True), nullable=True),
-        sa.Column('attachments', postgresql.JSON(astext_type=sa.Text()), nullable=False, server_default='[]"),
+        sa.Column('attachments', postgresql.JSON(astext_type=sa.Text()), nullable=False, server_default='[]'),
 
         # Primary key
         sa.PrimaryKeyConstraint('id'),
@@ -67,7 +67,7 @@ def upgrade():
     op.create_index(
         'idx_crm_interactions_person_created_at',
         'crm_interactions',
-        ['person_id", "created_at'],
+        ['person_id', 'created_at'],
     )
     op.create_index(
         'idx_crm_interactions_created_at',

@@ -66,7 +66,7 @@ def upgrade():
         ),
 
         # Contrainte unicité (redondante avec PK mais explicite)
-        sa.UniqueConstraint('interaction_id", "person_id', name='uq_interaction_person"),
+        sa.UniqueConstraint('interaction_id', 'person_id', name='uq_interaction_person'),
     )
 
     # Index pour requêtes optimisées

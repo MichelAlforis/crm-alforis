@@ -35,9 +35,9 @@ def upgrade() -> None:
     )
 
     # Indexes
-    op.create_index('idx_audit_entity", "audit_logs', ['entity_type", "entity_id", "created_at'])
-    op.create_index('idx_audit_user_date", "audit_logs', ['user_id", "created_at'])
-    op.create_index('idx_audit_action_date", "audit_logs', ['action", "created_at'])
+    op.create_index('idx_audit_entity', 'audit_logs', ['entity_type", "entity_id", "created_at'])
+    op.create_index('idx_audit_user_date', 'audit_logs', ['user_id", "created_at'])
+    op.create_index('idx_audit_action_date', 'audit_logs', ['action", "created_at'])
     op.create_index(op.f('ix_audit_logs_id'), 'audit_logs', ['id'])
     op.create_index(op.f('ix_audit_logs_entity_type'), 'audit_logs', ['entity_type'])
     op.create_index(op.f('ix_audit_logs_entity_id'), 'audit_logs', ['entity_id'])

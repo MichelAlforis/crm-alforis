@@ -13,10 +13,16 @@ patterns = [
     (r"server_default='(true|false)\"", r"server_default='\1'"),
     # server_default sa.text('now()") -> sa.text('now()')
     (r"server_default=sa\.text\('now\(\)\"\)", r"server_default=sa.text('now()')"),
+    # Generic server_default='value" -> server_default='value'
+    (r"server_default='([^']+)\"", r"server_default='\1'"),
     # comments mal fermés: comment='..."
     (r"(comment=')([^']+)\"", r"\1\2'"),
     # ondelete='SET NULL" -> ondelete='SET NULL'
     (r"(ondelete=')([^']+)\"", r"\1\2'"),
+    # default='value" -> default='value'
+    (r"default='([^']+)\"", r"default='\1'"),
+    # Mixed quotes in UniqueConstraint: 'xxx", "yyy' -> 'xxx', 'yyy'
+    (r"'([^']+)\"\s*,\s*\"([^\"]+)'", r"'\1', '\2'"),
     # op.create_index(op.f('xxx"), 'yyy' -> op.create_index(op.f('xxx'), 'yyy'
     (r"op\.create_index\(op\.f\('([^']+)\"\)", r"op.create_index(op.f('\1')"),
     # op.drop_index(op.f('xxx"), table_name='yyy" -> op.drop_index(op.f('xxx'), table_name='yyy'
@@ -29,6 +35,8 @@ patterns = [
     (r"op\.drop_column\('([^']+)\"\s*,\s*\"([^\"]+)\"", r"op.drop_column('\1', '\2'"),
     # PrimaryKeyConstraint("id") -> PrimaryKeyConstraint('id')
     (r'PrimaryKeyConstraint\("([^"]+)"\)', r"PrimaryKeyConstraint('\1')"),
+    # name='xxx" -> name='xxx'
+    (r"name='([^']+)\"", r"name='\1'"),
 ]
 
 for f in sorted(migrations.glob("*.py")):
