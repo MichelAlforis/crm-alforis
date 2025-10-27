@@ -536,6 +536,60 @@ crm-frontend/
 
 ---
 
-**Dernière mise à jour :** 27 Octobre 2025 (P2 ajouté)
+---
+
+## 📋 Instructions de Test Lighthouse
+
+**Pour mesurer les métriques P2 réelles** :
+
+1. **Suivre le guide complet** : [LIGHTHOUSE-TESTING.txt](../crm-frontend/docs/LIGHTHOUSE-TESTING.txt)
+
+2. **Méthode rapide (Chrome DevTools)** :
+   ```
+   - Ouvrir http://localhost:3010/dashboard
+   - F12 > Lighthouse > Performance
+   - "Analyze page load"
+   - Noter FCP, LCP, TBT, Speed Index, CLS
+   ```
+
+3. **Métriques à comparer** :
+   - **FCP** : Avant 0.3s → Cible <0.2s
+   - **LCP** : Avant 3.9s → Cible <2.4s
+   - **TBT** : Avant 820ms → Cible <300ms
+   - **Speed Index** : Avant 1.3s → Cible <1.0s
+
+4. **Reporter les résultats** :
+   - Remplir les tableaux dans LIGHTHOUSE-TESTING.txt
+   - Mettre à jour cette section avec les gains réels
+
+---
+
+## 📈 Résultats Lighthouse (À mettre à jour après tests)
+
+### Instructions
+Après avoir exécuté les tests Lighthouse, mettre à jour les sections ci-dessous :
+
+**Status** : ⬜ Tests en attente
+**Date tests** : ___________
+
+### Dashboard (/dashboard)
+- FCP : ___ s (Avant: 0.275s)
+- LCP : ___ s (Avant: 3.9s)
+- TBT : ___ ms (Avant: 820ms)
+- Speed Index : ___ s (Avant: 1.36s)
+- CLS : ___ (Avant: 0)
+- **Score** : ___/100
+
+### Organisations (/dashboard/organisations)
+- FCP : ___ s (Avant: 0.268s)
+- LCP : ___ s (Avant: 3.7s)
+- TBT : ___ ms (Avant: 820ms)
+- Speed Index : ___ s (Avant: 1.3s)
+- CLS : ___ (Avant: 0)
+- **Score** : ___/100
+
+---
+
+**Dernière mise à jour :** 27 Octobre 2025 (P2 ajouté + Instructions Lighthouse)
 **Code Review By :** Claude Code
-**Status :** ✅ **PRODUCTION-READY ENHANCED** - 10/11 tests (91%) - API -99.9%, Cache 81%, P2 optimizations deployed
+**Status :** ✅ **PRODUCTION-READY ENHANCED** - 10/11 tests (91%) - API -99.9%, Cache 81%, P2 deployed - Lighthouse tests pending

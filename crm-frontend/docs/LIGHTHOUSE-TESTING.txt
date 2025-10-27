@@ -1,0 +1,262 @@
+# Guide de Test Performance - Lighthouse & Web Vitals
+
+Date: 27 Octobre 2025
+Optimisations: P0 + P1 + P2 déployées
+
+## Objectif
+
+Mesurer les métriques de performance après les optimisations P2 pour valider les gains estimés.
+
+---
+
+## Méthode 1: Chrome DevTools Lighthouse (Recommandé)
+
+### Prérequis
+- Chrome/Edge navigateur (version récente)
+- Application CRM accessible sur http://localhost:3010
+- Backend API en cours d'exécution sur http://localhost:8000
+- Compte de test authentifié
+
+### Étapes
+
+1. **Démarrer les services**
+   ```bash
+   docker-compose ps
+   # Vérifier que api, frontend, postgres, redis sont UP
+   ```
+
+2. **Se connecter au CRM**
+   - Ouvrir http://localhost:3010
+   - Se connecter avec test+qa@alforis.com
+   - Accéder au dashboard
+
+3. **Ouvrir Chrome DevTools**
+   - Appuyer sur F12
+   - Onglet "Lighthouse"
+   - Configuration:
+     * Mode: Navigation
+     * Device: Desktop
+     * Categories: Performance uniquement
+     * Throttling: No throttling (pour tests locaux)
+
+4. **Lancer l'analyse sur 3 pages**
+
+   **Page 1: /dashboard**
+   - URL: http://localhost:3010/dashboard
+   - Cliquer "Analyze page load"
+   - Attendre le résultat (~30s)
+   - Noter les métriques dans le tableau ci-dessous
+
+   **Page 2: /dashboard/organisations**
+   - URL: http://localhost:3010/dashboard/organisations
+   - Même procédure
+   - Noter les métriques
+
+   **Page 3: /dashboard/mandats**
+   - URL: http://localhost:3010/dashboard/mandats
+   - Même procédure
+   - Noter les métriques
+
+5. **Enregistrer les résultats**
+   - Cliquer "View Treemap" pour analyse détaillée
+   - Sauvegarder le rapport JSON (icône de sauvegarde)
+   - Copier les métriques dans checklists/12-performance.md
+
+---
+
+## Méthode 2: Console Browser (Web Vitals)
+
+### Installation web-vitals (optionnel)
+
+```bash
+cd crm-frontend
+npm install web-vitals
+```
+
+### Ajouter WebVitalsReporter au layout
+
+Éditer `app/layout.tsx`:
+
+```tsx
+import { WebVitalsReporter } from '@/components/performance/WebVitalsReporter'
+
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>
+        {/* Ajouter après Providers */}
+        <WebVitalsReporter debug={process.env.NODE_ENV === 'development'} />
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  )
+}
+```
+
+### Consulter les métriques
+
+Dans la console Chrome (F12 > Console):
+
+```javascript
+// Afficher les Web Vitals mesurés
+window.getWebVitals()
+
+// Ou consulter localStorage
+JSON.parse(localStorage.getItem('web-vitals'))
+```
+
+---
+
+## Méthode 3: Lighthouse CLI (Avancé)
+
+### Installation
+
+```bash
+npm install -g lighthouse
+# Ou avec npx (sans installation)
+npx lighthouse --version
+```
+
+### Exécution
+
+```bash
+# Tester une page (nécessite URL publique ou tunnel)
+lighthouse http://localhost:3010/dashboard \
+  --only-categories=performance \
+  --output=json \
+  --output-path=./lighthouse-dashboard.json \
+  --chrome-flags="--headless"
+
+# Voir le rapport
+cat lighthouse-dashboard.json | jq '.audits.metrics.details.items[0]'
+```
+
+**Note**: Lighthouse CLI ne supporte pas l'authentification facilement.
+Pour tester les pages protégées, utiliser Chrome DevTools (Méthode 1).
+
+---
+
+## Tableau de Résultats - À Remplir
+
+### Dashboard (/dashboard)
+
+| Métrique | Avant P2 | Après P2 | Δ | Status |
+|----------|----------|----------|---|--------|
+| FCP | 0.275s | ___ s | ___ | ⬜ |
+| LCP | 3.9s | ___ s | ___ | ⬜ |
+| TBT | 820ms | ___ ms | ___ | ⬜ |
+| Speed Index | 1.36s | ___ s | ___ | ⬜ |
+| CLS | 0 | ___ | ___ | ⬜ |
+| **Score** | __/100 | ___/100 | ___ | ⬜ |
+
+### Organisations (/dashboard/organisations)
+
+| Métrique | Avant P2 | Après P2 | Δ | Status |
+|----------|----------|----------|---|--------|
+| FCP | 0.268s | ___ s | ___ | ⬜ |
+| LCP | 3.7s | ___ s | ___ | ⬜ |
+| TBT | 820ms | ___ ms | ___ | ⬜ |
+| Speed Index | 1.3s | ___ s | ___ | ⬜ |
+| CLS | 0 | ___ | ___ | ⬜ |
+| **Score** | __/100 | ___/100 | ___ | ⬜ |
+
+### Mandats (/dashboard/mandats)
+
+| Métrique | Avant P2 | Après P2 | Δ | Status |
+|----------|----------|----------|---|--------|
+| FCP | 0.3s | ___ s | ___ | ⬜ |
+| LCP | 3.6s | ___ s | ___ | ⬜ |
+| TBT | 820ms | ___ ms | ___ | ⬜ |
+| Speed Index | 1.0s | ___ s | ___ | ⬜ |
+| CLS | 0 | ___ | ___ | ⬜ |
+| **Score** | __/100 | ___/100 | ___ | ⬜ |
+
+---
+
+## Métriques Cibles (P2)
+
+| Métrique | Cible | Excellent | Bon | À Améliorer |
+|----------|-------|-----------|-----|-------------|
+| FCP | <0.2s | <1.8s | 1.8-3s | >3s |
+| LCP | <2.4s | <2.5s | 2.5-4s | >4s |
+| TBT | <300ms | <200ms | 200-600ms | >600ms |
+| Speed Index | <1.0s | <3.4s | 3.4-5.8s | >5.8s |
+| CLS | 0 | <0.1 | 0.1-0.25 | >0.25 |
+
+---
+
+## Diagnostic des Problèmes
+
+### Si LCP > 2.5s
+- Vérifier que les skeletons s'affichent immédiatement
+- Check preconnect dans layout.tsx (API + fonts)
+- Vérifier API response time (<100ms)
+- Check images avec priority sur hero images
+
+### Si TBT > 300ms
+- Vérifier que Web Worker fonctionne (console logs)
+- Check re-renders inutiles (React DevTools Profiler)
+- Vérifier que requestIdleCallback est utilisé pour code non-critique
+- Check bundle size (chunks > 244KB)
+
+### Si FCP > 1.8s
+- Vérifier que Suspense boundaries sont bien placées
+- Check que les composants lourds utilisent dynamic imports
+- Vérifier PWA service worker (cache)
+
+### Si CLS > 0.1
+- Vérifier que les skeletons ont les mêmes dimensions que le contenu final
+- Check images sans width/height
+- Vérifier fonts avec font-display: swap
+
+---
+
+## Analyse Avancée
+
+### Bundle Analyzer
+
+```bash
+cd crm-frontend
+ANALYZE=true npm run build
+# Ouvre un rapport visuel des chunks
+```
+
+### Network Throttling
+
+Tester avec throttling simulé:
+- Chrome DevTools > Network > Throttling
+- Profil: Fast 3G ou Slow 3G
+- Relancer Lighthouse
+
+### Memory Profiling
+
+- Chrome DevTools > Performance
+- Enregistrer session de 10s
+- Check memory leaks, long tasks (>50ms)
+
+---
+
+## Rapport Final
+
+Après avoir rempli les tableaux:
+
+1. Calculer les gains moyens:
+   - FCP: (avant - après) / avant * 100 = ___%
+   - LCP: (avant - après) / avant * 100 = ___%
+   - TBT: (avant - après) / avant * 100 = ___%
+
+2. Mettre à jour checklists/12-performance.md avec résultats réels
+
+3. Si gains < estimations:
+   - Analyser avec bundle analyzer
+   - Check Network tab pour requêtes lentes
+   - Profiler avec React DevTools
+
+---
+
+## Ressources
+
+- [Lighthouse Docs](https://developer.chrome.com/docs/lighthouse)
+- [Web Vitals](https://web.dev/vitals/)
+- [Next.js Performance](https://nextjs.org/docs/app/building-your-application/optimizing)
+- [P2 Optimizations Guide](./P2-OPTIMIZATIONS.txt)
