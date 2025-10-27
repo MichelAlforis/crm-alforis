@@ -3,7 +3,8 @@
 
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import clsx from 'clsx'
 import {
@@ -27,14 +28,102 @@ import ThemeToggle from '@/components/shared/ThemeToggle'
 // Permet tests unitaires et réutilisation
 const MENU_ITEMS = SIDEBAR_SECTIONS
 
+// Composant Popover pour les sous-menus en mode collapsed
+function SubmenuPopover({
+  item,
+  triggerRef,
+  onMouseEnter,
+  onMouseLeave
+}: {
+  item: any
+  triggerRef: React.RefObject<HTMLDivElement>
+  onMouseEnter: () => void
+  onMouseLeave: () => void
+}) {
+  const [position, setPosition] = useState({ top: 0, left: 0 })
+  const sidebar = useSidebarContext()
+
+  useEffect(() => {
+    if (triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect()
+      setPosition({
+        top: rect.top,
+        left: rect.right + 16 // 16px gap
+      })
+    }
+  }, [triggerRef])
+
+  if (typeof window === 'undefined') return null
+
+  return createPortal(
+    <div
+      className="fixed z-[9999] pointer-events-auto"
+      style={{ top: `${position.top}px`, left: `${position.left}px` }}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
+      <div className="min-w-[240px] bg-slate-800 border border-slate-700 rounded-xl shadow-2xl p-3 animate-in fade-in slide-in-from-left-2 duration-150">
+        {/* Header */}
+        <div className="px-2 py-2 border-b border-slate-700 mb-2">
+          <p className="text-sm font-bold text-white">{item.label}</p>
+          <p className="text-xs text-slate-400 mt-0.5">{item.description}</p>
+        </div>
+        {/* Submenu Items */}
+        <div className="space-y-1">
+          {item.submenu.map((subItem: any) => {
+            const SubIcon = subItem.icon
+            const subActive = sidebar.isActive(subItem.href)
+            return (
+              <Link
+                key={subItem.href}
+                href={subItem.href}
+                className={clsx(
+                  'flex items-center gap-3 px-3 py-2.5 rounded-lg',
+                  'transition-all duration-200',
+                  subActive
+                    ? 'bg-blue-600 text-white font-semibold shadow-lg'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-700'
+                )}
+              >
+                <SubIcon className="w-4 h-4" />
+                <span className="text-sm">{subItem.label}</span>
+              </Link>
+            )
+          })}
+        </div>
+      </div>
+    </div>,
+    document.body
+  )
+}
+
 export default function Sidebar() {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+  const itemRefs = useRef<{ [key: string]: React.RefObject<HTMLDivElement> }>({})
+  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   // ✅ État partagé via SidebarContext
   const sidebar = useSidebarContext()
 
   // 📊 Phase 4: Analytics & tracking
   const analytics = useSidebarAnalytics()
+
+  // Fonction pour gérer le hover avec délai
+  const handleMouseEnter = (href: string) => {
+    // Annuler tout timeout de fermeture en cours
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current)
+      closeTimeoutRef.current = null
+    }
+    setHoveredItem(href)
+  }
+
+  const handleMouseLeave = () => {
+    // Ajouter un délai avant de fermer pour permettre de passer au popover
+    closeTimeoutRef.current = setTimeout(() => {
+      setHoveredItem(null)
+    }, 200) // 200ms de délai
+  }
 
   const { todayCount } = useTaskViews()
   const { user, logout } = useAuth()
@@ -241,6 +330,24 @@ export default function Sidebar() {
               const hasSubmenu = item.submenu && item.submenu.length > 0
               const submenuOpen = sidebar.isSubmenuOpen(item.href)
 
+              // Debug logging
+              if (hasSubmenu) {
+                console.log('📌 Item:', item.label, {
+                  hasSubmenu,
+                  collapsed: sidebar.collapsed,
+                  isHovered,
+                  hoveredItem,
+                  itemHref: item.href,
+                  submenuLength: item.submenu?.length
+                })
+              }
+
+              // Créer un ref pour cet item si pas déjà créé
+              if (!itemRefs.current[item.href]) {
+                itemRefs.current[item.href] = React.createRef<HTMLDivElement>()
+              }
+              const itemRef = itemRefs.current[item.href]
+
               // Dynamic badge pour Agent IA
               const dynamicBadge = item.href === '/dashboard/ai' && pendingSuggestionsCount > 0
                 ? pendingSuggestionsCount
@@ -338,8 +445,12 @@ export default function Sidebar() {
                     // Parent Item with Submenu - Collapsed (show popover on hover)
                     <div className="relative group/item">
                       <div
-                        onMouseEnter={() => setHoveredItem(item.href)}
-                        onMouseLeave={() => setHoveredItem(null)}
+                        ref={itemRef}
+                        onMouseEnter={() => {
+                          console.log('🎯 Hover ENTER on:', item.label, item.href)
+                          handleMouseEnter(item.href)
+                        }}
+                        onMouseLeave={handleMouseLeave}
                         className={clsx(
                           'relative flex items-center justify-center',
                           'w-10 h-10 mx-auto rounded-xl',
@@ -353,40 +464,17 @@ export default function Sidebar() {
                         <Icon className="w-5 h-5" />
                       </div>
 
-                      {/* Popover Submenu on Hover */}
+                      {/* Popover Submenu via Portal */}
                       {isHovered && (
-                        <div className="absolute left-full top-0 ml-2 z-50 animate-in fade-in slide-in-from-left-2 duration-200">
-                          <div className="min-w-[220px] bg-slate-800 border border-white/10 rounded-xl shadow-2xl p-2">
-                            {/* Header */}
-                            <div className="px-3 py-2 border-b border-white/10 mb-1">
-                              <p className="text-sm font-bold text-white">{item.label}</p>
-                              <p className="text-xs text-slate-400">{item.description}</p>
-                            </div>
-                            {/* Submenu Items */}
-                            <div className="space-y-1">
-                              {item.submenu.map((subItem: any) => {
-                                const SubIcon = subItem.icon
-                                const subActive = sidebar.isActive(subItem.href)
-                                return (
-                                  <Link
-                                    key={subItem.href}
-                                    href={subItem.href}
-                                    className={clsx(
-                                      'flex items-center gap-2 px-3 py-2 rounded-lg',
-                                      'transition-all duration-200',
-                                      subActive
-                                        ? 'bg-white/20 text-white font-semibold'
-                                        : 'text-slate-400 hover:text-white hover:bg-white/10'
-                                    )}
-                                  >
-                                    <SubIcon className="w-4 h-4" />
-                                    <span className="text-sm">{subItem.label}</span>
-                                  </Link>
-                                )
-                              })}
-                            </div>
-                          </div>
-                        </div>
+                        <>
+                          {console.log('✅ Rendering popover for:', item.label, 'isHovered:', isHovered)}
+                          <SubmenuPopover
+                            item={item}
+                            triggerRef={itemRef}
+                            onMouseEnter={() => handleMouseEnter(item.href)}
+                            onMouseLeave={handleMouseLeave}
+                          />
+                        </>
                       )}
                     </div>
                   ) : (
