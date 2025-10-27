@@ -7,7 +7,10 @@ import React, { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { useOrganisations } from '@/hooks/useOrganisations'
 import { useConfirm } from '@/hooks/useConfirm'
-import { Card, Button, Table, Modal, Alert } from '@/components/shared'
+import { Card, Button, Modal, Alert } from '@/components/shared'
+import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
+import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
+import { Trash2 } from 'lucide-react'
 import { KPIForm } from '@/components/forms'
 import { KPI, KPICreate } from '@/lib/types'
 
@@ -102,44 +105,63 @@ export default function KPIsPage() {
     })
   }
 
-  const columns = [
+  const columns: ColumnV2<KPI>[] = [
     {
       header: 'Année',
       accessor: 'year',
+      sticky: 'left',
+      priority: 'high',
+      minWidth: '80px',
     },
     {
       header: 'Mois',
       accessor: 'month',
+      priority: 'high',
+      minWidth: '60px',
     },
     {
       header: 'RDV',
       accessor: 'rdv_count',
+      priority: 'high',
+      minWidth: '60px',
     },
     {
       header: 'Pitchs',
       accessor: 'pitchs',
+      priority: 'medium',
+      minWidth: '70px',
     },
     {
       header: 'Due Dil.',
       accessor: 'due_diligences',
+      priority: 'medium',
+      minWidth: '80px',
     },
     {
       header: 'Closings',
       accessor: 'closings',
+      priority: 'high',
+      minWidth: '80px',
     },
     {
       header: 'Revenu',
       accessor: 'revenue',
+      priority: 'high',
+      minWidth: '100px',
       render: (value: number) => `${value || 0}€`,
     },
     {
       header: 'Comm. %',
       accessor: 'commission_rate',
+      priority: 'medium',
+      minWidth: '90px',
       render: (value: number | null) => (value != null ? `${value}%` : '—'),
     },
     {
       header: 'Source',
       accessor: 'source',
+      priority: 'low',
+      minWidth: '110px',
       render: (_: string | undefined, row: KPI) =>
         row.auto_generated ? (
           <span className="text-xs font-medium text-orange-500">Automatique</span>
@@ -150,17 +172,23 @@ export default function KPIsPage() {
     {
       header: 'Actions',
       accessor: 'id',
-      render: (id: number | null, row: KPI) =>
-        id && !row.auto_generated ? (
-          <button
-            onClick={() => handleDelete(id)}
-            className="text-rouge hover:underline text-sm"
-          >
-            Supprimer
-          </button>
-        ) : (
-          <span className="text-xs text-gray-400">—</span>
-        ),
+      sticky: 'right',
+      priority: 'high',
+      minWidth: '120px',
+      render: (id: number | null, row: KPI) => {
+        if (!id || row.auto_generated) {
+          return <span className="text-xs text-gray-400">—</span>
+        }
+        const actions: OverflowAction[] = [
+          {
+            label: 'Supprimer',
+            icon: Trash2,
+            onClick: () => handleDelete(id),
+            variant: 'danger'
+          }
+        ]
+        return <OverflowMenu actions={actions} />
+      },
     },
   ]
 
@@ -248,11 +276,16 @@ export default function KPIsPage() {
 
           {/* Tableau des KPIs */}
           <Card className="overflow-x-auto">
-            <Table
+            <TableV2<KPI>
               columns={columns}
               data={kpis}
               isLoading={kpisLoading}
               isEmpty={kpis.length === 0}
+              emptyMessage="Aucun KPI enregistré pour ce fournisseur"
+              getRowKey={(row) => row.id?.toString() || `${row.year}-${row.month}`}
+              size="md"
+              variant="default"
+              stickyHeader
             />
           </Card>
 
