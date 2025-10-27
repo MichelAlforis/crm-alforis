@@ -198,8 +198,18 @@ function TourController() {
   const onboarding = useOnboarding({
     steps: TOUR_STEPS,
     storageKey: 'dashboard-onboarding-completed',
-    autoStart: true,
+    autoStart: false, // Désactivé car géré par BannerManager
   })
+
+  // Écouter l'événement du BannerManager
+  React.useEffect(() => {
+    const handleStartOnboarding = () => {
+      onboarding.start()
+    }
+
+    window.addEventListener('start-onboarding', handleStartOnboarding)
+    return () => window.removeEventListener('start-onboarding', handleStartOnboarding)
+  }, [onboarding])
 
   React.useEffect(() => {
     setIsOpen(onboarding.isActive)

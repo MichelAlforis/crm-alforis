@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/Button'
+import { Button } from '@/components/ui/button'
 import { Input } from '@/components/shared/Input'
 import { Alert } from '@/components/shared/Alert'
 import { useEmailTemplates } from '@/hooks/useEmailAutomation'

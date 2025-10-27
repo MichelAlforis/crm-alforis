@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/Button'
+import { Button } from '@/components/ui/button'
 import { Input } from '@/components/shared/Input'
 import { useViewportToggle } from '@/hooks/useViewportToggle'
 import { apiClient } from '@/lib/api'

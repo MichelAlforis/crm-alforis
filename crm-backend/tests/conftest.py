@@ -16,8 +16,8 @@ from core.database import Base, get_db
 from core.permissions import init_default_permissions
 from core.security import get_password_hash
 from main import app
-from models.organisation import Organisation, OrganisationCategory
-from models.person import OrganizationType, Person, PersonOrganizationLink
+from models.organisation import Organisation, OrganisationCategory, OrganisationType
+from models.person import Person, PersonOrganizationLink
 from models.role import Role, UserRole
 from models.user import User
 

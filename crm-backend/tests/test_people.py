@@ -65,6 +65,14 @@ def test_person_unique_email(test_db, sample_person):
 
 def test_create_person_org_link(test_db, sample_person, sample_organisation):
     """Test création lien Person ↔ Organisation"""
+    try:
+        from models.organisation import OrganisationType as OT
+        print(f"✅ Import réussi: OT = {OT}")
+    except Exception as e:
+        print(f"❌ Import échoué: {e}")
+        import traceback
+        traceback.print_exc()
+        raise
     link = PersonOrganizationLink(
         person_id=sample_person.id,
         organization_type=OrganizationType.INVESTOR,
@@ -87,6 +95,7 @@ def test_create_person_org_link(test_db, sample_person, sample_organisation):
 
 def test_person_multiple_organisations(test_db, sample_person, sample_organisations):
     """Test personne liée à plusieurs organisations"""
+    from models.organisation import OrganisationType
     links = []
     for i, org in enumerate(sample_organisations[:3]):
         link = PersonOrganizationLink(
@@ -527,7 +536,7 @@ class TestPeopleListEndpoint:
         # Lier avec différents types
         link1 = PersonOrganizationLink(
             person_id=person1.id,
-            organization_type=OrganisationType.INVESTOR,
+            organization_type=OT.INVESTOR,
             organization_id=sample_organisation.id,
             job_title="Investor Rep",
         )

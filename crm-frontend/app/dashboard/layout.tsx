@@ -16,6 +16,7 @@ import QueryProvider from '@/components/providers/QueryProvider'
 import OfflineIndicator from '@/components/pwa/OfflineIndicator'
 import { BannerManager } from '@/components/pwa/BannerManager'
 import { OnboardingTour } from '@/components/onboarding/OnboardingTour'
+import { SidebarProvider } from '@/contexts/SidebarContext'
 import { Loader2 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -61,34 +62,36 @@ export default function DashboardLayout({
   // Main dashboard layout
   return (
     <QueryProvider>
-      <OnboardingTour>
-        <div className="dashboard-layout flex">
-          {/* Sidebar Navigation - État géré par le hook useSidebar */}
-          <Sidebar />
+      <SidebarProvider>
+        <OnboardingTour>
+          <div className="dashboard-layout flex">
+            {/* Sidebar Navigation - État partagé via SidebarContext */}
+            <Sidebar />
 
-          {/* Main Content Area */}
-          <div
-            className={clsx(
-              'flex flex-col min-h-screen flex-1 transition-all duration-300 ease-in-out',
-              'w-full lg:w-auto overflow-x-hidden'
-            )}
-          >
-            {/* Top Navbar */}
-            <Navbar />
+            {/* Main Content Area */}
+            <div
+              className={clsx(
+                'flex flex-col min-h-screen flex-1 transition-all duration-300 ease-in-out',
+                'w-full lg:w-auto overflow-x-hidden'
+              )}
+            >
+              {/* Top Navbar */}
+              <Navbar />
 
-            {/* Page Content */}
-            <main className="flex-1 overflow-auto bg-gray-50">
-              <div className="dashboard-content animate-fadeIn">
-                {children}
-              </div>
-            </main>
+              {/* Page Content */}
+              <main className="flex-1 overflow-auto bg-gray-50">
+                <div className="dashboard-content animate-fadeIn">
+                  {children}
+                </div>
+              </main>
+            </div>
+
+            {/* PWA Components */}
+            <OfflineIndicator />
+            <BannerManager />
           </div>
-
-          {/* PWA Components */}
-          <OfflineIndicator />
-          <BannerManager />
-        </div>
-      </OnboardingTour>
+        </OnboardingTour>
+      </SidebarProvider>
     </QueryProvider>
   )
 }

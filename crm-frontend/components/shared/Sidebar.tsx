@@ -18,7 +18,7 @@ import {
 import { useTaskViews } from '@/hooks/useTasks'
 import { useAuth } from '@/hooks/useAuth'
 import { usePendingSuggestionsCount } from '@/hooks/useAI'
-import { useSidebar } from '@/hooks/useSidebar'
+import { useSidebarContext } from '@/contexts/SidebarContext'
 import { useSidebarAnalytics } from '@/hooks/useSidebarAnalytics'
 import { SIDEBAR_SECTIONS } from '@/config/sidebar.config'
 import ThemeToggle from '@/components/shared/ThemeToggle'
@@ -30,8 +30,8 @@ const MENU_ITEMS = SIDEBAR_SECTIONS
 export default function Sidebar() {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
 
-  // ✅ Hook centralisé pour toute la logique sidebar
-  const sidebar = useSidebar(MENU_ITEMS)
+  // ✅ État partagé via SidebarContext
+  const sidebar = useSidebarContext()
 
   // 📊 Phase 4: Analytics & tracking
   const analytics = useSidebarAnalytics()
