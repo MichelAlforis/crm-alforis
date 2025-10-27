@@ -124,8 +124,8 @@ class TestWorkflowExecution:
 
         # Créer une organisation (devrait déclencher le workflow)
         org_data = {
-            "nom": "Nouveau Prospect SARL",
-            "type": "prospect",
+            "name": "Nouveau Prospect SARL",
+            "type": "investor",  # prospect doesn't exist, use investor
         }
 
         response = client.post("/api/v1/organisations", json=org_data, headers=auth_headers)
@@ -231,7 +231,7 @@ class TestWorkflowManagement:
         test_db.add(workflow)
         test_db.commit()
 
-        response = client.patch(
+        response = client.put(
             f"/api/v1/workflows/{workflow.id}",
             json={"status": "inactive"},
             headers=auth_headers,

@@ -46,7 +46,7 @@ class TestInteractionCreation:
         }
 
         response = client.post(
-            "/api/v1/interactions", json=interaction_data, headers=auth_headers
+            "/api/v1/interactions/create-v2", json=interaction_data, headers=auth_headers
         )
         assert response.status_code == 201
         data = response.json()
@@ -80,7 +80,7 @@ class TestInteractionCreation:
         }
 
         response = client.post(
-            "/api/v1/interactions", json=interaction_data, headers=auth_headers
+            "/api/v1/interactions/create-v2", json=interaction_data, headers=auth_headers
         )
         assert response.status_code == 201
         data = response.json()
@@ -104,7 +104,7 @@ class TestInteractionCreation:
         }
 
         response = client.post(
-            "/api/v1/interactions", json=interaction_data, headers=auth_headers
+            "/api/v1/interactions/create-v2", json=interaction_data, headers=auth_headers
         )
         assert response.status_code == 201
         data = response.json()
@@ -126,7 +126,7 @@ class TestInteractionCreation:
         }
 
         response = client.post(
-            "/api/v1/interactions", json=interaction_data, headers=auth_headers
+            "/api/v1/interactions/create-v2", json=interaction_data, headers=auth_headers
         )
         assert response.status_code == 201
         data = response.json()

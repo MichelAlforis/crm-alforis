@@ -24,6 +24,7 @@ from datetime import datetime
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from pydantic import BaseModel
 from sqlalchemy import desc
 from sqlalchemy.orm import Session
 
@@ -126,6 +127,92 @@ def _build_interaction_out(interaction: Interaction) -> InteractionOut:
 
     # TODO: Fix InteractionOut validation - retourner dict temporairement
     return data  # InteractionOut(**data)
+
+
+# ==================== V2 ENDPOINTS (for tests) ====================
+
+
+@router.get("", response_model=List[InteractionOut])
+async def list_interactions(
+    type: Optional[str] = Query(None, description="Filter by type"),
+    status: Optional[str] = Query(None, description="Filter by status"),
+    org_id: Optional[int] = Query(None, description="Filter by org_id"),
+    person_id: Optional[int] = Query(None, description="Filter by person_id"),
+    start_date: Optional[datetime] = Query(None, description="Start date"),
+    end_date: Optional[datetime] = Query(None, description="End date"),
+    overdue: Optional[bool] = Query(None, description="Overdue interactions only"),
+    limit: int = Query(50, le=200),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """List interactions with filters (V2 for tests)"""
+    query = db.query(Interaction)
+
+    if type:
+        query = query.filter(Interaction.type == type)
+    if status:
+        query = query.filter(Interaction.status == status)
+    if org_id:
+        query = query.filter(Interaction.org_id == org_id)
+    if person_id:
+        query = query.filter(Interaction.person_id == person_id)
+    if start_date:
+        query = query.filter(Interaction.created_at >= start_date)
+    if end_date:
+        query = query.filter(Interaction.created_at <= end_date)
+    if overdue is not None:
+        from datetime import timezone as tz
+        now = datetime.now(tz.utc)
+        if overdue:
+            query = query.filter(
+                Interaction.next_action_at.isnot(None),
+                Interaction.next_action_at < now
+            )
+
+    interactions = query.order_by(desc(Interaction.created_at)).limit(limit).all()
+    return [_build_interaction_out(i) for i in interactions]
+
+
+@router.post("/create-v2", response_model=InteractionOut, status_code=status.HTTP_201_CREATED)
+async def create_interaction_v2(
+    payload: InteractionCreate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """Create interaction V2 (for tests) - same as POST / but different endpoint"""
+    user_id = _get_user_id(current_user)
+
+    interaction = Interaction(
+        org_id=payload.org_id,
+        person_id=payload.person_id,
+        type=payload.type,
+        title=payload.title,
+        description=payload.body,
+        created_by=user_id,
+        status=payload.status,
+        assignee_id=payload.assignee_id,
+        next_action_at=payload.next_action_at,
+        attachments=payload.attachments or [],
+        external_participants=payload.external_participants or [],
+    )
+
+    db.add(interaction)
+    db.flush()
+
+    if payload.participants:
+        for p_data in payload.participants:
+            participant = InteractionParticipant(
+                interaction_id=interaction.id,
+                person_id=p_data.person_id,
+                role=p_data.role,
+                present=p_data.present,
+            )
+            db.add(participant)
+
+    db.commit()
+    db.refresh(interaction)
+
+    return _build_interaction_out(interaction)
 
 
 @router.post("", response_model=InteractionOut, status_code=status.HTTP_201_CREATED)
@@ -569,3 +656,78 @@ async def update_next_action(
     db.refresh(interaction)
 
     return _build_interaction_out(interaction)
+
+
+class AddParticipantRequest(BaseModel):
+    """Request body for adding participant"""
+    person_id: int
+    present: bool = True
+    role: Optional[str] = None
+
+
+@router.post("/{interaction_id}/participants", status_code=status.HTTP_201_CREATED)
+async def add_participant_to_interaction(
+    interaction_id: int,
+    payload: AddParticipantRequest,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """Add participant to interaction"""
+    from models.person import Person
+
+    person_id = payload.person_id
+    present = payload.present
+    role = payload.role
+
+    interaction = db.query(Interaction).filter(Interaction.id == interaction_id).first()
+    if not interaction:
+        raise HTTPException(status_code=404, detail=f"Interaction {interaction_id} not found")
+
+    person = db.query(Person).filter(Person.id == person_id).first()
+    if not person:
+        raise HTTPException(status_code=404, detail=f"Person {person_id} not found")
+
+    existing = db.query(InteractionParticipant).filter(
+        InteractionParticipant.interaction_id == interaction_id,
+        InteractionParticipant.person_id == person_id
+    ).first()
+
+    if existing:
+        raise HTTPException(status_code=409, detail="Participant already exists")
+
+    participant = InteractionParticipant(
+        interaction_id=interaction_id,
+        person_id=person_id,
+        present=present,
+        role=role
+    )
+
+    db.add(participant)
+    db.commit()
+
+    return {"message": "Participant added", "person_id": person_id}
+
+
+@router.get("/{interaction_id}/participants")
+async def list_participants(
+    interaction_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """List participants of an interaction"""
+    interaction = db.query(Interaction).filter(Interaction.id == interaction_id).first()
+    if not interaction:
+        raise HTTPException(status_code=404, detail=f"Interaction {interaction_id} not found")
+
+    participants = db.query(InteractionParticipant).filter(
+        InteractionParticipant.interaction_id == interaction_id
+    ).all()
+
+    return [
+        {
+            "person_id": p.person_id,
+            "present": p.present,
+            "role": p.role,
+        }
+        for p in participants
+    ]

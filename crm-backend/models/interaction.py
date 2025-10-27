@@ -150,7 +150,7 @@ class Interaction(BaseModel):
 
     # Type d'interaction
     type = Column(
-        SAEnum(InteractionType, name="interaction_type"),
+        SAEnum(InteractionType, name="interaction_type", values_callable=lambda x: [e.value for e in x]),
         nullable=False,
         default=InteractionType.NOTE,
     )
