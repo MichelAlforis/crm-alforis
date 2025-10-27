@@ -1325,6 +1325,26 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
             .scalar()
         )
 
+        # Suggestions par type
+        suggestions_by_type = {}
+        for suggestion_type in AISuggestionType:
+            count = (
+                self.db.query(func.count(AISuggestion.id))
+                .filter(AISuggestion.type == suggestion_type)
+                .scalar()
+            )
+            suggestions_by_type[suggestion_type.value] = count
+
+        # Suggestions par statut
+        suggestions_by_status = {}
+        for status in AISuggestionStatus:
+            count = (
+                self.db.query(func.count(AISuggestion.id))
+                .filter(AISuggestion.status == status)
+                .scalar()
+            )
+            suggestions_by_status[status.value] = count
+
         total_executions = self.db.query(func.count(AIExecution.id)).scalar()
         total_cost = self.db.query(func.sum(AIExecution.estimated_cost_usd)).scalar() or 0.0
 
@@ -1332,6 +1352,8 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
             "total_suggestions": total_suggestions,
             "pending_suggestions": pending_suggestions,
             "approved_suggestions": approved_suggestions,
+            "suggestions_by_type": suggestions_by_type,
+            "suggestions_by_status": suggestions_by_status,
             "total_executions": total_executions,
             "total_cost_usd": round(total_cost, 2),
             "config": {
