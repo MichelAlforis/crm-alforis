@@ -1,7 +1,7 @@
 # 📋 Chapitre 9 - Responsive & Mobile
 
 **Status :** ✅ COMPLÉTÉ
-**Tests :** 15/19 (79%)
+**Tests :** 16/19 (84%)
 **Priorité :** 🟢 Basse (polish restant)
 
 ---
@@ -37,7 +37,7 @@
 |---|------|--------|-----------|
 | 9.16 | Sidebar complète affichée | ✅ OK | lg:sticky activé |
 | 9.17 | Grilles 3-4 colonnes | ⬜ | Vérifier lg:grid-cols-4 |
-| 9.18 | Tooltips affichés au hover | ⚠️ AIDE | Cliquer `<` pour réduire sidebar, hover icônes |
+| 9.18 | Tooltips/Submenus sidebar collapsed | ✅ OK | Portal + hover delay 200ms |
 | 9.19 | **Test** : Multi-fenêtres fonctionne | ⬜ | À tester |
 
 ---
@@ -80,7 +80,16 @@
 **Solution :** useState(() => window.matchMedia().matches) init correcte
 **Résultat :** ✅ Tablette charge sans freeze, 100% opérationnelle
 
+### ✅ Fix tooltips/submenus sidebar (commit actuel)
+**Problème :** Popover submenu apparaît puis disparaît immédiatement en mode collapsed
+**Cause 1 :** Popover rendu dans conteneur avec overflow-y-auto (coupé par overflow)
+**Cause 2 :** Gap de 16px entre icône et popover → onMouseLeave déclenché
+**Solution :**
+- Utiliser `createPortal` pour rendre dans document.body (évite overflow)
+- Ajouter délai 200ms avec `setTimeout` avant fermeture
+- `handleMouseEnter` annule timeout en cours
+**Résultat :** ✅ Popover reste ouvert, cliquable, transitions fluides
+
 ### Tests manuels restants
 - 9.17 : Grilles 3-4 colonnes desktop
-- 9.18 : Tooltips (cliquer `<` en haut sidebar pour réduire, puis hover)
 - 9.19 : Multi-fenêtres desktop

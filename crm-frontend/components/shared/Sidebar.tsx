@@ -330,18 +330,6 @@ export default function Sidebar() {
               const hasSubmenu = item.submenu && item.submenu.length > 0
               const submenuOpen = sidebar.isSubmenuOpen(item.href)
 
-              // Debug logging
-              if (hasSubmenu) {
-                console.log('📌 Item:', item.label, {
-                  hasSubmenu,
-                  collapsed: sidebar.collapsed,
-                  isHovered,
-                  hoveredItem,
-                  itemHref: item.href,
-                  submenuLength: item.submenu?.length
-                })
-              }
-
               // Créer un ref pour cet item si pas déjà créé
               if (!itemRefs.current[item.href]) {
                 itemRefs.current[item.href] = React.createRef<HTMLDivElement>()
@@ -446,10 +434,7 @@ export default function Sidebar() {
                     <div className="relative group/item">
                       <div
                         ref={itemRef}
-                        onMouseEnter={() => {
-                          console.log('🎯 Hover ENTER on:', item.label, item.href)
-                          handleMouseEnter(item.href)
-                        }}
+                        onMouseEnter={() => handleMouseEnter(item.href)}
                         onMouseLeave={handleMouseLeave}
                         className={clsx(
                           'relative flex items-center justify-center',
@@ -466,15 +451,12 @@ export default function Sidebar() {
 
                       {/* Popover Submenu via Portal */}
                       {isHovered && (
-                        <>
-                          {console.log('✅ Rendering popover for:', item.label, 'isHovered:', isHovered)}
-                          <SubmenuPopover
-                            item={item}
-                            triggerRef={itemRef}
-                            onMouseEnter={() => handleMouseEnter(item.href)}
-                            onMouseLeave={handleMouseLeave}
-                          />
-                        </>
+                        <SubmenuPopover
+                          item={item}
+                          triggerRef={itemRef}
+                          onMouseEnter={() => handleMouseEnter(item.href)}
+                          onMouseLeave={handleMouseLeave}
+                        />
                       )}
                     </div>
                   ) : (
