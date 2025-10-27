@@ -9,8 +9,8 @@ from typing import Optional
 
 from sqlalchemy.orm import Session
 
-from models.organisation import Organisation, PipelineStage
-from models.person import Person, StagePerson
+from models.organisation import Organisation, PipelineStage, InteractionStatus
+from models.person import Person
 from models.task import Task, TaskCategory, TaskPriority, TaskStatus
 from services.task import TaskService
 
@@ -87,8 +87,8 @@ class TaskAutomationService:
     async def on_person_stage_change(
         self,
         person_id: int,
-        old_stage: Optional[StagePerson],
-        new_stage: StagePerson,
+        old_stage: Optional[InteractionStatus],
+        new_stage: InteractionStatus,
     ) -> Optional[Task]:
         """
         Créer une tâche automatique quand le stage d'un person change
@@ -100,7 +100,7 @@ class TaskAutomationService:
             return None
 
         # Règle : Prospect Chaud → Relance J+3
-        if new_stage == StagePerson.PROSPECT_CHAUD:
+        if new_stage == InteractionStatus.PROSPECT_CHAUD:
             return await self.task_service.create_auto_task(
                 title=f"Relancer person {person.full_name}",
                 description=f"Le person est maintenant chaud. Faire un suivi pour finaliser le partenariat.",
@@ -112,7 +112,7 @@ class TaskAutomationService:
             )
 
         # Règle : En Négociation → Suivi J+5
-        elif new_stage == StagePerson.EN_NEGOCIATION:
+        elif new_stage == InteractionStatus.EN_DISCUSSION:
             return await self.task_service.create_auto_task(
                 title=f"Suivi négociation {person.full_name}",
                 description=f"Faire le point sur les termes du contrat person.",
