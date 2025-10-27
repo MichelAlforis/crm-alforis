@@ -9,7 +9,10 @@ import { useParams, useRouter } from 'next/navigation'
 import { useMandat, useUpdateMandat, useDeleteMandat } from '@/hooks/useMandats'
 import { useProduitsByMandat, useDeleteMandatProduitAssociation } from '@/hooks/useProduits'
 import { useConfirm } from '@/hooks/useConfirm'
-import { Card, Button, Table, Alert, Modal } from '@/components/shared'
+import { Card, Button, Alert, Modal } from '@/components/shared'
+import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
+import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
+import { Eye, Trash2 } from 'lucide-react'
 import { MandatForm } from '@/components/forms'
 import { SkeletonCard } from '@/components/ui/Skeleton'
 import MandatProduitAssociationModal from '@/components/mandats/MandatProduitAssociationModal'
@@ -152,25 +155,43 @@ export default function MandatDetailPage() {
     return sum + (association?.allocation_pourcentage || 0)
   }, 0) || 0
 
-  const produitColumns = [
+  type ProduitRow = {
+    id: number
+    name: string
+    type: string
+    isin_code: string | null
+    status: string
+    mandat_produits?: Array<{ id: number; mandat_id: number; allocation_pourcentage?: number }>
+  }
+
+  const produitColumns: ColumnV2<ProduitRow>[] = [
     {
       header: 'Nom',
       accessor: 'name',
+      sticky: 'left',
+      priority: 'high',
+      minWidth: '180px',
     },
     {
       header: 'Type',
       accessor: 'type',
+      priority: 'high',
+      minWidth: '140px',
       render: (value: string) => TYPE_LABELS[value] || value,
     },
     {
       header: 'Code ISIN',
       accessor: 'isin_code',
+      priority: 'medium',
+      minWidth: '140px',
       render: (value: string | null) => value || '-',
     },
     {
       header: 'Allocation',
-      accessor: 'allocation_pourcentage',
-      render: (_: unknown, row: any) => {
+      accessor: 'mandat_produits',
+      priority: 'high',
+      minWidth: '110px',
+      render: (_: unknown, row: ProduitRow) => {
         const association = row.mandat_produits?.find(
           (mp: any) => mp.mandat_id === mandatId
         )
@@ -185,6 +206,8 @@ export default function MandatDetailPage() {
     {
       header: 'Statut',
       accessor: 'status',
+      priority: 'medium',
+      minWidth: '100px',
       render: (value: string) => (
         <span
           className={`px-2 py-1 text-xs rounded ${
@@ -202,27 +225,30 @@ export default function MandatDetailPage() {
     {
       header: 'Actions',
       accessor: 'id',
-      render: (id: number, row: any) => {
+      sticky: 'right',
+      priority: 'high',
+      minWidth: '120px',
+      render: (id: number, row: ProduitRow) => {
         const association = row.mandat_produits?.find(
           (mp: any) => mp.mandat_id === mandatId
         )
-        return (
-          <div className="flex items-center gap-2">
-            <Link href={`/dashboard/produits/${id}`} className="text-bleu hover:underline text-sm">
-              Voir
-            </Link>
-            {association && (
-              <Button
-                variant="danger"
-                size="sm"
-                onClick={() => handleDeleteAssociationClick(association.id, row.name)}
-                disabled={deleteAssociationMutation.isPending}
-              >
-                Retirer
-              </Button>
-            )}
-          </div>
-        )
+        const actions: OverflowAction[] = [
+          {
+            label: 'Voir',
+            icon: Eye,
+            onClick: () => window.location.href = `/dashboard/produits/${id}`,
+            variant: 'default'
+          }
+        ]
+        if (association) {
+          actions.push({
+            label: 'Retirer',
+            icon: Trash2,
+            onClick: () => handleDeleteAssociationClick(association.id, row.name),
+            variant: 'danger'
+          })
+        }
+        return <OverflowMenu actions={actions} />
       },
     },
   ]
@@ -341,7 +367,16 @@ export default function MandatDetailPage() {
         )}
 
         {produits && produits.length > 0 ? (
-          <Table columns={produitColumns} data={produits} isLoading={false} isEmpty={false} />
+          <TableV2<ProduitRow>
+            columns={produitColumns}
+            data={produits}
+            isLoading={false}
+            isEmpty={false}
+            getRowKey={(row) => row.id.toString()}
+            size="md"
+            variant="default"
+            stickyHeader
+          />
         ) : (
           <div className="text-center py-8 text-gray-500">
             Aucun produit associé à ce mandat.
