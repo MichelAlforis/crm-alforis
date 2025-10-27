@@ -78,44 +78,22 @@ class SearchService:
             and query
         )
 
-        if use_postgres and query:  # Utiliser pg_trgm même si search_vector n'est pas dispo
-            # Combiner Full-Text Search ET fuzzy matching (pg_trgm)
-            if use_fulltext:
-                # Avec FTS + fuzzy
-                base_query = db.query(
-                    Organisation,
-                    (
-                        func.ts_rank(
-                            Organisation.search_vector, func.plainto_tsquery("french", query)
-                        )
-                        + func.similarity(Organisation.name, query)
-                    ).label("rank"),
-                )
+        if use_postgres and query:  # Utiliser pg_trgm
+            # Fuzzy matching avec pg_trgm
+            base_query = db.query(
+                Organisation,
+                func.similarity(Organisation.name, query).label("rank"),
+            )
 
-                # Recherche avec FTS OU similarité trigramme (tolérance aux fautes)
-                base_query = base_query.filter(
-                    or_(
-                        Organisation.search_vector.op("@@")(func.plainto_tsquery("french", query)),
-                        func.similarity(Organisation.name, query) > 0.3,  # Seuil de similarité
-                        func.similarity(Organisation.email, query) > 0.3,
-                    )
+            # Recherche par similarité trigramme ou ILIKE
+            base_query = base_query.filter(
+                or_(
+                    Organisation.name.ilike(f"%{query}%"),
+                    Organisation.email.ilike(f"%{query}%"),
+                    func.similarity(Organisation.name, query) > 0.3,  # Seuil de similarité
+                    func.similarity(Organisation.email, query) > 0.3,
                 )
-            else:
-                # Fuzzy matching seul (sans FTS)
-                base_query = db.query(
-                    Organisation,
-                    func.similarity(Organisation.name, query).label("rank"),
-                )
-
-                # Recherche par similarité trigramme ou ILIKE
-                base_query = base_query.filter(
-                    or_(
-                        Organisation.name.ilike(f"%{query}%"),
-                        Organisation.email.ilike(f"%{query}%"),
-                        func.similarity(Organisation.name, query) > 0.3,  # Seuil de similarité
-                        func.similarity(Organisation.email, query) > 0.3,
-                    )
-                )
+            )
         else:
             base_query = db.query(Organisation)
             like_pattern = f"%{query}%" if query else None

@@ -187,7 +187,7 @@ export function OverflowMenu({
               )}
               title={action.label}
             >
-              {Icon && <Icon className="w-4 h-4 flex-shrink-0" />}
+              {Icon && <Icon className="w-4 h-4 flex-shrink-0" style={{ pointerEvents: 'none' }} />}
             </button>
           )
         })}
@@ -207,6 +207,7 @@ export function OverflowMenu({
       <button
         ref={triggerRef}
         onClick={handleToggle}
+        onTouchEnd={handleToggle}
         className={clsx(
           'p-1.5 rounded transition-colors min-w-[32px] min-h-[32px] flex items-center justify-center',
           isOpen
@@ -217,7 +218,7 @@ export function OverflowMenu({
         aria-label="Open actions menu"
         aria-expanded={isOpen}
       >
-        <MoreVertical className="w-4 h-4 flex-shrink-0" />
+        <MoreVertical className="w-4 h-4 flex-shrink-0" style={{ pointerEvents: 'none' }} />
       </button>
 
       <DropdownPortal

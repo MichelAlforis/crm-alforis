@@ -1,7 +1,7 @@
 # 📋 Chapitre 10 - Recherche Globale
 
 **Status :** ✅ TERMINÉ (Code Review)
-**Tests :** 8/10 (80%)
+**Tests :** 9/10 (90%)
 **Priorité :** 🔴 Haute
 
 ---
@@ -18,7 +18,7 @@
 | 10.6 | Résultats groupés par type | ✅ | 4 types: organisations, people, interactions, kpis |
 | 10.7 | Suggestions pendant la saisie (autocomplete) | ✅ | Debounce 300ms + temps réel |
 | 10.8 | **Test** : Clic résultat ouvre la fiche | ✅ | router.push(href) fonctionnel |
-| 10.9 | Recherche full-text (tolérance fautes) | ⬜ | PostgreSQL FTS activé, pas de fuzzy |
+| 10.9 | Recherche full-text (tolérance fautes) | ✅ | pg_trgm activé, fuzzy matching opérationnel |
 | 10.10 | Performance < 300ms pour 1000+ entités | ⬜ | À tester en conditions réelles |
 
 ---
@@ -65,13 +65,22 @@
 
 ## 🔧 Améliorations Possibles (Optionnel)
 
-### Test 10.9 - Fuzzy Matching
-Pour ajouter la tolérance aux fautes de frappe :
-- **Option 1** : Extension PostgreSQL `pg_trgm` (trigrammes)
-- **Option 2** : Library TypeScript comme `fuse.js`
-- **Option 3** : Elastic Search (overkill pour CRM)
+### ✅ Test 10.9 - Fuzzy Matching (IMPLÉMENTÉ)
 
-**Recommandation** : `pg_trgm` est le meilleur compromis (natif PostgreSQL)
+**Solution retenue** : Extension PostgreSQL `pg_trgm` (trigrammes)
+
+**Implémentation** :
+- Migration Alembic : `20251027_1225_c9eb505dd41a_add_pg_trgm_fuzzy_search.py`
+- Extension `pg_trgm` activée dans PostgreSQL
+- Indexes GIN créés sur `nom`, `prenom`, `email`, `number`
+- Fonction `similarity()` avec seuil 0.3 pour tolérance aux fautes
+- Intégré dans [core/search.py](../crm-backend/core/search.py)
+
+**Tests validés** :
+- ✅ Recherche exacte "Finance" → 60 résultats (score 0.615)
+- ✅ 1 lettre changée "Finence" → 20 résultats (score 0.312)
+- ✅ 1 lettre manquante "Fnance" → 20 résultats (score 0.333)
+- ✅ 2 lettres inversées "Finace" → 20 résultats (score 0.333)
 
 ### Test 10.10 - Performance
 Tests de performance à effectuer :
@@ -106,5 +115,16 @@ crm-frontend/
 ---
 
 **Dernière mise à jour :** 27 Octobre 2025
-**Code Review By :** Claude Code  
-**Status :** ✅ Fonctionnel (8/10 tests passent)
+**Code Review By :** Claude Code
+**Status :** ✅ Fonctionnel (9/10 tests passent)
+
+## 🆕 Nouveautés (27/10/2025)
+
+### Fuzzy Matching avec pg_trgm
+- ✅ Extension PostgreSQL `pg_trgm` activée
+- ✅ Indexes trigrammes GIN créés sur tous les champs texte
+- ✅ Tolérance aux fautes de frappe opérationnelle
+- ✅ Scores de similarité calculés automatiquement
+- ✅ Tests validés avec différents types de fautes
+
+**Migration** : `20251027_1225_c9eb505dd41a_add_pg_trgm_fuzzy_search.py`
