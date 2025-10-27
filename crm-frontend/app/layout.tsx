@@ -62,9 +62,15 @@ export default function RootLayout({
   return (
     <html lang="fr" className="antialiased" suppressHydrationWarning>
       <head>
-        {/* Preconnect to speed up external resources */}
+        {/* P2 Optimization: Preconnect to speed up external resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+
+        {/* P2 Optimization: Preconnect to API (reduces connection time for LCP) */}
+        <link rel="preconnect" href={process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'} />
+        <link rel="dns-prefetch" href={process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'} />
         <link
           rel="apple-touch-icon"
           sizes="180x180"
