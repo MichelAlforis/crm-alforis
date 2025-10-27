@@ -275,7 +275,8 @@ def filter_query_by_team(query, user: User, model_class):
             if isinstance(user.get("role"), dict)
             else user.get("role")
         )
-        user_id = user.get("id")
+        # JWT uses 'sub' for user ID, not 'id'
+        user_id = user.get("sub") or user.get("id")
         user_team_id = user.get("team_id")
     else:
         user_role = user.role.name if hasattr(user.role, "name") else user.role

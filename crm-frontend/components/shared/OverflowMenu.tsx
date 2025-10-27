@@ -96,73 +96,19 @@ function DropdownPortal({ triggerRef, isOpen, onClose, children }: DropdownPorta
     }
   }, [isOpen, triggerRef])
 
-  // Close on click outside
+  // Close on escape key (click-outside handled by backdrop)
   useEffect(() => {
-    console.log('🟡 [DropdownPortal] useEffect isOpen:', isOpen)
     if (!isOpen) return
 
-    // Mark when dropdown was opened
-    openedAtRef.current = Date.now()
-    console.log('📍 [DropdownPortal] Marked open time:', openedAtRef.current)
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
 
-    // Add delay to prevent immediate close on open - LONGER delay for touch events
-    const timeoutId = setTimeout(() => {
-      console.log('🟠 [DropdownPortal] Setting up click-outside handlers')
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [isOpen, onClose])
 
-      const handleClickOutside = (e: MouseEvent | TouchEvent) => {
-        const target = e.target as Node | null
-
-        // Check if click is inside trigger button (including SVG children)
-        const isInsideTrigger = target ? triggerRef.current?.contains(target) : false
-
-        // Check if click is inside dropdown content
-        const isInsideDropdown = target ? dropdownRef.current?.contains(target) : false
-
-        console.log('🔴 [DropdownPortal] Click/touch detected', {
-          type: e.type,
-          target: (target as HTMLElement)?.tagName || 'null',
-          isInsideTrigger,
-          isInsideDropdown,
-          triggerExists: !!triggerRef.current,
-          dropdownExists: !!dropdownRef.current
-        })
-
-        // Only close if click is outside both trigger and dropdown
-        if (!isInsideTrigger && !isInsideDropdown) {
-          console.log('🔴 [DropdownPortal] Closing dropdown - click was outside')
-          onClose()
-        } else {
-          console.log('🟢 [DropdownPortal] Keeping open - click was inside')
-        }
-      }
-
-      const handleEscape = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-          console.log('⌨️  [DropdownPortal] Escape pressed, closing')
-          onClose()
-        }
-      }
-
-      // Only mousedown, NOT touchstart - touchstart causes issues on mobile
-      document.addEventListener('mousedown', handleClickOutside)
-      document.addEventListener('keydown', handleEscape)
-
-      return () => {
-        console.log('🟣 [DropdownPortal] Cleaning up click-outside handlers')
-        document.removeEventListener('mousedown', handleClickOutside)
-        document.removeEventListener('keydown', handleEscape)
-      }
-    }, 300) // 300ms delay - longer to avoid touchstart race
-
-    return () => clearTimeout(timeoutId)
-  }, [isOpen, onClose, triggerRef])
-
-  if (!isOpen || typeof window === 'undefined') {
-    if (!isOpen) console.log('🔵 [DropdownPortal] Not rendering - isOpen is false')
-    return null
-  }
-
-  console.log('✅ [DropdownPortal] Rendering dropdown at position:', position)
+  if (!isOpen || typeof window === 'undefined') return null
 
   return createPortal(
     <>
@@ -170,12 +116,10 @@ function DropdownPortal({ triggerRef, isOpen, onClose, children }: DropdownPorta
       <div
         className="fixed inset-0 z-[9998]"
         onClick={(e) => {
-          console.log('🖱️  [DropdownPortal] Backdrop clicked - closing')
           e.stopPropagation()
           onClose()
         }}
         onTouchEnd={(e) => {
-          console.log('👆 [DropdownPortal] Backdrop touched - closing')
           e.stopPropagation()
           onClose()
         }}
@@ -187,14 +131,8 @@ function DropdownPortal({ triggerRef, isOpen, onClose, children }: DropdownPorta
         className="fixed z-[9999] transition-opacity duration-150"
         style={{ top: `${position.top}px`, left: `${position.left}px` }}
         data-dropdown-content
-        onClick={(e) => {
-          console.log('🖱️  [DropdownPortal] Dropdown clicked - stopping propagation')
-          e.stopPropagation()
-        }}
-        onTouchEnd={(e) => {
-          console.log('👆 [DropdownPortal] Dropdown touchend - stopping propagation')
-          e.stopPropagation()
-        }}
+        onClick={(e) => e.stopPropagation()}
+        onTouchEnd={(e) => e.stopPropagation()}
       >
         <div className="min-w-[160px] bg-white border border-gray-200 rounded-lg shadow-lg py-1">
           {children}
@@ -260,16 +198,7 @@ export function OverflowMenu({
   const handleToggle = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    console.log('🔵 [OverflowMenu] Toggle clicked', {
-      type: e.type,
-      currentIsOpen: isOpen,
-      target: e.target,
-      currentTarget: e.currentTarget
-    })
-    setIsOpen((prev) => {
-      console.log('🟢 [OverflowMenu] Setting isOpen from', prev, 'to', !prev)
-      return !prev
-    })
+    setIsOpen((prev) => !prev)
   }
 
   return (
