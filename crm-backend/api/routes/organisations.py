@@ -363,10 +363,9 @@ async def delete_organisation_activity(
     - organisation_id: ID de l'organisation
     - activity_id: ID de l'activité à supprimer
     """
-    activity_service = OrganisationActivityService(db)
+    # Query activity directly instead of using service (which doesn't have get method)
+    activity = db.query(OrganisationActivity).filter(OrganisationActivity.id == activity_id).first()
 
-    # Vérifier que l'activité existe et appartient bien à cette organisation
-    activity = await activity_service.get(activity_id)
     if not activity:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"Activity {activity_id} not found"
@@ -378,5 +377,6 @@ async def delete_organisation_activity(
             detail=f"Activity {activity_id} does not belong to organisation {organisation_id}",
         )
 
-    await activity_service.delete(activity_id)
+    db.delete(activity)
+    db.commit()
     return None

@@ -42,6 +42,9 @@ export default function Sidebar() {
   const tasksDueToday = todayCount
   const isAdmin = user?.is_admin || false
 
+  // 🐛 Debug log
+  console.log('📱 Sidebar render - mobileOpen:', sidebar.mobileOpen, 'isMobile:', sidebar.isMobile)
+
   return (
     <>
       {/* Mobile Backdrop */}
