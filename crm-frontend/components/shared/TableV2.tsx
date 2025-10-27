@@ -15,6 +15,7 @@ export interface ColumnV2<T = any> {
   sortable?: boolean
   width?: string
   minWidth?: string
+  maxWidth?: string
   render?: (value: any, row: T, index: number) => React.ReactNode
   className?: string
   // V2 features
@@ -365,13 +366,20 @@ export function TableV2<T = any>({
                             isSticky === 'left' && 'shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]',
                             isSticky === 'right' && 'shadow-[-2px_0_4px_-2px_rgba(0,0,0,0.1)]'
                           )}
-                          style={isSticky ? {
-                            [isSticky]: stickyOffset,
-                          } : undefined}
+                          style={{
+                            ...(isSticky ? { [isSticky]: stickyOffset } : {}),
+                            ...(column.minWidth ? { minWidth: column.minWidth } : {}),
+                            ...(column.maxWidth ? { width: column.maxWidth, maxWidth: column.maxWidth } : {}),
+                          }}
                         >
-                          {column.render
-                            ? column.render(value, row, rowIdx)
-                            : value}
+                          <div className={clsx(
+                            'overflow-hidden',
+                            column.maxWidth && 'max-w-0 w-full'
+                          )}>
+                            {column.render
+                              ? column.render(value, row, rowIdx)
+                              : value}
+                          </div>
                         </td>
                       )
                     })}

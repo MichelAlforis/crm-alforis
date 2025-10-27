@@ -55,16 +55,31 @@ function DropdownPortal({ triggerRef, isOpen, onClose, children }: DropdownPorta
     if (isOpen && triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect()
       const viewportHeight = window.innerHeight
+      const viewportWidth = window.innerWidth
+      const dropdownWidth = 160
       const dropdownHeight = 200 // Estimate
 
       // Position below if space, otherwise above
       const shouldPositionAbove = rect.bottom + dropdownHeight > viewportHeight
 
+      // Calculate left position, ensuring it stays within viewport
+      let leftPos = rect.right - dropdownWidth + window.scrollX
+
+      // If dropdown would go off left edge, align to left of trigger instead
+      if (leftPos < 0) {
+        leftPos = rect.left + window.scrollX
+      }
+
+      // If still off right edge, align to right edge with padding
+      if (leftPos + dropdownWidth > viewportWidth) {
+        leftPos = viewportWidth - dropdownWidth - 8
+      }
+
       setPosition({
         top: shouldPositionAbove
           ? rect.top - dropdownHeight + window.scrollY
           : rect.bottom + 4 + window.scrollY,
-        left: rect.right - 160 + window.scrollX // Align right
+        left: Math.max(8, leftPos) // Ensure at least 8px from left edge
       })
     }
   }, [isOpen, triggerRef])
@@ -73,23 +88,39 @@ function DropdownPortal({ triggerRef, isOpen, onClose, children }: DropdownPorta
   useEffect(() => {
     if (!isOpen) return
 
-    const handleClickOutside = (e: MouseEvent) => {
-      if (triggerRef.current && !triggerRef.current.contains(e.target as Node)) {
-        onClose()
+    // Add small delay to prevent immediate close on open
+    const timeoutId = setTimeout(() => {
+      const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+        const target = e.target as HTMLElement
+
+        // Check if click is inside trigger button (including SVG children)
+        const isInsideTrigger = triggerRef.current?.contains(target)
+
+        // Check if click is inside dropdown content
+        const isInsideDropdown = target.closest('[data-dropdown-content]')
+
+        // Only close if click is outside both trigger and dropdown
+        if (!isInsideTrigger && !isInsideDropdown) {
+          onClose()
+        }
       }
-    }
 
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
+      const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') onClose()
+      }
 
-    document.addEventListener('mousedown', handleClickOutside)
-    document.addEventListener('keydown', handleEscape)
+      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener('touchstart', handleClickOutside as any) // Touch support
+      document.addEventListener('keydown', handleEscape)
 
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-      document.removeEventListener('keydown', handleEscape)
-    }
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside)
+        document.removeEventListener('touchstart', handleClickOutside as any)
+        document.removeEventListener('keydown', handleEscape)
+      }
+    }, 100) // 100ms delay
+
+    return () => clearTimeout(timeoutId)
   }, [isOpen, onClose, triggerRef])
 
   if (!isOpen || typeof window === 'undefined') return null
@@ -98,6 +129,9 @@ function DropdownPortal({ triggerRef, isOpen, onClose, children }: DropdownPorta
     <div
       className="fixed z-[9999]"
       style={{ top: `${position.top}px`, left: `${position.left}px` }}
+      data-dropdown-content
+      onClick={(e) => e.stopPropagation()}
+      onTouchEnd={(e) => e.stopPropagation()}
     >
       <div className="min-w-[160px] bg-white border border-gray-200 rounded-lg shadow-lg py-1 animate-in fade-in slide-in-from-top-2 duration-150">
         {children}
@@ -144,13 +178,13 @@ export function OverflowMenu({
               onClick={action.onClick}
               disabled={action.disabled}
               className={clsx(
-                'p-1.5 rounded transition-colors',
+                'p-1.5 rounded transition-colors min-w-[32px] min-h-[32px] flex items-center justify-center',
                 action.disabled && 'opacity-50 cursor-not-allowed',
                 !action.disabled && getVariantStyles(action.variant)
               )}
               title={action.label}
             >
-              {Icon && <Icon className="w-4 h-4" />}
+              {Icon && <Icon className="w-4 h-4 flex-shrink-0" />}
             </button>
           )
         })}
@@ -159,13 +193,20 @@ export function OverflowMenu({
   }
 
   // Collapsed menu with "..."
+  const handleToggle = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsOpen(!isOpen)
+  }
+
   return (
     <>
       <button
         ref={triggerRef}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleToggle}
+        onTouchEnd={handleToggle}
         className={clsx(
-          'p-1.5 rounded transition-colors',
+          'p-1.5 rounded transition-colors min-w-[32px] min-h-[32px] flex items-center justify-center',
           isOpen
             ? 'bg-gray-100 text-gray-900'
             : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
@@ -174,7 +215,7 @@ export function OverflowMenu({
         aria-label="Open actions menu"
         aria-expanded={isOpen}
       >
-        <MoreVertical className="w-4 h-4" />
+        <MoreVertical className="w-4 h-4 flex-shrink-0" />
       </button>
 
       <DropdownPortal
