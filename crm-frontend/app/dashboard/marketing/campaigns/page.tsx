@@ -3,7 +3,9 @@
 import React, { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { Plus, Eye, Mail, Send, Clock, CheckCircle, XCircle, TrendingUp, Users, Calendar, Edit, Trash2, Download, Copy } from 'lucide-react'
-import { Card, CardHeader, CardBody, Button, Table } from '@/components/shared'
+import { Card, CardHeader, CardBody, Button } from '@/components/shared'
+import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
+import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { useEmailCampaigns } from '@/hooks/useEmailAutomation'
 import { useExport } from '@/hooks/useExport'
 import { useConfirm } from '@/hooks/useConfirm'
@@ -134,10 +136,13 @@ export default function CampaignsPage() {
     }
   }
 
-  const columns = [
+  const columns: ColumnV2<EmailCampaign>[] = [
     {
       header: 'Campagne',
       accessor: 'name',
+      sticky: 'left',
+      priority: 'high',
+      minWidth: '200px',
       render: (value: string, row: EmailCampaign) => (
         <div>
           <Link href={`/dashboard/marketing/campaigns/${row.id}`} className="font-medium text-bleu hover:underline">
@@ -152,6 +157,8 @@ export default function CampaignsPage() {
     {
       header: 'Statut',
       accessor: 'status',
+      priority: 'high',
+      minWidth: '120px',
       render: (value: string) => (
         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[value as keyof typeof STATUS_COLORS] || 'bg-gray-100 text-gray-700'}`}>
           {STATUS_LABELS[value as keyof typeof STATUS_LABELS] || value}
@@ -161,6 +168,8 @@ export default function CampaignsPage() {
     {
       header: 'Provider',
       accessor: 'provider',
+      priority: 'medium',
+      minWidth: '120px',
       render: (value: string) => (
         <span className="text-sm capitalize">{value || '-'}</span>
       ),
@@ -168,51 +177,60 @@ export default function CampaignsPage() {
     {
       header: 'Créée le',
       accessor: 'created_at',
+      priority: 'medium',
+      minWidth: '120px',
       render: (value: string) => new Date(value).toLocaleDateString('fr-FR'),
     },
     {
       header: 'Programmée pour',
       accessor: 'scheduled_at',
+      priority: 'low',
+      minWidth: '140px',
       render: (value: string | undefined) =>
         value ? new Date(value).toLocaleString('fr-FR') : '-',
     },
     {
       header: 'Actions',
       accessor: 'id',
-      render: (id: number, row: EmailCampaign) => (
-        <div className="flex items-center gap-2">
-          {row.status === 'draft' ? (
-            <Link href={`/dashboard/marketing/campaigns/new?edit=${id}`}>
-              <Button variant="ghost" size="sm" title="Modifier le brouillon">
-                <Edit className="w-4 h-4" />
-              </Button>
-            </Link>
-          ) : (
-            <Link href={`/dashboard/marketing/campaigns/${id}`}>
-              <Button variant="ghost" size="sm" title="Voir les détails">
-                <Eye className="w-4 h-4" />
-              </Button>
-            </Link>
-          )}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => handleDuplicate(row)}
-            title="Dupliquer"
-          >
-            <Copy className="w-4 h-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => handleDelete(row)}
-            disabled={isDeleting}
-            title="Supprimer"
-          >
-            <Trash2 className="w-4 h-4 text-error" />
-          </Button>
-        </div>
-      ),
+      sticky: 'right',
+      priority: 'high',
+      minWidth: '120px',
+      render: (id: number, row: EmailCampaign) => {
+        const actions: OverflowAction[] = []
+
+        if (row.status === 'draft') {
+          actions.push({
+            label: 'Modifier',
+            icon: Edit,
+            onClick: () => window.location.href = `/dashboard/marketing/campaigns/new?edit=${id}`,
+            variant: 'default',
+          })
+        } else {
+          actions.push({
+            label: 'Voir',
+            icon: Eye,
+            onClick: () => window.location.href = `/dashboard/marketing/campaigns/${id}`,
+            variant: 'default',
+          })
+        }
+
+        actions.push(
+          {
+            label: 'Dupliquer',
+            icon: Copy,
+            onClick: () => handleDuplicate(row),
+            variant: 'default',
+          },
+          {
+            label: 'Supprimer',
+            icon: Trash2,
+            onClick: () => handleDelete(row),
+            variant: 'danger',
+          }
+        )
+
+        return <OverflowMenu actions={actions} />
+      },
     },
   ]
 
@@ -396,20 +414,42 @@ export default function CampaignsPage() {
             </Button>
           </div>
 
-          <Table
-            data={filteredCampaigns.slice(pagination.skip, pagination.skip + pagination.limit)}
+          <TableV2<EmailCampaign>
             columns={columns}
-            isLoading={isLoading}
-            isEmpty={!isLoading && filteredCampaigns.length === 0}
+            data={filteredCampaigns.slice(pagination.skip, pagination.skip + pagination.limit)}
+            getRowKey={(row) => row.id.toString()}
+            size="md"
+            variant="default"
+            stickyHeader
             emptyMessage={statusFilter ? `Aucune campagne avec le statut "${STATUS_LABELS[statusFilter as keyof typeof STATUS_LABELS]}"` : "Aucune campagne créée. Créez votre première campagne !"}
-            pagination={{
-              total: filteredCampaigns.length,
-              skip: pagination.skip,
-              limit: pagination.limit,
-              onPageChange: pagination.setSkip,
-              onLimitChange: pagination.setLimit,
-            }}
           />
+
+          {/* Pagination personnalisée */}
+          {filteredCampaigns.length > 0 && (
+            <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
+              <div className="text-sm text-text-secondary">
+                Page {Math.floor(pagination.skip / pagination.limit) + 1} sur {Math.ceil(filteredCampaigns.length / pagination.limit)} ({filteredCampaigns.length} campagnes au total)
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => pagination.setSkip(Math.max(0, pagination.skip - pagination.limit))}
+                  disabled={pagination.skip === 0}
+                >
+                  Précédent
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => pagination.setSkip(pagination.skip + pagination.limit)}
+                  disabled={pagination.skip + pagination.limit >= filteredCampaigns.length}
+                >
+                  Suivant
+                </Button>
+              </div>
+            </div>
+          )}
         </CardBody>
       </Card>
 
