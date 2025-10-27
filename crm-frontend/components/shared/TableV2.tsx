@@ -295,6 +295,13 @@ export function TableV2<T = any>({
                     ? calculateStickyOffset(visibleColumns, idx, isSticky)
                     : undefined
 
+                  // Priority-based responsive visibility (desktop only)
+                  const priorityClass = column.priority === 'low'
+                    ? 'hidden 2xl:table-cell'  // Only visible on >1536px
+                    : column.priority === 'medium'
+                    ? 'hidden xl:table-cell'   // Only visible on >1280px
+                    : '' // 'high' priority always visible
+
                   return (
                     <th
                       key={idx}
@@ -308,7 +315,9 @@ export function TableV2<T = any>({
                         // Sticky styles
                         isSticky && 'sticky z-10',
                         isSticky === 'left' && 'shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]',
-                        isSticky === 'right' && 'shadow-[-2px_0_4px_-2px_rgba(0,0,0,0.1)]'
+                        isSticky === 'right' && 'shadow-[-2px_0_4px_-2px_rgba(0,0,0,0.1)]',
+                        // Responsive priority (desktop only)
+                        priorityClass
                       )}
                       style={isSticky ? {
                         [isSticky]: stickyOffset,
@@ -354,6 +363,13 @@ export function TableV2<T = any>({
                         ? calculateStickyOffset(visibleColumns, colIdx, isSticky)
                         : undefined
 
+                      // Priority-based responsive visibility (desktop only)
+                      const priorityClass = column.priority === 'low'
+                        ? 'hidden 2xl:table-cell'  // Only visible on >1536px
+                        : column.priority === 'medium'
+                        ? 'hidden xl:table-cell'   // Only visible on >1280px
+                        : '' // 'high' priority always visible
+
                       return (
                         <td
                           key={colIdx}
@@ -364,7 +380,9 @@ export function TableV2<T = any>({
                             // Sticky styles
                             isSticky && 'sticky z-10',
                             isSticky === 'left' && 'shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]',
-                            isSticky === 'right' && 'shadow-[-2px_0_4px_-2px_rgba(0,0,0,0.1)]'
+                            isSticky === 'right' && 'shadow-[-2px_0_4px_-2px_rgba(0,0,0,0.1)]',
+                            // Responsive priority (desktop only)
+                            priorityClass
                           )}
                           style={{
                             ...(isSticky ? { [isSticky]: stickyOffset } : {}),
