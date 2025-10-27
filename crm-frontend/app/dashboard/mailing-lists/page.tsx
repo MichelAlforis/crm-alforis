@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Plus, Edit, Trash2, List, Users, Calendar, Eye } from 'lucide-react'
-import { Card, CardHeader, CardBody, Button, Table } from '@/components/shared'
+import { Plus, Edit, Trash2, List, Users, Calendar } from 'lucide-react'
+import { Card, CardHeader, CardBody, Button } from '@/components/shared'
+import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
+import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { Modal } from '@/components/shared/Modal'
 import { Input } from '@/components/shared/Input'
 import { Select } from '@/components/shared/Select'
@@ -116,10 +118,13 @@ export default function MailingListsPage() {
     })
   }
 
-  const columns = [
+  const columns: ColumnV2<MailingList>[] = [
     {
       header: 'Nom',
       accessor: 'name',
+      sticky: 'left',
+      priority: 'high',
+      minWidth: '200px',
       render: (value: string, row: MailingList) => (
         <div>
           <p className="font-medium text-text-primary">{value}</p>
@@ -132,6 +137,8 @@ export default function MailingListsPage() {
     {
       header: 'Type',
       accessor: 'target_type',
+      priority: 'high',
+      minWidth: '120px',
       render: (value: string) => (
         <span className="text-sm capitalize">
           {value === 'contacts' ? 'Contacts' : 'Organisations'}
@@ -141,6 +148,8 @@ export default function MailingListsPage() {
     {
       header: 'Destinataires',
       accessor: 'recipient_count',
+      priority: 'high',
+      minWidth: '140px',
       render: (value: number) => (
         <div className="flex items-center gap-2">
           <Users className="w-4 h-4 text-text-tertiary" />
@@ -151,27 +160,41 @@ export default function MailingListsPage() {
     {
       header: 'Dernière utilisation',
       accessor: 'last_used_at',
+      priority: 'medium',
+      minWidth: '150px',
       render: (value: string | undefined) =>
         value ? new Date(value).toLocaleDateString('fr-FR') : 'Jamais utilisée',
     },
     {
       header: 'Créée le',
       accessor: 'created_at',
+      priority: 'low',
+      minWidth: '120px',
       render: (value: string) => new Date(value).toLocaleDateString('fr-FR'),
     },
     {
       header: 'Actions',
       accessor: 'id',
-      render: (id: number, row: MailingList) => (
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" onClick={() => handleEdit(row)}>
-            <Edit className="w-4 h-4" />
-          </Button>
-          <Button variant="ghost" size="sm" onClick={() => handleDelete(id)}>
-            <Trash2 className="w-4 h-4 text-error" />
-          </Button>
-        </div>
-      ),
+      sticky: 'right',
+      priority: 'high',
+      minWidth: '120px',
+      render: (id: number, row: MailingList) => {
+        const actions: OverflowAction[] = [
+          {
+            label: 'Modifier',
+            icon: Edit,
+            onClick: () => handleEdit(row),
+            variant: 'default',
+          },
+          {
+            label: 'Supprimer',
+            icon: Trash2,
+            onClick: () => handleDelete(id),
+            variant: 'danger',
+          },
+        ]
+        return <OverflowMenu actions={actions} />
+      },
     },
   ]
 
@@ -257,11 +280,13 @@ export default function MailingListsPage() {
           icon={<List className="w-5 h-5 text-primary" />}
         />
         <CardBody>
-          <Table
-            data={lists}
+          <TableV2<MailingList>
             columns={columns}
-            isLoading={isLoading}
-            isEmpty={!isLoading && lists.length === 0}
+            data={lists}
+            getRowKey={(row) => row.id.toString()}
+            size="md"
+            variant="default"
+            stickyHeader
             emptyMessage="Aucune liste créée. Créez votre première liste de diffusion !"
           />
         </CardBody>
