@@ -11,8 +11,7 @@ from typing import List, Tuple
 
 
 def comment_multiline_import(content: str, module_name: str) -> str:
-    """
-
+    """Comment out multiline imports from a specific module."""
     # Pattern pour détecter un import multiligne
     pattern = rf'from {re.escape(module_name)} import \([^)]*\)'
 

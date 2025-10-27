@@ -6,6 +6,8 @@ from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session
 
 from core.exceptions import ResourceNotFound, ValidationError
+from models.interaction import Interaction
+from schemas.interaction import InteractionCreate, InteractionUpdate
 from services.base import BaseService
 
 logger = logging.getLogger(__name__)
