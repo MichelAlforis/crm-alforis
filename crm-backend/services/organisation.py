@@ -141,9 +141,12 @@ class OrganisationService(BaseService[Organisation, OrganisationCreate, Organisa
     ) -> Tuple[List[Organisation], int]:
         """
         Récupérer les organisations avec leurs relations clés préchargées pour éviter le N+1.
+
+        P1 Optimization: Eager load owner, mandats, contacts
         """
         try:
             query = self.db.query(Organisation).options(
+                joinedload(Organisation.owner),  # P1: Eager load owner
                 joinedload(Organisation.mandats),
                 joinedload(Organisation.contacts),
             )
