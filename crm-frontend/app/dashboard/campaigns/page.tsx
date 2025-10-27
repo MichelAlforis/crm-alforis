@@ -3,7 +3,9 @@
 import React, { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { Plus, Eye, Mail, Send, Clock, CheckCircle, XCircle, TrendingUp, Calendar } from 'lucide-react'
-import { Card, CardHeader, CardBody, Button, Table } from '@/components/shared'
+import { Card, CardHeader, CardBody, Button } from '@/components/shared'
+import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
+import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { useEmailCampaigns } from '@/hooks/useEmailAutomation'
 import type { EmailCampaign } from '@/lib/types'
 
@@ -54,10 +56,13 @@ export default function CampaignsPage() {
     return campaigns.filter(c => c.status === statusFilter)
   }, [campaigns, statusFilter])
 
-  const columns = [
+  const columns: ColumnV2<EmailCampaign>[] = [
     {
       header: 'Campagne',
       accessor: 'name',
+      sticky: 'left',
+      priority: 'high',
+      minWidth: '200px',
       render: (value: string, row: EmailCampaign) => (
         <div>
           <Link href={`/dashboard/campaigns/${row.id}`} className="font-medium text-bleu hover:underline">
@@ -72,6 +77,8 @@ export default function CampaignsPage() {
     {
       header: 'Statut',
       accessor: 'status',
+      priority: 'high',
+      minWidth: '120px',
       render: (value: string) => (
         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[value as keyof typeof STATUS_COLORS] || 'bg-gray-100 text-gray-700'}`}>
           {STATUS_LABELS[value as keyof typeof STATUS_LABELS] || value}
@@ -81,6 +88,8 @@ export default function CampaignsPage() {
     {
       header: 'Provider',
       accessor: 'provider',
+      priority: 'medium',
+      minWidth: '120px',
       render: (value: string) => (
         <span className="text-sm capitalize">{value || '-'}</span>
       ),
@@ -88,26 +97,35 @@ export default function CampaignsPage() {
     {
       header: 'Créée le',
       accessor: 'created_at',
+      priority: 'medium',
+      minWidth: '120px',
       render: (value: string) => new Date(value).toLocaleDateString('fr-FR'),
     },
     {
       header: 'Programmée pour',
       accessor: 'scheduled_at',
+      priority: 'low',
+      minWidth: '140px',
       render: (value: string | undefined) =>
         value ? new Date(value).toLocaleString('fr-FR') : '-',
     },
     {
       header: 'Actions',
       accessor: 'id',
-      render: (id: number) => (
-        <div className="flex items-center gap-2">
-          <Link href={`/dashboard/campaigns/${id}`}>
-            <Button variant="ghost" size="sm">
-              <Eye className="w-4 h-4" />
-            </Button>
-          </Link>
-        </div>
-      ),
+      sticky: 'right',
+      priority: 'high',
+      minWidth: '120px',
+      render: (id: number, row: EmailCampaign) => {
+        const actions: OverflowAction[] = [
+          {
+            label: 'Voir',
+            icon: Eye,
+            onClick: () => window.location.href = `/dashboard/campaigns/${id}`,
+            variant: 'default',
+          },
+        ]
+        return <OverflowMenu actions={actions} />
+      },
     },
   ]
 
@@ -260,11 +278,13 @@ export default function CampaignsPage() {
           icon={<Mail className="w-5 h-5 text-primary" />}
         />
         <CardBody>
-          <Table
-            data={filteredCampaigns}
+          <TableV2<EmailCampaign>
             columns={columns}
-            isLoading={isLoading}
-            isEmpty={!isLoading && filteredCampaigns.length === 0}
+            data={filteredCampaigns}
+            getRowKey={(row) => row.id.toString()}
+            size="md"
+            variant="default"
+            stickyHeader
             emptyMessage={statusFilter ? `Aucune campagne avec le statut "${STATUS_LABELS[statusFilter as keyof typeof STATUS_LABELS]}"` : "Aucune campagne créée. Créez votre première campagne !"}
           />
         </CardBody>
