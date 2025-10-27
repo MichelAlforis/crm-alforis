@@ -1094,14 +1094,23 @@ class TestInteractionsFromEmail:
 
     def test_create_from_email_send_no_org_id(self, client, test_db, auth_headers, test_user):
         """Test création depuis EmailSend sans organisation_id"""
-        from models.email import EmailSend, EmailSendStatus
+        from models.email import EmailCampaign, EmailSend, EmailSendStatus
+
+        # Créer une campagne email (requis pour EmailSend)
+        campaign = EmailCampaign(
+            name="Test Campaign",
+            from_name="Test Sender",
+            from_email="sender@example.com",
+            subject="Test email",
+        )
+        test_db.add(campaign)
+        test_db.flush()
 
         # Créer EmailSend sans organisation_id
         email_send = EmailSend(
+            campaign_id=campaign.id,
             status=EmailSendStatus.SENT,
             recipient_email="test@example.com",
-            subject="Test email",
-            created_by=test_user.id,
         )
         test_db.add(email_send)
         test_db.commit()

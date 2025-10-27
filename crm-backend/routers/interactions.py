@@ -129,8 +129,8 @@ async def list_interactions(
     status: Optional[str] = Query(None, description="Filter by status"),
     org_id: Optional[int] = Query(None, description="Filter by org_id"),
     person_id: Optional[int] = Query(None, description="Filter by person_id"),
-    start_date: Optional[datetime] = Query(None, description="Start date"),
-    end_date: Optional[datetime] = Query(None, description="End date"),
+    start_date: Optional[str] = Query(None, description="Start date (ISO format)"),
+    end_date: Optional[str] = Query(None, description="End date (ISO format)"),
     overdue: Optional[bool] = Query(None, description="Overdue interactions only"),
     limit: int = Query(50, le=200),
     db: Session = Depends(get_db),
@@ -148,9 +148,13 @@ async def list_interactions(
     if person_id:
         query = query.filter(Interaction.person_id == person_id)
     if start_date:
-        query = query.filter(Interaction.created_at >= start_date)
+        # Parse ISO datetime string
+        start_dt = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
+        query = query.filter(Interaction.created_at >= start_dt)
     if end_date:
-        query = query.filter(Interaction.created_at <= end_date)
+        # Parse ISO datetime string
+        end_dt = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
+        query = query.filter(Interaction.created_at <= end_dt)
     if overdue is not None:
         from datetime import timezone as tz
         now = datetime.now(tz.utc)
