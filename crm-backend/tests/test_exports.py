@@ -913,7 +913,7 @@ class TestExportsMandatsEndpoints:
             type=MandatType.VENTE,
             status=MandatStatus.ACTIVE,
             organisation_id=org.id,
-            date_debut=date(2024, 1, 1),
+            start_date=date(2024, 1, 1),
             owner_id=test_user.id,
         )
         test_db.add(mandat)
@@ -942,7 +942,7 @@ class TestExportsMandatsEndpoints:
             type=MandatType.VENTE,
             status=MandatStatus.ACTIVE,
             organisation_id=org.id,
-            date_debut=date(2024, 1, 1),
+            start_date=date(2024, 1, 1),
             owner_id=test_user.id,
         )
         test_db.add(mandat1)
@@ -952,7 +952,7 @@ class TestExportsMandatsEndpoints:
             type=MandatType.ACQUISITION,
             status=MandatStatus.SIGNED,
             organisation_id=org.id,
-            date_debut=date(2024, 1, 1),
+            start_date=date(2024, 1, 1),
             owner_id=test_user.id,
         )
         test_db.add(mandat2)
@@ -983,7 +983,7 @@ class TestExportsMandatsEndpoints:
             type=MandatType.VENTE,
             status=MandatStatus.SIGNED,
             organisation_id=org.id,
-            date_debut=date(2024, 1, 1),
+            start_date=date(2024, 1, 1),
             owner_id=test_user.id,
         )
         test_db.add(mandat)
