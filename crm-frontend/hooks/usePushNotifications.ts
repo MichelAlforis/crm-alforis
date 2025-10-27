@@ -102,10 +102,12 @@ export function usePushNotifications() {
       const registration = await navigator.serviceWorker.ready
 
       // Subscribe to push manager
-      // Note: VAPID public key should be in env variables
-      const VAPID_PUBLIC_KEY =
-        process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ||
-        'BEl62iUYgUivxIkv69yViEuiBIa-Ib37J8-fanoTWIshiOlGKCcwGPv8CYPvXsK9wQ=='
+      // VAPID public key from environment variables
+      const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
+
+      if (!VAPID_PUBLIC_KEY) {
+        throw new Error('VAPID public key not configured. Please set NEXT_PUBLIC_VAPID_PUBLIC_KEY in .env')
+      }
 
       const pushSubscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,

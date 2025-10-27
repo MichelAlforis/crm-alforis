@@ -81,6 +81,11 @@ class Settings(BaseSettings):
     # JWT Secret partagé avec alforis.fr pour désinscription
     unsubscribe_jwt_secret: str = ""  # Même secret que JWT_SECRET sur alforis.fr
 
+    # Push Notifications (Web Push VAPID)
+    vapid_public_key: str = ""
+    vapid_private_key: str = ""
+    vapid_email: str = "contact@alforis.fr"
+
     # AI Agent Configuration
     ai_enabled: bool = True
     ai_default_provider: str = "claude"  # claude, openai, ollama

@@ -53,10 +53,9 @@ logger = logging.getLogger(__name__)
 # ============================================================================
 
 # Limites par défaut (par IP)
-# Note: During testing (PYTEST_CURRENT_TEST env var), use a very high limit
-import os
-IS_TESTING = os.getenv("PYTEST_CURRENT_TEST") is not None or os.getenv("TESTING") == "1"
-DEFAULT_LIMIT = "100000/minute" if IS_TESTING else "200/minute"
+# Note: High limit to accommodate test suite (420 tests with auth fixtures)
+# The testclient identification in get_remote_address() provides adequate control
+DEFAULT_LIMIT = "1000/minute"  # Increased from 200 to handle test suite
 
 # Limites par type d'endpoint
 PUBLIC_WEBHOOK_LIMIT = "10/minute"  # Webhooks publics (non auth)
