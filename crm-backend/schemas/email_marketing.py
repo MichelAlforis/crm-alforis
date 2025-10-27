@@ -93,8 +93,6 @@ class LeadScoreOut(BaseModel):
     person_id: int
     score: int
     last_event_at: Optional[datetime]
-    created_at: datetime
-    updated_at: Optional[datetime]
 
     # Optional: inclure Person data (via join)
     person_name: Optional[str] = None

@@ -258,8 +258,6 @@ async def get_hot_leads(
                 person_id=lead_score.person_id,
                 score=lead_score.score,
                 last_event_at=lead_score.last_event_at,
-                created_at=lead_score.created_at,
-                updated_at=lead_score.updated_at,
                 person_name=person_name,
                 person_email=email,
             )
