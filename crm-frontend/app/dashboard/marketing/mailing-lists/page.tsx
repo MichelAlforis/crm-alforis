@@ -4,7 +4,9 @@ import React, { useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Plus, Edit, Trash2, List, Users, Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
-import { Card, CardHeader, CardBody, Button, Table } from '@/components/shared'
+import { Card, CardHeader, CardBody, Button } from '@/components/shared'
+import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
+import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { Alert } from '@/components/shared/Alert'
 import { useMailingLists } from '@/hooks/useMailingLists'
 import { useConfirm } from '@/hooks/useConfirm'
@@ -66,11 +68,13 @@ export default function MailingListsPage() {
 
   const totalPages = pagination.getTotalPages(table.filteredData.length)
 
-  const columns = [
+  const columns: ColumnV2<MailingList>[] = [
     {
       header: 'Nom',
       accessor: 'name',
-      sortable: true,
+      sticky: 'left',
+      priority: 'high',
+      minWidth: '200px',
       render: (value: string, row: MailingList) => (
         <div>
           <p className="font-medium text-text-primary">{value}</p>
@@ -83,7 +87,8 @@ export default function MailingListsPage() {
     {
       header: 'Type',
       accessor: 'target_type',
-      sortable: true,
+      priority: 'high',
+      minWidth: '120px',
       render: (value: string) => (
         <span className="text-sm capitalize">
           {value === 'contacts' ? 'Contacts' : 'Organisations'}
@@ -93,7 +98,8 @@ export default function MailingListsPage() {
     {
       header: 'Destinataires',
       accessor: 'recipient_count',
-      sortable: true,
+      priority: 'high',
+      minWidth: '140px',
       render: (value: number) => (
         <div className="flex items-center gap-2">
           <Users className="w-4 h-4 text-text-tertiary" />
@@ -104,43 +110,41 @@ export default function MailingListsPage() {
     {
       header: 'Dernière utilisation',
       accessor: 'last_used_at',
-      sortable: true,
+      priority: 'medium',
+      minWidth: '150px',
       render: (value: string | undefined) =>
         value ? new Date(value).toLocaleDateString('fr-FR') : 'Jamais utilisée',
     },
     {
       header: 'Créée le',
       accessor: 'created_at',
-      sortable: true,
+      priority: 'low',
+      minWidth: '120px',
       render: (value: string) => new Date(value).toLocaleDateString('fr-FR'),
     },
     {
       header: 'Actions',
       accessor: 'id',
-      width: '200px',
-      render: (id: number, row: MailingList) => (
-        <div className="flex items-center gap-2">
-          <Link href={`/dashboard/marketing/mailing-lists/${id}`}>
-            <Button
-              variant="outline"
-              size="sm"
-              className="hover:bg-primary/10 hover:border-primary"
-            >
-              <Edit className="w-4 h-4 mr-1" />
-              Modifier
-            </Button>
-          </Link>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleDelete(row)}
-            disabled={isDeleting}
-            className="hover:bg-error/10 hover:border-error text-error"
-          >
-            <Trash2 className="w-4 h-4" />
-          </Button>
-        </div>
-      ),
+      sticky: 'right',
+      priority: 'high',
+      minWidth: '120px',
+      render: (id: number, row: MailingList) => {
+        const actions: OverflowAction[] = [
+          {
+            label: 'Modifier',
+            icon: Edit,
+            onClick: () => router.push(`/dashboard/marketing/mailing-lists/${id}`),
+            variant: 'default',
+          },
+          {
+            label: 'Supprimer',
+            icon: Trash2,
+            onClick: () => handleDelete(row),
+            variant: 'danger',
+          },
+        ]
+        return <OverflowMenu actions={actions} />
+      },
     },
   ]
 
@@ -228,14 +232,16 @@ export default function MailingListsPage() {
           icon={<List className="w-5 h-5 text-primary" />}
         />
         <CardBody>
-          <Table
-            data={paginatedLists}
+          <TableV2<MailingList>
             columns={columns}
-            isLoading={isLoading}
-            isEmpty={!isLoading && lists.length === 0}
-            emptyMessage="Aucune liste créée. Créez votre première liste de diffusion !"
+            data={paginatedLists}
+            getRowKey={(row) => row.id.toString()}
             sortConfig={table.sortConfig}
             onSort={table.handleSort}
+            size="md"
+            variant="default"
+            stickyHeader
+            emptyMessage="Aucune liste créée. Créez votre première liste de diffusion !"
           />
 
           {/* Pagination */}
