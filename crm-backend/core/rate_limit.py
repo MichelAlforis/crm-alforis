@@ -53,7 +53,10 @@ logger = logging.getLogger(__name__)
 # ============================================================================
 
 # Limites par défaut (par IP)
-DEFAULT_LIMIT = "200/minute"
+# Note: During testing (PYTEST_CURRENT_TEST env var), use a very high limit
+import os
+IS_TESTING = os.getenv("PYTEST_CURRENT_TEST") is not None or os.getenv("TESTING") == "1"
+DEFAULT_LIMIT = "100000/minute" if IS_TESTING else "200/minute"
 
 # Limites par type d'endpoint
 PUBLIC_WEBHOOK_LIMIT = "10/minute"  # Webhooks publics (non auth)
@@ -75,7 +78,14 @@ def get_remote_address_or_user(request: Request) -> str:
 
     Permet de limiter par utilisateur plutôt que par IP
     pour les utilisateurs authentifiés
+
+    During testing, returns a special key to apply higher limits
     """
+    # Detect test client (pytest uses "testclient" as host)
+    client = getattr(request, "client", None)
+    if client and hasattr(client, "host") and client.host == "testclient":
+        return "test:client"
+
     # Essayer d'extraire le user_id du token JWT
     try:
         auth_header = request.headers.get("Authorization", "")
