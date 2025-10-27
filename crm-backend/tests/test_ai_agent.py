@@ -36,19 +36,20 @@ class TestAIAgentService:
     def mock_config(self, test_db):
         """Configuration AI pour les tests"""
         config = AIConfiguration(
-            provider=AIProvider.CLAUDE,
-            model_name="claude-3-5-sonnet-20241022",
-            api_key="sk-test-key",
-            temperature=0.3,
-            max_tokens=1000,
-            duplicate_threshold=0.85,
-            enrichment_threshold=0.70,
-            quality_threshold=0.60,
+            name="test_config",
+            description="Configuration de test",
+            is_active=True,
+            ai_provider=AIProvider.CLAUDE,
+            ai_model="claude-3-5-sonnet-20241022",
+            api_key_name="ANTHROPIC_API_KEY",
             auto_apply_enabled=False,
-            auto_apply_threshold=0.95,
+            auto_apply_confidence_threshold=0.95,
+            duplicate_similarity_threshold=0.85,
+            quality_score_threshold=0.60,
             daily_budget_usd=10.0,
-            cache_enabled=True,
-            cache_ttl_hours=24,
+            max_suggestions_per_execution=100,
+            max_tokens_per_request=4000,
+            rate_limit_requests_per_minute=10,
         )
         test_db.add(config)
         test_db.commit()
@@ -73,16 +74,16 @@ class TestAIAgentService:
         """Test récupération configuration"""
         config = ai_service.get_config()
         assert config is not None
-        assert config.provider == AIProvider.CLAUDE
-        assert config.duplicate_threshold == 0.85
+        assert config.ai_provider == AIProvider.CLAUDE
+        assert config.duplicate_similarity_threshold == 0.85
 
     def test_update_config(self, ai_service, mock_config):
         """Test mise à jour configuration"""
         updated = ai_service.update_config({
-            "duplicate_threshold": 0.90,
+            "duplicate_similarity_threshold": 0.90,
             "auto_apply_enabled": True,
         })
-        assert updated.duplicate_threshold == 0.90
+        assert updated.duplicate_similarity_threshold == 0.90
         assert updated.auto_apply_enabled is True
 
     # ===== Tests de suggestions =====
