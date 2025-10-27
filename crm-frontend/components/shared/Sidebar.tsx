@@ -261,7 +261,7 @@ export default function Sidebar() {
 
               return (
                 <div key={item.href} data-tour={getTourAttribute()}>
-                  {/* Parent Item */}
+                  {/* Parent Item with Submenu - Expanded */}
                   {hasSubmenu && !sidebar.collapsed ? (
                     <div className="relative group/item">
                       <button
@@ -334,7 +334,63 @@ export default function Sidebar() {
                         />
                       </button>
                     </div>
+                  ) : hasSubmenu && sidebar.collapsed ? (
+                    // Parent Item with Submenu - Collapsed (show popover on hover)
+                    <div className="relative group/item">
+                      <div
+                        onMouseEnter={() => setHoveredItem(item.href)}
+                        onMouseLeave={() => setHoveredItem(null)}
+                        className={clsx(
+                          'relative flex items-center justify-center',
+                          'w-10 h-10 mx-auto rounded-xl',
+                          'transition-all duration-300 cursor-pointer',
+                          active
+                            ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-2xl'
+                            : 'bg-white/5 text-slate-300 hover:bg-white/15 hover:text-white'
+                        )}
+                        title={item.label}
+                      >
+                        <Icon className="w-5 h-5" />
+                      </div>
+
+                      {/* Popover Submenu on Hover */}
+                      {isHovered && (
+                        <div className="absolute left-full top-0 ml-2 z-50 animate-in fade-in slide-in-from-left-2 duration-200">
+                          <div className="min-w-[220px] bg-slate-800 border border-white/10 rounded-xl shadow-2xl p-2">
+                            {/* Header */}
+                            <div className="px-3 py-2 border-b border-white/10 mb-1">
+                              <p className="text-sm font-bold text-white">{item.label}</p>
+                              <p className="text-xs text-slate-400">{item.description}</p>
+                            </div>
+                            {/* Submenu Items */}
+                            <div className="space-y-1">
+                              {item.submenu.map((subItem: any) => {
+                                const SubIcon = subItem.icon
+                                const subActive = sidebar.isActive(subItem.href)
+                                return (
+                                  <Link
+                                    key={subItem.href}
+                                    href={subItem.href}
+                                    className={clsx(
+                                      'flex items-center gap-2 px-3 py-2 rounded-lg',
+                                      'transition-all duration-200',
+                                      subActive
+                                        ? 'bg-white/20 text-white font-semibold'
+                                        : 'text-slate-400 hover:text-white hover:bg-white/10'
+                                    )}
+                                  >
+                                    <SubIcon className="w-4 h-4" />
+                                    <span className="text-sm">{subItem.label}</span>
+                                  </Link>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   ) : (
+                    // Simple Item (no submenu)
                     <div className="relative group/item">
                       <Link
                         href={item.href}
