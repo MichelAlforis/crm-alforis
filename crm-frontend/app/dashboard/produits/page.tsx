@@ -5,11 +5,22 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import { Eye } from 'lucide-react'
 import { useProduits } from '@/hooks/useProduits'
 import { useFilters } from '@/hooks/useFilters'
 import { usePagination } from '@/hooks/usePagination'
-import { Card, Button, Table, Input, Alert, AdvancedFilters } from '@/components/shared'
+import { Card, Button, Input, Alert, AdvancedFilters } from '@/components/shared'
+import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
+import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { ProduitType, ProduitStatus } from '@/lib/types'
+
+interface Produit {
+  id: number
+  name: string
+  type: ProduitType
+  isin_code: string | null
+  status: ProduitStatus
+}
 
 const TYPE_LABELS: Record<string, string> = {
   OPCVM: 'OPCVM (Fonds)',
@@ -95,14 +106,19 @@ export default function ProduitsPage() {
     return matchesSearch && matchesType && matchesStatus
   })
 
-  const columns = [
+  const columns: ColumnV2<Produit>[] = [
     {
       header: 'Nom',
       accessor: 'name',
+      sticky: 'left',
+      priority: 'high',
+      minWidth: '200px',
     },
     {
       header: 'Type',
       accessor: 'type',
+      priority: 'high',
+      minWidth: '140px',
       render: (value: ProduitType) => (
         <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded">
           {TYPE_LABELS[value]}
@@ -112,6 +128,8 @@ export default function ProduitsPage() {
     {
       header: 'Code ISIN',
       accessor: 'isin_code',
+      priority: 'medium',
+      minWidth: '140px',
       render: (value: string | null) => (
         <span className="font-mono text-sm">{value || '-'}</span>
       ),
@@ -119,6 +137,8 @@ export default function ProduitsPage() {
     {
       header: 'Statut',
       accessor: 'status',
+      priority: 'high',
+      minWidth: '120px',
       render: (value: ProduitStatus) => (
         <span
           className={`px-2 py-1 text-xs rounded ${
@@ -136,11 +156,20 @@ export default function ProduitsPage() {
     {
       header: 'Actions',
       accessor: 'id',
-      render: (id: number) => (
-        <Link href={`/dashboard/produits/${id}`} className="text-bleu hover:underline text-sm">
-          Voir
-        </Link>
-      ),
+      sticky: 'right',
+      priority: 'high',
+      minWidth: '120px',
+      render: (id: number) => {
+        const actions: OverflowAction[] = [
+          {
+            label: 'Voir',
+            icon: Eye,
+            onClick: () => window.location.href = `/dashboard/produits/${id}`,
+            variant: 'default',
+          },
+        ]
+        return <OverflowMenu actions={actions} />
+      },
     },
   ]
 
@@ -177,19 +206,42 @@ export default function ProduitsPage() {
       {error && <Alert type="error" message={error.message || 'Erreur de chargement'} />}
 
       <Card>
-        <Table
+        <TableV2<Produit>
           columns={columns}
           data={filteredData?.slice(pagination.skip, pagination.skip + pagination.limit) || []}
-          isLoading={isLoading}
-          isEmpty={!filteredData || filteredData.length === 0}
-          pagination={{
-            total: filteredData?.length || 0,
-            skip: pagination.skip,
-            limit: pagination.limit,
-            onPageChange: pagination.setSkip,
-            onLimitChange: pagination.setLimit,
-          }}
+          getRowKey={(row) => row.id.toString()}
+          size="md"
+          variant="default"
+          stickyHeader
+          emptyMessage="Aucun produit trouvé"
         />
+
+        {/* Pagination personnalisée */}
+        {filteredData && filteredData.length > 0 && (
+          <div className="flex items-center justify-between mt-4 pt-4 border-t border-border px-4">
+            <div className="text-sm text-text-secondary">
+              Page {Math.floor(pagination.skip / pagination.limit) + 1} sur {Math.ceil(filteredData.length / pagination.limit)} ({filteredData.length} produits au total)
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => pagination.setSkip(Math.max(0, pagination.skip - pagination.limit))}
+                disabled={pagination.skip === 0}
+              >
+                Précédent
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => pagination.setSkip(pagination.skip + pagination.limit)}
+                disabled={pagination.skip + pagination.limit >= filteredData.length}
+              >
+                Suivant
+              </Button>
+            </div>
+          </div>
+        )}
       </Card>
 
       {data && (
