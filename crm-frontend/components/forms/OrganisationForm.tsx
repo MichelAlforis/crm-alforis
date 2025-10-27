@@ -3,7 +3,7 @@
 
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Input, Button, Alert, Select } from '@/components/shared'
 import { Organisation, OrganisationCreate, OrganisationCategory } from '@/lib/types'
@@ -42,6 +42,7 @@ export function OrganisationForm({
     register,
     handleSubmit,
     formState: { errors },
+    setFocus,
   } = useForm<OrganisationCreate>({
     defaultValues: {
       ...initialData,
@@ -52,6 +53,14 @@ export function OrganisationForm({
     },
     mode: 'onBlur',
   })
+
+  // Focus automatique sur le premier champ en erreur
+  useEffect(() => {
+    const firstErrorField = Object.keys(errors)[0] as keyof OrganisationCreate
+    if (firstErrorField) {
+      setFocus(firstErrorField)
+    }
+  }, [errors, setFocus])
 
   const handleFormSubmit = async (data: OrganisationCreate) => {
     try {
@@ -120,7 +129,12 @@ export function OrganisationForm({
 
       <Input
         label="Téléphone principal"
-        {...register('main_phone')}
+        {...register('main_phone', {
+          pattern: {
+            value: /^[\+]?[0-9][\s\-\.\(\)0-9]{7,18}$/,
+            message: 'Format de téléphone invalide',
+          },
+        })}
         error={errors.main_phone?.message}
         placeholder="+33 1 23 45 67 89"
       />

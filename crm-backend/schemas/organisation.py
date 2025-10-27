@@ -1,4 +1,5 @@
 import json
+import re
 from datetime import date
 from decimal import Decimal
 from typing import List, Optional
@@ -60,6 +61,16 @@ class OrganisationBase(BaseModel):
     @classmethod
     def normalize_language(cls, value: str) -> str:
         return value.upper()
+
+    @field_validator("phone")
+    @classmethod
+    def validate_phone(cls, v: Optional[str]) -> Optional[str]:
+        """Valide le format du numéro de téléphone."""
+        if v:
+            pattern = r'^[\+]?[0-9][\s\-\.\(\)0-9]{7,18}$'
+            if not re.match(pattern, v):
+                raise ValueError("Format de téléphone invalide")
+        return v
 
 
 class OrganisationCreate(OrganisationBase):
@@ -147,6 +158,16 @@ class OrganisationContactBase(BaseModel):
     phone: Optional[str] = Field(None, max_length=20)
     title: Optional[str] = Field(None, max_length=255)
     notes: Optional[str] = None
+
+    @field_validator("phone")
+    @classmethod
+    def validate_phone(cls, v: Optional[str]) -> Optional[str]:
+        """Valide le format du numéro de téléphone."""
+        if v:
+            pattern = r'^[\+]?[0-9][\s\-\.\(\)0-9]{7,18}$'
+            if not re.match(pattern, v):
+                raise ValueError("Format de téléphone invalide")
+        return v
 
 
 class OrganisationContactCreate(OrganisationContactBase):

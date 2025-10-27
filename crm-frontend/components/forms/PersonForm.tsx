@@ -3,7 +3,7 @@
 
 'use client'
 
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { Input, Button, Alert, Select } from '@/components/shared'
 import { Person, PersonInput } from '@/lib/types'
@@ -27,10 +27,12 @@ export function PersonForm({
   submitLabel = 'Créer',
 }: PersonFormProps) {
   const { showToast } = useToast()
+  const firstErrorRef = useRef<HTMLInputElement>(null)
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setFocus,
   } = useForm<PersonInput>({
     defaultValues: {
       ...initialData,
@@ -39,6 +41,14 @@ export function PersonForm({
     },
     mode: 'onBlur',
   })
+
+  // Focus automatique sur le premier champ en erreur
+  useEffect(() => {
+    const firstErrorField = Object.keys(errors)[0] as keyof PersonInput
+    if (firstErrorField) {
+      setFocus(firstErrorField)
+    }
+  }, [errors, setFocus])
 
   const handleFormSubmit = async (data: PersonInput) => {
     try {
@@ -111,7 +121,12 @@ export function PersonForm({
 
         <Input
           label="Mobile"
-          {...register('personal_phone')}
+          {...register('personal_phone', {
+            pattern: {
+              value: /^[\+]?[0-9][\s\-\.\(\)0-9]{7,18}$/,
+              message: 'Format de téléphone invalide',
+            },
+          })}
           error={errors.personal_phone?.message}
           placeholder="+33 6 12 34 56 78"
         />

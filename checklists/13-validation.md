@@ -1,7 +1,7 @@
 # 📋 Chapitre 13 - Validation & Erreurs
 
-**Status :** ✅ TERMINÉ (Code Review)
-**Tests :** 14/16 (87.5%)
+**Status :** ✅ TERMINÉ (100%)
+**Tests :** 16/16 (100%)
 **Priorité :** 🟡 Moyenne
 
 ---
@@ -13,11 +13,11 @@
 | 13.1 | Champs requis marqués avec * | ✅ | Labels avec `*` dans OrganisationForm, LoginForm |
 | 13.2 | **Test** : Soumettre formulaire vide → Erreurs | ✅ | `required: 'Nom requis'` dans react-hook-form |
 | 13.3 | **Test** : Email invalide → Message erreur | ✅ | `EmailStr` (Pydantic) + regex pattern frontend |
-| 13.4 | **Test** : Téléphone format invalide → Erreur | ⬜ | Pas de validation pattern (optionnel) |
+| 13.4 | **Test** : Téléphone format invalide → Erreur | ✅ | Pattern regex backend + frontend validant formats européens |
 | 13.5 | **Test** : Date future invalide → Erreur | ✅ | Validation backend dans Interaction/Task schemas |
 | 13.6 | Messages erreur en français | ✅ | Tous les messages traduits (ex: "Nom requis") |
 | 13.7 | Champs erreur surlignés en rouge | ✅ | `border-rouge` appliqué si `error` présent |
-| 13.8 | Focus auto sur premier champ erreur | ⬜ | Non implémenté (amélioration UX future) |
+| 13.8 | Focus auto sur premier champ erreur | ✅ | useEffect + setFocus() dans PersonForm, OrganisationForm, LoginForm |
 | 13.9 | **Test** : Validation temps réel (onChange) | ✅ | `mode: 'onBlur'` dans useForm (validation active) |
 | 13.10 | Bouton submit disabled si invalide | ✅ | Bouton reste actif mais `isLoading` désactive |
 
@@ -269,70 +269,76 @@ Frontend → Toast error avec message
 
 ---
 
-## ⬜ Non Implémenté (2 tests)
+## ✅ Implémentations Complétées
 
-### Test 13.4 - Validation téléphone format
+### Test 13.4 - Validation téléphone format ✅
 
-**Raison** : Pas de validation pattern côté frontend/backend pour téléphones
-**Impact** : Faible - Les numéros sont stockés tels quels
-**Implémentation suggérée** :
+**Implémentation** : Pattern regex flexible acceptant formats européens internationaux
 
+**Backend** - `schemas/person.py` et `schemas/organisation.py` :
+```python
+@field_validator("phone", "personal_phone", "mobile", "work_phone")
+@classmethod
+def validate_phone(cls, v: Optional[str]) -> Optional[str]:
+    """Valide le format des numéros de téléphone."""
+    if v:
+        # Pattern flexible pour numéros européens (7-18 chiffres avec formatage)
+        pattern = r'^[\+]?[0-9][\s\-\.\(\)0-9]{7,18}$'
+        if not re.match(pattern, v):
+            raise ValueError("Format de téléphone invalide")
+    return v
+```
+
+**Frontend** - `PersonForm.tsx`, `OrganisationForm.tsx` :
 ```typescript
-// Frontend - PersonForm.tsx
 <Input
   label="Mobile"
   {...register('personal_phone', {
     pattern: {
-      value: /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,9}$/,
+      value: /^[\+]?[0-9][\s\-\.\(\)0-9]{7,18}$/,
       message: 'Format de téléphone invalide',
     },
   })}
 />
 ```
 
-```python
-# Backend - schemas/person.py
-from pydantic import field_validator
-import re
+**Formats acceptés** :
+- ✅ France : `+33 6 12 34 56 78`, `01 23 45 67 89`
+- ✅ Allemagne : `+49 30 12345678`, `+49 151 23456789`
+- ✅ UK : `+44 20 7123 4567`, `+44 7700 900123`
+- ✅ Espagne : `+34 91 123 45 67`, `+34 600 12 34 56`
+- ✅ Italie : `+39 06 1234 5678`, `+39 345 123 4567`
+- ✅ Belgique : `+32 2 123 45 67`, `+32 470 12 34 56`
+- ✅ Suisse : `+41 22 123 45 67`, `+41 79 123 45 67`
+- ✅ Luxembourg : `+352 123 456`, `+352 621 123 456`
 
-class PersonBase(BaseSchema):
-    @field_validator("personal_phone", "work_phone", "phone")
-    @classmethod
-    def validate_phone(cls, v: Optional[str]) -> Optional[str]:
-        if v:
-            pattern = r'^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,9}$'
-            if not re.match(pattern, v):
-                raise ValueError("Format de téléphone invalide")
-        return v
-```
+### Test 13.8 - Focus auto premier champ erreur ✅
 
-### Test 13.8 - Focus auto premier champ erreur
+**Implémentation** : useEffect avec setFocus() de react-hook-form
 
-**Raison** : Non implémenté, nécessite logique supplémentaire
-**Impact** : Faible - UX légèrement moins fluide
-**Implémentation suggérée** :
+**Fichiers modifiés** :
+- `PersonForm.tsx`
+- `OrganisationForm.tsx`
+- `LoginForm.tsx`
 
 ```typescript
-// PersonForm.tsx
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 
-const firstErrorField = Object.keys(errors)[0]
-const inputRef = useRef<HTMLInputElement>(null)
+const { setFocus, formState: { errors } } = useForm<FormType>()
 
+// Focus automatique sur le premier champ en erreur
 useEffect(() => {
-  if (firstErrorField && inputRef.current) {
-    inputRef.current.focus()
-    inputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  const firstErrorField = Object.keys(errors)[0] as keyof FormType
+  if (firstErrorField) {
+    setFocus(firstErrorField)
   }
-}, [errors])
-
-// Ajouter ref au premier Input
-<Input
-  ref={inputRef}
-  label="Prénom"
-  {...register('first_name', { required: 'Prénom requis' })}
-/>
+}, [errors, setFocus])
 ```
+
+**Bénéfices** :
+- ✅ Amélioration UX : l'utilisateur est directement guidé vers l'erreur
+- ✅ Accessibility : navigation au clavier facilitée
+- ✅ Cohérence : comportement identique sur tous les formulaires
 
 ---
 
@@ -387,4 +393,4 @@ crm-backend/
 
 **Dernière mise à jour :** 27 Octobre 2025
 **Code Review By :** Claude Code
-**Status :** ✅ 14/16 tests passent (87.5%) - Téléphone validation et focus auto manquants (optionnels)
+**Status :** ✅ 16/16 tests passent (100%) - Chapitre complété avec validation téléphone européenne et focus automatique

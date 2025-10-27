@@ -3,7 +3,7 @@
 
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Input, Button, Alert } from '@/components/shared'
 import { LoginRequest } from '@/lib/types'
@@ -21,11 +21,20 @@ export function LoginForm({ onSubmit, isLoading, error }: LoginFormProps) {
     register,
     handleSubmit,
     formState: { errors },
+    setFocus,
   } = useForm<LoginRequest>({
     mode: 'onBlur',
   })
 
   const [localError, setLocalError] = useState<string>('')
+
+  // Focus automatique sur le premier champ en erreur
+  useEffect(() => {
+    const firstErrorField = Object.keys(errors)[0] as keyof LoginRequest
+    if (firstErrorField) {
+      setFocus(firstErrorField)
+    }
+  }, [errors, setFocus])
 
   const handleFormSubmit = async (data: LoginRequest) => {
     try {

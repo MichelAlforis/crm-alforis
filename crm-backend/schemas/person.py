@@ -1,6 +1,7 @@
 from typing import List, Optional
+import re
 
-from pydantic import AliasChoices, ConfigDict, EmailStr, Field
+from pydantic import AliasChoices, ConfigDict, EmailStr, Field, field_validator
 
 from models.person import OrganizationType, PersonRole
 from schemas.base import BaseSchema, TimestampedSchema
@@ -23,6 +24,17 @@ class PersonBase(BaseSchema):
     notes: Optional[str] = None
     linkedin_url: Optional[str] = Field(None, max_length=500)
     is_active: bool = Field(default=True)
+
+    @field_validator("phone", "personal_phone", "mobile")
+    @classmethod
+    def validate_phone(cls, v: Optional[str]) -> Optional[str]:
+        """Valide le format des numéros de téléphone."""
+        if v:
+            # Pattern flexible pour numéros internationaux (7-18 chiffres avec formatage)
+            pattern = r'^[\+]?[0-9][\s\-\.\(\)0-9]{7,18}$'
+            if not re.match(pattern, v):
+                raise ValueError("Format de téléphone invalide")
+        return v
 
 
 class PersonCreate(PersonBase):
@@ -75,6 +87,16 @@ class PersonOrganizationLinkBase(BaseSchema):
     notes: Optional[str] = None
 
     model_config = ConfigDict(populate_by_name=True)
+
+    @field_validator("work_phone")
+    @classmethod
+    def validate_work_phone(cls, v: Optional[str]) -> Optional[str]:
+        """Valide le format du numéro de téléphone professionnel."""
+        if v:
+            pattern = r'^[\+]?[0-9][\s\-\.\(\)0-9]{7,18}$'
+            if not re.match(pattern, v):
+                raise ValueError("Format de téléphone invalide")
+        return v
 
 
 class PersonOrganizationLinkCreate(PersonOrganizationLinkBase):
