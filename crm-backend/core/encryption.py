@@ -126,3 +126,29 @@ def get_encryption_service() -> EncryptionService:
     if _encryption_service is None:
         _encryption_service = EncryptionService()
     return _encryption_service
+
+
+def encrypt_value(plaintext: str) -> str:
+    """
+    Helper pour chiffrer une valeur (utilise le service global)
+
+    Args:
+        plaintext: Texte en clair
+
+    Returns:
+        Texte chiffré
+    """
+    return get_encryption_service().encrypt(plaintext)
+
+
+def decrypt_value(ciphertext: str) -> str:
+    """
+    Helper pour déchiffrer une valeur (utilise le service global)
+
+    Args:
+        ciphertext: Texte chiffré
+
+    Returns:
+        Texte en clair
+    """
+    return get_encryption_service().decrypt(ciphertext)

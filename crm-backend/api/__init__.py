@@ -2,12 +2,14 @@ from fastapi import APIRouter
 
 from api.routes import (
     ai_agent,
+    ai_statistics,
     auth,
     dashboards,
     email_campaigns,
     external_webhooks,
     health,
     imports,
+    integrations,
     mailing_lists,
     mandats,
     monitoring,
@@ -75,6 +77,10 @@ api_router.include_router(workflows.router)
 
 # 🧠 AI AGENT (Phase 3.0)
 api_router.include_router(ai_agent.router)
+
+# 🤖 AI STATISTICS & INTEGRATIONS (Chapitre 17)
+api_router.include_router(ai_statistics.router)
+api_router.include_router(integrations.router)
 
 # ⚡ IMPORTS ROUTES (bulk operations)
 api_router.include_router(imports.router)

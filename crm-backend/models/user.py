@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 
 from models.base import BaseModel
@@ -76,6 +76,12 @@ class User(BaseModel):
     push_subscriptions = relationship(
         "PushSubscription", back_populates="user", cascade="all, delete-orphan"
     )
+
+    # Outlook Integration (Phase 1)
+    outlook_connected = Column(Boolean, default=False, nullable=False)
+    encrypted_outlook_access_token = Column(Text, nullable=True)
+    encrypted_outlook_refresh_token = Column(Text, nullable=True)
+    outlook_token_expires_at = Column(DateTime(timezone=True), nullable=True)
 
     def __repr__(self) -> str:
         return f"<User(id={self.id}, email='{self.email}')>"

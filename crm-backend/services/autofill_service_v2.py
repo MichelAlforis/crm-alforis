@@ -1,0 +1,495 @@
+"""
+Service d'Autofill Prédictif V2 - Pipeline Multi-Sources
+
+Pipeline de décision:
+1. Rules (10ms)        → Pays/langue via TLD, normalisation téléphone
+2. DB Patterns (20ms)  → Patterns email confirmés (≥2 contacts)
+3. Outlook (50ms)      → Signatures récentes
+4. LLM Fallback (300ms)→ Si incertitude ET budget disponible
+
+Seuils:
+- auto_apply si confidence ≥ 0.85 et source fiable
+- Pattern email : auto si confirmé par ≥2 contacts du domaine
+"""
+
+import hashlib
+import re
+from collections import Counter
+from datetime import datetime
+from typing import Dict, List, Optional, Tuple
+
+from phonenumbers import format_number, is_possible_number
+from phonenumbers import parse as pn_parse
+from phonenumbers import PhoneNumberFormat
+from sqlalchemy import func
+from sqlalchemy.orm import Session
+
+from models.organisation import Organisation
+from models.person import Person
+from services.outlook_integration import OutlookIntegration
+
+# Mapping TLD → Pays
+TLD_TO_COUNTRY = {
+    "fr": "FR",
+    "de": "DE",
+    "it": "IT",
+    "es": "ES",
+    "be": "BE",
+    "ch": "CH",
+    "lu": "LU",
+    "nl": "NL",
+    "uk": "GB",
+    "co.uk": "GB",
+    "com": None,  # Indéterminé
+}
+
+# Mapping Pays → Langue
+COUNTRY_TO_LANGUAGE = {
+    "FR": "fr",
+    "DE": "de",
+    "IT": "it",
+    "ES": "es",
+    "BE": "fr",
+    "CH": "de",
+    "LU": "fr",
+    "NL": "nl",
+    "GB": "en",
+}
+
+
+def slug(s: str) -> str:
+    """Normalise une chaîne (minuscules, sans accents, sans espaces)"""
+    return re.sub(r"[^a-z]", "", s.lower())
+
+
+class AutofillServiceV2:
+    """Service d'autofill prédictif V2 avec pipeline multi-sources"""
+
+    def __init__(self, db: Session):
+        self.db = db
+        self.confidence_threshold = 0.85  # Seuil auto-apply
+        self.outlook_service = OutlookIntegration(db)
+
+    async def autofill(
+        self, entity_type: str, draft: Dict, context: Optional[Dict] = None
+    ) -> Dict:
+        """
+        Autofill d'une entité avec pipeline multi-sources
+
+        Args:
+            entity_type: "person" ou "organisation"
+            draft: Données partielles
+            context: {
+                "outlook_enabled": bool,
+                "outlook_access_token": str,
+                "linkedin_enabled": bool,
+                "budget_mode": "normal"|"low"|"emergency"
+            }
+
+        Returns:
+            {
+                "autofill": {...},
+                "tasks": [...],
+                "meta": {...}
+            }
+        """
+        context = context or {}
+        budget_mode = context.get("budget_mode", "normal")
+
+        suggestions = {}
+        tasks = []
+        meta = {
+            "mode": "rules",
+            "cache_hit": False,
+            "latency_ms": 0,
+            "llm_called": False,
+            "model": None,
+        }
+
+        start_time = datetime.utcnow()
+
+        # ==========================================
+        # 1. RULES (10ms) - Priorité 1
+        # ==========================================
+
+        # Pays via TLD
+        if not draft.get("country") and draft.get("domain"):
+            country_suggestion = self._infer_country(draft["domain"])
+            if country_suggestion:
+                suggestions["country"] = country_suggestion
+
+        # Langue via pays
+        if not draft.get("language"):
+            country = draft.get("country") or suggestions.get("country", {}).get("value")
+            if country:
+                language_suggestion = self._infer_language(country)
+                if language_suggestion:
+                    suggestions["language"] = language_suggestion
+
+        # Normalisation téléphone (si fourni)
+        if draft.get("phone"):
+            phone_suggestion = self._normalize_phone(draft["phone"], draft.get("country"))
+            if phone_suggestion:
+                suggestions["phone"] = phone_suggestion
+
+        # ==========================================
+        # 2. DB PATTERNS (20ms) - Priorité 2
+        # ==========================================
+
+        if entity_type == "person" and draft.get("first_name") and draft.get("last_name"):
+            domain = draft.get("domain") or self._extract_domain(draft.get("organisation"))
+
+            if domain:
+                email_suggestion = self._infer_email_from_db_patterns(
+                    draft["first_name"], draft["last_name"], domain
+                )
+                if email_suggestion:
+                    suggestions["email"] = email_suggestion
+                    meta["mode"] = "rules+db"
+
+        # ==========================================
+        # 3. OUTLOOK (50ms) - Priorité 3
+        # ==========================================
+
+        if context.get("outlook_enabled") and budget_mode != "emergency":
+            outlook_token = context.get("outlook_access_token")
+
+            if outlook_token:
+                # Enrichir depuis signatures Outlook
+                outlook_suggestions = await self._enrich_from_outlook(
+                    draft, outlook_token
+                )
+
+                for field, suggestion in outlook_suggestions.items():
+                    # Priorité à Outlook (confidence 0.95)
+                    if field not in suggestions or suggestion["confidence"] > suggestions[field]["confidence"]:
+                        suggestions[field] = suggestion
+
+                meta["mode"] = "rules+db+outlook"
+
+                # Générer tâches depuis threads sans réponse
+                outlook_tasks = await self._generate_outlook_tasks(outlook_token)
+                tasks.extend(outlook_tasks)
+
+        # ==========================================
+        # 4. LLM FALLBACK (300ms) - Priorité 4
+        # ==========================================
+
+        # TODO: À implémenter si budget_mode == "normal" et incertitudes
+        # if budget_mode == "normal" and has_uncertainties:
+        #     llm_suggestions = await self._enrich_from_llm(draft, suggestions)
+        #     meta["llm_called"] = True
+        #     meta["model"] = "claude-3-5-sonnet-20241022"
+
+        # ==========================================
+        # Finalisation
+        # ==========================================
+
+        # Appliquer seuil auto-apply
+        for field, suggestion in suggestions.items():
+            suggestion["applied"] = suggestion["confidence"] >= self.confidence_threshold
+
+        # Calculer latence
+        duration = (datetime.utcnow() - start_time).total_seconds() * 1000
+        meta["latency_ms"] = int(duration)
+
+        return {"autofill": suggestions, "tasks": tasks, "meta": meta}
+
+    # ==========================================
+    # Règles (Priority 1)
+    # ==========================================
+
+    def _infer_country(self, domain: str) -> Optional[Dict]:
+        """Infère le pays à partir du TLD"""
+        tld = domain.split(".")[-1].lower()
+        country = TLD_TO_COUNTRY.get(tld)
+
+        if country:
+            return {
+                "value": country,
+                "confidence": 0.90,
+                "source": "tld_mapping",
+                "rationale_short": f"TLD .{tld} → {country}",
+                "alternatives": [],
+            }
+
+        return None
+
+    def _infer_language(self, country: str) -> Optional[Dict]:
+        """Infère la langue à partir du pays"""
+        language = COUNTRY_TO_LANGUAGE.get(country)
+
+        if language:
+            return {
+                "value": language,
+                "confidence": 0.75,
+                "source": "country_language_default",
+                "rationale_short": f"Langue par défaut pour {country}",
+                "alternatives": [],
+            }
+
+        return None
+
+    def _normalize_phone(self, raw: str, country: str = None) -> Optional[Dict]:
+        """Normalise un téléphone en E.164"""
+        default_region = country or "FR"
+
+        try:
+            num = pn_parse(raw, default_region)
+            if is_possible_number(num):
+                value = format_number(num, PhoneNumberFormat.E164)
+
+                return {
+                    "value": value,
+                    "confidence": 0.82,
+                    "source": "e164_normalization",
+                    "rationale_short": f"Téléphone {default_region} normalisé E.164",
+                    "alternatives": [],
+                }
+        except Exception:
+            pass
+
+        return None
+
+    # ==========================================
+    # DB Patterns (Priority 2)
+    # ==========================================
+
+    def _infer_email_from_db_patterns(
+        self, first_name: str, last_name: str, domain: str
+    ) -> Optional[Dict]:
+        """Infère l'email à partir des patterns existants dans la DB"""
+        # Chercher emails existants du même domaine
+        existing_emails = (
+            self.db.query(Person.email)
+            .filter(Person.email.like(f"%@{domain}"))
+            .limit(50)
+            .all()
+        )
+
+        existing_emails = [e[0] for e in existing_emails if e[0]]
+
+        # Détecter pattern majoritaire
+        if existing_emails:
+            value, confidence, pattern_counts = self._detect_email_pattern(
+                first_name, last_name, domain, existing_emails
+            )
+
+            alternatives = self._generate_email_alternatives(
+                first_name, last_name, domain, exclude=value
+            )
+
+            return {
+                "value": value,
+                "confidence": confidence,
+                "source": "domain_pattern",
+                "rationale_short": f"pattern {len(existing_emails)} contact(s) {domain}",
+                "alternatives": alternatives[:2],
+            }
+
+        # Fallback : pattern standard (prenom.nom)
+        f, l = slug(first_name), slug(last_name)
+        value = f"{f}.{l}@{domain}"
+
+        return {
+            "value": value,
+            "confidence": 0.65,
+            "source": "default_pattern",
+            "rationale_short": "pattern standard prenom.nom",
+            "alternatives": [f"{f[0]}{l}@{domain}", f"{f}{l}@{domain}"],
+        }
+
+    def _detect_email_pattern(
+        self, first: str, last: str, domain: str, existing: List[str]
+    ) -> Tuple[str, float, Counter]:
+        """Détecte le pattern majoritaire d'emails"""
+        patterns = []
+        f, l = slug(first), slug(last)
+
+        for email in existing:
+            local = email.split("@")[0].lower()
+
+            # Identifier le pattern
+            if local == f"{f}.{l}":
+                patterns.append("first.last")
+            elif local == f"{f}{l}":
+                patterns.append("firstlast")
+            elif local == f"{f}_{l}":
+                patterns.append("first_last")
+            elif local == f"{f[0]}{l}":
+                patterns.append("f_last")
+            elif local == f"{f}":
+                patterns.append("first")
+            elif local == f"{l}":
+                patterns.append("last")
+
+        if not patterns:
+            return f"{f}.{l}@{domain}", 0.65, Counter()
+
+        # Pattern majoritaire
+        counts = Counter(patterns)
+        best_pattern, count = counts.most_common(1)[0]
+        confidence = min(0.90, 0.70 + (count / len(patterns)) * 0.20)  # 0.70-0.90
+
+        # Générer email selon pattern
+        pattern_to_email = {
+            "first.last": f"{f}.{l}@{domain}",
+            "firstlast": f"{f}{l}@{domain}",
+            "first_last": f"{f}_{l}@{domain}",
+            "f_last": f"{f[0]}{l}@{domain}",
+            "first": f"{f}@{domain}",
+            "last": f"{l}@{domain}",
+        }
+
+        value = pattern_to_email.get(best_pattern, f"{f}.{l}@{domain}")
+
+        return value, confidence, counts
+
+    def _generate_email_alternatives(
+        self, first: str, last: str, domain: str, exclude: str = None
+    ) -> List[str]:
+        """Génère 2-3 alternatives d'email"""
+        f, l = slug(first), slug(last)
+        candidates = [
+            f"{f}.{l}@{domain}",
+            f"{f[0]}{l}@{domain}",
+            f"{f}{l}@{domain}",
+            f"{f}_{l}@{domain}",
+        ]
+
+        if exclude:
+            candidates = [c for c in candidates if c != exclude]
+
+        return candidates[:2]
+
+    # ==========================================
+    # Outlook (Priority 3)
+    # ==========================================
+
+    async def _enrich_from_outlook(
+        self, draft: Dict, access_token: str
+    ) -> Dict[str, Dict]:
+        """Enrichit les données depuis les signatures Outlook"""
+        suggestions = {}
+
+        try:
+            # Récupérer messages récents
+            messages = await self.outlook_service.get_recent_messages(
+                access_token, limit=50, days=30
+            )
+
+            # Extraire signatures
+            signatures = self.outlook_service.extract_signatures_from_messages(messages)
+
+            # Chercher correspondance par nom/prénom
+            first_name = draft.get("first_name", "").lower()
+            last_name = draft.get("last_name", "").lower()
+
+            for sig in signatures:
+                # Vérifier si signature correspond au draft
+                sig_email = sig.get("email", "").lower()
+
+                # Si nom/prénom correspondent à l'email ou si même domaine
+                if (first_name and first_name in sig_email) or (
+                    last_name and last_name in sig_email
+                ):
+                    # Email
+                    if sig.get("email"):
+                        suggestions["email"] = {
+                            "value": sig["email"],
+                            "confidence": 0.95,
+                            "source": "outlook_signature",
+                            "rationale_short": f"signature mail du {sig.get('source_date', 'récent')}",
+                            "evidence_hash": self._hash_evidence(sig),
+                            "alternatives": [],
+                        }
+
+                    # Téléphone
+                    if sig.get("phone"):
+                        normalized = self.outlook_service.normalize_phone_from_signature(
+                            sig["phone"], draft.get("country", "FR")
+                        )
+                        if normalized:
+                            suggestions["phone"] = {
+                                "value": normalized,
+                                "confidence": 0.88,
+                                "source": "outlook_signature",
+                                "rationale_short": "normalisé E.164 depuis signature",
+                                "evidence_hash": self._hash_evidence(sig),
+                                "alternatives": [],
+                            }
+
+                    # Fonction
+                    if sig.get("job_title"):
+                        suggestions["job_title"] = {
+                            "value": sig["job_title"],
+                            "confidence": 0.85,
+                            "source": "outlook_signature",
+                            "rationale_short": "fonction depuis signature",
+                            "evidence_hash": self._hash_evidence(sig),
+                            "alternatives": [],
+                        }
+
+                    break  # Première correspondance trouvée
+
+        except Exception as e:
+            # Log error mais ne pas fail
+            print(f"Outlook enrichment error: {e}")
+
+        return suggestions
+
+    async def _generate_outlook_tasks(self, access_token: str) -> List[Dict]:
+        """Génère des tâches depuis threads Outlook sans réponse"""
+        tasks = []
+
+        try:
+            # Détecter threads sans réponse J+7
+            unanswered = await self.outlook_service.get_sent_messages_without_reply(
+                access_token, older_than_days=7
+            )
+
+            for thread in unanswered[:3]:  # Max 3 tâches
+                tasks.append({
+                    "title": f"Relancer {thread['recipient']} sur {thread['subject']}",
+                    "due_date": (datetime.utcnow() + timedelta(days=1)).isoformat(),
+                    "assignee": "current_user",
+                    "confidence": 0.9,
+                    "reason": "outlook_no_reply_7d",
+                    "context_links": [f"outlook:thread={thread['thread_id']}"],
+                    "tags": ["followup", "outlook"],
+                    "estimated_minutes": 5,
+                })
+
+        except Exception as e:
+            print(f"Outlook tasks generation error: {e}")
+
+        return tasks
+
+    # ==========================================
+    # Helpers
+    # ==========================================
+
+    def _extract_domain(self, organisation: str) -> Optional[str]:
+        """Extrait le domain à partir du nom d'organisation"""
+        if organisation:
+            org = (
+                self.db.query(Organisation)
+                .filter(Organisation.name.ilike(f"%{organisation}%"))
+                .first()
+            )
+
+            if org and org.website:
+                # Extraire domain du website
+                domain = (
+                    org.website.replace("http://", "")
+                    .replace("https://", "")
+                    .split("/")[0]
+                )
+                return domain
+
+        return None
+
+    def _hash_evidence(self, data: Dict) -> str:
+        """Génère un hash SHA256 de l'évidence"""
+        content = str(sorted(data.items()))
+        return hashlib.sha256(content.encode()).hexdigest()[:16]

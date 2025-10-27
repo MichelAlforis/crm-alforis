@@ -12,13 +12,13 @@
 
 Checklists complètes pour valider le frontend en production, organisées par modules fonctionnels.
 
-**Total :** 297 tests répartis sur 16 chapitres
+**Total :** 312 tests répartis sur 17 chapitres
 
 ---
 
 ## 📑 Index des Chapitres
 
-### ✅ Tests Terminés (259/297 - 87%)
+### ✅ Tests Terminés (271/312 - 87%)
 
 | Chapitre | Fichier | Tests | Status | Score |
 |----------|---------|-------|--------|-------|
@@ -28,8 +28,13 @@ Checklists complètes pour valider le frontend en production, organisées par mo
 | **4. Module Contacts** | [04-contacts.md](04-contacts.md) | 29 | ✅ Complet | 29/29 (100%) |
 | **5. Module Organisations** | [05-organisations.md](05-organisations.md) | 22 | ✅ Complet | 20/22 (91%) |
 | **6. Module Marketing & RGPD** | [06-marketing.md](06-marketing.md) | 178 | ✅ Complet | 178/178 (100%) |
+| **12. Performance** | [12-performance.md](12-performance.md) | 11 | ✅ Complet | 10/11 (91%) |
+| **13. Validation & Erreurs** | [13-validation.md](13-validation.md) | 16 | ✅ Complet | 16/16 (100%) |
+| **14. Navigateurs** | [14-navigateurs.md](14-navigateurs.md) | 12 | ✅ Complet | 12/12 (100%) |
+| **15. Accessibilité** | [15-accessibilite.md](15-accessibilite.md) | 5 | ✅ Complet | 5/5 (100%) |
+| **17. Intelligence Artificielle** | [17-ia.md](17-ia.md) | 15 | ✅ Complet | 12/15 (80%) |
 
-### ⬜ Tests À Faire (38/297 - 13%)
+### ⬜ Tests À Faire (41/312 - 13%)
 
 | Chapitre | Fichier | Tests | Status |
 |----------|---------|-------|--------|
@@ -38,10 +43,6 @@ Checklists complètes pour valider le frontend en production, organisées par mo
 | **9. Responsive & Mobile** | [09-responsive.md](09-responsive.md) | 19 | ⬜ À faire |
 | **10. Recherche Globale** | [10-recherche.md](10-recherche.md) | 10 | ⬜ À faire |
 | **11. Exports & Rapports** | [11-exports.md](11-exports.md) | 8 | ⬜ À faire |
-| **12. Performance** | [12-performance.md](12-performance.md) | 11 | ⬜ À faire |
-| **13. Validation & Erreurs** | [13-validation.md](13-validation.md) | 16 | ⬜ À faire |
-| **14. Navigateurs** | [14-navigateurs.md](14-navigateurs.md) | 12 | ⬜ À faire |
-| **15. Accessibilité** | [15-accessibilite.md](15-accessibilite.md) | 5 | ⬜ Optionnel |
 | **16. Scénario Complet** | [16-scenario-complet.md](16-scenario-complet.md) | 12 | ⬜ À faire |
 
 ---
@@ -53,15 +54,13 @@ Checklists complètes pour valider le frontend en production, organisées par mo
 2. [10-recherche.md](10-recherche.md) - Recherche globale (10 tests)
 
 ### Priorité Moyenne 🟡
-4. [11-exports.md](11-exports.md) - Exports (8 tests)
-5. [13-validation.md](13-validation.md) - Validation (16 tests)
-6. [09-responsive.md](09-responsive.md) - Mobile (19 tests)
+3. [11-exports.md](11-exports.md) - Exports (8 tests)
+4. [09-responsive.md](09-responsive.md) - Mobile (19 tests)
+5. [17-ia.md](17-ia.md) - Tests IA manquants (3 tests - budgets, auto-apply)
 
 ### Priorité Basse 🟢
-7. [08-pwa.md](08-pwa.md) - PWA (20 tests)
-8. [12-performance.md](12-performance.md) - Performance (11 tests)
-9. [14-navigateurs.md](14-navigateurs.md) - Navigateurs (12 tests)
-10. [16-scenario-complet.md](16-scenario-complet.md) - E2E (12 tests)
+6. [08-pwa.md](08-pwa.md) - PWA (20 tests)
+7. [16-scenario-complet.md](16-scenario-complet.md) - E2E (12 tests)
 
 ---
 
