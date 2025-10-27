@@ -13,7 +13,7 @@ import {
   useDeleteOrganisation,
 } from '@/hooks/useOrganisations'
 import { useMandatsByOrganisation } from '@/hooks/useMandats'
-import { Card, Button, Table, Alert, Modal, ConfirmDialog } from '@/components/shared'
+import { Card, Button, Alert, Modal, ConfirmDialog } from '@/components/shared'
 import { OrganisationForm } from '@/components/forms'
 import { SkeletonCard } from '@/components/ui/Skeleton'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
