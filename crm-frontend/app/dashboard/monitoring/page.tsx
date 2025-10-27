@@ -70,13 +70,22 @@ export default function MonitoringPage() {
     try {
       // Use base URL without /api/v1 suffix
       const API_BASE = process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '') || 'http://localhost:8000'
-      const token = localStorage.getItem('access_token')
+      const token = localStorage.getItem('auth_token')
 
       const response = await fetch(`${API_BASE}/api/v1/monitoring/health`, {
         headers: {
           Authorization: token ? `Bearer ${token}` : '',
         },
       })
+
+      // If 401, token missing or expired - redirect to login
+      if (response.status === 401) {
+        if (token) {
+          localStorage.removeItem('access_token')
+        }
+        window.location.href = '/auth/login?redirect=/dashboard/monitoring'
+        return
+      }
 
       if (!response.ok) {
         throw new Error('Failed to fetch monitoring data')

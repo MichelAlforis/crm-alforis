@@ -8,7 +8,7 @@ LeadScore: Score d'engagement calculé
 from datetime import datetime
 from typing import List, Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 # Types littéraux
 EmailEventType = Literal["sent", "opened", "clicked", "bounced"]
@@ -74,6 +74,14 @@ class EmailSendOut(BaseModel):
     interaction_id: Optional[int]
     created_at: datetime
     updated_at: Optional[datetime]
+
+    @field_validator("status", mode="before")
+    @classmethod
+    def convert_enum_to_str(cls, v):
+        """Convertir EmailStatus enum → string pour validation Literal"""
+        if hasattr(v, "value"):
+            return v.value  # EmailStatus.SENT → 'sent'
+        return v
 
     class Config:
         from_attributes = True

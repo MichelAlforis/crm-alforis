@@ -169,14 +169,16 @@ async def ingest_email_event(
     )
 
     if not email_send:
-        # Create new
+        # Create new - Convertir string event → enum EmailStatus
+        status_enum = EmailStatus(payload.event)  # 'sent' → EmailStatus.SENT
+
         email_send = EmailEventTracking(
             organisation_id=payload.organisation_id,
             person_id=payload.person_id,
             provider=payload.provider,
             external_id=payload.external_id,
             subject=payload.subject,
-            status=EmailStatus(payload.event),
+            status=status_enum,  # Enum member attendu par SQLAlchemy
             sent_at=payload.occurred_at if payload.event == "sent" else None,
         )
         db.add(email_send)
@@ -188,7 +190,7 @@ async def ingest_email_event(
     # 3. Update status, compteurs, timestamps
     if payload.event == "opened":
         is_first_open = email_send.open_count == 0
-        email_send.status = EmailStatus.OPENED
+        email_send.status = EmailStatus.OPENED  # Enum member pour SQLAlchemy
         email_send.open_count += 1
         email_send.last_open_at = payload.occurred_at
 
@@ -198,12 +200,12 @@ async def ingest_email_event(
             create_interaction_from_email(db, email_send, user_id)
 
     elif payload.event == "clicked":
-        email_send.status = EmailStatus.CLICKED
+        email_send.status = EmailStatus.CLICKED  # Enum member pour SQLAlchemy
         email_send.click_count += 1
         email_send.last_click_at = payload.occurred_at
 
     elif payload.event == "bounced":
-        email_send.status = EmailStatus.BOUNCED
+        email_send.status = EmailStatus.BOUNCED  # Enum member pour SQLAlchemy
 
     elif payload.event == "sent":
         # Already set in create

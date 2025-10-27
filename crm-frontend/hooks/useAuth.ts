@@ -52,13 +52,17 @@ export function useAuth() {
           isLoading: false,
           error: 'Session expirée, veuillez vous reconnecter',
         })
-        router.push('/auth/login')
+        // Don't redirect if already on login page to avoid infinite loop
+        if (typeof window !== 'undefined' && !window.location.pathname.includes('/auth/login')) {
+          router.push('/auth/login')
+        }
       }
     })()
 
     return () => {
       isMounted = false
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // ============= LOGIN =============
@@ -79,9 +83,12 @@ export function useAuth() {
       })
       setFormState({ isSubmitting: false, success: true })
 
-      logger.log('🔄 Redirecting to dashboard...')
-      // Redirect to dashboard
-      router.push('/dashboard')
+      // Check for redirect parameter in URL
+      const params = new URLSearchParams(window.location.search)
+      const redirectTo = params.get('redirect') || '/dashboard'
+
+      logger.log('🔄 Redirecting to:', redirectTo)
+      router.push(redirectTo)
     } catch (error: any) {
       logError('useAuth.login', error, { email: credentials.email })
       const errorMessage = error.detail || 'Erreur de connexion'

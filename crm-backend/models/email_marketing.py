@@ -81,7 +81,7 @@ class EmailEventTracking(BaseModel):
 
     # Statut et tracking
     status = Column(
-        Enum(EmailStatus, name="email_status"),
+        Enum(EmailStatus, name="email_status", values_callable=lambda x: [e.value for e in x]),
         nullable=False,
         default=EmailStatus.SENT,
         index=True,
