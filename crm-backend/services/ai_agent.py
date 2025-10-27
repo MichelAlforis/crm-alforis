@@ -86,6 +86,42 @@ class AIAgentService:
 
         return config
 
+    def get_config(self) -> Optional[AIConfiguration]:
+        """Retourne la configuration active de l'agent IA"""
+        return self.config
+
+    def update_config(self, updates: Dict[str, Any]) -> AIConfiguration:
+        """
+        Met à jour la configuration de l'agent IA
+
+        Args:
+            updates: Dictionnaire des champs à mettre à jour
+
+        Returns:
+            Configuration mise à jour
+        """
+        if not self.config:
+            raise ValueError("No active configuration found")
+
+        # Mettre à jour les champs autorisés
+        allowed_fields = {
+            "name", "description", "is_active", "ai_provider", "ai_model",
+            "api_key_name", "auto_apply_enabled", "auto_apply_confidence_threshold",
+            "duplicate_similarity_threshold", "quality_score_threshold",
+            "max_suggestions_per_execution", "max_tokens_per_request",
+            "rate_limit_requests_per_minute", "daily_budget_usd", "monthly_budget_usd",
+            "notify_on_suggestions", "notify_on_errors", "notification_user_ids",
+            "custom_prompts", "rules"
+        }
+
+        for field, value in updates.items():
+            if field in allowed_fields and hasattr(self.config, field):
+                setattr(self.config, field, value)
+
+        self.db.commit()
+        self.db.refresh(self.config)
+        return self.config
+
     # ======================
     # Intégration API IA
     # ======================
@@ -307,6 +343,70 @@ class AIAgentService:
         """Génère une clé de cache unique pour une requête"""
         data_str = json.dumps(request_data, sort_keys=True)
         return hashlib.sha256(f"{request_type}:{data_str}".encode()).hexdigest()
+
+    def _get_from_cache(self, cache_key: str) -> Optional[Dict[str, Any]]:
+        """
+        Récupère un résultat depuis le cache par clé
+
+        Args:
+            cache_key: Clé de cache
+
+        Returns:
+            Données du cache si trouvées et non expirées, None sinon
+        """
+        cached = (
+            self.db.query(AICache)
+            .filter(
+                and_(
+                    AICache.cache_key == cache_key,
+                    AICache.expires_at > datetime.now(UTC),
+                )
+            )
+            .first()
+        )
+
+        if cached:
+            # Incrémenter le compteur de hits
+            cached.hit_count += 1
+            cached.last_accessed_at = datetime.now(UTC)
+            self.db.commit()
+            return cached.response_data
+
+        return None
+
+    def _save_to_cache(
+        self,
+        cache_key: str,
+        request_type: str,
+        request_data: Dict[str, Any],
+        response_data: Dict[str, Any],
+        ttl_hours: int = 24,
+    ) -> AICache:
+        """
+        Sauvegarde un résultat dans le cache
+
+        Args:
+            cache_key: Clé de cache
+            request_type: Type de requête
+            request_data: Données de la requête
+            response_data: Données de la réponse
+            ttl_hours: Durée de vie en heures
+
+        Returns:
+            Entrée de cache créée
+        """
+        cache_entry = AICache(
+            cache_key=cache_key,
+            request_type=request_type,
+            request_data=request_data,
+            response_data=response_data,
+            hit_count=0,
+            expires_at=datetime.now(UTC) + timedelta(hours=ttl_hours),
+        )
+        self.db.add(cache_entry)
+        self.db.commit()
+        self.db.refresh(cache_entry)
+        return cache_entry
 
     async def _get_cached_result(
         self, request_type: str, request_data: Dict[str, Any]
@@ -785,6 +885,89 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
 
         return query.order_by(AISuggestion.confidence_score.desc()).limit(limit).all()
 
+    def get_suggestions(
+        self,
+        status: Optional[AISuggestionStatus] = None,
+        entity_type: Optional[str] = None,
+        suggestion_type: Optional[AISuggestionType] = None,
+        min_confidence: Optional[float] = None,
+        limit: int = 100,
+    ) -> List[AISuggestion]:
+        """
+        Récupère les suggestions avec filtres optionnels
+
+        Args:
+            status: Filtrer par statut
+            entity_type: Filtrer par type d'entité
+            suggestion_type: Filtrer par type de suggestion
+            min_confidence: Score de confiance minimum
+            limit: Nombre maximum de résultats
+
+        Returns:
+            Liste de suggestions
+        """
+        query = self.db.query(AISuggestion)
+
+        if status:
+            query = query.filter(AISuggestion.status == status)
+        if entity_type:
+            query = query.filter(AISuggestion.entity_type == entity_type)
+        if suggestion_type:
+            query = query.filter(AISuggestion.type == suggestion_type)
+        if min_confidence is not None:
+            query = query.filter(AISuggestion.confidence_score >= min_confidence)
+
+        return query.order_by(AISuggestion.created_at.desc()).limit(limit).all()
+
+    def _create_suggestion(
+        self,
+        suggestion_type: AISuggestionType,
+        entity_type: str,
+        entity_id: int,
+        title: str,
+        description: str,
+        suggestion_data: Dict[str, Any],
+        confidence_score: float,
+        ai_provider: Optional[AIProvider] = None,
+        ai_model: Optional[str] = None,
+        execution_id: Optional[int] = None,
+    ) -> AISuggestion:
+        """
+        Crée une nouvelle suggestion
+
+        Args:
+            suggestion_type: Type de suggestion
+            entity_type: Type d'entité concernée
+            entity_id: ID de l'entité
+            title: Titre de la suggestion
+            description: Description
+            suggestion_data: Données de la suggestion
+            confidence_score: Score de confiance (0.0 à 1.0)
+            ai_provider: Fournisseur d'IA utilisé
+            ai_model: Modèle utilisé
+            execution_id: ID de l'exécution associée
+
+        Returns:
+            Suggestion créée
+        """
+        suggestion = AISuggestion(
+            type=suggestion_type,
+            status=AISuggestionStatus.PENDING,
+            entity_type=entity_type,
+            entity_id=entity_id,
+            title=title,
+            description=description,
+            suggestion_data=suggestion_data,
+            confidence_score=confidence_score,
+            ai_provider=ai_provider or (self.config.ai_provider if self.config else None),
+            ai_model=ai_model or (self.config.ai_model if self.config else None),
+            execution_id=execution_id,
+        )
+        self.db.add(suggestion)
+        self.db.commit()
+        self.db.refresh(suggestion)
+        return suggestion
+
     def approve_suggestion(self, suggestion_id: int, user_id: int, notes: Optional[str] = None):
         """Approuve et applique une suggestion"""
         suggestion = self.db.query(AISuggestion).filter(AISuggestion.id == suggestion_id).first()
@@ -1033,6 +1216,90 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
                 "message": message,
             }
         )
+
+    def _create_execution(
+        self,
+        task_type: AITaskType,
+        configuration_snapshot: Optional[Dict[str, Any]] = None,
+    ) -> AIExecution:
+        """
+        Crée une nouvelle exécution
+
+        Args:
+            task_type: Type de tâche à exécuter
+            configuration_snapshot: Snapshot de la configuration
+
+        Returns:
+            Exécution créée
+        """
+        execution = AIExecution(
+            task_type=task_type,
+            status="running",
+            started_at=datetime.now(UTC),
+            configuration_snapshot=configuration_snapshot or {},
+            total_items_processed=0,
+            successful_items=0,
+            failed_items=0,
+            estimated_cost_usd=0.0,
+        )
+        self.db.add(execution)
+        self.db.commit()
+        self.db.refresh(execution)
+        return execution
+
+    def _update_execution(
+        self,
+        execution_id: int,
+        status: Optional[str] = None,
+        total_items_processed: Optional[int] = None,
+        successful_items: Optional[int] = None,
+        failed_items: Optional[int] = None,
+        estimated_cost_usd: Optional[float] = None,
+        actual_cost_usd: Optional[float] = None,
+        error_message: Optional[str] = None,
+    ) -> AIExecution:
+        """
+        Met à jour une exécution
+
+        Args:
+            execution_id: ID de l'exécution
+            status: Nouveau statut
+            total_items_processed: Nombre total d'éléments traités
+            successful_items: Nombre d'éléments réussis
+            failed_items: Nombre d'échecs
+            estimated_cost_usd: Coût estimé
+            actual_cost_usd: Coût réel
+            error_message: Message d'erreur
+
+        Returns:
+            Exécution mise à jour
+        """
+        execution = self.db.query(AIExecution).filter(AIExecution.id == execution_id).first()
+        if not execution:
+            raise ValueError(f"Execution {execution_id} not found")
+
+        if status is not None:
+            execution.status = status
+        if total_items_processed is not None:
+            execution.total_items_processed = total_items_processed
+        if successful_items is not None:
+            execution.successful_items = successful_items
+        if failed_items is not None:
+            execution.failed_items = failed_items
+        if estimated_cost_usd is not None:
+            execution.estimated_cost_usd = estimated_cost_usd
+        if actual_cost_usd is not None:
+            execution.actual_cost_usd = actual_cost_usd
+        if error_message is not None:
+            execution.error_message = error_message
+
+        # Si statut terminal, marquer comme complété
+        if status in ["success", "failed", "cancelled"]:
+            execution.completed_at = datetime.now(UTC)
+
+        self.db.commit()
+        self.db.refresh(execution)
+        return execution
 
     def get_statistics(self) -> Dict[str, Any]:
         """Retourne les statistiques globales de l'agent IA"""
