@@ -921,7 +921,7 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
 
     def _create_suggestion(
         self,
-        suggestion_type: AISuggestionType,
+        type: AISuggestionType,
         entity_type: str,
         entity_id: int,
         title: str,
@@ -936,7 +936,7 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
         Crée une nouvelle suggestion
 
         Args:
-            suggestion_type: Type de suggestion
+            type: Type de suggestion
             entity_type: Type d'entité concernée
             entity_id: ID de l'entité
             title: Titre de la suggestion
@@ -951,7 +951,7 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
             Suggestion créée
         """
         suggestion = AISuggestion(
-            type=suggestion_type,
+            type=type,
             status=AISuggestionStatus.PENDING,
             entity_type=entity_type,
             entity_id=entity_id,
@@ -986,8 +986,10 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
         suggestion.applied_at = datetime.now(UTC)
 
         self.db.commit()
+        self.db.refresh(suggestion)
+        return suggestion
 
-    def reject_suggestion(self, suggestion_id: int, user_id: int, notes: Optional[str] = None):
+    def reject_suggestion(self, suggestion_id: int, user_id: int, notes: Optional[str] = None, reason: Optional[str] = None):
         """Rejette une suggestion"""
         suggestion = self.db.query(AISuggestion).filter(AISuggestion.id == suggestion_id).first()
         if not suggestion:
@@ -996,9 +998,11 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
         suggestion.status = AISuggestionStatus.REJECTED
         suggestion.reviewed_by = user_id
         suggestion.reviewed_at = datetime.now(UTC)
-        suggestion.review_notes = notes
+        suggestion.review_notes = reason or notes
 
         self.db.commit()
+        self.db.refresh(suggestion)
+        return suggestion
 
     # ======================
     # Batch Operations
@@ -1117,11 +1121,11 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
             if org:
                 # Données actuelles
                 current_data = {
-                    "nom": org.nom,
+                    "name": org.name,
                     "website": org.website,
-                    "category": org.category,
-                    "general_email": org.general_email,
-                    "general_phone": org.general_phone,
+                    "category": org.category.value if org.category else None,
+                    "email": org.email,
+                    "phone": org.phone,
                 }
 
                 # Analyser les changements
@@ -1234,12 +1238,12 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
         """
         execution = AIExecution(
             task_type=task_type,
-            status="running",
+            status=AIExecutionStatus.RUNNING,
             started_at=datetime.now(UTC),
-            configuration_snapshot=configuration_snapshot or {},
+            config=configuration_snapshot or {},
             total_items_processed=0,
-            successful_items=0,
-            failed_items=0,
+            total_suggestions_created=0,
+            total_suggestions_applied=0,
             estimated_cost_usd=0.0,
         )
         self.db.add(execution)
@@ -1265,10 +1269,10 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
             execution_id: ID de l'exécution
             status: Nouveau statut
             total_items_processed: Nombre total d'éléments traités
-            successful_items: Nombre d'éléments réussis
-            failed_items: Nombre d'échecs
+            successful_items: Nombre de suggestions appliquées (total_suggestions_applied)
+            failed_items: Nombre d'échecs (ignoré - pas de champ direct)
             estimated_cost_usd: Coût estimé
-            actual_cost_usd: Coût réel
+            actual_cost_usd: Coût réel (ignoré - pas de champ, utilise estimated_cost_usd)
             error_message: Message d'erreur
 
         Returns:
@@ -1279,23 +1283,29 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
             raise ValueError(f"Execution {execution_id} not found")
 
         if status is not None:
+            # Convertir string en enum si nécessaire
+            if isinstance(status, str):
+                status = AIExecutionStatus(status)
             execution.status = status
         if total_items_processed is not None:
             execution.total_items_processed = total_items_processed
         if successful_items is not None:
-            execution.successful_items = successful_items
-        if failed_items is not None:
-            execution.failed_items = failed_items
+            execution.total_suggestions_applied = successful_items
         if estimated_cost_usd is not None:
             execution.estimated_cost_usd = estimated_cost_usd
         if actual_cost_usd is not None:
-            execution.actual_cost_usd = actual_cost_usd
+            # Utiliser estimated_cost_usd comme approximation
+            execution.estimated_cost_usd = actual_cost_usd
         if error_message is not None:
             execution.error_message = error_message
 
         # Si statut terminal, marquer comme complété
-        if status in ["success", "failed", "cancelled"]:
+        if status and status.value in ["success", "failed", "cancelled"]:
             execution.completed_at = datetime.now(UTC)
+            # Calculer la durée
+            if execution.started_at:
+                duration = (execution.completed_at - execution.started_at).total_seconds()
+                execution.duration_seconds = duration
 
         self.db.commit()
         self.db.refresh(execution)
@@ -1309,6 +1319,11 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
             .filter(AISuggestion.status == AISuggestionStatus.PENDING)
             .scalar()
         )
+        approved_suggestions = (
+            self.db.query(func.count(AISuggestion.id))
+            .filter(AISuggestion.status.in_([AISuggestionStatus.APPROVED, AISuggestionStatus.APPLIED]))
+            .scalar()
+        )
 
         total_executions = self.db.query(func.count(AIExecution.id)).scalar()
         total_cost = self.db.query(func.sum(AIExecution.estimated_cost_usd)).scalar() or 0.0
@@ -1316,6 +1331,7 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
         return {
             "total_suggestions": total_suggestions,
             "pending_suggestions": pending_suggestions,
+            "approved_suggestions": approved_suggestions,
             "total_executions": total_executions,
             "total_cost_usd": round(total_cost, 2),
             "config": {
