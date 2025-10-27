@@ -28,12 +28,12 @@ class TestAIAgentService:
     """Tests du service AIAgentService"""
 
     @pytest.fixture
-    def ai_service(self, db_session):
+    def ai_service(self, test_db):
         """Fixture pour créer une instance du service"""
-        return AIAgentService(db_session)
+        return AIAgentService(test_db)
 
     @pytest.fixture
-    def mock_config(self, db_session):
+    def mock_config(self, test_db):
         """Configuration AI pour les tests"""
         config = AIConfiguration(
             provider=AIProvider.ANTHROPIC,
@@ -50,12 +50,12 @@ class TestAIAgentService:
             cache_enabled=True,
             cache_ttl_hours=24,
         )
-        db_session.add(config)
-        db_session.commit()
+        test_db.add(config)
+        test_db.commit()
         return config
 
     @pytest.fixture
-    def mock_organisation(self, db_session):
+    def mock_organisation(self, test_db):
         """Organisation pour les tests"""
         from models.organisation import Organisation
         org = Organisation(
@@ -63,8 +63,8 @@ class TestAIAgentService:
             website=None,
             general_email=None,
         )
-        db_session.add(org)
-        db_session.commit()
+        test_db.add(org)
+        test_db.commit()
         return org
 
     # ===== Tests de configuration =====
