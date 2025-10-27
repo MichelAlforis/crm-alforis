@@ -400,6 +400,8 @@ class AIAgentService:
             request_type=request_type,
             request_data=request_data,
             response_data=response_data,
+            ai_provider=self.config.ai_provider if self.config else AIProvider.CLAUDE,
+            ai_model=self.config.ai_model if self.config else None,
             hit_count=0,
             expires_at=datetime.now(UTC) + timedelta(hours=ttl_hours),
         )
@@ -979,11 +981,8 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
         suggestion.reviewed_at = datetime.now(UTC)
         suggestion.review_notes = notes
 
-        # Appliquer la suggestion
+        # Appliquer la suggestion (will set status to APPLIED if successful)
         self._apply_suggestion(suggestion)
-
-        suggestion.status = AISuggestionStatus.APPLIED
-        suggestion.applied_at = datetime.now(UTC)
 
         self.db.commit()
         self.db.refresh(suggestion)

@@ -47,8 +47,10 @@ def test_db():
     try:
         yield db
     finally:
+        db.rollback()  # Rollback any uncommitted changes
         db.close()
         Base.metadata.drop_all(bind=engine)
+        engine.dispose()  # Ensure engine is properly disposed
 
 
 @pytest.fixture(scope="function")

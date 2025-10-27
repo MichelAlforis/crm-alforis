@@ -137,7 +137,18 @@ class Notification(BaseModel):
 
     def is_expired(self) -> bool:
         """Indique si la notification est expirée."""
-        return self.expires_at is not None and self.expires_at < datetime.now(timezone.utc)
+        if self.expires_at is None:
+            return False
+
+        # Handle both naive and aware datetimes (SQLite strips timezone info)
+        now = datetime.now(timezone.utc)
+        expires = self.expires_at
+
+        # Make comparison consistent: if expires_at is naive, use naive now
+        if expires.tzinfo is None:
+            now = now.replace(tzinfo=None)
+
+        return expires < now
 
     def to_dict(self) -> Dict[str, Any]:
         """Convertit l'objet en dict sérialisable pour le frontend/WebSocket."""
