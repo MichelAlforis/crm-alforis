@@ -281,7 +281,7 @@ export function TableV2<T = any>({
         variants[variant]
       )}>
         <div className="overflow-x-auto">
-          <table className={clsx('w-full', sizes[size])}>
+          <table className={clsx('w-full table-fixed', sizes[size])}>
             <thead
               className={clsx(
                 'bg-gray-50 border-b border-gray-200',
@@ -358,7 +358,7 @@ export function TableV2<T = any>({
                         <td
                           key={colIdx}
                           className={clsx(
-                            'px-4 py-3 text-gray-900 bg-white',
+                            'px-4 py-3 text-gray-900 bg-white align-middle overflow-hidden',
                             'first:pl-6 last:pr-6',
                             column.className,
                             // Sticky styles
@@ -372,13 +372,14 @@ export function TableV2<T = any>({
                             ...(column.maxWidth ? { width: column.maxWidth, maxWidth: column.maxWidth } : {}),
                           }}
                         >
-                          <div className={clsx(
-                            'overflow-hidden',
-                            column.maxWidth && 'max-w-0 w-full'
-                          )}>
+                          <div className="min-w-0">
                             {column.render
                               ? column.render(value, row, rowIdx)
-                              : value}
+                              : (
+                                <span className="block min-w-0 overflow-hidden text-ellipsis whitespace-nowrap" title={String(value)}>
+                                  {value}
+                                </span>
+                              )}
                           </div>
                         </td>
                       )

@@ -119,18 +119,16 @@ export default function DemoTableV2Page() {
       accessor: 'email',
       sortable: true,
       priority: 'high', // 📱 Always visible on mobile
-      minWidth: '200px',
+      maxWidth: '280px', // Force column width with table-fixed
       render: (value: string) => (
-        <div className="max-w-[300px]">
-          <a
-            href={`mailto:${value}`}
-            className="text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1"
-            title={value}
-          >
-            <Mail className="w-3.5 h-3.5 flex-shrink-0" />
-            <span className="truncate block min-w-0">{value}</span>
-          </a>
-        </div>
+        <a
+          href={`mailto:${value}`}
+          className="flex items-center gap-1 min-w-0 text-blue-600 hover:text-blue-700 hover:underline"
+          title={value}
+        >
+          <Mail className="w-3.5 h-3.5 flex-shrink-0" />
+          <span className="truncate block min-w-0">{value}</span>
+        </a>
       )
     },
     {
