@@ -6,7 +6,7 @@ from sqlalchemy import ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
-from .database import Base
+from core.database import Base
 
 
 class CampaignStatus(str, enum.Enum):
@@ -27,6 +27,9 @@ class EmailStatus(str, enum.Enum):
     CLICKED = "clicked"
 
 
+# NOTE: There's also an EmailTemplate in models/email.py with the same table
+# This duplicate definition is kept for backward compatibility
+# Both should map to the same 'email_templates' table
 class EmailTemplate(Base):
     __tablename__ = "email_templates"
 

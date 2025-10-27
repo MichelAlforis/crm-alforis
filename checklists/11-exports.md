@@ -1,7 +1,7 @@
 # 📋 Chapitre 11 - Exports & Rapports
 
 **Status :** ✅ TERMINÉ (Code Review - Backend)
-**Tests :** 7/8 (87.5%)
+**Tests :** 8/8 (100%)
 **Priorité :** 🟡 Moyenne
 
 ---
@@ -13,7 +13,7 @@
 | 11.1 | **Test** : Export organisations CSV | ✅ | `/api/v1/exports/organisations/csv` |
 | 11.2 | **Test** : Export contacts Excel | ✅ | `/api/v1/exports/people/excel` |
 | 11.3 | **Test** : Export mandats PDF | ✅ | `/api/v1/exports/mandats/pdf` |
-| 11.4 | **Test** : Export campagnes CSV | ⬜ | Endpoint manquant - À implémenter |
+| 11.4 | **Test** : Export campagnes CSV | ✅ | `/api/v1/exports/campaigns/csv` - IMPLÉMENTÉ |
 | 11.5 | Colonnes correctes dans exports | ✅ | Headers définis explicitement par endpoint |
 | 11.6 | Données complètes (pas de troncature) | ✅ | `.all()` récupère toutes les données filtrées |
 | 11.7 | Encoding UTF-8 (accents préservés) | ✅ | `utf-8-sig` pour CSV (BOM Excel) |
@@ -106,43 +106,45 @@ return StreamingResponse(
 
 ---
 
-## ❌ Manquant : Export Campagnes
+## ✅ Implémenté : Export Campagnes
 
-### Test 11.4 - Export campagnes CSV
+### Test 11.4 - Export campagnes CSV ✅
 
-**Endpoint à créer** : `GET /api/v1/exports/campaigns/csv`
+**Endpoint implémenté** : `GET /api/v1/exports/campaigns/csv`
 
-**Headers suggérés** :
+**Headers implémentés** :
 ```python
 [
     "id",
     "name",
     "status",
-    "type",
     "scheduled_at",
     "total_recipients",
     "total_sent",
-    "open_rate",
-    "click_rate",
+    "last_sent_at",
+    "from_email",
+    "from_name",
     "created_at"
 ]
 ```
 
-**Query pour implémentation** :
+**Implémentation** :
 ```python
 @router.get("/campaigns/csv")
 async def export_campaigns_csv(
-    status: Optional[str] = None,
+    status: Optional[EmailCampaignStatus] = Query(None, description="Filtrer par statut"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    from models.email import EmailCampaign
     query = db.query(EmailCampaign)
     if status:
         query = query.filter(EmailCampaign.status == status)
     campaigns = query.all()
-    # ... CSV generation
+    # CSV generation avec ExportService
 ```
+
+**Filtres disponibles** :
+- `status` : Filtrer par statut de campagne (draft, scheduled, running, completed, etc.)
 
 ---
 
@@ -199,5 +201,5 @@ crm-frontend/
 ---
 
 **Dernière mise à jour :** 27 Octobre 2025
-**Code Review By :** Claude Code  
-**Status :** ✅ Backend complet (7/8 tests) - Campagnes manquantes
+**Code Review By :** Claude Code
+**Status :** ✅ Backend complet (8/8 tests - 100%) - Tous les exports implémentés

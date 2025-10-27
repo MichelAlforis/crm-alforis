@@ -93,18 +93,13 @@ function DropdownPortal({ triggerRef, isOpen, onClose, children }: DropdownPorta
 
     // Mark when dropdown was opened
     openedAtRef.current = Date.now()
+    console.log('📍 [DropdownPortal] Marked open time:', openedAtRef.current)
 
-    // Add small delay to prevent immediate close on open
+    // Add delay to prevent immediate close on open - LONGER delay for touch events
     const timeoutId = setTimeout(() => {
       console.log('🟠 [DropdownPortal] Setting up click-outside handlers')
-      const handleClickOutside = (e: MouseEvent | TouchEvent) => {
-        // Ignore events that happen within 300ms of opening (debounce)
-        const timeSinceOpen = Date.now() - openedAtRef.current
-        if (timeSinceOpen < 300) {
-          console.log('⏱️  [DropdownPortal] Ignoring event - too soon after open', { timeSinceOpen })
-          return
-        }
 
+      const handleClickOutside = (e: MouseEvent | TouchEvent) => {
         const target = e.target as Node | null
 
         // Check if click is inside trigger button (including SVG children)
@@ -119,8 +114,7 @@ function DropdownPortal({ triggerRef, isOpen, onClose, children }: DropdownPorta
           isInsideTrigger,
           isInsideDropdown,
           triggerExists: !!triggerRef.current,
-          dropdownExists: !!dropdownRef.current,
-          timeSinceOpen
+          dropdownExists: !!dropdownRef.current
         })
 
         // Only close if click is outside both trigger and dropdown
@@ -139,17 +133,16 @@ function DropdownPortal({ triggerRef, isOpen, onClose, children }: DropdownPorta
         }
       }
 
+      // Only mousedown, NOT touchstart - touchstart causes issues on mobile
       document.addEventListener('mousedown', handleClickOutside)
-      document.addEventListener('touchstart', handleClickOutside as any) // Touch support
       document.addEventListener('keydown', handleEscape)
 
       return () => {
         console.log('🟣 [DropdownPortal] Cleaning up click-outside handlers')
         document.removeEventListener('mousedown', handleClickOutside)
-        document.removeEventListener('touchstart', handleClickOutside as any)
         document.removeEventListener('keydown', handleEscape)
       }
-    }, 100) // 100ms delay
+    }, 300) // 300ms delay - longer to avoid touchstart race
 
     return () => clearTimeout(timeoutId)
   }, [isOpen, onClose, triggerRef])

@@ -7,6 +7,7 @@ Endpoints:
 - GET /exports/organisations/pdf : Export PDF rapport
 - GET /exports/mandats/csv : Export CSV mandats
 - GET /exports/mandats/pdf : Export PDF mandats
+- GET /exports/campaigns/csv : Export CSV campagnes email
 """
 
 from typing import Optional
@@ -19,6 +20,7 @@ from core.auth import get_current_user
 from core.database import get_db
 from core.exports import ExportService
 from core.permissions import filter_query_by_team
+from models.email import EmailCampaign, EmailCampaignStatus
 from models.mandat import Mandat, MandatStatus, MandatType
 from models.organisation import Organisation, OrganisationCategory
 from models.person import Person
@@ -607,4 +609,83 @@ async def export_people_pdf(
         output,
         media_type="application/pdf",
         headers={"Content-Disposition": "attachment; filename=people.pdf"},
+    )
+
+
+@router.get("/campaigns/csv")
+async def export_campaigns_csv(
+    status: Optional[EmailCampaignStatus] = Query(None, description="Filtrer par statut"),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Export CSV campagnes email avec statistiques
+
+    **Exemples:**
+    - `/exports/campaigns/csv`
+    - `/exports/campaigns/csv?status=completed`
+    - `/exports/campaigns/csv?status=scheduled`
+
+    **Returns:** Fichier CSV téléchargeable
+    """
+    # Query - Note: EmailCampaign doesn't have team filtering yet
+    query = db.query(EmailCampaign)
+
+    # Filtres
+    if status:
+        query = query.filter(EmailCampaign.status == status)
+
+    campaigns = query.all()
+
+    if not campaigns:
+        raise HTTPException(404, "Aucune campagne à exporter")
+
+    # Préparer les données pour l'export
+    export_data = []
+    for campaign in campaigns:
+        # Formater les dates
+        scheduled_at = campaign.scheduled_at.isoformat() if campaign.scheduled_at else ""
+        created_at = campaign.created_at.isoformat() if campaign.created_at else ""
+        last_sent_at = campaign.last_sent_at.isoformat() if campaign.last_sent_at else ""
+
+        export_data.append(
+            {
+                "id": campaign.id,
+                "name": campaign.name,
+                "status": campaign.status.value if campaign.status else "",
+                "scheduled_at": scheduled_at,
+                "total_recipients": campaign.total_recipients or 0,
+                "total_sent": campaign.total_sent or 0,
+                "last_sent_at": last_sent_at,
+                "from_email": campaign.from_email or "",
+                "from_name": campaign.from_name or "",
+                "created_at": created_at,
+            }
+        )
+
+    # Export CSV avec headers explicites
+    headers = [
+        "id",
+        "name",
+        "status",
+        "scheduled_at",
+        "total_recipients",
+        "total_sent",
+        "last_sent_at",
+        "from_email",
+        "from_name",
+        "created_at",
+    ]
+
+    buffer = ExportService.export_csv(
+        data=export_data,
+        filename="campaigns.csv",
+        headers=headers,
+    )
+
+    buffer.seek(0)
+    return StreamingResponse(
+        buffer,
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=campaigns.csv"},
     )

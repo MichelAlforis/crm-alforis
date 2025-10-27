@@ -1118,3 +1118,73 @@ class TestExportsEdgeCases:
         """Test export organisations Excel vide"""
         response = client.get("/api/v1/exports/organisations/excel", headers=admin_headers)
         assert response.status_code == 404
+
+
+class TestExportsCampaignsEndpoints:
+    """Tests des endpoints HTTP pour exports campagnes email"""
+
+    def test_export_campaigns_csv_endpoint(self, client, admin_headers, test_db):
+        """Test endpoint GET /exports/campaigns/csv"""
+        from models.email import EmailCampaign, EmailCampaignStatus, EmailTemplate
+
+        # Créer un template
+        template = EmailTemplate(
+            name="Test Template",
+            subject="Test Subject",
+            html_content="<p>Test</p>",
+        )
+        test_db.add(template)
+        test_db.flush()
+
+        # Créer campagne
+        campaign = EmailCampaign(
+            name="Test Campaign",
+            description="Test campaign description",
+            status=EmailCampaignStatus.COMPLETED,
+        )
+        test_db.add(campaign)
+        test_db.commit()
+
+        response = client.get("/api/v1/exports/campaigns/csv", headers=admin_headers)
+
+        assert response.status_code == 200
+        assert "text/csv" in response.headers["content-type"]
+        assert "campaigns.csv" in response.headers["content-disposition"]
+
+    def test_export_campaigns_csv_with_status_filter(self, client, admin_headers, test_db):
+        """Test export campaigns CSV avec filtre status"""
+        from models.email import EmailCampaign, EmailCampaignStatus
+
+        # Campagne completed
+        campaign1 = EmailCampaign(
+            name="Completed Campaign",
+            description="Completed campaign description",
+            status=EmailCampaignStatus.COMPLETED,
+        )
+        test_db.add(campaign1)
+
+        # Campagne scheduled
+        campaign2 = EmailCampaign(
+            name="Scheduled Campaign",
+            description="Scheduled campaign description",
+            status=EmailCampaignStatus.SCHEDULED,
+        )
+        test_db.add(campaign2)
+        test_db.commit()
+
+        # Filtre status=completed
+        response = client.get(
+            "/api/v1/exports/campaigns/csv?status=completed", headers=admin_headers
+        )
+        assert response.status_code == 200
+
+        # Filtre status=scheduled
+        response = client.get(
+            "/api/v1/exports/campaigns/csv?status=scheduled", headers=admin_headers
+        )
+        assert response.status_code == 200
+
+    def test_export_campaigns_csv_empty(self, client, admin_headers):
+        """Test export campaigns CSV vide"""
+        response = client.get("/api/v1/exports/campaigns/csv", headers=admin_headers)
+        assert response.status_code == 404
