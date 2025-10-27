@@ -8,7 +8,6 @@ Fournit des métriques détaillées sur:
 - Files d'attente (Redis/Celery si configuré)
 """
 
-import psutil
 import subprocess
 from datetime import datetime, timedelta, timezone
 from typing import Dict, Any, List, Optional
@@ -25,6 +24,14 @@ from models.notification import Notification
 
 router = APIRouter(tags=["monitoring"], prefix="/monitoring")
 
+try:  # pragma: no cover - optional dependency guard
+    import psutil  # type: ignore
+
+    PSUTIL_AVAILABLE = True
+except ImportError:  # pragma: no cover - executed when psutil missing
+    psutil = None  # type: ignore
+    PSUTIL_AVAILABLE = False
+
 
 def get_system_metrics() -> Dict[str, Any]:
     """
@@ -33,6 +40,9 @@ def get_system_metrics() -> Dict[str, Any]:
     Returns:
         Dict avec CPU, RAM, disque, réseau
     """
+    if not PSUTIL_AVAILABLE:
+        return {"error": "psutil non disponible - métriques système désactivées"}
+
     try:
         # CPU
         cpu_percent = psutil.cpu_percent(interval=1)

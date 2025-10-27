@@ -8,9 +8,42 @@ import logging
 from typing import Optional
 
 from fastapi import Request
-from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.errors import RateLimitExceeded
-from slowapi.util import get_remote_address
+
+try:  # pragma: no cover - optional dependency guard
+    from slowapi import Limiter, _rate_limit_exceeded_handler
+    from slowapi.errors import RateLimitExceeded
+    from slowapi.util import get_remote_address
+    SLOWAPI_AVAILABLE = True
+except ImportError:  # pragma: no cover - executed when slowapi absent
+    SLOWAPI_AVAILABLE = False
+
+    class RateLimitExceeded(Exception):  # type: ignore
+        """Fallback exception mimicking slowapi.errors.RateLimitExceeded."""
+
+        def __init__(self, detail: str = "Rate limit exceeded", headers: Optional[dict] = None):
+            super().__init__(detail)
+            self.detail = detail
+            self.headers = headers or {}
+
+    def get_remote_address(request: Request) -> str:  # type: ignore
+        client = getattr(request, "client", None)
+        host = getattr(client, "host", None)
+        return host or "unknown"
+
+    def _rate_limit_exceeded_handler(*args, **kwargs):  # type: ignore
+        return None
+
+    class Limiter:  # type: ignore
+        """No-op limiter replacement when slowapi is unavailable."""
+
+        def __init__(self, *args, **kwargs):
+            self.default_limits = kwargs.get("default_limits", [])
+
+        def limit(self, *args, **kwargs):
+            def decorator(func):
+                return func
+
+            return decorator
 
 logger = logging.getLogger(__name__)
 

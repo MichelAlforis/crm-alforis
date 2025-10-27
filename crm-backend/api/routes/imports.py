@@ -4,11 +4,15 @@
 
 #   POST /api/v1/imports/organisations/bulk (NEW: import unifié)
 #   POST /api/v1/imports/people/bulk (NEW: import personnes physiques)
+#   POST /api/v1/imports/organisations/csv (CSV file upload)
+#   POST /api/v1/imports/people/csv (CSV file upload)
 
+import csv
+import io
 import logging
 from typing import Any, Dict, List, Optional, Set
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile, status
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -66,7 +70,8 @@ def _resolve_org_type(raw: Any) -> OrganisationType:
             return OrganisationType.EMETTEUR
         if lowered in {"autre", "other"}:
             return OrganisationType.AUTRE
-    return OrganisationType.AUTRE
+    # Default: unknown types become CLIENT (legacy behavior for backward compatibility)
+    return OrganisationType.CLIENT
 
 
 @router.post("/organisations/bulk")
@@ -318,3 +323,146 @@ async def bulk_create_people(
         )
 
     return result
+
+
+# ============= CSV FILE UPLOAD ENDPOINTS =============
+
+
+@router.post("/organisations/csv")
+async def import_organisations_csv(
+    file: UploadFile = File(...),
+    type_org: str = Form(...),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user_optional),
+) -> Dict[str, Any]:
+    """
+    Import organisations from CSV file.
+
+    Expected CSV columns: name, email, category, type, country_code, language
+    """
+    if not file.filename.endswith(".csv"):
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail="Only CSV files are supported",
+        )
+
+    try:
+        # Read file content
+        content = await file.read()
+        decoded = content.decode("utf-8")
+
+        # Parse CSV
+        csv_reader = csv.DictReader(io.StringIO(decoded))
+        rows = list(csv_reader)
+
+        if not rows:
+            return {"total": 0, "created": [], "failed": 0, "errors": []}
+
+        # Convert CSV rows to OrganisationCreate objects
+        organisations = []
+        for row in rows:
+            org_data = {
+                "name": row.get("name", "").strip(),
+                "email": row.get("email", "").strip() or None,
+                "category": row.get("category", "Institution").strip(),
+                "country_code": row.get("country_code", "FR").strip(),
+                "language": row.get("language", "fr").strip().lower(),
+            }
+
+            # Remove empty values
+            org_data = {k: v for k, v in org_data.items() if v}
+
+            try:
+                organisations.append(OrganisationCreate(**org_data))
+            except Exception as e:
+                logger.warning(f"Failed to parse CSV row {row}: {e}")
+                continue
+
+        # Use existing bulk endpoint logic
+        return await bulk_create_organisations(
+            organisations=organisations,
+            type_org=type_org,
+            db=db,
+            current_user=current_user,
+        )
+
+    except UnicodeDecodeError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid CSV encoding. Please use UTF-8",
+        )
+    except Exception as e:
+        logger.exception("Error processing CSV file")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error processing CSV file: {str(e)}",
+        )
+
+
+@router.post("/people/csv")
+async def import_people_csv(
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user_optional),
+) -> Dict[str, Any]:
+    """
+    Import people from CSV file.
+
+    Expected CSV columns: first_name, last_name, personal_email, language, country_code
+    """
+    if not file.filename.endswith(".csv"):
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail="Only CSV files are supported",
+        )
+
+    try:
+        # Read file content
+        content = await file.read()
+        decoded = content.decode("utf-8")
+
+        # Parse CSV
+        csv_reader = csv.DictReader(io.StringIO(decoded))
+        rows = list(csv_reader)
+
+        if not rows:
+            return {"total": 0, "created": [], "failed": 0, "errors": []}
+
+        # Convert CSV rows to PersonCreate objects
+        people = []
+        for row in rows:
+            person_data = {
+                "first_name": row.get("first_name", "").strip(),
+                "last_name": row.get("last_name", "").strip(),
+                "personal_email": row.get("personal_email", "").strip() or None,
+                "language": row.get("language", "fr").strip().lower(),
+                "country_code": row.get("country_code", "FR").strip(),
+            }
+
+            # Remove empty values except email which can be None
+            person_data = {k: v for k, v in person_data.items() if v or k == "personal_email"}
+
+            try:
+                people.append(PersonCreate(**person_data))
+            except Exception as e:
+                logger.warning(f"Failed to parse CSV row {row}: {e}")
+                continue
+
+        # Use existing bulk endpoint logic
+        return await bulk_create_people(
+            people=people,
+            db=db,
+            current_user=current_user,
+        )
+
+    except UnicodeDecodeError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid CSV encoding. Please use UTF-8",
+        )
+    except Exception as e:
+        logger.exception("Error processing CSV file")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error processing CSV file: {str(e)}",
+        )

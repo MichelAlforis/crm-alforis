@@ -4,7 +4,6 @@ import io
 import json
 from typing import List
 
-import pandas as pd
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
 from sqlalchemy.orm import Session
 
@@ -16,6 +15,20 @@ from schemas.mailing_list import (
     MailingListUpdate,
 )
 from services.mailing_list_service import MailingListService
+
+try:  # pragma: no cover - optional dependency
+    import pandas as pd  # type: ignore
+
+    PANDAS_AVAILABLE = True
+    PANDAS_EMPTY_DATA_ERROR = pd.errors.EmptyDataError
+except ImportError:  # pragma: no cover - executed when pandas missing
+    pd = None  # type: ignore
+    PANDAS_AVAILABLE = False
+
+    class _PandasEmptyDataError(Exception):
+        pass
+
+    PANDAS_EMPTY_DATA_ERROR = _PandasEmptyDataError
 
 router = APIRouter(prefix="/mailing-lists", tags=["mailing-lists"])
 
@@ -201,6 +214,12 @@ async def import_mailing_lists(
         # Lire le contenu du fichier
         contents = await file.read()
 
+        if not PANDAS_AVAILABLE:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Le support CSV/Excel est indisponible (pandas non installé).",
+            )
+
         # Parser selon le format
         if filename.endswith(".csv"):
             df = pd.read_csv(io.BytesIO(contents))
@@ -297,7 +316,7 @@ async def import_mailing_lists(
             "results": results,
         }
 
-    except pd.errors.EmptyDataError:
+    except PANDAS_EMPTY_DATA_ERROR:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Le fichier est vide")
     except Exception as e:
         raise HTTPException(
