@@ -11,12 +11,18 @@ import { useEffect, useState } from 'react'
  * const isDesktop = useMediaQuery('(min-width: 1025px)')
  */
 export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(false)
+  const [matches, setMatches] = useState(() => {
+    // Initialize with correct value to avoid hydration mismatch
+    if (typeof window !== 'undefined') {
+      return window.matchMedia(query).matches
+    }
+    return false
+  })
 
   useEffect(() => {
     const mediaQuery = window.matchMedia(query)
 
-    // Set initial value
+    // Set initial value (may have changed since mount)
     setMatches(mediaQuery.matches)
 
     // Create event listener
