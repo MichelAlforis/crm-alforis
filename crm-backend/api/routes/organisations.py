@@ -1,11 +1,13 @@
 from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, Query as SQLAlchemyQuery
 
 from core import get_current_user, get_db
 from core.cache import cache_response, invalidate_organisation_cache
 from core.events import EventType, emit_event
+from core.permissions import filter_query_by_team
+from models.organisation import Organisation
 from models.organisation_activity import OrganisationActivity, OrganisationActivityType
 from schemas.base import PaginatedResponse
 from schemas.organisation import (
@@ -20,6 +22,79 @@ from services.organisation_activity import OrganisationActivityService
 from services.person import PersonOrganizationLinkService
 
 router = APIRouter(prefix="/organisations", tags=["organisations"])
+
+
+# ============= SHARED FILTER LOGIC =============
+
+
+def apply_organisation_filters(
+    query: SQLAlchemyQuery,
+    params: Dict[str, Any],
+    current_user: dict,
+) -> SQLAlchemyQuery:
+    """
+    Applique exactement les mêmes filtres que le viewer.
+    Utilisé par la route LIST et les exports pour garantir la cohérence.
+
+    Args:
+        query: Query SQLAlchemy sur Organisation
+        params: Dictionnaire de paramètres (category, country_code, language, is_active, etc.)
+        current_user: Utilisateur courant (dict depuis JWT)
+
+    Returns:
+        Query filtrée
+    """
+    # 1) Permissions identiques au viewer
+    query = filter_query_by_team(query, current_user, Organisation)
+
+    # 2) Helper pour convertir les booléens string/bool
+    def _get_bool(name: str) -> Optional[bool]:
+        v = params.get(name)
+        if isinstance(v, bool):
+            return v
+        if isinstance(v, str):
+            return v.lower() in ("true", "1", "yes", "y")
+        return None
+
+    # 3) Extraire les paramètres avec aliases pour compatibilité
+    country_code = params.get("country_code") or params.get("country")
+    language = params.get("language")
+    category = params.get("category")
+    org_type = params.get("type")
+    city = params.get("city")
+    is_active = _get_bool("is_active")
+    search = params.get("search")
+
+    # 4) Appliquer EXACTEMENT les mêmes filtres que le service get_all
+    if country_code:
+        query = query.filter(Organisation.country_code == country_code.upper())
+    if language:
+        query = query.filter(Organisation.language == language.upper())
+    if category:
+        query = query.filter(Organisation.category == category)
+    if org_type:
+        query = query.filter(Organisation.type == org_type)
+    if city:
+        query = query.filter(Organisation.city == city)
+    if is_active is not None:
+        query = query.filter(Organisation.is_active == is_active)
+
+    # 5) Recherche plein texte (comme dans search_organisations)
+    if search:
+        query = query.filter(Organisation.name.ilike(f"%{search}%"))
+
+    # 6) Tri par défaut (comme dans le viewer)
+    sort = params.get("sort") or "created_at:desc"
+    if sort == "created_at:desc":
+        query = query.order_by(Organisation.created_at.desc())
+    elif sort == "created_at:asc":
+        query = query.order_by(Organisation.created_at.asc())
+    elif sort == "name:asc":
+        query = query.order_by(Organisation.name.asc())
+    elif sort == "name:desc":
+        query = query.order_by(Organisation.name.desc())
+
+    return query
 
 
 def _extract_user_id(current_user: dict) -> Optional[int]:

@@ -16,10 +16,11 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
+from api.routes.organisations import apply_organisation_filters
+from api.routes.people import apply_people_filters
 from core.auth import get_current_user
 from core.database import get_db
 from core.exports import ExportService
-from core.permissions import filter_query_by_team
 from models.email import EmailCampaign, EmailCampaignStatus
 from models.mandat import Mandat, MandatStatus, MandatType
 from models.organisation import Organisation, OrganisationCategory
@@ -31,34 +32,46 @@ router = APIRouter(prefix="/exports", tags=["exports"])
 
 @router.get("/organisations/csv")
 async def export_organisations_csv(
-    category: Optional[OrganisationCategory] = Query(None, description="Filtrer par catégorie"),
+    category: Optional[str] = Query(None, description="Filtrer par catégorie"),
+    type: Optional[str] = Query(None, description="Filtrer par type"),
     city: Optional[str] = Query(None, description="Filtrer par ville"),
+    country_code: Optional[str] = Query(None, description="Filtrer par pays"),
+    language: Optional[str] = Query(None, description="Filtrer par langue"),
     is_active: Optional[bool] = Query(None, description="Filtrer actives/inactives"),
+    search: Optional[str] = Query(None, description="Recherche textuelle"),
+    sort: Optional[str] = Query(None, description="Tri (created_at:desc par défaut)"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     """
     Export CSV organisations avec filtres
 
+    **Utilise EXACTEMENT les mêmes filtres que le viewer**
+
     **Exemples:**
     - `/exports/organisations/csv`
-    - `/exports/organisations/csv?category=institution&city=Paris`
-    - `/exports/organisations/csv?is_active=true`
+    - `/exports/organisations/csv?category=Institution&country_code=FR`
+    - `/exports/organisations/csv?is_active=true&search=Bank`
 
     **Returns:** Fichier CSV téléchargeable
     """
-    # Query avec permissions
+    # Construire les params exactement comme le viewer
+    params = {
+        "category": category,
+        "type": type,
+        "city": city,
+        "country_code": country_code,
+        "language": language,
+        "is_active": is_active,
+        "search": search,
+        "sort": sort,
+    }
+
+    # Appliquer les mêmes filtres que le viewer
     query = db.query(Organisation)
-    query = filter_query_by_team(query, current_user, Organisation)
+    query = apply_organisation_filters(query, params, current_user)
 
-    # Filtres
-    if category:
-        query = query.filter(Organisation.category == category)
-    if city:
-        query = query.filter(Organisation.city == city)
-    if is_active is not None:
-        query = query.filter(Organisation.is_active == is_active)
-
+    # Pas de pagination pour export
     organisations = query.all()
 
     # Export CSV with explicit columns (noms d'attributs Python, pas noms DB)
@@ -98,15 +111,22 @@ async def export_organisations_csv(
 
 @router.get("/organisations/excel")
 async def export_organisations_excel(
-    category: Optional[OrganisationCategory] = Query(None),
+    category: Optional[str] = Query(None),
+    type: Optional[str] = Query(None),
     city: Optional[str] = Query(None),
+    country_code: Optional[str] = Query(None),
+    language: Optional[str] = Query(None),
     is_active: Optional[bool] = Query(None),
+    search: Optional[str] = Query(None),
+    sort: Optional[str] = Query(None),
     include_charts: bool = Query(True, description="Inclure graphiques statistiques"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     """
     Export Excel organisations avec graphiques
+
+    **Utilise EXACTEMENT les mêmes filtres que le viewer**
 
     **Fonctionnalités:**
     - Feuille "Données" avec styling professionnel
@@ -117,21 +137,25 @@ async def export_organisations_excel(
     **Exemples:**
     - `/exports/organisations/excel`
     - `/exports/organisations/excel?include_charts=false` (plus rapide)
-    - `/exports/organisations/excel?category=startup&is_active=true`
+    - `/exports/organisations/excel?category=Institution&is_active=true`
 
     **Returns:** Fichier Excel (.xlsx) téléchargeable
     """
-    # Query avec permissions
-    query = db.query(Organisation)
-    query = filter_query_by_team(query, current_user, Organisation)
+    # Construire les params exactement comme le viewer
+    params = {
+        "category": category,
+        "type": type,
+        "city": city,
+        "country_code": country_code,
+        "language": language,
+        "is_active": is_active,
+        "search": search,
+        "sort": sort,
+    }
 
-    # Filtres
-    if category:
-        query = query.filter(Organisation.category == category)
-    if city:
-        query = query.filter(Organisation.city == city)
-    if is_active is not None:
-        query = query.filter(Organisation.is_active == is_active)
+    # Appliquer les mêmes filtres que le viewer
+    query = db.query(Organisation)
+    query = apply_organisation_filters(query, params, current_user)
 
     organisations = query.all()
 
@@ -153,14 +177,21 @@ async def export_organisations_excel(
 
 @router.get("/organisations/pdf")
 async def export_organisations_pdf(
-    category: Optional[OrganisationCategory] = Query(None),
+    category: Optional[str] = Query(None),
+    type: Optional[str] = Query(None),
     city: Optional[str] = Query(None),
+    country_code: Optional[str] = Query(None),
+    language: Optional[str] = Query(None),
     is_active: Optional[bool] = Query(None),
+    search: Optional[str] = Query(None),
+    sort: Optional[str] = Query(None),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     """
     Export PDF rapport organisations
+
+    **Utilise EXACTEMENT les mêmes filtres que le viewer**
 
     **Fonctionnalités:**
     - Table formatée avec bordures
@@ -170,21 +201,25 @@ async def export_organisations_pdf(
 
     **Exemples:**
     - `/exports/organisations/pdf`
-    - `/exports/organisations/pdf?category=institution`
+    - `/exports/organisations/pdf?category=Institution`
 
     **Returns:** Fichier PDF téléchargeable
     """
-    # Query avec permissions
-    query = db.query(Organisation)
-    query = filter_query_by_team(query, current_user, Organisation)
+    # Construire les params exactement comme le viewer
+    params = {
+        "category": category,
+        "type": type,
+        "city": city,
+        "country_code": country_code,
+        "language": language,
+        "is_active": is_active,
+        "search": search,
+        "sort": sort,
+    }
 
-    # Filtres
-    if category:
-        query = query.filter(Organisation.category == category)
-    if city:
-        query = query.filter(Organisation.city == city)
-    if is_active is not None:
-        query = query.filter(Organisation.is_active == is_active)
+    # Appliquer les mêmes filtres que le viewer
+    query = db.query(Organisation)
+    query = apply_organisation_filters(query, params, current_user)
 
     organisations = query.all()
 
@@ -323,30 +358,37 @@ async def export_people_csv(
     role: Optional[str] = Query(None, description="Filtrer par rôle"),
     country_code: Optional[str] = Query(None, description="Filtrer par pays"),
     language: Optional[str] = Query(None, description="Filtrer par langue"),
+    is_active: Optional[bool] = Query(None, description="Filtrer actifs/inactifs"),
+    search: Optional[str] = Query(None, description="Recherche textuelle"),
+    sort: Optional[str] = Query(None, description="Tri"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     """
     Export CSV personnes physiques
 
+    **Utilise EXACTEMENT les mêmes filtres que le viewer**
+
     **Exemples:**
     - `/exports/people/csv`
     - `/exports/people/csv?role=Directeur&country_code=FR`
-    - `/exports/people/csv?language=fr`
+    - `/exports/people/csv?language=FR&search=Martin`
 
     **Returns:** Fichier CSV téléchargeable
     """
-    # Query avec permissions
-    query = db.query(Person)
-    query = filter_query_by_team(query, current_user, Person)
+    # Construire les params exactement comme le viewer
+    params = {
+        "role": role,
+        "country_code": country_code,
+        "language": language,
+        "is_active": is_active,
+        "search": search,
+        "sort": sort,
+    }
 
-    # Filtres
-    if role:
-        query = query.filter(Person.role.ilike(f"%{role}%"))
-    if country_code:
-        query = query.filter(Person.country_code == country_code)
-    if language:
-        query = query.filter(Person.language == language)
+    # Appliquer les mêmes filtres que le viewer
+    query = db.query(Person)
+    query = apply_people_filters(query, params, current_user)
 
     people = query.all()
 
@@ -389,11 +431,16 @@ async def export_people_excel(
     role: Optional[str] = Query(None),
     country_code: Optional[str] = Query(None),
     language: Optional[str] = Query(None),
+    is_active: Optional[bool] = Query(None),
+    search: Optional[str] = Query(None),
+    sort: Optional[str] = Query(None),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     """
     Export Excel personnes physiques
+
+    **Utilise EXACTEMENT les mêmes filtres que le viewer**
 
     **Fonctionnalités:**
     - Feuille "Personnes" avec styling professionnel
@@ -402,21 +449,23 @@ async def export_people_excel(
 
     **Exemples:**
     - `/exports/people/excel`
-    - `/exports/people/excel?country_code=FR`
+    - `/exports/people/excel?country_code=FR&search=Martin`
 
     **Returns:** Fichier Excel (.xlsx) téléchargeable
     """
-    # Query avec permissions
-    query = db.query(Person)
-    query = filter_query_by_team(query, current_user, Person)
+    # Construire les params exactement comme le viewer
+    params = {
+        "role": role,
+        "country_code": country_code,
+        "language": language,
+        "is_active": is_active,
+        "search": search,
+        "sort": sort,
+    }
 
-    # Filtres
-    if role:
-        query = query.filter(Person.role.ilike(f"%{role}%"))
-    if country_code:
-        query = query.filter(Person.country_code == country_code)
-    if language:
-        query = query.filter(Person.language == language)
+    # Appliquer les mêmes filtres que le viewer
+    query = db.query(Person)
+    query = apply_people_filters(query, params, current_user)
 
     people = query.all()
 
@@ -458,11 +507,16 @@ async def export_people_pdf(
     role: Optional[str] = Query(None),
     country_code: Optional[str] = Query(None),
     language: Optional[str] = Query(None),
+    is_active: Optional[bool] = Query(None),
+    search: Optional[str] = Query(None),
+    sort: Optional[str] = Query(None),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     """
     Export PDF rapport personnes physiques
+
+    **Utilise EXACTEMENT les mêmes filtres que le viewer**
 
     **Fonctionnalités:**
     - Table formatée avec bordures
@@ -472,21 +526,23 @@ async def export_people_pdf(
 
     **Exemples:**
     - `/exports/people/pdf`
-    - `/exports/people/pdf?role=Directeur`
+    - `/exports/people/pdf?role=Directeur&search=Martin`
 
     **Returns:** Fichier PDF téléchargeable
     """
-    # Query avec permissions
-    query = db.query(Person)
-    query = filter_query_by_team(query, current_user, Person)
+    # Construire les params exactement comme le viewer
+    params = {
+        "role": role,
+        "country_code": country_code,
+        "language": language,
+        "is_active": is_active,
+        "search": search,
+        "sort": sort,
+    }
 
-    # Filtres
-    if role:
-        query = query.filter(Person.role.ilike(f"%{role}%"))
-    if country_code:
-        query = query.filter(Person.country_code == country_code)
-    if language:
-        query = query.filter(Person.language == language)
+    # Appliquer les mêmes filtres que le viewer
+    query = db.query(Person)
+    query = apply_people_filters(query, params, current_user)
 
     people = query.all()
 
