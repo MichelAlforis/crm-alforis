@@ -10,6 +10,7 @@ from api.routes import (
     imports,
     mailing_lists,
     mandats,
+    monitoring,
     org_links,
     organisations,
     people,
@@ -32,6 +33,9 @@ api_router = APIRouter(prefix="/api/v1")
 
 # 🏥 HEALTH CHECK (sans prefix, pour Docker)
 api_router.include_router(health.router, prefix="")
+
+# 📊 MONITORING (métriques système, DB, workers)
+api_router.include_router(monitoring.router)
 
 # ⭐ AUTH ROUTES (sans authentification requise)
 api_router.include_router(auth.router)

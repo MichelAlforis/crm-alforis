@@ -20,7 +20,7 @@ from sqlalchemy import Enum as SAEnum
 from sqlalchemy import ForeignKey, Index, Integer, String, Text
 from sqlalchemy.orm import relationship
 
-from models.base import BaseModel
+from models.base import Base, BaseModel
 from models.constants import (
     FK_ORGANISATIONS_ID,
     FK_PEOPLE_ID,
@@ -53,7 +53,7 @@ class InteractionStatus(str, enum.Enum):
 STATUS_VALUES = ("todo", "in_progress", "done")
 
 
-class InteractionParticipant(BaseModel):
+class InteractionParticipant(Base):
     """
     Participant interne à une interaction (M-N avec Person).
 
@@ -66,6 +66,9 @@ class InteractionParticipant(BaseModel):
     Attributs:
     - role: Rôle du participant (ex: "CEO", "CTO", "Animateur")
     - present: Présent ou absent (default TRUE)
+
+    Note: Hérite de Base (pas BaseModel) car table de liaison M-N
+          avec PK composite (interaction_id, person_id), pas d'auto id/timestamps.
     """
 
     __tablename__ = "interaction_participants"
@@ -90,7 +93,7 @@ class InteractionParticipant(BaseModel):
     role = Column(String(80), nullable=True)
     present = Column(Boolean, nullable=False, default=True, server_default="true")
 
-    # Pas de created_at/updated_at (relation pure)
+    # Pas de id/created_at/updated_at (table de liaison pure avec PK composite)
 
     # Relations
     interaction = relationship("Interaction", back_populates="participants")

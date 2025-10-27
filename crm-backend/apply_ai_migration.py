@@ -23,7 +23,7 @@ def apply_migration():
         print(f"❌ Fichier de migration non trouvé: {migration_file}")
         sys.exit(1)
 
-    with open(migration_file, 'r') as f:
+    with open(migration_file, "r") as f:
         sql_content = f.read()
 
     # Connexion BDD

@@ -11,7 +11,7 @@ from pathlib import Path
 
 def fix_datetime_utcnow(file_path):
     """Remplace datetime.now(UTC) par datetime.now(UTC) dans un fichier."""
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, "r", encoding='utf-8') as f:
         content = f.read()
 
     original_content = content
@@ -37,14 +37,14 @@ def fix_datetime_utcnow(file_path):
                 if new_import.endswith('('):
                     new_import += 'UTC)'
                 elif ')' in old_import:
-                    new_import = old_import.replace(')', ', UTC)')
+                    new_import = old_import.replace(")", ", UTC)")
                 else:
                     new_import = old_import + ', UTC'
                 content = content.replace(old_import, new_import)
 
     # Écrire seulement si modifié
     if content != original_content:
-        with open(file_path, 'w', encoding='utf-8') as f:
+        with open(file_path, "w", encoding='utf-8') as f:
             f.write(content)
         return True
     return False

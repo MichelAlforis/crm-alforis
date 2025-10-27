@@ -158,6 +158,13 @@ if ENABLE_METRICS_MIDDLEWARE:
         try:
             response = await call_next(request)
         except Exception as exc:
+            # 🔍 DEBUG MODE: Afficher le traceback complet
+            print("=" * 80)
+            print(f"❌ EXCEPTION IN REQUEST: {request.method} {request.url.path}")
+            print("=" * 80)
+            traceback.print_exc()
+            print("=" * 80)
+
             # Laisse aussi Sentry capter
             if SENTRY_DSN:
                 try:
@@ -168,7 +175,7 @@ if ENABLE_METRICS_MIDDLEWARE:
             # Réponse JSON contrôlée
             return JSONResponse(
                 status_code=500,
-                content={"detail": "Internal Server Error"},
+                content={"detail": "Internal Server Error", "error": str(exc)},
             )
         finally:
             process_time = time.perf_counter() - start

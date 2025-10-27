@@ -16,7 +16,7 @@ def fix_file(filepath: Path) -> Tuple[bool, int]:
     Returns: (was_modified, num_changes)
     """
     try:
-        with open(filepath, 'r', encoding='utf-8') as f:
+        with open(filepath, "r", encoding='utf-8') as f:
             content = f.read()
 
         original_content = content
@@ -39,7 +39,7 @@ def fix_file(filepath: Path) -> Tuple[bool, int]:
 
         # Si modifié, écrire
         if content != original_content:
-            with open(filepath, 'w', encoding='utf-8') as f:
+            with open(filepath, "w", encoding='utf-8') as f:
                 f.write(content)
             return True, num_changes
 
