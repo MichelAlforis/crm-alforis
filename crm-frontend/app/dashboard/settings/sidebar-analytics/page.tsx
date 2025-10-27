@@ -300,7 +300,7 @@ export default function SidebarAnalyticsPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4 text-center">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
                     <div>
                       <p className="font-bold text-purple-600">{stat.clicks}</p>
                       <p className="text-xs text-gray-500">clics</p>

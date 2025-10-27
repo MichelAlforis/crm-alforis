@@ -59,12 +59,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ],
     }
 
-    // Size styles
+    // Size styles with mobile touch targets (min 44px height & width)
     const sizes = {
-      xs: 'text-xs px-2.5 py-1.5 gap-1.5',
-      sm: 'text-sm px-3 py-2 gap-2',
-      md: 'text-sm px-4 py-2.5 gap-2',
-      lg: 'text-base px-6 py-3 gap-2.5',
+      xs: 'text-xs px-2.5 py-1.5 gap-1.5 min-h-[36px] min-w-[36px] sm:min-h-0 sm:min-w-0',
+      sm: 'text-sm px-3 py-2 gap-2 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0',
+      md: 'text-sm px-4 py-2.5 gap-2 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0',
+      lg: 'text-base px-6 py-3 gap-2.5 min-h-[48px] min-w-[48px]',
     }
 
     return (

@@ -41,7 +41,8 @@ export interface SidebarSection {
 
 export function useSidebar(sections: SidebarSection[] = []) {
   const pathname = usePathname()
-  const isMobile = useMediaQuery('(max-width: 768px)')
+  // Utiliser 1024px pour correspondre au breakpoint lg: de Tailwind
+  const isMobile = useMediaQuery('(max-width: 1023px)')
 
   // État submenus avec persistance
   const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>(() => {

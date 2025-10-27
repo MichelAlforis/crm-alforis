@@ -47,7 +47,7 @@ export default function Sidebar() {
       {/* Mobile Backdrop */}
       {sidebar.mobileOpen && (
         <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm md:hidden z-30 animate-in fade-in duration-200"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm lg:hidden z-30 animate-in fade-in duration-200"
           onClick={sidebar.closeMobile}
           aria-hidden="true"
         />
@@ -56,14 +56,14 @@ export default function Sidebar() {
       {/* Sidebar */}
       <aside
         className={clsx(
-          'fixed md:sticky top-0 z-40 h-screen',
+          'fixed lg:sticky top-0 z-40 h-screen',
           'bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900',
           'border-r border-white/10',
           'transition-all duration-300 ease-in-out',
           'flex flex-col',
           'shadow-2xl backdrop-blur-sm',
           sidebar.collapsed ? 'w-20' : 'w-72',
-          !sidebar.mobileOpen && sidebar.isMobile && '-translate-x-full md:translate-x-0'
+          !sidebar.mobileOpen && sidebar.isMobile && '-translate-x-full lg:translate-x-0'
         )}
       >
         {/* Animated Background Pattern */}
@@ -94,14 +94,14 @@ export default function Sidebar() {
                   <ThemeToggle size="sm" className="inline-flex bg-white/10 text-white hover:bg-white/20" />
                   <button
                     onClick={sidebar.toggleCollapsed}
-                    className="hidden md:flex p-2 hover:bg-white/10 rounded-lg transition-all duration-200 group"
+                    className="hidden lg:flex p-2 hover:bg-white/10 rounded-lg transition-all duration-200 group"
                     aria-label="Réduire le menu"
                   >
                     <ChevronLeft className="w-4 h-4 text-slate-300 group-hover:text-white transition-colors" />
                   </button>
                   <button
                     onClick={sidebar.closeMobile}
-                    className="md:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
+                    className="lg:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
                     aria-label="Fermer le menu"
                   >
                     <X className="w-4 h-4 text-slate-300" />

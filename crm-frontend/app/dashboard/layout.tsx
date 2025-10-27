@@ -13,9 +13,8 @@ import { useAuth } from '@/hooks/useAuth'
 import Navbar from '@/components/shared/Navbar'
 import Sidebar from '@/components/shared/Sidebar'
 import QueryProvider from '@/components/providers/QueryProvider'
-import InstallPrompt from '@/components/pwa/InstallPrompt'
 import OfflineIndicator from '@/components/pwa/OfflineIndicator'
-import { PushNotificationManager } from '@/components/pwa/PushNotificationManager'
+import { BannerManager } from '@/components/pwa/BannerManager'
 import { OnboardingTour } from '@/components/onboarding/OnboardingTour'
 import { Loader2 } from 'lucide-react'
 import clsx from 'clsx'
@@ -71,7 +70,7 @@ export default function DashboardLayout({
           <div
             className={clsx(
               'flex flex-col min-h-screen flex-1 transition-all duration-300 ease-in-out',
-              'w-full lg:w-auto'
+              'w-full lg:w-auto overflow-x-hidden'
             )}
           >
             {/* Top Navbar */}
@@ -86,9 +85,8 @@ export default function DashboardLayout({
           </div>
 
           {/* PWA Components */}
-          <InstallPrompt />
           <OfflineIndicator />
-          <PushNotificationManager />
+          <BannerManager />
         </div>
       </OnboardingTour>
     </QueryProvider>
