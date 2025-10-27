@@ -173,6 +173,10 @@ async def create_interaction_v2(
     """Create interaction V2 (for tests) - same as POST / but different endpoint"""
     user_id = _get_user_id(current_user)
 
+    # Convert Pydantic models to dicts for JSON columns
+    attachments_dict = [att.model_dump() for att in (payload.attachments or [])]
+    external_participants_dict = [ep.model_dump() for ep in (payload.external_participants or [])]
+
     interaction = Interaction(
         org_id=payload.org_id,
         person_id=payload.person_id,
@@ -183,8 +187,8 @@ async def create_interaction_v2(
         status=payload.status,
         assignee_id=payload.assignee_id,
         next_action_at=payload.next_action_at,
-        attachments=payload.attachments or [],
-        external_participants=payload.external_participants or [],
+        attachments=attachments_dict,
+        external_participants=external_participants_dict,
     )
 
     db.add(interaction)

@@ -154,6 +154,12 @@ async def create_interaction_v2(
     user_id = _extract_user_id(current_user)
 
     # Create interaction
+    # Convert Pydantic models to dicts for JSON columns
+    attachments_dict = [att.model_dump() for att in (interaction_data.attachments or [])]
+    external_participants_dict = [
+        ep.model_dump() for ep in (interaction_data.external_participants or [])
+    ]
+
     interaction = Interaction(
         org_id=interaction_data.org_id,
         person_id=interaction_data.person_id,
@@ -164,8 +170,8 @@ async def create_interaction_v2(
         status=interaction_data.status,
         assignee_id=interaction_data.assignee_id,
         next_action_at=interaction_data.next_action_at,
-        attachments=interaction_data.attachments or [],
-        external_participants=interaction_data.external_participants or [],
+        attachments=attachments_dict,
+        external_participants=external_participants_dict,
     )
 
     db.add(interaction)
