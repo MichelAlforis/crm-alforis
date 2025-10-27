@@ -314,6 +314,18 @@ async def update_interaction(
             )
             db.add(participant)
 
+    # Handle assignee_id update
+    if payload.assignee_id is not None:
+        interaction.assignee_id = payload.assignee_id
+
+    # Handle status update
+    if payload.status is not None:
+        interaction.status = payload.status
+
+    # Handle next_action_at update
+    if payload.next_action_at is not None:
+        interaction.next_action_at = payload.next_action_at
+
     interaction.updated_at = datetime.utcnow()
 
     db.commit()
