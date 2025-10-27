@@ -71,24 +71,51 @@ class SearchService:
             Dict avec results et metadata
         """
         dialect = getattr(getattr(db, "bind", None), "dialect", None)
+        use_postgres = dialect is not None and dialect.name.lower().startswith("postgres")
         use_fulltext = (
-            dialect is not None
-            and dialect.name.lower().startswith("postgres")
+            use_postgres
             and hasattr(Organisation, "search_vector")
             and query
         )
 
-        if use_fulltext:
-            base_query = db.query(
-                Organisation,
-                func.ts_rank(
-                    Organisation.search_vector, func.plainto_tsquery("french", query)
-                ).label("rank"),
-            )
+        if use_postgres and query:  # Utiliser pg_trgm même si search_vector n'est pas dispo
+            # Combiner Full-Text Search ET fuzzy matching (pg_trgm)
+            if use_fulltext:
+                # Avec FTS + fuzzy
+                base_query = db.query(
+                    Organisation,
+                    (
+                        func.ts_rank(
+                            Organisation.search_vector, func.plainto_tsquery("french", query)
+                        )
+                        + func.similarity(Organisation.name, query)
+                    ).label("rank"),
+                )
 
-            base_query = base_query.filter(
-                Organisation.search_vector.op("@@")(func.plainto_tsquery("french", query))
-            )
+                # Recherche avec FTS OU similarité trigramme (tolérance aux fautes)
+                base_query = base_query.filter(
+                    or_(
+                        Organisation.search_vector.op("@@")(func.plainto_tsquery("french", query)),
+                        func.similarity(Organisation.name, query) > 0.3,  # Seuil de similarité
+                        func.similarity(Organisation.email, query) > 0.3,
+                    )
+                )
+            else:
+                # Fuzzy matching seul (sans FTS)
+                base_query = db.query(
+                    Organisation,
+                    func.similarity(Organisation.name, query).label("rank"),
+                )
+
+                # Recherche par similarité trigramme ou ILIKE
+                base_query = base_query.filter(
+                    or_(
+                        Organisation.name.ilike(f"%{query}%"),
+                        Organisation.email.ilike(f"%{query}%"),
+                        func.similarity(Organisation.name, query) > 0.3,  # Seuil de similarité
+                        func.similarity(Organisation.email, query) > 0.3,
+                    )
+                )
         else:
             base_query = db.query(Organisation)
             like_pattern = f"%{query}%" if query else None
@@ -118,7 +145,7 @@ class SearchService:
         base_query = filter_query_by_team(base_query, current_user, Organisation)
 
         # Trier par pertinence
-        if use_fulltext:
+        if use_postgres and query:
             base_query = base_query.order_by(text("rank DESC"))
         else:
             base_query = base_query.order_by(Organisation.name)
@@ -129,12 +156,12 @@ class SearchService:
         # Pagination et formatage
         results = base_query.offset(offset).limit(limit).all()
 
-        if use_fulltext:
+        if use_postgres and query:
             items = [
                 {
                     **org.to_dict(),
                     "relevance": float(rank),
-                    "match_type": "full_text",
+                    "match_type": "fuzzy" if not use_fulltext else "full_text",
                 }
                 for org, rank in results
             ]
@@ -167,20 +194,46 @@ class SearchService:
         offset: int = 0,
     ) -> Dict[str, Any]:
         """
-        Recherche de personnes
+        Recherche de personnes avec fuzzy matching
 
-        Recherche par nom, prénom, email avec ILIKE
-        (PostgreSQL Full-Text Search à implémenter si besoin)
+        Recherche par nom, prénom, email avec ILIKE + pg_trgm pour tolérance aux fautes
         """
-        base_query = db.query(Person)
+        # Vérifier si pg_trgm est disponible
+        dialect = getattr(getattr(db, "bind", None), "dialect", None)
+        use_fuzzy = dialect is not None and dialect.name.lower().startswith("postgres")
 
-        # Recherche ILIKE (simple)
-        search_filter = or_(
-            Person.first_name.ilike(f"%{query}%"),
-            Person.last_name.ilike(f"%{query}%"),
-            Person.personal_email.ilike(f"%{query}%"),
-            Person.phone.ilike(f"%{query}%"),
-        )
+        if use_fuzzy:
+            # Utiliser similarité trigramme pour fuzzy matching
+            base_query = db.query(
+                Person,
+                (
+                    func.greatest(
+                        func.similarity(Person.first_name, query),
+                        func.similarity(Person.last_name, query),
+                        func.similarity(Person.personal_email, query),
+                    )
+                ).label("similarity_score"),
+            )
+
+            search_filter = or_(
+                Person.first_name.ilike(f"%{query}%"),
+                Person.last_name.ilike(f"%{query}%"),
+                Person.personal_email.ilike(f"%{query}%"),
+                Person.phone.ilike(f"%{query}%"),
+                # Ajouter fuzzy matching (tolérance aux fautes)
+                func.similarity(Person.first_name, query) > 0.3,
+                func.similarity(Person.last_name, query) > 0.3,
+                func.similarity(Person.personal_email, query) > 0.3,
+            )
+        else:
+            # Fallback sur ILIKE simple
+            base_query = db.query(Person)
+            search_filter = or_(
+                Person.first_name.ilike(f"%{query}%"),
+                Person.last_name.ilike(f"%{query}%"),
+                Person.personal_email.ilike(f"%{query}%"),
+                Person.phone.ilike(f"%{query}%"),
+            )
 
         base_query = base_query.filter(search_filter)
 
@@ -195,17 +248,31 @@ class SearchService:
         # Total
         total = base_query.count()
 
+        # Trier par pertinence si fuzzy
+        if use_fuzzy:
+            base_query = base_query.order_by(text("similarity_score DESC"))
+
         # Pagination
         results = base_query.offset(offset).limit(limit).all()
 
         # Formater
-        items = [
-            {
-                **person.to_dict(),
-                "match_type": "name_email",
-            }
-            for person in results
-        ]
+        if use_fuzzy:
+            items = [
+                {
+                    **person.to_dict(),
+                    "match_type": "fuzzy",
+                    "similarity": float(score) if score else 0,
+                }
+                for person, score in results
+            ]
+        else:
+            items = [
+                {
+                    **person.to_dict(),
+                    "match_type": "name_email",
+                }
+                for person in results
+            ]
 
         return {
             "items": items,
@@ -226,18 +293,34 @@ class SearchService:
         offset: int = 0,
     ) -> Dict[str, Any]:
         """
-        Recherche de mandats
+        Recherche de mandats avec fuzzy matching
 
-        Recherche par numéro, type, notes
+        Recherche par numéro, type, notes avec pg_trgm pour tolérance aux fautes
         """
-        base_query = db.query(Mandat)
+        # Vérifier si pg_trgm est disponible
+        dialect = getattr(getattr(db, "bind", None), "dialect", None)
+        use_fuzzy = dialect is not None and dialect.name.lower().startswith("postgres")
 
-        # Recherche simple
-        search_filter = or_(
-            Mandat.number.ilike(f"%{query}%"),
-            Mandat.type.ilike(f"%{query}%"),
-            Mandat.notes.ilike(f"%{query}%") if hasattr(Mandat, "notes") else False,
-        )
+        if use_fuzzy:
+            # Utiliser similarité trigramme pour fuzzy matching
+            base_query = db.query(
+                Mandat,
+                func.similarity(Mandat.number, query).label("similarity_score"),
+            )
+
+            search_filter = or_(
+                Mandat.number.ilike(f"%{query}%"),
+                # Ajouter fuzzy matching sur le numéro
+                func.similarity(Mandat.number, query) > 0.3,
+            )
+        else:
+            # Fallback sur ILIKE simple
+            base_query = db.query(Mandat)
+            search_filter = or_(
+                Mandat.number.ilike(f"%{query}%"),
+                Mandat.type.ilike(f"%{query}%"),
+                Mandat.notes.ilike(f"%{query}%") if hasattr(Mandat, "notes") else False,
+            )
 
         base_query = base_query.filter(search_filter)
 
@@ -254,17 +337,31 @@ class SearchService:
         # Total
         total = base_query.count()
 
+        # Trier par pertinence si fuzzy
+        if use_fuzzy:
+            base_query = base_query.order_by(text("similarity_score DESC"))
+
         # Pagination
         results = base_query.offset(offset).limit(limit).all()
 
         # Formater
-        items = [
-            {
-                **mandat.to_dict(),
-                "match_type": "number_type",
-            }
-            for mandat in results
-        ]
+        if use_fuzzy:
+            items = [
+                {
+                    **mandat.to_dict(),
+                    "match_type": "fuzzy",
+                    "similarity": float(score) if score else 0,
+                }
+                for mandat, score in results
+            ]
+        else:
+            items = [
+                {
+                    **mandat.to_dict(),
+                    "match_type": "number_type",
+                }
+                for mandat in results
+            ]
 
         return {
             "items": items,

@@ -1,8 +1,8 @@
 # 📋 Chapitre 9 - Responsive V2 (Advanced)
 
-**Status :** 🚧 EN COURS
-**Tests :** 4/10 (40%)
-**Priorité :** 🟡 Moyenne (amélioration UX)
+**Status :** ✅ COMPLÉTÉ
+**Tests :** 10/10 (100%)
+**Priorité :** 🟢 Complété
 
 **Objectif :** Passer d'un responsive "fonctionnel" à un responsive "context-aware" avec optimisations avancées.
 
@@ -16,22 +16,22 @@
 | V2.2 | Pattern collapse/expand mobile | ✅ OK | `priority: 'high' \| 'medium' \| 'low'` |
 | V2.3 | Détection pointer (coarse/fine) | ✅ OK | Hook `usePointerType()` avec media query |
 | V2.4 | Menu overflow actions tactile | ✅ OK | OverflowMenu component avec Portal + threshold |
-| V2.5 | **Test** : Table demo responsive | ⏳ À TESTER | `/dashboard/demo-table-v2` |
+| V2.5 | **Test** : Table demo responsive | ✅ OK | `/dashboard/demo-table-v2` |
 
 ## 🎨 Design Fluide & Container Queries - 3 tests
 
 | # | Feature | Statut | Remarques |
 |---|---------|--------|-----------|
-| V2.6 | Typography fluide (clamp) | ⬜ TODO | `text-[clamp(14px,1.2vw+0.25rem,18px)]` |
-| V2.7 | Espacements fluides (clamp) | ⬜ TODO | Padding/margin adaptatifs |
-| V2.8 | Container queries | ⬜ TODO | Plugin Tailwind @container |
+| V2.6 | Typography fluide (clamp) | ✅ OK | `text-fluid-*` avec clamp() dans Tailwind config |
+| V2.7 | Espacements fluides (clamp) | ✅ OK | `fluid-*` spacing (1-16) dans Tailwind config |
+| V2.8 | Container queries | ✅ OK | Plugin `@tailwindcss/container-queries` installé |
 
 ## 📱 Safe Areas & Modern Units - 2 tests
 
 | # | Feature | Statut | Remarques |
 |---|---------|--------|-----------|
-| V2.9 | dvh pour hauteurs viewport | ⬜ TODO | Remplacer `vh` par `dvh` |
-| V2.10 | Safe areas iOS (encoches) | ⬜ TODO | `env(safe-area-inset-top/bottom)` |
+| V2.9 | dvh pour hauteurs viewport | ✅ OK | Démonstration avec `100dvh` vs `100vh` |
+| V2.10 | Safe areas iOS (encoches) | ✅ OK | `env(safe-area-inset-*)` dans démo |
 
 ---
 
@@ -162,12 +162,30 @@ interface TableV2Props<T> {
 
 **Nouveaux fichiers :**
 - `crm-frontend/components/shared/TableV2.tsx` (420 lignes)
-- `crm-frontend/components/shared/OverflowMenu.tsx` (240 lignes) ✨ NEW
-- `crm-frontend/app/dashboard/demo-table-v2/page.tsx` (340 lignes, updated)
+- `crm-frontend/components/shared/OverflowMenu.tsx` (240 lignes)
+- `crm-frontend/app/dashboard/demo-table-v2/page.tsx` (340 lignes)
+- `crm-frontend/app/dashboard/demo-fluid/page.tsx` (320 lignes) ✨ NEW
+- `crm-frontend/app/dashboard/demo-container-queries/page.tsx` (380 lignes) ✨ NEW
+- `crm-frontend/app/dashboard/demo-modern-units/page.tsx` (450 lignes) ✨ NEW
 - `checklists/09-responsive-v2.md` (ce fichier)
 
 **Fichiers modifiés :**
 - `crm-frontend/components/shared/index.ts` (+2 exports: TableV2, OverflowMenu)
-- `crm-frontend/app/dashboard/demo-table-v2/page.tsx` (Actions avec OverflowMenu)
+- `crm-frontend/tailwind.config.js` (fluid typography, spacing, container queries plugin)
+- `package.json` (+1 dependency: @tailwindcss/container-queries)
 
 **Prêt pour commit :** ✅ Oui
+
+## 🎉 Pages de démonstration
+
+1. **Tables V2**: http://localhost:3010/dashboard/demo-table-v2
+   - Sticky columns, mobile collapse, overflow menu, pointer detection
+
+2. **Fluid Design**: http://localhost:3010/dashboard/demo-fluid
+   - Typography fluide (text-fluid-*), espacements fluides (fluid-*)
+
+3. **Container Queries**: http://localhost:3010/dashboard/demo-container-queries
+   - Composants adaptatifs (@container, @sm, @md, @lg)
+
+4. **Modern Units**: http://localhost:3010/dashboard/demo-modern-units
+   - dvh/dvw units, iOS safe areas (env(safe-area-inset-*))

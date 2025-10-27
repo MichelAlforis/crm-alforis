@@ -47,6 +47,17 @@ module.exports = {
         'spacing-xl': 'var(--spacing-xl)',
         'spacing-2xl': 'var(--spacing-2xl)',
         'spacing-3xl': 'var(--spacing-3xl)',
+
+        // ✨ Fluid Spacing with clamp() - Responsive V2
+        'fluid-1': 'clamp(0.25rem, 0.5vw, 0.5rem)',   // 4-8px
+        'fluid-2': 'clamp(0.5rem, 1vw, 0.75rem)',     // 8-12px
+        'fluid-3': 'clamp(0.75rem, 1.5vw, 1rem)',     // 12-16px
+        'fluid-4': 'clamp(1rem, 2vw, 1.5rem)',        // 16-24px
+        'fluid-5': 'clamp(1.25rem, 2.5vw, 2rem)',     // 20-32px
+        'fluid-6': 'clamp(1.5rem, 3vw, 2.5rem)',      // 24-40px
+        'fluid-8': 'clamp(2rem, 4vw, 3.5rem)',        // 32-56px
+        'fluid-12': 'clamp(3rem, 6vw, 5rem)',         // 48-80px
+        'fluid-16': 'clamp(4rem, 8vw, 7rem)',         // 64-112px
       },
       
       // Border Radius System
@@ -94,6 +105,17 @@ module.exports = {
         '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
         '4xl': ['2.25rem', { lineHeight: '2.75rem' }],
         '5xl': ['3rem', { lineHeight: '3.5rem' }],
+
+        // ✨ Fluid Typography with clamp() - Responsive V2
+        'fluid-xs': ['clamp(0.7rem, 0.9vw, 0.8rem)', { lineHeight: '1.4' }],
+        'fluid-sm': ['clamp(0.8rem, 1vw, 0.9rem)', { lineHeight: '1.5' }],
+        'fluid-base': ['clamp(0.9rem, 1.2vw, 1.1rem)', { lineHeight: '1.6' }],
+        'fluid-lg': ['clamp(1rem, 1.5vw, 1.3rem)', { lineHeight: '1.6' }],
+        'fluid-xl': ['clamp(1.1rem, 2vw, 1.5rem)', { lineHeight: '1.5' }],
+        'fluid-2xl': ['clamp(1.3rem, 2.5vw, 1.9rem)', { lineHeight: '1.4' }],
+        'fluid-3xl': ['clamp(1.6rem, 3vw, 2.4rem)', { lineHeight: '1.3' }],
+        'fluid-4xl': ['clamp(2rem, 4vw, 3rem)', { lineHeight: '1.2' }],
+        'fluid-5xl': ['clamp(2.5rem, 5vw, 4rem)', { lineHeight: '1.1' }],
       },
       
       // Professional Shadows
@@ -212,6 +234,9 @@ module.exports = {
     },
   },
   plugins: [
+    // ✨ Container Queries Plugin - Responsive V2
+    require('@tailwindcss/container-queries'),
+
     // Custom plugin for additional utilities
     function ({ addUtilities }) {
       addUtilities({

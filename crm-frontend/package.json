@@ -21,6 +21,7 @@
     "@hookform/resolvers": "^3.3.0",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@reactour/tour": "^3.8.0",
+    "@tailwindcss/container-queries": "^0.1.1",
     "@tanstack/react-query": "^5.90.5",
     "@xyflow/react": "^12.0.0",
     "autoprefixer": "^10.4.0",

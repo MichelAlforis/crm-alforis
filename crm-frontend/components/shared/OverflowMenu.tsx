@@ -50,6 +50,7 @@ interface DropdownPortalProps {
 
 function DropdownPortal({ triggerRef, isOpen, onClose, children }: DropdownPortalProps) {
   const [position, setPosition] = useState({ top: 0, left: 0 })
+  const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (isOpen && triggerRef.current) {
@@ -91,13 +92,13 @@ function DropdownPortal({ triggerRef, isOpen, onClose, children }: DropdownPorta
     // Add small delay to prevent immediate close on open
     const timeoutId = setTimeout(() => {
       const handleClickOutside = (e: MouseEvent | TouchEvent) => {
-        const target = e.target as HTMLElement
+        const target = e.target as Node | null
 
         // Check if click is inside trigger button (including SVG children)
-        const isInsideTrigger = triggerRef.current?.contains(target)
+        const isInsideTrigger = target ? triggerRef.current?.contains(target) : false
 
         // Check if click is inside dropdown content
-        const isInsideDropdown = target.closest('[data-dropdown-content]')
+        const isInsideDropdown = target ? dropdownRef.current?.contains(target) : false
 
         // Only close if click is outside both trigger and dropdown
         if (!isInsideTrigger && !isInsideDropdown) {
@@ -127,10 +128,12 @@ function DropdownPortal({ triggerRef, isOpen, onClose, children }: DropdownPorta
 
   return createPortal(
     <div
+      ref={dropdownRef}
       className="fixed z-[9999]"
       style={{ top: `${position.top}px`, left: `${position.left}px` }}
       data-dropdown-content
       onClick={(e) => e.stopPropagation()}
+      onTouchStart={(e) => e.stopPropagation()}
       onTouchEnd={(e) => e.stopPropagation()}
     >
       <div className="min-w-[160px] bg-white border border-gray-200 rounded-lg shadow-lg py-1 animate-in fade-in slide-in-from-top-2 duration-150">
@@ -196,7 +199,7 @@ export function OverflowMenu({
   const handleToggle = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    setIsOpen(!isOpen)
+    setIsOpen((prev) => !prev)
   }
 
   return (
@@ -204,7 +207,6 @@ export function OverflowMenu({
       <button
         ref={triggerRef}
         onClick={handleToggle}
-        onTouchEnd={handleToggle}
         className={clsx(
           'p-1.5 rounded transition-colors min-w-[32px] min-h-[32px] flex items-center justify-center',
           isOpen
