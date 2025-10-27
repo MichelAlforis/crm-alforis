@@ -6,13 +6,14 @@
 import React, { useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Eye, Edit, Trash2, Mail, Phone, MapPin, Briefcase } from 'lucide-react'
 import { usePeople } from '@/hooks/usePeople'
-import { useTableColumns } from '@/hooks/useTableColumns'
 import { useClientSideTable } from '@/hooks/useClientSideTable'
 import { useFilters } from '@/hooks/useFilters'
 import { usePagination } from '@/hooks/usePagination'
-import { Card, Button, Table, Alert, AdvancedFilters, ColumnSelector, ExportButtons } from '@/components/shared'
+import { Card, Button, Alert, AdvancedFilters, ExportButtons } from '@/components/shared'
+import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
+import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import SearchBar from '@/components/search/SearchBar'
 import { Person } from '@/lib/types'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
@@ -104,71 +105,129 @@ export default function PeoplePage() {
     table.setFilters(filters.activeFilters as PeopleFilters)
   }, [filters.activeFilters])
 
-  // Define columns with useTableColumns hook
-  const defaultColumns = useMemo(
+  // Define columns for TableV2
+  const columns: ColumnV2<Person>[] = useMemo(
     () => [
       {
-        key: 'name',
         header: 'Nom',
         accessor: 'last_name',
-        visible: true,
         sortable: true,
+        sticky: 'left',
+        priority: 'high',
+        minWidth: '200px',
         render: (_: string, row: Person) => (
           <Link
             href={`/dashboard/people/${personSlug(row.id, row.first_name, row.last_name)}`}
-            className="text-bleu hover:underline text-sm font-medium"
+            className="font-medium text-gray-900 hover:text-blue-600 transition-colors"
           >
             {`${row.first_name} ${row.last_name}`}
           </Link>
         ),
       },
       {
-        key: 'role',
         header: 'Rôle',
         accessor: 'role',
-        visible: true,
         sortable: true,
+        priority: 'high',
+        render: (value: string | null) => value ? (
+          <div className="flex items-center gap-1 text-gray-700">
+            <Briefcase className="w-3.5 h-3.5 flex-shrink-0 text-gray-400" />
+            <span className="text-sm">{value}</span>
+          </div>
+        ) : <span className="text-gray-400">-</span>,
       },
       {
-        key: 'email',
         header: 'Email',
         accessor: 'personal_email',
-        visible: true,
         sortable: true,
+        priority: 'high',
+        maxWidth: '280px',
+        render: (value: string | null) => value ? (
+          <a
+            href={`mailto:${value}`}
+            className="flex items-center gap-1 min-w-0 text-blue-600 hover:text-blue-700 hover:underline"
+            title={value}
+          >
+            <Mail className="w-3.5 h-3.5 flex-shrink-0" />
+            <span className="truncate block min-w-0">{value}</span>
+          </a>
+        ) : <span className="text-gray-400">-</span>,
       },
       {
-        key: 'mobile',
         header: 'Mobile',
         accessor: 'personal_phone',
-        visible: false,
         sortable: true,
+        priority: 'medium',
+        render: (value: string | null) => value ? (
+          <a
+            href={`tel:${value}`}
+            className="flex items-center gap-1 text-gray-700 hover:text-gray-900"
+          >
+            <Phone className="w-3.5 h-3.5 flex-shrink-0" />
+            <span>{value}</span>
+          </a>
+        ) : <span className="text-gray-400">-</span>,
       },
       {
-        key: 'country',
         header: 'Pays',
         accessor: 'country_code',
-        visible: true,
         sortable: true,
-        render: (value: string | null | undefined) =>
-          value ? COUNTRY_LABELS[value] || value : '-',
+        priority: 'medium',
+        render: (value: string | null | undefined) => value ? (
+          <div className="flex items-center gap-1 text-sm">
+            <MapPin className="w-3.5 h-3.5 flex-shrink-0 text-gray-400" />
+            <span>{COUNTRY_LABELS[value] || value}</span>
+          </div>
+        ) : <span className="text-gray-400">-</span>,
       },
       {
-        key: 'language',
         header: 'Langue',
         accessor: 'language',
-        visible: false,
         sortable: true,
-        render: (value: string | null | undefined) =>
-          value ? LANGUAGE_LABELS[value] || value : '-',
+        priority: 'low',
+        render: (value: string | null | undefined) => value ? (
+          <span className="text-sm">{LANGUAGE_LABELS[value] || value}</span>
+        ) : <span className="text-gray-400">-</span>,
+      },
+      {
+        header: 'Actions',
+        accessor: 'id',
+        sticky: 'right',
+        priority: 'high',
+        minWidth: '120px',
+        render: (value: number, row: Person) => {
+          const actions: OverflowAction[] = [
+            {
+              label: 'Voir',
+              icon: Eye,
+              onClick: () => router.push(`/dashboard/people/${personSlug(value, row.first_name, row.last_name)}`),
+              variant: 'default'
+            },
+            {
+              label: 'Modifier',
+              icon: Edit,
+              onClick: () => router.push(`/dashboard/people/${personSlug(value, row.first_name, row.last_name)}?edit=true`),
+              variant: 'default'
+            },
+            {
+              label: 'Supprimer',
+              icon: Trash2,
+              onClick: () => {
+                if (confirm(`Supprimer ${row.first_name} ${row.last_name} ?`)) {
+                  // TODO: Implement delete
+                  alert('Suppression à implémenter')
+                }
+              },
+              variant: 'danger'
+            }
+          ]
+
+          return <OverflowMenu actions={actions} />
+        }
       },
     ],
-    [],
+    [router]
   )
-
-  const { visibleColumns, toggleColumn, resetColumns } = useTableColumns({
-    storageKey: 'people-columns',
-    defaultColumns,
-  })
 
   // Fetch people from API (server-side pagination)
   useEffect(() => {
@@ -261,11 +320,6 @@ export default function PeoplePage() {
               }}
             />
             <div className="flex items-center gap-2">
-              <ColumnSelector
-                columns={defaultColumns}
-                onToggle={toggleColumn}
-                onReset={resetColumns}
-              />
               <ExportButtons
                 resource="people"
                 params={exportParams}
@@ -284,21 +338,49 @@ export default function PeoplePage() {
       {people.error && <Alert type="error" message={people.error} />}
 
       <Card>
-        <Table
-          columns={visibleColumns}
+        <TableV2<Person>
+          columns={columns}
           data={table.filteredData.slice(pagination.skip, pagination.skip + pagination.limit)}
           isLoading={people.isLoading}
           isEmpty={table.filteredData.length === 0}
+          emptyMessage="Aucune personne trouvée"
           sortConfig={table.sortConfig}
           onSort={table.handleSort}
-          pagination={{
-            total: table.filteredData.length,
-            skip: pagination.skip,
-            limit: pagination.limit,
-            onPageChange: pagination.setSkip,
-            onLimitChange: pagination.setLimit,
-          }}
+          getRowKey={(row) => row.id}
+          size="md"
+          variant="default"
+          stickyHeader
         />
+
+        {/* Pagination */}
+        {table.filteredData.length > 0 && (
+          <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
+            <div className="text-sm text-gray-600">
+              Affichage {pagination.skip + 1} à {Math.min(pagination.skip + pagination.limit, table.filteredData.length)} sur {table.filteredData.length} personnes
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => pagination.setSkip(Math.max(0, pagination.skip - pagination.limit))}
+                disabled={pagination.skip === 0}
+              >
+                Précédent
+              </Button>
+              <div className="text-sm text-gray-600">
+                Page {Math.floor(pagination.skip / pagination.limit) + 1} / {Math.ceil(table.filteredData.length / pagination.limit)}
+              </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => pagination.setSkip(pagination.skip + pagination.limit)}
+                disabled={pagination.skip + pagination.limit >= table.filteredData.length}
+              >
+                Suivant
+              </Button>
+            </div>
+          </div>
+        )}
       </Card>
     </div>
   )
