@@ -1,6 +1,6 @@
 const withPWA = require('@ducanh2912/next-pwa').default({
   dest: 'public',
-  disable: process.env.NODE_ENV === 'development',
+  disable: false, // Activé en dev pour tester le mode offline
   register: true,
   skipWaiting: true,
   runtimeCaching: [

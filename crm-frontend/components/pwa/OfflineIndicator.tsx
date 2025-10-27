@@ -29,23 +29,25 @@ export default function OfflineIndicator() {
 
   return (
     <div
-      className={`fixed top-4 left-1/2 -translate-x-1/2 z-toast px-4 py-2 rounded-radius-md shadow-shadow-lg flex items-center gap-2 animate-fade-in ${
+      className={`fixed top-0 left-0 right-0 z-[9999] px-6 py-4 shadow-2xl flex items-center justify-center gap-3 animate-slide-down ${
         isOnline
-          ? 'bg-success/10 text-success border border-success/20'
-          : 'bg-warning/10 text-warning border border-warning/20'
+          ? 'bg-green-600 text-white'
+          : 'bg-yellow-500 text-gray-900'
       }`}
       role="alert"
     >
       {isOnline ? (
         <>
-          <Wifi className="w-4 h-4" />
-          <span className="text-sm font-medium">De retour en ligne</span>
+          <Wifi className="w-6 h-6" />
+          <span className="text-base font-semibold">
+            ✅ Connexion rétablie - Synchronisation en cours...
+          </span>
         </>
       ) : (
         <>
-          <WifiOff className="w-4 h-4" />
-          <span className="text-sm font-medium">
-            Mode hors ligne - Les données seront synchronisées
+          <WifiOff className="w-6 h-6" />
+          <span className="text-base font-semibold">
+            ⚠️ Mode hors ligne - Certaines fonctionnalités sont limitées
           </span>
         </>
       )}

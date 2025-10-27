@@ -32,12 +32,40 @@ Le frontend compile sans erreurs. Tous les fichiers sont en place :
    - Barre du haut des DevTools : cliquer sur **"Application"**
    - Sidebar gauche : cliquer sur **"Service Workers"**
 
-5. **✅ Vérifier le Service Worker**
-   - Tu dois voir : **"sw.js"** avec status **"activated and is running"**
-   - Source : `http://localhost:3010/sw.js`
+5. **⚠️ PROBLÈME : Service Worker désactivé en dev**
 
-6. **Activer le mode Offline**
-   - Cocher la case **"Offline"** (juste sous le nom du SW)
+   Le Service Worker est désactivé en mode développement par défaut !
+
+   **Solutions (choisir une) :**
+
+   **Option A - Test sans SW (juste les bannières) :**
+   - Aller dans l'onglet **"Network"** (pas "Application")
+   - Cocher **"Offline"** en haut
+   - ✅ La bannière jaune devrait apparaître
+   - Décocher "Offline"
+   - ✅ La bannière verte devrait apparaître
+
+   **Option B - Activer le SW temporairement :**
+   ```bash
+   # Éditer crm-frontend/next.config.js
+   # Ligne 3 : disable: process.env.NODE_ENV === 'development',
+   # Changer en : disable: false,
+
+   # Redémarrer frontend
+   docker-compose restart frontend
+   ```
+
+   **Option C - Build production (tests complets) :**
+   ```bash
+   cd crm-frontend
+   npm run build
+   npm start
+   ```
+
+6. **Si Service Worker activé : Tester le cache**
+   - DevTools > Application > Service Workers
+   - Tu verras : **"sw.js"** status **"activated"**
+   - Cocher la case **"Offline"**
 
 7. **✅ ATTENDU : Bannière jaune apparaît**
    ```
