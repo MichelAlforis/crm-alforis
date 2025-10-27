@@ -13,7 +13,7 @@
  */
 
 import { useEffect, useState } from 'react'
-import { apiClient } from '@/lib/api-client'
+import { apiClient } from '@/lib/api'
 
 export function usePushNotifications() {
   const [permission, setPermission] = useState<NotificationPermission>('default')
