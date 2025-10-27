@@ -31,11 +31,7 @@ export default function Navbar() {
           <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
             {/* Mobile Menu Button */}
             <button
-              onClick={() => {
-                console.log('🍔 Hamburger clicked! Current mobileOpen:', sidebar.mobileOpen)
-                sidebar.toggleMobile()
-                console.log('🍔 After toggle:', !sidebar.mobileOpen)
-              }}
+              onClick={sidebar.toggleMobile}
               className="lg:hidden p-2 rounded-xl hover:bg-gray-100 active:bg-gray-200 transition-colors shrink-0 dark:hover:bg-slate-700 dark:active:bg-slate-600"
               aria-label="Ouvrir le menu"
             >

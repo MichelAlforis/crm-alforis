@@ -11,7 +11,7 @@
 | # | Test | Statut | Remarques |
 |---|------|--------|-----------|
 | 9.1 | Menu hamburger affiché | ✅ OK | Visible sur < 1024px |
-| 9.2 | Navigation latérale escamotable | ✅ OK | Fixé: breakpoint lg: au lieu de md: |
+| 9.2 | Navigation latérale escamotable | ✅ OK | Fixé: SidebarContext + breakpoint lg: |
 | 9.3 | Tableaux scrollables horizontalement | ✅ OK | overflow-x-auto présent |
 | 9.4 | Cartes empilées verticalement | ✅ OK | grid-cols-1 sur mobile |
 | 9.5 | Boutons taille tactile (min 44px) | ✅ OK | min-h-[44px] min-w-[44px] ajouté |
@@ -47,9 +47,11 @@
 ## 📝 Changements appliqués
 
 ### P0 - Critique (✅ Complété)
-- **Navigation mobile** : Fixé breakpoint incohérence (md: → lg:)
+- **Navigation mobile** :
+  - Créé `SidebarContext` pour partager état entre Navbar/Sidebar
+  - Fixé breakpoint incohérence (md: → lg:)
 - **Scroll horizontal** : Ajout overflow-x: hidden sur body, layout, content
-- Fichiers modifiés : `useSidebar.ts`, `Sidebar.tsx`, `global.css`, `layout.tsx`
+- Fichiers modifiés : `SidebarContext.tsx` (NEW), `useSidebar.ts`, `Sidebar.tsx`, `Navbar.tsx`, `global.css`, `layout.tsx`
 
 ### P1 - Haute (✅ Complété)
 - **Boutons tactiles** : min-h-[44px] min-w-[44px] sur mobile
