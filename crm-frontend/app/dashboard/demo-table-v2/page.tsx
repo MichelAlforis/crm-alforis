@@ -119,13 +119,16 @@ export default function DemoTableV2Page() {
       accessor: 'email',
       sortable: true,
       priority: 'high', // 📱 Always visible on mobile
+      minWidth: '200px',
+      className: 'max-w-[250px]',
       render: (value: string) => (
         <a
           href={`mailto:${value}`}
-          className="text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1"
+          className="text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1 max-w-full"
+          title={value}
         >
-          <Mail className="w-3.5 h-3.5" />
-          <span>{value}</span>
+          <Mail className="w-3.5 h-3.5 flex-shrink-0" />
+          <span className="truncate">{value}</span>
         </a>
       )
     },
@@ -148,8 +151,9 @@ export default function DemoTableV2Page() {
       accessor: 'company',
       sortable: true,
       priority: 'medium', // 📱 Collapsed by default on mobile
+      className: 'max-w-[180px]',
       render: (value: string) => (
-        <span className="text-gray-700">{value}</span>
+        <span className="text-gray-700 truncate block" title={value}>{value}</span>
       )
     },
     {
