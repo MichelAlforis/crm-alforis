@@ -6,14 +6,27 @@
 import React, { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Eye } from 'lucide-react'
 import { useMandats } from '@/hooks/useMandats'
-import { useTableColumns } from '@/hooks/useTableColumns'
 import { useFilters } from '@/hooks/useFilters'
 import { usePagination } from '@/hooks/usePagination'
-import { Card, Button, Table, Alert, AdvancedFilters, ExportButtons, ColumnSelector } from '@/components/shared'
+import { Card, Button, Alert, AdvancedFilters, ExportButtons } from '@/components/shared'
+import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
+import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import SearchBar from '@/components/search/SearchBar'
 import { MandatStatus } from '@/lib/types'
+
+interface Mandat {
+  id: number
+  numero_mandat: string | null
+  organisation: {
+    id: number
+    name: string
+  }
+  status: MandatStatus
+  date_debut: string
+  date_fin: string | null
+}
 
 const STATUS_LABELS: Record<string, string> = {
   proposé: 'Proposé',
@@ -87,23 +100,21 @@ export default function MandatsPage() {
     status: filters.values.status || undefined,
   })
 
-  // Define columns with useTableColumns hook
-  const defaultColumns = useMemo(
+  const columns: ColumnV2<Mandat>[] = useMemo(
     () => [
       {
-        key: 'numero_mandat',
         header: 'N° Mandat',
         accessor: 'numero_mandat',
-        visible: true,
-        sortable: true,
+        sticky: 'left',
+        priority: 'high',
+        minWidth: '140px',
         render: (value: string | null) => value || '-',
       },
       {
-        key: 'organisation',
         header: 'Organisation',
         accessor: 'organisation',
-        visible: true,
-        sortable: true,
+        priority: 'high',
+        minWidth: '200px',
         render: (org: any) => (
           <Link
             href={`/dashboard/organisations/${org.id}`}
@@ -114,11 +125,10 @@ export default function MandatsPage() {
         ),
       },
       {
-        key: 'status',
         header: 'Statut',
         accessor: 'status',
-        visible: true,
-        sortable: true,
+        priority: 'high',
+        minWidth: '120px',
         render: (value: MandatStatus) => (
           <span
             className={`px-2 py-1 text-xs rounded ${
@@ -134,42 +144,41 @@ export default function MandatsPage() {
         ),
       },
       {
-        key: 'date_debut',
         header: 'Date début',
         accessor: 'date_debut',
-        visible: true,
-        sortable: true,
+        priority: 'medium',
+        minWidth: '120px',
         render: (value: string) => new Date(value).toLocaleDateString('fr-FR'),
       },
       {
-        key: 'date_fin',
         header: 'Date fin',
         accessor: 'date_fin',
-        visible: false,
-        sortable: true,
+        priority: 'low',
+        minWidth: '120px',
         render: (value: string | null) =>
           value ? new Date(value).toLocaleDateString('fr-FR') : 'Indéterminée',
       },
       {
-        key: 'actions',
         header: 'Actions',
         accessor: 'id',
-        visible: true,
-        sortable: false,
-        render: (id: number) => (
-          <Link href={`/dashboard/mandats/${id}`} className="text-bleu hover:underline text-sm">
-            Voir
-          </Link>
-        ),
+        sticky: 'right',
+        priority: 'high',
+        minWidth: '120px',
+        render: (id: number) => {
+          const actions: OverflowAction[] = [
+            {
+              label: 'Voir',
+              icon: Eye,
+              onClick: () => router.push(`/dashboard/mandats/${id}`),
+              variant: 'default',
+            },
+          ]
+          return <OverflowMenu actions={actions} />
+        },
       },
     ],
-    [],
+    [router],
   )
-
-  const { visibleColumns, toggleColumn, resetColumns } = useTableColumns({
-    storageKey: 'mandats-columns',
-    defaultColumns,
-  })
 
   const filteredMandats = (data?.items ?? [])
     .filter((mandat) => {
@@ -264,18 +273,11 @@ export default function MandatsPage() {
                 }
               }}
             />
-            <div className="flex items-center gap-2">
-              <ColumnSelector
-                columns={defaultColumns}
-                onToggle={toggleColumn}
-                onReset={resetColumns}
-              />
-              <ExportButtons
-                resource="mandats"
-                params={exportParams}
-                baseFilename="mandats"
-              />
-            </div>
+            <ExportButtons
+              resource="mandats"
+              params={exportParams}
+              baseFilename="mandats"
+            />
           </div>
           <AdvancedFilters
             filters={advancedFilterDefinitions}
@@ -289,21 +291,44 @@ export default function MandatsPage() {
       {error && <Alert type="error" message={error.message || 'Erreur de chargement'} />}
 
       <Card>
-        <Table
-          columns={visibleColumns}
+        <TableV2<Mandat>
+          columns={columns}
           data={paginatedMandats}
-          isLoading={isLoading}
-          isEmpty={filteredMandats.length === 0}
+          getRowKey={(row) => row.id.toString()}
           sortConfig={sortConfig}
           onSort={handleSort}
-          pagination={{
-            total: filteredMandats.length,
-            skip: pagination.skip,
-            limit: pagination.limit,
-            onPageChange: pagination.setSkip,
-            onLimitChange: pagination.setLimit,
-          }}
+          size="md"
+          variant="default"
+          stickyHeader
+          emptyMessage="Aucun mandat trouvé"
         />
+
+        {/* Pagination personnalisée */}
+        {filteredMandats.length > 0 && (
+          <div className="flex items-center justify-between mt-4 pt-4 border-t border-border px-4">
+            <div className="text-sm text-text-secondary">
+              Page {Math.floor(pagination.skip / pagination.limit) + 1} sur {Math.ceil(filteredMandats.length / pagination.limit)} ({filteredMandats.length} mandats au total)
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => pagination.setSkip(Math.max(0, pagination.skip - pagination.limit))}
+                disabled={pagination.skip === 0}
+              >
+                Précédent
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => pagination.setSkip(pagination.skip + pagination.limit)}
+                disabled={pagination.skip + pagination.limit >= filteredMandats.length}
+              >
+                Suivant
+              </Button>
+            </div>
+          </div>
+        )}
       </Card>
     </div>
   )
