@@ -324,6 +324,102 @@ class TestRecipientSelection:
         assert data["total"] == 10
         assert len(data["recipients"]) == 5
 
+    def test_list_recipients_contacts_with_filters(self, client, test_db, auth_headers):
+        """Test liste des contacts avec filtres avancés"""
+        # Créer contacts avec différentes caractéristiques
+        for i in range(5):
+            person = Person(
+                first_name=f"Contact{i}",
+                last_name="Test",
+                email=f"contact{i}@test.com",
+                language="fr" if i < 3 else "en",
+                country_code="FR" if i < 2 else "BE",
+                job_title="CEO" if i == 0 else "Manager",
+                is_active=True if i < 4 else False,
+            )
+            test_db.add(person)
+        test_db.commit()
+
+        # Test filtre langue
+        filters = {"target_type": "contacts", "languages": ["fr"]}
+        response = client.post(
+            "/api/v1/email/campaigns/recipients/list", json=filters, headers=auth_headers
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["total"] == 3
+
+        # Test filtre pays
+        filters = {"target_type": "contacts", "countries": ["FR"]}
+        response = client.post(
+            "/api/v1/email/campaigns/recipients/list", json=filters, headers=auth_headers
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["total"] == 2
+
+        # Test filtre rôle
+        filters = {"target_type": "contacts", "roles": ["CEO"]}
+        response = client.post(
+            "/api/v1/email/campaigns/recipients/list", json=filters, headers=auth_headers
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["total"] == 1
+
+        # Test filtre actif/inactif
+        filters = {"target_type": "contacts", "is_active": True}
+        response = client.post(
+            "/api/v1/email/campaigns/recipients/list", json=filters, headers=auth_headers
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["total"] == 4
+
+    def test_list_recipients_contacts_with_specific_ids(self, client, test_db, auth_headers):
+        """Test liste contacts avec IDs spécifiques et exclusions"""
+        # Créer 5 contacts
+        person_ids = []
+        for i in range(5):
+            person = Person(
+                first_name=f"Person{i}",
+                last_name="Test",
+                email=f"person{i}@test.com",
+            )
+            test_db.add(person)
+            test_db.flush()
+            person_ids.append(person.id)
+        test_db.commit()
+
+        # Test specific_ids
+        filters = {"target_type": "contacts", "specific_ids": person_ids[:3]}
+        response = client.post(
+            "/api/v1/email/campaigns/recipients/list", json=filters, headers=auth_headers
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["total"] == 3
+
+        # Test exclude_ids
+        filters = {"target_type": "contacts", "exclude_ids": [person_ids[0]]}
+        response = client.post(
+            "/api/v1/email/campaigns/recipients/list", json=filters, headers=auth_headers
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["total"] == 4
+
+    def test_list_recipients_invalid_target_type(self, client, test_db, auth_headers):
+        """Test avec type de cible invalide"""
+        filters = {"target_type": "invalid_type"}
+        response = client.post(
+            "/api/v1/email/campaigns/recipients/list", json=filters, headers=auth_headers
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["total"] == 0
+        assert data["recipients"] == []
+
 
 class TestEmailCampaigns:
     """Tests CRUD des campagnes email"""
@@ -844,6 +940,85 @@ class TestCampaignSubscriptions:
         data = response.json()
         assert data["created"] == 5
         assert data["already_exists"] == 0
+
+    def test_list_person_subscriptions(self, client, test_db, auth_headers):
+        """Test liste des abonnements d'une personne"""
+        person = Person(first_name="John", last_name="Subscriber", email="john@test.com")
+        test_db.add(person)
+        test_db.flush()
+
+        # Créer plusieurs campagnes
+        for i in range(3):
+            campaign = EmailCampaign(
+                name=f"Campaign {i}",
+                status=EmailCampaignStatus.DRAFT,
+                from_name="ALFORIS Finance",
+                from_email="contact@alforis.com",
+                provider=EmailProvider.RESEND,
+            )
+            test_db.add(campaign)
+            test_db.flush()
+
+            subscription = CampaignSubscription(
+                campaign_id=campaign.id,
+                person_id=person.id,
+                is_active=True if i < 2 else False,
+            )
+            test_db.add(subscription)
+        test_db.commit()
+
+        # Liste tous
+        response = client.get(
+            f"/api/v1/email/people/{person.id}/subscriptions?only_active=false",
+            headers=auth_headers,
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert len(data) == 3
+
+        # Liste actifs uniquement
+        response = client.get(
+            f"/api/v1/email/people/{person.id}/subscriptions?only_active=true",
+            headers=auth_headers,
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert len(data) == 2
+
+    def test_list_organisation_subscriptions(self, client, test_db, auth_headers):
+        """Test liste des abonnements d'une organisation"""
+        org = Organisation(type=OrganisationType.CLIENT)
+        org.name = "Test Company"
+        org.email = "company@test.com"
+        test_db.add(org)
+        test_db.flush()
+
+        # Créer campagne et abonnement
+        campaign = EmailCampaign(
+            name="Org campaign",
+            status=EmailCampaignStatus.DRAFT,
+            from_name="ALFORIS Finance",
+            from_email="contact@alforis.com",
+            provider=EmailProvider.RESEND,
+        )
+        test_db.add(campaign)
+        test_db.flush()
+
+        subscription = CampaignSubscription(
+            campaign_id=campaign.id,
+            organisation_id=org.id,
+            is_active=True,
+        )
+        test_db.add(subscription)
+        test_db.commit()
+
+        response = client.get(
+            f"/api/v1/email/organisations/{org.id}/subscriptions", headers=auth_headers
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert len(data) == 1
+        assert data[0]["organisation_id"] == org.id
 
 
 class TestRecipientTracking:
