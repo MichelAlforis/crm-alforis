@@ -51,6 +51,7 @@ interface DropdownPortalProps {
 function DropdownPortal({ triggerRef, isOpen, onClose, children }: DropdownPortalProps) {
   const [position, setPosition] = useState({ top: 0, left: 0 })
   const dropdownRef = useRef<HTMLDivElement | null>(null)
+  const openedAtRef = useRef<number>(0)
 
   useEffect(() => {
     if (isOpen && triggerRef.current) {
@@ -90,10 +91,20 @@ function DropdownPortal({ triggerRef, isOpen, onClose, children }: DropdownPorta
     console.log('🟡 [DropdownPortal] useEffect isOpen:', isOpen)
     if (!isOpen) return
 
+    // Mark when dropdown was opened
+    openedAtRef.current = Date.now()
+
     // Add small delay to prevent immediate close on open
     const timeoutId = setTimeout(() => {
       console.log('🟠 [DropdownPortal] Setting up click-outside handlers')
       const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+        // Ignore events that happen within 300ms of opening (debounce)
+        const timeSinceOpen = Date.now() - openedAtRef.current
+        if (timeSinceOpen < 300) {
+          console.log('⏱️  [DropdownPortal] Ignoring event - too soon after open', { timeSinceOpen })
+          return
+        }
+
         const target = e.target as Node | null
 
         // Check if click is inside trigger button (including SVG children)
@@ -108,7 +119,8 @@ function DropdownPortal({ triggerRef, isOpen, onClose, children }: DropdownPorta
           isInsideTrigger,
           isInsideDropdown,
           triggerExists: !!triggerRef.current,
-          dropdownExists: !!dropdownRef.current
+          dropdownExists: !!dropdownRef.current,
+          timeSinceOpen
         })
 
         // Only close if click is outside both trigger and dropdown
