@@ -9,8 +9,19 @@ from unittest.mock import MagicMock, Mock, patch
 import pytest
 
 from models.ai_agent import AICache, AIConfiguration, AIExecution, AISuggestion
-from schemas.ai_agent import AIProvider, AISuggestionStatus, AISuggestionType, AITaskType
+from schemas.ai_agent import (
+    AIProviderEnum,
+    AISuggestionStatusEnum,
+    AISuggestionTypeEnum,
+    AITaskTypeEnum,
+)
 from services.ai_agent import AIAgentService
+
+# Aliases pour compatibilité
+AIProvider = AIProviderEnum
+AISuggestionStatus = AISuggestionStatusEnum
+AISuggestionType = AISuggestionTypeEnum
+AITaskType = AITaskTypeEnum
 
 
 class TestAIAgentService:
