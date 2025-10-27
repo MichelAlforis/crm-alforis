@@ -60,7 +60,7 @@ class TestAIAgentService:
         """Organisation pour les tests"""
         from models.organisation import Organisation
         org = Organisation(
-            nom="Test Company",
+            name="Test Company",
             website=None,
             general_email=None,
         )

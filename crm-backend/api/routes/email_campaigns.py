@@ -529,8 +529,8 @@ async def delete_campaign(
     if not campaign:
         raise HTTPException(status_code=404, detail="Campagne introuvable")
 
-    # Vérifier le statut - ne pas autoriser la suppression si sending ou scheduled
-    if campaign.status in [EmailCampaignStatus.SENDING, EmailCampaignStatus.SCHEDULED]:
+    # Vérifier le statut - ne pas autoriser la suppression si running ou scheduled
+    if campaign.status in [EmailCampaignStatus.RUNNING, EmailCampaignStatus.SCHEDULED]:
         raise HTTPException(
             status_code=400,
             detail="Impossible de supprimer une campagne en cours d'envoi ou programmée. Veuillez d'abord la mettre en pause.",
@@ -1280,6 +1280,8 @@ async def get_batch_recipients_with_tracking(
         if clicked_events:
             last_click = max(e["event_at"] for e in clicked_events)
             last_click_dt = datetime.fromisoformat(last_click.replace("Z", "+00:00"))
+            if last_click_dt.tzinfo is None:
+                last_click_dt = last_click_dt.replace(tzinfo=timezone.utc)
             hours_since_click = (now - last_click_dt).total_seconds() / 3600
             if hours_since_click < 24:
                 score += 30  # Lead très chaud !

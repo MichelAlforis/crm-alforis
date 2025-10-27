@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import time
 import traceback
@@ -9,6 +10,18 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse
+
+# ============================================================
+# 🔍 Logging configuration
+# ============================================================
+
+# Configure logging level from environment (DEBUG, INFO, WARNING, ERROR)
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+logging.basicConfig(
+    level=getattr(logging, LOG_LEVEL, logging.INFO),
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger("crm-api")
 
 # ============================================================
 # 🔧 Feature flags & ENV
@@ -58,7 +71,7 @@ def _init_sentry_if_available() -> None:
             traces_sample_rate=0.0,  # ajuste si tu veux le tracing
         )
     except Exception as e:
-        print("⚠️ Sentry init failed:", e)
+        logger.warning(f"Sentry initialization failed: {e}")
 
 
 # ============================================================
@@ -121,7 +134,7 @@ app = FastAPI(
 )
 
 # --- Middleware CORS ---
-print(f"🔧 Configuration CORS: {ALLOWED_ORIGINS}")
+logger.info(f"CORS configuration: {ALLOWED_ORIGINS}")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
@@ -129,7 +142,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-print(f"✅ Middleware CORS ajouté pour: {ALLOWED_ORIGINS}")
+logger.info(f"CORS middleware enabled for origins: {ALLOWED_ORIGINS}")
 
 # --- GZip (utile pour grosses réponses JSON) ---
 app.add_middleware(GZipMiddleware, minimum_size=1024)
@@ -144,11 +157,11 @@ try:
     app.state.limiter = limiter
     app.add_exception_handler(RateLimitExceeded, custom_rate_limit_exceeded_handler)
     app.add_middleware(SlowAPIMiddleware)
-    print("✅ Rate limiting activé (slowapi)")
+    logger.info("Rate limiting enabled (slowapi)")
 except ImportError:
-    print("⚠️ slowapi non disponible - rate limiting désactivé")
+    logger.warning("slowapi not available - rate limiting disabled")
 except Exception as e:
-    print(f"⚠️ Rate limiting setup failed: {e}")
+    logger.warning(f"Rate limiting setup failed: {e}")
 
 # --- Metrics simple (temps de réponse) ---
 if ENABLE_METRICS_MIDDLEWARE:
@@ -158,24 +171,38 @@ if ENABLE_METRICS_MIDDLEWARE:
         try:
             response = await call_next(request)
         except Exception as exc:
-            # 🔍 DEBUG MODE: Afficher le traceback complet
-            print("=" * 80)
-            print(f"❌ EXCEPTION IN REQUEST: {request.method} {request.url.path}")
-            print("=" * 80)
-            traceback.print_exc()
-            print("=" * 80)
+            # Log structured error with appropriate level
+            logger.error(
+                f"Exception in {request.method} {request.url.path}",
+                exc_info=exc,
+                extra={
+                    "method": request.method,
+                    "path": request.url.path,
+                    "client": request.client.host if request.client else None,
+                }
+            )
 
-            # Laisse aussi Sentry capter
+            # In DEBUG mode, also print full traceback to console
+            if logger.isEnabledFor(logging.DEBUG):
+                print("=" * 80)
+                print(f"❌ DEBUG TRACEBACK: {request.method} {request.url.path}")
+                print("=" * 80)
+                traceback.print_exc()
+                print("=" * 80)
+
+            # Send to Sentry if configured
             if SENTRY_DSN:
                 try:
                     import sentry_sdk  # type: ignore
                     sentry_sdk.capture_exception(exc)
-                except Exception:
-                    pass
-            # Réponse JSON contrôlée
+                except Exception as e:
+                    logger.warning(f"Failed to send exception to Sentry: {e}")
+
+            # Controlled JSON response (hide internal details in production)
+            error_detail = str(exc) if logger.isEnabledFor(logging.DEBUG) else "Internal Server Error"
             return JSONResponse(
                 status_code=500,
-                content={"detail": "Internal Server Error", "error": str(exc)},
+                content={"detail": "Internal Server Error", "error": error_detail},
             )
         finally:
             process_time = time.perf_counter() - start
@@ -216,8 +243,9 @@ try:
     # api_router a déjà le prefix="/api/v1" dans api/__init__.py, ne pas le redoubler !
     app.include_router(api_router)
 except Exception as e:
-    print("⚠️ Erreur lors du chargement des routes :", e)
-    traceback.print_exc()
+    logger.error(f"Failed to load API routes: {e}", exc_info=e)
+    if logger.isEnabledFor(logging.DEBUG):
+        traceback.print_exc()
 
 # ============================================================
 # 🔌 WebSocket pour notifications temps réel
@@ -274,16 +302,16 @@ try:
             await websocket_endpoint(websocket, int(user_id), int(org_id))
 
         except Exception as e:
-            print(f"❌ WebSocket error: {e}")
+            logger.error(f"WebSocket error: {e}", exc_info=e)
             try:
                 await websocket.close(code=1011, reason=f"Error: {str(e)}")
             except:
                 pass
 
-    print("✅ WebSocket endpoint /ws/notifications activé")
+    logger.info("WebSocket endpoint /ws/notifications enabled")
 
 except Exception as e:
-    print(f"⚠️ WebSocket non disponible: {e}")
+    logger.warning(f"WebSocket not available: {e}")
 
 # Si tu préfères inclure router par router :
 # try:
@@ -320,11 +348,24 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
         try:
             import sentry_sdk  # type: ignore
             sentry_sdk.capture_exception(exc)
-        except Exception:
-            pass
-    # Log console
-    print("❌ Unhandled exception:", exc)
-    traceback.print_exc()
+        except Exception as e:
+            logger.warning(f"Failed to send exception to Sentry: {e}")
+
+    # Structured logging
+    logger.error(
+        f"Unhandled exception in {request.method} {request.url.path}",
+        exc_info=exc,
+        extra={
+            "method": request.method,
+            "path": request.url.path,
+            "client": request.client.host if request.client else None,
+        }
+    )
+
+    # Debug mode: print full traceback
+    if logger.isEnabledFor(logging.DEBUG):
+        traceback.print_exc()
+
     return JSONResponse(status_code=500, content={"detail": "Internal Server Error"})
 
 
