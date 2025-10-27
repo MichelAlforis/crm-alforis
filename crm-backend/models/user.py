@@ -73,6 +73,9 @@ class User(BaseModel):
     mailing_lists = relationship(
         "MailingList", back_populates="creator", foreign_keys="MailingList.created_by"
     )
+    push_subscriptions = relationship(
+        "PushSubscription", back_populates="user", cascade="all, delete-orphan"
+    )
 
     def __repr__(self) -> str:
         return f"<User(id={self.id}, email='{self.email}')>"

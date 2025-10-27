@@ -16,6 +16,7 @@ from api.routes import (
     people,
     produits,
     public,
+    push_notifications,
     tasks,
     users,
     workflows,
@@ -86,5 +87,8 @@ api_router.include_router(interactions.router)
 
 # 📧 EMAIL MARKETING & LEAD SCORING (Chapitre 7 - Phase 3.3)
 api_router.include_router(email_marketing.router)
+
+# 📱 PUSH NOTIFICATIONS (Chapitre 8 - PWA)
+api_router.include_router(push_notifications.router)
 
 __all__ = ["api_router"]

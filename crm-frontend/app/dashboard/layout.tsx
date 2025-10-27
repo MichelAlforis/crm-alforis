@@ -15,6 +15,7 @@ import Sidebar from '@/components/shared/Sidebar'
 import QueryProvider from '@/components/providers/QueryProvider'
 import InstallPrompt from '@/components/pwa/InstallPrompt'
 import OfflineIndicator from '@/components/pwa/OfflineIndicator'
+import { PushNotificationManager } from '@/components/pwa/PushNotificationManager'
 import { OnboardingTour } from '@/components/onboarding/OnboardingTour'
 import { Loader2 } from 'lucide-react'
 import clsx from 'clsx'
@@ -87,6 +88,7 @@ export default function DashboardLayout({
           {/* PWA Components */}
           <InstallPrompt />
           <OfflineIndicator />
+          <PushNotificationManager />
         </div>
       </OnboardingTour>
     </QueryProvider>
