@@ -6,7 +6,10 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
-import { Card, Button, Alert, Table, Modal, Input } from '@/components/shared'
+import { Card, Button, Alert, Modal, Input } from '@/components/shared'
+import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
+import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
+import { Trash2 } from 'lucide-react'
 import { PersonForm } from '@/components/forms'
 import { usePeople } from '@/hooks/usePeople'
 import { useConfirm } from '@/hooks/useConfirm'
@@ -184,52 +187,75 @@ export default function PersonDetailPage() {
     })
   }
 
-  const linkColumns = [
+  type OrganizationLinkRow = {
+    id: number
+    organizationLabel: string
+    job_title?: string | null
+    work_email?: string | null
+    work_phone?: string | null
+    is_primary: boolean
+  }
+
+  const linkColumns: ColumnV2<OrganizationLinkRow>[] = [
     {
       header: 'Organisation',
       accessor: 'organizationLabel',
+      sticky: 'left',
+      priority: 'high',
+      minWidth: '200px',
     },
     {
       header: 'Rôle',
       accessor: 'job_title',
+      priority: 'high',
+      minWidth: '150px',
+      render: (value?: string | null) => value || '-',
     },
     {
       header: 'Email pro',
       accessor: 'work_email',
+      priority: 'medium',
+      minWidth: '200px',
+      maxWidth: '280px',
+      render: (value?: string | null) => value || '-',
     },
     {
       header: 'Téléphone',
       accessor: 'work_phone',
+      priority: 'medium',
+      minWidth: '140px',
+      render: (value?: string | null) => value || '-',
     },
     {
       header: 'Principal',
       accessor: 'is_primary',
+      priority: 'low',
+      minWidth: '100px',
       render: (value: boolean) => (value ? 'Oui' : 'Non'),
     },
     {
       header: 'Actions',
       accessor: 'id',
-      render: (_: number, row: any) => (
-        <div className="flex gap-2">
-          <Button
-            variant="ghost"
-            size="xs"
-            onClick={() =>
-              updatePersonOrganizationLink(row.id, { is_primary: !row.is_primary }).then(refresh)
-            }
-          >
-            {row.is_primary ? 'Retirer' : 'Définir principal'}
-          </Button>
-          <Button
-            variant="ghost"
-            size="xs"
-            className="text-rouge"
-            onClick={() => handleDeleteLinkClick(row.id)}
-          >
-            Supprimer
-          </Button>
-        </div>
-      ),
+      sticky: 'right',
+      priority: 'high',
+      minWidth: '120px',
+      render: (_: number, row: OrganizationLinkRow) => {
+        const actions: OverflowAction[] = [
+          {
+            label: row.is_primary ? 'Retirer principal' : 'Définir principal',
+            icon: Trash2,
+            onClick: () => updatePersonOrganizationLink(row.id, { is_primary: !row.is_primary }).then(refresh),
+            variant: 'default'
+          },
+          {
+            label: 'Supprimer',
+            icon: Trash2,
+            onClick: () => handleDeleteLinkClick(row.id),
+            variant: 'danger'
+          }
+        ]
+        return <OverflowMenu actions={actions} />
+      },
     },
   ]
 
@@ -368,11 +394,16 @@ export default function PersonDetailPage() {
       </div>
 
       <Card>
-        <Table
+        <TableV2<OrganizationLinkRow>
           columns={linkColumns}
           data={organizationRows}
           isLoading={single.isLoading}
           isEmpty={organizationRows.length === 0}
+          emptyMessage="Aucun rattachement à une organisation"
+          getRowKey={(row) => row.id.toString()}
+          size="md"
+          variant="default"
+          stickyHeader
         />
           </Card>
 
