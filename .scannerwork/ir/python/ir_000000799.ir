@@ -1,37 +1,0 @@
-
-Œ‚"
-    Convert a Name metadata value to a .egg-link name, by applying
-    the same substitution as pkg_resources's safe_name function.
-    Note: we cannot use canonicalize_name because it has a different logic.
-
-    We also look for the raw name (without normalization) as setuptools 69 changed
-    the way it names .egg-link files (https://github.com/pypa/setuptools/issues/4167).
-    "str
-".egg-link"str
-"[^A-Za-z0-9.]+"str
-"-"str
-
-0int
-"{raw_name}.egg-link"strraw_name (!
-list"Î
-
- (/"	
-resub:"
- 
- (="	#binop +#2+:'
-%
- (	"#unknown-value#Blist&
-$
- ("
-#is-exact#:	
-Bbool
-
- ("
-#assume#:8
-6
- ("#set-field# __collection_size:	Bint&
-$
- ("#array-add-last#:	&
-$
- ("#array-add-last#:	
- (	*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/egg_link.py

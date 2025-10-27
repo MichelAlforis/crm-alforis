@@ -13,9 +13,9 @@ from core import get_db, verify_admin_user
 from core.events import EventType
 from schemas.webhook import (
     WebhookCreate,
-    WebhookUpdate,
     WebhookResponse,
     WebhookRotateSecretRequest,
+    WebhookUpdate,
 )
 from services.webhook import WebhookService
 

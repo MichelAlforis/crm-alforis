@@ -1,209 +1,0 @@
-
-1.0PythonFrontend"1760943934084*py2.B§
-
-imports1
-
-extends2
-
-returns3
-
-	has param4
-
-module5
-
-
-class6
-
-function7
-"
-crm-backend/tests/conftest.py9
-
-tests.conftest11
-
-inspect12
-
-fastapi.testclient14
-
-
-sqlalchemy16
-
-sqlalchemy.orm18
-
-sqlalchemy.pool20
-
-
-main22
-
-core.database24
-
-core.security26
-
-models.user28
-
-models.organisation30
-
-models.person32
-
-models.role34
-
-core.permissions36
-
-asyncio38
-'
-!tests.conftest.pytest_pyfunc_call40
-!
-tests.conftest.auth_headers42
-
-tests.conftest.client44
-+
-%tests.conftest.sample_person_with_org46
-)
-#tests.conftest.sample_organisations48
-
-tests.conftest.test_user50
-(
-"tests.conftest.sample_organisation52
-"
-tests.conftest.create_person54
-
-tests.conftest.test_db56
-"
-tests.conftest.sample_person58
-(
-"tests.conftest.create_organisation60
-2
-,tests.conftest.pytest_collection_modifyitems62
-
-tests.conftest.admin_user64J
-
-8
-89jñ
- 
-10
-10115 *
-8 (
-
-13
-13125
-
-15
-15145
-
-17
-17165
-
-19
-19185
-
-21
-21205
-
-23
-23225
-
-25
-25245
-
-27
-27265
-
-29
-29285
-
-31
-31305
-
-33
-33325
-
-35
-35345
-
-37
-37365
-
-39
-39385
-
-41
-41407 210
-
-43
-43427 210
-
-45
-45447 210
-
-47
-47467 210
-
-49
-49487 210
-
-51
-51507 210
-
-53
-53527 210
-
-55
-55547 210
-
-57
-57567 210
-
-59
-59587 210
-
-61
-61607 210
-
-63
-63627 210
-
-65
-65647 210rî
-
-10131*
-8 (
-
-10151*
-8	 	(*
-
-10171*
-8
- 
-(%
-
-10191*
-8 ((
-
-10211*
-8 ('
-
-10231*
-8 (
-
-10251*
-8 ('
-
-10271*
-8 (,
-
-10291*
-8 (
-
-10311*
-8 (C
-
-10331*
-8 (K
-
-10351*
-8 ('
-
-10371*
-8 (6
-
-10391*
-8´ ´(

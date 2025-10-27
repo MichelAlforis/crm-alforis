@@ -1,17 +1,0 @@
-
-‹"The epoch of the version.
-
-        >>> Version("2.0.0").epoch
-        0
-        >>> Version("1!2.0.0").epoch
-        1
-        "strself
-Œ Œ("i+
-)
-
-” ”("#get-field# _version:(
-&
-
-” ”(""#get-field# epoch:
-
-” ”("*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/packaging/version.py

@@ -1,109 +1,0 @@
-
-4pip._internal.exceptions.DiagnosticPipError.__repr__‰
-/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/exceptions.pyn n("2*×	
-2o w(	t
-r
-p p(
-%1"__id*Z
-
-__unknown_file (>*<-
-+pip._internal.exceptions.DiagnosticPipError"
-	__class__J
-H
-p p('
-%2"__id*0
-
-__unknown_file (*
-
-%1"
-
-__name__t
-r
-q q('
-%3"__id*Z
-
-__unknown_file (>*<-
-+pip._internal.exceptions.DiagnosticPipError"
-	referencer
-p
-r r(#
-%4"__id*X
-
-__unknown_file (<*:-
-+pip._internal.exceptions.DiagnosticPipError"	
-messager
-p
-s s(#
-%5"__id*X
-
-__unknown_file (<*:-
-+pip._internal.exceptions.DiagnosticPipError"	
-contextt
-r
-t t('
-%6"__id*Z
-
-__unknown_file (>*<-
-+pip._internal.exceptions.DiagnosticPipError"
-	note_stmtt
-r
-u u('
-%7"__id*Z
-
-__unknown_file (>*<-
-+pip._internal.exceptions.DiagnosticPipError"
-	hint_stmt§
-¤
-p v(
-%8"__concat*
-p p(
-<*
-p p('
-
-%2*
-p( p()
-(*
-q q(
-
-reference=*
-q q('
-
-%3*
-q* q(,
-, *
-r r(
-
-message=*
-r r(#
-
-%4*
-r& r((
-, *
-s s(
-
-context=*
-s s(#
-
-%5*
-s& s((
-, *
-t t(
-
-note_stmt=*
-t t('
-
-%6*
-t* t(,
-, *
-u u(
-
-hint_stmt=*
-u u('
-
-%7*
-v v(
-)>"
-o w(	
-
-%8B/-
-+pip._internal.exceptions.DiagnosticPipErrorH

@@ -1,42 +1,0 @@
-
-ˇ	ı"Create Text instance from markup.
-
-        Args:
-            text (str): A string containing console markup.
-            style (Union[str, Style], optional): Base style for text. Defaults to "".
-            emoji (bool, optional): Also render emoji code. Defaults to True.
-            emoji_variant (str, optional): Optional emoji variant, either "text" or "emoji". Defaults to None.
-            justify (str, optional): Justify method: "left", "center", "full", "right". Defaults to None.
-            overflow (str, optional): Overflow method: "crop", "fold", "ellipsis". Defaults to None.
-            end (str, optional): Character to end text with. Defaults to "\\\\n".
-
-        Returns:
-            Text: A Text instance with markup rendered.
-        "strcls
-Ö Ö(text
-Ü Ü(style
-à à(%emoji
-â â(emoji_variant
-ä ä(4justify
-ã ã(1overflow
-å å(3end
-ç ç("é,
-*
-
-ù ù("
-render"?python-unknown?H
-F
-
-ü ü(Urendered_text"!
-pip._vendor.rich.markuprender:+
-)
-
-† †("#set-field# justify:,
-*
-
-° °("#set-field# overflow:'
-%
-
-¢ ¢("#set-field# end:
-
-£ £(*|/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/text.py

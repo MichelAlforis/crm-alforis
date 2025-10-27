@@ -11,31 +11,32 @@ Ce service fournit des fonctionnalités d'IA pour:
 Utilise les API Claude (Anthropic), OpenAI ou Ollama selon configuration.
 """
 
-from typing import Dict, Any, List, Optional, Tuple
-from datetime import datetime, timedelta, UTC
-from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_, func
-import json
-import hashlib
-import httpx
 import asyncio
+import hashlib
+import json
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
+from typing import Any, Dict, List, Optional, Tuple
 
+import httpx
+from sqlalchemy import and_, func, or_
+from sqlalchemy.orm import Session
+
+from core.config import settings
+from core.notifications import NotificationManager
 from models.ai_agent import (
-    AISuggestion,
-    AIExecution,
-    AIConfiguration,
     AICache,
-    AISuggestionType,
-    AISuggestionStatus,
+    AIConfiguration,
+    AIExecution,
     AIExecutionStatus,
-    AITaskType,
     AIProvider,
+    AISuggestion,
+    AISuggestionStatus,
+    AISuggestionType,
+    AITaskType,
 )
 from models.organisation import Organisation
 from models.person import Person
-from core.config import settings
-from core.notifications import NotificationManager
 
 
 class AIAgentService:
@@ -61,9 +62,7 @@ class AIAgentService:
 
     def _load_configuration(self) -> Optional[AIConfiguration]:
         """Charge la configuration active de l'agent IA"""
-        config = self.db.query(AIConfiguration).filter(
-            AIConfiguration.is_active == True
-        ).first()
+        config = self.db.query(AIConfiguration).filter(AIConfiguration.is_active == True).first()
 
         if not config:
             # Créer une configuration par défaut
@@ -86,6 +85,42 @@ class AIAgentService:
             self.db.refresh(config)
 
         return config
+
+    def get_config(self) -> Optional[AIConfiguration]:
+        """Retourne la configuration active de l'agent IA"""
+        return self.config
+
+    def update_config(self, updates: Dict[str, Any]) -> AIConfiguration:
+        """
+        Met à jour la configuration de l'agent IA
+
+        Args:
+            updates: Dictionnaire des champs à mettre à jour
+
+        Returns:
+            Configuration mise à jour
+        """
+        if not self.config:
+            raise ValueError("No active configuration found")
+
+        # Mettre à jour les champs autorisés
+        allowed_fields = {
+            "name", "description", "is_active", "ai_provider", "ai_model",
+            "api_key_name", "auto_apply_enabled", "auto_apply_confidence_threshold",
+            "duplicate_similarity_threshold", "quality_score_threshold",
+            "max_suggestions_per_execution", "max_tokens_per_request",
+            "rate_limit_requests_per_minute", "daily_budget_usd", "monthly_budget_usd",
+            "notify_on_suggestions", "notify_on_errors", "notification_user_ids",
+            "custom_prompts", "rules"
+        }
+
+        for field, value in updates.items():
+            if field in allowed_fields and hasattr(self.config, field):
+                setattr(self.config, field, value)
+
+        self.db.commit()
+        self.db.refresh(self.config)
+        return self.config
 
     # ======================
     # Intégration API IA
@@ -140,6 +175,7 @@ class AIAgentService:
         api_key = None
         if self.config and self.config.encrypted_anthropic_key:
             from core.encryption import get_encryption_service
+
             encryption = get_encryption_service()
             try:
                 api_key = encryption.decrypt(self.config.encrypted_anthropic_key)
@@ -171,10 +207,9 @@ class AIAgentService:
                     "model": model,
                     "max_tokens": max_tokens,
                     "temperature": temperature,
-                    "system": system_prompt or "Tu es un assistant IA expert en gestion de données CRM.",
-                    "messages": [
-                        {"role": "user", "content": prompt}
-                    ],
+                    "system": system_prompt
+                    or "Tu es un assistant IA expert en gestion de données CRM.",
+                    "messages": [{"role": "user", "content": prompt}],
                 },
             )
             response.raise_for_status()
@@ -207,6 +242,7 @@ class AIAgentService:
         api_key = None
         if self.config and self.config.encrypted_openai_key:
             from core.encryption import get_encryption_service
+
             encryption = get_encryption_service()
             try:
                 api_key = encryption.decrypt(self.config.encrypted_openai_key)
@@ -237,7 +273,11 @@ class AIAgentService:
                     "max_tokens": max_tokens,
                     "temperature": temperature,
                     "messages": [
-                        {"role": "system", "content": system_prompt or "Tu es un assistant IA expert en gestion de données CRM."},
+                        {
+                            "role": "system",
+                            "content": system_prompt
+                            or "Tu es un assistant IA expert en gestion de données CRM.",
+                        },
                         {"role": "user", "content": prompt},
                     ],
                 },
@@ -304,18 +344,86 @@ class AIAgentService:
         data_str = json.dumps(request_data, sort_keys=True)
         return hashlib.sha256(f"{request_type}:{data_str}".encode()).hexdigest()
 
+    def _get_from_cache(self, cache_key: str) -> Optional[Dict[str, Any]]:
+        """
+        Récupère un résultat depuis le cache par clé
+
+        Args:
+            cache_key: Clé de cache
+
+        Returns:
+            Données du cache si trouvées et non expirées, None sinon
+        """
+        cached = (
+            self.db.query(AICache)
+            .filter(
+                and_(
+                    AICache.cache_key == cache_key,
+                    AICache.expires_at > datetime.now(UTC),
+                )
+            )
+            .first()
+        )
+
+        if cached:
+            # Incrémenter le compteur de hits
+            cached.hit_count += 1
+            cached.last_accessed_at = datetime.now(UTC)
+            self.db.commit()
+            return cached.response_data
+
+        return None
+
+    def _save_to_cache(
+        self,
+        cache_key: str,
+        request_type: str,
+        request_data: Dict[str, Any],
+        response_data: Dict[str, Any],
+        ttl_hours: int = 24,
+    ) -> AICache:
+        """
+        Sauvegarde un résultat dans le cache
+
+        Args:
+            cache_key: Clé de cache
+            request_type: Type de requête
+            request_data: Données de la requête
+            response_data: Données de la réponse
+            ttl_hours: Durée de vie en heures
+
+        Returns:
+            Entrée de cache créée
+        """
+        cache_entry = AICache(
+            cache_key=cache_key,
+            request_type=request_type,
+            request_data=request_data,
+            response_data=response_data,
+            hit_count=0,
+            expires_at=datetime.now(UTC) + timedelta(hours=ttl_hours),
+        )
+        self.db.add(cache_entry)
+        self.db.commit()
+        self.db.refresh(cache_entry)
+        return cache_entry
+
     async def _get_cached_result(
         self, request_type: str, request_data: Dict[str, Any]
     ) -> Optional[Dict[str, Any]]:
         """Récupère un résultat depuis le cache s'il existe et n'est pas expiré"""
         cache_key = self._get_cache_key(request_type, request_data)
 
-        cached = self.db.query(AICache).filter(
-            and_(
-                AICache.cache_key == cache_key,
-                AICache.expires_at > datetime.now(UTC),
+        cached = (
+            self.db.query(AICache)
+            .filter(
+                and_(
+                    AICache.cache_key == cache_key,
+                    AICache.expires_at > datetime.now(UTC),
+                )
             )
-        ).first()
+            .first()
+        )
 
         if cached:
             cached.increment_hit()
@@ -410,9 +518,7 @@ class AIAgentService:
             self.db.commit()
             raise
 
-    async def _detect_organisation_duplicates(
-        self, execution: AIExecution, limit: Optional[int]
-    ):
+    async def _detect_organisation_duplicates(self, execution: AIExecution, limit: Optional[int]):
         """Détecte les doublons d'organisations"""
         # Récupérer toutes les organisations actives
         query = self.db.query(Organisation).filter(Organisation.is_active == True)
@@ -427,7 +533,7 @@ class AIAgentService:
         duplicates_found = []
 
         for i, org1 in enumerate(organisations):
-            for org2 in organisations[i + 1:]:
+            for org2 in organisations[i + 1 :]:
                 # Vérifier cache
                 cache_request = {
                     "org1_id": org1.id,
@@ -482,7 +588,9 @@ class AIAgentService:
             execution.total_suggestions_created += 1
 
         self.db.commit()
-        self._log_execution(execution, "info", f"{len(duplicates_found)} doublons potentiels détectés")
+        self._log_execution(
+            execution, "info", f"{len(duplicates_found)} doublons potentiels détectés"
+        )
 
     async def _compare_organisations(
         self, org1: Organisation, org2: Organisation, execution: AIExecution
@@ -661,7 +769,9 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
             # Mise à jour métriques
             execution.total_prompt_tokens += result["prompt_tokens"]
             execution.total_completion_tokens += result["completion_tokens"]
-            execution.estimated_cost_usd = (execution.estimated_cost_usd or 0.0) + result["cost_usd"]
+            execution.estimated_cost_usd = (execution.estimated_cost_usd or 0.0) + result[
+                "cost_usd"
+            ]
 
         except json.JSONDecodeError:
             self._log_execution(execution, "error", f"Erreur parsing JSON pour org {org.id}")
@@ -775,6 +885,89 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
 
         return query.order_by(AISuggestion.confidence_score.desc()).limit(limit).all()
 
+    def get_suggestions(
+        self,
+        status: Optional[AISuggestionStatus] = None,
+        entity_type: Optional[str] = None,
+        suggestion_type: Optional[AISuggestionType] = None,
+        min_confidence: Optional[float] = None,
+        limit: int = 100,
+    ) -> List[AISuggestion]:
+        """
+        Récupère les suggestions avec filtres optionnels
+
+        Args:
+            status: Filtrer par statut
+            entity_type: Filtrer par type d'entité
+            suggestion_type: Filtrer par type de suggestion
+            min_confidence: Score de confiance minimum
+            limit: Nombre maximum de résultats
+
+        Returns:
+            Liste de suggestions
+        """
+        query = self.db.query(AISuggestion)
+
+        if status:
+            query = query.filter(AISuggestion.status == status)
+        if entity_type:
+            query = query.filter(AISuggestion.entity_type == entity_type)
+        if suggestion_type:
+            query = query.filter(AISuggestion.type == suggestion_type)
+        if min_confidence is not None:
+            query = query.filter(AISuggestion.confidence_score >= min_confidence)
+
+        return query.order_by(AISuggestion.created_at.desc()).limit(limit).all()
+
+    def _create_suggestion(
+        self,
+        type: AISuggestionType,
+        entity_type: str,
+        entity_id: int,
+        title: str,
+        description: str,
+        suggestion_data: Dict[str, Any],
+        confidence_score: float,
+        ai_provider: Optional[AIProvider] = None,
+        ai_model: Optional[str] = None,
+        execution_id: Optional[int] = None,
+    ) -> AISuggestion:
+        """
+        Crée une nouvelle suggestion
+
+        Args:
+            type: Type de suggestion
+            entity_type: Type d'entité concernée
+            entity_id: ID de l'entité
+            title: Titre de la suggestion
+            description: Description
+            suggestion_data: Données de la suggestion
+            confidence_score: Score de confiance (0.0 à 1.0)
+            ai_provider: Fournisseur d'IA utilisé
+            ai_model: Modèle utilisé
+            execution_id: ID de l'exécution associée
+
+        Returns:
+            Suggestion créée
+        """
+        suggestion = AISuggestion(
+            type=type,
+            status=AISuggestionStatus.PENDING,
+            entity_type=entity_type,
+            entity_id=entity_id,
+            title=title,
+            description=description,
+            suggestion_data=suggestion_data,
+            confidence_score=confidence_score,
+            ai_provider=ai_provider or (self.config.ai_provider if self.config else None),
+            ai_model=ai_model or (self.config.ai_model if self.config else None),
+            execution_id=execution_id,
+        )
+        self.db.add(suggestion)
+        self.db.commit()
+        self.db.refresh(suggestion)
+        return suggestion
+
     def approve_suggestion(self, suggestion_id: int, user_id: int, notes: Optional[str] = None):
         """Approuve et applique une suggestion"""
         suggestion = self.db.query(AISuggestion).filter(AISuggestion.id == suggestion_id).first()
@@ -793,8 +986,10 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
         suggestion.applied_at = datetime.now(UTC)
 
         self.db.commit()
+        self.db.refresh(suggestion)
+        return suggestion
 
-    def reject_suggestion(self, suggestion_id: int, user_id: int, notes: Optional[str] = None):
+    def reject_suggestion(self, suggestion_id: int, user_id: int, notes: Optional[str] = None, reason: Optional[str] = None):
         """Rejette une suggestion"""
         suggestion = self.db.query(AISuggestion).filter(AISuggestion.id == suggestion_id).first()
         if not suggestion:
@@ -803,9 +998,11 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
         suggestion.status = AISuggestionStatus.REJECTED
         suggestion.reviewed_by = user_id
         suggestion.reviewed_at = datetime.now(UTC)
-        suggestion.review_notes = notes
+        suggestion.review_notes = reason or notes
 
         self.db.commit()
+        self.db.refresh(suggestion)
+        return suggestion
 
     # ======================
     # Batch Operations
@@ -840,11 +1037,9 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
                 results.append({"suggestion_id": suggestion_id, "status": "success"})
                 successful += 1
             except Exception as e:
-                results.append({
-                    "suggestion_id": suggestion_id,
-                    "status": "failed",
-                    "error": str(e)
-                })
+                results.append(
+                    {"suggestion_id": suggestion_id, "status": "failed", "error": str(e)}
+                )
                 failed += 1
 
         return {
@@ -879,11 +1074,9 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
                 results.append({"suggestion_id": suggestion_id, "status": "success"})
                 successful += 1
             except Exception as e:
-                results.append({
-                    "suggestion_id": suggestion_id,
-                    "status": "failed",
-                    "error": str(e)
-                })
+                results.append(
+                    {"suggestion_id": suggestion_id, "status": "failed", "error": str(e)}
+                )
                 failed += 1
 
         return {
@@ -922,15 +1115,17 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
         changes_summary = []
 
         if suggestion.entity_type == "organisation":
-            org = self.db.query(Organisation).filter(Organisation.id == suggestion.entity_id).first()
+            org = (
+                self.db.query(Organisation).filter(Organisation.id == suggestion.entity_id).first()
+            )
             if org:
                 # Données actuelles
                 current_data = {
-                    "nom": org.nom,
+                    "name": org.name,
                     "website": org.website,
-                    "category": org.category,
-                    "general_email": org.general_email,
-                    "general_phone": org.general_phone,
+                    "category": org.category.value if org.category else None,
+                    "email": org.email,
+                    "phone": org.phone,
                 }
 
                 # Analyser les changements
@@ -939,12 +1134,14 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
                         old_value = current_data[field]
                         if old_value != new_value:
                             change_type = "update" if old_value else "add"
-                            changes_summary.append({
-                                "field": field,
-                                "from": old_value,
-                                "to": new_value,
-                                "type": change_type
-                            })
+                            changes_summary.append(
+                                {
+                                    "field": field,
+                                    "from": old_value,
+                                    "to": new_value,
+                                    "type": change_type,
+                                }
+                            )
 
         # Impact assessment
         impact = f"{len(changes_summary)} champ(s) seront modifié(s)"
@@ -974,8 +1171,7 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
             Liste des suggestions
         """
         query = self.db.query(AISuggestion).filter(
-            AISuggestion.entity_type == entity_type,
-            AISuggestion.entity_id == entity_id
+            AISuggestion.entity_type == entity_type, AISuggestion.entity_id == entity_id
         )
 
         if status:
@@ -994,7 +1190,9 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
     def _apply_enrichment(self, suggestion: AISuggestion):
         """Applique un enrichissement de données"""
         if suggestion.entity_type == "organisation":
-            org = self.db.query(Organisation).filter(Organisation.id == suggestion.entity_id).first()
+            org = (
+                self.db.query(Organisation).filter(Organisation.id == suggestion.entity_id).first()
+            )
             if org:
                 for field, value in suggestion.suggestion_data.items():
                     if hasattr(org, field):
@@ -1015,18 +1213,137 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
         if execution.execution_logs is None:
             execution.execution_logs = []
 
-        execution.execution_logs.append({
-            "timestamp": datetime.now(UTC).isoformat(),
-            "level": level,
-            "message": message,
-        })
+        execution.execution_logs.append(
+            {
+                "timestamp": datetime.now(UTC).isoformat(),
+                "level": level,
+                "message": message,
+            }
+        )
+
+    def _create_execution(
+        self,
+        task_type: AITaskType,
+        configuration_snapshot: Optional[Dict[str, Any]] = None,
+    ) -> AIExecution:
+        """
+        Crée une nouvelle exécution
+
+        Args:
+            task_type: Type de tâche à exécuter
+            configuration_snapshot: Snapshot de la configuration
+
+        Returns:
+            Exécution créée
+        """
+        execution = AIExecution(
+            task_type=task_type,
+            status=AIExecutionStatus.RUNNING,
+            started_at=datetime.now(UTC),
+            config=configuration_snapshot or {},
+            total_items_processed=0,
+            total_suggestions_created=0,
+            total_suggestions_applied=0,
+            estimated_cost_usd=0.0,
+        )
+        self.db.add(execution)
+        self.db.commit()
+        self.db.refresh(execution)
+        return execution
+
+    def _update_execution(
+        self,
+        execution_id: int,
+        status: Optional[str] = None,
+        total_items_processed: Optional[int] = None,
+        successful_items: Optional[int] = None,
+        failed_items: Optional[int] = None,
+        estimated_cost_usd: Optional[float] = None,
+        actual_cost_usd: Optional[float] = None,
+        error_message: Optional[str] = None,
+    ) -> AIExecution:
+        """
+        Met à jour une exécution
+
+        Args:
+            execution_id: ID de l'exécution
+            status: Nouveau statut
+            total_items_processed: Nombre total d'éléments traités
+            successful_items: Nombre de suggestions appliquées (total_suggestions_applied)
+            failed_items: Nombre d'échecs (ignoré - pas de champ direct)
+            estimated_cost_usd: Coût estimé
+            actual_cost_usd: Coût réel (ignoré - pas de champ, utilise estimated_cost_usd)
+            error_message: Message d'erreur
+
+        Returns:
+            Exécution mise à jour
+        """
+        execution = self.db.query(AIExecution).filter(AIExecution.id == execution_id).first()
+        if not execution:
+            raise ValueError(f"Execution {execution_id} not found")
+
+        if status is not None:
+            # Convertir string en enum si nécessaire
+            if isinstance(status, str):
+                status = AIExecutionStatus(status)
+            execution.status = status
+        if total_items_processed is not None:
+            execution.total_items_processed = total_items_processed
+        if successful_items is not None:
+            execution.total_suggestions_applied = successful_items
+        if estimated_cost_usd is not None:
+            execution.estimated_cost_usd = estimated_cost_usd
+        if actual_cost_usd is not None:
+            # Utiliser estimated_cost_usd comme approximation
+            execution.estimated_cost_usd = actual_cost_usd
+        if error_message is not None:
+            execution.error_message = error_message
+
+        # Si statut terminal, marquer comme complété
+        if status and status.value in ["success", "failed", "cancelled"]:
+            execution.completed_at = datetime.now(UTC)
+            # Calculer la durée
+            if execution.started_at:
+                duration = (execution.completed_at - execution.started_at).total_seconds()
+                execution.duration_seconds = duration
+
+        self.db.commit()
+        self.db.refresh(execution)
+        return execution
 
     def get_statistics(self) -> Dict[str, Any]:
         """Retourne les statistiques globales de l'agent IA"""
         total_suggestions = self.db.query(func.count(AISuggestion.id)).scalar()
-        pending_suggestions = self.db.query(func.count(AISuggestion.id)).filter(
-            AISuggestion.status == AISuggestionStatus.PENDING
-        ).scalar()
+        pending_suggestions = (
+            self.db.query(func.count(AISuggestion.id))
+            .filter(AISuggestion.status == AISuggestionStatus.PENDING)
+            .scalar()
+        )
+        approved_suggestions = (
+            self.db.query(func.count(AISuggestion.id))
+            .filter(AISuggestion.status.in_([AISuggestionStatus.APPROVED, AISuggestionStatus.APPLIED]))
+            .scalar()
+        )
+
+        # Suggestions par type
+        suggestions_by_type = {}
+        for suggestion_type in AISuggestionType:
+            count = (
+                self.db.query(func.count(AISuggestion.id))
+                .filter(AISuggestion.type == suggestion_type)
+                .scalar()
+            )
+            suggestions_by_type[suggestion_type.value] = count
+
+        # Suggestions par statut
+        suggestions_by_status = {}
+        for status in AISuggestionStatus:
+            count = (
+                self.db.query(func.count(AISuggestion.id))
+                .filter(AISuggestion.status == status)
+                .scalar()
+            )
+            suggestions_by_status[status.value] = count
 
         total_executions = self.db.query(func.count(AIExecution.id)).scalar()
         total_cost = self.db.query(func.sum(AIExecution.estimated_cost_usd)).scalar() or 0.0
@@ -1034,6 +1351,9 @@ Si tu ne peux pas déterminer une information avec certitude, ne l'inclus pas da
         return {
             "total_suggestions": total_suggestions,
             "pending_suggestions": pending_suggestions,
+            "approved_suggestions": approved_suggestions,
+            "suggestions_by_type": suggestions_by_type,
+            "suggestions_by_status": suggestions_by_status,
             "total_executions": total_executions,
             "total_cost_usd": round(total_cost, 2),
             "config": {

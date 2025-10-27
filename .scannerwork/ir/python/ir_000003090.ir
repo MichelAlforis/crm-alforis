@@ -1,43 +1,0 @@
-
-Ω≥"od.pop(k[,d]) -> v, remove specified key and return the corresponding value.
-            If key is not found, d is returned if given, otherwise KeyError is raised.
-
-            "strself
-∂ ∂(key
-∂ ∂(default
-∂ ∂(+"P,
-*
-
-ª ª("
-#binop in#2in:Bbool "
-
-ª ª( *
-ª ª("n,
-*
-
-º º("result"#array-read#:*
-(
-
-Ω Ω("#python-array-del#:
-
-æ æ("+
-)
-
-ø ø('"#get-field# __marker:,
-*
-
-ø ø('	"
-#binop ==#2==:Bbool "
-
-ø ø('	 *
-ø ø("B,
-*
-
-¿ ¿(#
-"
-KeyError*:BKeyError2
-
-¿ ¿(#
-"
-
-¡ ¡(*Å/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/distlib/compat.py

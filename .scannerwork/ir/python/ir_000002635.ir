@@ -1,11 +1,0 @@
-
-"XDG_PICTURES_DIR"str
-"~/Pictures"str
-LC":return: pictures directory tied to the user, e.g. ``~/Pictures``"strself
-” ”("^J
-H
-
-– –(D"4
-pip._vendor.platformdirs.unix_get_user_media_dir:
-
-– –(D*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/unix.py

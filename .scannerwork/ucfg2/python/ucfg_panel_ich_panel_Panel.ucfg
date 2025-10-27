@@ -1,165 +1,0 @@
-
-pip._vendor.rich.panel.Panel‡
-}/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/panel.py( (("2*ô
-2: :($n
-l
-: :($.
-pip._vendor.rich.panel.Panel"
-
-renderable"__id**
-
-__unknown_file (
-
-
-renderable`
-^
-; ;('
-pip._vendor.rich.panel.Panel"
-box"__id*#
-
-__unknown_file (
-
-boxd
-b
-< <()
-pip._vendor.rich.panel.Panel"
-title"__id*%
-
-__unknown_file (	
-
-titlep
-n
-= =(3/
-pip._vendor.rich.panel.Panel"
-title_align"__id*+
-
-__unknown_file (
-
-title_alignj
-h
-> >( ,
-pip._vendor.rich.panel.Panel"
-
-subtitle"__id*(
-
-__unknown_file (
-
-
-subtitlev
-t
-? ?(,2
-pip._vendor.rich.panel.Panel"
-subtitle_align"__id*.
-
-__unknown_file (
-
-subtitle_alignj
-h
-@ @( ,
-pip._vendor.rich.panel.Panel"
-
-safe_box"__id*(
-
-__unknown_file (
-
-
-safe_boxf
-d
-A A(*
-pip._vendor.rich.panel.Panel"
-expand"__id*&
-
-__unknown_file (
-
-
-expandd
-b
-B B()
-pip._vendor.rich.panel.Panel"
-style"__id*%
-
-__unknown_file (	
-
-styler
-p
-C C((0
-pip._vendor.rich.panel.Panel"
-border_style"__id*,
-
-__unknown_file (
-
-border_styled
-b
-D D()
-pip._vendor.rich.panel.Panel"
-width"__id*%
-
-__unknown_file (	
-
-widthf
-d
-E E(*
-pip._vendor.rich.panel.Panel"
-height"__id*&
-
-__unknown_file (
-
-
-heighth
-f
-F F(+
-pip._vendor.rich.panel.Panel"	
-padding"__id*'
-
-__unknown_file (
-	
-paddingl
-j
-G G("-
-pip._vendor.rich.panel.Panel"
-	highlight"__id*)
-
-__unknown_file (
-
-	highlight*
-3*Q
-3
-
-panel.py.,
-I I(
-%1"pip._vendor.rich.panel.Panel"
-I I(
-
-%1:
-* *($
-
-renderable:
-+ +(
-box:
-- -((
-title:
-. .(+
-title_align:
-/ /(+
-
-subtitle:
-0 0(.
-subtitle_align:
-1 1('
-
-safe_box:
-2 2(
-expand:
-3 3(!
-style:
-4 4((
-border_style:
-5 5(#
-width:
-6 6($
-height:
-7 7(+	
-padding:
-8 8(
-	highlightB 
-pip._vendor.rich.panel.PanelH

@@ -1,13 +1,0 @@
-
-ž”"Iterate through installed distributions.
-
-        This function should be implemented by subclass, but never called
-        directly. Use the public ``iter_distribution()`` instead, which
-        implements additional logic to make sure the distributions are valid.
-        "strself
-Ö Ö( "S?
-=
-
-Ý Ý(#"NotImplementedError*BNotImplementedError2
-
-Ý Ý(#*‚/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/metadata/base.py

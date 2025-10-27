@@ -9,6 +9,7 @@ import { Input, Button, Alert, Select } from '@/components/shared'
 import { Organisation, OrganisationCreate, OrganisationCategory } from '@/lib/types'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import { useToast } from '@/components/ui/Toast'
+import { HelpTooltip } from '@/components/help/HelpTooltip'
 
 interface OrganisationFormProps {
   initialData?: Organisation
@@ -85,18 +86,29 @@ export function OrganisationForm({
         placeholder="ex: FSS 1, Émetteur XYZ, Distributeur ABC"
       />
 
-      <Select
-        label="Catégorie *"
-        {...register('category', { required: 'Catégorie requise' })}
-        error={errors.category?.message}
-      >
-        <option value="">-- Sélectionner --</option>
-        {CATEGORY_OPTIONS.map((cat) => (
-          <option key={cat.value} value={cat.value}>
-            {cat.label}
-          </option>
-        ))}
-      </Select>
+      <div>
+        <div className="flex items-center gap-2 mb-2">
+          <label className="block text-sm font-medium text-gray-700">
+            Catégorie *
+          </label>
+          <HelpTooltip
+            content="Type d'organisation selon votre métier : Institution (banque, assurance), Wholesale (distributeur en gros), SDG (sélection de gérants), CGPI (conseiller patrimoine indépendant), etc."
+            learnMoreLink="/dashboard/help/guides/organisations#categories"
+            size="sm"
+          />
+        </div>
+        <Select
+          {...register('category', { required: 'Catégorie requise' })}
+          error={errors.category?.message}
+        >
+          <option value="">-- Sélectionner --</option>
+          {CATEGORY_OPTIONS.map((cat) => (
+            <option key={cat.value} value={cat.value}>
+              {cat.label}
+            </option>
+          ))}
+        </Select>
+      </div>
 
       <Input
         label="Email principal"
@@ -186,13 +198,24 @@ export function OrganisationForm({
 
         {showAdvanced && (
           <div className="mt-4 space-y-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
-            <Input
-              label="AUM (Assets Under Management)"
-              type="number"
-              {...register('aum', { valueAsNumber: true })}
-              error={errors.aum?.message}
-              placeholder="Montant en millions €"
-            />
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  AUM (Assets Under Management)
+                </label>
+                <HelpTooltip
+                  content="Montant des actifs sous gestion de l'organisation, exprimé en millions d'euros. Indicateur clé pour évaluer la taille et l'importance d'un distributeur ou gestionnaire."
+                  learnMoreLink="/dashboard/help/guides/organisations#aum"
+                  size="sm"
+                />
+              </div>
+              <Input
+                type="number"
+                {...register('aum', { valueAsNumber: true })}
+                error={errors.aum?.message}
+                placeholder="Montant en millions €"
+              />
+            </div>
 
             <Input
               label="Date AUM"
@@ -209,9 +232,16 @@ export function OrganisationForm({
             />
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Stratégies d'investissement
-              </label>
+              <div className="flex items-center gap-2 mb-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Stratégies d'investissement
+                </label>
+                <HelpTooltip
+                  content="Liste des stratégies d'investissement proposées par l'organisation (Actions Europe, Obligations, Private Equity, etc.). Une stratégie par ligne. Utile pour cibler les produits compatibles."
+                  learnMoreLink="/dashboard/help/guides/organisations#strategies"
+                  size="sm"
+                />
+              </div>
               <textarea
                 {...register('strategies')}
                 placeholder="Une stratégie par ligne (ex: Actions Europe, Obligations, etc.)"

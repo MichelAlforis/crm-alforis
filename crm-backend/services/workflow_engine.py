@@ -8,25 +8,26 @@ Ce module contient la logique métier pour:
 - Gérer les erreurs et retries
 """
 
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timedelta, UTC
-from sqlalchemy.orm import Session
-from sqlalchemy import and_
-import re
 import json
+import re
+from datetime import UTC, datetime, timedelta
+from typing import Any, Dict, List, Optional
 
+from sqlalchemy import and_
+from sqlalchemy.orm import Session
+
+from core.notifications import NotificationManager
+from models.notification import Notification, NotificationType
+from models.organisation import Organisation
+from models.task import Task, TaskPriority, TaskStatus
 from models.workflow import (
     Workflow,
-    WorkflowExecution,
-    WorkflowStatus,
-    WorkflowExecutionStatus,
-    WorkflowTriggerType,
     WorkflowActionType,
+    WorkflowExecution,
+    WorkflowExecutionStatus,
+    WorkflowStatus,
+    WorkflowTriggerType,
 )
-from models.organisation import Organisation
-from models.task import Task, TaskStatus, TaskPriority
-from models.notification import Notification, NotificationType
-from core.notifications import NotificationManager
 
 
 class WorkflowEngine:
@@ -49,7 +50,7 @@ class WorkflowEngine:
         workflow: Workflow,
         trigger_entity_type: str,
         trigger_entity_id: int,
-        trigger_data: Optional[Dict[str, Any]] = None
+        trigger_data: Optional[Dict[str, Any]] = None,
     ) -> WorkflowExecution:
         """
         Exécute un workflow complet
@@ -71,7 +72,7 @@ class WorkflowEngine:
             status=WorkflowExecutionStatus.RUNNING,
             started_at=datetime.now(UTC),
             execution_logs=[],
-            actions_executed=[]
+            actions_executed=[],
         )
         self.db.add(execution)
         self.db.commit()
@@ -79,7 +80,9 @@ class WorkflowEngine:
         try:
             # 1. Récupérer le contexte (entité trigger)
             context = self._build_context(trigger_entity_type, trigger_entity_id, trigger_data)
-            self._log(execution, "info", f"Contexte construit: {trigger_entity_type}#{trigger_entity_id}")
+            self._log(
+                execution, "info", f"Contexte construit: {trigger_entity_type}#{trigger_entity_id}"
+            )
 
             # 2. Vérifier les conditions
             if workflow.conditions:
@@ -98,20 +101,24 @@ class WorkflowEngine:
             for idx, action in enumerate(workflow.actions):
                 try:
                     result = self._execute_action(action, context)
-                    actions_results.append({
-                        "index": idx,
-                        "type": action.get("type"),
-                        "status": "success",
-                        "result": result
-                    })
+                    actions_results.append(
+                        {
+                            "index": idx,
+                            "type": action.get("type"),
+                            "status": "success",
+                            "result": result,
+                        }
+                    )
                     self._log(execution, "info", f"Action {idx} exécutée: {action.get('type')}")
                 except Exception as action_error:
-                    actions_results.append({
-                        "index": idx,
-                        "type": action.get("type"),
-                        "status": "failed",
-                        "error": str(action_error)
-                    })
+                    actions_results.append(
+                        {
+                            "index": idx,
+                            "type": action.get("type"),
+                            "status": "failed",
+                            "error": str(action_error),
+                        }
+                    )
                     self._log(execution, "error", f"Échec action {idx}: {str(action_error)}")
                     # Continue avec les autres actions (ne pas tout arrêter)
 
@@ -135,10 +142,7 @@ class WorkflowEngine:
             raise
 
     def _build_context(
-        self,
-        entity_type: str,
-        entity_id: int,
-        trigger_data: Optional[Dict[str, Any]] = None
+        self, entity_type: str, entity_id: int, trigger_data: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """
         Construit le contexte d'exécution avec les données de l'entité
@@ -155,7 +159,7 @@ class WorkflowEngine:
             "trigger_entity_type": entity_type,
             "trigger_entity_id": entity_id,
             "trigger_data": trigger_data or {},
-            "timestamp": datetime.now(UTC).isoformat()
+            "timestamp": datetime.now(UTC).isoformat(),
         }
 
         # Charger l'entité en fonction du type
@@ -311,7 +315,7 @@ class WorkflowEngine:
         """
         if isinstance(config, str):
             # Remplacer toutes les variables {{path.to.value}}
-            pattern = r'\{\{([^}]+)\}\}'
+            pattern = r"\{\{([^}]+)\}\}"
             matches = re.findall(pattern, config)
             for match in matches:
                 value = self._get_nested_value(context, match.strip())
@@ -348,10 +352,12 @@ class WorkflowEngine:
             "to": config.get("to"),
             "subject": config.get("subject"),
             "sent": True,
-            "message": "Email envoyé (simulation)"
+            "message": "Email envoyé (simulation)",
         }
 
-    def _action_create_task(self, config: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
+    def _action_create_task(
+        self, config: Dict[str, Any], context: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Crée une tâche
 
@@ -381,7 +387,7 @@ class WorkflowEngine:
             "urgent": TaskPriority.URGENT,
             "high": TaskPriority.HIGH,
             "normal": TaskPriority.NORMAL,
-            "low": TaskPriority.LOW
+            "low": TaskPriority.LOW,
         }
         priority = priority_map.get(config.get("priority", "normal").lower(), TaskPriority.NORMAL)
 
@@ -393,19 +399,20 @@ class WorkflowEngine:
             due_date=due_date,
             priority=priority,
             status=TaskStatus.TODO,
-            organisation_id=context.get("trigger_entity_id") if context.get("trigger_entity_type") == "organisation" else None
+            organisation_id=(
+                context.get("trigger_entity_id")
+                if context.get("trigger_entity_type") == "organisation"
+                else None
+            ),
         )
         self.db.add(task)
         self.db.commit()
 
-        return {
-            "action": "create_task",
-            "task_id": task.id,
-            "title": task.title,
-            "created": True
-        }
+        return {"action": "create_task", "task_id": task.id, "title": task.title, "created": True}
 
-    def _action_send_notification(self, config: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
+    def _action_send_notification(
+        self, config: Dict[str, Any], context: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Envoie une notification WebSocket
 
@@ -420,12 +427,11 @@ class WorkflowEngine:
             "info": NotificationType.TASK_ASSIGNED,
             "success": NotificationType.DEAL_WON,
             "warning": NotificationType.TASK_OVERDUE,
-            "error": NotificationType.SYSTEM_ERROR
+            "error": NotificationType.SYSTEM_ERROR,
         }
 
         notification_type = notification_type_map.get(
-            config.get("type", "info"),
-            NotificationType.TASK_ASSIGNED
+            config.get("type", "info"), NotificationType.TASK_ASSIGNED
         )
 
         # Créer la notification
@@ -434,16 +440,14 @@ class WorkflowEngine:
             type=notification_type,
             title="Workflow automatisé",
             message=config.get("message"),
-            data={"workflow_execution": True}
+            data={"workflow_execution": True},
         )
 
-        return {
-            "action": "send_notification",
-            "notification_id": notification.id,
-            "sent": True
-        }
+        return {"action": "send_notification", "notification_id": notification.id, "sent": True}
 
-    def _action_update_field(self, config: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
+    def _action_update_field(
+        self, config: Dict[str, Any], context: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Met à jour un champ d'une entité
 
@@ -470,12 +474,14 @@ class WorkflowEngine:
                     "entity_type": entity_type,
                     "entity_id": entity_id,
                     "field": field,
-                    "updated": True
+                    "updated": True,
                 }
 
         return {"action": "update_field", "updated": False, "error": "Entité non trouvée"}
 
-    def _action_assign_user(self, config: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
+    def _action_assign_user(
+        self, config: Dict[str, Any], context: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Assigne une entité à un utilisateur
 
@@ -487,11 +493,7 @@ class WorkflowEngine:
             }
         """
         # TODO: Implémenter assignment (dépend du modèle Organisation)
-        return {
-            "action": "assign_user",
-            "assigned": True,
-            "message": "Assignment simulé"
-        }
+        return {"action": "assign_user", "assigned": True, "message": "Assignment simulé"}
 
     def _action_add_tag(self, config: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -509,7 +511,7 @@ class WorkflowEngine:
             "action": "add_tag",
             "tag": config.get("tag"),
             "added": True,
-            "message": "Tag simulé"
+            "message": "Tag simulé",
         }
 
     def _log(self, execution: WorkflowExecution, level: str, message: str):
@@ -517,20 +519,16 @@ class WorkflowEngine:
         if execution.execution_logs is None:
             execution.execution_logs = []
 
-        execution.execution_logs.append({
-            "timestamp": datetime.now(UTC).isoformat(),
-            "level": level,
-            "message": message
-        })
+        execution.execution_logs.append(
+            {"timestamp": datetime.now(UTC).isoformat(), "level": level, "message": message}
+        )
 
     # ======================
     # Méthodes utilitaires
     # ======================
 
     def find_workflows_by_trigger(
-        self,
-        trigger_type: WorkflowTriggerType,
-        status: WorkflowStatus = WorkflowStatus.ACTIVE
+        self, trigger_type: WorkflowTriggerType, status: WorkflowStatus = WorkflowStatus.ACTIVE
     ) -> List[Workflow]:
         """
         Trouve tous les workflows actifs pour un type de trigger donné
@@ -542,12 +540,11 @@ class WorkflowEngine:
         Returns:
             Liste des workflows correspondants
         """
-        return self.db.query(Workflow).filter(
-            and_(
-                Workflow.trigger_type == trigger_type,
-                Workflow.status == status
-            )
-        ).all()
+        return (
+            self.db.query(Workflow)
+            .filter(and_(Workflow.trigger_type == trigger_type, Workflow.status == status))
+            .all()
+        )
 
     def check_inactivity_workflows(self, inactivity_days: int = 30):
         """
@@ -585,16 +582,22 @@ class WorkflowEngine:
                 "skipped_count": 2
             }
         """
-        executions = self.db.query(WorkflowExecution).filter(
-            WorkflowExecution.workflow_id == workflow_id
-        ).all()
+        executions = (
+            self.db.query(WorkflowExecution)
+            .filter(WorkflowExecution.workflow_id == workflow_id)
+            .all()
+        )
 
         total = len(executions)
         if total == 0:
             return {
                 "total_executions": 0,
-                "success_rate": 0,
-                "avg_duration_seconds": 0
+                "success_count": 0,
+                "failed_count": 0,
+                "skipped_count": 0,
+                "success_rate": 0.0,
+                "avg_duration_seconds": 0.0,
+                "last_execution": None,
             }
 
         success = len([e for e in executions if e.status == WorkflowExecutionStatus.SUCCESS])
@@ -613,5 +616,5 @@ class WorkflowEngine:
             "skipped_count": skipped,
             "success_rate": (success / total * 100) if total > 0 else 0,
             "avg_duration_seconds": round(avg_duration, 2),
-            "last_execution": last_exec.isoformat() if last_exec else None
+            "last_execution": last_exec.isoformat() if last_exec else None,
         }

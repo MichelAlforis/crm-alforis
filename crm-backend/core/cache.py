@@ -8,21 +8,22 @@ Fonctionnalités:
 - Métriques (hit/miss rate)
 """
 
-import redis
-import json
 import hashlib
+import json
 import logging
-from functools import wraps
-from typing import Any, Optional, Callable
 from datetime import timedelta
+from functools import wraps
+from typing import Any, Callable, Optional
 
-from core.config import settings
+import redis
 from fastapi.encoders import jsonable_encoder
 
+from core.config import settings
 
 # ============================================================================
 # Redis Client
 # ============================================================================
+
 
 class RedisClient:
     """Client Redis singleton"""
@@ -39,16 +40,18 @@ class RedisClient:
         """
         if cls._instance is None:
             cls._instance = redis.Redis(
-                host=getattr(settings, 'redis_host', 'redis'),
-                port=getattr(settings, 'redis_port', 6379),
-                password=getattr(settings, 'redis_password', None),
-                db=getattr(settings, 'redis_db', 0),
+                host=getattr(settings, "redis_host", "redis"),
+                port=getattr(settings, "redis_port", 6379),
+                password=getattr(settings, "redis_password", None),
+                db=getattr(settings, "redis_db", 0),
                 decode_responses=True,
                 socket_timeout=1,
                 socket_connect_timeout=1,
                 retry_on_timeout=True,
             )
-            logging.info(f"✅ Redis client initialisé - Host: {getattr(settings, 'redis_host', 'redis')}")
+            logging.info(
+                f"✅ Redis client initialisé - Host: {getattr(settings, 'redis_host', 'redis')}"
+            )
 
         return cls._instance
 
@@ -72,6 +75,7 @@ class RedisClient:
 # ============================================================================
 # Cache Functions
 # ============================================================================
+
 
 def generate_cache_key(*args, **kwargs) -> str:
     """
@@ -207,11 +211,8 @@ def clear_all_cache() -> bool:
 # Cache Decorator
 # ============================================================================
 
-def cache_response(
-    ttl: int = 300,
-    key_prefix: str = "",
-    skip_if: Optional[Callable] = None
-):
+
+def cache_response(ttl: int = 300, key_prefix: str = "", skip_if: Optional[Callable] = None):
     """
     Décorateur pour cacher les réponses de fonction
 
@@ -289,6 +290,7 @@ def cache_response(
 
         # Retourner le bon wrapper (async ou sync)
         import asyncio
+
         if asyncio.iscoroutinefunction(func):
             return async_wrapper
         else:
@@ -300,6 +302,7 @@ def cache_response(
 # ============================================================================
 # Cache Invalidation Helpers
 # ============================================================================
+
 
 def invalidate_organisation_cache(org_id: Optional[int] = None):
     """
@@ -348,6 +351,7 @@ def invalidate_all_caches():
 # Cache Statistics
 # ============================================================================
 
+
 def get_cache_stats() -> dict:
     """
     Obtient les statistiques du cache
@@ -356,10 +360,7 @@ def get_cache_stats() -> dict:
         Dict avec hits, misses, hit_rate, keys_count
     """
     if not RedisClient.is_available():
-        return {
-            "available": False,
-            "error": "Redis non disponible"
-        }
+        return {"available": False, "error": "Redis non disponible"}
 
     try:
         client = RedisClient.get_client()
@@ -389,10 +390,7 @@ def get_cache_stats() -> dict:
 
     except Exception as e:
         logging.error(f"❌ Cache stats error: {e}")
-        return {
-            "available": False,
-            "error": str(e)
-        }
+        return {"available": False, "error": str(e)}
 
 
 def reset_cache_stats():
@@ -415,6 +413,7 @@ def reset_cache_stats():
 # Health Check
 # ============================================================================
 
+
 def check_cache_health() -> dict:
     """
     Vérifie l'état du cache
@@ -425,11 +424,7 @@ def check_cache_health() -> dict:
     available = RedisClient.is_available()
 
     if not available:
-        return {
-            "status": "unavailable",
-            "available": False,
-            "message": "Redis non disponible"
-        }
+        return {"status": "unavailable", "available": False, "message": "Redis non disponible"}
 
     try:
         client = RedisClient.get_client()
@@ -448,11 +443,7 @@ def check_cache_health() -> dict:
         }
 
     except Exception as e:
-        return {
-            "status": "error",
-            "available": False,
-            "error": str(e)
-        }
+        return {"status": "error", "available": False, "error": str(e)}
 
 
 # ============================================================================

@@ -1,13 +1,0 @@
-
-"{resource}:{action}"str
-ÖÌ"
-        CrÃ©e un nom de permission standardisÃ©
-
-        Args:
-            resource: La ressource
-            action: L'action
-
-        Returns:
-            str: Nom formatÃ© "resource:action"
-        "strclsi i("resourcei$ i(1actioni3 i(>"
-t t(%*Q/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/permission.py

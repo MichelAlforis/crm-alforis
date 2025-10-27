@@ -1,8 +1,13 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, JSON, Enum as SQLEnum, ForeignKey, Boolean
+import enum
+
+from sqlalchemy import JSON, Boolean, Column, DateTime
+from sqlalchemy import Enum as SQLEnum
+from sqlalchemy import ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+
 from .database import Base
-import enum
+
 
 class CampaignStatus(str, enum.Enum):
     DRAFT = "draft"
@@ -12,6 +17,7 @@ class CampaignStatus(str, enum.Enum):
     PAUSED = "paused"
     CANCELLED = "cancelled"
 
+
 class EmailStatus(str, enum.Enum):
     PENDING = "pending"
     SENT = "sent"
@@ -19,6 +25,7 @@ class EmailStatus(str, enum.Enum):
     BOUNCED = "bounced"
     OPENED = "opened"
     CLICKED = "clicked"
+
 
 class EmailTemplate(Base):
     __tablename__ = "email_templates"
@@ -33,6 +40,7 @@ class EmailTemplate(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     campaigns = relationship("EmailCampaign", back_populates="template")
+
 
 class EmailCampaign(Base):
     __tablename__ = "email_campaigns"
@@ -76,6 +84,7 @@ class EmailCampaign(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     emails = relationship("CampaignEmail", back_populates="campaign")
+
 
 class CampaignEmail(Base):
     __tablename__ = "campaign_emails"

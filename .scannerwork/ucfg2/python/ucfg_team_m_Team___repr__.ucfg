@@ -1,38 +1,0 @@
-
-models.team.Team.__repr__U
-K/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/team.py ("2*›
-2 (:R
-P
- ("
-%1"__id*8
-
-__unknown_file (*
-models.team.Team"
-idT
-R
-, (5
-%2"__id*:
-
-__unknown_file (*
-models.team.Team"
-nameè
-å
- (:
-%3"__concat*
- (
-	<Team(id=*
- ("
-
-%1*
-# (+
-
-, name='*
-, (5
-
-%2*
-6 (9
-')>"
- (:
-
-%3B
-models.team.TeamH

@@ -1,22 +1,26 @@
-from sqlalchemy import Column, String, Integer, Text, Enum, ForeignKey, Boolean, JSON, DateTime
+import enum
+from datetime import datetime
+
+from sqlalchemy import JSON, Boolean, Column, DateTime, Enum, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
+
 from models.base import BaseModel
 from models.constants import (
+    ENUM_WORKFLOW_STATUS,
+    ENUM_WORKFLOW_TRIGGER,
     FK_USERS_ID,
     FK_WORKFLOWS_ID,
     ONDELETE_CASCADE,
-    ENUM_WORKFLOW_STATUS,
-    ENUM_WORKFLOW_TRIGGER,
 )
-import enum
-from datetime import datetime
 
 # =======================
 # Enums
 # =======================
 
+
 class WorkflowTriggerType(str, enum.Enum):
     """Types de déclencheurs de workflow"""
+
     ORGANISATION_CREATED = "organisation_created"
     ORGANISATION_UPDATED = "organisation_updated"
     DEAL_CREATED = "deal_created"
@@ -29,6 +33,7 @@ class WorkflowTriggerType(str, enum.Enum):
 
 class WorkflowActionType(str, enum.Enum):
     """Types d'actions de workflow"""
+
     SEND_EMAIL = "send_email"
     CREATE_TASK = "create_task"
     UPDATE_FIELD = "update_field"
@@ -41,6 +46,7 @@ class WorkflowActionType(str, enum.Enum):
 
 class WorkflowStatus(str, enum.Enum):
     """Statut du workflow"""
+
     ACTIVE = "active"
     INACTIVE = "inactive"
     DRAFT = "draft"
@@ -48,6 +54,7 @@ class WorkflowStatus(str, enum.Enum):
 
 class WorkflowExecutionStatus(str, enum.Enum):
     """Statut d'exécution du workflow"""
+
     PENDING = "pending"
     RUNNING = "running"
     SUCCESS = "success"
@@ -58,6 +65,7 @@ class WorkflowExecutionStatus(str, enum.Enum):
 # =======================
 # Modèles
 # =======================
+
 
 class Workflow(BaseModel):
     """
@@ -76,6 +84,7 @@ class Workflow(BaseModel):
             - Créer tâche "Relancer client"
             - Notifier manager si montant > 50k€
     """
+
     __tablename__ = "workflows"
 
     # Informations de base
@@ -85,13 +94,25 @@ class Workflow(BaseModel):
 
     # Déclencheur
     trigger_type = Column(Enum(WorkflowTriggerType), nullable=False, index=True)
-    trigger_config = Column(JSON, nullable=True, comment="Configuration du déclencheur (ex: {stage: 'PROPOSITION', delay_days: 30})")
+    trigger_config = Column(
+        JSON,
+        nullable=True,
+        comment="Configuration du déclencheur (ex: {stage: 'PROPOSITION', delay_days: 30})",
+    )
 
     # Conditions (logique IF)
-    conditions = Column(JSON, nullable=True, comment="Conditions à vérifier (ex: {field: 'montant', operator: '>', value: 50000})")
+    conditions = Column(
+        JSON,
+        nullable=True,
+        comment="Conditions à vérifier (ex: {field: 'montant', operator: '>', value: 50000})",
+    )
 
     # Actions
-    actions = Column(JSON, nullable=False, comment="Liste des actions à exécuter (ex: [{type: 'send_email', config: {...}}])")
+    actions = Column(
+        JSON,
+        nullable=False,
+        comment="Liste des actions à exécuter (ex: [{type: 'send_email', config: {...}}])",
+    )
 
     # Métadonnées
     created_by = Column(Integer, ForeignKey(FK_USERS_ID), nullable=True)
@@ -101,7 +122,9 @@ class Workflow(BaseModel):
 
     # Relations
     creator = relationship("User", foreign_keys=[created_by])
-    executions = relationship("WorkflowExecution", back_populates="workflow", cascade="all, delete-orphan")
+    executions = relationship(
+        "WorkflowExecution", back_populates="workflow", cascade="all, delete-orphan"
+    )
 
     def __repr__(self):
         return f"<Workflow(id={self.id}, name='{self.name}', status={self.status})>"
@@ -117,13 +140,23 @@ class WorkflowExecution(BaseModel):
     - Entité déclencheur (organisation, deal, etc.)
     - Durée d'exécution
     """
+
     __tablename__ = "workflow_executions"
 
-    workflow_id = Column(Integer, ForeignKey(FK_WORKFLOWS_ID, ondelete=ONDELETE_CASCADE), nullable=False, index=True)
-    status = Column(Enum(WorkflowExecutionStatus), default=WorkflowExecutionStatus.PENDING, nullable=False, index=True)
+    workflow_id = Column(
+        Integer, ForeignKey(FK_WORKFLOWS_ID, ondelete=ONDELETE_CASCADE), nullable=False, index=True
+    )
+    status = Column(
+        Enum(WorkflowExecutionStatus),
+        default=WorkflowExecutionStatus.PENDING,
+        nullable=False,
+        index=True,
+    )
 
     # Contexte d'exécution
-    trigger_entity_type = Column(String, nullable=True, comment="Type d'entité (organisation, deal, etc.)")
+    trigger_entity_type = Column(
+        String, nullable=True, comment="Type d'entité (organisation, deal, etc.)"
+    )
     trigger_entity_id = Column(Integer, nullable=True, comment="ID de l'entité déclencheur")
 
     # Résultats
@@ -133,7 +166,9 @@ class WorkflowExecution(BaseModel):
     error_message = Column(Text, nullable=True)
 
     # Actions exécutées
-    actions_executed = Column(JSON, nullable=True, comment="Détails des actions exécutées avec leurs résultats")
+    actions_executed = Column(
+        JSON, nullable=True, comment="Détails des actions exécutées avec leurs résultats"
+    )
 
     # Relations
     workflow = relationship("Workflow", back_populates="executions")

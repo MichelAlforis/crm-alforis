@@ -1,22 +1,24 @@
-from fastapi import APIRouter, Depends, status, HTTPException, Query
-from sqlalchemy.orm import Session
 from typing import List, Optional
 
-from core import get_db, get_current_user
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy.orm import Session
+
+from core import get_current_user, get_db
 from schemas.base import PaginatedResponse
 from schemas.organisation import (
-    ProduitCreate,
-    ProduitUpdate,
-    ProduitResponse,
-    ProduitDetailResponse,
     MandatProduitCreate,
     MandatProduitResponse,
+    ProduitCreate,
+    ProduitDetailResponse,
+    ProduitResponse,
+    ProduitUpdate,
 )
-from services.organisation import ProduitService, MandatProduitService
+from services.organisation import MandatProduitService, ProduitService
 
 router = APIRouter(prefix="/produits", tags=["produits"])
 
 # ============= GET ROUTES =============
+
 
 @router.get("", response_model=PaginatedResponse[ProduitResponse])
 async def list_produits(
@@ -48,7 +50,7 @@ async def list_produits(
         total=total,
         skip=skip,
         limit=limit,
-        items=[ProduitResponse.model_validate(item) for item in items]
+        items=[ProduitResponse.model_validate(item) for item in items],
     )
 
 
@@ -68,7 +70,7 @@ async def search_produits(
         total=total,
         skip=skip,
         limit=limit,
-        items=[ProduitResponse.model_validate(item) for item in items]
+        items=[ProduitResponse.model_validate(item) for item in items],
     )
 
 
@@ -84,8 +86,7 @@ async def get_produit_by_isin(
 
     if not produit:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Produit avec ISIN {isin} non trouvé"
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Produit avec ISIN {isin} non trouvé"
         )
 
     return ProduitResponse.model_validate(produit)
@@ -119,6 +120,7 @@ async def get_produit(
 
 # ============= POST ROUTES =============
 
+
 @router.post("", response_model=ProduitResponse, status_code=status.HTTP_201_CREATED)
 async def create_produit(
     produit: ProduitCreate,
@@ -145,7 +147,11 @@ async def create_produit(
     return ProduitResponse.model_validate(new_produit)
 
 
-@router.post("/associate-to-mandat", response_model=MandatProduitResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/associate-to-mandat",
+    response_model=MandatProduitResponse,
+    status_code=status.HTTP_201_CREATED,
+)
 async def associate_produit_to_mandat(
     association: MandatProduitCreate,
     db: Session = Depends(get_db),
@@ -174,6 +180,7 @@ async def associate_produit_to_mandat(
 
 # ============= PUT ROUTES =============
 
+
 @router.put("/{produit_id}", response_model=ProduitResponse)
 async def update_produit(
     produit_id: int,
@@ -188,6 +195,7 @@ async def update_produit(
 
 
 # ============= DELETE ROUTES =============
+
 
 @router.delete("/{produit_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_produit(

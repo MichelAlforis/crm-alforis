@@ -1,32 +1,0 @@
-
-"%s(host=%r, port=%r)"str
-
-0intself[ [(	tuple"‹/
--
-\) \(3"#dependent-value#*:Btype)
-'
-\) \(<"#get-field# __name__:%
-#
-\> \(G"#get-field# host:%
-#
-\I \(R"#get-field# port:(
-&
-\( \(S"#unknown-value#Btuple&
-$
-\( \(S	"
-#is-exact#:Bbool
-
-\( \(S
-"
-#assume#:	8
-6
-\( \(S"#set-field# __collection_size:Bint&
-$
-\( \(S"#array-add-last#:&
-$
-\( \(S"#array-add-last#:&
-$
-\( \(S"#array-add-last#:,
-*
-\ \(S"?python-str-format?*:
-\ \(S*‰/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/connectionpool.py

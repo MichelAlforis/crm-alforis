@@ -1,118 +1,0 @@
-
-1.0PythonFrontend"1760943902733*py2.Bç
-
-imports1
-
-extends2
-
-returns3
-
-	has param4
-
-module5
-
-
-class6
-
-function7
- 
-crm-backend/schemas/base.py9
-
-schemas.base11
-
-pydantic12
-
-datetime14
-
-typing16
-$
-schemas.base.PaginatedResponse18
-
-schemas.base.BaseSchema20
-1
-+schemas.base.PaginatedResponse.current_page22
-	
-int24
-0
-*schemas.base.PaginatedResponse.total_pages26
-&
- schemas.base.HealthCheckResponse28
-$
-schemas.base.TimestampedSchema30
-#
-schemas.base.PaginationParams32
-
-pydantic.main.BaseModel34J
-
-8
-89j∞
- 
-10
-10115 *
-8 (
-
-13
-13125
-
-15
-15145
-
-17
-17165
-
-19
-19186 210
-
-21
-21206 210
-
-23
-23227 219
-
-25
-25246
-
-27
-27267 219
-
-29
-29286 210
-
-31
-31306 210
-
-33
-33326 210
-
-35
-35346rÑ
-
-10131*
-8 (@
-
-10151*
-8 (
-
-10171*
-8 (.
-
-19212*
-8 (
-
-23253*
-8%	 %(
-
-27253*
-8!	 !(
-
-29212*
-8( ((
-
-31212*
-8 (
-
-33212*
-8 (
-
-21352*
-8 (

@@ -11,26 +11,17 @@ import enum
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import (
-    Column,
-    DateTime,
-    Enum,
-    ForeignKey,
-    Integer,
-    Numeric,
-    String,
-    Text,
-)
+from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, Numeric, String, Text
 from sqlalchemy.orm import relationship
 
 from models.base import BaseModel
 from models.constants import (
-    FK_USERS_ID,
-    FK_ORGANISATIONS_ID,
-    FK_MANDATS_ID,
-    ONDELETE_SET_NULL,
-    ONDELETE_CASCADE,
     ENUM_MANDAT_STATUS,
+    FK_MANDATS_ID,
+    FK_ORGANISATIONS_ID,
+    FK_USERS_ID,
+    ONDELETE_CASCADE,
+    ONDELETE_SET_NULL,
 )
 from models.organisation import Organisation
 
@@ -52,10 +43,22 @@ class MandatStatus(str, enum.Enum):
 class Mandat(BaseModel):
     __tablename__ = "mandats"
 
-    organisation_id = Column(Integer, ForeignKey(FK_ORGANISATIONS_ID, ondelete=ONDELETE_CASCADE), nullable=False, index=True)
+    organisation_id = Column(
+        Integer,
+        ForeignKey(FK_ORGANISATIONS_ID, ondelete=ONDELETE_CASCADE),
+        nullable=False,
+        index=True,
+    )
     number = Column(String(100), unique=True, nullable=True, index=True)
-    type = Column(Enum(MandatType, name="mandattype"), nullable=False, default=MandatType.VENTE, index=True)
-    status = Column(Enum(MandatStatus, name=ENUM_MANDAT_STATUS), nullable=False, default=MandatStatus.DRAFT, index=True)
+    type = Column(
+        Enum(MandatType, name="mandattype"), nullable=False, default=MandatType.VENTE, index=True
+    )
+    status = Column(
+        Enum(MandatStatus, name=ENUM_MANDAT_STATUS),
+        nullable=False,
+        default=MandatStatus.DRAFT,
+        index=True,
+    )
 
     start_date = Column(DateTime(timezone=True), nullable=True)
     end_date = Column(DateTime(timezone=True), nullable=True)
@@ -64,7 +67,9 @@ class Mandat(BaseModel):
     description = Column(Text, nullable=True)
     conditions = Column(Text, nullable=True)
 
-    owner_id = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True, index=True)
+    owner_id = Column(
+        Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True, index=True
+    )
 
     organisation = relationship("Organisation", back_populates="legacy_mandats")
     owner = relationship("User", back_populates="legacy_mandats")

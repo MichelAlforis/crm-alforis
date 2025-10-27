@@ -1,25 +1,0 @@
-
-&pip._vendor.rich.prompt.PromptBase.askˆ
-~/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/prompt.pya a("3*/
-3
-	prompt.py"
-o o(
-implicit return:
-c c(
-prompt:
-e e()	
-console:
-f f(
-
-password:
-g g(+	
-choices:
-h h(#
-case_sensitive:
-i i(!
-show_default:
-j j(!
-show_choices:
-k k('
-streamB&$
-"pip._vendor.rich.prompt.PromptBaseH

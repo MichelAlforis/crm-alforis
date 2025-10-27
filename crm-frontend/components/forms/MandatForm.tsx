@@ -8,8 +8,10 @@ import { useForm } from 'react-hook-form'
 import { Input, Button, Alert, Select, EntityAutocompleteInput } from '@/components/shared'
 import { MandatDistribution, MandatDistributionCreate, MandatStatus, Organisation } from '@/lib/types'
 import { usePaginatedOptions, type PaginatedFetcherParams } from '@/hooks/usePaginatedOptions'
+import { useEntityPreload } from '@/hooks/useEntityPreload'
 import { apiClient } from '@/lib/api'
 import { useToast } from '@/components/ui/Toast'
+import { HelpTooltip } from '@/components/help/HelpTooltip'
 
 interface MandatFormProps {
   initialData?: MandatDistribution
@@ -91,33 +93,17 @@ export function MandatForm({
     mode: 'onBlur',
   })
 
-  // Pré-charger l'organisation sélectionnée si fournie
-  useEffect(() => {
-    const orgId = initialData?.organisation_id ?? organisationId
-    if (!orgId) return
-
-    let isMounted = true
-
-    void (async () => {
-      try {
-        const organisation = await apiClient.getOrganisation(orgId)
-        if (!isMounted) return
-        upsertOrganisationOption({
-          id: organisation.id,
-          label: organisation.name,
-          sublabel: organisation.category || undefined,
-        })
-        setSelectedOrganisationId(orgId)
-        setSelectedOrganisationLabel(organisation.name)
-      } catch (error) {
-        console.error('Impossible de pré-charger l\'organisation sélectionnée', error)
-      }
-    })()
-
-    return () => {
-      isMounted = false
-    }
-  }, [initialData?.organisation_id, organisationId, upsertOrganisationOption])
+  // Pré-charger l'organisation sélectionnée si fournie (avec useEntityPreload)
+  useEntityPreload<Organisation>({
+    entityId: initialData?.organisation_id ?? organisationId,
+    fetchEntity: (id) => apiClient.getOrganisation(id),
+    mapToOption: mapOrganisationToOption,
+    upsertOption: upsertOrganisationOption,
+    onLoaded: (organisation) => {
+      setSelectedOrganisationId(organisation.id)
+      setSelectedOrganisationLabel(organisation.name)
+    },
+  })
 
   const handleFormSubmit = async (data: MandatDistributionCreate) => {
     if (!selectedOrganisationId) {
@@ -186,25 +172,47 @@ export function MandatForm({
         minSearchLength={2}
       />
 
-      <Input
-        label="Numéro de mandat"
-        {...register('numero_mandat')}
-        error={errors.numero_mandat?.message}
-        placeholder="ex: MAN-2025-001"
-      />
+      <div>
+        <div className="flex items-center gap-2 mb-2">
+          <label className="block text-sm font-medium text-gray-700">
+            Numéro de mandat
+          </label>
+          <HelpTooltip
+            content="Identifiant unique du mandat de distribution (référence interne ou contractuelle). Exemple : MAN-2025-001, DIST-FSS1-2025."
+            learnMoreLink="/dashboard/help/guides/mandats#numero"
+            size="sm"
+          />
+        </div>
+        <Input
+          {...register('numero_mandat')}
+          error={errors.numero_mandat?.message}
+          placeholder="ex: MAN-2025-001"
+        />
+      </div>
 
-      <Select
-        label="Statut *"
-        {...register('status', { required: 'Statut requis' })}
-        error={errors.status?.message}
-      >
-        <option value="">-- Sélectionner --</option>
-        {STATUS_OPTIONS.map((status) => (
-          <option key={status.value} value={status.value}>
-            {status.label}
-          </option>
-        ))}
-      </Select>
+      <div>
+        <div className="flex items-center gap-2 mb-2">
+          <label className="block text-sm font-medium text-gray-700">
+            Statut *
+          </label>
+          <HelpTooltip
+            content="État du mandat : Proposé (en négociation), Signé (contrat finalisé), Actif (en cours), Terminé (échu ou annulé)."
+            learnMoreLink="/dashboard/help/guides/mandats#statuts"
+            size="sm"
+          />
+        </div>
+        <Select
+          {...register('status', { required: 'Statut requis' })}
+          error={errors.status?.message}
+        >
+          <option value="">-- Sélectionner --</option>
+          {STATUS_OPTIONS.map((status) => (
+            <option key={status.value} value={status.value}>
+              {status.label}
+            </option>
+          ))}
+        </Select>
+      </div>
 
       <div className="grid grid-cols-2 gap-4">
         <Input

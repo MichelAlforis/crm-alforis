@@ -1,8 +1,9 @@
 from typing import List, Optional
+
 from pydantic import AnyHttpUrl, Field, field_validator
 
-from schemas.base import BaseSchema, TimestampedSchema
 from core.events import EventType
+from schemas.base import BaseSchema, TimestampedSchema
 
 
 class WebhookBase(BaseSchema):
@@ -29,7 +30,9 @@ class WebhookBase(BaseSchema):
                 event_value = EventType(event).value
             except ValueError as exc:
                 valid_events = ", ".join([e.value for e in EventType])
-                raise ValueError(f"Événement inconnu '{event}'. Événements valides: {valid_events}") from exc
+                raise ValueError(
+                    f"Événement inconnu '{event}'. Événements valides: {valid_events}"
+                ) from exc
 
             if event_value not in seen:
                 seen.add(event_value)
@@ -65,9 +68,7 @@ class WebhookUpdate(BaseSchema):
 
     @field_validator("events")
     @classmethod
-    def validate_optional_events(
-        cls, events: Optional[List[str]]
-    ) -> Optional[List[str]]:
+    def validate_optional_events(cls, events: Optional[List[str]]) -> Optional[List[str]]:
         if events is None:
             return events
         return WebhookBase.validate_events(events)  # type: ignore[arg-type]

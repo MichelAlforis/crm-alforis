@@ -1,6 +1,0 @@
-
-.%"Génère un secret HMAC sécurisé."strcls (	num_bytes (B">,
-*
- (+"
-secrets	token_hex:Bstr
- (+*P/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/services/webhook.py

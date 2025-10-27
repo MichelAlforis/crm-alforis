@@ -1,17 +1,0 @@
-
-ıÎ"
-        Return a dictionary containing key-value pairs for the information
-        items from the distro release file data source of the OS
-        distribution.
-
-        For details, see :func:`distro.distro_release_info`.
-        "strself
-Ö Ö( "{7
-5
-
-ç ç(("" #get-field# _distro_release_info:.
-,
-
-ç ç(("?python-partial-apply?:
-
-ç ç((*Ä/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/distro/distro.py

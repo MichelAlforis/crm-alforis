@@ -1,108 +1,0 @@
-
-SJ"%(\(\w+\))?[-#0 +]*([0-9]+|[*])?(\.([0-9]+|[*]))?[hlL]?[E-GXc-giorsaux%]"str
-ri"\{((\w+)((\.\w+)|(\[[^\]]+\]))*)?(\![sra])?(\:(.?[<>=\^])?[-+ ]?#?0?(\d+)?,?(\.\d+)?[E-GXb-gnosx%]?)?\}"str
-"[^\\\'"%{\n]+"str
-
-	0int
-$"%|(\{{1,2})"str
-	"[\'"\\]"strttypeA A(	tuple,list"…!
-
-E( E(."#unknown-value#)
-'
-E( E(7"#get-field# Interpol:(
-&
-D E(8"#unknown-value#Btuple&
-$
-D E(8"
-#is-exact#:Bbool
-
-D E(8"
-#assume#:8
-6
-D E(8
-"#set-field# __collection_size:	Bint&
-$
-D E(8"#array-add-last#:&
-$
-D E(8"#array-add-last#:!
-
-K K("#unknown-value#)
-'
-K K(#"#get-field# Interpol:(
-&
-G K($"#unknown-value#Btuple&
-$
-G K($"
-#is-exact#:Bbool
-
-G K($"
-#assume#:8
-6
-G K($"#set-field# __collection_size:	Bint&
-$
-G K($"#array-add-last#:&
-$
-G K($"#array-add-last#:(
-&
-N N(%"#unknown-value#Btuple&
-$
-N N(%"
-#is-exact#:Bbool
-
-N N(%"
-#assume#:8
-6
-N N(%"#set-field# __collection_size:	Bint&
-$
-N N(%"#array-add-last#:&
-$
-N N(%"#array-add-last#:(
-&
-O O("#unknown-value#Btuple&
-$
-O O("
-#is-exact#:Bbool
-
-O O( "
-#assume#:8
-6
-O O(!"#set-field# __collection_size:	Bint&
-$
-O O(""#array-add-last#:&
-$
-O O(#"#array-add-last#:(
-&
-Q Q(#%"#unknown-value#Btuple&
-$
-Q Q(#&"
-#is-exact#:%Bbool
-
-Q Q(#'"
-#assume#:&8
-6
-Q Q(#("#set-field# __collection_size:%	Bint&
-$
-Q Q(#)"#array-add-last#:%$&
-$
-Q Q(#*"#array-add-last#:%'
-%
-B S(	+"#unknown-value#Blist&
-$
-B S(	-"
-#is-exact#:+,Bbool
-
-B S(	."
-#assume#:-8
-6
-B S(	/"#set-field# __collection_size:+	Bint&
-$
-B S(	0"#array-add-last#:+&
-$
-B S(	1"#array-add-last#:+&
-$
-B S(	2"#array-add-last#:+&
-$
-B S(	3"#array-add-last#:+&
-$
-B S(	4"#array-add-last#:+%
-B S(	+*‰/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexers/python.py

@@ -9,6 +9,7 @@ import { useOrganisations } from '@/hooks/useOrganisations'
 import { useMandats } from '@/hooks/useMandats'
 import { useTasks } from '@/hooks/useTasks'
 import { usePeople } from '@/hooks/usePeople'
+import { DashboardInteractionsWidget } from '@/components/interactions/DashboardInteractionsWidget'
 
 export default function DashboardPage() {
   // Fetch counts (limit=1 to get only total count, minimal payload)
@@ -100,6 +101,9 @@ export default function DashboardPage() {
           </a>
         </div>
       </Card>
+
+      {/* Recent Interactions Widget */}
+      <DashboardInteractionsWidget limit={5} />
     </div>
   )
 }

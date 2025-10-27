@@ -1,1013 +1,0 @@
-
-–"*.rtf"str
-Æ"*.png"str
-µ"16m"str
-""bitmap"str
-ø"JpgImageFormatter"str
-–÷≈"Format tokens as RTF markup. This formatter automatically outputs full RTF documents with color information and other useful stuff. Perfect for Copy and Paste into Microsoft(R) Word(R) documents."str
-V"troff"str
-x"*.htm"str
-£"ImageFormatter"str
-ﬁ"tex"str
-aÎW"Format tokens as LaTeX code. This needs the `fancyvrb` and `color` standard packages."str
-§"img"str
-¨"RawTokenFormatter"str
-≤"TerminalTrueColor"str
-LºB"Format tokens as a raw representation for storing token streams."str
-¬"jpeg"str
-=á3"Output the text unchanged without any formatting."str
- 	"img_bmp"str
-p"HTML"str
-:"GifImageFormatter"str
-õ	"console"str
-Ã"TestcaseFormatter"str
-#‚"pygments.formatters.svg"str
-!"bmp"str
-≠"Raw tokens"str
-Œ
-"testcase"str
-"BBCode"str
-…"*.jpg"str
-¿	"img_jpg"str
-„"SVG"str
-%"pygments.formatters.bbcode"str
-⁄"LatexFormatter"str
-%˜"pygments.formatters.other"str
-n"HtmlFormatter"str
-…"RTF"str
-<ÿ2"Format tokens as appropriate for a new testcase."str
-˛"terminal256"str
- "rtf"str
-˙"null"str
-#o"pygments.formatters.html"str
-(ò"pygments.formatters.terminal"str
-ó"TerminalFormatter"str
-¨¢"Format tokens with BBcodes. These formatting codes are used by many bulletin boards, so you can highlight your sourcecode with pygments before posting it there."str
-Í"*.svg"str
-"BmpImageFormatter"str
-Õ
-"Testcase"str
-Ä¥v"Create a PNG image from source code. This uses the Python Imaging Library to generate a pixmap from the source code."str
-2ò("Format tokens with IRC color sequences"str
-ö
-"terminal"str
-›"latex"str
-"bb"str
-Hv"Create a GIF image from source code. This uses the Python Imaging Library to generate a pixmap from the source code."str
-+¸!"pygments.formatters.terminal256"str
-¡"jpg"str
-Ä"256"str
-w"*.html"str
-Ç/y"Create a bitmap image from source code. This uses the Python Imaging Library to generate a pixmap from the source code."str
-Â"Format tokens as an SVG graphics file.  This formatter is still experimental. Each line of code is a ``<text>`` element with explicit ``x`` and ``y`` coordinates containing ``<tspan>`` elements with the individual token styles."str
-‰"svg"str
-"bbcode"str
-¥"console16m"str
-Åœw"Create a JPEG image from source code. This uses the Python Imaging Library to generate a pixmap from the source code."str
-ˆ"NullFormatter"str
-™¶ü"Format tokens with ANSI color sequences, for output in a text console. Color sequences are terminated at newlines, so that paging the output works correctly."str
-ç"irc"str
-QcH"Format tokens with groff escapes to change their color and font style."str
-)"*.bmp"str
- í"PangoMarkupFormatter"str
-#ã"pygments.formatters.irc"str
-¶"png"str
-å"IRC"str
-Å"*.txt"str
-ä"IRCFormatter"str
-ï"pango"str
- ˚"Terminal256Formatter"str
-¯"Text only"str
-$T"pygments.formatters.groff"str
-Ÿ¡Œ"Format tokens with ANSI color sequences, for output in a true-color terminal or console.  Like in `TerminalFormatter` color sequences are terminated at newlines, so that paging the output works correctly."str
-q"html"str
-«"RtfFormatter"str
-%€"pygments.formatters.latex"str
-Ø"tokens"str
-î"Pango Markup"str
-+ì!"pygments.formatters.pangomarkup"str
-Ï‚"Format tokens as HTML 4 ``<span>`` tags. By default, the content is enclosed in a ``<pre>`` tag, itself wrapped in a ``<div>`` tag (but see the `nowrap` option). The ``<div>``'s CSS class can be set by the `cssclass` option."str
-ÿåÕ"Format tokens with ANSI color sequences, for output in a 256-color terminal or console.  Like in `TerminalFormatter` color sequences are terminated at newlines, so that paging the output works correctly."str
-R°H"Format tokens as Pango Markup code. It can then be rendered to an SVG."str
-NoneNoneType
-ô
-"Terminal"str
-
-0int
-‹"LaTeX"str
-&±"TerminalTrueColorFormatter"str
-ˇ"console256"str
-<"gif"str
-·"SvgFormatter"str
-#»"pygments.formatters.rtf"str
-S"GroffFormatter"str
-"BBCodeFormatter"str
-•"IMG"str
-""pygments.formatters.img"str
-˝"Terminal256"str
-ñ"pangomarkup"str
-˘"text"str
-Æ"raw"str
-U"groff"str
-;	"img_gif"str
-≥"terminal16m"str
-∂"*.raw"str
-B"*.gif"str
-Â"*.tex"str
-W"roff"str	tuple"è~0
-.
- (
-FORMATTERS"#new-object#Bdict(
-&
-@ (P"#unknown-value#Btuple&
-$
-@ (P	"
-#is-exact#:Bbool
-
-@ (P
-"
-#assume#:	8
-6
-@ (P"#set-field# __collection_size:Bint&
-$
-@ (P"#array-add-last#:&
-$
-@ (P"#array-add-last#:(
-&
-R (T"#unknown-value#Btuple&
-$
-R (T"
-#is-exact#:Bbool
-
-R (T"
-#assume#:8
-6
-R (T"#set-field# __collection_size:Bint)
-'
-	 (˘"#unknown-value#Btuple'
-%
-	 (˘"
-#is-exact#:Bbool
-
-	 (˘"
-#assume#:9
-7
-	 (˘"#set-field# __collection_size:Bint'
-%
-	 (˘"#array-add-last#:'
-%
-	 (˘"#array-add-last#:'
-%
-	 (˘"#array-add-last#:'
-%
-	 (˘"#array-add-last#:'
-%
-	 (˘"#array-add-last#:!
-
-	 (˘"	#map-set#:(
-&
-@ (Q#"#unknown-value#Btuple&
-$
-@ (Q$"
-#is-exact#:#Bbool
-
-@ (Q%"
-#assume#:$8
-6
-@ (Q&"#set-field# __collection_size:#Bint&
-$
-@ (Q'"#array-add-last#:#!&
-$
-@ (Q("#array-add-last#:#"(
-&
-S (]*"#unknown-value#Btuple&
-$
-S (]+"
-#is-exact#:*Bbool
-
-S (],"
-#assume#:+8
-6
-S (]-"#set-field# __collection_size:*Bint&
-$
-S (]."#array-add-last#:*))
-'
-	 (Ÿ0"#unknown-value#Btuple'
-%
-	 (Ÿ1"
-#is-exact#:0Bbool
-
-	 (Ÿ2"
-#assume#:19
-7
-	 (Ÿ3"#set-field# __collection_size:0Bint'
-%
-	 (Ÿ4"#array-add-last#:0'
-%
-	 (Ÿ5"#array-add-last#:0 '
-%
-	 (Ÿ6"#array-add-last#:0#'
-%
-	 (Ÿ7"#array-add-last#:0*'
-%
-	 (Ÿ8"#array-add-last#:0/!
-
-	 (Ÿ9"	#map-set#:0(
-&
-@ (H="#unknown-value#Btuple&
-$
-@ (H>"
-#is-exact#:=Bbool
-
-@ (H?"
-#assume#:>8
-6
-@ (H@"#set-field# __collection_size:=Bint&
-$
-@ (HA"#array-add-last#:=<(
-&
-J (TC"#unknown-value#Btuple&
-$
-J (TD"
-#is-exact#:CBbool
-
-J (TE"
-#assume#:D8
-6
-J (TF"#set-field# __collection_size:CBint&
-$
-J (TG"#array-add-last#:CB)
-'
-	 (ÕI"#unknown-value#Btuple'
-%
-	 (ÕJ"
-#is-exact#:IBbool
-
-	 (ÕK"
-#assume#:J9
-7
-	 (ÕL"#set-field# __collection_size:IBint'
-%
-	 (ÕM"#array-add-last#:I'
-%
-	 (ÕN"#array-add-last#:I;'
-%
-	 (ÕO"#array-add-last#:I='
-%
-	 (ÕP"#array-add-last#:IC'
-%
-	 (ÕQ"#array-add-last#:IH!
-
-	 (ÕR"	#map-set#::I(
-&
-= (WX"#unknown-value#Btuple&
-$
-= (WY"
-#is-exact#:XBbool
-
-= (WZ"
-#assume#:Y8
-6
-= (W["#set-field# __collection_size:XBint&
-$
-= (W\"#array-add-last#:XU&
-$
-= (W]"#array-add-last#:XV&
-$
-= (W^"#array-add-last#:XW(
-&
-Y ([_"#unknown-value#Btuple&
-$
-Y ([`"
-#is-exact#:_Bbool
-
-Y ([a"
-#assume#:`8
-6
-Y ([b"#set-field# __collection_size:_Bint)
-'
-	 (¶d"#unknown-value#Btuple'
-%
-	 (¶e"
-#is-exact#:dBbool
-
-	 (¶f"
-#assume#:e9
-7
-	 (¶g"#set-field# __collection_size:dBint'
-%
-	 (¶h"#array-add-last#:dT'
-%
-	 (¶i"#array-add-last#:dU'
-%
-	 (¶j"#array-add-last#:dX'
-%
-	 (¶k"#array-add-last#:d_'
-%
-	 (¶l"#array-add-last#:dc!
-
-	 (¶m"	#map-set#:Sd(
-&
-	: 	(Cr"#unknown-value#Btuple&
-$
-	: 	(Cs"
-#is-exact#:rBbool
-
-	: 	(Ct"
-#assume#:s8
-6
-	: 	(Cu"#set-field# __collection_size:rBint&
-$
-	: 	(Cv"#array-add-last#:rq(
-&
-	E 	(Xy"#unknown-value#Btuple&
-$
-	E 	(Xz"
-#is-exact#:yBbool
-
-	E 	(X{"
-#assume#:z8
-6
-	E 	(X|"#set-field# __collection_size:yBint&
-$
-	E 	(X}"#array-add-last#:yw&
-$
-	E 	(X~"#array-add-last#:yx*
-(
-		 	(ΩÄ"#unknown-value#Btuple)
-'
-		 	(ΩÅ"
-#is-exact#:ÄBbool 
-
-		 	(ΩÇ"
-#assume#:Å;
-9
-		 	(ΩÉ"#set-field# __collection_size:ÄBint)
-'
-		 	(ΩÑ"#array-add-last#:Äo)
-'
-		 	(ΩÖ"#array-add-last#:Äp)
-'
-		 	(ΩÜ"#array-add-last#:Är)
-'
-		 	(Ωá"#array-add-last#:Äy)
-'
-		 	(Ωà"#array-add-last#:Ä#
-!
-		 	(Ωâ"	#map-set#:nÄ)
-'
-
-7 
-(Eé"#unknown-value#Btuple(
-&
-
-7 
-(Eè"
-#is-exact#:éBbool
-
-
-7 
-(Eê"
-#assume#:è:
-8
-
-7 
-(Eë"#set-field# __collection_size:éBint)
-'
-
-7 
-(Eí"#array-add-last#:éç)
-'
-
-7 
-(Eì"#array-add-last#:éå)
-'
-
-G 
-(Iî"#unknown-value#Btuple(
-&
-
-G 
-(Iï"
-#is-exact#:îBbool
-
-
-G 
-(Iñ"
-#assume#:ï:
-8
-
-G 
-(Ió"#set-field# __collection_size:îBint)
-'
-
- 
-(tô"#unknown-value#Btuple(
-&
-
- 
-(tö"
-#is-exact#:ôBbool
-
-
- 
-(tõ"
-#assume#:ö:
-8
-
- 
-(tú"#set-field# __collection_size:ôBint)
-'
-
- 
-(tù"#array-add-last#:ôã)
-'
-
- 
-(tû"#array-add-last#:ôå)
-'
-
- 
-(tü"#array-add-last#:ôé)
-'
-
- 
-(t†"#array-add-last#:ôî)
-'
-
- 
-(t°"#array-add-last#:ôò#
-!
-
- 
-(t¢"	#map-set#:äô)
-'
-9 (Nß"#unknown-value#Btuple(
-&
-9 (N®"
-#is-exact#:ßBbool
-
-9 (N©"
-#assume#:®:
-8
-9 (N™"#set-field# __collection_size:ßBint)
-'
-9 (N´"#array-add-last#:ß§)
-'
-9 (N¨"#array-add-last#:ß•)
-'
-9 (N≠"#array-add-last#:ß¶)
-'
-P (ZØ"#unknown-value#Btuple(
-&
-P (Z∞"
-#is-exact#:ØBbool
-
-P (Z±"
-#assume#:∞:
-8
-P (Z≤"#set-field# __collection_size:ØBint)
-'
-P (Z≥"#array-add-last#:ØÆ*
-(
-	 (”µ"#unknown-value#Btuple)
-'
-	 (”∂"
-#is-exact#:µBbool 
-
-	 (”∑"
-#assume#:∂;
-9
-	 (”∏"#set-field# __collection_size:µBint)
-'
-	 (”π"#array-add-last#:µ*
-(
-	 (”∫"#array-add-last#:µ§*
-(
-	 (”ª"#array-add-last#:µß*
-(
-	 (”º"#array-add-last#:µØ*
-(
-	 (”Ω"#array-add-last#:µ¥$
-"
-	 (”æ"	#map-set#:£µ)
-'
-@ (O√"#unknown-value#Btuple(
-&
-@ (Oƒ"
-#is-exact#:√Bbool
-
-@ (O≈"
-#assume#:ƒ:
-8
-@ (O∆"#set-field# __collection_size:√Bint)
-'
-@ (O«"#array-add-last#:√¡)
-'
-@ (O»"#array-add-last#:√¬)
-'
-Q ([ "#unknown-value#Btuple(
-&
-Q ([À"
-#is-exact#: Bbool
-
-Q ([Ã"
-#assume#:À:
-8
-Q ([Õ"#set-field# __collection_size: Bint)
-'
-Q ([Œ"#array-add-last#: …*
-(
-	 (’–"#unknown-value#Btuple)
-'
-	 (’—"
-#is-exact#:–Bbool 
-
-	 (’“"
-#assume#:—;
-9
-	 (’”"#set-field# __collection_size:–Bint)
-'
-	 (’‘"#array-add-last#:–*
-(
-	 (’’"#array-add-last#:–¿*
-(
-	 (’÷"#array-add-last#:–√*
-(
-	 (’◊"#array-add-last#:– *
-(
-	 (’ÿ"#array-add-last#:–œ$
-"
-	 (’Ÿ"	#map-set#:ø–)
-'
-= (Mﬂ"#unknown-value#Btuple(
-&
-= (M‡"
-#is-exact#:ﬂBbool
-
-= (M·"
-#assume#:‡:
-8
-= (M‚"#set-field# __collection_size:ﬂBint)
-'
-= (M„"#array-add-last#:ﬂ›)
-'
-= (M‰"#array-add-last#:ﬂﬁ)
-'
-O (YÊ"#unknown-value#Btuple(
-&
-O (YÁ"
-#is-exact#:ÊBbool
-
-O (YË"
-#assume#:Á:
-8
-O (YÈ"#set-field# __collection_size:ÊBint)
-'
-O (YÍ"#array-add-last#:ÊÂ*
-(
-	 (≥Ï"#unknown-value#Btuple)
-'
-	 (≥Ì"
-#is-exact#:ÏBbool 
-
-	 (≥Ó"
-#assume#:Ì;
-9
-	 (≥Ô"#set-field# __collection_size:ÏBint*
-(
-	 (≥"#array-add-last#:Ï€*
-(
-	 (≥Ò"#array-add-last#:Ï‹*
-(
-	 (≥Ú"#array-add-last#:Ïﬂ*
-(
-	 (≥Û"#array-add-last#:ÏÊ*
-(
-	 (≥Ù"#array-add-last#:ÏÎ$
-"
-	 (≥ı"	#map-set#:⁄Ï)
-'
-@ (P˚"#unknown-value#Btuple(
-&
-@ (P¸"
-#is-exact#:˚Bbool
-
-@ (P˝"
-#assume#:¸:
-8
-@ (P˛"#set-field# __collection_size:˚Bint)
-'
-@ (Pˇ"#array-add-last#:˚˘)
-'
-@ (PÄ"#array-add-last#:˚˙)
-'
-R (\Ç"#unknown-value#Btuple(
-&
-R (\É"
-#is-exact#:ÇBbool
-
-R (\Ñ"
-#assume#:É:
-8
-R (\Ö"#set-field# __collection_size:ÇBint)
-'
-R (\Ü"#array-add-last#:ÇÅ*
-(
-	 (íà"#unknown-value#Btuple)
-'
-	 (íâ"
-#is-exact#:àBbool 
-
-	 (íä"
-#assume#:â;
-9
-	 (íã"#set-field# __collection_size:àBint*
-(
-	 (íå"#array-add-last#:à˜*
-(
-	 (íç"#array-add-last#:à¯*
-(
-	 (íé"#array-add-last#:à˚*
-(
-	 (íè"#array-add-last#:àÇ*
-(
-	 (íê"#array-add-last#:àá$
-"
-	 (íë"	#map-set#:ˆà)
-'
-P (hó"#unknown-value#Btuple(
-&
-P (hò"
-#is-exact#:óBbool
-
-P (hô"
-#assume#:ò:
-8
-P (hö"#set-field# __collection_size:óBint)
-'
-P (hõ"#array-add-last#:óï)
-'
-P (hú"#array-add-last#:óñ)
-'
-j (lù"#unknown-value#Btuple(
-&
-j (lû"
-#is-exact#:ùBbool
-
-j (lü"
-#assume#:û:
-8
-j (l†"#set-field# __collection_size:ùBint*
-(
-	 (∑¢"#unknown-value#Btuple)
-'
-	 (∑£"
-#is-exact#:¢Bbool 
-
-	 (∑§"
-#assume#:£;
-9
-	 (∑•"#set-field# __collection_size:¢Bint*
-(
-	 (∑¶"#array-add-last#:¢ì*
-(
-	 (∑ß"#array-add-last#:¢î*
-(
-	 (∑®"#array-add-last#:¢ó*
-(
-	 (∑©"#array-add-last#:¢ù*
-(
-	 (∑™"#array-add-last#:¢°$
-"
-	 (∑´"	#map-set#:í¢)
-'
-E (V∞"#unknown-value#Btuple(
-&
-E (V±"
-#is-exact#:∞Bbool
-
-E (V≤"
-#assume#:±:
-8
-E (V≥"#set-field# __collection_size:∞Bint)
-'
-E (V¥"#array-add-last#:∞Æ)
-'
-E (Vµ"#array-add-last#:∞Ø)
-'
-X (b∑"#unknown-value#Btuple(
-&
-X (b∏"
-#is-exact#:∑Bbool
-
-X (bπ"
-#assume#:∏:
-8
-X (b∫"#set-field# __collection_size:∑Bint)
-'
-X (bª"#array-add-last#:∑∂*
-(
-	 (ßΩ"#unknown-value#Btuple)
-'
-	 (ßæ"
-#is-exact#:ΩBbool 
-
-	 (ßø"
-#assume#:æ;
-9
-	 (ß¿"#set-field# __collection_size:ΩBint*
-(
-	 (ß¡"#array-add-last#:Ω˜*
-(
-	 (ß¬"#array-add-last#:Ω≠*
-(
-	 (ß√"#array-add-last#:Ω∞*
-(
-	 (ßƒ"#array-add-last#:Ω∑*
-(
-	 (ß≈"#array-add-last#:Ωº$
-"
-	 (ß∆"	#map-set#:¨Ω)
-'
-7 (?À"#unknown-value#Btuple(
-&
-7 (?Ã"
-#is-exact#:ÀBbool
-
-7 (?Õ"
-#assume#:Ã:
-8
-7 (?Œ"#set-field# __collection_size:ÀBint)
-'
-7 (?œ"#array-add-last#:À )
-'
-A (K—"#unknown-value#Btuple(
-&
-A (K“"
-#is-exact#:—Bbool
-
-A (K”"
-#assume#:“:
-8
-A (K‘"#set-field# __collection_size:—Bint)
-'
-A (K’"#array-add-last#:—–*
-(
-	 (ì◊"#unknown-value#Btuple)
-'
-	 (ìÿ"
-#is-exact#:◊Bbool 
-
-	 (ìŸ"
-#assume#:ÿ;
-9
-	 (ì⁄"#set-field# __collection_size:◊Bint*
-(
-	 (ì€"#array-add-last#:◊»*
-(
-	 (ì‹"#array-add-last#:◊…*
-(
-	 (ì›"#array-add-last#:◊À*
-(
-	 (ìﬁ"#array-add-last#:◊—*
-(
-	 (ìﬂ"#array-add-last#:◊÷$
-"
-	 (ì‡"	#map-set#:«◊)
-'
-7 (?Â"#unknown-value#Btuple(
-&
-7 (?Ê"
-#is-exact#:ÂBbool
-
-7 (?Á"
-#assume#:Ê:
-8
-7 (?Ë"#set-field# __collection_size:ÂBint)
-'
-7 (?È"#array-add-last#:Â‰)
-'
-A (KÎ"#unknown-value#Btuple(
-&
-A (KÏ"
-#is-exact#:ÎBbool
-
-A (KÌ"
-#assume#:Ï:
-8
-A (KÓ"#set-field# __collection_size:ÎBint)
-'
-A (KÔ"#array-add-last#:ÎÍ*
-(
-	 (≥Ò"#unknown-value#Btuple)
-'
-	 (≥Ú"
-#is-exact#:ÒBbool 
-
-	 (≥Û"
-#assume#:Ú;
-9
-	 (≥Ù"#set-field# __collection_size:ÒBint*
-(
-	 (≥ı"#array-add-last#:Ò‚*
-(
-	 (≥ˆ"#array-add-last#:Ò„*
-(
-	 (≥˜"#array-add-last#:ÒÂ*
-(
-	 (≥¯"#array-add-last#:ÒÎ*
-(
-	 (≥˘"#array-add-last#:Ò$
-"
-	 (≥˙"	#map-set#:·Ò)
-'
-O (sÅ"#unknown-value#Btuple(
-&
-O (sÇ"
-#is-exact#:ÅBbool
-
-O (sÉ"
-#assume#:Ç:
-8
-O (sÑ"#set-field# __collection_size:ÅBint)
-'
-O (sÖ"#array-add-last#:Å˛)
-'
-O (sÜ"#array-add-last#:Åˇ)
-'
-O (sá"#array-add-last#:ÅÄ)
-'
-u (wà"#unknown-value#Btuple(
-&
-u (wâ"
-#is-exact#:àBbool
-
-u (wä"
-#assume#:â:
-8
-u (wã"#set-field# __collection_size:àBint*
-(
-	 («ç"#unknown-value#Btuple)
-'
-	 («é"
-#is-exact#:çBbool 
-
-	 («è"
-#assume#:é;
-9
-	 («ê"#set-field# __collection_size:çBint*
-(
-	 («ë"#array-add-last#:ç¸*
-(
-	 («í"#array-add-last#:ç˝*
-(
-	 («ì"#array-add-last#:çÅ*
-(
-	 («î"#array-add-last#:çà*
-(
-	 («ï"#array-add-last#:çå$
-"
-	 («ñ"	#map-set#:˚ç)
-'
-F (]ú"#unknown-value#Btuple(
-&
-F (]ù"
-#is-exact#:úBbool
-
-F (]û"
-#assume#:ù:
-8
-F (]ü"#set-field# __collection_size:úBint)
-'
-F (]†"#array-add-last#:úö)
-'
-F (]°"#array-add-last#:úõ)
-'
-_ (a¢"#unknown-value#Btuple(
-&
-_ (a£"
-#is-exact#:¢Bbool
-
-_ (a§"
-#assume#:£:
-8
-_ (a•"#set-field# __collection_size:¢Bint*
-(
-	 (Éß"#unknown-value#Btuple)
-'
-	 (É®"
-#is-exact#:ßBbool 
-
-	 (É©"
-#assume#:®;
-9
-	 (É™"#set-field# __collection_size:ßBint*
-(
-	 (É´"#array-add-last#:ßò*
-(
-	 (É¨"#array-add-last#:ßô*
-(
-	 (É≠"#array-add-last#:ßú*
-(
-	 (ÉÆ"#array-add-last#:ß¢*
-(
-	 (ÉØ"#array-add-last#:ß¶$
-"
-	 (É∞"	#map-set#:óß)
-'
-[ (∂"#unknown-value#Btuple(
-&
-[ (∑"
-#is-exact#:∂Bbool
-
-[ (∏"
-#assume#:∑:
-8
-[ (π"#set-field# __collection_size:∂Bint)
-'
-[ (∫"#array-add-last#:∂≥)
-'
-[ (ª"#array-add-last#:∂¥)
-'
-[ (º"#array-add-last#:∂µ+
-)
-
-Å (ÉΩ"#unknown-value#Btuple*
-(
-
-Å (Éæ"
-#is-exact#:ΩBbool!
-
-
-Å (Éø"
-#assume#:æ<
-:
-
-Å (É¿"#set-field# __collection_size:ΩBint*
-(
-	" (‘¬"#unknown-value#Btuple)
-'
-	" (‘√"
-#is-exact#:¬Bbool 
-
-	" (‘ƒ"
-#assume#:√;
-9
-	" (‘≈"#set-field# __collection_size:¬Bint*
-(
-	" (‘∆"#array-add-last#:¬¸*
-(
-	" (‘«"#array-add-last#:¬≤*
-(
-	" (‘»"#array-add-last#:¬∂*
-(
-	" (‘…"#array-add-last#:¬Ω*
-(
-	" (‘ "#array-add-last#:¬¡$
-"
-	 (‘À"	#map-set#:±¬)
-'
-C (Pœ"#unknown-value#Btuple(
-&
-C (P–"
-#is-exact#:œBbool
-
-C (P—"
-#assume#:–:
-8
-C (P“"#set-field# __collection_size:œBint)
-'
-C (P”"#array-add-last#:œŒ)
-'
-R (T‘"#unknown-value#Btuple(
-&
-R (T’"
-#is-exact#:‘Bbool
-
-R (T÷"
-#assume#:’:
-8
-R (T◊"#set-field# __collection_size:‘Bint*
-(
-	 (âŸ"#unknown-value#Btuple)
-'
-	 (â⁄"
-#is-exact#:ŸBbool 
-
-	 (â€"
-#assume#:⁄;
-9
-	 (â‹"#set-field# __collection_size:ŸBint*
-(
-	 (â›"#array-add-last#:Ÿ˜*
-(
-	 (âﬁ"#array-add-last#:ŸÕ*
-(
-	 (âﬂ"#array-add-last#:Ÿœ*
-(
-	 (â‡"#array-add-last#:Ÿ‘*
-(
-	 (â·"#array-add-last#:Ÿÿ$
-"
-	 (â‚"	#map-set#:ÃŸ *è/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pygments/formatters/_mapping.py

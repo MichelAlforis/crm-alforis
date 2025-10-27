@@ -5,15 +5,20 @@ Gestion des clés API et configuration des providers d'email avec cryptage
 Similaire à AIConfiguration pour la cohérence
 """
 
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, Enum as SQLEnum, ForeignKey
-from sqlalchemy.orm import relationship
-from datetime import datetime
 import enum
+from datetime import datetime
+
+from sqlalchemy import Boolean, Column, DateTime
+from sqlalchemy import Enum as SQLEnum
+from sqlalchemy import ForeignKey, Integer, String, Text
+from sqlalchemy.orm import relationship
+
 from models.base import BaseModel
 
 
 class EmailProvider(str, enum.Enum):
     """Fournisseurs d'email supportés"""
+
     RESEND = "resend"
     SENDGRID = "sendgrid"
     MAILGUN = "mailgun"
@@ -26,6 +31,7 @@ class EmailConfiguration(BaseModel):
     Stocke de manière cryptée les clés API des fournisseurs d'email.
     Une seule configuration peut être active à la fois.
     """
+
     __tablename__ = "email_configurations"
 
     # Identification
@@ -34,7 +40,11 @@ class EmailConfiguration(BaseModel):
     is_active = Column(Boolean, default=False, nullable=False, index=True)
 
     # Provider et configuration
-    provider = Column(SQLEnum(EmailProvider, values_callable=lambda x: [e.value for e in x]), nullable=False, default=EmailProvider.RESEND)
+    provider = Column(
+        SQLEnum(EmailProvider, values_callable=lambda x: [e.value for e in x]),
+        nullable=False,
+        default=EmailProvider.RESEND,
+    )
 
     # Clés API (cryptées)
     api_key_encrypted = Column(Text, nullable=False)  # Clé API cryptée
@@ -62,4 +72,6 @@ class EmailConfiguration(BaseModel):
     test_error = Column(Text, nullable=True)  # Message d'erreur du dernier test
 
     def __repr__(self):
-        return f"<EmailConfiguration(id={self.id}, provider={self.provider}, active={self.is_active})>"
+        return (
+            f"<EmailConfiguration(id={self.id}, provider={self.provider}, active={self.is_active})>"
+        )

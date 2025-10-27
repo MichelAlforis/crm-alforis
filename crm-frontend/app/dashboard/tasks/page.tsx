@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useTaskViews, useTasks } from '@/hooks/useTasks'
+import { useFilters } from '@/hooks/useFilters'
 import TaskForm from '@/components/forms/TaskForm'
 import { AdvancedFilters } from '@/components/shared'
 import type { Task, TaskPriority } from '@/lib/types'
@@ -167,30 +168,24 @@ function TaskSection({
 
 // ============= MAIN PAGE =============
 
+interface TaskFilters {
+  priority: string
+  category: string
+  status: string
+}
+
 export default function TaskdeskPage() {
   const { overdue, today, next7, overdueCount, todayCount, next7Count, stats } = useTaskViews()
   const { quickAction } = useTasks()
   const [isFormOpen, setIsFormOpen] = useState(false)
-  const [filtersState, setFiltersState] = useState({
-    priority: '',
-    category: '',
-    status: '',
-  })
 
-  const handleFilterChange = (key: string, value: unknown) => {
-    if (Array.isArray(value)) return
-    setFiltersState((prev) => ({
-      ...prev,
-      [key]: value as string,
-    }))
-  }
-
-  const resetFilters = () =>
-    setFiltersState({
+  const filters = useFilters<TaskFilters>({
+    initialValues: {
       priority: '',
       category: '',
       status: '',
-    })
+    },
+  })
 
   const advancedFilterDefinitions = [
     {
@@ -235,14 +230,14 @@ export default function TaskdeskPage() {
   // Filtrer les tâches
   const filterTasks = (tasks: Task[]) => {
     return tasks.filter((task) => {
-      const matchesPriority = filtersState.priority
-        ? task.priority === filtersState.priority
+      const matchesPriority = filters.values.priority
+        ? task.priority === filters.values.priority
         : true
-      const matchesCategory = filtersState.category
-        ? task.category === filtersState.category
+      const matchesCategory = filters.values.category
+        ? task.category === filters.values.category
         : true
-      const matchesStatus = filtersState.status
-        ? task.status === filtersState.status
+      const matchesStatus = filters.values.status
+        ? task.status === filters.values.status
         : true
       return matchesPriority && matchesCategory && matchesStatus
     })
@@ -313,9 +308,9 @@ export default function TaskdeskPage() {
           <div className="mt-6">
             <AdvancedFilters
               filters={advancedFilterDefinitions}
-              values={filtersState}
-              onChange={handleFilterChange}
-              onReset={resetFilters}
+              values={filters.values}
+              onChange={filters.handleChange}
+              onReset={filters.reset}
             />
           </div>
 

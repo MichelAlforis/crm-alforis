@@ -1,17 +1,0 @@
-
-òè"
-        Return a dictionary containing key-value pairs for the information
-        items from the lsb_release command data source of the OS
-        distribution.
-
-        For details, see :func:`distro.lsb_release_info`.
-        "strself
-û û("x4
-2
-
-ƒ ƒ(%"#get-field# _lsb_release_info:.
-,
-
-ƒ ƒ(%"?python-partial-apply?:
-
-ƒ ƒ(%*€/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/distro/distro.py

@@ -298,7 +298,9 @@ case "$ACTION" in
 
     # Build et démarrage
     print_info "Build des images Docker..."
-    if ! ssh_quiet "cd '$REMOTE_DIR' && docker compose -f $COMPOSE_FILE build --no-cache"; then
+    # OPTIMISATION: Retrait de --no-cache pour utiliser le cache des layers Docker (gain 5-10x)
+    # Si besoin d'un rebuild complet, ajouter --no-cache manuellement
+    if ! ssh_quiet "cd '$REMOTE_DIR' && docker compose -f $COMPOSE_FILE build"; then
       print_error "Échec build"
       exit 14
     fi

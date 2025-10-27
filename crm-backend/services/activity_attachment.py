@@ -1,22 +1,22 @@
 """Service pour gérer les pièces jointes d'activités."""
 
-from typing import List, Optional
-from sqlalchemy.orm import Session
-from pathlib import Path
 import os
 import uuid
 from datetime import datetime
+from pathlib import Path
+from typing import List, Optional
 
-from services.base import BaseService
-from models.activity_attachment import ActivityAttachment
-from schemas.activity_attachment import (
-    ActivityAttachmentCreate,
-    ActivityAttachmentUpdate,
-)
+from sqlalchemy.orm import Session
+
 from core.exceptions import ResourceNotFound, ValidationError
+from models.activity_attachment import ActivityAttachment
+from schemas.activity_attachment import ActivityAttachmentCreate, ActivityAttachmentUpdate
+from services.base import BaseService
 
 
-class ActivityAttachmentService(BaseService[ActivityAttachment, ActivityAttachmentCreate, ActivityAttachmentUpdate]):
+class ActivityAttachmentService(
+    BaseService[ActivityAttachment, ActivityAttachmentCreate, ActivityAttachmentUpdate]
+):
     """Service pour gérer les pièces jointes des activités."""
 
     def __init__(self, db: Session):
@@ -24,9 +24,11 @@ class ActivityAttachmentService(BaseService[ActivityAttachment, ActivityAttachme
 
     async def get_by_activity(self, activity_id: int) -> List[ActivityAttachment]:
         """Récupère toutes les pièces jointes d'une activité."""
-        return self.db.query(ActivityAttachment).filter(
-            ActivityAttachment.activity_id == activity_id
-        ).all()
+        return (
+            self.db.query(ActivityAttachment)
+            .filter(ActivityAttachment.activity_id == activity_id)
+            .all()
+        )
 
     async def save_file(
         self,
@@ -36,7 +38,7 @@ class ActivityAttachmentService(BaseService[ActivityAttachment, ActivityAttachme
         mime_type: str,
         title: Optional[str] = None,
         notes: Optional[str] = None,
-        upload_dir: str = "uploads/attachments"
+        upload_dir: str = "uploads/attachments",
     ) -> ActivityAttachment:
         """
         Sauvegarde un fichier sur disque et crée l'entrée en base.
@@ -78,7 +80,7 @@ class ActivityAttachmentService(BaseService[ActivityAttachment, ActivityAttachme
             file_size=file_size,
             mime_type=mime_type,
             title=title,
-            notes=notes
+            notes=notes,
         )
 
         return await self.create(attachment_data)

@@ -1,14 +1,0 @@
-
-0'":return: videos path tied to the user"strself
-í í("¡2
-0
-
-ï ï(("#get-field# user_videos_dir:.
-,
-
-ï ï(("?python-partial-apply?:)
-'
-
-ï ï()"Path:Bpathlib.Path
-
-ï ï()*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/api.py

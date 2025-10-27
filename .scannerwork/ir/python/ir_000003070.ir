@@ -1,81 +1,0 @@
-
-
-"__name__"str
-
-0int
-	"__doc__"str
-"__annotations__"str
-
-"__module__"struser_function
-Ù$ Ù(1" #
-!
-
-à à("#unknown-value##
-!
-
-Ü Ü("#unknown-value##
-!
-
-Ö Ö("#unknown-value##
-!
-
-Ñ Ñ("#unknown-value##
-!
-
-É É("#unknown-value#$
-"
-
-ı ı($"?python-unknown?:
-8
-
-ı ı($"#set-field# __collection_size:Bint:
-8
-
-ı ı($repr_running"
-builtinsset*:Bset*
-(
-
-˜ É(%closure"#new-object#0
-.
-
-˜ É("#set-field# repr_running:1
-/
-
-˜ É("#set-field# user_function:-
-+
-
-˜ É(	"?python-partial-apply?:,
-*
-
-É% É(I"
-builtinsgetattr*:
-.
-,
-
-É É(""#set-field# __module__:,
-*
-
-Ñ" Ñ(C"
-builtinsgetattr*:+
-)
-
-Ñ Ñ("#set-field# __doc__:,
-*
-
-Ö# Ö(E"
-builtinsgetattr*:,
-*
-
-Ö Ö( "#set-field# __name__:&
-$
-
-áE á(G"#new-object#Bdict-
-+
-
-Ü* á(H"
-builtinsgetattr*:3
-1
-
-Ü Ü('"#set-field# __annotations__:
-
-à à(*Å/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/distlib/compat.py

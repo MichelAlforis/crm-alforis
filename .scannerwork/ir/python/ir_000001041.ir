@@ -1,67 +1,0 @@
-
-"server_side"str
-¾´"A true SSLContext object is not available. This prevents urllib3 from configuring SSL appropriately and may cause certain SSL connections to fail. You can upgrade to a newer version of Python to solve this. For more information, see https://urllib3.readthedocs.io/en/1.26.x/advanced-usage.html#ssl-warnings"str
-
-"certfile"str
-		"keyfile"str
-"ssl_version"str
-
-"ca_certs"str
-"cert_reqs"strself
-¤ ¤(socket
-¤ ¤($server_hostname
-¤& ¤(:server_side
-¤< ¤(M:6pip._vendor.urllib3.exceptions.InsecurePlatformWarning"¹0
-.
-
-¥ ­("
-warningswarn:BNoneType.
-,
-
-® µ(kwargs"#new-object#Bdict*
-(
-
-¯ ¯('
-"#get-field# keyfile:"
- 
-
-¯ ¯('"	#map-set#:	
-+
-)
-
-° °()"#get-field# certfile:"
- 
-
-° °()"	#map-set#:+
-)
-
-± ±()"#get-field# ca_certs:"
- 
-
-± ±()"	#map-set#:.
-,
-
-² ²(-"#get-field# verify_mode:"
- 
-
-² ²(-"	#map-set#:+
-)
-
-³ ³(,"#get-field# protocol:"
- 
-
-³ ³(,"	#map-set#:"
- 
-
-´ ´(*"	#map-set#:*
-(
-
-¶/ ¶(;"#get-field# ciphers:'
-%
-
-¶= ¶(E"#unaryop **#2**:3
-1
-
-¶ ¶(F"wrap_socket:Bssl.SSLSocket
-
-¶ ¶(F*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/util/ssl_.py

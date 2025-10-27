@@ -1,40 +1,0 @@
-
-"list"str
-"purge"str
-"remove"str
-"dir"str
-"info"strself4 4("½$
-"
-5 ;(	"#new-object#Bdict.
-,
-6 6(%"#get-field# get_cache_dir:,
-*
-6 6(%"?python-partial-apply?: 
-
-6 6(%"	#map-set#:/
--
-7 7('"#get-field# get_cache_info:,
-*
-7 7('	"?python-partial-apply?: 
-
-7 7('
-"	#map-set#:	1
-/
-8 8()"#get-field# list_cache_items:,
-*
-8 8()"?python-partial-apply?: 
-
-8 8()"	#map-set#:3
-1
-9 9(-" #get-field# remove_cache_items:,
-*
-9 9(-"?python-partial-apply?: 
-
-9 9(-"	#map-set#:,
-*
-: :(%"#get-field# purge_cache:,
-*
-: :(%"?python-partial-apply?: 
-
-: :(%"	#map-set#:
-5 ;(	*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/commands/cache.py

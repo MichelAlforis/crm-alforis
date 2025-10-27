@@ -1,8 +1,9 @@
 import enum
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from typing import Optional
 
 from sqlalchemy import (
+    JSON,
     Boolean,
     Column,
     DateTime,
@@ -10,7 +11,6 @@ from sqlalchemy import (
     ForeignKey,
     Index,
     Integer,
-    JSON,
     String,
     Text,
 )
@@ -19,13 +19,13 @@ from sqlalchemy.sql import func
 
 from models.base import BaseModel
 from models.constants import (
-    FK_USERS_ID,
-    FK_EMAIL_TEMPLATES_ID,
-    FK_EMAIL_CAMPAIGNS_ID,
-    ONDELETE_SET_NULL,
-    ONDELETE_CASCADE,
     ENUM_EMAIL_CAMPAIGN_STATUS,
     ENUM_EMAIL_SEND_STATUS,
+    FK_EMAIL_CAMPAIGNS_ID,
+    FK_EMAIL_TEMPLATES_ID,
+    FK_USERS_ID,
+    ONDELETE_CASCADE,
+    ONDELETE_SET_NULL,
 )
 
 
@@ -180,7 +180,9 @@ class EmailCampaign(BaseModel):
     from_name = Column(String(255), nullable=False)
     from_email = Column(String(255), nullable=False, index=True)
     reply_to = Column(String(255), nullable=True)
-    default_template_id = Column(Integer, ForeignKey("email_templates.id", ondelete="SET NULL"), nullable=True)
+    default_template_id = Column(
+        Integer, ForeignKey("email_templates.id", ondelete="SET NULL"), nullable=True
+    )
     subject = Column(String(255), nullable=True)
     preheader = Column(String(255), nullable=True)
     audience_filters = Column(JSON, nullable=True)
@@ -231,8 +233,12 @@ class EmailCampaignStep(BaseModel):
         Index("idx_email_campaign_steps_order", "campaign_id", "order_index"),
     )
 
-    campaign_id = Column(Integer, ForeignKey("email_campaigns.id", ondelete="CASCADE"), nullable=False)
-    template_id = Column(Integer, ForeignKey("email_templates.id", ondelete="SET NULL"), nullable=True)
+    campaign_id = Column(
+        Integer, ForeignKey("email_campaigns.id", ondelete="CASCADE"), nullable=False
+    )
+    template_id = Column(
+        Integer, ForeignKey("email_templates.id", ondelete="SET NULL"), nullable=True
+    )
     subject = Column(String(255), nullable=True)
     preheader = Column(String(255), nullable=True)
     order_index = Column(Integer, nullable=False, default=1)
@@ -272,7 +278,9 @@ class EmailSendBatch(BaseModel):
         Index("idx_email_send_batches_status", "status"),
     )
 
-    campaign_id = Column(Integer, ForeignKey("email_campaigns.id", ondelete="CASCADE"), nullable=False)
+    campaign_id = Column(
+        Integer, ForeignKey("email_campaigns.id", ondelete="CASCADE"), nullable=False
+    )
     name = Column(String(255), nullable=False)
     status = Column(
         Enum(EmailSendStatus, name="emailsendstatus"),
@@ -291,7 +299,9 @@ class EmailSendBatch(BaseModel):
     failed_count = Column(Integer, nullable=False, default=0)
 
     campaign = relationship("EmailCampaign", back_populates="send_batches")
-    sends = relationship("EmailSend", back_populates="batch", cascade="all, delete-orphan", passive_deletes=True)
+    sends = relationship(
+        "EmailSend", back_populates="batch", cascade="all, delete-orphan", passive_deletes=True
+    )
 
 
 class EmailSend(BaseModel):
@@ -306,14 +316,26 @@ class EmailSend(BaseModel):
         Index("idx_email_sends_recipient", "recipient_email"),
     )
 
-    campaign_id = Column(Integer, ForeignKey("email_campaigns.id", ondelete="CASCADE"), nullable=False)
-    batch_id = Column(Integer, ForeignKey("email_send_batches.id", ondelete="CASCADE"), nullable=True)
-    step_id = Column(Integer, ForeignKey("email_campaign_steps.id", ondelete="SET NULL"), nullable=True)
-    template_id = Column(Integer, ForeignKey("email_templates.id", ondelete="SET NULL"), nullable=True)
+    campaign_id = Column(
+        Integer, ForeignKey("email_campaigns.id", ondelete="CASCADE"), nullable=False
+    )
+    batch_id = Column(
+        Integer, ForeignKey("email_send_batches.id", ondelete="CASCADE"), nullable=True
+    )
+    step_id = Column(
+        Integer, ForeignKey("email_campaign_steps.id", ondelete="SET NULL"), nullable=True
+    )
+    template_id = Column(
+        Integer, ForeignKey("email_templates.id", ondelete="SET NULL"), nullable=True
+    )
     recipient_email = Column(String(255), nullable=False)
     recipient_name = Column(String(255), nullable=True)
-    recipient_person_id = Column(Integer, ForeignKey("people.id", ondelete="SET NULL"), nullable=True)
-    organisation_id = Column(Integer, ForeignKey("organisations.id", ondelete="SET NULL"), nullable=True)
+    recipient_person_id = Column(
+        Integer, ForeignKey("people.id", ondelete="SET NULL"), nullable=True
+    )
+    organisation_id = Column(
+        Integer, ForeignKey("organisations.id", ondelete="SET NULL"), nullable=True
+    )
     variant = Column(
         Enum(EmailVariant, name="emailvariant"),
         nullable=True,
@@ -390,13 +412,25 @@ class CampaignSubscription(BaseModel):
         Index("idx_campaign_subscriptions_campaign", "campaign_id"),
         Index("idx_campaign_subscriptions_person", "person_id"),
         Index("idx_campaign_subscriptions_organisation", "organisation_id"),
-        Index("idx_campaign_subscriptions_unique", "campaign_id", "person_id", "organisation_id", unique=True),
+        Index(
+            "idx_campaign_subscriptions_unique",
+            "campaign_id",
+            "person_id",
+            "organisation_id",
+            unique=True,
+        ),
     )
 
-    campaign_id = Column(Integer, ForeignKey("email_campaigns.id", ondelete="CASCADE"), nullable=False)
+    campaign_id = Column(
+        Integer, ForeignKey("email_campaigns.id", ondelete="CASCADE"), nullable=False
+    )
     person_id = Column(Integer, ForeignKey("people.id", ondelete="CASCADE"), nullable=True)
-    organisation_id = Column(Integer, ForeignKey("organisations.id", ondelete="CASCADE"), nullable=True)
-    subscribed_by = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True)
+    organisation_id = Column(
+        Integer, ForeignKey("organisations.id", ondelete="CASCADE"), nullable=True
+    )
+    subscribed_by = Column(
+        Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True
+    )
     is_active = Column(Boolean, nullable=False, default=True)
     unsubscribed_at = Column(DateTime(timezone=True), nullable=True)
 
@@ -414,9 +448,7 @@ class UnsubscribedEmail(BaseModel):
     """Emails désabonnés globalement (liste noire)."""
 
     __tablename__ = "unsubscribed_emails"
-    __table_args__ = (
-        Index("idx_unsubscribed_email", "email", unique=True),
-    )
+    __table_args__ = (Index("idx_unsubscribed_email", "email", unique=True),)
 
     email = Column(String(255), nullable=False, unique=True)
     unsubscribed_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())

@@ -1,27 +1,20 @@
-from sqlalchemy import (
-    Column,
-    String,
-    Integer,
-    Text,
-    Enum,
-    ForeignKey,
-    DateTime,
-    Index,
-)
-from sqlalchemy.orm import relationship
-from models.base import BaseModel
-from models.constants import (
-    FK_USERS_ID,
-    FK_ORGANISATIONS_ID,
-    FK_PEOPLE_ID,
-    ONDELETE_SET_NULL,
-    ONDELETE_CASCADE,
-    ENUM_TASK_STATUS,
-    ENUM_TASK_PRIORITY,
-    ENUM_TASK_CATEGORY,
-)
 import enum
 from datetime import datetime, timezone
+
+from sqlalchemy import Column, DateTime, Enum, ForeignKey, Index, Integer, String, Text
+from sqlalchemy.orm import relationship
+
+from models.base import BaseModel
+from models.constants import (
+    ENUM_TASK_CATEGORY,
+    ENUM_TASK_PRIORITY,
+    ENUM_TASK_STATUS,
+    FK_ORGANISATIONS_ID,
+    FK_PEOPLE_ID,
+    FK_USERS_ID,
+    ONDELETE_CASCADE,
+    ONDELETE_SET_NULL,
+)
 
 
 class TaskPriority(str, enum.Enum):
@@ -95,8 +88,12 @@ class Task(BaseModel):
     due_date = Column(DateTime(timezone=True), nullable=True, index=True)
     completed_at = Column(DateTime(timezone=True), nullable=True)
 
-    assigned_to = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True, index=True)
-    created_by = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True, index=True)
+    assigned_to = Column(
+        Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True, index=True
+    )
+    created_by = Column(
+        Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True, index=True
+    )
 
     organisation_id = Column(
         Integer,

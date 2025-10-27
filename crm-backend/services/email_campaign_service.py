@@ -1,17 +1,31 @@
-from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_
-from typing import List, Dict, Any, Optional
-from models.email_campaign import EmailTemplate, EmailCampaign, CampaignEmail, CampaignStatus, EmailStatus
-from models.organisation import Organisation
-from models.person import Person
-from models.contact import Contact
-from schemas.email_campaign import (
-    EmailTemplateCreate, EmailTemplateUpdate,
-    EmailCampaignCreate, EmailCampaignUpdate,
-    RecipientFilters, EmailPreview, EmailPreviewRecipient, EmailPreviewList
-)
 import re
 from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+from sqlalchemy import and_, or_
+from sqlalchemy.orm import Session
+
+from models.contact import Contact
+from models.email_campaign import (
+    CampaignEmail,
+    CampaignStatus,
+    EmailCampaign,
+    EmailStatus,
+    EmailTemplate,
+)
+from models.organisation import Organisation
+from models.person import Person
+from schemas.email_campaign import (
+    EmailCampaignCreate,
+    EmailCampaignUpdate,
+    EmailPreview,
+    EmailPreviewList,
+    EmailPreviewRecipient,
+    EmailTemplateCreate,
+    EmailTemplateUpdate,
+    RecipientFilters,
+)
+
 
 class EmailTemplateService:
     @staticmethod
@@ -20,7 +34,7 @@ class EmailTemplateService:
         variables = set()
         for text in [template.subject, template.body_html]:
             # Recherche des variables au format {{variable}}
-            found = re.findall(r'\{\{(\w+)\}\}', text)
+            found = re.findall(r"\{\{(\w+)\}\}", text)
             variables.update(found)
 
         db_template = EmailTemplate(
@@ -28,7 +42,7 @@ class EmailTemplateService:
             subject=template.subject,
             body_html=template.body_html,
             body_text=template.body_text,
-            variables=list(variables)
+            variables=list(variables),
         )
         db.add(db_template)
         db.commit()
@@ -44,7 +58,9 @@ class EmailTemplateService:
         return db.query(EmailTemplate).offset(skip).limit(limit).all()
 
     @staticmethod
-    def update_template(db: Session, template_id: int, template_update: EmailTemplateUpdate) -> Optional[EmailTemplate]:
+    def update_template(
+        db: Session, template_id: int, template_update: EmailTemplateUpdate
+    ) -> Optional[EmailTemplate]:
         db_template = db.query(EmailTemplate).filter(EmailTemplate.id == template_id).first()
         if not db_template:
             return None
@@ -52,16 +68,16 @@ class EmailTemplateService:
         update_data = template_update.model_dump(exclude_unset=True)
 
         # Recalculer les variables si le contenu change
-        if 'subject' in update_data or 'body_html' in update_data:
+        if "subject" in update_data or "body_html" in update_data:
             variables = set()
-            subject = update_data.get('subject', db_template.subject)
-            body_html = update_data.get('body_html', db_template.body_html)
+            subject = update_data.get("subject", db_template.subject)
+            body_html = update_data.get("body_html", db_template.body_html)
 
             for text in [subject, body_html]:
-                found = re.findall(r'\{\{(\w+)\}\}', text)
+                found = re.findall(r"\{\{(\w+)\}\}", text)
                 variables.update(found)
 
-            update_data['variables'] = list(variables)
+            update_data["variables"] = list(variables)
 
         for key, value in update_data.items():
             setattr(db_template, key, value)
@@ -153,7 +169,9 @@ class EmailCampaignService:
             return query
 
     @staticmethod
-    def _get_personalization_data(recipient: Any, recipient_type: str, db: Session) -> Dict[str, Any]:
+    def _get_personalization_data(
+        recipient: Any, recipient_type: str, db: Session
+    ) -> Dict[str, Any]:
         """Génère les données de personnalisation pour un destinataire"""
 
         if recipient_type == "organisations":
@@ -167,7 +185,11 @@ class EmailCampaignService:
         else:  # contacts
             # Récupérer l'organisation du contact
             contact = db.query(Contact).filter(Contact.person_id == recipient.id).first()
-            organisation = db.query(Organisation).filter(Organisation.id == contact.organisation_id).first() if contact else None
+            organisation = (
+                db.query(Organisation).filter(Organisation.id == contact.organisation_id).first()
+                if contact
+                else None
+            )
 
             return {
                 "first_name": recipient.first_name or "",
@@ -208,7 +230,7 @@ class EmailCampaignService:
             batch_size=campaign.batch_size,
             delay_between_batches=campaign.delay_between_batches,
             scheduled_at=campaign.scheduled_at,
-            status=CampaignStatus.DRAFT
+            status=CampaignStatus.DRAFT,
         )
         db.add(db_campaign)
         db.commit()
@@ -221,10 +243,18 @@ class EmailCampaignService:
 
     @staticmethod
     def list_campaigns(db: Session, skip: int = 0, limit: int = 100) -> List[EmailCampaign]:
-        return db.query(EmailCampaign).order_by(EmailCampaign.created_at.desc()).offset(skip).limit(limit).all()
+        return (
+            db.query(EmailCampaign)
+            .order_by(EmailCampaign.created_at.desc())
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
 
     @staticmethod
-    def update_campaign(db: Session, campaign_id: int, campaign_update: EmailCampaignUpdate) -> Optional[EmailCampaign]:
+    def update_campaign(
+        db: Session, campaign_id: int, campaign_update: EmailCampaignUpdate
+    ) -> Optional[EmailCampaign]:
         db_campaign = db.query(EmailCampaign).filter(EmailCampaign.id == campaign_id).first()
         if not db_campaign:
             return None
@@ -236,11 +266,11 @@ class EmailCampaignService:
         update_data = campaign_update.model_dump(exclude_unset=True)
 
         # Si les filtres changent, recalculer le nombre de destinataires
-        if 'recipient_filters' in update_data:
-            filters = RecipientFilters(**update_data['recipient_filters'])
+        if "recipient_filters" in update_data:
+            filters = RecipientFilters(**update_data["recipient_filters"])
             query = EmailCampaignService._build_recipient_query(db, filters)
-            update_data['total_recipients'] = query.count()
-            update_data['recipient_filters'] = filters.model_dump()
+            update_data["total_recipients"] = query.count()
+            update_data["recipient_filters"] = filters.model_dump()
 
         for key, value in update_data.items():
             setattr(db_campaign, key, value)
@@ -251,10 +281,7 @@ class EmailCampaignService:
 
     @staticmethod
     def preview_campaign(
-        db: Session,
-        campaign_id: int,
-        page: int = 1,
-        page_size: int = 10
+        db: Session, campaign_id: int, page: int = 1, page_size: int = 10
     ) -> EmailPreviewList:
         """Génère une prévisualisation des emails pour la campagne"""
 
@@ -279,7 +306,9 @@ class EmailCampaignService:
         # Générer les prévisualisations
         previews = []
         for recipient in recipients:
-            recipient_type = filters.target_type.value.rstrip('s')  # "organisations" -> "organisation"
+            recipient_type = filters.target_type.value.rstrip(
+                "s"
+            )  # "organisations" -> "organisation"
 
             # Données de personnalisation
             personalization_data = EmailCampaignService._get_personalization_data(
@@ -287,32 +316,40 @@ class EmailCampaignService:
             )
 
             # Personnaliser le contenu
-            subject = EmailCampaignService._personalize_content(template.subject, personalization_data)
-            body_html = EmailCampaignService._personalize_content(template.body_html, personalization_data)
-            body_text = EmailCampaignService._personalize_content(template.body_text, personalization_data) if template.body_text else None
+            subject = EmailCampaignService._personalize_content(
+                template.subject, personalization_data
+            )
+            body_html = EmailCampaignService._personalize_content(
+                template.body_html, personalization_data
+            )
+            body_text = (
+                EmailCampaignService._personalize_content(template.body_text, personalization_data)
+                if template.body_text
+                else None
+            )
 
             preview = EmailPreview(
                 recipient=EmailPreviewRecipient(
                     id=recipient.id,
                     type=recipient_type,
-                    name=recipient.name if hasattr(recipient, 'name') else f"{recipient.first_name} {recipient.last_name}",
+                    name=(
+                        recipient.name
+                        if hasattr(recipient, "name")
+                        else f"{recipient.first_name} {recipient.last_name}"
+                    ),
                     email=recipient.email,
-                    personalization_data=personalization_data
+                    personalization_data=personalization_data,
                 ),
                 subject=subject,
                 body_html=body_html,
-                body_text=body_text
+                body_text=body_text,
             )
             previews.append(preview)
 
         total_pages = (total + page_size - 1) // page_size
 
         return EmailPreviewList(
-            total=total,
-            previews=previews,
-            page=page,
-            page_size=page_size,
-            total_pages=total_pages
+            total=total, previews=previews, page=page, page_size=page_size, total_pages=total_pages
         )
 
     @staticmethod
@@ -341,7 +378,7 @@ class EmailCampaignService:
         emails_in_batch = 0
 
         for recipient in recipients:
-            recipient_type = filters.target_type.value.rstrip('s')
+            recipient_type = filters.target_type.value.rstrip("s")
 
             # Données de personnalisation
             personalization_data = EmailCampaignService._get_personalization_data(
@@ -349,11 +386,23 @@ class EmailCampaignService:
             )
 
             # Personnaliser le contenu
-            subject = EmailCampaignService._personalize_content(template.subject, personalization_data)
-            body_html = EmailCampaignService._personalize_content(template.body_html, personalization_data)
-            body_text = EmailCampaignService._personalize_content(template.body_text, personalization_data) if template.body_text else None
+            subject = EmailCampaignService._personalize_content(
+                template.subject, personalization_data
+            )
+            body_html = EmailCampaignService._personalize_content(
+                template.body_html, personalization_data
+            )
+            body_text = (
+                EmailCampaignService._personalize_content(template.body_text, personalization_data)
+                if template.body_text
+                else None
+            )
 
-            recipient_name = recipient.name if hasattr(recipient, 'name') else f"{recipient.first_name} {recipient.last_name}"
+            recipient_name = (
+                recipient.name
+                if hasattr(recipient, "name")
+                else f"{recipient.first_name} {recipient.last_name}"
+            )
 
             campaign_email = CampaignEmail(
                 campaign_id=campaign_id,
@@ -366,7 +415,7 @@ class EmailCampaignService:
                 body_text=body_text,
                 personalization_data=personalization_data,
                 status=EmailStatus.PENDING,
-                batch_number=batch_number
+                batch_number=batch_number,
             )
             db.add(campaign_email)
 
@@ -386,7 +435,7 @@ class EmailCampaignService:
         status: Optional[EmailStatus] = None,
         batch_number: Optional[int] = None,
         skip: int = 0,
-        limit: int = 100
+        limit: int = 100,
     ) -> List[CampaignEmail]:
         """Récupère les emails d'une campagne"""
 
@@ -422,5 +471,5 @@ class EmailCampaignService:
             "emails_clicked": clicked,
             "open_rate": (opened / sent * 100) if sent > 0 else 0,
             "click_rate": (clicked / sent * 100) if sent > 0 else 0,
-            "failure_rate": (failed / total * 100) if total > 0 else 0
+            "failure_rate": (failed / total * 100) if total > 0 else 0,
         }

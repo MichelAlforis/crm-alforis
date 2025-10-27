@@ -1,21 +1,0 @@
-
-Š€"Retrieves a handle to the specified standard device (standard input, standard output, or standard error).
-
-    Args:
-        handle (int): Integer identifier for the handle. Defaults to -11 (stdout).
-
-    Returns:
-        wintypes.HANDLE: The handle
-    "strhandleN N(%"È!
-
-W W("#unknown-value#'
-%
-W W("#get-field# HANDLE:!
-
-W! W(."#unknown-value##
-!
-W! W(6"_GetStdHandle:"
- 
-W W(7"
-typingcast:
-W W(7*†/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/_win32_console.py

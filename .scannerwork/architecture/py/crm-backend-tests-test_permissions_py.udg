@@ -1,250 +1,0 @@
-
-1.0PythonFrontend"1760943916059*py2.B
-
-imports1
-
-extends2
-
-returns3
-
-	has param4
-
-module5
-
-
-class6
-
-function7
-*
-%crm-backend/tests/test_permissions.py9
-
-tests.test_permissions11
-
-fastapi12
-
-sqlalchemy.orm14
-
-models.role16
-
-models.permission18
-
-models.user20
-
-models.team22
-
-core.permissions24
-
-models.organisation26
-2
-,tests.test_permissions.test_check_role_level28
-$
-sqlalchemy.orm.session.Session30
->
-8tests.test_permissions.test_filter_query_by_team_manager32
-<
-6tests.test_permissions.test_filter_query_by_team_admin34
-
-models.user.User36
-?
-9tests.test_permissions.test_role_permissions_relationship38
--
-'tests.test_permissions.test_create_role40
-:
-4tests.test_permissions.test_init_default_permissions42
-A
-;tests.test_permissions.test_permission_on_user_without_role44
-5
-/tests.test_permissions.test_role_has_permission46
-6
-0tests.test_permissions.test_role_level_hierarchy48
-E
-?tests.test_permissions.test_has_permission_user_with_permission50
-7
-1tests.test_permissions.test_bulk_permission_check52
-H
-Btests.test_permissions.test_has_permission_user_without_permission54
-;
-5tests.test_permissions.test_filter_query_by_team_user56
-C
-=tests.test_permissions.test_role_get_permissions_for_resource58
-?
-9tests.test_permissions.test_permission_create_name_format60
-3
--tests.test_permissions.test_create_permission62
-6
-0tests.test_permissions.test_has_permission_admin64J
-
-8
-89j‰
- 
-10
-10115 *
-8 (
-
-13
-13125
-
-15
-15145
-
-17
-17165
-
-19
-19185
-
-21
-21205
-
-23
-23225
-
-25
-25245
-
-27
-27265
-
-29
-29287 210
-
-31
-31306
-
-33
-33327 210
-
-35
-35347 210
-
-37
-37366
-
-39
-39387 210
-
-41
-41407 210
-
-43
-43427 210
-
-45
-45447 210
-
-47
-47467 210
-
-49
-49487 210
-
-51
-51507 210
-
-53
-53527 210
-
-55
-55547 210
-
-57
-57567 210
-
-59
-59587 210
-
-61
-61607 210
-
-63
-63627 210
-
-65
-65647 210r”
-
-10131*
-8 ("
-
-10151*
-8 (#
-
-10171*
-8 ('
-
-10191*
-8 (O
-
-10211*
-8 (
-
-10231*
-8 (
-
-10251*
-8 (
-
-10271*
-8ò ò(1
-
-10271*
-8ÿ ÿ(1
-
-10271*
-8« «(1
-
-29314*
-8Ô Ô(
-
-33314*
-8ı ı(&
-
-35314*
-8ğ ğ($
-
-35374*
-8ğ ğ($
-
-39314*
-8A A('
-
-41314*
-8! !(
-
-43314*
-8Ê Ê("
-
-45314*
-8ç ç()
-
-47314*
-8g g(
-
-51314*
-8§ §(-
-
-53314*
-8‹ ‹(
-
-53374*
-8‹ ‹(
-
-55314*
-8Ã Ã(0
-
-57314*
-8© ©(#
-
-59314*
-8} }(+
-
-61314*
-8ö ö('
-
-63314*
-81 1(
-
-65314*
-8Ÿ Ÿ(
-
-65374*
-8Ÿ Ÿ(

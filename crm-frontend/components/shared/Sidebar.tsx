@@ -5,198 +5,50 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 import {
-  LayoutDashboard,
-  UserCircle2,
-  Building2,
   ChevronLeft,
   ChevronRight,
   ChevronDown,
   X,
-  Settings,
   LogOut,
-  HelpCircle,
   Bell,
-  Briefcase,
-  Package,
-  Workflow,
-  Link as LinkIcon,
-  Upload,
-  Mail,
-  Users,
-  Sparkles,
-  BarChart3,
-  List,
-  FileText,
+  Star,
 } from 'lucide-react'
 import { useTaskViews } from '@/hooks/useTasks'
 import { useAuth } from '@/hooks/useAuth'
 import { usePendingSuggestionsCount } from '@/hooks/useAI'
 import { useSidebar } from '@/hooks/useSidebar'
+import { useSidebarAnalytics } from '@/hooks/useSidebarAnalytics'
+import { SIDEBAR_SECTIONS } from '@/config/sidebar.config'
 import ThemeToggle from '@/components/shared/ThemeToggle'
 
-interface SidebarProps {
-  isOpen?: boolean
-  onClose?: () => void
-}
+// ✅ Configuration externalisée dans config/sidebar.config.ts
+// Permet tests unitaires et réutilisation
+const MENU_ITEMS = SIDEBAR_SECTIONS
 
-// Menu items configuration
-// ✅ ARCHITECTURE UNIFIÉE (2025-10-18)
-// - Organisations (remplace Investisseurs + Fournisseurs)
-// - People (contacts unifiés)
-// - Workflows (automatisations)
-const MENU_ITEMS = [
-  {
-    label: 'Dashboard',
-    href: '/dashboard',
-    icon: LayoutDashboard,
-    description: 'Vue d\'ensemble',
-    badge: null,
-    gradient: 'from-blue-500 to-cyan-500',
-  },
-  {
-    label: 'Organisations',
-    href: '/dashboard/organisations',
-    icon: Building2,
-    description: 'Clients, fournisseurs, distributeurs...',
-    badge: null,
-    gradient: 'from-purple-500 to-pink-500',
-  },
-  {
-    label: 'Personnes',
-    href: '/dashboard/people',
-    icon: UserCircle2,
-    description: 'Annuaire des contacts',
-    badge: null,
-    gradient: 'from-teal-500 to-emerald-500',
-  },
-  {
-    label: 'Mandats',
-    href: '/dashboard/mandats',
-    icon: Briefcase,
-    description: 'Mandats de distribution',
-    badge: null,
-    gradient: 'from-violet-500 to-purple-500',
-  },
-  {
-    label: 'Produits',
-    href: '/dashboard/produits',
-    icon: Package,
-    description: 'OPCVM, ETF, SCPI...',
-    badge: null,
-    gradient: 'from-amber-500 to-orange-500',
-  },
-  {
-    label: 'Workflows',
-    href: '/dashboard/workflows',
-    icon: Workflow,
-    description: 'Automatisations',
-    badge: null,
-    gradient: 'from-indigo-500 to-purple-500',
-  },
-  {
-    label: 'KPIs Fournisseurs',
-    href: '/dashboard/kpis',
-    icon: BarChart3,
-    description: 'Indicateurs de performance',
-    badge: null,
-    gradient: 'from-emerald-500 to-teal-500',
-  },
-  {
-    label: 'Agent IA',
-    href: '/dashboard/ai',
-    icon: Sparkles,
-    description: 'Suggestions intelligentes',
-    badge: null, // Dynamic badge via pendingSuggestionsCount
-    gradient: 'from-violet-500 via-purple-500 to-fuchsia-500',
-  },
-  {
-    label: 'Marketing',
-    href: '/dashboard/marketing',
-    icon: Mail,
-    description: 'Campagnes & automation',
-    badge: null,
-    gradient: 'from-blue-500 via-purple-500 to-pink-500',
-    submenu: [
-      {
-        label: 'Vue d\'ensemble',
-        href: '/dashboard/marketing',
-        icon: LayoutDashboard,
-        description: 'Dashboard marketing',
-      },
-      {
-        label: 'Campagnes',
-        href: '/dashboard/marketing/campaigns',
-        icon: Mail,
-        description: 'Campagnes email',
-      },
-      {
-        label: 'Listes',
-        href: '/dashboard/marketing/mailing-lists',
-        icon: List,
-        description: 'Listes de diffusion',
-      },
-      {
-        label: 'Templates',
-        href: '/dashboard/marketing/templates',
-        icon: FileText,
-        description: 'Templates email',
-      },
-    ],
-  },
-  {
-    label: 'Import Unifié',
-    href: '/dashboard/imports/unified',
-    icon: Upload,
-    description: 'Organisations + Personnes',
-    badge: 'NEW',
-    gradient: 'from-rose-500 to-pink-500',
-  },
-  {
-    label: 'Utilisateurs',
-    href: '/dashboard/users',
-    icon: Users,
-    description: 'Gestion des comptes',
-    badge: null,
-    gradient: 'from-gray-500 to-slate-600',
-  },
-  // ❌ LEGACY ITEMS REMOVED (2025-10-18):
-  // - Investisseurs → Organisations (type=client)
-  // - Fournisseurs → Organisations (type=fournisseur)
-  // - Interactions → Organisations Activity
-  // - KPIs → Dashboards
-  // - Import → Split to /organisations/import + /people/import
-  // ✅ NEW (2025-10-18): Import Unifié → /dashboard/imports/unified
-]
-
-export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
-  const pathname = usePathname()
-  const [collapsed, setCollapsed] = useState(false)
+export default function Sidebar() {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
-  const { openSubmenus, toggleSubmenu, isSubmenuOpen } = useSidebar()
+
+  // ✅ Hook centralisé pour toute la logique sidebar
+  const sidebar = useSidebar(MENU_ITEMS)
+
+  // 📊 Phase 4: Analytics & tracking
+  const analytics = useSidebarAnalytics()
+
   const { todayCount } = useTaskViews()
   const { user, logout } = useAuth()
   const pendingSuggestionsCount = usePendingSuggestionsCount()
   const tasksDueToday = todayCount
   const isAdmin = user?.is_admin || false
 
-  const isActive = (href: string): boolean => {
-    if (!pathname) return false
-    if (href === '/dashboard') {
-      return pathname === '/dashboard'
-    }
-    return pathname.startsWith(href)
-  }
-
   return (
     <>
       {/* Mobile Backdrop */}
-      {isOpen && (
+      {sidebar.mobileOpen && (
         <div
           className="fixed inset-0 bg-black/60 backdrop-blur-sm md:hidden z-30 animate-in fade-in duration-200"
-          onClick={onClose}
+          onClick={sidebar.closeMobile}
           aria-hidden="true"
         />
       )}
@@ -210,8 +62,8 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
           'transition-all duration-300 ease-in-out',
           'flex flex-col',
           'shadow-2xl backdrop-blur-sm',
-          collapsed ? 'w-20' : 'w-72',
-          !isOpen && '-translate-x-full md:translate-x-0'
+          sidebar.collapsed ? 'w-20' : 'w-72',
+          !sidebar.mobileOpen && sidebar.isMobile && '-translate-x-full md:translate-x-0'
         )}
       >
         {/* Animated Background Pattern */}
@@ -223,7 +75,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
         <div className="relative flex flex-col h-full">
           {/* Header */}
           <div className="h-20 px-4 flex items-center justify-between">
-            {!collapsed ? (
+            {!sidebar.collapsed ? (
               <>
                 <div className="flex items-center gap-3">
                   <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-blue-500/50">
@@ -241,14 +93,14 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                 <div className="flex items-center gap-2">
                   <ThemeToggle size="sm" className="inline-flex bg-white/10 text-white hover:bg-white/20" />
                   <button
-                    onClick={() => setCollapsed(!collapsed)}
+                    onClick={sidebar.toggleCollapsed}
                     className="hidden md:flex p-2 hover:bg-white/10 rounded-lg transition-all duration-200 group"
                     aria-label="Réduire le menu"
                   >
                     <ChevronLeft className="w-4 h-4 text-slate-300 group-hover:text-white transition-colors" />
                   </button>
                   <button
-                    onClick={onClose}
+                    onClick={sidebar.closeMobile}
                     className="md:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
                     aria-label="Fermer le menu"
                   >
@@ -259,7 +111,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
             ) : (
               <div className="flex flex-col items-center gap-2">
                 <button
-                  onClick={() => setCollapsed(false)}
+                  onClick={sidebar.toggleCollapsed}
                   className="mx-auto p-2 hover:bg-white/10 rounded-lg transition-all duration-200"
                   aria-label="Étendre le menu"
                 >
@@ -272,7 +124,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
 
           {/* Daily Tasks Indicator */}
           <div className="px-3 pb-4">
-            {collapsed ? (
+            {sidebar.collapsed ? (
               <Link
                 href="/dashboard/tasks"
                 className="relative mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 transition-all hover:scale-110 hover:shadow-xl shadow-lg group"
@@ -312,6 +164,70 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
 
           {/* Navigation */}
           <nav className="flex-1 px-3 py-2 space-y-1.5 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+            {/* ⭐ SECTION FAVORIS */}
+            {sidebar.favoriteItems.length > 0 && !sidebar.collapsed && (
+              <div className="mb-4">
+                <div className="flex items-center gap-2 px-3 py-2 mb-2">
+                  <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    Favoris ({sidebar.favoriteItems.length})
+                  </span>
+                </div>
+                <div className="space-y-1">
+                  {sidebar.favoriteItems.map((item: any) => {
+                    const Icon = item.data.icon
+                    const active = sidebar.isActive(item.data.href)
+                    const isSubitem = item.type === 'subitem'
+
+                    return (
+                      <Link
+                        key={`fav-${item.data.href}`}
+                        href={item.data.href}
+                        onClick={() => analytics.trackClick(item.data.href, item.data.label)}
+                        className={clsx(
+                          'group relative flex items-center gap-3',
+                          'px-3 py-2.5 rounded-xl',
+                          'transition-all duration-300',
+                          active
+                            ? 'bg-gradient-to-r from-yellow-600 via-amber-600 to-orange-600 text-white shadow-xl shadow-yellow-500/30'
+                            : 'text-slate-300 hover:text-white hover:bg-yellow-500/10 border border-yellow-500/20'
+                        )}
+                      >
+                        <div className={clsx(
+                          'relative flex items-center justify-center',
+                          'rounded-lg flex-shrink-0',
+                          'transition-all duration-300',
+                          isSubitem ? 'w-6 h-6' : 'w-8 h-8',
+                          active ? 'bg-white/20' : 'bg-yellow-500/10'
+                        )}>
+                          <Icon className={clsx(isSubitem ? 'w-3.5 h-3.5' : 'w-4 h-4')} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <span className={clsx(
+                            'font-semibold block',
+                            isSubitem ? 'text-xs' : 'text-sm'
+                          )}>
+                            {item.data.label}
+                          </span>
+                          {isSubitem && (
+                            <span className="text-[10px] text-slate-400 truncate block">
+                              {item.data.parentLabel}
+                            </span>
+                          )}
+                        </div>
+                        <Star className={clsx(
+                          'text-yellow-400 fill-yellow-400',
+                          isSubitem ? 'w-3.5 h-3.5' : 'w-4 h-4'
+                        )} />
+                      </Link>
+                    )
+                  })}
+                </div>
+                <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-3" />
+              </div>
+            )}
+
+            {/* TOUTES LES SECTIONS */}
             {MENU_ITEMS.filter((item: any) => {
               // Filtrer "Utilisateurs" si pas admin
               if (item.href === '/dashboard/users' && !isAdmin) {
@@ -320,162 +236,252 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
               return true
             }).map((item: any) => {
               const Icon = item.icon
-              const active = isActive(item.href)
+              const active = sidebar.isActive(item.href)
               const isHovered = hoveredItem === item.href
               const hasSubmenu = item.submenu && item.submenu.length > 0
-              const submenuOpen = isSubmenuOpen(item.href)
+              const submenuOpen = sidebar.isSubmenuOpen(item.href)
 
               // Dynamic badge pour Agent IA
               const dynamicBadge = item.href === '/dashboard/ai' && pendingSuggestionsCount > 0
                 ? pendingSuggestionsCount
                 : item.badge
 
+              const isFav = sidebar.isFavorite(item.href)
+
+              // Ajouter data-tour attributes pour onboarding
+              const getTourAttribute = () => {
+                if (item.href === '/dashboard/crm') return 'crm-section'
+                if (item.href === '/dashboard/automation') return 'automation-section'
+                if (item.href === '/dashboard/marketing') return 'marketing-section'
+                if (item.href === '/dashboard/ai') return 'ai-link'
+                if (item.href === '/dashboard/workflows') return 'workflows-link'
+                if (item.label === 'Centre d\'aide' || item.href === '/dashboard/help') return 'help-link'
+                return undefined
+              }
+
               return (
-                <div key={item.href}>
+                <div key={item.href} data-tour={getTourAttribute()}>
                   {/* Parent Item */}
-                  {hasSubmenu && !collapsed ? (
-                    <button
-                      onClick={() => toggleSubmenu(item.href)}
-                      onMouseEnter={() => setHoveredItem(item.href)}
-                      onMouseLeave={() => setHoveredItem(null)}
-                      className={clsx(
-                        'group relative flex items-center gap-3 w-full',
-                        'px-3 py-3 rounded-xl',
-                        'transition-all duration-300',
-                        'overflow-hidden',
-                        active
-                          ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-2xl shadow-blue-500/40 scale-105'
-                          : 'text-slate-300 hover:text-white hover:bg-white/10 hover:scale-102'
-                      )}
-                    >
-                      {/* Hover Effect Background */}
-                      {!active && isHovered && (
+                  {hasSubmenu && !sidebar.collapsed ? (
+                    <div className="relative group/item">
+                      <button
+                        onClick={() => sidebar.toggleSubmenu(item.href)}
+                        onMouseEnter={() => setHoveredItem(item.href)}
+                        onMouseLeave={() => setHoveredItem(null)}
+                        className={clsx(
+                          'group relative flex items-center gap-3 w-full',
+                          'px-3 py-3 rounded-xl',
+                          'transition-all duration-300',
+                          'overflow-hidden',
+                          active
+                            ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-2xl shadow-blue-500/40 scale-105'
+                            : 'text-slate-300 hover:text-white hover:bg-white/10 hover:scale-102'
+                        )}
+                      >
+                        {/* Hover Effect Background */}
+                        {!active && isHovered && (
+                          <div className={clsx(
+                            'absolute inset-0 bg-gradient-to-r opacity-15 animate-in fade-in duration-300',
+                            item.gradient
+                          )} />
+                        )}
+
+                        {/* Icon Container */}
                         <div className={clsx(
-                          'absolute inset-0 bg-gradient-to-r opacity-15 animate-in fade-in duration-300',
-                          item.gradient
-                        )} />
-                      )}
-
-                      {/* Icon Container */}
-                      <div className={clsx(
-                        'relative flex items-center justify-center',
-                        'w-10 h-10 rounded-xl flex-shrink-0',
-                        'transition-all duration-300',
-                        active
-                          ? 'bg-white/20 shadow-lg'
-                          : 'bg-white/5 group-hover:bg-white/15 group-hover:scale-110'
-                      )}>
-                        <Icon className={clsx('w-5 h-5 transition-all duration-300', active && 'scale-110 drop-shadow-lg')} />
-                      </div>
-
-                      <div className="flex-1 relative z-10">
-                        <p className={clsx('text-sm font-bold transition-all duration-200', active && 'drop-shadow-sm')}>
-                          {item.label}
-                        </p>
-                        <p className={clsx('text-[11px] transition-colors duration-200', active ? 'text-white/80' : 'text-slate-400 group-hover:text-slate-300')}>
-                          {item.description}
-                        </p>
-                      </div>
-
-                      {/* Chevron */}
-                      <ChevronDown className={clsx('w-4 h-4 transition-transform duration-300', submenuOpen && 'rotate-180')} />
-                    </button>
-                  ) : (
-                    <Link
-                      href={item.href}
-                      onMouseEnter={() => setHoveredItem(item.href)}
-                      onMouseLeave={() => setHoveredItem(null)}
-                      className={clsx(
-                        'group relative flex items-center gap-3',
-                        'px-3 py-3 rounded-xl',
-                        'transition-all duration-300',
-                        'overflow-hidden',
-                        active
-                          ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-2xl shadow-blue-500/40 scale-105'
-                          : 'text-slate-300 hover:text-white hover:bg-white/10 hover:scale-102',
-                        collapsed && 'justify-center'
-                      )}
-                      title={collapsed ? item.label : undefined}
-                    >
-                      {/* Hover Effect Background */}
-                      {!active && isHovered && !collapsed && (
-                        <div className={clsx('absolute inset-0 bg-gradient-to-r opacity-15 animate-in fade-in duration-300', item.gradient)} />
-                      )}
-
-                      {/* Active shimmer effect */}
-                      {active && (
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                      )}
-
-                      {/* Icon Container */}
-                      <div className={clsx(
-                        'relative flex items-center justify-center',
-                        'w-10 h-10 rounded-xl flex-shrink-0',
-                        'transition-all duration-300',
-                        active ? 'bg-white/20 shadow-lg' : 'bg-white/5 group-hover:bg-white/15 group-hover:scale-110'
-                      )}>
-                        <Icon className={clsx('w-5 h-5 transition-all duration-300', active && 'scale-110 drop-shadow-lg')} />
-                      </div>
-
-                      {!collapsed && (
-                        <>
-                          <div className="flex-1 relative z-10">
-                            <p className={clsx('text-sm font-bold transition-all duration-200', active && 'drop-shadow-sm')}>
-                              {item.label}
-                            </p>
-                            <p className={clsx('text-[11px] transition-colors duration-200', active ? 'text-white/80' : 'text-slate-400 group-hover:text-slate-300')}>
-                              {item.description}
-                            </p>
-                          </div>
-
-                          {/* Badge */}
-                          {dynamicBadge && (
-                            <div className={clsx(
-                              'px-2.5 py-1 rounded-lg text-xs font-bold',
-                              'transition-all duration-300 shadow-sm',
-                              active ? 'bg-white/30 text-white shadow-lg' : 'bg-white/10 text-slate-300 group-hover:bg-white/20 group-hover:scale-110'
-                            )}>
-                              {dynamicBadge}
-                            </div>
-                          )}
-
-                          {/* Active Indicator */}
-                          {active && <div className="w-1.5 h-10 bg-white rounded-full shadow-lg animate-pulse" />}
-                        </>
-                      )}
-
-                      {/* Collapsed Badge */}
-                      {collapsed && dynamicBadge && (
-                        <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full text-[9px] font-bold text-white flex items-center justify-center shadow-lg border-2 border-slate-900">
-                          {dynamicBadge === 'NEW' ? '!' : dynamicBadge}
+                          'relative flex items-center justify-center',
+                          'w-10 h-10 rounded-xl flex-shrink-0',
+                          'transition-all duration-300',
+                          active
+                            ? 'bg-white/20 shadow-lg'
+                            : 'bg-white/5 group-hover:bg-white/15 group-hover:scale-110'
+                        )}>
+                          <Icon className={clsx('w-5 h-5 transition-all duration-300', active && 'scale-110 drop-shadow-lg')} />
                         </div>
+
+                        <div className="flex-1 relative z-10">
+                          <p className={clsx('text-sm font-bold transition-all duration-200', active && 'drop-shadow-sm')}>
+                            {item.label}
+                          </p>
+                          <p className={clsx('text-[11px] transition-colors duration-200', active ? 'text-white/80' : 'text-slate-400 group-hover:text-slate-300')}>
+                            {item.description}
+                          </p>
+                        </div>
+
+                        {/* Chevron */}
+                        <ChevronDown className={clsx('w-4 h-4 transition-transform duration-300', submenuOpen && 'rotate-180')} />
+                      </button>
+
+                      {/* Bouton Favori (étoile) */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          sidebar.toggleFavorite(item.href)
+                        }}
+                        className={clsx(
+                          'absolute top-2 left-2 z-20',
+                          'p-1.5 rounded-lg transition-all duration-200',
+                          'opacity-0 group-hover/item:opacity-100',
+                          isFav && 'opacity-100',
+                          'hover:bg-white/20 hover:scale-110'
+                        )}
+                        title={isFav ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                      >
+                        <Star
+                          className={clsx(
+                            'w-4 h-4 transition-all',
+                            isFav ? 'text-yellow-400 fill-yellow-400' : 'text-slate-400'
+                          )}
+                        />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="relative group/item">
+                      <Link
+                        href={item.href}
+                        onMouseEnter={() => setHoveredItem(item.href)}
+                        onMouseLeave={() => setHoveredItem(null)}
+                        className={clsx(
+                          'group relative flex items-center gap-3',
+                          'px-3 py-3 rounded-xl',
+                          'transition-all duration-300',
+                          'overflow-hidden',
+                          active
+                            ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-2xl shadow-blue-500/40 scale-105'
+                            : 'text-slate-300 hover:text-white hover:bg-white/10 hover:scale-102',
+                          sidebar.collapsed && 'justify-center'
+                        )}
+                        title={sidebar.collapsed ? item.label : undefined}
+                      >
+                        {/* Hover Effect Background */}
+                        {!active && isHovered && !sidebar.collapsed && (
+                          <div className={clsx('absolute inset-0 bg-gradient-to-r opacity-15 animate-in fade-in duration-300', item.gradient)} />
+                        )}
+
+                        {/* Active shimmer effect */}
+                        {active && (
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                        )}
+
+                        {/* Icon Container */}
+                        <div className={clsx(
+                          'relative flex items-center justify-center',
+                          'w-10 h-10 rounded-xl flex-shrink-0',
+                          'transition-all duration-300',
+                          active ? 'bg-white/20 shadow-lg' : 'bg-white/5 group-hover:bg-white/15 group-hover:scale-110'
+                        )}>
+                          <Icon className={clsx('w-5 h-5 transition-all duration-300', active && 'scale-110 drop-shadow-lg')} />
+                        </div>
+
+                        {!sidebar.collapsed && (
+                          <>
+                            <div className="flex-1 relative z-10">
+                              <p className={clsx('text-sm font-bold transition-all duration-200', active && 'drop-shadow-sm')}>
+                                {item.label}
+                              </p>
+                              <p className={clsx('text-[11px] transition-colors duration-200', active ? 'text-white/80' : 'text-slate-400 group-hover:text-slate-300')}>
+                                {item.description}
+                              </p>
+                            </div>
+
+                            {/* Badge */}
+                            {dynamicBadge && (
+                              <div className={clsx(
+                                'px-2.5 py-1 rounded-lg text-xs font-bold',
+                                'transition-all duration-300 shadow-sm',
+                                active ? 'bg-white/30 text-white shadow-lg' : 'bg-white/10 text-slate-300 group-hover:bg-white/20 group-hover:scale-110'
+                              )}>
+                                {dynamicBadge}
+                              </div>
+                            )}
+
+                            {/* Active Indicator */}
+                            {active && <div className="w-1.5 h-10 bg-white rounded-full shadow-lg animate-pulse" />}
+                          </>
+                        )}
+
+                        {/* Collapsed Badge */}
+                        {sidebar.collapsed && dynamicBadge && (
+                          <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full text-[9px] font-bold text-white flex items-center justify-center shadow-lg border-2 border-slate-900">
+                            {dynamicBadge === 'NEW' ? '!' : dynamicBadge}
+                          </div>
+                        )}
+                      </Link>
+
+                      {/* Bouton Favori (étoile) - Simple items */}
+                      {!sidebar.collapsed && (
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault()
+                            sidebar.toggleFavorite(item.href)
+                          }}
+                          className={clsx(
+                            'absolute top-2 left-2 z-20',
+                            'p-1.5 rounded-lg transition-all duration-200',
+                            'opacity-0 group-hover/item:opacity-100',
+                            isFav && 'opacity-100',
+                            'hover:bg-white/20 hover:scale-110'
+                          )}
+                          title={isFav ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                        >
+                          <Star
+                            className={clsx(
+                              'w-4 h-4 transition-all',
+                              isFav ? 'text-yellow-400 fill-yellow-400' : 'text-slate-400'
+                            )}
+                          />
+                        </button>
                       )}
-                    </Link>
+                    </div>
                   )}
 
                   {/* Submenu Items */}
-                  {hasSubmenu && submenuOpen && !collapsed && (
+                  {hasSubmenu && submenuOpen && !sidebar.collapsed && (
                     <div className="ml-6 mt-1 space-y-1 border-l-2 border-white/10 pl-3">
                       {item.submenu.map((subItem: any) => {
                         const SubIcon = subItem.icon
-                        // Pour les sous-menus, on vérifie une correspondance exacte du pathname
-                        const subActive = pathname === subItem.href
+                        // ✅ Utiliser sidebar.isActive() au lieu de pathname direct
+                        const subActive = sidebar.isActive(subItem.href)
+                        const isSubFav = sidebar.isFavorite(subItem.href)
 
                         return (
-                          <Link
-                            key={subItem.href}
-                            href={subItem.href}
-                            className={clsx(
-                              'flex items-center gap-2 px-3 py-2 rounded-lg',
-                              'transition-all duration-200',
-                              subActive
-                                ? 'bg-white/20 text-white font-semibold shadow-lg'
-                                : 'text-slate-400 hover:text-white hover:bg-white/10'
-                            )}
-                          >
-                            <SubIcon className="w-4 h-4" />
-                            <span className="text-sm">{subItem.label}</span>
-                          </Link>
+                          <div key={subItem.href} className="relative group/subitem">
+                            <Link
+                              href={subItem.href}
+                              className={clsx(
+                                'flex items-center gap-2 px-3 py-2 rounded-lg',
+                                'transition-all duration-200',
+                                subActive
+                                  ? 'bg-white/20 text-white font-semibold shadow-lg'
+                                  : 'text-slate-400 hover:text-white hover:bg-white/10'
+                              )}
+                            >
+                              <SubIcon className="w-4 h-4" />
+                              <span className="text-sm flex-1">{subItem.label}</span>
+                            </Link>
+
+                            {/* Bouton Favori (étoile) pour sous-items */}
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault()
+                                sidebar.toggleFavorite(subItem.href)
+                              }}
+                              className={clsx(
+                                'absolute top-1.5 right-1.5 z-20',
+                                'p-1 rounded transition-all duration-200',
+                                'opacity-0 group-hover/subitem:opacity-100',
+                                isSubFav && 'opacity-100',
+                                'hover:bg-white/20 hover:scale-110'
+                              )}
+                              title={isSubFav ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                            >
+                              <Star
+                                className={clsx(
+                                  'w-3.5 h-3.5 transition-all',
+                                  isSubFav ? 'text-yellow-400 fill-yellow-400' : 'text-slate-400'
+                                )}
+                              />
+                            </button>
+                          </div>
                         )
                       })}
                     </div>
@@ -490,50 +496,11 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
             <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
           </div>
 
-          {/* Secondary Navigation */}
-          <div className="px-3 py-3 space-y-1">
-            <Link
-              href="/dashboard/settings"
-              className={clsx(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg',
-                'text-slate-300 hover:text-white hover:bg-white/10',
-                'transition-all duration-200',
-                collapsed && 'justify-center'
-              )}
-            >
-              <Settings className="w-4 h-4" />
-              {!collapsed && <span className="text-sm">Paramètres</span>}
-            </Link>
-            <Link
-              href="/dashboard/settings/webhooks"
-              className={clsx(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg',
-                'text-slate-300 hover:text-white hover:bg-white/10',
-                'transition-all duration-200',
-                collapsed && 'justify-center'
-              )}
-            >
-              <LinkIcon className="w-4 h-4" />
-              {!collapsed && <span className="text-sm">Webhooks</span>}
-            </Link>
-
-            <Link
-              href="/dashboard/help"
-              className={clsx(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg',
-                'text-slate-300 hover:text-white hover:bg-white/10',
-                'transition-all duration-200',
-                collapsed && 'justify-center'
-              )}
-            >
-              <HelpCircle className="w-4 h-4" />
-              {!collapsed && <span className="text-sm">Aide</span>}
-            </Link>
-          </div>
+          {/* Secondary Navigation - vide maintenant, tout est dans le menu principal */}
 
           {/* Footer - User Profile */}
           <div className="px-3 py-4 border-t border-white/10">
-            {!collapsed ? (
+            {!sidebar.collapsed ? (
               <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-br from-white/5 to-white/10 hover:from-white/10 hover:to-white/15 transition-all duration-300 cursor-pointer group shadow-lg hover:shadow-xl border border-white/10 hover:border-white/20">
                 <div className="relative group-hover:scale-110 transition-transform duration-300">
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-green-400 via-emerald-500 to-blue-500 flex items-center justify-center shadow-lg">

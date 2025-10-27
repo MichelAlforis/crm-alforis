@@ -1,15 +1,16 @@
-from typing import Optional, List, Tuple, Dict, Any
-from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import func, or_, and_
-from datetime import date, timedelta, datetime, UTC
+import logging
+from datetime import UTC, date, datetime, timedelta
+from typing import Any, Dict, List, Optional, Tuple
 
-from models.task import Task, TaskStatus, TaskPriority, TaskCategory
-from schemas.task import TaskCreate, TaskUpdate, TaskFilterParams
+from sqlalchemy import and_, func, or_
+from sqlalchemy.orm import Session, joinedload
+
+from core.exceptions import ResourceNotFound, ValidationError
+from models.organisation_activity import OrganisationActivityType
+from models.task import Task, TaskCategory, TaskPriority, TaskStatus
+from schemas.task import TaskCreate, TaskFilterParams, TaskUpdate
 from services.base import BaseService
 from services.organisation_activity import OrganisationActivityService
-from models.organisation_activity import OrganisationActivityType
-from core.exceptions import ResourceNotFound, ValidationError
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -129,18 +130,12 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
         active_statuses = [TaskStatus.TODO, TaskStatus.DOING]
 
         view_conditions = {
-            "overdue": and_(
-                self.model.due_date < today,
-                self.model.status.in_(active_statuses)
-            ),
-            "today": and_(
-                self.model.due_date == today,
-                self.model.status.in_(active_statuses)
-            ),
+            "overdue": and_(self.model.due_date < today, self.model.status.in_(active_statuses)),
+            "today": and_(self.model.due_date == today, self.model.status.in_(active_statuses)),
             "next7": and_(
                 self.model.due_date > today,
                 self.model.due_date <= today + timedelta(days=7),
-                self.model.status.in_(active_statuses)
+                self.model.status.in_(active_statuses),
             ),
         }
 
@@ -313,7 +308,9 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
             task,
             OrganisationActivityType.TASK_UPDATED,
             title=f"Tâche reportée • {task.title}",
-            preview=f"Nouvelle échéance {task.due_date.strftime('%d/%m/%Y')}" if task.due_date else None,
+            preview=(
+                f"Nouvelle échéance {task.due_date.strftime('%d/%m/%Y')}" if task.due_date else None
+            ),
             actor=actor,
             extra_metadata={"snoozed_days": days},
         )
@@ -345,7 +342,9 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
             title=f"Tâche terminée • {task.title}",
             preview=self._task_preview(task, ["Complétée"]),
             actor=actor,
-            extra_metadata={"completed_at": task.completed_at.isoformat() if task.completed_at else None},
+            extra_metadata={
+                "completed_at": task.completed_at.isoformat() if task.completed_at else None
+            },
         )
 
         logger.info(f"Task {task_id} marked as done and interaction created")

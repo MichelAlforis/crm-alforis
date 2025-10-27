@@ -1,22 +1,0 @@
-selfJ J(otherJ J("IEpip._internal.resolution.resolvelib.requirements.SpecifierRequirement"t)
-'
-K K(6"#is-instance#:Bbool)
-'
-K K(6"#unaryop !#2!:Bbool"
-K K(6 *K K(
-"5!
-
-L L(!"#unknown-value#
-L L(!"¾'
-%
-M M("#get-field# _equal:,
-*
-M M("?python-partial-apply?:'
-%
-M M(*	"#get-field# _equal:*
-(
-M M(*
-"
-#binop ==#2==:	Bbool
-M M(*
-*—/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/resolution/resolvelib/requirements.py

@@ -1,32 +1,0 @@
-
-falsebool
-;2"Check for equality with another Timestamp object"strself9 9(other9 9("§/
--
-; ;("#dependent-value#*:Btype*
-(
-; ;(("#get-field# __class__:*
-(
-; ;(("
-#binop ==#2==:Bbool"
-; ;(( *; ;(
-"–(
-&
-< <("#get-field# seconds:(
-&
-<# <(0"#get-field# seconds:*
-(
-< <(0	"
-#binop ==#2==:Bbool"
-< <(0	 "
-= =("š,
-*
-<5 <(E
-"#get-field# nanoseconds:,
-*
-<I <(Z"#get-field# nanoseconds:*
-(
-<5 <(Z"
-#binop ==#2==:
-Bbool
-< <(Z"$*	
-< <(Z*~/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/msgpack/ext.py

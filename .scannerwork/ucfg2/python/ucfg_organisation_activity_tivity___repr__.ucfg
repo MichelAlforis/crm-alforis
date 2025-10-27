@@ -1,51 +1,0 @@
-
-:models.organisation_activity.OrganisationActivity.__repr__f
-\/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/models/organisation_activity.py] ]("2*ú
-2^ a(	s
-q
-_( _(/
-%1"__id*Y
-
-__unknown_file (=*;3
-1models.organisation_activity.OrganisationActivity"
-id€
-~
-_C _(W
-%2"__id*f
-
-__unknown_file (J*H3
-1models.organisation_activity.OrganisationActivity"
-organisation_idu
-s
-` `(
-%3"__id*[
-
-__unknown_file (?*=3
-1models.organisation_activity.OrganisationActivity"
-typeç
-ä
-_ `(!
-%4"__concat*)
-_ _('
-<OrganisationActivity(id=*
-_( _(/
-
-%1*"
-_0 _(B
-, organisation_id=*
-_C _(W
-
-%2*
-_X _(Z
-, *
-` `(	
-type=*
-` `(
-
-%3*
-` `( 
-)>"
-^ a(	
-
-%4B53
-1models.organisation_activity.OrganisationActivityH

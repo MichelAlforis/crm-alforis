@@ -1,63 +1,0 @@
-
-/pip._vendor.urllib3.exceptions.HostChangedError
-…/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/exceptions.pyb b("2*â
-2c c(Cl
-j
-c c(C
-%2"__concat*9
-c c(=-+
-)Tried to open a foreign host with url: %s*
-c@ c(C
-
-urlA
-?
-c c(C	
-message"__id*"
-
-__unknown_file (
-
-%2Ÿœ
-d d(7
-%3"type.__init__*,
-
-__unknown_file (
-
-RequestError*O
-
-__unknown_file (31
-/pip._vendor.urllib3.exceptions.HostChangedError*$
-
-__unknown_file (
-
-pool*#
-
-__unknown_file (
-
-url*'
-
-__unknown_file (
-	
-message2__init__{
-y
-e e(>1
-/pip._vendor.urllib3.exceptions.HostChangedError"	
-retries"__id*'
-
-__unknown_file (
-	
-retries*
-3*e
-3
-exceptions.py?=
-h h
-%1"/pip._vendor.urllib3.exceptions.HostChangedError"
-h h
-
-%1:
-b b(
-pool:
-b b( 
-url:
-b" b(+	
-retriesB31
-/pip._vendor.urllib3.exceptions.HostChangedErrorH

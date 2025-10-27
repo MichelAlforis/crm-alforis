@@ -1,6 +1,0 @@
-
-H?"Cookie headers should be added with add_unredirected_header()"str
-XO"cookiejar has no legitimate use for this method; add it back if you find one."strselfN N(keyN N(valN N(!"R@
->
-P R(	"NotImplementedError*:BNotImplementedError2
-P R(	*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/requests/cookies.py

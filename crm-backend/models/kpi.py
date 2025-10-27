@@ -2,16 +2,7 @@
 
 from __future__ import annotations
 
-from sqlalchemy import (
-    Column,
-    Integer,
-    Float,
-    Boolean,
-    String,
-    ForeignKey,
-    UniqueConstraint,
-    Index,
-)
+from sqlalchemy import Boolean, Column, Float, ForeignKey, Index, Integer, String, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 from models.base import BaseModel
@@ -67,4 +58,3 @@ class DashboardKPI(BaseModel):
         """Convenience helper pour marquer le KPI comme saisi manuellement."""
         self.auto_generated = False
         self.data_source = "manual"
-

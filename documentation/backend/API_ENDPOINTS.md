@@ -1,28 +1,34 @@
-# Documentation API - CRM Alforis (Architecture Unifiée)
+# Documentation API - CRM Alforis
 
-> **Base URL**: `http://localhost:8000/api/v1`
+> **Base URL Production**: `https://crm.alforis.fr/api/v1`
+> **Base URL Dev**: `http://localhost:8000/api/v1`
 > **Format**: JSON
 > **Authentification**: Bearer Token (JWT)
-> **Version**: v1.0 (Architecture unifiée - Janvier 2025)
+> **Version**: v1.0
+> **Dernière mise à jour**: 23 Octobre 2025
 
 ---
 
 ## 📑 Table des matières
 
 - [🔐 Authentification](#-authentification)
-- [🔍 Recherche](#-recherche)
+- [👥 Utilisateurs](#-utilisateurs)
 - [🏢 Organisations](#-organisations)
-- [👥 Personnes](#-personnes)
+- [👤 Personnes](#-personnes)
 - [🔗 Liens Organisation-Personne](#-liens-organisation-personne)
+- [💬 Interactions](#-interactions)
 - [✅ Tâches](#-tâches)
 - [📋 Mandats de Distribution](#-mandats-de-distribution)
 - [💼 Produits](#-produits)
-- [📧 Email Automation](#-email-automation)
+- [📧 Email Marketing](#-email-marketing)
+- [📋 Listes de Diffusion](#-listes-de-diffusion)
 - [🤖 Workflows](#-workflows)
 - [🔔 Webhooks](#-webhooks)
+- [🌐 Webhooks Publics](#-webhooks-publics)
+- [🤖 Agent IA](#-agent-ia)
 - [📊 Dashboards & Statistiques](#-dashboards--statistiques)
-- [📤 Exports](#-exports)
 - [📥 Imports](#-imports)
+- [🌍 API Publique](#-api-publique)
 - [🏥 Health Check](#-health-check)
 
 ---
@@ -65,21 +71,19 @@ Authorization: Bearer {access_token}
 
 ---
 
-## 🔍 Recherche
+## 👥 Utilisateurs
 
-**Prefix**: `/search`
+**Prefix**: `/users`
 
 | Méthode | Endpoint | Description |
 |---------|----------|-------------|
-| **GET** | `/search/organisations?q={query}` | Recherche d'organisations |
-| **GET** | `/search/people?q={query}` | Recherche de personnes |
-| **GET** | `/search/mandats?q={query}` | Recherche de mandats |
-| **GET** | `/search/autocomplete?q={query}&type={type}` | Autocomplétion multitype |
-
-**Query params communs:**
-- `q` (string, required): Terme de recherche
-- `skip` (int, default: 0): Offset pagination
-- `limit` (int, default: 20): Limite de résultats
+| **GET** | `/users` | Liste tous les utilisateurs |
+| **POST** | `/users` | Créer un nouvel utilisateur |
+| **GET** | `/users/{id}` | Détails d'un utilisateur |
+| **PUT** | `/users/{id}` | Mettre à jour un utilisateur |
+| **DELETE** | `/users/{id}` | Supprimer un utilisateur |
+| **PUT** | `/users/{id}/password` | Changer le mot de passe |
+| **PUT** | `/users/{id}/role` | Changer le rôle |
 
 ---
 
@@ -94,11 +98,17 @@ Authorization: Bearer {access_token}
 | **GET** | `/organisations/search?q={query}` | Rechercher des organisations |
 | **GET** | `/organisations/stats` | Statistiques globales |
 | **GET** | `/organisations/by-language/{language}` | Organisations par langue |
+| **POST** | `/organisations` | Créer une organisation |
 | **GET** | `/organisations/{id}` | Détails d'une organisation |
 | **PUT** | `/organisations/{id}` | Mettre à jour une organisation |
 | **DELETE** | `/organisations/{id}` | Supprimer une organisation |
-| **GET** | `/organisations/{id}/activity` | Historique d'activité d'une organisation |
-| **DELETE** | `/organisations/{id}/activity/{activity_id}` | Supprimer une activité |
+| **GET** | `/organisations/{id}/interactions` | Interactions liées à une organisation |
+| **POST** | `/organisations/{id}/interactions` | Créer une interaction |
+| **GET** | `/organisations/{id}/people` | Personnes liées à l'organisation |
+| **GET** | `/organisations/{id}/mandats` | Mandats de l'organisation |
+| **GET** | `/organisations/export/csv` | Export organisations CSV |
+| **GET** | `/organisations/export/excel` | Export organisations Excel |
+| **GET** | `/organisations/export/pdf` | Export organisations PDF |
 
 ### Détails d'une organisation
 
@@ -151,17 +161,25 @@ Authorization: Bearer {access_token}
 
 ---
 
-## 👥 Personnes
+## 👤 Personnes
 
 **Prefix**: `/people`
 
 | Méthode | Endpoint | Description |
 |---------|----------|-------------|
+| **GET** | `/people` | Liste toutes les personnes |
+| **POST** | `/people` | Créer une personne |
 | **GET** | `/people/search?q={query}` | Rechercher des personnes |
+| **GET** | `/people/stats` | Statistiques globales |
 | **GET** | `/people/{id}` | Détails d'une personne |
-| **GET** | `/people/{id}/organisations` | Organisations liées à une personne |
 | **PUT** | `/people/{id}` | Mettre à jour une personne |
 | **DELETE** | `/people/{id}` | Supprimer une personne |
+| **GET** | `/people/{id}/organisations` | Organisations liées à une personne |
+| **GET** | `/people/{id}/interactions` | Interactions liées à une personne |
+| **POST** | `/people/{id}/interactions` | Créer une interaction |
+| **GET** | `/people/export/csv` | Export personnes CSV |
+| **GET** | `/people/export/excel` | Export personnes Excel |
+| **GET** | `/people/export/pdf` | Export personnes PDF |
 
 ### Détails d'une personne
 
@@ -230,18 +248,55 @@ Authorization: Bearer {access_token}
 
 ---
 
+## 💬 Interactions
+
+**Prefix**: `/interactions`
+
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| **GET** | `/interactions` | Liste toutes les interactions |
+| **POST** | `/interactions` | Créer une interaction |
+| **GET** | `/interactions/{id}` | Détails d'une interaction |
+| **PUT** | `/interactions/{id}` | Mettre à jour une interaction |
+| **DELETE** | `/interactions/{id}` | Supprimer une interaction |
+| **GET** | `/interactions/types` | Types d'interactions disponibles |
+| **GET** | `/interactions/stats` | Statistiques des interactions |
+
+### Types d'interactions
+
+**GET** `/interactions/types`
+
+**Réponse:**
+```json
+[
+  "email",
+  "phone",
+  "meeting",
+  "note",
+  "task",
+  "linkedin",
+  "event"
+]
+```
+
+---
+
 ## ✅ Tâches
 
 **Prefix**: `/tasks`
 
 | Méthode | Endpoint | Description |
 |---------|----------|-------------|
+| **GET** | `/tasks` | Liste toutes les tâches |
+| **POST** | `/tasks` | Créer une tâche |
 | **GET** | `/tasks/stats` | Statistiques des tâches |
 | **GET** | `/tasks/{id}` | Détails d'une tâche |
-| **POST** | `/tasks/{id}/snooze` | Reporter une tâche |
-| **POST** | `/tasks/{id}/quick-action` | Action rapide (snooze_1d, mark_done, etc.) |
 | **PUT** | `/tasks/{id}` | Mettre à jour une tâche |
 | **DELETE** | `/tasks/{id}` | Supprimer une tâche |
+| **POST** | `/tasks/{id}/snooze` | Reporter une tâche |
+| **POST** | `/tasks/{id}/quick-action` | Action rapide (snooze_1d, mark_done, etc.) |
+| **POST** | `/tasks/{id}/complete` | Marquer comme complétée |
+| **GET** | `/tasks/export/csv` | Export tâches CSV |
 
 ### Statistiques
 
@@ -288,12 +343,17 @@ Authorization: Bearer {access_token}
 
 | Méthode | Endpoint | Description |
 |---------|----------|-------------|
+| **GET** | `/mandats` | Liste tous les mandats |
+| **POST** | `/mandats` | Créer un mandat |
 | **GET** | `/mandats/active` | Mandats actifs |
 | **GET** | `/mandats/organisation/{organisation_id}` | Mandats d'une organisation |
+| **GET** | `/mandats/stats` | Statistiques des mandats |
 | **GET** | `/mandats/{id}` | Détails d'un mandat |
 | **GET** | `/mandats/{id}/is-actif` | Vérifier si mandat actif |
 | **PUT** | `/mandats/{id}` | Mettre à jour un mandat |
 | **DELETE** | `/mandats/{id}` | Supprimer un mandat |
+| **GET** | `/mandats/export/csv` | Export mandats CSV |
+| **GET** | `/mandats/export/pdf` | Export mandats PDF |
 
 ---
 
@@ -314,29 +374,41 @@ Authorization: Bearer {access_token}
 
 ---
 
-## 📧 Email Automation
+## 📧 Email Marketing
 
 **Prefix**: `/email`
 
-### Templates
+### Templates Email
 
 | Méthode | Endpoint | Description |
 |---------|----------|-------------|
-| **GET** | `/email/templates` | Lister les templates |
+| **GET** | `/email/templates` | Lister tous les templates |
 | **POST** | `/email/templates` | Créer un template |
+| **GET** | `/email/templates/{id}` | Détails d'un template |
 | **PUT** | `/email/templates/{id}` | Mettre à jour un template |
+| **DELETE** | `/email/templates/{id}` | Supprimer un template |
+| **POST** | `/email/templates/{id}/preview` | Aperçu du template |
+| **GET** | `/email/templates/export/csv` | Export templates CSV |
 
-### Campagnes
+### Campagnes Email
 
 | Méthode | Endpoint | Description |
 |---------|----------|-------------|
-| **GET** | `/email/campaigns` | Lister les campagnes |
+| **GET** | `/email/campaigns` | Lister toutes les campagnes |
 | **POST** | `/email/campaigns` | Créer une campagne |
 | **GET** | `/email/campaigns/{id}` | Détails d'une campagne |
 | **PUT** | `/email/campaigns/{id}` | Mettre à jour une campagne |
-| **POST** | `/email/campaigns/{id}/schedule` | Planifier l'envoi |
+| **DELETE** | `/email/campaigns/{id}` | Supprimer une campagne |
+| **POST** | `/email/campaigns/{id}/prepare` | Préparer la campagne |
+| **POST** | `/email/campaigns/{id}/start` | Démarrer l'envoi |
+| **POST** | `/email/campaigns/{id}/pause` | Mettre en pause |
+| **POST** | `/email/campaigns/{id}/cancel` | Annuler |
+| **POST** | `/email/campaigns/{id}/send-test` | Envoyer un email de test |
 | **GET** | `/email/campaigns/{id}/stats` | Statistiques de la campagne |
 | **GET** | `/email/campaigns/{id}/sends` | Liste des envois |
+| **GET** | `/email/campaigns/export/csv` | Export campagnes CSV |
+| **GET** | `/email/campaigns/export/excel` | Export campagnes Excel |
+| **GET** | `/email/campaigns/export/pdf` | Export campagnes PDF |
 
 ### Création de campagne
 
@@ -365,22 +437,48 @@ Authorization: Bearer {access_token}
 
 ---
 
+## 📋 Listes de Diffusion
+
+**Prefix**: `/mailing-lists`
+
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| **GET** | `/mailing-lists` | Lister toutes les listes |
+| **POST** | `/mailing-lists` | Créer une liste |
+| **GET** | `/mailing-lists/{id}` | Détails d'une liste |
+| **PUT** | `/mailing-lists/{id}` | Mettre à jour une liste |
+| **DELETE** | `/mailing-lists/{id}` | Supprimer une liste |
+| **POST** | `/mailing-lists/{id}/toggle-active` | Activer/Désactiver |
+| **GET** | `/mailing-lists/{id}/contacts` | Contacts de la liste |
+| **POST** | `/mailing-lists/{id}/contacts` | Ajouter des contacts |
+| **DELETE** | `/mailing-lists/{id}/contacts/{contact_id}` | Retirer un contact |
+| **GET** | `/mailing-lists/export/csv` | Export listes CSV |
+| **GET** | `/mailing-lists/export/excel` | Export listes Excel |
+| **GET** | `/mailing-lists/export/pdf` | Export listes PDF |
+
+---
+
 ## 🤖 Workflows
 
 **Prefix**: `/workflows`
 
 | Méthode | Endpoint | Description |
 |---------|----------|-------------|
+| **GET** | `/workflows` | Lister tous les workflows |
+| **POST** | `/workflows` | Créer un workflow |
 | **GET** | `/workflows/{id}` | Détails d'un workflow |
 | **PUT** | `/workflows/{id}` | Mettre à jour un workflow |
 | **DELETE** | `/workflows/{id}` | Supprimer un workflow |
 | **POST** | `/workflows/{id}/activate` | Activer un workflow |
+| **POST** | `/workflows/{id}/deactivate` | Désactiver un workflow |
 | **POST** | `/workflows/{id}/execute` | Exécuter manuellement |
 | **GET** | `/workflows/{id}/executions` | Historique d'exécution |
 | **GET** | `/workflows/{id}/executions/{execution_id}` | Détails d'une exécution |
 | **GET** | `/workflows/{id}/stats` | Statistiques du workflow |
-| **GET** | `/workflows/templates/list` | Templates de workflow |
-| **POST** | `/workflows/templates/{template_id}/create` | Créer depuis template |
+| **GET** | `/workflows/templates` | Templates de workflow disponibles |
+| **POST** | `/workflows/from-template/{template_id}` | Créer depuis template |
+
+**Note**: Les workflows utilisent des définitions JSON pour configurer déclencheurs et actions. Voir [WORKFLOWS.md](WORKFLOWS.md) pour la documentation complète.
 
 ---
 
@@ -390,11 +488,14 @@ Authorization: Bearer {access_token}
 
 | Méthode | Endpoint | Description |
 |---------|----------|-------------|
+| **GET** | `/webhooks` | Lister tous les webhooks |
+| **POST** | `/webhooks` | Créer un webhook |
 | **GET** | `/webhooks/{id}` | Détails d'un webhook |
 | **PUT** | `/webhooks/{id}` | Mettre à jour un webhook |
 | **DELETE** | `/webhooks/{id}` | Supprimer un webhook |
+| **POST** | `/webhooks/{id}/test` | Tester un webhook |
 | **POST** | `/webhooks/{id}/rotate-secret` | Régénérer le secret |
-| **GET** | `/webhooks/events/available` | Liste des événements disponibles |
+| **GET** | `/webhooks/events` | Liste des événements disponibles |
 
 ### Événements disponibles
 
@@ -414,6 +515,67 @@ Authorization: Bearer {access_token}
     "description": "Déclenché quand une tâche passe à DONE"
   }
 ]
+```
+
+---
+
+## 🌐 Webhooks Publics (Resend)
+
+**Prefix**: `/external-webhooks`
+
+**Note**: Ces endpoints sont destinés à recevoir des webhooks externes (Resend pour les emails). Ils ne nécessitent pas d'authentification JWT mais utilisent une vérification par signature.
+
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| **POST** | `/external-webhooks/resend` | Webhook Resend (événements email) |
+
+### Événements Resend traités
+
+- `email.sent` - Email envoyé
+- `email.delivered` - Email délivré
+- `email.delivery_delayed` - Livraison retardée
+- `email.bounced` - Email rejeté
+- `email.opened` - Email ouvert
+- `email.clicked` - Lien cliqué
+
+---
+
+## 🤖 Agent IA
+
+**Prefix**: `/ai`
+
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| **POST** | `/ai/chat` | Conversation avec l'agent IA |
+| **GET** | `/ai/suggestions` | Obtenir des suggestions IA |
+| **GET** | `/ai/statistics` | Statistiques d'utilisation IA |
+| **GET** | `/ai/config` | Configuration de l'agent IA |
+| **PUT** | `/ai/config` | Mettre à jour la configuration |
+
+### Chat avec l'agent
+
+**POST** `/ai/chat`
+
+**Body:**
+```json
+{
+  "message": "Quelles sont mes tâches urgentes?",
+  "context": {
+    "organisation_id": 5,
+    "person_id": 12
+  }
+}
+```
+
+**Réponse:**
+```json
+{
+  "response": "Vous avez 3 tâches urgentes...",
+  "suggestions": [
+    "Voir les tâches",
+    "Créer une interaction"
+  ]
+}
 ```
 
 ---
@@ -445,34 +607,19 @@ Authorization: Bearer {access_token}
 
 ---
 
-## 📤 Exports
-
-**Prefix**: `/exports`
-
-| Méthode | Endpoint | Description |
-|---------|----------|-------------|
-| **GET** | `/exports/organisations/csv` | Export organisations CSV |
-| **GET** | `/exports/organisations/excel` | Export organisations Excel |
-| **GET** | `/exports/organisations/pdf` | Export organisations PDF |
-| **GET** | `/exports/mandats/csv` | Export mandats CSV |
-| **GET** | `/exports/mandats/pdf` | Export mandats PDF |
-
-**Query params:**
-- `ids` (array, optional): Liste d'IDs à exporter
-- `filters` (object, optional): Filtres à appliquer
-
-**Réponse:** Fichier binaire avec headers appropriés (`Content-Type`, `Content-Disposition`)
-
----
-
 ## 📥 Imports
 
 **Prefix**: `/imports`
 
 | Méthode | Endpoint | Description |
 |---------|----------|-------------|
-| **POST** | `/imports/organisations/bulk` | Import massif d'organisations |
-| **POST** | `/imports/people/bulk` | Import massif de personnes |
+| **POST** | `/imports/organisations` | Import massif d'organisations |
+| **POST** | `/imports/people` | Import massif de personnes |
+| **POST** | `/imports/mandats` | Import massif de mandats |
+| **POST** | `/imports/interactions` | Import massif d'interactions |
+| **POST** | `/imports/validate` | Valider un fichier avant import |
+| **GET** | `/imports/history` | Historique des imports |
+| **GET** | `/imports/{import_id}/status` | Statut d'un import |
 
 ### Import d'organisations
 
@@ -512,18 +659,61 @@ Authorization: Bearer {access_token}
 
 ---
 
+## 🌍 API Publique
+
+**Prefix**: `/public`
+
+**Note**: Ces endpoints sont publics et ne nécessitent pas d'authentification. Ils sont destinés à être utilisés par des utilisateurs externes (liens de désinscription, etc.).
+
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| **GET** | `/public/unsubscribe?token={token}` | Page de désinscription RGPD |
+| **POST** | `/public/unsubscribe` | Confirmer la désinscription |
+| **GET** | `/public/preferences?token={token}` | Page préférences email |
+| **POST** | `/public/preferences` | Mettre à jour les préférences |
+
+### Désinscription RGPD
+
+**GET** `/public/unsubscribe?token={jwt_token}`
+
+Affiche une page HTML permettant à l'utilisateur de se désabonner des communications marketing.
+
+**POST** `/public/unsubscribe`
+
+**Body:**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "reason": "too_many_emails",
+  "feedback": "Message optionnel"
+}
+```
+
+**Réponse:**
+```json
+{
+  "success": true,
+  "message": "Vous avez été désinscrit avec succès"
+}
+```
+
+---
+
 ## 🏥 Health Check
 
 **Prefix**: `/health`
 
 | Méthode | Endpoint | Description |
 |---------|----------|-------------|
-| **GET** | `/health/health` | Vérifier l'état de l'API |
+| **GET** | `/health` | Vérifier l'état de l'API |
+| **GET** | `/ready` | Vérifier si l'API est prête (readiness probe) |
 
 **Réponse:**
 ```json
 {
-  "status": "ok"
+  "status": "healthy",
+  "database": "connected",
+  "redis": "connected"
 }
 ```
 
@@ -571,21 +761,51 @@ Format standardisé pour toutes les erreurs :
 
 ---
 
-## 🗑️ Endpoints supprimés
+## 📋 Résumé des Endpoints
 
-Les endpoints suivants ont été **supprimés** avec l'architecture unifiée :
+**Total**: ~100+ endpoints
 
-- ❌ `/investors/*` - Remplacé par `/organisations`
-- ❌ `/fournisseurs/*` - Remplacé par `/organisations`
-- ❌ `/interactions/*` - Intégré dans `/organisations/{id}/activity`
-- ❌ `/kpis/investor/*` - Remplacé par `/dashboards/stats`
-- ❌ `/migration/*` - Plus nécessaire (base recréée proprement)
+### Par module
+- **Auth & Users**: 11 endpoints
+- **Organisations**: 12 endpoints
+- **Personnes**: 13 endpoints
+- **Liens Org-Person**: 4 endpoints
+- **Interactions**: 7 endpoints
+- **Tâches**: 10 endpoints
+- **Mandats**: 11 endpoints
+- **Produits**: 7 endpoints
+- **Email Templates**: 7 endpoints
+- **Email Campagnes**: 12 endpoints
+- **Listes de Diffusion**: 12 endpoints
+- **Workflows**: 13 endpoints
+- **Webhooks**: 8 endpoints
+- **Webhooks Publics (Resend)**: 1 endpoint
+- **Agent IA**: 5 endpoints
+- **Dashboards**: 2 endpoints
+- **Imports**: 7 endpoints
+- **API Publique**: 4 endpoints
+- **Health Check**: 2 endpoints
 
-**Migration complète** : Toutes les données legacy ont été supprimées. Seules les tables unifiées existent maintenant.
+### Fonctionnalités transversales
+- **Exports**: CSV, Excel, PDF disponibles pour organisations, personnes, tâches, mandats, campagnes, listes, templates
+- **Recherche**: Disponible sur organisations, personnes, produits
+- **Statistiques**: Disponibles pour chaque module
+- **Pagination**: Supportée partout (params `page`, `page_size`)
+- **Filtres**: Disponibles sur tous les endpoints de liste
+
+---
+
+## 📚 Documentation Complémentaire
+
+- [WORKFLOWS.md](WORKFLOWS.md) - Guide complet workflows
+- [IMPORTS.md](IMPORTS.md) - Guide imports massifs
+- [EXPORTS.md](EXPORTS.md) - Guide exports multi-formats
+- [RECHERCHE.md](RECHERCHE.md) - Recherche full-text PostgreSQL
+- [email-campaigns-guide.md](../marketing/email-campaigns-guide.md) - Guide complet campagnes email
 
 ---
 
 **Version API:** v1.0
-**Architecture:** Unifiée (Organisation + Person)
-**Dernière mise à jour:** 20 Octobre 2024
-**Base de données:** PostgreSQL 15 (base recréée proprement le 19 oct 2024)
+**Production**: https://crm.alforis.fr/api/v1
+**Documentation Interactive**: https://crm.alforis.fr/api/v1/docs
+**Dernière mise à jour:** 23 Octobre 2025

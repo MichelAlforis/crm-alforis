@@ -1,15 +1,0 @@
-
-""str
-êÜ"
-        This method must return statements or declarations suitable to define
-        the current style for subsequent highlighted text (e.g. CSS classes
-        in the `HTMLFormatter`).
-
-        The optional argument `arg` can be used to modify the generation and
-        is formatter dependent (it is standardized because it can be given on
-        the command line).
-
-        This method is called by the ``-S`` :doc:`command-line option <cmdline>`,
-        the `arg` is then given by the ``-a`` option.
-        "strselfc c(argc c(#"
-p p(*Ö/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pygments/formatter.py

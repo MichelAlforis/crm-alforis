@@ -1,10 +1,0 @@
-
-Œ‚"A representation of the Version that shows all internal state.
-
-        >>> Version('1.0.0')
-        <Version('1.0.0')>
-        "str
-"<Version('{self}')>"strself
-â â("
-
-è è(%*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/packaging/version.py

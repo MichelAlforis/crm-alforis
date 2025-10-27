@@ -1,47 +1,0 @@
-
-"get"str
-"unset"str
-"set"str
-"debug"str
-"list"str
-"edit"strselfb b("³$
-"
-c j(	"#new-object#Bdict,
-*
-d d($"#get-field# list_values:,
-*
-d d($"?python-partial-apply?: 
-
-d d($"	#map-set#:/
--
-e e('"#get-field# open_in_editor:,
-*
-e e('	"?python-partial-apply?: 
-
-e e('
-"	#map-set#:	)
-'
-f f( "#get-field# get_name:,
-*
-f f( "?python-partial-apply?: 
-
-f f( "	#map-set#:/
--
-g g(&"#get-field# set_name_value:,
-*
-g g(&"?python-partial-apply?: 
-
-g g(&"	#map-set#:+
-)
-h h($"#get-field# unset_name:,
-*
-h h($"?python-partial-apply?: 
-
-h h($"	#map-set#:3
-1
-i i(," #get-field# list_config_values:,
-*
-i i(,"?python-partial-apply?: 
-
-i i(,"	#map-set#:
-c j(	*‹/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/commands/configuration.py

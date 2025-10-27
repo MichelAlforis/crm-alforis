@@ -1,95 +1,0 @@
-
-
-0int
-ÞÔ"Transform and replace netloc in a url.
-
-    transform_netloc is a function taking the netloc and returning a
-    tuple. The first element of this tuple is the new netloc. The
-    entire tuple is returned.
-
-    Returns a tuple containing the transformed url as item 0 and the
-    original tuple returned by transform_netloc as item 1.
-    "str
-"NetlocTuple"strurl
-Û Û( transform_netloc
-Û Û(@	tuple"”:
-8
-
-æ æ(%purl"
-urllib.parseurlsplit:Btuple)
-'
-
-ç$ ç(/"#get-field# netloc:6
-4
-
-ç ç(0netloc_tuple"transform_netloc:)
-'
-
-é é("#get-field# scheme:$
-"
-
-é é(.	"#array-read#:'
-%
-
-é0 é(9
-"#get-field# path:(
-&
-
-é; é(E"#get-field# query:+
-)
-
-éG é(T"#get-field# fragment:*
-(
-
-é é("#unknown-value#Btuple(
-&
-
-é é("
-#is-exact#:Bbool
-
-
-é é("
-#assume#::
-8
-
-é é("#set-field# __collection_size:Bint(
-&
-
-é é("#array-add-last#:(
-&
-
-é é("#array-add-last#:	(
-&
-
-é é("#array-add-last#:
-(
-&
-
-é é("#array-add-last#:(
-&
-
-é é("#array-add-last#:.
-,
-
-é é(U
-url_pieces"#id#:Btuple5
-3
-
-ê ê(.surl"
-urllib.parse
-urlunsplit:*
-(
-
-ë ë(2"#unknown-value#Btuple(
-&
-
-ë ë(2"#array-add-last#:$
-"
-
-ë ë(2"
-typingcast:(
-&
-
-ë ë(2"#array-add-last#:
-
-ë ë(2*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/misc.py

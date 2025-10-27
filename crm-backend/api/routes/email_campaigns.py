@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from pydantic import BaseModel
 from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
 
@@ -9,6 +10,10 @@ from core.events import EventType, emit_event
 from models.email import EmailCampaignStatus, EmailProvider, EmailSend, EmailSendStatus
 from schemas.base import PaginatedResponse
 from schemas.email import (
+    CampaignSubscriptionBulkCreate,
+    CampaignSubscriptionBulkResponse,
+    CampaignSubscriptionCreate,
+    CampaignSubscriptionResponse,
     EmailCampaignCreate,
     EmailCampaignResponse,
     EmailCampaignScheduleRequest,
@@ -19,12 +24,7 @@ from schemas.email import (
     EmailTemplateCreate,
     EmailTemplateResponse,
     EmailTemplateUpdate,
-    CampaignSubscriptionCreate,
-    CampaignSubscriptionResponse,
-    CampaignSubscriptionBulkCreate,
-    CampaignSubscriptionBulkResponse,
 )
-from pydantic import BaseModel
 from services.email_service import (
     EmailAnalyticsService,
     EmailCampaignService,
@@ -58,7 +58,9 @@ async def list_templates(
     return [EmailTemplateResponse.model_validate(tpl) for tpl in templates]
 
 
-@router.post("/templates", response_model=EmailTemplateResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/templates", response_model=EmailTemplateResponse, status_code=status.HTTP_201_CREATED
+)
 async def create_template(
     payload: EmailTemplateCreate,
     db: Session = Depends(get_db),
@@ -106,8 +108,9 @@ async def delete_template(
     current_user: dict = Depends(get_current_user),
 ):
     """Supprimer un template email"""
-    from models.email import EmailTemplate
     from fastapi import HTTPException
+
+    from models.email import EmailTemplate
 
     # Récupérer le template
     template = db.query(EmailTemplate).filter(EmailTemplate.id == template_id).first()
@@ -116,14 +119,15 @@ async def delete_template(
 
     # Vérifier si utilisé dans des campagnes
     from models.email import EmailCampaign
-    campaigns_using_template = db.query(EmailCampaign).filter(
-        EmailCampaign.default_template_id == template_id
-    ).count()
+
+    campaigns_using_template = (
+        db.query(EmailCampaign).filter(EmailCampaign.default_template_id == template_id).count()
+    )
 
     if campaigns_using_template > 0:
         raise HTTPException(
             status_code=400,
-            detail=f"Impossible de supprimer ce template. Il est utilisé dans {campaigns_using_template} campagne(s)."
+            detail=f"Impossible de supprimer ce template. Il est utilisé dans {campaigns_using_template} campagne(s).",
         )
 
     # Supprimer le template
@@ -141,8 +145,9 @@ async def send_test_email_from_template(
     current_user: dict = Depends(get_current_user),
 ):
     """Envoie un email de test à partir d'un template"""
-    from models.email import EmailTemplate
     from fastapi import HTTPException
+
+    from models.email import EmailTemplate
 
     # Récupérer le template
     template = db.query(EmailTemplate).filter(EmailTemplate.id == template_id).first()
@@ -170,19 +175,21 @@ async def send_test_email_from_template(
 
     try:
         # Récupérer la configuration email active
-        from models.email_config import EmailConfiguration
-        from services.email_config_service import EmailConfigurationService
         import os
+
         import requests
 
-        email_config = db.query(EmailConfiguration).filter(
-            EmailConfiguration.is_active == True
-        ).first()
+        from models.email_config import EmailConfiguration
+        from services.email_config_service import EmailConfigurationService
+
+        email_config = (
+            db.query(EmailConfiguration).filter(EmailConfiguration.is_active == True).first()
+        )
 
         if not email_config:
             raise HTTPException(
                 status_code=400,
-                detail="Aucune configuration email active. Veuillez configurer une API email dans les paramètres."
+                detail="Aucune configuration email active. Veuillez configurer une API email dans les paramètres.",
             )
 
         # Décrypter la clé API
@@ -197,16 +204,13 @@ async def send_test_email_from_template(
         # Envoyer directement via l'API Resend
         response = requests.post(
             "https://api.resend.com/emails",
-            headers={
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json"
-            },
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
             json={
                 "from": f"{from_name} <{from_email}>",
                 "to": [test_email],
                 "subject": f"[TEST] {subject}",
                 "html": body_html,
-            }
+            },
         )
 
         if response.status_code not in [200, 201]:
@@ -216,7 +220,7 @@ async def send_test_email_from_template(
             "message": "Test email sent successfully",
             "to_email": test_email,
             "template_id": template_id,
-            "resend_response": response.json()
+            "resend_response": response.json(),
         }
     except HTTPException:
         raise
@@ -226,8 +230,10 @@ async def send_test_email_from_template(
 
 # ============= RECIPIENT COUNT =============
 
+
 class RecipientFilters(BaseModel):
     """Filtres pour sélectionner des destinataires"""
+
     target_type: str  # 'organisations' ou 'contacts'
     languages: Optional[List[str]] = None
     countries: Optional[List[str]] = None
@@ -242,6 +248,7 @@ class RecipientFilters(BaseModel):
 
 class RecipientCountResponse(BaseModel):
     """Réponse du comptage de destinataires"""
+
     count: int
 
 
@@ -255,11 +262,12 @@ async def count_recipients(
     Compter le nombre de destinataires correspondant aux filtres
     Utilisé pour prévisualiser le nombre de destinataires d'une campagne
     """
-    from models.organisation import Organisation
-    from models.person import Person, PersonOrganizationLink
     from sqlalchemy import and_
 
-    if filters.target_type == 'organisations':
+    from models.organisation import Organisation
+    from models.person import Person, PersonOrganizationLink
+
+    if filters.target_type == "organisations":
         query = db.query(Organisation).filter(Organisation.email.isnot(None))
 
         if filters.countries:
@@ -285,9 +293,10 @@ async def count_recipients(
 
         count = query.count()
 
-    elif filters.target_type == 'contacts':
+    elif filters.target_type == "contacts":
         # TOUS les contacts avec email (pas seulement les contacts principaux)
         from sqlalchemy import or_
+
         query = db.query(Person).filter(
             or_(Person.email.isnot(None), Person.personal_email.isnot(None))
         )
@@ -299,10 +308,9 @@ async def count_recipients(
             query = query.filter(Person.country_code.in_(filters.countries))
 
         if filters.roles:
-            query = query.filter(or_(
-                Person.job_title.in_(filters.roles),
-                Person.role.in_(filters.roles)
-            ))
+            query = query.filter(
+                or_(Person.job_title.in_(filters.roles), Person.role.in_(filters.roles))
+            )
 
         if filters.is_active is not None:
             query = query.filter(Person.is_active == filters.is_active)
@@ -335,7 +343,7 @@ async def list_recipients(
 
     recipients = []
 
-    if filters.target_type == 'organisations':
+    if filters.target_type == "organisations":
         query = db.query(Organisation).filter(Organisation.email.isnot(None))
 
         if filters.languages:
@@ -368,30 +376,34 @@ async def list_recipients(
         orgs = query.offset(skip).limit(limit).all()
 
         for org in orgs:
-            recipients.append({
-                "id": org.id,
-                "name": org.name,
-                "email": org.email,
-                "country": org.country_code,
-                "language": org.language,
-                "category": org.category,
-            })
+            recipients.append(
+                {
+                    "id": org.id,
+                    "name": org.name,
+                    "email": org.email,
+                    "country": org.country_code,
+                    "language": org.language,
+                    "category": org.category,
+                }
+            )
 
-    elif filters.target_type == 'contacts':
+    elif filters.target_type == "contacts":
         from sqlalchemy import or_
+
         # Récupérer TOUS les contacts avec email, pas seulement les contacts principaux
         # LEFT JOIN pour avoir l'organisation si elle existe
-        query = db.query(Person, Organisation).outerjoin(
-            PersonOrganizationLink,
-            and_(
-                PersonOrganizationLink.person_id == Person.id,
-                PersonOrganizationLink.is_primary == True  # Prendre l'org principale si elle existe
+        query = (
+            db.query(Person, Organisation)
+            .outerjoin(
+                PersonOrganizationLink,
+                and_(
+                    PersonOrganizationLink.person_id == Person.id,
+                    PersonOrganizationLink.is_primary
+                    == True,  # Prendre l'org principale si elle existe
+                ),
             )
-        ).outerjoin(
-            Organisation,
-            Organisation.id == PersonOrganizationLink.organisation_id
-        ).filter(
-            or_(Person.email.isnot(None), Person.personal_email.isnot(None))
+            .outerjoin(Organisation, Organisation.id == PersonOrganizationLink.organisation_id)
+            .filter(or_(Person.email.isnot(None), Person.personal_email.isnot(None)))
         )
 
         if filters.languages:
@@ -401,10 +413,9 @@ async def list_recipients(
             query = query.filter(Person.country_code.in_(filters.countries))
 
         if filters.roles:
-            query = query.filter(or_(
-                Person.job_title.in_(filters.roles),
-                Person.role.in_(filters.roles)
-            ))
+            query = query.filter(
+                or_(Person.job_title.in_(filters.roles), Person.role.in_(filters.roles))
+            )
 
         if filters.is_active is not None:
             query = query.filter(Person.is_active == filters.is_active)
@@ -422,14 +433,16 @@ async def list_recipients(
 
         for person, org in results:
             email = person.email or person.personal_email
-            recipients.append({
-                "id": person.id,
-                "name": person.full_name,
-                "email": email,
-                "organisation_name": org.name if org else None,
-                "country": person.country_code,
-                "language": person.language,
-            })
+            recipients.append(
+                {
+                    "id": person.id,
+                    "name": person.full_name,
+                    "email": email,
+                    "organisation_name": org.name if org else None,
+                    "country": person.country_code,
+                    "language": person.language,
+                }
+            )
     else:
         total = 0
 
@@ -437,6 +450,7 @@ async def list_recipients(
 
 
 # ============= CAMPAIGNS =============
+
 
 @router.get("/campaigns", response_model=PaginatedResponse[EmailCampaignResponse])
 async def list_campaigns(
@@ -458,7 +472,9 @@ async def list_campaigns(
     return PaginatedResponse(total=total, skip=skip, limit=limit, items=items)
 
 
-@router.post("/campaigns", response_model=EmailCampaignResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/campaigns", response_model=EmailCampaignResponse, status_code=status.HTTP_201_CREATED
+)
 async def create_campaign(
     payload: EmailCampaignCreate,
     db: Session = Depends(get_db),
@@ -504,19 +520,20 @@ async def delete_campaign(
     current_user: dict = Depends(get_current_user),
 ):
     """Supprimer une campagne (seulement si draft, paused, completed ou failed)"""
-    from models.email import EmailCampaign, EmailCampaignStatus
     from fastapi import HTTPException
+
+    from models.email import EmailCampaign, EmailCampaignStatus
 
     # Récupérer la campagne
     campaign = db.query(EmailCampaign).filter(EmailCampaign.id == campaign_id).first()
     if not campaign:
         raise HTTPException(status_code=404, detail="Campagne introuvable")
 
-    # Vérifier le statut - ne pas autoriser la suppression si sending ou scheduled
-    if campaign.status in [EmailCampaignStatus.SENDING, EmailCampaignStatus.SCHEDULED]:
+    # Vérifier le statut - ne pas autoriser la suppression si running ou scheduled
+    if campaign.status in [EmailCampaignStatus.RUNNING, EmailCampaignStatus.SCHEDULED]:
         raise HTTPException(
             status_code=400,
-            detail="Impossible de supprimer une campagne en cours d'envoi ou programmée. Veuillez d'abord la mettre en pause."
+            detail="Impossible de supprimer une campagne en cours d'envoi ou programmée. Veuillez d'abord la mettre en pause.",
         )
 
     # Supprimer la campagne
@@ -576,7 +593,9 @@ async def campaign_stats(
     return stats
 
 
-@router.get("/campaigns/{campaign_id}/batches", response_model=PaginatedResponse[EmailSendBatchResponse])
+@router.get(
+    "/campaigns/{campaign_id}/batches", response_model=PaginatedResponse[EmailSendBatchResponse]
+)
 async def list_campaign_batches(
     campaign_id: int,
     skip: int = Query(0, ge=0),
@@ -589,12 +608,7 @@ async def list_campaign_batches(
 
     query = db.query(EmailSendBatch).filter(EmailSendBatch.campaign_id == campaign_id)
     total = query.count()
-    batches = (
-        query.order_by(EmailSendBatch.created_at.desc())
-        .offset(skip)
-        .limit(limit)
-        .all()
-    )
+    batches = query.order_by(EmailSendBatch.created_at.desc()).offset(skip).limit(limit).all()
     items = [EmailSendBatchResponse.model_validate(batch) for batch in batches]
     return PaginatedResponse(total=total, skip=skip, limit=limit, items=items)
 
@@ -611,17 +625,14 @@ async def get_campaign_batch(
 
     batch = (
         db.query(EmailSendBatch)
-        .filter(
-            EmailSendBatch.id == batch_id,
-            EmailSendBatch.campaign_id == campaign_id
-        )
+        .filter(EmailSendBatch.id == batch_id, EmailSendBatch.campaign_id == campaign_id)
         .first()
     )
 
     if not batch:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Batch {batch_id} not found for campaign {campaign_id}"
+            detail=f"Batch {batch_id} not found for campaign {campaign_id}",
         )
 
     return EmailSendBatchResponse.model_validate(batch)
@@ -640,12 +651,7 @@ async def list_campaign_sends(
     if status_filter:
         query = query.filter(EmailSend.status == status_filter)
     total = query.count()
-    sends = (
-        query.order_by(EmailSend.created_at.desc())
-        .offset(skip)
-        .limit(limit)
-        .all()
-    )
+    sends = query.order_by(EmailSend.created_at.desc()).offset(skip).limit(limit).all()
     items = [EmailSendResponse.model_validate(send) for send in sends]
     return PaginatedResponse(total=total, skip=skip, limit=limit, items=items)
 
@@ -660,10 +666,11 @@ async def get_campaign_send_batch(
     """Récupérer les détails d'un batch d'envoi spécifique."""
     from models.email import EmailSendBatch
 
-    batch = db.query(EmailSendBatch).filter(
-        EmailSendBatch.id == send_id,
-        EmailSendBatch.campaign_id == campaign_id
-    ).first()
+    batch = (
+        db.query(EmailSendBatch)
+        .filter(EmailSendBatch.id == send_id, EmailSendBatch.campaign_id == campaign_id)
+        .first()
+    )
 
     if not batch:
         raise HTTPException(status_code=404, detail="Batch d'envoi introuvable")
@@ -687,12 +694,7 @@ async def get_send_batch_details(
         query = query.filter(EmailSend.status == status_filter)
 
     total = query.count()
-    sends = (
-        query.order_by(EmailSend.created_at.desc())
-        .offset(skip)
-        .limit(limit)
-        .all()
-    )
+    sends = query.order_by(EmailSend.created_at.desc()).offset(skip).limit(limit).all()
 
     items = [EmailSendResponse.model_validate(send) for send in sends]
     return PaginatedResponse(total=total, skip=skip, limit=limit, items=items)
@@ -701,7 +703,11 @@ async def get_send_batch_details(
 # ============= CAMPAIGN SUBSCRIPTIONS =============
 
 
-@router.post("/campaigns/{campaign_id}/subscriptions", response_model=CampaignSubscriptionResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/campaigns/{campaign_id}/subscriptions",
+    response_model=CampaignSubscriptionResponse,
+    status_code=status.HTTP_201_CREATED,
+)
 async def subscribe_to_campaign(
     campaign_id: int,
     payload: CampaignSubscriptionCreate,
@@ -709,11 +715,13 @@ async def subscribe_to_campaign(
     current_user: dict = Depends(get_current_user),
 ):
     """Abonner une personne ou organisation à une campagne."""
-    from models.email import EmailCampaign, CampaignSubscription
-    from models.person import Person
-    from models.organisation import Organisation
+    from datetime import UTC, datetime
+
     from fastapi import HTTPException
-    from datetime import datetime, UTC
+
+    from models.email import CampaignSubscription, EmailCampaign
+    from models.organisation import Organisation
+    from models.person import Person
 
     # Vérifier que la campagne existe
     campaign = db.query(EmailCampaign).filter(EmailCampaign.id == campaign_id).first()
@@ -737,11 +745,15 @@ async def subscribe_to_campaign(
         entity_email = org.email
 
     # Vérifier si déjà abonné
-    existing = db.query(CampaignSubscription).filter(
-        CampaignSubscription.campaign_id == campaign_id,
-        CampaignSubscription.person_id == payload.person_id,
-        CampaignSubscription.organisation_id == payload.organisation_id,
-    ).first()
+    existing = (
+        db.query(CampaignSubscription)
+        .filter(
+            CampaignSubscription.campaign_id == campaign_id,
+            CampaignSubscription.person_id == payload.person_id,
+            CampaignSubscription.organisation_id == payload.organisation_id,
+        )
+        .first()
+    )
 
     if existing:
         # Réactiver si désabonné
@@ -789,7 +801,10 @@ async def subscribe_to_campaign(
     return response_data
 
 
-@router.delete("/campaigns/{campaign_id}/subscriptions/{subscription_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/campaigns/{campaign_id}/subscriptions/{subscription_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
 async def unsubscribe_from_campaign(
     campaign_id: int,
     subscription_id: int,
@@ -797,14 +812,20 @@ async def unsubscribe_from_campaign(
     current_user: dict = Depends(get_current_user),
 ):
     """Désabonner une entité d'une campagne."""
-    from models.email import CampaignSubscription
-    from fastapi import HTTPException
-    from datetime import datetime, UTC
+    from datetime import UTC, datetime
 
-    subscription = db.query(CampaignSubscription).filter(
-        CampaignSubscription.id == subscription_id,
-        CampaignSubscription.campaign_id == campaign_id,
-    ).first()
+    from fastapi import HTTPException
+
+    from models.email import CampaignSubscription
+
+    subscription = (
+        db.query(CampaignSubscription)
+        .filter(
+            CampaignSubscription.id == subscription_id,
+            CampaignSubscription.campaign_id == campaign_id,
+        )
+        .first()
+    )
 
     if not subscription:
         raise HTTPException(status_code=404, detail="Abonnement introuvable")
@@ -824,7 +845,9 @@ async def unsubscribe_from_campaign(
     )
 
 
-@router.get("/campaigns/{campaign_id}/subscriptions", response_model=List[CampaignSubscriptionResponse])
+@router.get(
+    "/campaigns/{campaign_id}/subscriptions", response_model=List[CampaignSubscriptionResponse]
+)
 async def list_campaign_subscriptions(
     campaign_id: int,
     only_active: bool = Query(True),
@@ -832,10 +855,11 @@ async def list_campaign_subscriptions(
     current_user: dict = Depends(get_current_user),
 ):
     """Lister les abonnements d'une campagne."""
-    from models.email import CampaignSubscription, EmailCampaign
-    from models.person import Person
-    from models.organisation import Organisation
     from fastapi import HTTPException
+
+    from models.email import CampaignSubscription, EmailCampaign
+    from models.organisation import Organisation
+    from models.person import Person
 
     # Vérifier que la campagne existe
     campaign = db.query(EmailCampaign).filter(EmailCampaign.id == campaign_id).first()
@@ -884,9 +908,11 @@ async def list_campaign_subscriptions(
 
         # Vérifier si l'email est dans la liste noire globale
         if entity_email and not should_skip:
-            unsubscribed = db.query(UnsubscribedEmail).filter(
-                UnsubscribedEmail.email == entity_email.lower()
-            ).first()
+            unsubscribed = (
+                db.query(UnsubscribedEmail)
+                .filter(UnsubscribedEmail.email == entity_email.lower())
+                .first()
+            )
             if unsubscribed:
                 should_skip = True
 
@@ -905,9 +931,10 @@ async def list_person_subscriptions(
     current_user: dict = Depends(get_current_user),
 ):
     """Lister les abonnements d'une personne."""
+    from fastapi import HTTPException
+
     from models.email import CampaignSubscription, EmailCampaign
     from models.person import Person
-    from fastapi import HTTPException
 
     # Vérifier que la personne existe
     person = db.query(Person).filter(Person.id == person_id).first()
@@ -938,7 +965,10 @@ async def list_person_subscriptions(
     return result
 
 
-@router.get("/organisations/{organisation_id}/subscriptions", response_model=List[CampaignSubscriptionResponse])
+@router.get(
+    "/organisations/{organisation_id}/subscriptions",
+    response_model=List[CampaignSubscriptionResponse],
+)
 async def list_organisation_subscriptions(
     organisation_id: int,
     only_active: bool = Query(True),
@@ -946,16 +976,19 @@ async def list_organisation_subscriptions(
     current_user: dict = Depends(get_current_user),
 ):
     """Lister les abonnements d'une organisation."""
+    from fastapi import HTTPException
+
     from models.email import CampaignSubscription, EmailCampaign
     from models.organisation import Organisation
-    from fastapi import HTTPException
 
     # Vérifier que l'organisation existe
     org = db.query(Organisation).filter(Organisation.id == organisation_id).first()
     if not org:
         raise HTTPException(status_code=404, detail="Organisation introuvable")
 
-    query = db.query(CampaignSubscription).filter(CampaignSubscription.organisation_id == organisation_id)
+    query = db.query(CampaignSubscription).filter(
+        CampaignSubscription.organisation_id == organisation_id
+    )
 
     if only_active:
         query = query.filter(CampaignSubscription.is_active == True)
@@ -979,17 +1012,22 @@ async def list_organisation_subscriptions(
     return result
 
 
-@router.post("/campaigns/subscriptions/bulk", response_model=CampaignSubscriptionBulkResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/campaigns/subscriptions/bulk",
+    response_model=CampaignSubscriptionBulkResponse,
+    status_code=status.HTTP_201_CREATED,
+)
 async def bulk_subscribe_to_campaign(
     payload: CampaignSubscriptionBulkCreate,
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
     """Abonner plusieurs personnes/organisations à une campagne en une fois."""
-    from models.email import EmailCampaign, CampaignSubscription
-    from models.person import Person
-    from models.organisation import Organisation
     from fastapi import HTTPException
+
+    from models.email import CampaignSubscription, EmailCampaign
+    from models.organisation import Organisation
+    from models.person import Person
 
     # Vérifier que la campagne existe
     campaign = db.query(EmailCampaign).filter(EmailCampaign.id == payload.campaign_id).first()
@@ -1006,10 +1044,14 @@ async def bulk_subscribe_to_campaign(
     for person_id in payload.person_ids:
         try:
             # Vérifier si existe déjà
-            existing = db.query(CampaignSubscription).filter(
-                CampaignSubscription.campaign_id == payload.campaign_id,
-                CampaignSubscription.person_id == person_id,
-            ).first()
+            existing = (
+                db.query(CampaignSubscription)
+                .filter(
+                    CampaignSubscription.campaign_id == payload.campaign_id,
+                    CampaignSubscription.person_id == person_id,
+                )
+                .first()
+            )
 
             if existing:
                 if not existing.is_active:
@@ -1042,10 +1084,14 @@ async def bulk_subscribe_to_campaign(
     for org_id in payload.organisation_ids:
         try:
             # Vérifier si existe déjà
-            existing = db.query(CampaignSubscription).filter(
-                CampaignSubscription.campaign_id == payload.campaign_id,
-                CampaignSubscription.organisation_id == org_id,
-            ).first()
+            existing = (
+                db.query(CampaignSubscription)
+                .filter(
+                    CampaignSubscription.campaign_id == payload.campaign_id,
+                    CampaignSubscription.organisation_id == org_id,
+                )
+                .first()
+            )
 
             if existing:
                 if not existing.is_active:
@@ -1102,18 +1148,20 @@ class RecipientTrackingResponse(BaseModel):
 
     id: int
     recipient: dict  # person_id, name, email, organisation, role
-    tracking: dict   # sent_at, opened[], clicked[], bounced
+    tracking: dict  # sent_at, opened[], clicked[], bounced
     engagement_score: int  # Score 0-100 pour priorisation
 
 
 @router.get(
     "/campaigns/{campaign_id}/batches/{batch_id}/recipients-tracking",
-    response_model=List[RecipientTrackingResponse]
+    response_model=List[RecipientTrackingResponse],
 )
 async def get_batch_recipients_with_tracking(
     campaign_id: int,
     batch_id: int,
-    filter: Optional[str] = Query(None, description="Filter: clicked, opened, not_opened, bounced, all"),
+    filter: Optional[str] = Query(
+        None, description="Filter: clicked, opened, not_opened, bounced, all"
+    ),
     sort: Optional[str] = Query("engagement", description="Sort: engagement, name, date"),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
@@ -1135,24 +1183,24 @@ async def get_batch_recipients_with_tracking(
     - name: Par nom alphabétique
     - date: Par date de dernier événement
     """
-    from models.email import EmailEvent, EmailEventType, EmailSendBatch
-    from models.person import Person
-    from models.organisation import Organisation
-    from sqlalchemy.orm import joinedload
     from datetime import datetime, timezone
 
+    from sqlalchemy.orm import joinedload
+
+    from models.email import EmailEvent, EmailEventType, EmailSendBatch
+    from models.organisation import Organisation
+    from models.person import Person
+
     # Vérifier que le batch appartient bien à la campagne
-    batch = db.query(EmailSendBatch).filter(
-        and_(
-            EmailSendBatch.id == batch_id,
-            EmailSendBatch.campaign_id == campaign_id
-        )
-    ).first()
+    batch = (
+        db.query(EmailSendBatch)
+        .filter(and_(EmailSendBatch.id == batch_id, EmailSendBatch.campaign_id == campaign_id))
+        .first()
+    )
 
     if not batch:
         raise HTTPException(
-            status_code=404,
-            detail=f"Batch {batch_id} not found for campaign {campaign_id}"
+            status_code=404, detail=f"Batch {batch_id} not found for campaign {campaign_id}"
         )
 
     # Query de base avec jointures
@@ -1162,12 +1210,12 @@ async def get_batch_recipients_with_tracking(
         .options(
             joinedload(EmailSend.recipient_person),
             joinedload(EmailSend.organisation),
-            joinedload(EmailSend.events)
+            joinedload(EmailSend.events),
         )
     )
 
     # Appliquer filtres
-    if filter == 'clicked':
+    if filter == "clicked":
         # Sous-requête pour trouver les send_id avec événements CLICKED
         clicked_send_ids = (
             db.query(EmailEvent.send_id)
@@ -1176,7 +1224,7 @@ async def get_batch_recipients_with_tracking(
         )
         query = query.filter(EmailSend.id.in_(clicked_send_ids))
 
-    elif filter == 'opened':
+    elif filter == "opened":
         # Sous-requête pour trouver les send_id avec événements OPENED
         opened_send_ids = (
             db.query(EmailEvent.send_id)
@@ -1185,7 +1233,7 @@ async def get_batch_recipients_with_tracking(
         )
         query = query.filter(EmailSend.id.in_(opened_send_ids))
 
-    elif filter == 'not_opened':
+    elif filter == "not_opened":
         # LEFT JOIN pour exclure ceux qui ont des events OPENED
         opened_send_ids = (
             db.query(EmailEvent.send_id)
@@ -1194,7 +1242,7 @@ async def get_batch_recipients_with_tracking(
         )
         query = query.filter(~EmailSend.id.in_(opened_send_ids))
 
-    elif filter == 'bounced':
+    elif filter == "bounced":
         # Sous-requête pour trouver les send_id avec événements BOUNCED
         bounced_send_ids = (
             db.query(EmailEvent.send_id)
@@ -1212,24 +1260,28 @@ async def get_batch_recipients_with_tracking(
         # Extraire les événements par type
         opened_events = [
             {"event_at": e.event_at.isoformat(), "ip": e.ip_address}
-            for e in send.events if e.event_type == EmailEventType.OPENED
+            for e in send.events
+            if e.event_type == EmailEventType.OPENED
         ]
         clicked_events = [
             {"event_at": e.event_at.isoformat(), "url": e.url, "ip": e.ip_address}
-            for e in send.events if e.event_type == EmailEventType.CLICKED
+            for e in send.events
+            if e.event_type == EmailEventType.CLICKED
         ]
         bounced = any(e.event_type == EmailEventType.BOUNCED for e in send.events)
 
         # Calcul du score d'engagement (0-100)
         score = 0
-        score += len(clicked_events) * 20      # Clic = +20 points
-        score += len(opened_events) * 10       # Ouverture = +10 points
+        score += len(clicked_events) * 20  # Clic = +20 points
+        score += len(opened_events) * 10  # Ouverture = +10 points
 
         # Bonus si événement récent (< 24h)
         now = datetime.now(timezone.utc)
         if clicked_events:
             last_click = max(e["event_at"] for e in clicked_events)
-            last_click_dt = datetime.fromisoformat(last_click.replace('Z', '+00:00'))
+            last_click_dt = datetime.fromisoformat(last_click.replace("Z", "+00:00"))
+            if last_click_dt.tzinfo is None:
+                last_click_dt = last_click_dt.replace(tzinfo=timezone.utc)
             hours_since_click = (now - last_click_dt).total_seconds() / 3600
             if hours_since_click < 24:
                 score += 30  # Lead très chaud !
@@ -1266,23 +1318,28 @@ async def get_batch_recipients_with_tracking(
             "click_count": len(clicked_events),
         }
 
-        results.append(RecipientTrackingResponse(
-            id=send.id,
-            recipient=recipient,
-            tracking=tracking,
-            engagement_score=score,
-        ))
+        results.append(
+            RecipientTrackingResponse(
+                id=send.id,
+                recipient=recipient,
+                tracking=tracking,
+                engagement_score=score,
+            )
+        )
 
     # Tri
-    if sort == 'engagement':
+    if sort == "engagement":
         results.sort(key=lambda x: x.engagement_score, reverse=True)
-    elif sort == 'name':
-        results.sort(key=lambda x: x.recipient['name'])
-    elif sort == 'date':
-        results.sort(key=lambda x: (
-            max([e['event_at'] for e in x.tracking['clicked']], default='')
-            or max([e['event_at'] for e in x.tracking['opened']], default='')
-            or x.tracking['sent_at']
-        ), reverse=True)
+    elif sort == "name":
+        results.sort(key=lambda x: x.recipient["name"])
+    elif sort == "date":
+        results.sort(
+            key=lambda x: (
+                max([e["event_at"] for e in x.tracking["clicked"]], default="")
+                or max([e["event_at"] for e in x.tracking["opened"]], default="")
+                or x.tracking["sent_at"]
+            ),
+            reverse=True,
+        )
 
     return results

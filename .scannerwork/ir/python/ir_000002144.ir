@@ -1,800 +1,0 @@
-
-90"Fallback pure Python implementation of msgpack"str
-¶223int
-
-1int
-ô208int
-—214int
-ã220int
-
-"5int
-217int
-3197int
-x204int
-H"Bb"str
-ë">Q"str
-"pypy_version_info"str
-[201int
-truebool
-»"b2s"str
-e202int
-
-2int
-ö"b"str
-£">h"str
-¥211int
-
-o8int
-$511int
-=198int
-Ä205int
-æ"b1s"str
-G199int
-4">H"str
-
-3int
-à206int
-Q200int
-)196int
-n203int
-¢209int
-falsebool
-€215int
-î221int
-µ">q"str
-NoneNoneType
-˘218int
-Ω212int
-\">Ib"str
-ê207int
-Ê16int
-«213int
-
-0int
-&""str
-Á"b16s"str
-p">d"str
-¨">i"str
-
- 4int
-“"b4s"str
-´210int
-‹"b8s"str
-f">f"str
->">I"str
-R">Hb"str
-Â216int
-ù222int
-Ç219int	+tuple"•!
-
- ("#unknown-value#*
-(
- (*datetime"?python-unknown?0
-.
- ($"
-builtinshasattr*:Bbool"" 
- ($ * (2 ("£0
-.
- (%newlist_hint"?python-unknown?0
-.
-	 	(.BytesBuilder"?python-unknown?5
-3
- (	_USING_STRINGBUILDER"#id#:Bbool"l+
-)
-   (
-BytesIO"?python-unknown?5
-3
-" "( _USING_STRINGBUILDER"#id#:Bbool"ªM,
-*
-( ((Q
-BufferFull"?python-unknown?+
-)
-( ((Q	ExtraData"?python-unknown?-
-+
-( ((QFormatError"?python-unknown?+
-)
-( ((Q	OutOfData"?python-unknown?,
-*
-( ((Q
-StackError"?python-unknown?)
-'
-) )(#ExtType"?python-unknown?+
-)
-) )(#	Timestamp"?python-unknown?%
-#
-+ +(EX_SKIP"#id#:Bint*
-(
-, ,(EX_CONSTRUCT"#id#:Bint2
-0
-- -(EX_READ_ARRAY_HEADER"#id#:Bint0
-.
-. .(EX_READ_MAP_HEADER"#id#:Bint,
-*
-0 0(TYPE_IMMEDIATE"#id#:Bint(
-&
-1 1(
-TYPE_ARRAY"#id#:Bint&
-$
-2 2(TYPE_MAP"#id#:Bint&
-$
-3 3(TYPE_RAW"#id#:Bint&
-$
-4 4(!TYPE_BIN"#id#: Bint&
-$
-5 5(#TYPE_EXT"#id#:"Bint3
-1
-7 7(%DEFAULT_RECURSE_LIMIT"#id#:$Bint-
-+
-a a('_NO_FORMAT_USED"#id#:&Bstr6
-4
-b ((_MSGPACK_HEADERS"#new-object#Bdict(
-&
-c
- c((*"#unknown-value#Btuple&
-$
-c
- c((,"
-#is-exact#:*+Bbool
-
-c
- c((-"
-#assume#:,8
-6
-c
- c((."#set-field# __collection_size:*Bint&
-$
-c
- c((/"#array-add-last#:*&
-$
-c
- c((0"#array-add-last#:*'&
-$
-c
- c((1"#array-add-last#:*! 
-
-c c((2"	#map-set#:()*(
-&
-d
- d(5"#unknown-value#Btuple&
-$
-d
- d(6"
-#is-exact#:5+Bbool
-
-d
- d(7"
-#assume#:68
-6
-d
- d(8"#set-field# __collection_size:5Bint&
-$
-d
- d(9"#array-add-last#:5&
-$
-d
- d(:"#array-add-last#:54&
-$
-d
- d(;"#array-add-last#:5! 
-
-d d(<"	#map-set#:(35(
-&
-e
- e(?"#unknown-value#Btuple&
-$
-e
- e(@"
-#is-exact#:?+Bbool
-
-e
- e(A"
-#assume#:@8
-6
-e
- e(B"#set-field# __collection_size:?Bint&
-$
-e
- e(C"#array-add-last#:? &
-$
-e
- e(D"#array-add-last#:?>&
-$
-e
- e(E"#array-add-last#:?! 
-
-e e(F"	#map-set#:(=?(
-&
-f
- f(I"#unknown-value#Btuple&
-$
-f
- f(J"
-#is-exact#:I+Bbool
-
-f
- f(K"
-#assume#:J8
-6
-f
- f(L"#set-field# __collection_size:IBint&
-$
-f
- f(M"#array-add-last#:I&
-$
-f
- f(N"#array-add-last#:IH&
-$
-f
- f(O"#array-add-last#:I# 
-
-f f(P"	#map-set#:(GI(
-&
-g
- g(S"#unknown-value#Btuple&
-$
-g
- g(T"
-#is-exact#:S+Bbool
-
-g
- g(U"
-#assume#:T8
-6
-g
- g(V"#set-field# __collection_size:SBint&
-$
-g
- g(W"#array-add-last#:S&
-$
-g
- g(X"#array-add-last#:SR&
-$
-g
- g(Y"#array-add-last#:S# 
-
-g g(Z"	#map-set#:(QS(
-&
-h
- h(]"#unknown-value#Btuple&
-$
-h
- h(^"
-#is-exact#:]+Bbool
-
-h
- h(_"
-#assume#:^8
-6
-h
- h(`"#set-field# __collection_size:]Bint&
-$
-h
- h(a"#array-add-last#:]"&
-$
-h
- h(b"#array-add-last#:]\&
-$
-h
- h(c"#array-add-last#:]# 
-
-h h(d"	#map-set#:([](
-&
-i
- i(g"#unknown-value#Btuple&
-$
-i
- i(h"
-#is-exact#:g+Bbool
-
-i
- i(i"
-#assume#:h8
-6
-i
- i(j"#set-field# __collection_size:gBint&
-$
-i
- i(k"#array-add-last#:g &
-$
-i
- i(l"#array-add-last#:gf 
-
-i i(m"	#map-set#:(eg(
-&
-j
- j(q"#unknown-value#Btuple&
-$
-j
- j(r"
-#is-exact#:q+Bbool
-
-j
- j(s"
-#assume#:r8
-6
-j
- j(t"#set-field# __collection_size:qBint&
-$
-j
- j(u"#array-add-last#:qo&
-$
-j
- j(v"#array-add-last#:qp 
-
-j j(w"	#map-set#:(nq(
-&
-k
- k(y"#unknown-value#Btuple&
-$
-k
- k(z"
-#is-exact#:y+Bbool
-
-k
- k({"
-#assume#:z8
-6
-k
- k(|"#set-field# __collection_size:yBint&
-$
-k
- k(}"#array-add-last#:y&
-$
-k
- k(~"#array-add-last#:y' 
-
-k k("	#map-set#:(xy)
-'
-l
- l(Å"#unknown-value#Btuple(
-&
-l
- l(Ç"
-#is-exact#:Å+Bbool
-
-l
- l(É"
-#assume#:Ç:
-8
-l
- l(Ñ"#set-field# __collection_size:ÅBint(
-&
-l
- l(Ö"#array-add-last#:Å(
-&
-l
- l(Ü"#array-add-last#:Å4#
-!
-l l(á"	#map-set#:(ÄÅ)
-'
-m
- m(â"#unknown-value#Btuple(
-&
-m
- m(ä"
-#is-exact#:â+Bbool
-
-m
- m(ã"
-#assume#:ä:
-8
-m
- m(å"#set-field# __collection_size:âBint(
-&
-m
- m(ç"#array-add-last#:â (
-&
-m
- m(é"#array-add-last#:â>#
-!
-m m(è"	#map-set#:(àâ)
-'
-n
- n(í"#unknown-value#Btuple(
-&
-n
- n(ì"
-#is-exact#:í+Bbool
-
-n
- n(î"
-#assume#:ì:
-8
-n
- n(ï"#set-field# __collection_size:íBint(
-&
-n
- n(ñ"#array-add-last#:ío)
-'
-n
- n(ó"#array-add-last#:íë#
-!
-n n(ò"	#map-set#:(êí)
-'
-o
- o(õ"#unknown-value#Btuple(
-&
-o
- o(ú"
-#is-exact#:õ+Bbool
-
-o
- o(ù"
-#assume#:ú:
-8
-o
- o(û"#set-field# __collection_size:õBint(
-&
-o
- o(ü"#array-add-last#:õ)
-'
-o
- o(†"#array-add-last#:õö#
-!
-o o(°"	#map-set#:(ôõ)
-'
-p
- p(§"#unknown-value#Btuple(
-&
-p
- p(•"
-#is-exact#:§+Bbool
-
-p
- p(¶"
-#assume#:•:
-8
-p
- p(ß"#set-field# __collection_size:§Bint(
-&
-p
- p(®"#array-add-last#:§)
-'
-p
- p(©"#array-add-last#:§£#
-!
-p p(™"	#map-set#:(¢§)
-'
-q
- q(≠"#unknown-value#Btuple(
-&
-q
- q(Æ"
-#is-exact#:≠+Bbool
-
-q
- q(Ø"
-#assume#:Æ:
-8
-q
- q(∞"#set-field# __collection_size:≠Bint(
-&
-q
- q(±"#array-add-last#:≠ )
-'
-q
- q(≤"#array-add-last#:≠¨#
-!
-q q(≥"	#map-set#:(´≠)
-'
-r
- r(∂"#unknown-value#Btuple(
-&
-r
- r(∑"
-#is-exact#:∂+Bbool
-
-r
- r(∏"
-#assume#:∑:
-8
-r
- r(π"#set-field# __collection_size:∂Bint(
-&
-r
- r(∫"#array-add-last#:∂o)
-'
-r
- r(ª"#array-add-last#:∂µ#
-!
-r r(º"	#map-set#:(¥∂)
-'
-s
- s(ø"#unknown-value#Btuple(
-&
-s
- s(¿"
-#is-exact#:ø+Bbool
-
-s
- s(¡"
-#assume#:¿:
-8
-s
- s(¬"#set-field# __collection_size:øBint(
-&
-s
- s(√"#array-add-last#:ø)
-'
-s
- s(ƒ"#array-add-last#:øæ(
-&
-s
- s(≈"#array-add-last#:ø##
-!
-s s(∆"	#map-set#:(Ωø)
-'
-t
- t(…"#unknown-value#Btuple(
-&
-t
- t( "
-#is-exact#:…+Bbool
-
-t
- t(À"
-#assume#: :
-8
-t
- t(Ã"#set-field# __collection_size:…Bint(
-&
-t
- t(Õ"#array-add-last#:…)
-'
-t
- t(Œ"#array-add-last#:…»(
-&
-t
- t(œ"#array-add-last#:…##
-!
-t t(–"	#map-set#:(«…)
-'
-u
- u(”"#unknown-value#Btuple(
-&
-u
- u(‘"
-#is-exact#:”+Bbool
-
-u
- u(’"
-#assume#:‘:
-8
-u
- u(÷"#set-field# __collection_size:”Bint(
-&
-u
- u(◊"#array-add-last#:” )
-'
-u
- u(ÿ"#array-add-last#:”“(
-&
-u
- u(Ÿ"#array-add-last#:”##
-!
-u u(⁄"	#map-set#:(—”)
-'
-v
- v(›"#unknown-value#Btuple(
-&
-v
- v(ﬁ"
-#is-exact#:›+Bbool
-
-v
- v(ﬂ"
-#assume#:ﬁ:
-8
-v
- v(‡"#set-field# __collection_size:›Bint(
-&
-v
- v(·"#array-add-last#:›o)
-'
-v
- v(‚"#array-add-last#:›‹(
-&
-v
- v(„"#array-add-last#:›##
-!
-v v(‰"	#map-set#:(€›)
-'
-w
- w( Ë"#unknown-value#Btuple(
-&
-w
- w( È"
-#is-exact#:Ë+Bbool
-
-w
- w( Í"
-#assume#:È:
-8
-w
- w( Î"#set-field# __collection_size:ËBint)
-'
-w
- w( Ï"#array-add-last#:ËÊ)
-'
-w
- w( Ì"#array-add-last#:ËÁ(
-&
-w
- w( Ó"#array-add-last#:Ë##
-!
-w w( Ô"	#map-set#:(ÂË)
-'
-x
- x((Ò"#unknown-value#Btuple(
-&
-x
- x((Ú"
-#is-exact#:Ò+Bbool
-
-x
- x((Û"
-#assume#:Ú:
-8
-x
- x((Ù"#set-field# __collection_size:ÒBint(
-&
-x
- x((ı"#array-add-last#:Ò(
-&
-x
- x((ˆ"#array-add-last#:Ò'(
-&
-x
- x((˜"#array-add-last#:Ò#
-!
-x x((¯"	#map-set#:(Ò)
-'
-y
- y(˙"#unknown-value#Btuple(
-&
-y
- y(˚"
-#is-exact#:˙+Bbool
-
-y
- y(¸"
-#assume#:˚:
-8
-y
- y(˝"#set-field# __collection_size:˙Bint(
-&
-y
- y(˛"#array-add-last#:˙(
-&
-y
- y(ˇ"#array-add-last#:˙4(
-&
-y
- y(Ä"#array-add-last#:˙#
-!
-y y(Å"	#map-set#:(˘˙)
-'
-z
- z(É"#unknown-value#Btuple(
-&
-z
- z(Ñ"
-#is-exact#:É+Bbool
-
-z
- z(Ö"
-#assume#:Ñ:
-8
-z
- z(Ü"#set-field# __collection_size:ÉBint(
-&
-z
- z(á"#array-add-last#:É (
-&
-z
- z(à"#array-add-last#:É>(
-&
-z
- z(â"#array-add-last#:É#
-!
-z z(ä"	#map-set#:(ÇÉ)
-'
-{
- {(å"#unknown-value#Btuple(
-&
-{
- {(ç"
-#is-exact#:å+Bbool
-
-{
- {(é"
-#assume#:ç:
-8
-{
- {(è"#set-field# __collection_size:åBint(
-&
-{
- {(ê"#array-add-last#:å(
-&
-{
- {(ë"#array-add-last#:å4(
-&
-{
- {(í"#array-add-last#:å#
-!
-{ {(ì"	#map-set#:(ãå)
-'
-|
- |(ï"#unknown-value#Btuple(
-&
-|
- |(ñ"
-#is-exact#:ï+Bbool
-
-|
- |(ó"
-#assume#:ñ:
-8
-|
- |(ò"#set-field# __collection_size:ïBint(
-&
-|
- |(ô"#array-add-last#:ï (
-&
-|
- |(ö"#array-add-last#:ï>(
-&
-|
- |(õ"#array-add-last#:ï#
-!
-| |(ú"	#map-set#:(îï)
-'
-}
- }(û"#unknown-value#Btuple(
-&
-}
- }(ü"
-#is-exact#:û+Bbool
-
-}
- }(†"
-#assume#:ü:
-8
-}
- }(°"#set-field# __collection_size:ûBint(
-&
-}
- }(¢"#array-add-last#:û(
-&
-}
- }(£"#array-add-last#:û4(
-&
-}
- }(§"#array-add-last#:û#
-!
-} }(•"	#map-set#:(ùû)
-'
-~
- ~(ß"#unknown-value#Btuple(
-&
-~
- ~(®"
-#is-exact#:ß+Bbool
-
-~
- ~(©"
-#assume#:®:
-8
-~
- ~(™"#set-field# __collection_size:ßBint(
-&
-~
- ~(´"#array-add-last#:ß (
-&
-~
- ~(¨"#array-add-last#:ß>(
-&
-~
- ~(≠"#array-add-last#:ß#
-!
-~ ~(Æ"	#map-set#:(¶ß *É/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/msgpack/fallback.py

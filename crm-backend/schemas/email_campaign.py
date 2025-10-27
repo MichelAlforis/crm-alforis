@@ -1,7 +1,9 @@
-from pydantic import BaseModel, Field, EmailStr
-from typing import Optional, List, Dict, Any
 from datetime import datetime
 from enum import Enum
+from typing import Any, Dict, List, Optional
+
+from pydantic import BaseModel, EmailStr, Field
+
 
 class CampaignStatus(str, Enum):
     DRAFT = "draft"
@@ -11,6 +13,7 @@ class CampaignStatus(str, Enum):
     PAUSED = "paused"
     CANCELLED = "cancelled"
 
+
 class EmailStatus(str, Enum):
     PENDING = "pending"
     SENT = "sent"
@@ -19,11 +22,14 @@ class EmailStatus(str, Enum):
     OPENED = "opened"
     CLICKED = "clicked"
 
+
 class TargetType(str, Enum):
     ORGANISATIONS = "organisations"
     CONTACTS = "contacts"
 
+
 # Email Templates
+
 
 class EmailTemplateCreate(BaseModel):
     name: str = Field(..., max_length=200)
@@ -32,12 +38,14 @@ class EmailTemplateCreate(BaseModel):
     body_text: Optional[str] = None
     variables: List[str] = Field(default_factory=list)
 
+
 class EmailTemplateUpdate(BaseModel):
     name: Optional[str] = Field(None, max_length=200)
     subject: Optional[str] = Field(None, max_length=500)
     body_html: Optional[str] = None
     body_text: Optional[str] = None
     variables: Optional[List[str]] = None
+
 
 class EmailTemplate(BaseModel):
     id: int
@@ -52,7 +60,9 @@ class EmailTemplate(BaseModel):
     class Config:
         from_attributes = True
 
+
 # Recipient Filters
+
 
 class RecipientFilters(BaseModel):
     target_type: TargetType
@@ -62,7 +72,9 @@ class RecipientFilters(BaseModel):
     specific_ids: Optional[List[int]] = Field(default_factory=list)
     exclude_ids: Optional[List[int]] = Field(default_factory=list)
 
+
 # Email Campaigns
+
 
 class EmailCampaignCreate(BaseModel):
     name: str = Field(..., max_length=200)
@@ -73,6 +85,7 @@ class EmailCampaignCreate(BaseModel):
     delay_between_batches: int = Field(default=60, ge=0)
     scheduled_at: Optional[datetime] = None
 
+
 class EmailCampaignUpdate(BaseModel):
     name: Optional[str] = Field(None, max_length=200)
     description: Optional[str] = None
@@ -82,6 +95,7 @@ class EmailCampaignUpdate(BaseModel):
     delay_between_batches: Optional[int] = Field(None, ge=0)
     scheduled_at: Optional[datetime] = None
     status: Optional[CampaignStatus] = None
+
 
 class EmailCampaign(BaseModel):
     id: int
@@ -106,10 +120,13 @@ class EmailCampaign(BaseModel):
     class Config:
         from_attributes = True
 
+
 class EmailCampaignWithTemplate(EmailCampaign):
     template: EmailTemplate
 
+
 # Preview
+
 
 class EmailPreviewRecipient(BaseModel):
     id: int
@@ -118,11 +135,13 @@ class EmailPreviewRecipient(BaseModel):
     email: str
     personalization_data: Dict[str, Any]
 
+
 class EmailPreview(BaseModel):
     recipient: EmailPreviewRecipient
     subject: str
     body_html: str
     body_text: Optional[str]
+
 
 class EmailPreviewList(BaseModel):
     total: int
@@ -131,7 +150,9 @@ class EmailPreviewList(BaseModel):
     page_size: int
     total_pages: int
 
+
 # Campaign Email
+
 
 class CampaignEmail(BaseModel):
     id: int
@@ -152,7 +173,9 @@ class CampaignEmail(BaseModel):
     class Config:
         from_attributes = True
 
+
 # Statistics
+
 
 class CampaignStatistics(BaseModel):
     total_recipients: int

@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react'
 import Link from 'next/link'
-import { Plus, Eye, Mail, Send, Clock, CheckCircle, XCircle, TrendingUp, Users, Calendar } from 'lucide-react'
+import { Plus, Eye, Mail, Send, Clock, CheckCircle, XCircle, TrendingUp, Calendar } from 'lucide-react'
 import { Card, CardHeader, CardBody, Button, Table } from '@/components/shared'
 import { useEmailCampaigns } from '@/hooks/useEmailAutomation'
 import type { EmailCampaign } from '@/lib/types'

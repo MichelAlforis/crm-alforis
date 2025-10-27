@@ -1,150 +1,0 @@
-
-
-3int
-"darwin"str
-®û"
-        Build a shebang line. In the simple case (on Windows, or a shebang line
-        which is not too long or contains spaces) use a simple formulation for
-        the shebang. Otherwise, use /bin/sh as the executable, with a contrived
-        shebang which allows the script to run either under Python or sh, using
-        suitable quoting. Thanks to Harald Nordgren for his input.
-
-        See also: http://www.in-ulm.de/~mascheck/various/shebang/#length
-                  https://hg.mozilla.org/mozilla-central/file/tip/mach
-        "str
-127int
-falsebool
-	truebool
-"posix"str
-)"'''exec' "bytes
-512int
--	"' '''\n"bytes
-"cross_compiling"strself
-ì ì(
-executable
-ì ì('post_interp
-ì) ì(4"™#
-!
-
-û û("#unknown-value#'
-%
-
-û û("#get-field# name:,
-*
-
-û û("
-#binop !=#2!=:Bbool,"*
-
-û û( *
-û û(
-2
-† †(";1
-/
-
-ü ü(!
-simple_shebang"#id#:	Bbool
-"±#
-!
-
-† †("#unknown-value#-
-+
-
-† †(3"
-builtinsgetattr*:+
-)
-
-† †(3"
-__bool__*:BboolH,"*
-
-† †(3 *
-† †(2
-¶ ¶(";1
-/
-
-• •("simple_shebang"#id#:Bbool
-"»,
-*
-
-® ®(,"
-builtinslen*:Bint,
-*
-
-®/ ®(?"
-builtinslen*:Bint:
-8
-
-® ®(Cshebang_length"	#binop +#2+:Bint#
-!
-
-© ©("#unknown-value#+
-)
-
-© ©("#get-field# platform:,
-*
-
-© ©('"
-#binop ==#2==:Bbool,"*
-
-© ©(' *
-© ©(2
-´ ´(">4
-2
-
-™ ™((max_shebang_length"#id#:Bint">4
-2
-
-¨ ¨((max_shebang_length"#id#:Bint"ù$*"max_shebang_length'
-%
-
-≠ ≠(#"?python-unknown?*4
-2
-
-≠ ≠(5"#binop not in#2not in:Bbool"
-
-≠ ≠(6 	"B,
-*
-
-≠< ≠(` "
-#binop <=#2<=:Bbool
-
-≠ ≠(a	"M	*! 1
-/
-
-≠ ≠(b"simple_shebang"#id#:!Bbool
-"X
-&*$#simple_shebang
-	","*
-
-Ø Ø(# *
-Ø Ø(
-2
-± ±("ä'
-%
-
-∞ ∞($"?python-unknown?*'
-%
-
-∞8 ∞(=%"?python-unknown?*.
-,
-
-∞ ∞(=&result"	#binop +#2+:$%"ë'
-%
-
-≤ ≤(#'"?python-unknown?*#
-!
-
-≤ ≤(#(result"#id#:''
-%
-
-≥@ ≥(O*"?python-unknown?*.
-,
-
-≥ ≥(O+result"	#binop +#2+:)*/
--
-
-≥ ≥(O,result"	#binop +#*2+:(+/
--
-
-¥ ¥( .result"	#binop +#*2+:,-".*/result&.
-
-µ µ(/*Ç/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/distlib/scripts.py

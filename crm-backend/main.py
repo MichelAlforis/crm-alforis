@@ -1,5 +1,6 @@
-import os
 import json
+import logging
+import os
 import time
 import traceback
 from contextlib import asynccontextmanager
@@ -9,6 +10,18 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse
+
+# ============================================================
+# 🔍 Logging configuration
+# ============================================================
+
+# Configure logging level from environment (DEBUG, INFO, WARNING, ERROR)
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+logging.basicConfig(
+    level=getattr(logging, LOG_LEVEL, logging.INFO),
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger("crm-api")
 
 # ============================================================
 # 🔧 Feature flags & ENV
@@ -58,7 +71,7 @@ def _init_sentry_if_available() -> None:
             traces_sample_rate=0.0,  # ajuste si tu veux le tracing
         )
     except Exception as e:
-        print("⚠️ Sentry init failed:", e)
+        logger.warning(f"Sentry initialization failed: {e}")
 
 
 # ============================================================
@@ -121,7 +134,7 @@ app = FastAPI(
 )
 
 # --- Middleware CORS ---
-print(f"🔧 Configuration CORS: {ALLOWED_ORIGINS}")
+logger.info(f"CORS configuration: {ALLOWED_ORIGINS}")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
@@ -129,10 +142,26 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-print(f"✅ Middleware CORS ajouté pour: {ALLOWED_ORIGINS}")
+logger.info(f"CORS middleware enabled for origins: {ALLOWED_ORIGINS}")
 
 # --- GZip (utile pour grosses réponses JSON) ---
 app.add_middleware(GZipMiddleware, minimum_size=1024)
+
+# --- Rate Limiting ---
+try:
+    from slowapi.errors import RateLimitExceeded
+    from slowapi.middleware import SlowAPIMiddleware
+
+    from core.rate_limit import custom_rate_limit_exceeded_handler, limiter
+
+    app.state.limiter = limiter
+    app.add_exception_handler(RateLimitExceeded, custom_rate_limit_exceeded_handler)
+    app.add_middleware(SlowAPIMiddleware)
+    logger.info("Rate limiting enabled (slowapi)")
+except ImportError:
+    logger.warning("slowapi not available - rate limiting disabled")
+except Exception as e:
+    logger.warning(f"Rate limiting setup failed: {e}")
 
 # --- Metrics simple (temps de réponse) ---
 if ENABLE_METRICS_MIDDLEWARE:
@@ -142,17 +171,38 @@ if ENABLE_METRICS_MIDDLEWARE:
         try:
             response = await call_next(request)
         except Exception as exc:
-            # Laisse aussi Sentry capter
+            # Log structured error with appropriate level
+            logger.error(
+                f"Exception in {request.method} {request.url.path}",
+                exc_info=exc,
+                extra={
+                    "method": request.method,
+                    "path": request.url.path,
+                    "client": request.client.host if request.client else None,
+                }
+            )
+
+            # In DEBUG mode, also print full traceback to console
+            if logger.isEnabledFor(logging.DEBUG):
+                print("=" * 80)
+                print(f"❌ DEBUG TRACEBACK: {request.method} {request.url.path}")
+                print("=" * 80)
+                traceback.print_exc()
+                print("=" * 80)
+
+            # Send to Sentry if configured
             if SENTRY_DSN:
                 try:
                     import sentry_sdk  # type: ignore
                     sentry_sdk.capture_exception(exc)
-                except Exception:
-                    pass
-            # Réponse JSON contrôlée
+                except Exception as e:
+                    logger.warning(f"Failed to send exception to Sentry: {e}")
+
+            # Controlled JSON response (hide internal details in production)
+            error_detail = str(exc) if logger.isEnabledFor(logging.DEBUG) else "Internal Server Error"
             return JSONResponse(
                 status_code=500,
-                content={"detail": "Internal Server Error"},
+                content={"detail": "Internal Server Error", "error": error_detail},
             )
         finally:
             process_time = time.perf_counter() - start
@@ -186,29 +236,34 @@ async def ready():
 # On isole les imports pour éviter qu’un module optionnel (ex: events/redis) ne fasse planter tout le boot.
 # Ajoute/retire les lignes selon ce que tu as réellement.
 try:
-    from api import api_router  # ton APIRouter principal qui inclut people, organisations, kpis, auth, etc.
+    from api import (
+        api_router,  # ton APIRouter principal qui inclut people, organisations, kpis, auth, etc.
+    )
+
     # api_router a déjà le prefix="/api/v1" dans api/__init__.py, ne pas le redoubler !
     app.include_router(api_router)
 except Exception as e:
-    print("⚠️ Erreur lors du chargement des routes :", e)
-    traceback.print_exc()
+    logger.error(f"Failed to load API routes: {e}", exc_info=e)
+    if logger.isEnabledFor(logging.DEBUG):
+        traceback.print_exc()
 
 # ============================================================
 # 🔌 WebSocket pour notifications temps réel
 # ============================================================
 
 try:
-    from fastapi import WebSocket, WebSocketDisconnect, Query
+    from fastapi import Query, WebSocket, WebSocketDisconnect
+
+    from core.database import get_db
     from core.notifications import websocket_endpoint
     from core.security import decode_token
-    from core.database import get_db
 
     @app.websocket("/ws/notifications")
     async def notifications_websocket(
         websocket: WebSocket,
         token: str = Query(...)
     ):
-        """Endpoint WebSocket pour les notifications temps réel"""
+        """Endpoint WebSocket pour les notifications temps réel (multi-tenant)"""
         try:
             # Décoder le token pour obtenir l'utilisateur
             payload = decode_token(token)
@@ -218,20 +273,45 @@ try:
                 await websocket.close(code=1008, reason="Invalid token: missing user_id")
                 return
 
-            # Connecter via le manager
-            await websocket_endpoint(websocket, user_id)
+            # Récupérer l'org_id depuis le token ou la DB
+            org_id = payload.get("org_id")
+
+            # Fallback: si pas dans le token, récupérer depuis la DB
+            if not org_id:
+                from models.user import User
+                db_gen = get_db()
+                db = next(db_gen)
+                try:
+                    user = db.query(User).filter(User.id == int(user_id)).first()
+                    if user and hasattr(user, "organisation_id"):
+                        org_id = user.organisation_id
+                    elif user:
+                        # Fallback: organisation par défaut (1) si pas d'org_id
+                        org_id = 1
+                    else:
+                        await websocket.close(code=1008, reason="User not found")
+                        return
+                finally:
+                    db.close()
+
+            if not org_id:
+                await websocket.close(code=1008, reason="Invalid token: missing org_id")
+                return
+
+            # Connecter via le manager avec org_id
+            await websocket_endpoint(websocket, int(user_id), int(org_id))
 
         except Exception as e:
-            print(f"❌ WebSocket error: {e}")
+            logger.error(f"WebSocket error: {e}", exc_info=e)
             try:
                 await websocket.close(code=1011, reason=f"Error: {str(e)}")
             except:
                 pass
 
-    print("✅ WebSocket endpoint /ws/notifications activé")
+    logger.info("WebSocket endpoint /ws/notifications enabled")
 
 except Exception as e:
-    print(f"⚠️ WebSocket non disponible: {e}")
+    logger.warning(f"WebSocket not available: {e}")
 
 # Si tu préfères inclure router par router :
 # try:
@@ -253,12 +333,13 @@ except Exception as e:
 
 from core.exceptions import APIException
 
+
 @app.exception_handler(APIException)
 async def api_exception_handler(request: Request, exc: APIException):
     """Handler pour les exceptions API personnalisées (404, 409, etc.)"""
     return JSONResponse(
         status_code=exc.status_code,
-        content={"detail": exc.detail}
+        content={"detail": exc.message}
     )
 
 @app.exception_handler(Exception)
@@ -267,11 +348,24 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
         try:
             import sentry_sdk  # type: ignore
             sentry_sdk.capture_exception(exc)
-        except Exception:
-            pass
-    # Log console
-    print("❌ Unhandled exception:", exc)
-    traceback.print_exc()
+        except Exception as e:
+            logger.warning(f"Failed to send exception to Sentry: {e}")
+
+    # Structured logging
+    logger.error(
+        f"Unhandled exception in {request.method} {request.url.path}",
+        exc_info=exc,
+        extra={
+            "method": request.method,
+            "path": request.url.path,
+            "client": request.client.host if request.client else None,
+        }
+    )
+
+    # Debug mode: print full traceback
+    if logger.isEnabledFor(logging.DEBUG):
+        traceback.print_exc()
+
     return JSONResponse(status_code=500, content={"detail": "Internal Server Error"})
 
 
@@ -282,3 +376,4 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False)
+# test optimisation $(date)

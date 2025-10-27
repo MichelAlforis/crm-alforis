@@ -1,9 +1,0 @@
-
-
-"~/Movies"str
-H?":return: videos directory tied to the user, e.g. ``~/Movies``"strselfu u(":(
-&
-w w(-"
-os.path
-expanduser:
-w w(-*…/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/macos.py

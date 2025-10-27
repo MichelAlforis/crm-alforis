@@ -1,11 +1,0 @@
-
-"~/Downloads"str
-"XDG_DOWNLOAD_DIR"str
-NE":return: downloads directory tied to the user, e.g. ``~/Downloads``"strself
-è è("^J
-H
-
-ë ë(E"4
-pip._vendor.platformdirs.unix_get_user_media_dir:
-
-ë ë(E*Ñ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/unix.py

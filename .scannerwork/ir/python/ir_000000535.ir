@@ -1,40 +1,0 @@
-
-
-
-0int
-wn"Set the terminal window title
-
-        Args:
-            title (str): The new terminal window title
-        "strcls
-£ £(title
-£ £(	tuple($pip._vendor.rich.segment.ControlType"ë3
-1
-
-© ©(0"#get-field# SET_WINDOW_TITLE:*
-(
-
-© ©(8"#unknown-value#Btuple(
-&
-
-© ©(8"
-#is-exact#:Bbool
-
-
-© ©(8	"
-#assume#::
-8
-
-© ©(8"#set-field# __collection_size:
-Bint(
-&
-
-© ©(8"#array-add-last#:(
-&
-
-© ©(8"#array-add-last#:
-
-
-© ©(9"cls:
-
-© ©(9*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/control.py

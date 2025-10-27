@@ -1,10 +1,0 @@
-
-#"Subclass should override"str
-Ê‹"The name identifying this requirement in the resolver.
-
-        This is different from ``project_name`` if this requirement contains
-        extras, where ``project_name`` would not contain the ``[...]`` part.
-        "strselfK K("R@
->
-Q Q(="NotImplementedError*:BNotImplementedError2
-Q Q(=*è/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/resolution/resolvelib/base.py

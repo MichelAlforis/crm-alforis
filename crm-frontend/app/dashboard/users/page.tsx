@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { Plus, Pencil, Trash2, UserX, Search, X } from 'lucide-react'
 import { useUsers, useDeleteUser, useCreateUser, useUpdateUser, User } from '@/hooks/useUsers'
+import { useConfirm } from '@/hooks/useConfirm'
 import { Button } from '@/components/ui/button'
 import { UserForm } from '@/components/forms'
 import { useToast } from '@/hooks/useToast'
@@ -18,6 +19,7 @@ export default function UsersPage() {
   const updateMutation = useUpdateUser()
   const deleteMutation = useDeleteUser()
   const { showToast } = useToast()
+  const { confirm, ConfirmDialogComponent } = useConfirm()
 
   const handleOpenCreate = () => {
     setEditingUser(null)
@@ -63,24 +65,29 @@ export default function UsersPage() {
   }
 
   const handleDelete = async (id: number, email: string, hardDelete: boolean = false) => {
-    if (!confirm(`Êtes-vous sûr de vouloir ${hardDelete ? 'supprimer définitivement' : 'désactiver'} l'utilisateur ${email} ?`)) {
-      return
-    }
-
-    try {
-      await deleteMutation.mutateAsync({ id, hardDelete })
-      showToast({
-        type: 'success',
-        title: hardDelete ? 'Utilisateur supprimé' : 'Utilisateur désactivé',
-      })
-      refetch()
-    } catch (error: any) {
-      showToast({
-        type: 'error',
-        title: 'Erreur',
-        message: error.response?.data?.detail || 'Impossible de supprimer l\'utilisateur',
-      })
-    }
+    confirm({
+      title: hardDelete ? 'Supprimer définitivement' : 'Désactiver l\'utilisateur',
+      message: `Êtes-vous sûr de vouloir ${hardDelete ? 'supprimer définitivement' : 'désactiver'} l'utilisateur ${email} ?`,
+      type: 'danger',
+      confirmText: hardDelete ? 'Supprimer' : 'Désactiver',
+      cancelText: 'Annuler',
+      onConfirm: async () => {
+        try {
+          await deleteMutation.mutateAsync({ id, hardDelete })
+          showToast({
+            type: 'success',
+            title: hardDelete ? 'Utilisateur supprimé' : 'Utilisateur désactivé',
+          })
+          refetch()
+        } catch (error: any) {
+          showToast({
+            type: 'error',
+            title: 'Erreur',
+            message: error.response?.data?.detail || 'Impossible de supprimer l\'utilisateur',
+          })
+        }
+      },
+    })
   }
 
   return (
@@ -263,6 +270,9 @@ export default function UsersPage() {
           </div>
         </div>
       )}
+
+      {/* Confirmation Dialog */}
+      <ConfirmDialogComponent />
     </div>
   )
 }

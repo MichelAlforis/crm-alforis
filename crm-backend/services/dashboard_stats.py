@@ -3,22 +3,24 @@ Service pour les statistiques Dashboard
 Remplace progressivement le système KPI legacy
 """
 
-from collections import defaultdict
-from sqlalchemy.orm import Session
-from sqlalchemy import func, and_
-from typing import List, Optional, Dict, Any, Tuple
-from datetime import datetime, timedelta, timezone
 import logging
+from collections import defaultdict
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, List, Optional, Tuple
 
+from sqlalchemy import and_, func
+from sqlalchemy.orm import Session
+
+from models.kpi import DashboardKPI
+from models.kpi import DashboardKPI as OrganisationKPI
 from models.organisation import Organisation
-from models.kpi import DashboardKPI as OrganisationKPI, DashboardKPI
-from models.task import Task, TaskStatus
 from models.organisation_activity import OrganisationActivity, OrganisationActivityType
+from models.task import Task, TaskStatus
 from schemas.dashboard_stats import (
     GlobalDashboardStats,
-    OrganisationStatsResponse,
-    OrganisationMonthlyKPI,
     MonthlyAggregateStats,
+    OrganisationMonthlyKPI,
+    OrganisationStatsResponse,
     YearlyAggregateStats,
 )
 from services.kpi import OrganisationKPIService
@@ -193,7 +195,9 @@ class DashboardStatsService:
         # Finalise commission rate
         for bucket in buckets.values():
             if bucket["commission_values"]:
-                bucket["commission_rate"] = sum(bucket["commission_values"]) / len(bucket["commission_values"])
+                bucket["commission_rate"] = sum(bucket["commission_values"]) / len(
+                    bucket["commission_values"]
+                )
             else:
                 bucket["commission_rate"] = None
             bucket.pop("commission_values", None)
@@ -208,68 +212,52 @@ class DashboardStatsService:
         """
         try:
             # Compter les organisations
-            total_orgs = self.db.query(func.count(Organisation.id)).filter(
-                Organisation.is_active == True
-            ).scalar() or 0
+            total_orgs = (
+                self.db.query(func.count(Organisation.id))
+                .filter(Organisation.is_active == True)
+                .scalar()
+                or 0
+            )
 
             # Organisations par catégorie
             orgs_by_category_raw = (
-                self.db.query(
-                    Organisation.category,
-                    func.count(Organisation.id)
-                )
+                self.db.query(Organisation.category, func.count(Organisation.id))
                 .filter(Organisation.is_active == True)
                 .group_by(Organisation.category)
                 .all()
             )
-            orgs_by_category = {
-                str(cat): count for cat, count in orgs_by_category_raw if cat
-            }
+            orgs_by_category = {str(cat): count for cat, count in orgs_by_category_raw if cat}
 
             # Organisations par type (pipeline)
             orgs_by_type_raw = (
-                self.db.query(
-                    Organisation.type,
-                    func.count(Organisation.id)
-                )
+                self.db.query(Organisation.type, func.count(Organisation.id))
                 .filter(Organisation.is_active == True)
                 .group_by(Organisation.type)
                 .all()
             )
-            orgs_by_pipeline = {
-                str(type_): count for type_, count in orgs_by_type_raw if type_
-            }
+            orgs_by_pipeline = {str(type_): count for type_, count in orgs_by_type_raw if type_}
 
             # Tâches
             total_tasks = self.db.query(func.count(Task.id)).scalar() or 0
 
             completed_tasks = (
-                self.db.query(func.count(Task.id))
-                .filter(Task.status == TaskStatus.DONE)
-                .scalar() or 0
+                self.db.query(func.count(Task.id)).filter(Task.status == TaskStatus.DONE).scalar()
+                or 0
             )
 
             today = datetime.now().date()
             overdue_tasks = (
                 self.db.query(func.count(Task.id))
-                .filter(
-                    and_(
-                        Task.status != TaskStatus.DONE,
-                        Task.due_date < today
-                    )
-                )
-                .scalar() or 0
+                .filter(and_(Task.status != TaskStatus.DONE, Task.due_date < today))
+                .scalar()
+                or 0
             )
 
             tasks_due_today = (
                 self.db.query(func.count(Task.id))
-                .filter(
-                    and_(
-                        Task.status != TaskStatus.DONE,
-                        Task.due_date == today
-                    )
-                )
-                .scalar() or 0
+                .filter(and_(Task.status != TaskStatus.DONE, Task.due_date == today))
+                .scalar()
+                or 0
             )
 
             # Activités récentes
@@ -279,13 +267,15 @@ class DashboardStatsService:
             activities_7d = (
                 self.db.query(func.count(OrganisationActivity.id))
                 .filter(OrganisationActivity.occurred_at >= seven_days_ago)
-                .scalar() or 0
+                .scalar()
+                or 0
             )
 
             activities_30d = (
                 self.db.query(func.count(OrganisationActivity.id))
                 .filter(OrganisationActivity.occurred_at >= thirty_days_ago)
-                .scalar() or 0
+                .scalar()
+                or 0
             )
 
             return GlobalDashboardStats(
@@ -311,9 +301,7 @@ class DashboardStatsService:
 
     # ============= STATISTIQUES PAR ORGANISATION =============
 
-    async def get_organisation_stats(
-        self, organisation_id: int
-    ) -> OrganisationStatsResponse:
+    async def get_organisation_stats(self, organisation_id: int) -> OrganisationStatsResponse:
         """
         Calcule les statistiques pour une organisation spécifique
         """
@@ -326,18 +314,17 @@ class DashboardStatsService:
             total_tasks = (
                 self.db.query(func.count(Task.id))
                 .filter(Task.organisation_id == organisation_id)
-                .scalar() or 0
+                .scalar()
+                or 0
             )
 
             completed_tasks = (
                 self.db.query(func.count(Task.id))
                 .filter(
-                    and_(
-                        Task.organisation_id == organisation_id,
-                        Task.status == TaskStatus.DONE
-                    )
+                    and_(Task.organisation_id == organisation_id, Task.status == TaskStatus.DONE)
                 )
-                .scalar() or 0
+                .scalar()
+                or 0
             )
 
             pending_tasks = total_tasks - completed_tasks
@@ -345,7 +332,8 @@ class DashboardStatsService:
             total_interactions = (
                 self.db.query(func.count(OrganisationActivity.id))
                 .filter(OrganisationActivity.organisation_id == organisation_id)
-                .scalar() or 0
+                .scalar()
+                or 0
             )
 
             # Dernière activité
@@ -377,18 +365,14 @@ class DashboardStatsService:
     # ============= KPI MENSUELS (COMPATIBILITÉ LEGACY) =============
 
     async def get_monthly_kpis(
-        self,
-        organisation_id: int,
-        year: Optional[int] = None,
-        month: Optional[int] = None
+        self, organisation_id: int, year: Optional[int] = None, month: Optional[int] = None
     ) -> List[OrganisationMonthlyKPI]:
         """
         Retourne les KPI mensuels pour une organisation.
         Priorité aux KPI enregistrés manuellement, puis suggestions calculées depuis les activités.
         """
-        stored_query = (
-            self.db.query(DashboardKPI)
-            .filter(DashboardKPI.organisation_id == organisation_id)
+        stored_query = self.db.query(DashboardKPI).filter(
+            DashboardKPI.organisation_id == organisation_id
         )
         if year:
             stored_query = stored_query.filter(DashboardKPI.year == year)
@@ -446,7 +430,8 @@ class DashboardStatsService:
                 continue
 
             if not any(
-                values[field] for field in ("rdv_count", "pitchs", "due_diligences", "closings", "revenue")
+                values[field]
+                for field in ("rdv_count", "pitchs", "due_diligences", "closings", "revenue")
             ):
                 continue
 
@@ -474,11 +459,7 @@ class DashboardStatsService:
         return results
 
     async def create_or_update_monthly_kpi(
-        self,
-        organisation_id: int,
-        year: int,
-        month: int,
-        data: Dict[str, Any]
+        self, organisation_id: int, year: int, month: int, data: Dict[str, Any]
     ) -> OrganisationMonthlyKPI:
         """
         Crée ou met à jour un KPI mensuel pour une organisation.
@@ -608,9 +589,7 @@ class DashboardStatsService:
 
     # ============= AGRÉGATIONS MENSUELLES =============
 
-    async def get_monthly_aggregate(
-        self, year: int, month: int
-    ) -> MonthlyAggregateStats:
+    async def get_monthly_aggregate(self, year: int, month: int) -> MonthlyAggregateStats:
         """
         Agrège les KPIs de toutes les organisations pour un mois donné
         """
@@ -654,7 +633,8 @@ class DashboardStatsService:
                     created_at=record.created_at.isoformat() if record.created_at else None,
                     updated_at=record.updated_at.isoformat() if record.updated_at else None,
                     auto_generated=record.auto_generated,
-                    source=record.data_source or ("activity" if record.auto_generated else "manual"),
+                    source=record.data_source
+                    or ("activity" if record.auto_generated else "manual"),
                 )
             )
             if record.commission_rate is not None:
@@ -691,7 +671,8 @@ class DashboardStatsService:
             if (org_id, year, month) in stored_map:
                 continue
             if not any(
-                data[field] for field in ("rdv_count", "pitchs", "due_diligences", "closings", "revenue")
+                data[field]
+                for field in ("rdv_count", "pitchs", "due_diligences", "closings", "revenue")
             ):
                 continue
             append_auto(org_id, data)
@@ -721,17 +702,11 @@ class DashboardStatsService:
             organisations=organisations_entries or None,
         )
 
-    async def get_yearly_aggregate(
-        self, organisation_id: int, year: int
-    ) -> YearlyAggregateStats:
+    async def get_yearly_aggregate(self, organisation_id: int, year: int) -> YearlyAggregateStats:
         """
         Agrège les KPIs d'une organisation pour une année complète
         """
-        org = (
-            self.db.query(Organisation)
-            .filter(Organisation.id == organisation_id)
-            .first()
-        )
+        org = self.db.query(Organisation).filter(Organisation.id == organisation_id).first()
         if not org:
             raise ValueError(f"Organisation {organisation_id} not found")
 
@@ -798,7 +773,8 @@ class DashboardStatsService:
             if m in stored_map:
                 continue
             if not any(
-                data[field] for field in ("rdv_count", "pitchs", "due_diligences", "closings", "revenue")
+                data[field]
+                for field in ("rdv_count", "pitchs", "due_diligences", "closings", "revenue")
             ):
                 continue
             monthly = OrganisationMonthlyKPI(

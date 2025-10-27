@@ -5,12 +5,13 @@
 #   POST /api/v1/imports/organisations/bulk (NEW: import unifié)
 #   POST /api/v1/imports/people/bulk (NEW: import personnes physiques)
 
-from fastapi import APIRouter, HTTPException, Depends, status, Query
-from sqlalchemy.orm import Session
+import logging
+from typing import Any, Dict, List, Optional, Set
+
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
-from typing import List, Optional, Dict, Any, Set
-import logging
+from sqlalchemy.orm import Session
 
 # ---- Dépendances / modèles / schémas
 from core.database import get_db
@@ -26,6 +27,7 @@ router = APIRouter(prefix="/imports", tags=["imports"])
 
 
 # ---------- Utils communs ----------
+
 
 def _normalize_email(email: Optional[str]) -> Optional[str]:
     return email.strip().lower() if isinstance(email, str) else None
@@ -46,6 +48,7 @@ def _collect_nonempty_emails(items: List[dict], key: str = "email") -> Set[str]:
 
 
 # ============= NEW: BULK CREATE ORGANISATIONS (UNIFIÉ) =============
+
 
 def _resolve_org_type(raw: Any) -> OrganisationType:
     if isinstance(raw, OrganisationType):
@@ -94,11 +97,13 @@ async def bulk_create_organisations(
         if norm_name:
             if norm_name in seen_names:
                 result["failed"] += 1
-                result["errors"].append({
-                    "index": idx,
-                    "row": _index_to_row(idx),
-                    "error": f"Doublon dans le payload pour le nom: {org.name}"
-                })
+                result["errors"].append(
+                    {
+                        "index": idx,
+                        "row": _index_to_row(idx),
+                        "error": f"Doublon dans le payload pour le nom: {org.name}",
+                    }
+                )
             else:
                 seen_names.add(norm_name)
 
@@ -112,9 +117,9 @@ async def bulk_create_organisations(
     if payload_names:
         existing_names = {
             n[0].strip().lower()
-            for n in db.query(Organisation.name).filter(
-                func.lower(Organisation.name).in_(payload_names)
-            ).all()
+            for n in db.query(Organisation.name)
+            .filter(func.lower(Organisation.name).in_(payload_names))
+            .all()
         }
 
     try:
@@ -129,11 +134,13 @@ async def bulk_create_organisations(
                 norm_name = name.strip().lower() if isinstance(name, str) else None
                 if norm_name and norm_name in existing_names:
                     result["failed"] += 1
-                    result["errors"].append({
-                        "index": idx,
-                        "row": _index_to_row(idx),
-                        "error": f"Organisation déjà existante: {name}"
-                    })
+                    result["errors"].append(
+                        {
+                            "index": idx,
+                            "row": _index_to_row(idx),
+                            "error": f"Organisation déjà existante: {name}",
+                        }
+                    )
                     continue
 
                 # Créer l'organisation avec le type spécifié
@@ -150,18 +157,16 @@ async def bulk_create_organisations(
             except IntegrityError as ie:
                 db.rollback()
                 result["failed"] += 1
-                result["errors"].append({
-                    "index": idx,
-                    "row": _index_to_row(idx),
-                    "error": f"Contrainte d'intégrité: {getattr(ie, 'orig', ie)}"
-                })
+                result["errors"].append(
+                    {
+                        "index": idx,
+                        "row": _index_to_row(idx),
+                        "error": f"Contrainte d'intégrité: {getattr(ie, 'orig', ie)}",
+                    }
+                )
             except Exception as e:
                 result["failed"] += 1
-                result["errors"].append({
-                    "index": idx,
-                    "row": _index_to_row(idx),
-                    "error": str(e)
-                })
+                result["errors"].append({"index": idx, "row": _index_to_row(idx), "error": str(e)})
 
         if result["created"]:
             db.commit()
@@ -173,13 +178,14 @@ async def bulk_create_organisations(
         logger.exception("Erreur lors du bulk_create_organisations")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Erreur lors de l'enregistrement: {str(e)}"
+            detail=f"Erreur lors de l'enregistrement: {str(e)}",
         )
 
     return result
 
 
 # ============= NEW: BULK CREATE PEOPLE (PERSONNES PHYSIQUES) =============
+
 
 def _detect_duplicate_emails(people: List[PersonCreate], result: Dict[str, Any]) -> Set[str]:
     """Détecte les doublons d'email dans le payload et met à jour result."""
@@ -189,11 +195,13 @@ def _detect_duplicate_emails(people: List[PersonCreate], result: Dict[str, Any])
         if norm_email:
             if norm_email in seen_emails:
                 result["failed"] += 1
-                result["errors"].append({
-                    "index": idx,
-                    "row": _index_to_row(idx),
-                    "error": f"Doublon dans le payload pour l'email: {norm_email}"
-                })
+                result["errors"].append(
+                    {
+                        "index": idx,
+                        "row": _index_to_row(idx),
+                        "error": f"Doublon dans le payload pour l'email: {norm_email}",
+                    }
+                )
             else:
                 seen_emails.add(norm_email)
     return seen_emails
@@ -214,18 +222,15 @@ def _get_existing_emails(db: Session, payload_dicts: List[dict]) -> Set[str]:
         return set()
 
     return {
-        e[0] for e in db.query(Person.personal_email).filter(
-            func.lower(Person.personal_email).in_(payload_emails)
-        ).all()
+        e[0]
+        for e in db.query(Person.personal_email)
+        .filter(func.lower(Person.personal_email).in_(payload_emails))
+        .all()
     }
 
 
 def _process_person_creation(
-    idx: int,
-    payload: dict,
-    db: Session,
-    existing_emails: Set[str],
-    result: Dict[str, Any]
+    idx: int, payload: dict, db: Session, existing_emails: Set[str], result: Dict[str, Any]
 ) -> None:
     """Traite la création d'une personne avec gestion d'erreurs."""
     # Skip si doublon payload déjà détecté
@@ -236,11 +241,13 @@ def _process_person_creation(
     email = payload.get("personal_email")
     if email and email in existing_emails:
         result["failed"] += 1
-        result["errors"].append({
-            "index": idx,
-            "row": _index_to_row(idx),
-            "error": f"Email déjà existant en base: {email}"
-        })
+        result["errors"].append(
+            {
+                "index": idx,
+                "row": _index_to_row(idx),
+                "error": f"Email déjà existant en base: {email}",
+            }
+        )
         return
 
     try:
@@ -254,18 +261,16 @@ def _process_person_creation(
     except IntegrityError as ie:
         db.rollback()
         result["failed"] += 1
-        result["errors"].append({
-            "index": idx,
-            "row": _index_to_row(idx),
-            "error": f"Contrainte d'intégrité: {getattr(ie, 'orig', ie)}"
-        })
+        result["errors"].append(
+            {
+                "index": idx,
+                "row": _index_to_row(idx),
+                "error": f"Contrainte d'intégrité: {getattr(ie, 'orig', ie)}",
+            }
+        )
     except Exception as e:
         result["failed"] += 1
-        result["errors"].append({
-            "index": idx,
-            "row": _index_to_row(idx),
-            "error": str(e)
-        })
+        result["errors"].append({"index": idx, "row": _index_to_row(idx), "error": str(e)})
 
 
 @router.post("/people/bulk")
@@ -281,12 +286,7 @@ async def bulk_create_people(
     à une organisation. Utilisez /links/bulk pour créer les liens ensuite.
     """
     total = len(people)
-    result: Dict[str, Any] = {
-        "total": total,
-        "created": [],
-        "failed": 0,
-        "errors": []
-    }
+    result: Dict[str, Any] = {"total": total, "created": [], "failed": 0, "errors": []}
 
     if total == 0:
         return result
@@ -314,8 +314,7 @@ async def bulk_create_people(
         logger.exception("Erreur lors du bulk_create_people")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Erreur lors de l'enregistrement: {str(e)}"
+            detail=f"Erreur lors de l'enregistrement: {str(e)}",
         )
 
     return result
-

@@ -1,25 +1,0 @@
-
-ØÎ"
-    :param appname: See `appname <platformdirs.api.PlatformDirsABC.appname>`.
-    :param appauthor: See `appauthor <platformdirs.api.PlatformDirsABC.appauthor>`.
-    :param version: See `version <platformdirs.api.PlatformDirsABC.version>`.
-    :param roaming: See `roaming <platformdirs.api.PlatformDirsABC.roaming>`.
-    :param ensure_exists: See `ensure_exists <platformdirs.api.PlatformDirsABC.ensure_exists>`.
-    :returns: data path tied to the user
-    "strappname
-Ä Ä(	appauthor
-Å Å(1version
-Æ Æ(roaming
-Ç Ç(ensure_exists
-È È("”#
-!
-
-Ò Ò("#unknown-value#(
-&
-
-Ò Ø("PlatformDirs:1
-/
-
-Ò Ø(	"#get-field# user_data_path:
-
-Ò Ø(	*ˆ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/__init__.py

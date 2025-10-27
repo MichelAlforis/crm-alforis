@@ -17,20 +17,20 @@ Options:
     --dry-run: Afficher les migrations sans les exécuter
 """
 
-import sys
-import os
 import argparse
+import os
+import sys
 from datetime import datetime
+
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session
 
 # Ajouter le répertoire parent au path pour importer les modules
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from core.database import engine, SessionLocal
-from models import Base, Fournisseur, Organisation, MandatDistribution, OrganisationContact
-from models.organisation import OrganisationCategory, MandatStatus
-
+from core.database import SessionLocal, engine
+from models import Base, Fournisseur, MandatDistribution, Organisation, OrganisationContact
+from models.organisation import MandatStatus, OrganisationCategory
 
 # Mapping des types de fournisseurs vers les catégories d'organisations
 TYPE_FOURNISSEUR_TO_CATEGORY = {

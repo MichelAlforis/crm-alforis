@@ -7,6 +7,7 @@ import { Card, CardHeader, CardBody, Button, Table } from '@/components/shared'
 import { useEmailCampaigns } from '@/hooks/useEmailAutomation'
 import { useExport } from '@/hooks/useExport'
 import { useConfirm } from '@/hooks/useConfirm'
+import { usePagination } from '@/hooks/usePagination'
 import { useToast } from '@/components/ui/Toast'
 import { apiClient } from '@/lib/api'
 import type { EmailCampaign } from '@/lib/types'
@@ -34,6 +35,7 @@ export default function CampaignsPage() {
   const [statusFilter, setStatusFilter] = useState<string | null>(null)
   const { confirm, ConfirmDialogComponent } = useConfirm()
   const { showToast } = useToast()
+  const pagination = usePagination({ initialLimit: 20 })
 
   // Hook d'export avec filtres
   const { exportData, isExporting } = useExport({
@@ -395,11 +397,18 @@ export default function CampaignsPage() {
           </div>
 
           <Table
-            data={filteredCampaigns}
+            data={filteredCampaigns.slice(pagination.skip, pagination.skip + pagination.limit)}
             columns={columns}
             isLoading={isLoading}
             isEmpty={!isLoading && filteredCampaigns.length === 0}
             emptyMessage={statusFilter ? `Aucune campagne avec le statut "${STATUS_LABELS[statusFilter as keyof typeof STATUS_LABELS]}"` : "Aucune campagne créée. Créez votre première campagne !"}
+            pagination={{
+              total: filteredCampaigns.length,
+              skip: pagination.skip,
+              limit: pagination.limit,
+              onPageChange: pagination.setSkip,
+              onLimitChange: pagination.setLimit,
+            }}
           />
         </CardBody>
       </Card>

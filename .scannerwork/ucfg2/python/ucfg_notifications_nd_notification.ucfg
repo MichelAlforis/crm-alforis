@@ -1,79 +1,0 @@
-
-8core.notifications.NotificationService.send_notification^
-R/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/core/notifications.pyÄ Ä("2*ñ
-2
-Ñ ä(
-
-å è(	
-%1"dictó
-î
-
-ç ç("
-%2"__mapSet*"
-
-__unknown_file (
-
-%1*$
-
-__unknown_file (
-type*,
-
-__unknown_file (
-notificationKI
-
-é é(*
-%3*,
-
-__unknown_file (
-
-notification2to_dictç
-ä
-
-é é(*
-%4"__mapSet*"
-
-__unknown_file (
-
-%1*$
-
-__unknown_file (
-data*"
-
-__unknown_file (
-
-%3C
-A
-
-å è(		
-message"__id*"
-
-__unknown_file (
-
-%1ß§
-
-í í(=
-%5*'
-
-__unknown_file (
-	
-manager*'
-
-__unknown_file (
-	
-message*'
-
-__unknown_file (
-	
-user_id2send_personal_message*
-3*8
-3
-notifications.py"
-î î(
-implicit return:
-
-Å Å("
-notification:
-
-Ç Ç(	
-user_idB*(
-&core.notifications.NotificationServiceH

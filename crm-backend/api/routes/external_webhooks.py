@@ -6,21 +6,21 @@ Endpoints sécurisés par Bearer Token pour recevoir:
 2. Désabonnements depuis le site web
 """
 
-from datetime import datetime, timezone
-from typing import Dict, Any
-
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import and_
-from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError
-
 import logging
+from datetime import datetime, timezone
+from typing import Any, Dict
+
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from sqlalchemy import and_
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
 
 from core import get_db, verify_webhook_token
 from core.exceptions import ConflictError
-from models.email import EmailEvent, EmailSend, UnsubscribedEmail, EmailEventType
-from models.person import Person
+from core.rate_limit import PUBLIC_WEBHOOK_LIMIT, limiter
+from models.email import EmailEvent, EmailEventType, EmailSend, UnsubscribedEmail
 from models.organisation import Organisation
+from models.person import Person
 from schemas.email import (
     ResendWebhookEvent,
     ResendWebhookResponse,
@@ -50,7 +50,9 @@ RESEND_EVENT_MAPPING = {
 
 
 @router.post("/resend", response_model=ResendWebhookResponse)
+@limiter.limit(PUBLIC_WEBHOOK_LIMIT)  # 10 req/min max
 async def receive_resend_webhook(
+    request: Request,
     event: ResendWebhookEvent,
     db: Session = Depends(get_db),
     _auth: bool = Depends(verify_webhook_token),
@@ -118,7 +120,11 @@ async def receive_resend_webhook(
             provider_event_id=event.email_id,
             provider_message_id=event.email_id,
             raw_payload=event.model_dump(by_alias=True),
-            url=event.data.get("clicked_url") if event.data and event.event_type == "email.clicked" else None,
+            url=(
+                event.data.get("clicked_url")
+                if event.data and event.event_type == "email.clicked"
+                else None
+            ),
         )
         db.add(email_event)
         db.flush()
@@ -132,13 +138,19 @@ async def receive_resend_webhook(
             email_send.status = "CLICKED"
         elif event_type in [EmailEventType.BOUNCED, EmailEventType.DROPPED]:
             email_send.status = "FAILED"
-            email_send.error_message = event.data.get("bounce_reason") or event.data.get("failure_reason") if event.data else None
+            email_send.error_message = (
+                event.data.get("bounce_reason") or event.data.get("failure_reason")
+                if event.data
+                else None
+            )
         elif event_type == EmailEventType.UNSUBSCRIBED:
             # 5. Désinscription automatique : mettre à jour Person/Organisation
             email_lower = event.to.lower()
 
             # Ajouter à la blacklist globale si pas déjà présent
-            existing_unsubscribe = db.query(UnsubscribedEmail).filter(UnsubscribedEmail.email == email_lower).first()
+            existing_unsubscribe = (
+                db.query(UnsubscribedEmail).filter(UnsubscribedEmail.email == email_lower).first()
+            )
             if not existing_unsubscribe:
                 unsubscribed = UnsubscribedEmail(
                     email=email_lower,
@@ -149,19 +161,17 @@ async def receive_resend_webhook(
 
             # Mettre à jour Person.email_unsubscribed
             db.query(Person).filter(Person.email == email_lower).update(
-                {"email_unsubscribed": True},
-                synchronize_session=False
+                {"email_unsubscribed": True}, synchronize_session=False
             )
 
             # Mettre à jour Organisation.email_unsubscribed
             db.query(Organisation).filter(Organisation.email == email_lower).update(
-                {"email_unsubscribed": True},
-                synchronize_session=False
+                {"email_unsubscribed": True}, synchronize_session=False
             )
 
             logger.info(
                 "auto_unsubscribe_from_webhook",
-                extra={"email": email_lower, "event_id": email_event.id}
+                extra={"email": email_lower, "event_id": email_event.id},
             )
 
         db.commit()
@@ -207,7 +217,9 @@ async def handle_unsubscribe(
         unsubscribed_at = request.unsubscribed_at or datetime.now(timezone.utc)
 
         # 1. Vérifier si déjà désabonné
-        existing = db.query(UnsubscribedEmail).filter(UnsubscribedEmail.email == email_lower).first()
+        existing = (
+            db.query(UnsubscribedEmail).filter(UnsubscribedEmail.email == email_lower).first()
+        )
         if existing:
             raise ConflictError(f"Email {email_lower} is already unsubscribed")
 

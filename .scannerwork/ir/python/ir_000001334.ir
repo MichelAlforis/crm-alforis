@@ -1,11 +1,0 @@
-
-¢˜"
-        Return the url used at location
-
-        Raises RemoteNotFoundError if the repository does not have a remote
-        url configured.
-        "strcls
-Õ Õ(location
-Õ Õ()NotImplementedError"2
-
-Ü Ü(!*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/vcs/versioncontrol.py

@@ -1,86 +1,0 @@
-
-1.0PythonFrontend"1760943899645*py2.Bð
-
-imports1
-
-extends2
-
-returns3
-
-	has param4
-
-module5
-
-
-class6
-
-function7
-
-crm-backend/models/base.py9
-
-models.base11
-
-
-sqlalchemy12
- 
-sqlalchemy.ext.declarative14
-
-sqlalchemy.orm16
-
-datetime18
-
-models.base.BaseModel20
-
-models.base.Base22
-$
-models.base.BaseModel.__repr__24
-#
-models.base.BaseModel.to_dict26J
-
-8
-89jÒ
- 
-10
-10115 *
-8 (
-
-13
-13125
-
-15
-15145
-
-17
-17165
-
-19
-19185
-
-21
-21206 210
-
-23
-23226 210
-
-25
-25247 221
-
-27
-27267 221r‚
-
-10131*
-8 (?
-
-10151*
-8 (8
-
-10171*
-8 (+
-
-10191*
-8 (
-
-21232*
-8
- 
-(

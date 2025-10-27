@@ -27,15 +27,16 @@ Usage:
     )
 """
 
-from typing import Optional, List, Dict, Any, Union
-from sqlalchemy import func, or_, and_, text
-from sqlalchemy.orm import Session
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Union
 
+from sqlalchemy import and_, func, or_, text
+from sqlalchemy.orm import Session
+
+from core.permissions import filter_query_by_team
+from models.mandat import Mandat
 from models.organisation import Organisation, OrganisationCategory
 from models.person import Person
-from models.mandat import Mandat
-from core.permissions import filter_query_by_team
 
 
 class SearchService:
@@ -81,15 +82,12 @@ class SearchService:
             base_query = db.query(
                 Organisation,
                 func.ts_rank(
-                    Organisation.search_vector,
-                    func.plainto_tsquery('french', query)
-                ).label('rank')
+                    Organisation.search_vector, func.plainto_tsquery("french", query)
+                ).label("rank"),
             )
 
             base_query = base_query.filter(
-                Organisation.search_vector.op('@@')(
-                    func.plainto_tsquery('french', query)
-                )
+                Organisation.search_vector.op("@@")(func.plainto_tsquery("french", query))
             )
         else:
             base_query = db.query(Organisation)
@@ -105,33 +103,23 @@ class SearchService:
 
         # Appliquer filtres additionnels
         if filters:
-            if 'category' in filters:
+            if "category" in filters:
+                base_query = base_query.filter(Organisation.category == filters["category"])
+            if "type" in filters:
+                base_query = base_query.filter(Organisation.type == filters["type"])
+            if "is_active" in filters:
+                base_query = base_query.filter(Organisation.is_active == filters["is_active"])
+            if "pipeline_stage" in filters:
                 base_query = base_query.filter(
-                    Organisation.category == filters['category']
-                )
-            if 'type' in filters:
-                base_query = base_query.filter(
-                    Organisation.type == filters['type']
-                )
-            if 'is_active' in filters:
-                base_query = base_query.filter(
-                    Organisation.is_active == filters['is_active']
-                )
-            if 'pipeline_stage' in filters:
-                base_query = base_query.filter(
-                    Organisation.pipeline_stage == filters['pipeline_stage']
+                    Organisation.pipeline_stage == filters["pipeline_stage"]
                 )
 
         # Filtrer par permissions (équipe)
-        base_query = filter_query_by_team(
-            base_query,
-            current_user,
-            Organisation
-        )
+        base_query = filter_query_by_team(base_query, current_user, Organisation)
 
         # Trier par pertinence
         if use_fulltext:
-            base_query = base_query.order_by(text('rank DESC'))
+            base_query = base_query.order_by(text("rank DESC"))
         else:
             base_query = base_query.order_by(Organisation.name)
 
@@ -145,8 +133,8 @@ class SearchService:
             items = [
                 {
                     **org.to_dict(),
-                    'relevance': float(rank),
-                    'match_type': 'full_text',
+                    "relevance": float(rank),
+                    "match_type": "full_text",
                 }
                 for org, rank in results
             ]
@@ -154,19 +142,19 @@ class SearchService:
             items = [
                 {
                     **org.to_dict(),
-                    'relevance': None,
-                    'match_type': 'fallback',
+                    "relevance": None,
+                    "match_type": "fallback",
                 }
                 for org in results
             ]
 
         return {
-            'items': items,
-            'total': total,
-            'query': query,
-            'filters': filters or {},
-            'limit': limit,
-            'offset': offset,
+            "items": items,
+            "total": total,
+            "query": query,
+            "filters": filters or {},
+            "limit": limit,
+            "offset": offset,
         }
 
     @staticmethod
@@ -188,20 +176,18 @@ class SearchService:
 
         # Recherche ILIKE (simple)
         search_filter = or_(
-            Person.first_name.ilike(f'%{query}%'),
-            Person.last_name.ilike(f'%{query}%'),
-            Person.personal_email.ilike(f'%{query}%'),
-            Person.phone.ilike(f'%{query}%'),
+            Person.first_name.ilike(f"%{query}%"),
+            Person.last_name.ilike(f"%{query}%"),
+            Person.personal_email.ilike(f"%{query}%"),
+            Person.phone.ilike(f"%{query}%"),
         )
 
         base_query = base_query.filter(search_filter)
 
         # Filtres additionnels
         if filters:
-            if 'is_active' in filters:
-                base_query = base_query.filter(
-                    Person.is_active == filters['is_active']
-                )
+            if "is_active" in filters:
+                base_query = base_query.filter(Person.is_active == filters["is_active"])
 
         # Permissions
         # Note: Person n'a pas de owner_id direct, filtrage via organisations liées si besoin
@@ -216,18 +202,18 @@ class SearchService:
         items = [
             {
                 **person.to_dict(),
-                'match_type': 'name_email',
+                "match_type": "name_email",
             }
             for person in results
         ]
 
         return {
-            'items': items,
-            'total': total,
-            'query': query,
-            'filters': filters or {},
-            'limit': limit,
-            'offset': offset,
+            "items": items,
+            "total": total,
+            "query": query,
+            "filters": filters or {},
+            "limit": limit,
+            "offset": offset,
         }
 
     @staticmethod
@@ -248,30 +234,22 @@ class SearchService:
 
         # Recherche simple
         search_filter = or_(
-            Mandat.number.ilike(f'%{query}%'),
-            Mandat.type.ilike(f'%{query}%'),
-            Mandat.notes.ilike(f'%{query}%') if hasattr(Mandat, 'notes') else False,
+            Mandat.number.ilike(f"%{query}%"),
+            Mandat.type.ilike(f"%{query}%"),
+            Mandat.notes.ilike(f"%{query}%") if hasattr(Mandat, "notes") else False,
         )
 
         base_query = base_query.filter(search_filter)
 
         # Filtres
         if filters:
-            if 'status' in filters:
-                base_query = base_query.filter(
-                    Mandat.status == filters['status']
-                )
-            if 'type' in filters:
-                base_query = base_query.filter(
-                    Mandat.type == filters['type']
-                )
+            if "status" in filters:
+                base_query = base_query.filter(Mandat.status == filters["status"])
+            if "type" in filters:
+                base_query = base_query.filter(Mandat.type == filters["type"])
 
         # Permissions
-        base_query = filter_query_by_team(
-            base_query,
-            current_user,
-            Mandat
-        )
+        base_query = filter_query_by_team(base_query, current_user, Mandat)
 
         # Total
         total = base_query.count()
@@ -283,18 +261,18 @@ class SearchService:
         items = [
             {
                 **mandat.to_dict(),
-                'match_type': 'number_type',
+                "match_type": "number_type",
             }
             for mandat in results
         ]
 
         return {
-            'items': items,
-            'total': total,
-            'query': query,
-            'filters': filters or {},
-            'limit': limit,
-            'offset': offset,
+            "items": items,
+            "total": total,
+            "query": query,
+            "filters": filters or {},
+            "limit": limit,
+            "offset": offset,
         }
 
     @staticmethod
@@ -322,48 +300,48 @@ class SearchService:
             Dict avec résultats par type
         """
         if not entity_types:
-            entity_types = ['organisations', 'people', 'mandats']
+            entity_types = ["organisations", "people", "mandats"]
 
         results = {}
 
         # Rechercher organisations
-        if 'organisations' in entity_types:
+        if "organisations" in entity_types:
             org_results = SearchService.search_organisations(
                 query=query,
                 db=db,
                 current_user=current_user,
                 limit=limit_per_type,
             )
-            results['organisations'] = org_results['items']
+            results["organisations"] = org_results["items"]
 
         # Rechercher personnes
-        if 'people' in entity_types:
+        if "people" in entity_types:
             people_results = SearchService.search_people(
                 query=query,
                 db=db,
                 current_user=current_user,
                 limit=limit_per_type,
             )
-            results['people'] = people_results['items']
+            results["people"] = people_results["items"]
 
         # Rechercher mandats
-        if 'mandats' in entity_types:
+        if "mandats" in entity_types:
             mandat_results = SearchService.search_mandats(
                 query=query,
                 db=db,
                 current_user=current_user,
                 limit=limit_per_type,
             )
-            results['mandats'] = mandat_results['items']
+            results["mandats"] = mandat_results["items"]
 
         # Calculer total
         total = sum(len(items) for items in results.values())
 
         return {
-            'query': query,
-            'results': results,
-            'total': total,
-            'entity_types': entity_types,
+            "query": query,
+            "results": results,
+            "total": total,
+            "entity_types": entity_types,
         }
 
     @staticmethod
@@ -371,7 +349,7 @@ class SearchService:
         query: str,
         db: Session,
         current_user,
-        entity_type: str = 'organisations',
+        entity_type: str = "organisations",
         limit: int = 10,
     ) -> List[Dict[str, Any]]:
         """
@@ -394,58 +372,59 @@ class SearchService:
 
         suggestions = []
 
-        if entity_type == 'organisations':
+        if entity_type == "organisations":
             # Rechercher organisations
-            orgs = db.query(Organisation)\
-                .filter(Organisation.name.ilike(f'{query}%'))\
-                .limit(limit)\
+            orgs = (
+                db.query(Organisation)
+                .filter(Organisation.name.ilike(f"{query}%"))
+                .limit(limit)
                 .all()
+            )
 
             suggestions = [
                 {
-                    'id': org.id,
-                    'name': org.name,
-                    'type': 'organisation',
-                    'category': org.category,
+                    "id": org.id,
+                    "name": org.name,
+                    "type": "organisation",
+                    "category": org.category,
                 }
                 for org in orgs
             ]
 
-        elif entity_type == 'people':
+        elif entity_type == "people":
             # Rechercher personnes
-            people = db.query(Person)\
+            people = (
+                db.query(Person)
                 .filter(
                     or_(
-                        Person.first_name.ilike(f'{query}%'),
-                        Person.last_name.ilike(f'{query}%'),
+                        Person.first_name.ilike(f"{query}%"),
+                        Person.last_name.ilike(f"{query}%"),
                     )
-                )\
-                .limit(limit)\
+                )
+                .limit(limit)
                 .all()
+            )
 
             suggestions = [
                 {
-                    'id': person.id,
-                    'name': f'{person.first_name} {person.last_name}',
-                    'type': 'person',
-                    'email': person.personal_email,
+                    "id": person.id,
+                    "name": f"{person.first_name} {person.last_name}",
+                    "type": "person",
+                    "email": person.personal_email,
                 }
                 for person in people
             ]
 
-        elif entity_type == 'mandats':
+        elif entity_type == "mandats":
             # Rechercher mandats
-            mandats = db.query(Mandat)\
-                .filter(Mandat.number.ilike(f'{query}%'))\
-                .limit(limit)\
-                .all()
+            mandats = db.query(Mandat).filter(Mandat.number.ilike(f"{query}%")).limit(limit).all()
 
             suggestions = [
                 {
-                    'id': mandat.id,
-                    'name': mandat.number,
-                    'type': 'mandat',
-                    'status': mandat.status,
+                    "id": mandat.id,
+                    "name": mandat.number,
+                    "type": "mandat",
+                    "status": mandat.status,
                 }
                 for mandat in mandats
             ]
@@ -474,20 +453,17 @@ class SearchService:
         # TODO: Implémenter table search_history pour stocker les recherches
         # Pour l'instant, suggestions statiques
         common_terms = [
-            'finance',
-            'banque',
-            'investissement',
-            'assurance',
-            'immobilier',
-            'tech',
-            'startup',
+            "finance",
+            "banque",
+            "investissement",
+            "assurance",
+            "immobilier",
+            "tech",
+            "startup",
         ]
 
         # Filtrer par query
-        suggestions = [
-            term for term in common_terms
-            if term.startswith(query.lower())
-        ]
+        suggestions = [term for term in common_terms if term.startswith(query.lower())]
 
         return suggestions[:limit]
 
@@ -495,6 +471,7 @@ class SearchService:
 # ============================================
 # Helpers Simplifiés
 # ============================================
+
 
 async def search_all(
     query: str,
@@ -529,7 +506,7 @@ async def autocomplete(
     query: str,
     db: Session,
     current_user,
-    entity_type: str = 'organisations',
+    entity_type: str = "organisations",
     limit: int = 10,
 ) -> List[Dict[str, Any]]:
     """

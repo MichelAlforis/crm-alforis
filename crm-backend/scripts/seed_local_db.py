@@ -4,23 +4,25 @@ Script de génération de données de test pour le CRM Alforis
 Usage: docker exec -i v1--api-1 python3 /app/scripts/seed_local_db.py
 """
 
-import sys
 import os
+import sys
 
 # Ajouter le chemin parent pour importer les modules
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
+import random
+from datetime import datetime, timedelta
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from datetime import datetime, timedelta
-import random
+
+from core.security import get_password_hash
+from models.organisation import Organisation, OrganisationCategory, OrganisationType
 
 # Import des modèles
 from models.person import Person, PersonOrganizationLink, PersonRole
-from models.organisation import Organisation, OrganisationType, OrganisationCategory
-from models.task import Task, TaskStatus, TaskPriority, TaskCategory
+from models.task import Task, TaskCategory, TaskPriority, TaskStatus
 from models.user import User
-from core.security import get_password_hash
 
 # Configuration DB
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://crm_user:crm_password@postgres:5432/crm_db")

@@ -4,8 +4,8 @@ from typing import Any, Dict, Optional
 
 from pydantic import BaseModel, Field
 
-from schemas.base import TimestampedSchema
 from models.organisation_activity import OrganisationActivityType
+from schemas.base import TimestampedSchema
 
 
 class OrganisationActivityBase(BaseModel):

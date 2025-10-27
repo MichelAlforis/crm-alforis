@@ -4,23 +4,24 @@ Script de seed pour générer des données de test
 Usage: docker exec v1-api-1 python3 scripts/seed_test_data.py
 """
 
-import sys
 import random
+import sys
 from datetime import datetime, timedelta
 
 # Ajouter le path pour les imports
 sys.path.insert(0, '/app')
 
 from sqlalchemy.orm import Session
+
 from core.database import SessionLocal, engine
-from models.user import User
-from models.person import Person, PersonOrganizationLink, PersonRole
-from models.organisation import Organisation, OrganisationType, OrganisationCategory
-from models.task import Task, TaskStatus, TaskPriority
-from models.role import Role
-from models.permission import Permission
-from models.team import Team
 from core.security import hash_password
+from models.organisation import Organisation, OrganisationCategory, OrganisationType
+from models.permission import Permission
+from models.person import Person, PersonOrganizationLink, PersonRole
+from models.role import Role
+from models.task import Task, TaskPriority, TaskStatus
+from models.team import Team
+from models.user import User
 
 # Données de test françaises
 FIRST_NAMES = [

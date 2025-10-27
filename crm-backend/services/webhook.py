@@ -1,14 +1,14 @@
 from __future__ import annotations
 
-from typing import List, Optional
 import secrets
+from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
+from core.exceptions import DatabaseError
 from models.webhook import Webhook
 from schemas.webhook import WebhookCreate, WebhookUpdate
 from services.base import BaseService
-from core.exceptions import DatabaseError
 
 
 class WebhookService(BaseService[Webhook, WebhookCreate, WebhookUpdate]):
@@ -58,9 +58,9 @@ class WebhookService(BaseService[Webhook, WebhookCreate, WebhookUpdate]):
         try:
             return (
                 self.db.query(self.model)
-                    .filter(Webhook.is_active.is_(True))
-                    .filter(Webhook.events.contains([event]))
-                    .all()
+                .filter(Webhook.is_active.is_(True))
+                .filter(Webhook.events.contains([event]))
+                .all()
             )
         except Exception as exc:
             raise DatabaseError("Failed to fetch webhooks") from exc

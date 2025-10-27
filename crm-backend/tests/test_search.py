@@ -10,15 +10,14 @@ Tests pour:
 """
 
 import pytest
-from sqlalchemy.orm import Session
 from sqlalchemy import text
+from sqlalchemy.orm import Session
 
+from core.search import SearchService, autocomplete, search_all
+from models.mandat import Mandat
 from models.organisation import Organisation, OrganisationCategory
 from models.person import Person
-from models.mandat import Mandat
 from models.user import User
-from core.search import SearchService, search_all, autocomplete
-
 
 # ============================================
 # Tests Setup Full-Text Search

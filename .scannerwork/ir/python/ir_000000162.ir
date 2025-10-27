@@ -1,11 +1,0 @@
-
-[R"
-    Clean a "part" of a URL path (i.e. after splitting on "@" characters).
-    "strpartt t(""p/
--
-y y(8"
-urllib.parseunquote:Bstr-
-+
-y y(9"
-urllib.parsequote:Bstr
-y y(9*€/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/models/link.py

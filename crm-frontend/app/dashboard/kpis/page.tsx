@@ -6,12 +6,14 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { useOrganisations } from '@/hooks/useOrganisations'
+import { useConfirm } from '@/hooks/useConfirm'
 import { Card, Button, Table, Modal, Alert } from '@/components/shared'
 import { KPIForm } from '@/components/forms'
 import { KPI, KPICreate } from '@/lib/types'
 
 export default function KPIsPage() {
-  const { data: organisations } = useOrganisations({ limit: 1000 })
+  const { data: organisations } = useOrganisations({ limit: 200 })
+  const { confirm, ConfirmDialogComponent } = useConfirm()
   const [selectedFournisseurId, setSelectedFournisseurId] = useState<number | null>(null)
   const [kpis, setKpis] = useState<KPI[]>([])
   const [kpisLoading, setKpisLoading] = useState(false)
@@ -75,22 +77,29 @@ export default function KPIsPage() {
 
   const handleDelete = async (kpiId: number | null) => {
     if (!selectedFournisseurId || !kpiId) return
-    if (confirm('Supprimer ce KPI?')) {
-      try {
-        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-        const token = localStorage.getItem('access_token')
-        const response = await fetch(`${API_BASE}/api/v1/stats/kpis/${kpiId}`, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': token ? `Bearer ${token}` : '',
-          }
-        })
-        if (!response.ok) throw new Error('Failed to delete KPI')
-        await fetchKPIs()
-      } catch (err: any) {
-        console.error('Error deleting KPI:', err)
-      }
-    }
+    confirm({
+      title: 'Supprimer le KPI',
+      message: 'Êtes-vous sûr de vouloir supprimer ce KPI ? Cette action est irréversible.',
+      type: 'danger',
+      confirmText: 'Supprimer',
+      cancelText: 'Annuler',
+      onConfirm: async () => {
+        try {
+          const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+          const token = localStorage.getItem('access_token')
+          const response = await fetch(`${API_BASE}/api/v1/stats/kpis/${kpiId}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': token ? `Bearer ${token}` : '',
+            }
+          })
+          if (!response.ok) throw new Error('Failed to delete KPI')
+          await fetchKPIs()
+        } catch (err: any) {
+          console.error('Error deleting KPI:', err)
+        }
+      },
+    })
   }
 
   const columns = [
@@ -261,6 +270,9 @@ export default function KPIsPage() {
           </Modal>
         </>
       )}
+
+      {/* Confirmation Dialog */}
+      <ConfirmDialogComponent />
     </div>
   )
 }

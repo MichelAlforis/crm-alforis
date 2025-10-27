@@ -1,185 +1,0 @@
-
-1.0PythonFrontend"1760943920465*py2.B˜
-
-imports1
-
-extends2
-
-returns3
-
-	has param4
-
-module5
-
-
-class6
-
-function7
-,
-'crm-backend/services/task_automation.py9
-
-services.task_automation11
-
-typing12
-
-datetime14
-
-sqlalchemy.orm16
-
-logging18
-
-models.task20
-
-models.organisation22
-
-models.person24
-
-services.task26
-4
-.services.task_automation.TaskAutomationService28
-I
-Cservices.task_automation.TaskAutomationService.create_followup_task30
-
-models.task.Task32
-	
-str34
-	
-int36
-
-models.task.TaskPriority38
-T
-Nservices.task_automation.TaskAutomationService.on_organisation_pipeline_change40
-'
-!models.organisation.PipelineStage42
-K
-Eservices.task_automation.TaskAutomationService.on_person_stage_change44
-=
-7services.task_automation.TaskAutomationService.__init__46
-$
-sqlalchemy.orm.session.Session48
-K
-Eservices.task_automation.TaskAutomationService.on_interaction_created50J
-
-8
-89jÂ
- 
-10
-10115 *
-8 (
-
-13
-13125
-
-15
-15145
-
-17
-17165
-
-19
-19185
-
-21
-21205
-
-23
-23225
-
-25
-25245
-
-27
-27265
-
-29
-29286 210
-
-31
-31307 229
-
-33
-33326
-
-35
-35346
-
-37
-37366
-
-39
-39386
-
-41
-41407 229
-
-43
-43426
-
-45
-45447 229
-
-47
-47467 229
-
-49
-49486
-
-51
-51507 229rü
-
-10131*
-8 (
-
-10151*
-8 (%
-
-10171*
-8 (#
-
-10191*
-8	 	(
-
-10211*
-8 (7
-
-10231*
-8 (<
-
-10251*
-8 (.
-
-10271*
-8 (&
-
-31333*
-8Ì Ì(#
-
-31354*
-8Ì Ì(#
-
-31354*
-8Ì Ì(#
-
-31374*
-8Ì Ì(#
-
-31394*
-8Ì Ì(#
-
-31354*
-8Ì Ì(#
-
-41374*
-8 (.
-
-41434*
-8 (.
-
-45374*
-8V V(%
-
-47494*
-8	 (
-
-51354*
-8 (%

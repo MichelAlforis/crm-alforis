@@ -1,12 +1,0 @@
-
-åÇ"Returns a key/value dictionary from a CookieJar.
-
-    :param cj: CookieJar object to extract cookies from.
-    :rtype: dict
-    "strcj
-… …("N:
-8
-
-– –(>cookie_dict"?python-unknown?:Bdict
-
-— —(*Å/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/requests/utils.py

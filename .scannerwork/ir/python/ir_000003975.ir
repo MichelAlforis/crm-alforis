@@ -1,14 +1,0 @@
-
--$":return: log path tied to the user"strself
-Ù Ù("ž/
--
-
-Û Û(%"#get-field# user_log_dir:.
-,
-
-Û Û(%"?python-partial-apply?:)
-'
-
-Û Û(&"Path:Bpathlib.Path
-
-Û Û(&*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/api.py

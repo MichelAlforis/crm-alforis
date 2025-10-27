@@ -1,65 +1,0 @@
-
-"s"str
-"--exists-action"str
-"w"str
-"exists_action"str
-"action"str
-"a"str
-"b"str
-"append"str
-"choice"str
-"i"str
-d["Default action when a path already exists: (s)witch, (i)gnore, (w)ipe, (b)ackup, (a)bort."str
-
-0int
-list"ÿ)
-'
-
-À À()	"#unknown-value#Blist(
-&
-
-À À()"
-#is-exact#:	
-Bbool
-
-
-À À()"
-#assume#::
-8
-
-À À()"#set-field# __collection_size:	Bint(
-&
-
-À À()"#array-add-last#:	(
-&
-
-À À()"#array-add-last#:	(
-&
-
-À À()"#array-add-last#:	(
-&
-
-À À()"#array-add-last#:	(
-&
-
-À À()"#array-add-last#:	)
-'
-
-Á Á("#unknown-value#Blist(
-&
-
-Á Á("
-#is-exact#:
-Bbool
-
-
-Á Á("
-#assume#::
-8
-
-Á Á("#set-field# __collection_size:Bint5
-3
-
-» Æ("Option:	Boptparse.Option
-
-» Æ(*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/cli/cmdoptions.py

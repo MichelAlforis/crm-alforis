@@ -1,219 +1,0 @@
-
-1.0PythonFrontend"1760943916692*py2.Bâ
-
-imports1
-
-extends2
-
-returns3
-
-	has param4
-
-module5
-
-
-class6
-
-function7
-'
-"crm-backend/models/notification.py9
-
-models.notification11
-
-
-sqlalchemy12
-
-sqlalchemy.orm14
-
-datetime16
-
-
-enum18
-
-typing20
-
-models.base22
-
-models.constants24
-
-models.user26
-&
- models.notification.Notification28
-
-models.base.BaseModel30
-7
-1models.notification.Notification.__getattribute__32
-	
-str34
-3
--models.notification.Notification.mark_as_read36
-/
-)models.notification.Notification.__repr__38
-.
-(models.notification.Notification.to_dict40
-
-
-dict42
-.
-(models.notification.Notification.restore44
-/
-)models.notification.Notification.__init__46
-5
-/models.notification.Notification.mark_as_unread48
-.
-(models.notification.Notification.archive50
-2
-,models.notification.Notification.__setattr__52
-1
-+models.notification.Notification.is_expired54
-
-
-bool56
-.
-(models.notification.NotificationPriority58
-
-	enum.Enum60
-*
-$models.notification.NotificationType62J
-
-8
-89jﬁ
- 
-10
-10115 *
-8 (
-
-13
-13125
-
-15
-15145
-
-17
-17165
-
-19
-19185
-
-21
-21205
-
-23
-23225
-
-25
-25245
-
-27
-27265
-
-29
-29286 210
-
-31
-31306
-
-33
-33327 229
-
-35
-35346
-
-37
-37367 229
-
-39
-39387 229
-
-41
-41407 229
-
-43
-43426
-
-45
-45447 229
-
-47
-47467 229
-
-49
-49487 229
-
-51
-51507 229
-
-53
-53527 229
-
-55
-55547 229
-
-57
-57566
-
-59
-59586 210
-
-61
-61606
-
-63
-63626 210rˆ
-
-10131*
-8 (	
-
-10151*
-8 ((
-
-10171*
-8 ((
-
-10191*
-8 (
-
-10211*
-8 (,
-
-10231*
-8 ("
-
-10251*
-8 (
-
-10271*
-8# #(!
-
-29312*
-8B B(
-
-33354*
-8¶	 ¶(
-
-39353*
-8k	 k(
-
-41433*
-8ç	 ç(
-
-47434*
-8e	 e(
-
-53354*
-8Æ	 Æ(
-
-55573*
-8â	 â(
-
-59352*
-89 9(
-
-59612*
-89 9(
-
-63352*
-8& &(
-
-63612*
-8& &(

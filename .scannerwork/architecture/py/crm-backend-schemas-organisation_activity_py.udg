@@ -1,114 +1,0 @@
-
-1.0PythonFrontend"1760943931131*py2.Bç
-
-imports1
-
-extends2
-
-returns3
-
-	has param4
-
-module5
-
-
-class6
-
-function7
-1
-,crm-backend/schemas/organisation_activity.py9
-#
-schemas.organisation_activity11
-
-
-__future__12
-
-typing14
-
-pydantic16
-
-schemas.base18
-"
-models.organisation_activity20
-@
-:schemas.organisation_activity.OrganisationActivityResponse22
-<
-6schemas.organisation_activity.OrganisationActivityBase24
-$
-schemas.base.TimestampedSchema26
->
-8schemas.organisation_activity.OrganisationActivityUpdate28
-
-pydantic.main.BaseModel30
->
-8schemas.organisation_activity.OrganisationActivityCreate32J
-
-8
-89j‹
- 
-10
-10115 *
-8 (
-
-13
-13125
-
-15
-15145
-
-17
-17165
-
-19
-19185
-
-21
-21205
-
-23
-23226 210
-
-25
-25246 210
-
-27
-27266
-
-29
-29286 210
-
-31
-31306
-
-33
-33326 210r„
-
-10131*
-8 (#
-
-10151*
-8 ('
-
-10171*
-8 (&
-
-10191*
-8 (+
-
-10211*
-8 (B
-
-23252*
-8# #(#
-
-23272*
-8# #(#
-
-29312*
-8 (!
-
-25312*
-8 (
-
-33252*
-8 (!

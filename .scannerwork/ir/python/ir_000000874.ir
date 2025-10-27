@@ -1,22 +1,0 @@
-
-É¿"A decorator that turns an iterable of renderables in to a group.
-
-    Args:
-        fit (bool, optional): Fit dimension of group to contents, or fill available space. Defaults to True.
-    "strfit
-é
- é("»#
-!
-
-ü ü("#unknown-value#*
-(
-
-ð ü(%closure"#new-object#'
-%
-
-ð ü("#set-field# fit:-
-+
-
-ð ü("?python-partial-apply?:
-
-ü ü(*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/console.py

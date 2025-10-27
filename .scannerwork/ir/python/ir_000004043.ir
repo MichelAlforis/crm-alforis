@@ -1,45 +1,0 @@
-
-""bool
-?
-6"Fatal Internal error [id=2]. Please report as a bug."str
--1int
-
-1intself
-ù ù(""á,
-*
-
-û û("#get-field# load_only:+
-)
-
-û û("#built-in-assert#:+
-)
-
-ü ü("#get-field# _parsers:,
-*
-
-ü  ü(."#get-field# load_only:-
-+
-
-ü ü(/parsers"#array-read#:+
-)
-
-ı ı("
-__bool__*:BboolH+
-)
-
-ı ı(	"#unaryop !#2!:Bbool "
-
-ı ı(	 *
-ı ı(
-"lV
-T
-
-ÿ ("ConfigurationError:
-B+pip._internal.exceptions.ConfigurationError2
-
-ÿ (":$
-"
-
-„ „("#array-read#:
-
-„ „(*‚/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/configuration.py

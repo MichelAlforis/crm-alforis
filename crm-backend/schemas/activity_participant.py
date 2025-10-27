@@ -1,14 +1,18 @@
 """Schemas Pydantic pour les participants aux activités."""
 
-from typing import Optional
 from datetime import datetime
-from pydantic import BaseModel, Field, ConfigDict
+from typing import Optional
+
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ActivityParticipantBase(BaseModel):
     """Base schema pour les participants."""
+
     person_id: Optional[int] = Field(None, gt=0, description="ID de la personne (si dans le CRM)")
-    organisation_id: Optional[int] = Field(None, gt=0, description="ID de l'organisation du participant")
+    organisation_id: Optional[int] = Field(
+        None, gt=0, description="ID de l'organisation du participant"
+    )
 
     # Pour participants externes
     external_name: Optional[str] = Field(None, max_length=255, description="Nom complet si externe")
@@ -17,17 +21,23 @@ class ActivityParticipantBase(BaseModel):
 
     # Métadonnées
     is_organizer: bool = Field(False, description="Organisateur de l'événement")
-    attendance_status: Optional[str] = Field(None, max_length=50, description="confirmed/tentative/declined")
-    notes: Optional[str] = Field(None, max_length=500, description="Notes spécifiques au participant")
+    attendance_status: Optional[str] = Field(
+        None, max_length=50, description="confirmed/tentative/declined"
+    )
+    notes: Optional[str] = Field(
+        None, max_length=500, description="Notes spécifiques au participant"
+    )
 
 
 class ActivityParticipantCreate(ActivityParticipantBase):
     """Schema pour créer un participant à une activité."""
+
     activity_id: int = Field(..., gt=0, description="ID de l'activité")
 
 
 class ActivityParticipantUpdate(BaseModel):
     """Schema pour mettre à jour un participant."""
+
     attendance_status: Optional[str] = Field(None, max_length=50)
     notes: Optional[str] = Field(None, max_length=500)
     is_organizer: Optional[bool] = None
@@ -35,6 +45,7 @@ class ActivityParticipantUpdate(BaseModel):
 
 class ActivityParticipantResponse(ActivityParticipantBase):
     """Schema de réponse pour un participant."""
+
     model_config = ConfigDict(from_attributes=True)
 
     id: int
@@ -59,13 +70,13 @@ class ActivityWithParticipantsCreate(BaseModel):
 
     # Participants
     participants: list[ActivityParticipantBase] = Field(
-        default_factory=list,
-        description="Liste des participants (CRM ou externes)"
+        default_factory=list, description="Liste des participants (CRM ou externes)"
     )
 
 
 class ActivityWithParticipantsResponse(BaseModel):
     """Schema de réponse pour une activité avec participants."""
+
     model_config = ConfigDict(from_attributes=True)
 
     id: int

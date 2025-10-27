@@ -1,21 +1,0 @@
-
-""boolself
-” ”("ð+
-)
-
-• •( "#get-field# _deleted:+
-)
-
-• •( "
-__bool__*:BboolH+
-)
-
-• •( "#unaryop !#2!:Bbool+
-)
-
-• •(S"#built-in-assert#:(
-&
-
-– –("#get-field# _path:
-
-– –(*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/utils/temp_dir.py

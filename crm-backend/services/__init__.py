@@ -1,10 +1,10 @@
 from services.base import BaseService
 from services.email_service import (
-    EmailTemplateService,
+    EmailAnalyticsService,
     EmailCampaignService,
     EmailDeliveryService,
-    EmailAnalyticsService,
     EmailEventIngestionService,
+    EmailTemplateService,
 )
 
 __all__ = [

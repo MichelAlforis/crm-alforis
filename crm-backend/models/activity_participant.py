@@ -8,14 +8,7 @@ Ce modèle permet de gérer les interactions multi-participants :
 
 from __future__ import annotations
 
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    ForeignKey,
-    Index,
-    Boolean,
-)
+from sqlalchemy import Boolean, Column, ForeignKey, Index, Integer, String
 from sqlalchemy.orm import relationship
 
 from models.base import BaseModel
@@ -70,25 +63,20 @@ class ActivityParticipant(BaseModel):
 
     # Relations
     activity = relationship(
-        "OrganisationActivity",
-        back_populates="participants",
-        foreign_keys=[activity_id]
+        "OrganisationActivity", back_populates="participants", foreign_keys=[activity_id]
     )
 
     person = relationship(
-        "Person",
-        back_populates="activity_participations",
-        foreign_keys=[person_id]
+        "Person", back_populates="activity_participations", foreign_keys=[person_id]
     )
 
-    organisation = relationship(
-        "Organisation",
-        foreign_keys=[organisation_id]
-    )
+    organisation = relationship("Organisation", foreign_keys=[organisation_id])
 
     def __repr__(self) -> str:
         if self.person_id:
-            return f"<ActivityParticipant(activity_id={self.activity_id}, person_id={self.person_id})>"
+            return (
+                f"<ActivityParticipant(activity_id={self.activity_id}, person_id={self.person_id})>"
+            )
         else:
             return f"<ActivityParticipant(activity_id={self.activity_id}, external={self.external_name})>"
 

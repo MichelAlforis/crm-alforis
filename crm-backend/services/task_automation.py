@@ -3,14 +3,15 @@ Service d'automatisation des tâches
 Création automatique de tâches basée sur des événements CRM
 """
 
-from typing import Optional
-from datetime import date, timedelta
-from sqlalchemy.orm import Session
 import logging
+from datetime import date, timedelta
+from typing import Optional
 
-from models.task import Task, TaskPriority, TaskStatus, TaskCategory
+from sqlalchemy.orm import Session
+
 from models.organisation import Organisation, PipelineStage
 from models.person import Person, StagePerson
+from models.task import Task, TaskCategory, TaskPriority, TaskStatus
 from services.task import TaskService
 
 logger = logging.getLogger(__name__)
@@ -147,7 +148,9 @@ class TaskAutomationService:
 
         # Déterminer l'entité concernée
         if Organisation_id:
-            Organisation = self.db.query(Organisation).filter(Organisation.id == Organisation_id).first()
+            Organisation = (
+                self.db.query(Organisation).filter(Organisation.id == Organisation_id).first()
+            )
             if Organisation:
                 entity_name = Organisation.name
                 entity_id_Organisation = Organisation_id

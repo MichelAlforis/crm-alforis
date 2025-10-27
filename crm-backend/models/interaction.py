@@ -1,0 +1,240 @@
+"""
+Modèle Interaction - Historique des communications et activités
+
+v1 : Champs de base (type, title, body, attachments)
+v1.1 : Participants multiples (M-N avec Person + external_participants JSON)
+v2 : Workflow inbox (status, assignee, next_action_at)
+
+Contrainte métier :
+- Chaque interaction doit être liée à une organisation OU une personne
+- CHECK: (org_id IS NOT NULL) OR (person_id IS NOT NULL)
+"""
+
+from __future__ import annotations
+
+import enum
+from datetime import datetime
+
+from sqlalchemy import JSON, Boolean, CheckConstraint, Column, DateTime
+from sqlalchemy import Enum as SAEnum
+from sqlalchemy import ForeignKey, Index, Integer, String, Text
+from sqlalchemy.orm import relationship
+
+from models.base import Base, BaseModel
+from models.constants import (
+    FK_ORGANISATIONS_ID,
+    FK_PEOPLE_ID,
+    FK_USERS_ID,
+    ONDELETE_CASCADE,
+    ONDELETE_SET_NULL,
+)
+
+
+class InteractionType(str, enum.Enum):
+    """Types d'interactions supportées."""
+
+    CALL = "call"
+    EMAIL = "email"
+    MEETING = "meeting"
+    VISIO = "visio"
+    NOTE = "note"
+    OTHER = "other"
+
+
+class InteractionStatus(str, enum.Enum):
+    """Statuts d'une interaction (workflow inbox)."""
+
+    TODO = "todo"
+    IN_PROGRESS = "in_progress"
+    DONE = "done"
+
+
+# Constantes pour mapping SQL (évite binding sur noms Python)
+STATUS_VALUES = ("todo", "in_progress", "done")
+
+
+class InteractionParticipant(Base):
+    """
+    Participant interne à une interaction (M-N avec Person).
+
+    Utilisé principalement pour les réunions avec plusieurs participants.
+
+    Relations:
+    - interaction: Interaction concernée
+    - person: Personne (collaborateur du CRM)
+
+    Attributs:
+    - role: Rôle du participant (ex: "CEO", "CTO", "Animateur")
+    - present: Présent ou absent (default TRUE)
+
+    Note: Hérite de Base (pas BaseModel) car table de liaison M-N
+          avec PK composite (interaction_id, person_id), pas d'auto id/timestamps.
+    """
+
+    __tablename__ = "interaction_participants"
+    __table_args__ = (
+        # PK composite
+        {"extend_existing": True},
+    )
+
+    interaction_id = Column(
+        Integer,
+        ForeignKey("crm_interactions.id", ondelete=ONDELETE_CASCADE),
+        primary_key=True,
+        nullable=False,
+    )
+    person_id = Column(
+        Integer,
+        ForeignKey(FK_PEOPLE_ID, ondelete=ONDELETE_CASCADE),
+        primary_key=True,
+        nullable=False,
+    )
+
+    role = Column(String(80), nullable=True)
+    present = Column(Boolean, nullable=False, default=True, server_default="true")
+
+    # Pas de id/created_at/updated_at (table de liaison pure avec PK composite)
+
+    # Relations
+    interaction = relationship("Interaction", back_populates="participants")
+    person = relationship("Person")
+
+    def __repr__(self) -> str:
+        return (
+            f"<InteractionParticipant(interaction_id={self.interaction_id}, "
+            f"person_id={self.person_id}, role={self.role})>"
+        )
+
+
+class Interaction(BaseModel):
+    """
+    Interaction = communication ou activité liée à une organisation/personne.
+
+    Exemples:
+    - Appel téléphonique avec un contact
+    - Email envoyé à un client
+    - Compte-rendu de réunion
+    - Note post-déjeuner d'affaires
+
+    Relations:
+    - organisation (nullable): Organisation concernée
+    - person (nullable): Personne concernée
+    - creator: Utilisateur ayant créé l'interaction
+    """
+
+    __tablename__ = "crm_interactions"  # Nouveau nom pour éviter conflit avec l'ancien modèle
+    __table_args__ = (
+        # Contrainte métier: au moins organisation OU personne
+        CheckConstraint(
+            "(org_id IS NOT NULL) OR (person_id IS NOT NULL)", name="chk_interaction_org_or_person"
+        ),
+        # Index pour requêtes optimisées
+        Index("idx_interactions_org_created_at", "org_id", "created_at"),
+        Index("idx_interactions_person_created_at", "person_id", "created_at"),
+        Index("idx_interactions_created_at", "created_at"),
+    )
+
+    # Relations avec Organisation/Personne (nullable)
+    org_id = Column(
+        Integer,
+        ForeignKey(FK_ORGANISATIONS_ID, ondelete=ONDELETE_SET_NULL),
+        nullable=True,
+        index=True,
+    )
+    person_id = Column(
+        Integer,
+        ForeignKey(FK_PEOPLE_ID, ondelete=ONDELETE_SET_NULL),
+        nullable=True,
+        index=True,
+    )
+
+    # Type d'interaction
+    type = Column(
+        SAEnum(InteractionType, name="interaction_type", values_callable=lambda x: [e.value for e in x]),
+        nullable=False,
+        default=InteractionType.NOTE,
+    )
+
+    # Contenu
+    title = Column(String(200), nullable=False)
+    description = Column("body", Text, nullable=True)  # Renommé pour cohérence avec autres modèles
+
+    # Métadonnées
+    created_by = Column(
+        Integer,
+        ForeignKey(FK_USERS_ID),
+        nullable=False,
+        index=True,
+    )
+
+    # Pièces jointes (liste d'objets { name: str, url: str })
+    attachments = Column(JSON, nullable=False, default=list)
+
+    # Participants externes (liste d'objets { name, email, company })
+    external_participants = Column(JSON, nullable=False, default=list)
+
+    # ===== V2: Workflow Inbox =====
+    # Status de l'interaction (workflow)
+    # Note: Utilise SAEnum avec valeurs string pour éviter binding sur noms Python (TODO→todo)
+    status = Column(
+        SAEnum(
+            *STATUS_VALUES,
+            name="interaction_status",
+            native_enum=True,
+            create_type=False,  # Type ENUM existe déjà en DB
+            validate_strings=True,
+        ),
+        nullable=False,
+        server_default="todo",
+        index=True,
+    )
+
+    # Assignee (utilisateur responsable)
+    assignee_id = Column(
+        Integer,
+        ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL),
+        nullable=True,
+        index=True,
+    )
+
+    # Date/heure de la prochaine action à faire
+    next_action_at = Column(DateTime(timezone=True), nullable=True, index=True)
+
+    # Timestamp de la dernière notification envoyée (évite re-notification)
+    notified_at = Column(DateTime(timezone=True), nullable=True)
+
+    # Optional: Links vers Tasks et Events (future)
+    linked_task_id = Column(Integer, nullable=True)
+    linked_event_id = Column(Integer, nullable=True)
+
+    # Relations SQLAlchemy
+    # Note: Using backref instead of back_populates to avoid collision with
+    # Organisation.interactions (which references OrganisationInteraction, not Interaction)
+    organisation = relationship("Organisation", backref="crm_interactions")
+    person = relationship("Person", backref="crm_interactions")
+    creator = relationship("User", foreign_keys=[created_by])
+    assignee = relationship("User", foreign_keys=[assignee_id])
+
+    # Participants internes (M-N avec Person)
+    participants = relationship(
+        "InteractionParticipant",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+        back_populates="interaction",
+    )
+
+    def __repr__(self) -> str:
+        return (
+            f"<Interaction(id={self.id}, type={self.type}, "
+            f"org_id={self.org_id}, person_id={self.person_id})>"
+        )
+
+    @property
+    def body(self):
+        """Alias pour compatibilité API."""
+        return self.description
+
+    @body.setter
+    def body(self, value):
+        """Alias pour compatibilité API."""
+        self.description = value

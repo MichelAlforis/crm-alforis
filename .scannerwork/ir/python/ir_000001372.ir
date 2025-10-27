@@ -1,50 +1,0 @@
-
-
-3int
-
-
-2int
-¦œ"The third item of :attr:`release` or ``0`` if unavailable.
-
-        >>> Version("1.2.3").micro
-        3
-        >>> Version("1").micro
-        0
-        "str
-
-0intself
-» »("æ*
-(
-
-Ã& Ã(2"#get-field# release:.
-,
-
-Ã& Ã(2"?python-partial-apply?:,
-*
-
-Ã" Ã(3"
-builtinslen*:Bint,
-*
-
-Ã" Ã(8"
-#binop >=#2>=:Bbool,"*
-
-Ã" Ã(8 *
-Ã Ã(!2
-Ã9 Ã(="–*
-(
-
-Ã Ã("#get-field# release:.
-,
-
-Ã Ã(	"?python-partial-apply?:$
-"
-
-Ã Ã("#array-read#:	
-
-
-Ã Ã(?"
-
-Ã Ã(?"&*
-
-Ã Ã(?*„/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/packaging/version.py

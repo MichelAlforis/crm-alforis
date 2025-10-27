@@ -1,52 +1,0 @@
-
-7pip._internal.cli.spinners.NonInteractiveSpinner.finishŒ
-/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/cli/spinners.pyn n("2*
-2o o(y
-w
-o o(
-%3"__id*_
-
-__unknown_file (C*A2
-0pip._internal.cli.spinners.NonInteractiveSpinner"
-	_finished*
-4
-5*/
-3
-spinners.py"
-u u
-implicit return*›
-4q q(>u
-s
-q q(=
-%1"__concat*&
-q q(-
-finished with status '*
-q. q(:
-
-final_status*
-q; q(<
-'’
-q q(>
-%2*P
-
-__unknown_file (42
-0pip._internal.cli.spinners.NonInteractiveSpinner*"
-
-__unknown_file (
-
-%12_update{
-y
-r r(A2
-0pip._internal.cli.spinners.NonInteractiveSpinner"
-	_finished"__id*$
-
-__unknown_file (
-
-True*
-3*#
-5p p("
-p p(
-void:
-n n(&
-final_statusB42
-0pip._internal.cli.spinners.NonInteractiveSpinnerH

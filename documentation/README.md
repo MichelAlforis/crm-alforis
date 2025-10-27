@@ -63,7 +63,7 @@ npm run dev
 **API**
 - [api/README.md](backend/api/README.md) - Documentation API détaillée
 
-### 🎨 Frontend (5 fichiers)
+### 🎨 Frontend (6 fichiers)
 
 **Architecture**
 - [ARCHITECTURE.md](frontend/ARCHITECTURE.md) - Architecture Next.js
@@ -71,6 +71,7 @@ npm run dev
 - [QUICK_START.md](frontend/QUICK_START.md) - Démarrage rapide
 
 **Développement**
+- [HOOKS.md](frontend/HOOKS.md) - **Hooks React personnalisés** ⭐ NOUVEAU
 - [FRONTEND_ENDPOINTS_HOOKS.md](frontend/FRONTEND_ENDPOINTS_HOOKS.md) - Hooks React Query
 - [PRODUCTION_DEPLOY.md](frontend/PRODUCTION_DEPLOY.md) - Build production
 
@@ -87,10 +88,11 @@ npm run dev
 - [PROJET_AGENT_IA_RESUME.md](features/PROJET_AGENT_IA_RESUME.md) - Résumé IA
 - [INTERACTIONS_AUTO_CREATION.md](features/INTERACTIONS_AUTO_CREATION.md) - Auto-interactions
 
-### 📧 Marketing (4 fichiers)
+### 📧 Marketing (5 fichiers)
 
-- [email-campaigns-guide.md](marketing/email-campaigns-guide.md) - **Guide principal**
-- [FEATURE_CAMPAIGN_SUBSCRIPTIONS.md](marketing/FEATURE_CAMPAIGN_SUBSCRIPTIONS.md) - Abonnements
+- [MARKETING_HUB_GUIDE.md](marketing/MARKETING_HUB_GUIDE.md) - **Marketing Hub Complet** ⭐ NOUVEAU
+- [email-campaigns-guide.md](marketing/email-campaigns-guide.md) - Guide campagnes
+- [FEATURE_CAMPAIGN_SUBSCRIPTIONS.md](marketing/FEATURE_CAMPAIGN_SUBSCRIPTIONS.md) - Abonnements RGPD
 - [GUIDE_TEST_MODULE_MARKETING.md](marketing/GUIDE_TEST_MODULE_MARKETING.md) - Tests marketing
 - [GUIDE_TEST_ABONNEMENTS.md](marketing/GUIDE_TEST_ABONNEMENTS.md) - Tests abonnements
 
@@ -141,10 +143,12 @@ npm run dev
 - Webhooks configurés
 
 **Frontend** : ✅ 95% Production Ready
+- 87% des tests frontend validés (259/297) ⭐
 - Dashboard analytics complet
-- Module marketing 100% fonctionnel
+- **Marketing Hub 100% fonctionnel** (178 tests) ⭐
 - PWA installable
 - Exports multi-formats
+- 4 hooks réutilisables créés ⭐
 
 ---
 
@@ -174,9 +178,25 @@ npm run dev
 ## 🔗 Liens Utiles
 
 - [README Principal](../README.md) - Vue d'ensemble projet
-- [Checklist Tests Production](../CHECKLIST_TESTS_FRONTEND_PROD.md) - Tests frontend
+- [Tests Frontend](../TESTS_FRONTEND.md) - 259/297 tests validés (87%)
 - [Checklist Améliorations](../CHECKLIST_AMELIORATION_FUTURE.md) - Roadmap
+- **[Checklists Détaillées](../checklists/)** - Tests par chapitre ⭐ NOUVEAU
 
 ---
 
-**Dernière mise à jour** : 23 octobre 2025
+## 🎯 Nouveautés (Octobre 2025)
+
+### Documentation Enrichie
+- ✅ **[HOOKS.md](frontend/HOOKS.md)** - Synthèse 15+ hooks React
+- ✅ **[MARKETING_HUB_GUIDE.md](marketing/MARKETING_HUB_GUIDE.md)** - Guide complet (178 tests)
+- ✅ **[Checklists](../checklists/)** - 6 chapitres détaillés (259 tests)
+
+### Fonctionnalités Majeures
+- ✅ **Marketing Hub** - Architecture complète (Campagnes, Listes, Templates)
+- ✅ **Tracking Leads** - Scoring 0-100 avec classification 🔥⚡🟢
+- ✅ **Hooks Réutilisables** - useConfirm, useExport, useTableColumns, useSearchFocus
+- ✅ **Webhooks Resend** - 9 événements temps réel + RGPD
+
+---
+
+**Dernière mise à jour** : 24 octobre 2025

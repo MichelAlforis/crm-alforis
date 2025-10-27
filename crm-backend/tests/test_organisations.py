@@ -5,8 +5,8 @@ Teste toutes les opérations CRUD sur les organisations.
 """
 
 import pytest
-from models.organisation import Organisation, OrganisationCategory
 
+from models.organisation import Organisation, OrganisationCategory
 
 # ============================================================================
 # Tests Modèles

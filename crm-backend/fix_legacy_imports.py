@@ -9,6 +9,18 @@ import re
 from pathlib import Path
 from typing import List, Tuple
 
+# Patterns pour commenter les imports legacy
+LEGACY_PATTERNS = [
+    (r'^from models\.', r'# from models.'),
+    (r'^from schemas\.', r'# from schemas.'),
+    (r'^from services\.', r'# from services.'),
+]
+
+# Patterns pour __all__
+ALL_PATTERNS = [
+    (r'__all__\s*=\s*\[([^\]]+)\]', r'# __all__ = [\1]'),
+]
+
 
 def fix_file(filepath: Path) -> Tuple[bool, int]:
     """
@@ -16,7 +28,7 @@ def fix_file(filepath: Path) -> Tuple[bool, int]:
     Returns: (was_modified, num_changes)
     """
     try:
-        with open(filepath, 'r', encoding='utf-8') as f:
+        with open(filepath, "r", encoding='utf-8') as f:
             content = f.read()
 
         original_content = content
@@ -39,7 +51,7 @@ def fix_file(filepath: Path) -> Tuple[bool, int]:
 
         # Si modifié, écrire
         if content != original_content:
-            with open(filepath, 'w', encoding='utf-8') as f:
+            with open(filepath, "w", encoding='utf-8') as f:
                 f.write(content)
             return True, num_changes
 

@@ -1,8 +1,10 @@
-from typing import Generic, TypeVar, Type, Optional, List, Any
-from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_
-from core.exceptions import ResourceNotFound, DatabaseError, ValidationError
 import logging
+from typing import Any, Generic, List, Optional, Type, TypeVar
+
+from sqlalchemy import and_, or_
+from sqlalchemy.orm import Session
+
+from core.exceptions import DatabaseError, ResourceNotFound, ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -10,47 +12,45 @@ ModelType = TypeVar("ModelType")
 CreateSchemaType = TypeVar("CreateSchemaType")
 UpdateSchemaType = TypeVar("UpdateSchemaType")
 
+
 class BaseService(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
-    
+
     def __init__(self, model: Type[ModelType], db: Session):
         self.model = model
         self.db = db
         self.model_name = model.__name__
-        
+
     async def get_all(
-        self,
-        skip: int = 0,
-        limit: int = 100,
-        filters: dict = None
+        self, skip: int = 0, limit: int = 100, filters: dict = None
     ) -> tuple[List[ModelType], int]:
         """
         Récupérer tous les enregistrements avec pagination
-        
+
         Args:
             skip: Nombre d'enregistrements à ignorer
             limit: Nombre d'enregistrements à retourner
             filters: Dictionnaire de filtres {column_name: value}
-        
+
         Returns:
             (liste d'objets, total_count)
         """
         try:
             query = self.db.query(self.model)
-            
+
             # Appliquer les filtres
             if filters:
                 for key, value in filters.items():
                     if hasattr(self.model, key) and value is not None:
                         query = query.filter(getattr(self.model, key) == value)
-            
+
             total = query.count()
             items = query.offset(skip).limit(limit).all()
-            
+
             return items, total
         except Exception as e:
             logger.error(f"Error fetching {self.model_name}: {e}")
             raise DatabaseError(f"Failed to fetch {self.model_name}")
-    
+
     async def get_by_id(self, id: int) -> ModelType:
         """Récupérer un enregistrement par son ID"""
         try:
@@ -63,7 +63,7 @@ class BaseService(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         except Exception as e:
             logger.error(f"Error fetching {self.model_name} by ID {id}: {e}")
             raise DatabaseError(f"Failed to fetch {self.model_name}")
-    
+
     async def create(self, schema: CreateSchemaType) -> ModelType:
         """Créer un nouvel enregistrement"""
         try:
@@ -78,17 +78,17 @@ class BaseService(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             self.db.rollback()
             logger.error(f"Error creating {self.model_name}: {e}")
             raise DatabaseError(f"Failed to create {self.model_name}")
-    
+
     async def update(self, id: int, schema: UpdateSchemaType) -> ModelType:
         """Mettre à jour un enregistrement"""
         try:
             db_obj = await self.get_by_id(id)
-            
+
             update_data = schema.model_dump(exclude_unset=True)
             for key, value in update_data.items():
                 if hasattr(db_obj, key):
                     setattr(db_obj, key, value)
-            
+
             self.db.add(db_obj)
             self.db.commit()
             self.db.refresh(db_obj)
@@ -100,7 +100,7 @@ class BaseService(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             self.db.rollback()
             logger.error(f"Error updating {self.model_name} {id}: {e}")
             raise DatabaseError(f"Failed to update {self.model_name}")
-    
+
     async def delete(self, id: int) -> bool:
         """Supprimer un enregistrement"""
         try:
@@ -115,7 +115,7 @@ class BaseService(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             self.db.rollback()
             logger.error(f"Error deleting {self.model_name} {id}: {e}")
             raise DatabaseError(f"Failed to delete {self.model_name}")
-    
+
     async def bulk_create(self, schemas: List[CreateSchemaType]) -> List[ModelType]:
         """Créer plusieurs enregistrements en une transaction"""
         try:
@@ -128,7 +128,7 @@ class BaseService(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             self.db.rollback()
             logger.error(f"Error bulk creating {self.model_name}: {e}")
             raise DatabaseError(f"Failed to bulk create {self.model_name}")
-    
+
     async def count(self, filters: dict = None) -> int:
         """Compter le nombre d'enregistrements"""
         try:

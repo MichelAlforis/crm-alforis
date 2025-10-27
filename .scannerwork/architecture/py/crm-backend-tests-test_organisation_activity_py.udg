@@ -1,60 +1,0 @@
-
-1.0PythonFrontend"1760943933875*py2.BÃ
-
-imports1
-
-extends2
-
-returns3
-
-	has param4
-
-module5
-
-
-class6
-
-function7
-4
-/crm-backend/tests/test_organisation_activity.py9
-&
- tests.test_organisation_activity11
-
-
-core.cache12
-"
-models.organisation_activity14
-O
-Itests.test_organisation_activity.test_timeline_records_on_crud_operations16
-4
-.tests.test_organisation_activity.cleanup_cache18
-D
->tests.test_organisation_activity.test_activity_widget_endpoint20J
-
-8
-89j“
- 
-10
-10115 *
-8 (
-
-13
-13125
-
-15
-15145
-
-17
-17167 210
-
-19
-19187 210
-
-21
-21207 210r4
-
-10131*
-8 ('
-
-10151*
-8 (B

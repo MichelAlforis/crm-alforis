@@ -1,94 +1,0 @@
-
-2services.organisation.ProduitService.get_by_mandata
-U/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/services/organisation.py» »("7*›
-7
-À –(h
-f
-
-Ã Ã(
-%3"__id*L
-
-__unknown_file (0*.&
-$services.organisation.ProduitService"
-dbhf
-
-Ã Ã(&
-%4*"
-
-__unknown_file (
-
-%3*'
-
-__unknown_file (
-	
-Produit2querymk
-
-Ã Õ($
-%5*"
-
-__unknown_file (
-
-%4*-
-
-__unknown_file (
-
-MandatProduit2joinl
-j
-
-Œ Œ(/
-%6"__id*P
-
-__unknown_file (4*2#
-!models.organisation.MandatProduit"
-	mandat_idì
-ê
-
-Œ Œ(<
-%7"	__compare*"
-
-__unknown_file (
-==*"
-
-__unknown_file (
-
-%6*)
-
-__unknown_file (
-
-	mandat_iddb
-
-Ã Œ(=
-%8*"
-
-__unknown_file (
-
-%5*"
-
-__unknown_file (
-
-%72filter=;
-
-Ã œ(
-%9*"
-
-__unknown_file (
-
-%82allD
-B
-
-À –(
-
-produits"__id*"
-
-__unknown_file (
-
-%9"
-
-— —(
-
-
-produits:
-
-»" »(0
-	mandat_idB(&
-$services.organisation.ProduitServiceH

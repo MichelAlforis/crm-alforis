@@ -1,11 +1,12 @@
 """Routes API pour les listes de diffusion."""
-from typing import List
 
-from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
-from sqlalchemy.orm import Session
-import pandas as pd
 import io
 import json
+from typing import List
+
+import pandas as pd
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
+from sqlalchemy.orm import Session
 
 from core import get_current_user, get_db
 from schemas.mailing_list import (
@@ -96,8 +97,7 @@ async def get_mailing_list(
 
     if not mailing_list:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Liste de diffusion introuvable"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Liste de diffusion introuvable"
         )
 
     return mailing_list
@@ -116,8 +116,7 @@ async def update_mailing_list(
 
     if not mailing_list:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Liste de diffusion introuvable"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Liste de diffusion introuvable"
         )
 
     return mailing_list
@@ -140,8 +139,7 @@ async def delete_mailing_list(
 
     if not success:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Liste de diffusion introuvable"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Liste de diffusion introuvable"
         )
 
     return None
@@ -159,8 +157,7 @@ async def mark_list_as_used(
 
     if not mailing_list:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Liste de diffusion introuvable"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Liste de diffusion introuvable"
         )
 
     return mailing_list
@@ -194,10 +191,10 @@ async def import_mailing_lists(
 
     # Vérifier le type de fichier
     filename = file.filename.lower()
-    if not (filename.endswith('.csv') or filename.endswith('.xlsx') or filename.endswith('.xls')):
+    if not (filename.endswith(".csv") or filename.endswith(".xlsx") or filename.endswith(".xls")):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Format de fichier non supporté. Utilisez CSV ou Excel (.xlsx, .xls)"
+            detail="Format de fichier non supporté. Utilisez CSV ou Excel (.xlsx, .xls)",
         )
 
     try:
@@ -205,33 +202,30 @@ async def import_mailing_lists(
         contents = await file.read()
 
         # Parser selon le format
-        if filename.endswith('.csv'):
+        if filename.endswith(".csv"):
             df = pd.read_csv(io.BytesIO(contents))
         else:
             df = pd.read_excel(io.BytesIO(contents))
 
         # Vérifier que la colonne 'name' existe
-        if 'name' not in df.columns:
+        if "name" not in df.columns:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="La colonne 'name' est obligatoire dans le fichier"
+                detail="La colonne 'name' est obligatoire dans le fichier",
             )
 
         # Remplacer les NaN par des valeurs par défaut
-        df = df.fillna({
-            'description': '',
-            'target_type': 'contacts',
-            'filters': '{}',
-            'recipient_count': 0,
-            'is_active': True
-        })
+        df = df.fillna(
+            {
+                "description": "",
+                "target_type": "contacts",
+                "filters": "{}",
+                "recipient_count": 0,
+                "is_active": True,
+            }
+        )
 
-        results = {
-            "created": [],
-            "updated": [],
-            "errors": [],
-            "total_processed": 0
-        }
+        results = {"created": [], "updated": [], "errors": [], "total_processed": 0}
 
         # Traiter chaque ligne
         for idx, row in df.iterrows():
@@ -240,79 +234,73 @@ async def import_mailing_lists(
             try:
                 # Parser filters si c'est une string
                 filters_data = {}
-                if isinstance(row.get('filters'), str):
+                if isinstance(row.get("filters"), str):
                     try:
-                        filters_data = json.loads(row['filters']) if row['filters'] else {}
+                        filters_data = json.loads(row["filters"]) if row["filters"] else {}
                     except json.JSONDecodeError:
                         filters_data = {}
-                elif isinstance(row.get('filters'), dict):
-                    filters_data = row['filters']
+                elif isinstance(row.get("filters"), dict):
+                    filters_data = row["filters"]
 
                 # Convertir is_active en boolean
                 is_active = True
-                if 'is_active' in row:
-                    is_active_val = str(row['is_active']).lower()
-                    is_active = is_active_val in ['true', '1', 'yes', 'oui', 't']
+                if "is_active" in row:
+                    is_active_val = str(row["is_active"]).lower()
+                    is_active = is_active_val in ["true", "1", "yes", "oui", "t"]
 
                 # Vérifier si la liste existe déjà (par nom)
                 existing_list = None
                 if update_existing:
                     from models.mailing_list import MailingList
-                    existing_list = db.query(MailingList).filter(
-                        MailingList.name == row['name']
-                    ).first()
+
+                    existing_list = (
+                        db.query(MailingList).filter(MailingList.name == row["name"]).first()
+                    )
 
                 if existing_list:
                     # Mise à jour
                     update_data = MailingListUpdate(
-                        name=row['name'],
-                        description=row.get('description', '') or None,
-                        target_type=row.get('target_type', 'contacts'),
+                        name=row["name"],
+                        description=row.get("description", "") or None,
+                        target_type=row.get("target_type", "contacts"),
                         filters=filters_data,
-                        recipient_count=int(row.get('recipient_count', 0)),
-                        is_active=is_active
+                        recipient_count=int(row.get("recipient_count", 0)),
+                        is_active=is_active,
                     )
                     updated_list = service.update(existing_list.id, update_data)
-                    results["updated"].append({
-                        "id": updated_list.id,
-                        "name": updated_list.name
-                    })
+                    results["updated"].append({"id": updated_list.id, "name": updated_list.name})
                 else:
                     # Création
                     create_data = MailingListCreate(
-                        name=row['name'],
-                        description=row.get('description', '') or None,
-                        target_type=row.get('target_type', 'contacts'),
+                        name=row["name"],
+                        description=row.get("description", "") or None,
+                        target_type=row.get("target_type", "contacts"),
                         filters=filters_data,
-                        recipient_count=int(row.get('recipient_count', 0)),
-                        is_active=is_active
+                        recipient_count=int(row.get("recipient_count", 0)),
+                        is_active=is_active,
                     )
                     new_list = service.create(create_data, user_id=user_id)
-                    results["created"].append({
-                        "id": new_list.id,
-                        "name": new_list.name
-                    })
+                    results["created"].append({"id": new_list.id, "name": new_list.name})
 
             except Exception as e:
-                results["errors"].append({
-                    "row": idx + 2,  # +2 car Excel commence à 1 et on a un header
-                    "name": row.get('name', 'N/A'),
-                    "error": str(e)
-                })
+                results["errors"].append(
+                    {
+                        "row": idx + 2,  # +2 car Excel commence à 1 et on a un header
+                        "name": row.get("name", "N/A"),
+                        "error": str(e),
+                    }
+                )
 
         return {
             "success": True,
             "message": f"Import terminé: {len(results['created'])} créées, {len(results['updated'])} mises à jour, {len(results['errors'])} erreurs",
-            "results": results
+            "results": results,
         }
 
     except pd.errors.EmptyDataError:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Le fichier est vide"
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Le fichier est vide")
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Erreur lors de l'import: {str(e)}"
+            detail=f"Erreur lors de l'import: {str(e)}",
         )

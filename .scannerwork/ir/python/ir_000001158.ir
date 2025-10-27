@@ -1,32 +1,0 @@
-
-´ª"Return a description of the requirement that triggered me.
-
-        This default implementation returns long description of the req, with
-        line numbers
-
-        "str
-"unknown package"strself
-í í("ƒ&
-$
-
-ô  ô(("#get-field# req:+
-)
-
-ô  ô(("
-__bool__*:BboolH,"*
-
-ô  ô(( *
-ô ô(2
-ô) ô(-"n&
-$
-
-ô ô("#get-field# req:0
-.
-
-ô ô("#dependent-value#*:Bstr
-
-ô ô(?"
-
-ô ô(?"&*
-
-ô ô(?*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/exceptions.py

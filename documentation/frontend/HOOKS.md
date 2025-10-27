@@ -1,0 +1,910 @@
+# 🎣 Hooks React - CRM Alforis
+
+**Dernière mise à jour** : 24 Octobre 2025
+
+---
+
+## 📋 Vue d'ensemble
+
+Liste complète des hooks React personnalisés utilisés dans le CRM.
+
+**Total** : **40 hooks** | **Phase 2, 3 & 4 High Impact** : 11 hooks ⭐⭐⭐ | **Réutilisables** : 12 hooks ⭐ | **Métier** : 17 hooks | **UI/UX** : 7 hooks | **Utilitaires** : 3 hooks
+
+### 🎯 Phase 2 - Migration Complète ✅ (Octobre 2025)
+- **useModalForm** : 1 usage → 55 lignes économisées
+- **useClientSideTable** : 2 usages → 150 lignes économisées
+- **useFilters** : 6 usages → 90-120 lignes économisées
+- **useConfirm** : 16 usages → 128-240 lignes économisées
+
+**Impact Phase 2** : **~423-565 lignes de code économisées** | **17 fichiers migrés** | **Build: ✅ SUCCESS**
+
+### 🎯 Phase 3 - Optimisations ✅ (Octobre 2025)
+- **useEntityPreload** : 2 usages → 52 lignes économisées
+- **useAsyncAction** : 0 usage (créé, disponible)
+- **usePagination** : 1 usage → 10 lignes économisées
+
+**Impact Phase 3** : **~62 lignes de code économisées** | **3 fichiers migrés** | **Build: ✅ SUCCESS (45 pages)**
+
+### 🎯 Phase 4 - Onboarding & Analytics ✅ (Octobre 2025)
+- **useClipboard** : 1 usage → 18 lignes économisées
+- **useViewportToggle** : 2 usages → 6 lignes économisées
+- **useOnboarding** : Wizard onboarding nouveaux utilisateurs (créé)
+- **useHelpAnalytics** : Tracking interactions aide (créé)
+- **useLocalStorage** : Sync état localStorage (créé)
+
+**Impact Phase 4** : **~24 lignes de code économisées** | **6 fichiers migrés** | **Build: ✅ SUCCESS (46 pages)**
+
+**Impact total Phases 1+2+3+4** : **~509-651 lignes économisées** | **23 fichiers migrés**
+
+---
+
+## 🎯 Hooks Réutilisables ⭐
+
+Ces hooks ont été créés pour être utilisés dans plusieurs modules.
+
+### 1. useTableColumns
+**Fichier** : `hooks/useTableColumns.ts` | **Créé** : Chapitre 5
+
+Gestion des colonnes visibles/cachées avec sauvegarde localStorage.
+
+```typescript
+const { visibleColumns, toggleColumn, resetColumns } = useTableColumns(
+  'organisations-columns',
+  ['name', 'type', 'country', 'aum']
+)
+```
+
+**Utilisé dans** : Organisations, People, Mandats
+**Composant associé** : `ColumnSelector.tsx`
+
+---
+
+### 2. useConfirm
+**Fichier** : `hooks/useConfirm.tsx` | **Créé** : Chapitre 5
+
+Modals de confirmation modernes (remplace `window.confirm()`).
+
+```typescript
+const confirm = useConfirm()
+
+await confirm({
+  title: 'Supprimer ?',
+  message: 'Action irréversible',
+  type: 'danger', // danger | warning | info | success
+  onConfirm: async () => { /* action */ }
+})
+```
+
+**Utilisé dans** : Organisations, People, Mandats, Mailing Lists
+**Composant associé** : `ConfirmDialog.tsx`
+**Impact** : 6+ `window.confirm()` remplacés, UX cohérente
+
+---
+
+### 3. useExport
+**Fichier** : `hooks/useExport.ts` | **Créé** : Chapitre 5
+
+Exports CSV/Excel/PDF avec gestion erreurs.
+
+```typescript
+const { exportCSV, exportExcel, exportPDF, isExporting, error } = useExport()
+
+await exportCSV('/api/v1/exports/organisations/csv', 'orgas.csv')
+```
+
+**Utilisé dans** : ExportButtons (185→111 lignes, -40%)
+**Fix backend** : `filter_query_by_team()` gère dict/object User (Commit 70dfae70)
+
+---
+
+### 4. useSearchFocus
+**Fichier** : `hooks/useSearchFocus.ts` | **Créé** : Chapitre 5
+
+Effets de focus sur barres de recherche.
+
+```typescript
+const { isFocused, handleFocus, handleBlur } = useSearchFocus()
+
+<input onFocus={handleFocus} onBlur={handleBlur} />
+```
+
+**Utilisé dans** : SearchBar global
+
+---
+
+### 5. useEntityPreload ⭐⭐⭐
+**Fichier** : `hooks/useEntityPreload.ts` | **Créé** : Phase 3 (24 Oct 2025)
+
+Pré-chargement d'entités pour autocompletes en mode édition.
+
+```typescript
+useEntityPreload<Organisation>({
+  entityId: initialData?.organisation_id,
+  fetchEntity: (id) => apiClient.getOrganisation(id),
+  mapToOption: (org) => ({ id: org.id, label: org.name }),
+  upsertOption: upsertOrganisationOption,
+  onLoaded: (org) => setSelectedLabel(org.name),
+})
+```
+
+**Utilisé dans** : MandatForm (2 fois), TaskForm (2 fois)
+**Gain** : 52 lignes économisées (23 lignes → 11 lignes par usage)
+
+---
+
+### 6. useAsyncAction
+**Fichier** : `hooks/useAsyncAction.ts` | **Créé** : Phase 3 (24 Oct 2025)
+
+Gestion des états loading/error/data pour actions asynchrones.
+
+```typescript
+const { execute, isLoading, error, data, reset } = useAsyncAction({
+  action: apiClient.createTemplate,
+  onSuccess: (result) => toast.success('Créé!'),
+  onError: (err) => console.error(err),
+})
+
+// Dans le composant
+<Button onClick={() => execute(formData)} disabled={isLoading}>
+  {isLoading ? 'Création...' : 'Créer'}
+</Button>
+```
+
+**Utilisé dans** : Aucun usage actuellement (React Query utilisé à la place)
+**Note** : Disponible pour les composants sans React Query
+
+---
+
+### 7. usePagination
+**Fichier** : `hooks/usePagination.ts` | **Créé** : Phase 3 (24 Oct 2025)
+
+Gestion de la pagination client-side avec navigation.
+
+```typescript
+const pagination = usePagination({
+  initialLimit: 20,
+  initialPage: 1,
+})
+
+// Calcul des données paginées
+const paginatedData = data.slice(pagination.skip, pagination.skip + pagination.limit)
+const totalPages = pagination.getTotalPages(data.length)
+
+// Navigation
+<Button onClick={pagination.prevPage} disabled={!pagination.hasPrevPage}>
+  Précédent
+</Button>
+<Button onClick={pagination.nextPage} disabled={!pagination.hasNextPage(data.length)}>
+  Suivant
+</Button>
+```
+
+**Utilisé dans** : mailing-lists/page.tsx
+**Gain** : 10 lignes économisées (7 lignes → 3 lignes + meilleure API)
+
+---
+
+### 8. useClipboard ⭐⭐
+**Fichier** : `hooks/useClipboard.ts` | **Créé** : Phase 4 (24 Oct 2025)
+
+Copie dans le presse-papier avec feedback et gestion d'erreur.
+
+```typescript
+const { copy, isCopied, error } = useClipboard({
+  successDuration: 2000,
+  onSuccess: (text) => toast.success('Copié!'),
+  onError: (err) => toast.error('Échec de la copie'),
+})
+
+<Button onClick={() => copy('Secret HMAC: abc123')}>
+  {isCopied ? 'Copié ✓' : 'Copier'}
+</Button>
+```
+
+**Utilisé dans** : webhooks/page.tsx
+**Gain** : 18 lignes économisées (31 lignes → 13 lignes)
+
+---
+
+### 9. useViewportToggle ⭐
+**Fichier** : `hooks/useViewportToggle.ts` | **Créé** : Phase 4 (24 Oct 2025)
+
+Toggle entre modes desktop/mobile/tablet pour previews.
+
+```typescript
+const viewport = useViewportToggle({
+  defaultMode: 'desktop',
+  modes: ['desktop', 'mobile'],
+})
+
+<Button onClick={() => viewport.setMode('mobile')}>
+  📱 Mobile
+</Button>
+<div style={{ maxWidth: viewport.maxWidth }}>
+  {content}
+</div>
+```
+
+**Utilisé dans** : TemplateEditModal.tsx, TemplatePreviewModal.tsx
+**Gain** : 6 lignes économisées (code plus propre et réutilisable)
+
+---
+
+## 💼 Hooks Métier (17 hooks)
+
+### useAuth ⭐⭐⭐
+**Fichier** : `hooks/useAuth.ts`
+
+Authentification JWT et session utilisateur.
+
+```typescript
+const { user, login, logout, isAuthenticated, isLoading } = useAuth()
+```
+
+**Bug corrigé** : Toast succès lors d'erreur (Chapitre 2, Commit 08e7353b)
+
+---
+
+### useOrganisations
+**Fichier** : `hooks/useOrganisations.ts`
+
+CRUD organisations avec React Query.
+
+```typescript
+const { organisations, isLoading, createOrganisation, updateOrganisation, deleteOrganisation } = useOrganisations(filters)
+```
+
+**Features** : Cache, invalidation auto, filtres avancés, pagination
+
+---
+
+### usePeople
+**Fichier** : `hooks/usePeople.ts`
+
+CRUD contacts/personnes.
+
+```typescript
+const { people, total, isLoading, createPerson, updatePerson, deletePerson } = usePeople(filters)
+```
+
+**Améliorations (Chapitre 4)** : Pagination 50/page, tri multi-colonnes, slugs SEO
+
+---
+
+### useMailingLists
+**Fichier** : `hooks/useMailingLists.ts`
+
+Gestion listes de diffusion (Marketing Hub).
+
+```typescript
+const { lists, isLoading, createList, updateList, deleteList } = useMailingLists()
+```
+
+**Modifications (Chapitre 6)** : Ajout méthode `put()` dans apiClient, pages dédiées
+
+---
+
+### useTasks
+**Fichier** : `hooks/useTasks.ts`
+
+Gestion tâches et rappels.
+
+```typescript
+const { tasks, createTask, updateTask, deleteTask } = useTasks('today' | 'overdue' | 'all')
+```
+
+**Usage** : Création tâche prioritaire depuis tracking leads (score ≥70)
+
+---
+
+### useMandats
+**Fichier** : `hooks/useMandats.ts`
+
+CRUD mandats (contrats clients).
+
+```typescript
+const { mandats, isLoading, createMandat, updateMandat, deleteMandat } = useMandats(filters)
+```
+
+---
+
+### useProduits
+**Fichier** : `hooks/useProduits.ts`
+
+Gestion produits/services.
+
+```typescript
+const { produits, isLoading, createProduit, updateProduit, deleteProduit } = useProduits()
+```
+
+---
+
+### useUsers
+**Fichier** : `hooks/useUsers.ts`
+
+Gestion utilisateurs et équipes.
+
+```typescript
+const { users, isLoading, createUser, updateUser, deleteUser } = useUsers()
+```
+
+---
+
+### useWorkflows ⭐
+**Fichier** : `hooks/useWorkflows.ts`
+
+Gestion workflows automatisés.
+
+```typescript
+const {
+  workflows,
+  isLoading,
+  createWorkflow,
+  updateWorkflow,
+  deleteWorkflow,
+  executeWorkflow,
+  duplicateWorkflow
+} = useWorkflows()
+```
+
+**Features** :
+- Triggers : organisation_created, deal_updated, etc.
+- Actions : send_email, create_task, update_field
+- Conditions : AND/OR avec opérateurs
+- Variables dynamiques
+- Duplication workflows
+
+---
+
+### useWorkflowTemplates ⭐⭐
+**Fichier** : `hooks/useWorkflowTemplates.ts` | **Créé** : Chapitre 7 (24 Oct 2025)
+
+Bibliothèque de templates workflows avec recherche et filtres avancés.
+
+```typescript
+const {
+  templates,
+  isLoading,
+  searchTemplates,
+  filterTemplates,
+  duplicateTemplate,
+  stats
+} = useWorkflowTemplates()
+
+// Recherche fulltext
+const results = searchTemplates('newsletter')
+
+// Filtrage combiné
+const filtered = filterTemplates({
+  search: 'relance',
+  category: 'mailing',
+  trigger: 'WEBHOOK_RECEIVED',
+  difficulty: 'facile'
+})
+```
+
+**Features** :
+- 20 templates B2B prêts à l'emploi (appels, réunions, mailings, relations, reporting)
+- Métadonnées enrichies : catégorie, tags, use cases, difficulté, temps setup, prérequis
+- Recherche fulltext (nom, description, tags, use cases, trigger)
+- Filtres: catégorie, trigger, difficulté
+- Statistiques agrégées
+- Duplication avec redirection auto vers édition
+
+**Utilisé dans** : /dashboard/workflows/library
+**Composant associé** : WorkflowTemplateCard.tsx
+
+---
+
+### useWebhooks
+**Fichier** : `hooks/useWebhooks.ts`
+
+Configuration webhooks externes.
+
+```typescript
+const { webhooks, isLoading, createWebhook, updateWebhook, deleteWebhook } = useWebhooks()
+```
+
+---
+
+### useNotifications
+**Fichier** : `hooks/useNotifications.ts`
+
+Notifications temps réel (WebSocket).
+
+```typescript
+const { notifications, isConnected, markAsRead, markAllAsRead } = useNotifications()
+```
+
+**Features** :
+- WebSocket connection
+- Auto-reconnect
+- Notification list
+- Read/unread status
+
+---
+
+### useOrganisationActivity
+**Fichier** : `hooks/useOrganisationActivity.ts`
+
+Activités et timeline organisation.
+
+```typescript
+const { activities, isLoading } = useOrganisationActivity(organisationId)
+```
+
+---
+
+### useCampaignSubscriptions
+**Fichier** : `hooks/useCampaignSubscriptions.ts`
+
+Abonnements campagnes email (RGPD).
+
+```typescript
+const { subscriptions, subscribe, unsubscribe } = useCampaignSubscriptions(campaignId)
+```
+
+---
+
+### useEmailAutomation
+**Fichier** : `hooks/useEmailAutomation.ts`
+
+Automatisations email marketing.
+
+```typescript
+const { automations, createAutomation, triggerAutomation } = useEmailAutomation()
+```
+
+---
+
+### useEmailConfig
+**Fichier** : `hooks/useEmailConfig.ts`
+
+Configuration providers email (Resend, SendGrid, Mailgun).
+
+```typescript
+const { configs, activeConfig, createConfig, updateConfig, setActive } = useEmailConfig()
+```
+
+**Features** :
+- Multi-provider support
+- Encryption clés API
+- Configuration active
+
+---
+
+### useImport
+**Fichier** : `hooks/useImport.ts`
+
+Imports massifs (CSV, Excel).
+
+```typescript
+const { importData, isImporting, progress, errors } = useImport()
+
+await importData({
+  file: file,
+  entity: 'people' | 'organisations',
+  mapping: { /* colonnes */ }
+})
+```
+
+---
+
+### usePaginatedOptions
+**Fichier** : `hooks/usePaginatedOptions.ts`
+
+Options paginées pour selects (organisations, contacts).
+
+```typescript
+const { options, hasMore, loadMore, isLoading } = usePaginatedOptions({
+  endpoint: '/api/v1/organisations',
+  searchTerm: search
+})
+```
+
+**Usage** : Dropdowns avec lazy loading
+
+---
+
+### useSettingsData
+**Fichier** : `hooks/useSettingsData.ts`
+
+Paramètres application et préférences utilisateur.
+
+```typescript
+const { settings, updateSettings, isLoading } = useSettingsData()
+```
+
+---
+
+### useAI ⭐
+**Fichier** : `hooks/useAI.ts`
+
+Agent IA (suggestions, statistiques).
+
+```typescript
+const { statistics, suggestions, isLoading } = useAI()
+```
+
+**Bug corrigé** : Double `/api/v1` prefix → 404 en prod (Chapitre 3, lignes 60-66)
+
+---
+
+## 🎨 Hooks UI/UX (6 hooks)
+
+### useSidebar ⭐
+**Fichier** : `hooks/useSidebar.ts` | **Créé** : Chapitre 6
+
+Menu collapsible (Marketing Hub).
+
+```typescript
+const { isOpen, toggle, open, close } = useSidebar('marketing')
+```
+
+**Features** : Auto-ouverture si route active, localStorage persistence
+
+---
+
+### useMediaQuery
+**Fichier** : `hooks/useMediaQuery.ts`
+
+Détection breakpoints responsive.
+
+```typescript
+const isMobile = useMediaQuery('(max-width: 768px)')
+const isTablet = useMediaQuery('(min-width: 769px) and (max-width: 1024px)')
+const isDesktop = useMediaQuery('(min-width: 1025px)')
+```
+
+**Usage** : Composants responsive, affichage conditionnel
+
+---
+
+### useOnlineStatus
+**Fichier** : `hooks/useOnlineStatus.ts`
+
+Détection statut réseau (online/offline).
+
+```typescript
+const isOnline = useOnlineStatus()
+
+{!isOnline && <Banner>Vous êtes hors ligne</Banner>}
+```
+
+**Features** :
+- Événements navigator.onLine
+- Auto-update
+- PWA support
+
+---
+
+### useToast
+**Fichier** : `hooks/useToast.ts`
+
+Wrapper pour système de notifications toast.
+
+```typescript
+const { toast } = useToast()
+
+toast.success('Sauvegardé !')
+toast.error('Erreur')
+toast.info('Info')
+```
+
+---
+
+## ⚡ Hooks Phase 2 - High Impact (3 hooks)
+
+### useModalForm ⭐⭐⭐
+**Fichier** : `hooks/useModalForm.ts` | **Créé** : Phase 2
+
+Gestion complète de formulaires modals avec validation, états de chargement et gestion d'erreurs.
+
+```typescript
+const modal = useModalForm<WebhookFormState>({
+  initialValues: { url: '', events: [], description: '', is_active: true },
+  validate: (values) => {
+    const errors = {}
+    if (!values.url.trim()) errors.url = 'URL requise'
+    if (values.events.length === 0) errors.events = 'Au moins un événement'
+    return errors
+  },
+  onSubmit: async (values) => {
+    await createWebhook(values)
+  },
+  onSuccess: () => toast.success('Créé!')
+})
+
+// Usage
+<Modal isOpen={modal.isOpen} onClose={modal.close}>
+  <form onSubmit={modal.handleSubmit}>
+    {modal.error && <Alert type="error" message={modal.error} />}
+    <Input value={modal.values.url} onChange={modal.handleChange('url')} />
+    <Button type="submit" isLoading={modal.isSubmitting}>Save</Button>
+  </form>
+</Modal>
+```
+
+**Impact** : ~195 lignes économisées, utilisable dans 15+ fichiers
+**Fonctionnalités** :
+- État du formulaire centralisé
+- Validation intégrée avec erreurs par champ
+- Gestion automatique loading/error/success
+- Reset et close automatiques
+- Type-safe avec generics
+
+---
+
+### useClientSideTable ⭐⭐⭐
+**Fichier** : `hooks/useClientSideTable.ts` | **Créé** : Phase 2
+
+Gestion complète de tables côté client : recherche, filtrage, tri.
+
+```typescript
+const table = useClientSideTable<Person>({
+  data: people?.items || [],
+  searchFields: ['first_name', 'last_name', 'email'],
+  defaultSortKey: 'name',
+  filterFn: (item, filters) => {
+    if (filters.country && item.country !== filters.country) return false
+    return true
+  }
+})
+
+// Usage
+<SearchBar value={table.searchQuery} onChange={table.setSearchQuery} />
+<Table
+  data={table.filteredData}
+  sortConfig={table.sortConfig}
+  onSort={table.handleSort}
+/>
+```
+
+**Impact** : ~375 lignes économisées, utilisable dans 5+ pages
+**Fonctionnalités** :
+- Recherche multi-champs
+- Tri ascendant/descendant
+- Filtrage personnalisé
+- Compteurs total/filtré
+- Type-safe avec generics
+
+---
+
+### useFilters ⭐⭐
+**Fichier** : `hooks/useFilters.ts` | **Créé** : Phase 2
+
+Gestion simplifiée d'états de filtres avec reset.
+
+```typescript
+const filters = useFilters({
+  initialValues: {
+    role: '',
+    country: '',
+    language: '',
+    createdFrom: '',
+    createdTo: '',
+  }
+})
+
+// Usage
+<AdvancedFilters
+  values={filters.values}
+  onChange={filters.handleChange}
+  onReset={filters.reset}
+/>
+{filters.hasActiveFilters && <Badge>{filters.activeCount} filtres actifs</Badge>}
+```
+
+**Impact** : ~100 lignes économisées, utilisable dans 10+ pages
+**Fonctionnalités** :
+- Gestion état multi-filtres
+- Détection filtres actifs
+- Reset en un clic
+- Compatible AdvancedFilters component
+
+---
+
+## 🛠️ Hooks Utilitaires (2 hooks)
+
+### useDebounce
+**Fichier** : `hooks/useDebounce.ts`
+
+Debounce valeurs (recherche temps réel).
+
+```typescript
+const debouncedSearch = useDebounce(search, 500)
+```
+
+---
+
+### useLocalStorage ⭐⭐
+**Fichier** : `hooks/useLocalStorage.ts` | **Créé** : Phase 4 (24 Oct 2025)
+
+Synchronisation état ↔ localStorage avec TypeScript générique.
+
+```typescript
+const [theme, setTheme] = useLocalStorage('theme', 'light')
+const [onboardingCompleted, setOnboardingCompleted] = useLocalStorage<boolean>('onboarding-completed', false)
+```
+
+**Features** :
+- Type-safe avec generics
+- Initialisation SSR-safe (typeof window check)
+- Gestion d'erreurs intégrée
+- Support fonctions comme useState
+
+**Utilisé dans** : useOnboarding, settings, theme preferences
+
+---
+
+### useOnboarding ⭐⭐⭐
+**Fichier** : `hooks/useOnboarding.ts` | **Créé** : Phase 4 (24 Oct 2025)
+
+Gestion du wizard d'onboarding pour nouveaux utilisateurs.
+
+```typescript
+const onboarding = useOnboarding({
+  steps: ONBOARDING_STEPS,
+  storageKey: 'dashboard-onboarding-completed',
+  autoStart: true,
+  onComplete: () => console.log('Onboarding terminé!')
+})
+
+// API
+onboarding.start()      // Démarrer le tour
+onboarding.stop()       // Arrêter
+onboarding.skip()       // Passer et marquer complété
+onboarding.next()       // Étape suivante
+onboarding.prev()       // Étape précédente
+onboarding.isActive     // Tour actif?
+onboarding.hasCompleted // Déjà complété?
+```
+
+**Features** :
+- Auto-start pour nouveaux utilisateurs
+- Persistance localStorage
+- Navigation multi-étapes
+- Callbacks onComplete/onSkip
+
+**Note** : Composant OnboardingTour créé mais désactivé (react-joyride incompatible React 18)
+**Alternative** : Utiliser `@reactour/tour` ou `shepherd.js` compatible React 18
+
+---
+
+### useHelpAnalytics ⭐⭐⭐
+**Fichier** : `hooks/useHelpAnalytics.ts` | **Créé** : Phase 4 (24 Oct 2025)
+
+Tracking des interactions avec le système d'aide.
+
+```typescript
+const analytics = useHelpAnalytics()
+
+// Tracking FAQ
+analytics.trackFAQView('faq-001', 'Organisations')
+analytics.trackFAQSearch('mandat distribution', 12)
+
+// Tracking Guides
+analytics.trackGuideView('organisations', 75) // 75% scroll
+
+// Tracking Tooltips
+analytics.trackTooltipHover('aum-field', 'organisation-form')
+analytics.trackTooltipLearnMore('aum-field', '/dashboard/help/guides/organisations#aum')
+
+// Tracking Ratings
+analytics.trackArticleRating('guide-organisations', 'positive')
+analytics.trackArticleRating('guide-mandats', 'negative', 'Manque d\'exemples')
+
+// Tracking Support
+analytics.trackSupportContact('email', 'Question technique')
+```
+
+**API Events** :
+- `faq_view` : Vue question FAQ
+- `faq_search` : Recherche FAQ
+- `guide_view` : Vue guide (avec scroll depth)
+- `tooltip_hover` : Survol tooltip
+- `tooltip_learn_more_click` : Clic "En savoir plus"
+- `article_rating` : Rating article (positive/negative)
+- `support_contact` : Contact support
+
+**Backend Required** : POST `/api/v1/help/analytics` (à implémenter)
+
+**Utilisé dans** : ArticleRating component, Guide pages (prêt à intégrer)
+
+---
+
+## 📊 Index Alphabétique (32 hooks)
+
+| Hook | Type | Fichier | Utilité |
+|------|------|---------|---------|
+| useAI | Métier | useAI.ts | Agent IA statistiques/suggestions |
+| useAuth | Métier ⭐⭐⭐ | useAuth.ts | Authentification JWT |
+| useCampaignSubscriptions | Métier | useCampaignSubscriptions.ts | Abonnements RGPD |
+| useClientSideTable | Phase 2 ⭐⭐⭐ | useClientSideTable.ts | Tables client-side complètes |
+| useConfirm | UI/UX ⭐ | useConfirm.tsx | Modals confirmation |
+| useDebounce | Utilitaire | useDebounce.ts | Debounce valeurs |
+| useFilters | Phase 2 ⭐⭐ | useFilters.ts | Gestion état filtres |
+| useEmailAutomation | Métier | useEmailAutomation.ts | Automatisations email |
+| useEmailConfig | Métier | useEmailConfig.ts | Config providers email |
+| useExport | UI/UX ⭐ | useExport.ts | Exports CSV/Excel/PDF |
+| useImport | Métier | useImport.ts | Imports massifs |
+| useLocalStorage | Utilitaire | - | Sync localStorage |
+| useMailingLists | Métier | useMailingLists.ts | Listes diffusion |
+| useMandats | Métier | useMandats.ts | CRUD mandats |
+| useMediaQuery | UI/UX | useMediaQuery.ts | Breakpoints responsive |
+| useModalForm | Phase 2 ⭐⭐⭐ | useModalForm.ts | Formulaires modals complets |
+| useNotifications | Métier | useNotifications.ts | WebSocket temps réel |
+| useOnlineStatus | UI/UX | useOnlineStatus.ts | Détection réseau |
+| useOrganisationActivity | Métier | useOrganisationActivity.ts | Timeline activités |
+| useOrganisations | Métier | useOrganisations.ts | CRUD organisations |
+| usePaginatedOptions | Métier | usePaginatedOptions.ts | Selects lazy loading |
+| usePeople | Métier | usePeople.ts | CRUD contacts |
+| useProduits | Métier | useProduits.ts | CRUD produits |
+| useSearchFocus | UI/UX ⭐ | useSearchFocus.ts | Focus recherche |
+| useSettingsData | Métier | useSettingsData.ts | Paramètres app |
+| useSidebar | UI/UX ⭐ | useSidebar.ts | Menu collapsible |
+| useTableColumns | UI/UX ⭐ | useTableColumns.ts | Colonnes modifiables |
+| useTasks | Métier | useTasks.ts | CRUD tâches |
+| useToast | UI/UX | useToast.ts | Notifications toast |
+| useUsers | Métier | useUsers.ts | CRUD utilisateurs |
+| useWebhooks | Métier | useWebhooks.ts | Config webhooks |
+| useWorkflows | Métier ⭐ | useWorkflows.ts | Automatisations |
+
+---
+
+## 🎯 Bonnes Pratiques
+
+### Nomenclature
+- ✅ Préfixe `use` obligatoire
+- ✅ Nom descriptif (`useConfirm` > `useModal`)
+
+### Retour de Valeur
+- **Objet** si > 2 valeurs : `{ data, isLoading, error }`
+- **Tableau** si ≤ 2 valeurs : `[value, setValue]`
+
+### localStorage
+- Toujours préfixer : `[module]-[feature]`
+- Exemple : `'organisations-columns'`, `'people-columns'`
+
+### TypeScript
+- Typer paramètres et retours
+- Interfaces pour objets complexes
+
+---
+
+## 📈 Statistiques
+
+### Par Catégorie
+| Catégorie | Nombre | % |
+|-----------|--------|---|
+| Métier | 17 | 53% |
+| UI/UX | 6 | 19% |
+| Phase 2 High Impact ⭐⭐⭐ | 3 | 9% |
+| Réutilisables ⭐ | 4 | 13% |
+| Utilitaires | 2 | 6% |
+| **Total** | **32** | **100%** |
+
+### Impact Projet
+| Métrique | Avant | Après | Gain |
+|----------|-------|-------|------|
+| Hooks totaux | 29 | 32 | +3 nouveaux |
+| Lignes ExportButtons | 185 | 111 | -40% |
+| Duplications confirm() | 6+ | 0 | ✅ |
+| **Phase 2 économies** | **-** | **-670 lignes** | **✅** |
+| Cohérence UX | ❌ | ✅ | ⭐ |
+
+### Réduction Code Phase 2
+| Hook | Économie | Fichiers affectés |
+|------|----------|-------------------|
+| useModalForm | ~195 lignes | 2 fichiers (15+ potentiel) |
+| useClientSideTable | ~375 lignes | 1 fichier (5+ potentiel) |
+| useFilters | ~100 lignes | 1 fichier (10+ potentiel) |
+| **Total Phase 2** | **~670 lignes** | **2 migrations complètes** |
+
+---
+
+## 🔗 Ressources
+
+- [Chapitre 5 - Organisations](../../checklists/05-organisations.md)
+- [Architecture Frontend](./ARCHITECTURE.md)
+- [Composants Partagés](./COMPONENTS.md)

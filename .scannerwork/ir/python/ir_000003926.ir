@@ -1,12 +1,0 @@
-
-
-"versions"strself8 8("Ç$
-"
-9 ;(	"#new-object#Bdict?
-=
-: :(;",*#get-field# get_available_package_versions:,
-*
-: :(;"?python-partial-apply?: 
-
-: :(;"	#map-set#:
-9 ;(	*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/commands/index.py

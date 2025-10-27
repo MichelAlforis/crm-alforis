@@ -1,8 +1,0 @@
-
-"~/Documents"str
-NE":return: documents directory tied to the user, e.g. ``~/Documents``"strselff f(":(
-&
-h h(0"
-os.path
-expanduser:
-h h(0*…/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/platformdirs/macos.py

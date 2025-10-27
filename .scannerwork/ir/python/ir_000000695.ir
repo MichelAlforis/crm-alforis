@@ -1,28 +1,0 @@
-
-œ’"
-    Yield ``Requirement`` objects for each specification in `strs`.
-
-    `strs` must be a string, or a (possibly-nested) iterable thereof.
-    "strstrs
-Ú Ú(')%pip._vendor.pkg_resources.Requirement"§#
-!
-
-à2 à(>"#unknown-value#D
-B
-
-à@ à(Q"/
- pip._internal.utils._jaraco_textyield_lines:-
-+
-
-à. à(R"
-builtinsmap*:BmapJ
-H
-
-à à(S"5
- pip._internal.utils._jaraco_textjoin_continuation:-
-+
-
-à à(T"
-builtinsmap*:Bmap
-
-à à(T*‰/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pkg_resources/__init__.py

@@ -1,36 +1,0 @@
-
-ÚË"
-    Guess the "Content-Type" of a file.
-
-    :param filename:
-        The filename to guess the "Content-Type" of using :mod:`mimetypes`.
-    :param default:
-        If no "Content-Type" can be guessed, default to `default`.
-    "str
-
-0intfilename
- 
-(default
-! 
-(C"I)
-'
- ("
-__bool__*:BboolH"
- ( * ("¬'
-%
- (-"#unknown-value#Bbool2
-0
- (-"
-	mimetypes
-guess_type:Btuple"
- 
- (0"#array-read#:)
-'
- (0	"
-__bool__*:BboolH"
- (0	 "
- ("
- (;"$*
-
- (;
-*Å/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/fields.py

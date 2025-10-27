@@ -4,16 +4,19 @@ Models - Webhook
 Table stockant les webhooks sortants configurés par les intégrations externes.
 """
 
-from sqlalchemy import Column, String, Boolean, Text
-from sqlalchemy.dialects.sqlite import JSON as SQLITE_JSON
+from sqlalchemy import Boolean, Column, String, Text
 from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.sqlite import JSON as SQLITE_JSON
+
 
 def _json_column():
     try:
         from sqlalchemy import JSON
+
         return JSON
     except ImportError:
         return SQLITE_JSON
+
 
 from models.base import BaseModel
 

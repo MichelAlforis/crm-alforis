@@ -7,9 +7,10 @@ Correction SonarQube issue (21 occurrences)
 import re
 from pathlib import Path
 
+
 def fix_bash_test(file_path):
     """Remplace [ par [[ dans les conditions bash."""
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, "r", encoding='utf-8') as f:
         content = f.read()
 
     original_content = content
@@ -38,7 +39,7 @@ def fix_bash_test(file_path):
 
     # Écrire seulement si modifié
     if content != original_content:
-        with open(file_path, 'w', encoding='utf-8') as f:
+        with open(file_path, "w", encoding='utf-8') as f:
             f.write(content)
         return True
     return False

@@ -1,46 +1,0 @@
-
-"__module__"str
-çÝ"
-    Decorator that converts a function into a filter::
-
-        @simplefilter
-        def lowercase(self, lexer, stream, options):
-            for ttype, value in stream:
-                yield ttype, value.lower()
-    "str
-
-	0int
-	"__doc__"str
-
-"function"strf (	tuple.*pip._vendor.pygments.filter.FunctionFilter"£)
-'
-" "("#get-field# __name__:(
-&
-" "(-"#unknown-value#Btuple&
-$
-" "(-"
-#is-exact#:Bbool
-
-" "(-"
-#assume#:8
-6
-" "(-
-"#set-field# __collection_size:	Bint&
-$
-" "(-"#array-add-last#:$
-"
-"/ &("#new-object#Bdict*
-(
-# #(."
-builtinsgetattr*: 
-
-# #(."	#map-set#:(
-&
-$ $("#get-field# __doc__: 
-
-$ $("	#map-set#: 
-
-% %("	#map-set#:1
-/
-" &("#dependent-value#*:Btype
-" &(*‚/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pygments/filter.py

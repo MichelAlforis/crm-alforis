@@ -6,15 +6,7 @@ Ce modèle permet d'attacher plusieurs fichiers (documents, images, PDF, etc.)
 
 from __future__ import annotations
 
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    Text,
-    ForeignKey,
-    Index,
-    BigInteger,
-)
+from sqlalchemy import BigInteger, Column, ForeignKey, Index, Integer, String, Text
 from sqlalchemy.orm import relationship
 
 from models.base import BaseModel
@@ -49,14 +41,14 @@ class ActivityAttachment(BaseModel):
     mime_type = Column(String(100), nullable=True)  # Type MIME (application/pdf, image/png, etc.)
 
     # Métadonnées pour identification
-    title = Column(String(255), nullable=True)  # Titre/libellé du document (ex: "Contrat signé", "CR réunion")
+    title = Column(
+        String(255), nullable=True
+    )  # Titre/libellé du document (ex: "Contrat signé", "CR réunion")
     notes = Column(Text, nullable=True)  # Notes/description détaillée du document
 
     # Relations
     activity = relationship(
-        "OrganisationActivity",
-        back_populates="attachments",
-        foreign_keys=[activity_id]
+        "OrganisationActivity", back_populates="attachments", foreign_keys=[activity_id]
     )
 
     def __repr__(self) -> str:

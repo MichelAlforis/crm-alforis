@@ -5,6 +5,7 @@ import { Mail, Clock, Layers } from 'lucide-react'
 import { Input } from '@/components/shared/Input'
 import { Select } from '@/components/shared/Select'
 import { Alert } from '@/components/shared/Alert'
+import { HelpTooltip } from '@/components/help/HelpTooltip'
 import { apiClient } from '@/lib/api'
 import { logger } from '@/lib/logger'
 
@@ -61,23 +62,34 @@ export const Step3Configuration: React.FC<Step3ConfigurationProps> = ({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-md">
-          <Select
-            label="Fournisseur d'email *"
-            value={provider}
-            onChange={e => onChange({ provider: e.target.value as EmailProvider })}
-            disabled={isLoadingProviders}
-            required
-          >
-            <option value="resend" disabled={!availableProviders.includes('resend')}>
-              Resend{!availableProviders.includes('resend') ? ' (non configuré)' : ''}
-            </option>
-            <option value="sendgrid" disabled={!availableProviders.includes('sendgrid')}>
-              SendGrid{!availableProviders.includes('sendgrid') ? ' (non configuré)' : ''}
-            </option>
-            <option value="mailgun" disabled={!availableProviders.includes('mailgun')}>
-              Mailgun{!availableProviders.includes('mailgun') ? ' (non configuré)' : ''}
-            </option>
-          </Select>
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <label className="text-sm font-medium text-text-primary">
+                Fournisseur d'email *
+              </label>
+              <HelpTooltip
+                content="Le service utilisé pour envoyer les emails. Resend est recommandé pour une meilleure délivrabilité."
+                learnMoreLink="/dashboard/help/guides/marketing#fournisseurs"
+                size="sm"
+              />
+            </div>
+            <Select
+              value={provider}
+              onChange={e => onChange({ provider: e.target.value as EmailProvider })}
+              disabled={isLoadingProviders}
+              required
+            >
+              <option value="resend" disabled={!availableProviders.includes('resend')}>
+                Resend{!availableProviders.includes('resend') ? ' (non configuré)' : ''}
+              </option>
+              <option value="sendgrid" disabled={!availableProviders.includes('sendgrid')}>
+                SendGrid{!availableProviders.includes('sendgrid') ? ' (non configuré)' : ''}
+              </option>
+              <option value="mailgun" disabled={!availableProviders.includes('mailgun')}>
+                Mailgun{!availableProviders.includes('mailgun') ? ' (non configuré)' : ''}
+              </option>
+            </Select>
+          </div>
 
           <Input
             label="Nom de l'expéditeur *"
@@ -106,27 +118,49 @@ export const Step3Configuration: React.FC<Step3ConfigurationProps> = ({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md">
-          <Input
-            label="Taille des lots (batch)"
-            type="number"
-            min="1"
-            max="1000"
-            value={batch_size}
-            onChange={e => onChange({ batch_size: Number(e.target.value) })}
-            helperText="Nombre d'emails envoyés par lot"
-            leftIcon={<Layers className="h-4 w-4" />}
-          />
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <label className="text-sm font-medium text-text-primary">
+                Taille des lots (batch)
+              </label>
+              <HelpTooltip
+                content="Nombre d'emails envoyés simultanément. Limiter la taille des lots améliore la délivrabilité et respecte les quotas des fournisseurs. Recommandé : 600 emails."
+                learnMoreLink="/dashboard/help/guides/marketing#envoi-lots"
+                size="sm"
+              />
+            </div>
+            <Input
+              type="number"
+              min="1"
+              max="1000"
+              value={batch_size}
+              onChange={e => onChange({ batch_size: Number(e.target.value) })}
+              helperText="Nombre d'emails envoyés par lot"
+              leftIcon={<Layers className="h-4 w-4" />}
+            />
+          </div>
 
-          <Input
-            label="Délai entre les lots (secondes)"
-            type="number"
-            min="0"
-            max="3600"
-            value={delay_between_batches}
-            onChange={e => onChange({ delay_between_batches: Number(e.target.value) })}
-            helperText="Temps d'attente entre chaque lot"
-            leftIcon={<Clock className="h-4 w-4" />}
-          />
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <label className="text-sm font-medium text-text-primary">
+                Délai entre les lots (secondes)
+              </label>
+              <HelpTooltip
+                content="Temps d'attente entre chaque lot d'envoi. Un délai permet d'éviter d'être considéré comme spam et respecte les limites des fournisseurs. Recommandé : 60 secondes."
+                learnMoreLink="/dashboard/help/guides/marketing#envoi-lots"
+                size="sm"
+              />
+            </div>
+            <Input
+              type="number"
+              min="0"
+              max="3600"
+              value={delay_between_batches}
+              onChange={e => onChange({ delay_between_batches: Number(e.target.value) })}
+              helperText="Temps d'attente entre chaque lot"
+              leftIcon={<Clock className="h-4 w-4" />}
+            />
+          </div>
         </div>
 
         <Alert

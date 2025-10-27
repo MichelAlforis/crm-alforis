@@ -8,27 +8,13 @@ tâche, mandat, email, etc.) afin de fournir un flux chronologique unifié.
 from __future__ import annotations
 
 import enum
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    Enum,
-    ForeignKey,
-    Text,
-    JSON,
-    Index,
-    DateTime,
-)
-from sqlalchemy.orm import relationship
 from datetime import datetime
 
+from sqlalchemy import JSON, Column, DateTime, Enum, ForeignKey, Index, Integer, String, Text
+from sqlalchemy.orm import relationship
+
 from models.base import BaseModel
-from models.constants import (
-    FK_USERS_ID,
-    FK_ORGANISATIONS_ID,
-    ONDELETE_SET_NULL,
-    ONDELETE_CASCADE,
-)
+from models.constants import FK_ORGANISATIONS_ID, FK_USERS_ID, ONDELETE_CASCADE, ONDELETE_SET_NULL
 
 
 class OrganisationActivityType(str, enum.Enum):
@@ -78,9 +64,15 @@ class OrganisationActivity(BaseModel):
     )
     title = Column(String(500), nullable=True)
     description = Column(Text, nullable=True)
-    activity_metadata = Column("metadata", JSON, nullable=True)  # Renommé: 'metadata' est réservé par SQLAlchemy
-    created_by = Column(Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True, index=True)
-    occurred_at = Column(DateTime(timezone=True), nullable=False, default=datetime.utcnow, index=True)
+    activity_metadata = Column(
+        "metadata", JSON, nullable=True
+    )  # Renommé: 'metadata' est réservé par SQLAlchemy
+    created_by = Column(
+        Integer, ForeignKey(FK_USERS_ID, ondelete=ONDELETE_SET_NULL), nullable=True, index=True
+    )
+    occurred_at = Column(
+        DateTime(timezone=True), nullable=False, default=datetime.utcnow, index=True
+    )
 
     organisation = relationship("Organisation", back_populates="activities")
 

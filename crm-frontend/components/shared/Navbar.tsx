@@ -10,16 +10,15 @@ import React from 'react'
 import { ClipboardList, Menu, Search, User } from 'lucide-react'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
+import { useSidebar } from '@/hooks/useSidebar'
+import { SIDEBAR_SECTIONS } from '@/config/sidebar.config'
 import GlobalSearchInputAdvanced from '@/components/shared/GlobalSearchInputAdvanced'
 import { useTaskViews } from '@/hooks/useTasks'
 import NotificationBell from '@/components/shared/NotificationBell'
 import ThemeToggle from '@/components/shared/ThemeToggle'
 
-interface NavbarProps {
-  onMenuClick?: () => void
-}
-
-export default function Navbar({ onMenuClick }: NavbarProps) {
+export default function Navbar() {
+  const sidebar = useSidebar(SIDEBAR_SECTIONS)
   const { logout, user } = useAuth()
   const [showUserMenu, setShowUserMenu] = React.useState(false)
   const { todayCount } = useTaskViews()
@@ -33,7 +32,7 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
           <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
             {/* Mobile Menu Button */}
             <button
-              onClick={onMenuClick}
+              onClick={sidebar.toggleMobile}
               className="lg:hidden p-2 rounded-xl hover:bg-gray-100 active:bg-gray-200 transition-colors shrink-0 dark:hover:bg-slate-700 dark:active:bg-slate-600"
               aria-label="Ouvrir le menu"
             >

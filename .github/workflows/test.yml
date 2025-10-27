@@ -1,0 +1,117 @@
+name: Tests Only (Fast)
+
+# Workflow rapide pour tester uniquement (sans lint, sans build)
+# Utile pour des PR drafts ou développement rapide
+
+on:
+  workflow_dispatch:  # Manuel
+  push:
+    branches:
+      - feature/**
+      - fix/**
+    paths:
+      - 'crm-backend/**/*.py'
+      - 'crm-frontend/**/*.{ts,tsx}'
+      - 'tests/**'
+
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: "3.12"
+  NODE_VERSION: "20"
+
+jobs:
+  # ============================================================================
+  # 🧪 TESTS BACKEND - RAPIDE
+  # ============================================================================
+  test-backend-fast:
+    name: 🐍 Backend Tests (Fast)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: crm_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 3
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install deps
+        run: |
+          cd crm-backend
+          pip install -q -r requirements.txt pytest pytest-cov pytest-asyncio
+
+      - name: Run fast tests (excluding slow marks)
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/crm_test
+          REDIS_URL: redis://localhost:6379/0
+          SECRET_KEY: test_key_for_ci
+        run: |
+          cd crm-backend
+          pytest -v -m "not slow" --tb=short
+
+  # ============================================================================
+  # 🧪 TESTS FRONTEND - RAPIDE
+  # ============================================================================
+  test-frontend-fast:
+    name: ⚛️ Frontend Tests (Fast)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: crm-frontend/package-lock.json
+
+      - name: Install deps
+        run: |
+          cd crm-frontend
+          npm ci --prefer-offline --no-audit
+
+      - name: Run tests
+        run: |
+          cd crm-frontend
+          npm run test -- --watchAll=false --maxWorkers=2
+
+  # ============================================================================
+  # 📊 SUMMARY
+  # ============================================================================
+  summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [test-backend-fast, test-frontend-fast]
+    if: always()
+
+    steps:
+      - name: Summary
+        run: |
+          echo "## ⚡ Fast Tests Results" >> $GITHUB_STEP_SUMMARY
+          echo "Backend: ${{ needs.test-backend-fast.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "Frontend: ${{ needs.test-frontend-fast.result }}" >> $GITHUB_STEP_SUMMARY

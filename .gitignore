@@ -3,6 +3,8 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+crm-backend/.venv*/
+crm-backend/temp-venv/
 
 # Node
 node_modules/
@@ -13,6 +15,11 @@ npm-debug.log*
 # Docker
 postgres_data/
 backups/
+logs/
+*.log
+.scannerwork/
+crm-backend/wheelhouse/
+crm-backend/wheelhouse.tar.gz
 
 # Database dumps (contiennent des données sensibles)
 *.sql

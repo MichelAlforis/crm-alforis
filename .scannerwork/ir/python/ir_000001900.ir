@@ -1,18 +1,0 @@
-
-Œƒ"Returns a CookieJar from a key/value dictionary.
-
-    :param cj: CookieJar to insert cookies into.
-    :param cookie_dict: Dict of key/values to insert into CookieJar.
-    :rtype: CookieJar
-    "strcj
-‘ ‘(cookie_dict
-‘ ‘()"É#
-!
-
-‹ ‹(/"#unknown-value#J
-H
-
-‹ ‹(/"3
-pip._vendor.requests.cookiescookiejar_from_dict:
-
-‹ ‹(/*Å/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/requests/utils.py

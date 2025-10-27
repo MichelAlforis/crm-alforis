@@ -1,25 +1,27 @@
+import json
+from datetime import date
 from decimal import Decimal
 from typing import List, Optional
-from datetime import date
-import json
 
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
 from models.organisation import OrganisationCategory, OrganisationType, PipelineStage
 from schemas.base import TimestampedSchema
-from schemas.person import PersonOrganizationLinkResponse, PersonResponse
 from schemas.organisation_activity import OrganisationActivityResponse
-
+from schemas.person import PersonOrganizationLinkResponse, PersonResponse
 
 # =======================
 # Organisation Schemas
 # =======================
 
+
 class OrganisationBase(BaseModel):
     """Schéma de base pour une organisation unifiée."""
 
     name: str = Field(..., min_length=1, max_length=255)
-    type: OrganisationType = Field(..., description="client|fournisseur|distributeur|emetteur|autre")
+    type: OrganisationType = Field(
+        ..., description="client|fournisseur|distributeur|emetteur|autre"
+    )
     category: Optional[OrganisationCategory] = Field(
         None, description="Institution, Wholesale, SDG, CGPI, Autres"
     )
@@ -135,8 +137,10 @@ class OrganisationDetailResponse(OrganisationResponse):
 # Contact Organisation Schemas
 # =======================
 
+
 class OrganisationContactBase(BaseModel):
     """Schéma de base pour un contact d'organisation"""
+
     organisation_id: int
     name: str = Field(..., min_length=1, max_length=255)
     email: Optional[str] = Field(None, max_length=255)
@@ -147,11 +151,13 @@ class OrganisationContactBase(BaseModel):
 
 class OrganisationContactCreate(OrganisationContactBase):
     """Schéma pour la création d'un contact d'organisation"""
+
     pass
 
 
 class OrganisationContactUpdate(BaseModel):
     """Schéma pour la mise à jour d'un contact d'organisation"""
+
     name: Optional[str] = Field(None, min_length=1, max_length=255)
     email: Optional[str] = Field(None, max_length=255)
     phone: Optional[str] = Field(None, max_length=20)
@@ -161,6 +167,7 @@ class OrganisationContactUpdate(BaseModel):
 
 class OrganisationContactResponse(OrganisationContactBase, TimestampedSchema):
     """Schéma de réponse pour un contact d'organisation"""
+
     id: int
 
     class Config:
@@ -171,8 +178,10 @@ class OrganisationContactResponse(OrganisationContactBase, TimestampedSchema):
 # Mandat Distribution Schemas
 # =======================
 
+
 class MandatDistributionBase(BaseModel):
     """Schéma de base pour un mandat de distribution"""
+
     organisation_id: int
     status: str = Field(default="proposé", description="proposé, signé, actif, terminé")
     date_signature: Optional[date] = None
@@ -180,10 +189,10 @@ class MandatDistributionBase(BaseModel):
     date_fin: Optional[date] = None
     notes: Optional[str] = None
 
-    @field_validator('status')
+    @field_validator("status")
     @classmethod
     def validate_status(cls, v):
-        valid_statuses = ['proposé', 'signé', 'actif', 'terminé']
+        valid_statuses = ["proposé", "signé", "actif", "terminé"]
         if v not in valid_statuses:
             raise ValueError(f"Status must be one of {valid_statuses}")
         return v
@@ -191,11 +200,13 @@ class MandatDistributionBase(BaseModel):
 
 class MandatDistributionCreate(MandatDistributionBase):
     """Schéma pour la création d'un mandat de distribution"""
+
     pass
 
 
 class MandatDistributionUpdate(BaseModel):
     """Schéma pour la mise à jour d'un mandat de distribution"""
+
     status: Optional[str] = None
     date_signature: Optional[date] = None
     date_debut: Optional[date] = None
@@ -205,6 +216,7 @@ class MandatDistributionUpdate(BaseModel):
 
 class MandatDistributionResponse(MandatDistributionBase, TimestampedSchema):
     """Schéma de réponse pour un mandat de distribution"""
+
     id: int
     is_actif: bool = Field(description="True si le mandat est signé ou actif")
 
@@ -214,6 +226,7 @@ class MandatDistributionResponse(MandatDistributionBase, TimestampedSchema):
 
 class MandatDistributionDetailResponse(MandatDistributionResponse):
     """Schéma de réponse détaillée pour un mandat avec les produits associés"""
+
     organisation: OrganisationResponse
     produits: List["ProduitResponse"] = []
 
@@ -225,26 +238,28 @@ class MandatDistributionDetailResponse(MandatDistributionResponse):
 # Produit Schemas
 # =======================
 
+
 class ProduitBase(BaseModel):
     """Schéma de base pour un produit"""
+
     name: str = Field(..., min_length=1, max_length=255)
     isin: Optional[str] = Field(None, max_length=12, description="Code ISIN unique")
     type: str = Field(..., description="OPCVM, FCP, SICAV, ETF, Fonds Alternatif, Autre")
     status: str = Field(default="en_attente", description="actif, inactif, en_attente")
     notes: Optional[str] = None
 
-    @field_validator('type')
+    @field_validator("type")
     @classmethod
     def validate_type(cls, v):
-        valid_types = ['OPCVM', 'FCP', 'SICAV', 'ETF', 'Fonds Alternatif', 'Autre']
+        valid_types = ["OPCVM", "FCP", "SICAV", "ETF", "Fonds Alternatif", "Autre"]
         if v not in valid_types:
             raise ValueError(f"Type must be one of {valid_types}")
         return v
 
-    @field_validator('status')
+    @field_validator("status")
     @classmethod
     def validate_status(cls, v):
-        valid_statuses = ['actif', 'inactif', 'en_attente']
+        valid_statuses = ["actif", "inactif", "en_attente"]
         if v not in valid_statuses:
             raise ValueError(f"Status must be one of {valid_statuses}")
         return v
@@ -252,11 +267,13 @@ class ProduitBase(BaseModel):
 
 class ProduitCreate(ProduitBase):
     """Schéma pour la création d'un produit"""
+
     pass
 
 
 class ProduitUpdate(BaseModel):
     """Schéma pour la mise à jour d'un produit"""
+
     name: Optional[str] = Field(None, min_length=1, max_length=255)
     isin: Optional[str] = Field(None, max_length=12)
     type: Optional[str] = None
@@ -266,6 +283,7 @@ class ProduitUpdate(BaseModel):
 
 class ProduitResponse(ProduitBase, TimestampedSchema):
     """Schéma de réponse pour un produit"""
+
     id: int
 
     class Config:
@@ -274,6 +292,7 @@ class ProduitResponse(ProduitBase, TimestampedSchema):
 
 class ProduitDetailResponse(ProduitResponse):
     """Schéma de réponse détaillée pour un produit avec les mandats associés"""
+
     mandats: List["MandatProduitResponse"] = []
 
     class Config:
@@ -284,8 +303,10 @@ class ProduitDetailResponse(ProduitResponse):
 # Mandat Produit Schemas
 # =======================
 
+
 class MandatProduitBase(BaseModel):
     """Schéma de base pour l'association mandat-produit"""
+
     mandat_id: int
     produit_id: int
     date_ajout: Optional[date] = None
@@ -294,17 +315,20 @@ class MandatProduitBase(BaseModel):
 
 class MandatProduitCreate(MandatProduitBase):
     """Schéma pour la création d'une association mandat-produit"""
+
     pass
 
 
 class MandatProduitUpdate(BaseModel):
     """Schéma pour la mise à jour d'une association mandat-produit"""
+
     date_ajout: Optional[date] = None
     notes: Optional[str] = None
 
 
 class MandatProduitResponse(MandatProduitBase, TimestampedSchema):
     """Schéma de réponse pour une association mandat-produit"""
+
     id: int
     mandat: MandatDistributionResponse
     produit: ProduitResponse
@@ -317,31 +341,38 @@ class MandatProduitResponse(MandatProduitBase, TimestampedSchema):
 # Interaction Schemas
 # =======================
 
+
 class InteractionBase(BaseModel):
     """Schéma de base pour une interaction"""
+
     organisation_id: int
     personne_id: Optional[int] = None
-    produit_id: Optional[int] = Field(None, description="Produit concerné (nécessite un mandat actif)")
+    produit_id: Optional[int] = Field(
+        None, description="Produit concerné (nécessite un mandat actif)"
+    )
     date: date
     type: str = Field(..., description="appel, email, reunion, webinaire, autre")
     pipeline: str = Field(..., description="fournisseur ou vente")
-    status: Optional[str] = Field(None, description="Pour pipeline fournisseur: prospect_froid, prospect_chaud, refus, en_discussion, validé")
+    status: Optional[str] = Field(
+        None,
+        description="Pour pipeline fournisseur: prospect_froid, prospect_chaud, refus, en_discussion, validé",
+    )
     duration_minutes: Optional[int] = None
     subject: Optional[str] = Field(None, max_length=255)
     notes: Optional[str] = None
 
-    @field_validator('type')
+    @field_validator("type")
     @classmethod
     def validate_type(cls, v):
-        valid_types = ['appel', 'email', 'reunion', 'webinaire', 'autre']
+        valid_types = ["appel", "email", "reunion", "webinaire", "autre"]
         if v not in valid_types:
             raise ValueError(f"Type must be one of {valid_types}")
         return v
 
-    @field_validator('pipeline')
+    @field_validator("pipeline")
     @classmethod
     def validate_pipeline(cls, v):
-        valid_pipelines = ['fournisseur', 'vente']
+        valid_pipelines = ["fournisseur", "vente"]
         if v not in valid_pipelines:
             raise ValueError(f"Pipeline must be one of {valid_pipelines}")
         return v
@@ -349,11 +380,13 @@ class InteractionBase(BaseModel):
 
 class InteractionCreate(InteractionBase):
     """Schéma pour la création d'une interaction"""
+
     pass
 
 
 class InteractionUpdate(BaseModel):
     """Schéma pour la mise à jour d'une interaction"""
+
     organisation_id: Optional[int] = None
     personne_id: Optional[int] = None
     produit_id: Optional[int] = None
@@ -368,6 +401,7 @@ class InteractionUpdate(BaseModel):
 
 class InteractionResponse(InteractionBase, TimestampedSchema):
     """Schéma de réponse pour une interaction"""
+
     id: int
 
     class Config:
@@ -376,6 +410,7 @@ class InteractionResponse(InteractionBase, TimestampedSchema):
 
 class InteractionDetailResponse(InteractionResponse):
     """Schéma de réponse détaillée pour une interaction avec relations"""
+
     organisation: OrganisationResponse
     personne: Optional["PersonResponse"] = None
     produit: Optional[ProduitResponse] = None

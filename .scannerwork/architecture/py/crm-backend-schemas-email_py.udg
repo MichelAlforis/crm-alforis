@@ -1,258 +1,0 @@
-
-1.0PythonFrontend"1760943927555*py2.BŠ
-
-
-imports1
-
-extends2
-
-returns3
-
-	has param4
-
-module5
-
-
-class6
-
-function7
-!
-crm-backend/schemas/email.py9
-
-schemas.email11
-
-datetime12
-
-typing14
-
-pydantic16
-
-models.email18
-
-schemas.base20
-"
-schemas.email.EmailRecipient22
-
-schemas.base.BaseSchema24
-.
-(schemas.email.EmailCampaignStatsResponse26
-)
-#schemas.email.EmailCampaignStepBase28
-)
-#schemas.email.EmailRecipientSummary30
--
-'schemas.email.EmailCampaignStepResponse32
-$
-schemas.base.TimestampedSchema34
-%
-schemas.email.EmailCampaignBase36
-&
- schemas.email.EmailEventResponse38
-%
-schemas.email.EmailTemplateBase40
-'
-!schemas.email.EmailTemplateUpdate42
-)
-#schemas.email.EmailTemplateResponse44
-)
-#schemas.email.EmailCampaignResponse46
-8
-2schemas.email.EmailCampaignResponse.parse_datetime48
-+
-%schemas.email.EmailCampaignStepCreate50
-'
-!schemas.email.EmailCampaignUpdate52
-0
-*schemas.email.EmailCampaignScheduleRequest54
-C
-=schemas.email.EmailCampaignScheduleRequest.parse_scheduled_at56
-'
-!schemas.email.EmailCampaignCreate58
-%
-schemas.email.EmailSendResponse60
-)
-#schemas.email.EmailSendFilterParams62
-'
-!schemas.email.EmailTemplateCreate64
-+
-%schemas.email.EmailCampaignStepUpdate66
--
-'schemas.email.EmailCampaignStatsVariant68J
-
-8
-89jÍ
- 
-10
-10115 *
-8 (
-
-13
-13125
-
-15
-15145
-
-17
-17165
-
-19
-19185
-
-21
-21205
-
-23
-23226 210
-
-25
-25246
-
-27
-27266 210
-
-29
-29286 210
-
-31
-31306 210
-
-33
-33326 210
-
-35
-35346
-
-37
-37366 210
-
-39
-39386 210
-
-41
-41406 210
-
-43
-43426 210
-
-45
-45446 210
-
-47
-47466 210
-
-49
-49487 247
-
-51
-51506 210
-
-53
-53526 210
-
-55
-55546 210
-
-57
-57567 255
-
-59
-59586 210
-
-61
-61606 210
-
-63
-63626 210
-
-65
-65646 210
-
-67
-67666 210
-
-69
-69686 210rî
-
-10131*
-8 (
-
-10151*
-8 (-
-
-10171*
-8 (,
-
-10191*
-8 (
-
-10211*
-8 (7
-
-23252*
-8l l(
-
-27252*
-8Š Š(!
-
-29252*
-8@ @(
-
-31252*
-8Â Â(
-
-33352*
-8f f( 
-
-33292*
-8f f( 
-
-37252*
-8y y(
-
-39352*
-8ï ï(
-
-41252*
-8 (
-
-43252*
-8' '(
-
-45352*
-86 6(
-
-45412*
-86 6(
-
-47352*
-8­ ­(
-
-47372*
-8­ ­(
-
-51292*
-8R R(
-
-53252*
-8• •(
-
-55252*
-8Ê Ê(#
-
-59372*
-8Ž Ž(
-
-61352*
-8Ü Ü(
-
-63252*
-8   (
-
-65412*
-8 (
-
-67252*
-8X X(
-
-69252*
-8ý ý( 

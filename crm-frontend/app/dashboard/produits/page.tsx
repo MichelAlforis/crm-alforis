@@ -6,6 +6,8 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useProduits } from '@/hooks/useProduits'
+import { useFilters } from '@/hooks/useFilters'
+import { usePagination } from '@/hooks/usePagination'
 import { Card, Button, Table, Input, Alert, AdvancedFilters } from '@/components/shared'
 import { ProduitType, ProduitStatus } from '@/lib/types'
 
@@ -22,26 +24,21 @@ const TYPE_LABELS: Record<string, string> = {
   Autre: 'Autre',
 }
 
+interface ProduitFilters {
+  type: string
+  status: string
+}
+
 export default function ProduitsPage() {
   const [searchText, setSearchText] = useState('')
-  const [filtersState, setFiltersState] = useState({
-    type: '',
-    status: '',
-  })
+  const pagination = usePagination({ initialLimit: 20 })
 
-  const handleFilterChange = (key: string, value: unknown) => {
-    if (Array.isArray(value)) return
-    setFiltersState((prev) => ({
-      ...prev,
-      [key]: value as string,
-    }))
-  }
-
-  const resetFilters = () =>
-    setFiltersState({
+  const filters = useFilters<ProduitFilters>({
+    initialValues: {
       type: '',
       status: '',
-    })
+    },
+  })
 
   const advancedFilterDefinitions = [
     {
@@ -75,8 +72,8 @@ export default function ProduitsPage() {
 
   const { data, isLoading, error } = useProduits({
     limit: 100,
-    type: filtersState.type || undefined,
-    status: filtersState.status || undefined,
+    type: filters.values.type || undefined,
+    status: filters.values.status || undefined,
   })
 
   // Filtrer côté client par nom/ISIN + filtres avancés
@@ -87,12 +84,12 @@ export default function ProduitsPage() {
       produit.isin_code?.toLowerCase().includes(search) ||
       false
 
-    const matchesType = filtersState.type
-      ? produit.type === filtersState.type
+    const matchesType = filters.values.type
+      ? produit.type === filters.values.type
       : true
 
-    const matchesStatus = filtersState.status
-      ? produit.status === filtersState.status
+    const matchesStatus = filters.values.status
+      ? produit.status === filters.values.status
       : true
 
     return matchesSearch && matchesType && matchesStatus
@@ -170,9 +167,9 @@ export default function ProduitsPage() {
           />
           <AdvancedFilters
             filters={advancedFilterDefinitions}
-            values={filtersState}
-            onChange={handleFilterChange}
-            onReset={resetFilters}
+            values={filters.values}
+            onChange={filters.handleChange}
+            onReset={filters.reset}
           />
         </div>
       </Card>
@@ -182,9 +179,16 @@ export default function ProduitsPage() {
       <Card>
         <Table
           columns={columns}
-          data={filteredData || []}
+          data={filteredData?.slice(pagination.skip, pagination.skip + pagination.limit) || []}
           isLoading={isLoading}
           isEmpty={!filteredData || filteredData.length === 0}
+          pagination={{
+            total: filteredData?.length || 0,
+            skip: pagination.skip,
+            limit: pagination.limit,
+            onPageChange: pagination.setSkip,
+            onLimitChange: pagination.setLimit,
+          }}
         />
       </Card>
 

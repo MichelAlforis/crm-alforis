@@ -1,10 +1,12 @@
 """Service pour gérer les participants aux activités."""
 
+from datetime import datetime
 from typing import List, Optional
-from sqlalchemy.orm import Session
-from sqlalchemy import desc
 
-from services.base import BaseService
+from sqlalchemy import desc
+from sqlalchemy.orm import Session
+
+from core.exceptions import ResourceNotFound, ValidationError
 from models.activity_participant import ActivityParticipant
 from models.organisation_activity import OrganisationActivity, OrganisationActivityType
 from schemas.activity_participant import (
@@ -12,11 +14,12 @@ from schemas.activity_participant import (
     ActivityParticipantUpdate,
     ActivityWithParticipantsCreate,
 )
-from core.exceptions import ResourceNotFound, ValidationError
-from datetime import datetime
+from services.base import BaseService
 
 
-class ActivityParticipantService(BaseService[ActivityParticipant, ActivityParticipantCreate, ActivityParticipantUpdate]):
+class ActivityParticipantService(
+    BaseService[ActivityParticipant, ActivityParticipantCreate, ActivityParticipantUpdate]
+):
     """Service pour gérer les participants aux activités."""
 
     def __init__(self, db: Session):
@@ -24,15 +27,14 @@ class ActivityParticipantService(BaseService[ActivityParticipant, ActivityPartic
 
     async def get_by_activity(self, activity_id: int) -> List[ActivityParticipant]:
         """Récupère tous les participants d'une activité."""
-        return self.db.query(ActivityParticipant).filter(
-            ActivityParticipant.activity_id == activity_id
-        ).all()
+        return (
+            self.db.query(ActivityParticipant)
+            .filter(ActivityParticipant.activity_id == activity_id)
+            .all()
+        )
 
     async def get_by_person(
-        self,
-        person_id: int,
-        limit: int = 5,
-        activity_types: Optional[List[str]] = None
+        self, person_id: int, limit: int = 5, activity_types: Optional[List[str]] = None
     ) -> List[ActivityParticipant]:
         """
         Récupère les participations récentes d'une personne.
@@ -54,17 +56,10 @@ class ActivityParticipantService(BaseService[ActivityParticipant, ActivityPartic
         if activity_types:
             query = query.filter(OrganisationActivity.type.in_(activity_types))
 
-        return (
-            query.order_by(desc(OrganisationActivity.occurred_at))
-            .limit(limit)
-            .all()
-        )
+        return query.order_by(desc(OrganisationActivity.occurred_at)).limit(limit).all()
 
     async def get_by_organisation(
-        self,
-        organisation_id: int,
-        limit: int = 5,
-        activity_types: Optional[List[str]] = None
+        self, organisation_id: int, limit: int = 5, activity_types: Optional[List[str]] = None
     ) -> List[OrganisationActivity]:
         """
         Récupère les activités récentes d'une organisation.
@@ -84,16 +79,10 @@ class ActivityParticipantService(BaseService[ActivityParticipant, ActivityPartic
         if activity_types:
             query = query.filter(OrganisationActivity.type.in_(activity_types))
 
-        return (
-            query.order_by(desc(OrganisationActivity.occurred_at))
-            .limit(limit)
-            .all()
-        )
+        return query.order_by(desc(OrganisationActivity.occurred_at)).limit(limit).all()
 
     async def create_activity_with_participants(
-        self,
-        activity_data: ActivityWithParticipantsCreate,
-        created_by: Optional[int] = None
+        self, activity_data: ActivityWithParticipantsCreate, created_by: Optional[int] = None
     ) -> OrganisationActivity:
         """
         Crée une activité avec ses participants en une transaction.
@@ -119,7 +108,7 @@ class ActivityParticipantService(BaseService[ActivityParticipant, ActivityPartic
             description=activity_data.description,
             activity_metadata=activity_data.metadata,
             created_by=created_by,
-            occurred_at=activity_data.occurred_at or datetime.utcnow()
+            occurred_at=activity_data.occurred_at or datetime.utcnow(),
         )
 
         self.db.add(activity)
@@ -142,7 +131,7 @@ class ActivityParticipantService(BaseService[ActivityParticipant, ActivityPartic
                 external_role=participant_data.external_role,
                 is_organizer=participant_data.is_organizer,
                 attendance_status=participant_data.attendance_status,
-                notes=participant_data.notes
+                notes=participant_data.notes,
             )
             self.db.add(participant)
 
@@ -151,15 +140,15 @@ class ActivityParticipantService(BaseService[ActivityParticipant, ActivityPartic
         return activity
 
     async def add_participant_to_activity(
-        self,
-        activity_id: int,
-        participant_data: ActivityParticipantCreate
+        self, activity_id: int, participant_data: ActivityParticipantCreate
     ) -> ActivityParticipant:
         """Ajoute un participant à une activité existante."""
         # Vérifier que l'activité existe
-        activity = self.db.query(OrganisationActivity).filter(
-            OrganisationActivity.id == activity_id
-        ).first()
+        activity = (
+            self.db.query(OrganisationActivity)
+            .filter(OrganisationActivity.id == activity_id)
+            .first()
+        )
 
         if not activity:
             raise ResourceNotFound(f"Activity {activity_id} not found")

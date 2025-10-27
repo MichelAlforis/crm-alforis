@@ -15,6 +15,7 @@ import Sidebar from '@/components/shared/Sidebar'
 import QueryProvider from '@/components/providers/QueryProvider'
 import InstallPrompt from '@/components/pwa/InstallPrompt'
 import OfflineIndicator from '@/components/pwa/OfflineIndicator'
+import { OnboardingTour } from '@/components/onboarding/OnboardingTour'
 import { Loader2 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -25,7 +26,6 @@ export default function DashboardLayout({
 }) {
   const { isAuthenticated, isLoading } = useAuth()
   const router = useRouter()
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -61,42 +61,34 @@ export default function DashboardLayout({
   // Main dashboard layout
   return (
     <QueryProvider>
-      <div className="dashboard-layout flex">
-        {/* Sidebar Navigation */}
-        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <OnboardingTour>
+        <div className="dashboard-layout flex">
+          {/* Sidebar Navigation - État géré par le hook useSidebar */}
+          <Sidebar />
 
-        {/* Main Content Area */}
-        <div
-          className={clsx(
-            'flex flex-col min-h-screen flex-1 transition-all duration-300 ease-in-out',
-            'w-full lg:w-auto'
-          )}
-        >
-          {/* Top Navbar */}
-          <Navbar
-            onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          />
-
-          {/* Page Content */}
-          <main className="flex-1 overflow-auto bg-gray-50">
-            <div className="dashboard-content animate-fadeIn">
-              {children}
-            </div>
-          </main>
-        </div>
-
-        {/* Mobile Sidebar Backdrop */}
-        {isSidebarOpen && (
+          {/* Main Content Area */}
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 lg:hidden animate-in fade-in duration-200"
-            onClick={() => setIsSidebarOpen(false)}
-          />
-        )}
+            className={clsx(
+              'flex flex-col min-h-screen flex-1 transition-all duration-300 ease-in-out',
+              'w-full lg:w-auto'
+            )}
+          >
+            {/* Top Navbar */}
+            <Navbar />
 
-        {/* PWA Components */}
-        <InstallPrompt />
-        <OfflineIndicator />
-      </div>
+            {/* Page Content */}
+            <main className="flex-1 overflow-auto bg-gray-50">
+              <div className="dashboard-content animate-fadeIn">
+                {children}
+              </div>
+            </main>
+          </div>
+
+          {/* PWA Components */}
+          <InstallPrompt />
+          <OfflineIndicator />
+        </div>
+      </OnboardingTour>
     </QueryProvider>
   )
 }

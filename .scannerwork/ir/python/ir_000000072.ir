@@ -1,32 +1,0 @@
-
-±§"A decorator to make `parse_float` safe.
-
-    `parse_float` must not return dicts or lists, because these types
-    would be mixed with parsed TOML tables and arrays, thus confusing
-    the parser. The returned decorated callable raises `ValueError`
-    instead of returning illegal types.
-    "strparse_float
-ð ð(1	float"u#
-!
-
-‚ ‚("#unknown-value#,
-*
-
-ù ù("
-#binop ==#2==:Bbool "
-
-ù ù( *
-ù ù("
-
-ú ú(" *
-(
-
-ü ‚(%closure"#new-object#/
--
-
-ü ‚("#set-field# parse_float:-
-+
-
-ü ‚("?python-partial-apply?:
-
-‚ ‚(*€/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/tomli/_parser.py

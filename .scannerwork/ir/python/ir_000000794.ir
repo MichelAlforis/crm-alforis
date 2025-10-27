@@ -1,17 +1,0 @@
-
-¾´"Returns the locations found via self.index_urls
-
-        Checks the url_name on the main (first in the list) index and
-        use this url_name to produce all locations
-        "strselfj! j(%project_namej' j(8"è!
-
-~ ~(?"#unknown-value#(
-&
-q ~(%closure"#new-object#.
-,
-q ~("#set-field# project_name:+
-)
-q ~("?python-partial-apply?:,
-*
-~ ~(?"?python-unknown?:Blist
-~ ~(?*ˆ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/models/search_scope.py

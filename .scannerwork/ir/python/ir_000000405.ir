@@ -1,26 +1,0 @@
-
-¨¢"
-    Helper pour recherche globale rapide
-
-    Args:
-        query: Terme de recherche
-        db: Session database
-        current_user: Utilisateur courant
-        entity_types: Types √† chercher
-        limit_per_type: Limite par type
-
-    Returns:
-        R√©sultats de recherche
-    "strquery
-Ù Ù(db
-ı ı(current_user
-ˆ ˆ(entity_types
-˜ ˜(,limit_per_type
-¯ ¯("T@
->
-
-á ç("'
-core.search.SearchService
-search_all:
-
-á ç(*K/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/core/search.py

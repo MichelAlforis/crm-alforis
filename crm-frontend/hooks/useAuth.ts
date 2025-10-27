@@ -8,6 +8,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { apiClient } from '@/lib/api'
+import { logger, logError } from '@/lib/logger'
 import { LoginRequest, FormState, AuthState } from '@/lib/types'
 
 export function useAuth() {
@@ -43,7 +44,7 @@ export function useAuth() {
           user: profile || undefined,
         })
       } catch (error: any) {
-        console.error('Failed to fetch current user:', error)
+        logError('useAuth', error, { context: 'Failed to fetch current user' })
         apiClient.clearToken()
         if (!isMounted) return
         setState({
@@ -51,23 +52,27 @@ export function useAuth() {
           isLoading: false,
           error: 'Session expirée, veuillez vous reconnecter',
         })
-        router.push('/auth/login')
+        // Don't redirect if already on login page to avoid infinite loop
+        if (typeof window !== 'undefined' && !window.location.pathname.includes('/auth/login')) {
+          router.push('/auth/login')
+        }
       }
     })()
 
     return () => {
       isMounted = false
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // ============= LOGIN =============
   const login = useCallback(async (credentials: LoginRequest) => {
-    console.log('🔐 Login attempt:', credentials.email)
+    logger.log('🔐 Login attempt:', credentials.email)
     setFormState({ isSubmitting: true })
     try {
-      console.log('📡 Calling API...')
+      logger.log('📡 Calling API...')
       const response = await apiClient.login(credentials)
-      console.log('✅ Login successful:', response)
+      logger.log('✅ Login successful:', response)
       apiClient.setToken(response.access_token)
 
       const profile = await apiClient.getCurrentUser()
@@ -78,11 +83,14 @@ export function useAuth() {
       })
       setFormState({ isSubmitting: false, success: true })
 
-      console.log('🔄 Redirecting to dashboard...')
-      // Redirect to dashboard
-      router.push('/dashboard')
+      // Check for redirect parameter in URL
+      const params = new URLSearchParams(window.location.search)
+      const redirectTo = params.get('redirect') || '/dashboard'
+
+      logger.log('🔄 Redirecting to:', redirectTo)
+      router.push(redirectTo)
     } catch (error: any) {
-      console.error('❌ Login error:', error)
+      logError('useAuth.login', error, { email: credentials.email })
       const errorMessage = error.detail || 'Erreur de connexion'
       setState({
         isAuthenticated: false,

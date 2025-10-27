@@ -5,8 +5,11 @@ Lance quand PostgreSQL est disponible
 
 import sys
 from pathlib import Path
+
 from sqlalchemy import create_engine, text
+
 from core.config import settings
+
 
 def apply_migration():
     """Applique la migration 001_add_ai_agent_tables.sql"""
@@ -20,7 +23,7 @@ def apply_migration():
         print(f"❌ Fichier de migration non trouvé: {migration_file}")
         sys.exit(1)
 
-    with open(migration_file, 'r') as f:
+    with open(migration_file, "r") as f:
         sql_content = f.read()
 
     # Connexion BDD

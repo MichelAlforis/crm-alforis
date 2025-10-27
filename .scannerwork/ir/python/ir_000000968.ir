@@ -1,13 +1,0 @@
-
-·­"Given a requirement name, return the installed distributions.
-
-        The name may not be normalized. The implementation must canonicalize
-        it for lookup.
-        "strself
-Î Î(name
-Î Î(("S?
-=
-
-Ô Ô(#"NotImplementedError*BNotImplementedError2
-
-Ô Ô(#*‚/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/metadata/base.py

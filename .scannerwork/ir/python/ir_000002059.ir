@@ -1,36 +1,0 @@
-
-
-"__name__"str
-	"__doc__"str
-
-0intself
-„ „(list"…0
-.
-
-… …('attrs"#unknown-value#Blist(
-&
-
-… …('"
-#is-exact#:Bbool
-
-
-… …('"
-#assume#::
-8
-
-… …('	"#set-field# __collection_size:Bint(
-&
-
-… …('
-"#array-add-last#:(
-&
-
-… …('"#array-add-last#:4
-2
-
-† †(?attrs"?python-unknown?:Blist.
-,
-
-† †(?attrs"	#binop +#*2+:
-
-‡ ‡(*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/urllib3/packages/six.py

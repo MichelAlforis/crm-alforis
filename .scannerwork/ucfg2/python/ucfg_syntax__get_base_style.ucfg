@@ -1,53 +1,0 @@
-
-.pip._vendor.rich.syntax.Syntax._get_base_styleŠ
-~/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/syntax.py¥ ¥("2*­
-2
-¦ ¦(!p
-n
-
-§= §(R
-%1"__id*T
-
-__unknown_file (8*6 
-pip._vendor.rich.syntax.Syntax"
-background_stylef
-d
-
-§ §(#
-%2"__id*J
-
-__unknown_file (.*, 
-pip._vendor.rich.syntax.Syntax"
-_theme‰†
-
-§ §(:
-%3"8pip._vendor.rich.syntax.SyntaxTheme.get_background_style*"
-
-__unknown_file (
-
-%22get_background_styleJ
-H
-
-§ §(R
-%4"__concat*
-
-§ §(:
-
-%3*
-
-§= §(R
-
-%1I
-G
-
-§ §(R
-default_style"__id*"
-
-__unknown_file (
-
-%4"
-
-¨ ¨(
-
-default_styleB" 
-pip._vendor.rich.syntax.SyntaxH

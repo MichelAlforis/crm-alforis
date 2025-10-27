@@ -14,8 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft, Mail, Users, Filter, Eye, Send } from "lucide-react";
+import { ArrowLeft, Mail, Users, Send } from "lucide-react";
 import { useToast } from "@/hooks/useToast";
 import { Badge } from "@/components/ui/badge";
 

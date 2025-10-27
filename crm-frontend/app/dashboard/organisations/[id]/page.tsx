@@ -21,6 +21,7 @@ import type { OrganisationUpdate } from '@/lib/types'
 import { OrganisationTimeline } from '@/components/organisations/OrganisationTimeline'
 import { useToast } from '@/hooks/useToast'
 import { CampaignSubscriptionManager } from '@/components/email/CampaignSubscriptionManager'
+import { ActivityTab } from '@/components/interactions/ActivityTab'
 
 const CATEGORY_LABELS: Record<string, string> = {
   Institution: 'Institution',
@@ -41,10 +42,14 @@ const STATUS_LABELS: Record<string, string> = {
   RESILIE: 'Résilié',
 }
 
+type TabType = 'informations' | 'activite'
+
 export default function OrganisationDetailPage() {
   const params = useParams<{ id?: string }>()
   const router = useRouter()
   const { showToast } = useToast()
+
+  const [activeTab, setActiveTab] = useState<TabType>('informations')
 
   const organisationId = React.useMemo(() => {
     const rawId = params?.id
@@ -284,8 +289,37 @@ export default function OrganisationDetailPage() {
         </div>
       </div>
 
-      {/* Informations générales */}
-      <Card>
+      {/* Tabs */}
+      <div className="border-b border-gray-200">
+        <nav className="flex gap-8">
+          <button
+            onClick={() => setActiveTab('informations')}
+            className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${
+              activeTab === 'informations'
+                ? 'border-bleu text-bleu'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Informations
+          </button>
+          <button
+            onClick={() => setActiveTab('activite')}
+            className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${
+              activeTab === 'activite'
+                ? 'border-bleu text-bleu'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Activité
+          </button>
+        </nav>
+      </div>
+
+      {/* Tab Content - Informations */}
+      {activeTab === 'informations' && (
+        <>
+          {/* Informations générales */}
+          <Card>
         <h2 className="text-xl font-semibold mb-4">Informations générales</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -425,15 +459,22 @@ export default function OrganisationDetailPage() {
         </Card>
       )}
 
-      {organisationId && <OrganisationTimeline organisationId={organisationId} />}
+          {organisationId && <OrganisationTimeline organisationId={organisationId} />}
 
-      {/* Campaign Subscriptions */}
-      {organisationId && (
-        <CampaignSubscriptionManager
-          entityType="organisation"
-          entityId={organisationId}
-          entityName={organisation.name}
-        />
+          {/* Campaign Subscriptions */}
+          {organisationId && (
+            <CampaignSubscriptionManager
+              entityType="organisation"
+              entityId={organisationId}
+              entityName={organisation.name}
+            />
+          )}
+        </>
+      )}
+
+      {/* Tab Content - Activité */}
+      {activeTab === 'activite' && organisationId && (
+        <ActivityTab orgId={organisationId} canCreate={true} />
       )}
 
       {/* Modal d'édition */}

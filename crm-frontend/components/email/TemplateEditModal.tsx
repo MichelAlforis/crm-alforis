@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/shared/Input'
 import { Alert } from '@/components/shared/Alert'
 import { useEmailTemplates } from '@/hooks/useEmailAutomation'
+import { useViewportToggle } from '@/hooks/useViewportToggle'
 import { logger } from '@/lib/logger'
 
 interface EmailTemplate {
@@ -36,7 +37,10 @@ export function TemplateEditModal({
   onSuccess,
 }: TemplateEditModalProps) {
   const { updateTemplate } = useEmailTemplates()
-  const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop')
+  const viewport = useViewportToggle({
+    defaultMode: 'desktop',
+    modes: ['desktop', 'mobile'],
+  })
   const [formData, setFormData] = useState({
     name: '',
     subject: '',
@@ -122,16 +126,16 @@ export function TemplateEditModal({
                 <div className="hidden md:flex items-center gap-1 md:gap-2">
                   <Button
                     size="sm"
-                    variant={viewMode === 'desktop' ? 'default' : 'outline'}
-                    onClick={() => setViewMode('desktop')}
+                    variant={viewport.isMode('desktop') ? 'default' : 'outline'}
+                    onClick={() => viewport.setMode('desktop')}
                     title="Vue Desktop"
                   >
                     <Monitor className="w-4 h-4" />
                   </Button>
                   <Button
                     size="sm"
-                    variant={viewMode === 'mobile' ? 'default' : 'outline'}
-                    onClick={() => setViewMode('mobile')}
+                    variant={viewport.isMode('mobile') ? 'default' : 'outline'}
+                    onClick={() => viewport.setMode('mobile')}
                     title="Vue Mobile"
                   >
                     <Smartphone className="w-4 h-4" />
@@ -247,8 +251,8 @@ export function TemplateEditModal({
                 <div className="flex md:hidden items-center gap-1 bg-white dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700">
                   <Button
                     size="sm"
-                    variant={viewMode === 'desktop' ? 'default' : 'ghost'}
-                    onClick={() => setViewMode('desktop')}
+                    variant={viewport.isMode('desktop') ? 'default' : 'ghost'}
+                    onClick={() => viewport.setMode('desktop')}
                     title="Vue Desktop"
                     className="h-7 px-2"
                   >
@@ -256,8 +260,8 @@ export function TemplateEditModal({
                   </Button>
                   <Button
                     size="sm"
-                    variant={viewMode === 'mobile' ? 'default' : 'ghost'}
-                    onClick={() => setViewMode('mobile')}
+                    variant={viewport.isMode('mobile') ? 'default' : 'ghost'}
+                    onClick={() => viewport.setMode('mobile')}
                     title="Vue Mobile"
                     className="h-7 px-2"
                   >
@@ -266,7 +270,7 @@ export function TemplateEditModal({
                 </div>
               </div>
 
-              <div className="mx-auto" style={{ maxWidth: viewMode === 'desktop' ? '100%' : '375px' }}>
+              <div className="mx-auto" style={{ maxWidth: viewport.maxWidth }}>
                 {/* Email Preview Frame */}
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden">
                   {/* Fake Email Client Header */}

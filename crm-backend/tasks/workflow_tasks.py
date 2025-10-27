@@ -3,12 +3,14 @@ Tâches Celery pour l'exécution de workflows
 
 Ces tâches sont exécutées de manière asynchrone par Celery workers
 """
+
 import logging
 
 try:
     from celery import Task
     from celery.utils.log import get_task_logger
 except ImportError:  # pragma: no cover
+
     class Task:  # Minimal stub
         def __init__(self, *args, **kwargs):
             pass
@@ -21,20 +23,23 @@ except ImportError:  # pragma: no cover
 
     def get_task_logger(name):
         return logging.getLogger(name)
-from sqlalchemy.orm import Session
-from datetime import datetime, timezone, timedelta
-from typing import Dict, Any, Optional
 
-from tasks.celery_app import celery_app
+
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, Optional
+
+from sqlalchemy.orm import Session
+
 from core.database import get_db
 from models.workflow import (
     Workflow,
     WorkflowExecution,
+    WorkflowExecutionStatus,
     WorkflowStatus,
     WorkflowTriggerType,
-    WorkflowExecutionStatus
 )
 from services.workflow_engine import WorkflowEngine
+from tasks.celery_app import celery_app
 
 logger = get_task_logger(__name__)
 
@@ -44,6 +49,7 @@ class DatabaseTask(Task):
     Classe de base pour les tâches utilisant la base de données
     Gère automatiquement la session DB
     """
+
     _db: Session = None
 
     @property
@@ -63,14 +69,14 @@ class DatabaseTask(Task):
     base=DatabaseTask,
     name="tasks.workflow_tasks.execute_workflow_async",
     max_retries=3,
-    default_retry_delay=60
+    default_retry_delay=60,
 )
 def execute_workflow_async(
     self,
     workflow_id: int,
     trigger_entity_type: str,
     trigger_entity_id: int,
-    trigger_data: Optional[Dict[str, Any]] = None
+    trigger_data: Optional[Dict[str, Any]] = None,
 ):
     """
     Exécute un workflow de manière asynchrone
@@ -84,7 +90,9 @@ def execute_workflow_async(
     Cette tâche est appelée par les hooks d'événements (organisation créée, deal modifié, etc.)
     """
     try:
-        logger.info(f"Exécution workflow #{workflow_id} pour {trigger_entity_type}#{trigger_entity_id}")
+        logger.info(
+            f"Exécution workflow #{workflow_id} pour {trigger_entity_type}#{trigger_entity_id}"
+        )
 
         # Charger le workflow
         workflow = self.db.query(Workflow).filter(Workflow.id == workflow_id).first()
@@ -102,7 +110,7 @@ def execute_workflow_async(
             workflow=workflow,
             trigger_entity_type=trigger_entity_type,
             trigger_entity_id=trigger_entity_id,
-            trigger_data=trigger_data
+            trigger_data=trigger_data,
         )
 
         logger.info(f"Workflow #{workflow_id} exécuté: {execution.status}")
@@ -111,26 +119,24 @@ def execute_workflow_async(
             "workflow_id": workflow_id,
             "execution_id": execution.id,
             "status": execution.status.value,
-            "duration_seconds": execution.duration_seconds
+            "duration_seconds": execution.duration_seconds,
         }
 
     except Exception as exc:
         logger.error(f"Erreur exécution workflow #{workflow_id}: {str(exc)}")
         # Retry avec backoff exponentiel
-        raise self.retry(exc=exc, countdown=60 * (2 ** self.request.retries))
+        raise self.retry(exc=exc, countdown=60 * (2**self.request.retries))
 
 
 @celery_app.task(
-    bind=True,
-    base=DatabaseTask,
-    name="tasks.workflow_tasks.trigger_workflows_for_event"
+    bind=True, base=DatabaseTask, name="tasks.workflow_tasks.trigger_workflows_for_event"
 )
 def trigger_workflows_for_event(
     self,
     event_type: str,
     entity_type: str,
     entity_id: int,
-    event_data: Optional[Dict[str, Any]] = None
+    event_data: Optional[Dict[str, Any]] = None,
 ):
     """
     Déclenche tous les workflows correspondant à un événement
@@ -181,20 +187,14 @@ def trigger_workflows_for_event(
                 workflow_id=workflow.id,
                 trigger_entity_type=entity_type,
                 trigger_entity_id=entity_id,
-                trigger_data=event_data
+                trigger_data=event_data,
             )
 
-            results.append({
-                "workflow_id": workflow.id,
-                "workflow_name": workflow.name,
-                "task_id": task.id
-            })
+            results.append(
+                {"workflow_id": workflow.id, "workflow_name": workflow.name, "task_id": task.id}
+            )
 
-        return {
-            "event_type": event_type,
-            "workflows_triggered": len(results),
-            "results": results
-        }
+        return {"event_type": event_type, "workflows_triggered": len(results), "results": results}
 
     except Exception as exc:
         logger.error(f"Erreur déclenchement workflows pour {event_type}: {str(exc)}")
@@ -202,9 +202,7 @@ def trigger_workflows_for_event(
 
 
 @celery_app.task(
-    bind=True,
-    base=DatabaseTask,
-    name="tasks.workflow_tasks.check_inactivity_workflows"
+    bind=True, base=DatabaseTask, name="tasks.workflow_tasks.check_inactivity_workflows"
 )
 def check_inactivity_workflows(self):
     """
@@ -239,13 +237,13 @@ def check_inactivity_workflows(self):
                 cutoff_date = datetime.now(timezone.utc) - timedelta(days=inactivity_days)
 
                 # Sous-requête pour trouver la dernière activité par organisation
-                from sqlalchemy import func, and_
+                from sqlalchemy import and_, func
                 from sqlalchemy.orm import aliased
 
                 last_activity = (
                     self.db.query(
                         OrganisationActivity.organisation_id,
-                        func.max(OrganisationActivity.created_at).label("last_activity_date")
+                        func.max(OrganisationActivity.created_at).label("last_activity_date"),
                     )
                     .group_by(OrganisationActivity.organisation_id)
                     .subquery()
@@ -258,13 +256,19 @@ def check_inactivity_workflows(self):
                     .filter(
                         and_(
                             last_activity.c.last_activity_date < cutoff_date,
-                            Organisation.pipeline_stage.in_(trigger_config.get("pipeline_stages", ["PROPOSITION", "QUALIFICATION"]))
+                            Organisation.pipeline_stage.in_(
+                                trigger_config.get(
+                                    "pipeline_stages", ["PROPOSITION", "QUALIFICATION"]
+                                )
+                            ),
                         )
                     )
                     .all()
                 )
 
-                logger.info(f"Trouvé {len(inactive_orgs)} organisations inactives depuis {inactivity_days} jours")
+                logger.info(
+                    f"Trouvé {len(inactive_orgs)} organisations inactives depuis {inactivity_days} jours"
+                )
 
                 # Déclencher le workflow pour chaque organisation inactive
                 for org in inactive_orgs:
@@ -272,27 +276,20 @@ def check_inactivity_workflows(self):
                         workflow_id=workflow.id,
                         trigger_entity_type="organisation",
                         trigger_entity_id=org.id,
-                        trigger_data={"inactivity_days": inactivity_days}
+                        trigger_data={"inactivity_days": inactivity_days},
                     )
                     total_triggered += 1
 
         logger.info(f"Workflows d'inactivité déclenchés: {total_triggered}")
 
-        return {
-            "workflows_checked": len(workflows),
-            "total_triggered": total_triggered
-        }
+        return {"workflows_checked": len(workflows), "total_triggered": total_triggered}
 
     except Exception as exc:
         logger.error(f"Erreur vérification workflows d'inactivité: {str(exc)}")
         raise
 
 
-@celery_app.task(
-    bind=True,
-    base=DatabaseTask,
-    name="tasks.workflow_tasks.run_scheduled_workflows"
-)
+@celery_app.task(bind=True, base=DatabaseTask, name="tasks.workflow_tasks.run_scheduled_workflows")
 def run_scheduled_workflows(self, frequency: str = "daily"):
     """
     Exécute les workflows planifiés
@@ -311,7 +308,8 @@ def run_scheduled_workflows(self, frequency: str = "daily"):
 
         # Filtrer par fréquence
         matching_workflows = [
-            w for w in workflows
+            w
+            for w in workflows
             if w.trigger_config and w.trigger_config.get("schedule") == frequency
         ]
 
@@ -324,31 +322,21 @@ def run_scheduled_workflows(self, frequency: str = "daily"):
                 workflow_id=workflow.id,
                 trigger_entity_type="system",
                 trigger_entity_id=0,
-                trigger_data={"scheduled": True, "frequency": frequency}
+                trigger_data={"scheduled": True, "frequency": frequency},
             )
 
-            results.append({
-                "workflow_id": workflow.id,
-                "workflow_name": workflow.name,
-                "task_id": task.id
-            })
+            results.append(
+                {"workflow_id": workflow.id, "workflow_name": workflow.name, "task_id": task.id}
+            )
 
-        return {
-            "frequency": frequency,
-            "workflows_executed": len(results),
-            "results": results
-        }
+        return {"frequency": frequency, "workflows_executed": len(results), "results": results}
 
     except Exception as exc:
         logger.error(f"Erreur exécution workflows planifiés ({frequency}): {str(exc)}")
         raise
 
 
-@celery_app.task(
-    bind=True,
-    base=DatabaseTask,
-    name="tasks.workflow_tasks.cleanup_old_executions"
-)
+@celery_app.task(bind=True, base=DatabaseTask, name="tasks.workflow_tasks.cleanup_old_executions")
 def cleanup_old_executions(self, days_to_keep: int = 90):
     """
     Nettoie les anciennes exécutions de workflows
@@ -371,18 +359,13 @@ def cleanup_old_executions(self, days_to_keep: int = 90):
         )
 
         # Supprimer les anciennes exécutions
-        self.db.query(WorkflowExecution).filter(
-            WorkflowExecution.created_at < cutoff_date
-        ).delete()
+        self.db.query(WorkflowExecution).filter(WorkflowExecution.created_at < cutoff_date).delete()
 
         self.db.commit()
 
         logger.info(f"Nettoyage terminé: {count} exécutions supprimées")
 
-        return {
-            "cutoff_date": cutoff_date.isoformat(),
-            "deleted_count": count
-        }
+        return {"cutoff_date": cutoff_date.isoformat(), "deleted_count": count}
 
     except Exception as exc:
         logger.error(f"Erreur nettoyage exécutions: {str(exc)}")
@@ -390,11 +373,7 @@ def cleanup_old_executions(self, days_to_keep: int = 90):
         raise
 
 
-@celery_app.task(
-    bind=True,
-    base=DatabaseTask,
-    name="tasks.workflow_tasks.get_workflow_stats"
-)
+@celery_app.task(bind=True, base=DatabaseTask, name="tasks.workflow_tasks.get_workflow_stats")
 def get_workflow_stats(self, workflow_id: int):
     """
     Récupère les statistiques d'un workflow

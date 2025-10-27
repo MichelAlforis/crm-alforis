@@ -1,29 +1,0 @@
-
-"--requirement"str
-"-r"str
-\S"Install from the given requirements file. This option can be used multiple times."str
-
-	0int
-"append"str
-"file"str
-"requirements"strlist"ú)
-'
-
-· ·("#unknown-value#Blist(
-&
-
-· ·("
-#is-exact#:Bbool
-
-
-· ·("
-#assume#::
-8
-
-· ·(
-"#set-field# __collection_size:	Bint4
-2
-
-² »("Option:Boptparse.Option
-
-² »(*ƒ/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/cli/cmdoptions.py

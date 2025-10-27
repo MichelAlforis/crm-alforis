@@ -2,9 +2,9 @@
 Module Notifications - Système de notifications temps réel
 
 Ce module fournit:
-- WebSocket server pour notifications temps réel
+- WebSocket server pour notifications temps réel (multi-tenant safe)
 - Service de création et envoi de notifications
-- Intégration avec Redis Pub/Sub pour scalabilité
+- Rooms par org/user/resource avec heartbeat timeout
 - Helpers pour notifier les utilisateurs
 
 Usage:
@@ -21,120 +21,232 @@ Usage:
     )
 """
 
+from __future__ import annotations
+
+import asyncio
 import atexit
-from typing import Optional, List, Dict, Any, Union
-from datetime import datetime, timezone, timedelta
+import json
+import time
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, List, Optional, Set, Union
+
+from anyio import from_thread as anyio_from_thread
+from anyio.from_thread import BlockingPortal, start_blocking_portal
 from fastapi import WebSocket, WebSocketDisconnect
 from sqlalchemy.orm import Session
-import asyncio
-from anyio import from_thread as anyio_from_thread
-from anyio.from_thread import start_blocking_portal, BlockingPortal
 
 from models.notification import (
+    NOTIFICATION_TEMPLATES,
     Notification,
-    NotificationType,
     NotificationPriority,
-    NOTIFICATION_TEMPLATES
+    NotificationType,
 )
 from models.user import User
 
+# ============================================
+# WebSocket Connection Manager (Multi-Tenant)
+# ============================================
 
-# ============================================
-# WebSocket Connection Manager
-# ============================================
+HEARTBEAT_TIMEOUT_SEC = 90  # Ferme si pas d'activité depuis N sec
+HEARTBEAT_SWEEP_INTERVAL_SEC = 20  # Fréquence de vérification des timeouts
+
+
+class ClientMeta:
+    """Métadonnées d'un client WebSocket connecté"""
+
+    __slots__ = ("ws", "org_id", "user_id", "rooms", "last_seen")
+
+    def __init__(self, ws: WebSocket, org_id: int, user_id: int):
+        self.ws = ws
+        self.org_id = org_id
+        self.user_id = user_id
+        self.rooms: Set[str] = set()
+        self.last_seen: float = time.time()
+
 
 class ConnectionManager:
     """
-    Gestion des connexions WebSocket
+    Gestion des connexions WebSocket avec isolation multi-tenant
 
-    Permet de:
-    - Connecter/déconnecter des clients
-    - Envoyer des messages à un utilisateur spécifique
-    - Broadcaster des messages à tous les clients
+    Features:
+    - Rooms par org/user/resource (isolation tenant)
+    - Heartbeat timeout automatique (évite connexions zombies)
+    - Close codes explicites (1000/1001/1011)
+    - Envoi ciblé: user, org, room
     """
 
-    def __init__(self):
-        # Dict: user_id -> List[WebSocket]
-        self.active_connections: Dict[int, List[WebSocket]] = {}
+    def __init__(self) -> None:
+        # rooms -> clients
+        self.rooms: Dict[str, Set[ClientMeta]] = {}
+        # reverse index
+        self.clients: Dict[WebSocket, ClientMeta] = {}
+        # surveillance heartbeat
+        self._sweeper_task: Optional[asyncio.Task] = None
+        self._lock = asyncio.Lock()
 
-    async def connect(self, websocket: WebSocket, user_id: int):
+    async def start(self) -> None:
+        """Démarre le sweeper de heartbeat si pas déjà lancé"""
+        if self._sweeper_task is None or self._sweeper_task.done():
+            self._sweeper_task = asyncio.create_task(self._heartbeat_sweeper())
+
+    async def stop(self) -> None:
+        """Arrête le sweeper de heartbeat"""
+        if self._sweeper_task:
+            self._sweeper_task.cancel()
+            self._sweeper_task = None
+
+    async def accept(self, ws: WebSocket, org_id: int, user_id: int) -> ClientMeta:
         """
-        Connecte un client WebSocket
+        Accepte une connexion WebSocket et crée les rooms de base
 
         Args:
-            websocket: Connexion WebSocket
+            ws: WebSocket
+            org_id: ID de l'organisation
             user_id: ID de l'utilisateur
+
+        Returns:
+            ClientMeta: Métadonnées du client
         """
-        await websocket.accept()
+        await ws.accept()
+        meta = ClientMeta(ws, org_id, user_id)
 
-        if user_id not in self.active_connections:
-            self.active_connections[user_id] = []
+        async with self._lock:
+            self.clients[ws] = meta
+            # Rooms de base
+            await self._join_internal(meta, f"org:{org_id}")
+            await self._join_internal(meta, f"org:{org_id}:user:{user_id}")
 
-        self.active_connections[user_id].append(websocket)
-        print(f"✅ WebSocket connecté: User#{user_id} ({len(self.active_connections[user_id])} connexions)")
+        print(f"✅ WebSocket connecté: Org#{org_id} User#{user_id} ({len(self.clients)} total)")
+        return meta
 
-    def disconnect(self, websocket: WebSocket, user_id: int):
+    async def join(self, ws: WebSocket, room: str) -> None:
+        """Ajoute le client à une room"""
+        async with self._lock:
+            meta = self.clients.get(ws)
+            if not meta:
+                return
+            await self._join_internal(meta, room)
+
+    async def _join_internal(self, meta: ClientMeta, room: str) -> None:
+        """Join interne sans lock (appelé depuis un contexte déjà locké)"""
+        meta.rooms.add(room)
+        self.rooms.setdefault(room, set()).add(meta)
+
+    async def leave(self, ws: WebSocket, room: str) -> None:
+        """Retire le client d'une room"""
+        async with self._lock:
+            meta = self.clients.get(ws)
+            if not meta:
+                return
+            if room in meta.rooms:
+                meta.rooms.remove(room)
+            if room in self.rooms:
+                self.rooms[room].discard(meta)
+                if not self.rooms[room]:
+                    self.rooms.pop(room, None)
+
+    async def disconnect(self, ws: WebSocket, code: int = 1000, reason: str = "normal") -> None:
         """
-        Déconnecte un client WebSocket
+        Déconnecte un client proprement avec close code explicite
 
         Args:
-            websocket: Connexion WebSocket
-            user_id: ID de l'utilisateur
+            ws: WebSocket
+            code: Code de fermeture (1000=normal, 1001=going away, 1011=error)
+            reason: Raison de la fermeture
         """
-        if user_id in self.active_connections:
-            if websocket in self.active_connections[user_id]:
-                self.active_connections[user_id].remove(websocket)
+        try:
+            await ws.close(code=code, reason=reason)
+        except Exception:
+            pass
 
-            # Supprimer l'entrée si plus aucune connexion
-            if len(self.active_connections[user_id]) == 0:
-                del self.active_connections[user_id]
+        async with self._lock:
+            meta = self.clients.pop(ws, None)
+            if not meta:
+                return
 
-        print(f"❌ WebSocket déconnecté: User#{user_id}")
+            # Retirer de toutes les rooms
+            for room in list(meta.rooms):
+                group = self.rooms.get(room)
+                if group:
+                    group.discard(meta)
+                    if not group:
+                        self.rooms.pop(room, None)
+
+        print(f"❌ WebSocket déconnecté: Org#{meta.org_id} User#{meta.user_id} ({code}: {reason})")
+
+    async def send_to_room(self, room: str, event: dict) -> None:
+        """Envoie un event à tous les clients d'une room"""
+        payload = json.dumps(event, ensure_ascii=False)
+
+        async with self._lock:
+            targets = list(self.rooms.get(room, set()))
+
+        for meta in targets:
+            try:
+                await meta.ws.send_text(payload)
+            except Exception:
+                await self.disconnect(meta.ws, code=1011, reason="send failed")
+
+    async def broadcast_org(self, org_id: int, event: dict) -> None:
+        """Broadcast à toute une organisation"""
+        await self.send_to_room(f"org:{org_id}", event)
+
+    async def send_to_user(self, org_id: int, user_id: int, event: dict) -> None:
+        """Envoie à un utilisateur spécifique"""
+        await self.send_to_room(f"org:{org_id}:user:{user_id}", event)
+
+    async def mark_seen(self, ws: WebSocket) -> None:
+        """Met à jour le timestamp de dernière activité (heartbeat)"""
+        async with self._lock:
+            meta = self.clients.get(ws)
+            if meta:
+                meta.last_seen = time.time()
+
+    async def _heartbeat_sweeper(self) -> None:
+        """Task qui ferme les connexions inactives (timeout)"""
+        try:
+            while True:
+                await asyncio.sleep(HEARTBEAT_SWEEP_INTERVAL_SEC)
+                now = time.time()
+                stale: list[WebSocket] = []
+
+                async with self._lock:
+                    for ws, meta in list(self.clients.items()):
+                        if now - meta.last_seen > HEARTBEAT_TIMEOUT_SEC:
+                            stale.append(ws)
+
+                for ws in stale:
+                    await self.disconnect(ws, code=1001, reason="heartbeat timeout")
+
+        except asyncio.CancelledError:
+            return
+
+    # ============================================
+    # Méthodes de compatibilité avec l'ancien manager
+    # ============================================
 
     async def send_personal_message(self, message: dict, user_id: int):
-        """
-        Envoie un message à un utilisateur spécifique
+        """Compatibilité: envoie à un user (suppose org_id=1 par défaut)"""
+        # Note: Cette méthode est conservée pour compatibilité mais dépréciée
+        # Utiliser send_to_user(org_id, user_id, message) à la place
+        async with self._lock:
+            # Trouver tous les clients de cet user_id
+            targets = [m for m in self.clients.values() if m.user_id == user_id]
 
-        Args:
-            message: Message à envoyer (dict)
-            user_id: ID de l'utilisateur
-        """
-        if user_id not in self.active_connections:
-            return  # Utilisateur non connecté
-
-        # Envoyer à toutes les connexions de l'utilisateur
-        disconnected = []
-
-        for websocket in self.active_connections[user_id]:
+        payload = json.dumps(message, ensure_ascii=False)
+        for meta in targets:
             try:
-                await websocket.send_json(message)
-            except WebSocketDisconnect:
-                disconnected.append(websocket)
-            except Exception as e:
-                print(f"❌ Erreur envoi WebSocket User#{user_id}: {e}")
-                disconnected.append(websocket)
-
-        # Nettoyer les connexions mortes
-        for ws in disconnected:
-            self.disconnect(ws, user_id)
-
-    async def broadcast(self, message: dict):
-        """
-        Broadcast un message à tous les utilisateurs connectés
-
-        Args:
-            message: Message à envoyer (dict)
-        """
-        for user_id in list(self.active_connections.keys()):
-            await self.send_personal_message(message, user_id)
+                await meta.ws.send_text(payload)
+            except Exception:
+                await self.disconnect(meta.ws, code=1011, reason="send failed")
 
     def is_user_connected(self, user_id: int) -> bool:
         """Vérifie si un utilisateur est connecté"""
-        return user_id in self.active_connections and len(self.active_connections[user_id]) > 0
+        return any(m.user_id == user_id for m in self.clients.values())
 
     def get_connected_users_count(self) -> int:
-        """Retourne le nombre d'utilisateurs connectés"""
-        return len(self.active_connections)
+        """Retourne le nombre de clients connectés"""
+        return len(self.clients)
 
 
 # S'assurer qu'un portail AnyIO est disponible pour les appels from_thread (tests WS)
@@ -184,6 +296,7 @@ manager = ConnectionManager()
 # ============================================
 # Service de Notifications
 # ============================================
+
 
 class NotificationService:
     """
@@ -265,10 +378,7 @@ class NotificationService:
             user_id: ID de l'utilisateur
         """
         # Construire le message WebSocket
-        message = {
-            "type": "notification",
-            "data": notification.to_dict()
-        }
+        message = {"type": "notification", "data": notification.to_dict()}
 
         # Envoyer via WebSocket si l'utilisateur est connecté
         await manager.send_personal_message(message, user_id)
@@ -336,13 +446,15 @@ class NotificationService:
         Returns:
             int: Nombre de notifications non lues
         """
-        return db.query(Notification)\
+        return (
+            db.query(Notification)
             .filter(
                 Notification.user_id == user_id,
                 Notification.is_read == False,
-                Notification.is_archived == False
-            )\
+                Notification.is_archived == False,
+            )
             .count()
+        )
 
     @staticmethod
     def get_user_notifications(
@@ -365,8 +477,7 @@ class NotificationService:
         Returns:
             List[Notification]: Liste des notifications
         """
-        query = db.query(Notification)\
-            .filter(Notification.user_id == user_id)
+        query = db.query(Notification).filter(Notification.user_id == user_id)
 
         if not include_read:
             query = query.filter(Notification.is_read == False)
@@ -388,15 +499,9 @@ class NotificationService:
             db: Session database
             user_id: ID de l'utilisateur
         """
-        db.query(Notification)\
-            .filter(
-                Notification.user_id == user_id,
-                Notification.is_read == False
-            )\
-            .update({
-                "is_read": True,
-                "read_at": datetime.now(timezone.utc)
-            })
+        db.query(Notification).filter(
+            Notification.user_id == user_id, Notification.is_read == False
+        ).update({"is_read": True, "read_at": datetime.now(timezone.utc)})
         db.commit()
 
     @staticmethod
@@ -404,12 +509,11 @@ class NotificationService:
         """Supprime les notifications archivées plus anciennes que ``days`` jours."""
         cutoff_date = datetime.now(timezone.utc) - timedelta(days=days)
 
-        deleted_count = db.query(Notification)\
-            .filter(
-                Notification.created_at < cutoff_date,
-                Notification.is_archived.is_(True)
-            )\
+        deleted_count = (
+            db.query(Notification)
+            .filter(Notification.created_at < cutoff_date, Notification.is_archived.is_(True))
             .delete()
+        )
 
         db.commit()
         return deleted_count
@@ -461,10 +565,7 @@ class NotificationManager:
         return NotificationService.get_unread_count(self.db, user_id)
 
     @staticmethod
-    def cleanup_old_notifications(
-        db: Session,
-        days: int = 30
-    ):
+    def cleanup_old_notifications(db: Session, days: int = 30):
         """
         Supprime les notifications anciennes
 
@@ -478,6 +579,7 @@ class NotificationManager:
 # ============================================
 # Helpers Simplifiés
 # ============================================
+
 
 async def notify_user(
     user_id: int,
@@ -529,6 +631,63 @@ async def notify_user(
     return notification
 
 
+def create_notification(
+    db: Session,
+    user_id: int,
+    title: str,
+    message: str,
+    type: str = "reminder",
+    priority: str = "normal",
+    link: Optional[str] = None,
+) -> Notification:
+    """
+    Version synchrone pour créer une notification (sans WebSocket)
+
+    Utilisé par les workers synchrones (reminder_worker, etc.)
+
+    Args:
+        db: Session database
+        user_id: ID utilisateur
+        title: Titre
+        message: Message
+        type: Type ('reminder', 'task', etc.)
+        priority: Priorité ('low', 'normal', 'high', 'urgent')
+        link: Lien optionnel
+
+    Returns:
+        Notification créée
+    """
+    # Mapper les types string vers enum
+    type_map = {
+        "reminder": NotificationType.INTERACTION_REMINDER,
+        "task": NotificationType.TASK_ASSIGNED,
+        "mention": NotificationType.MENTION,
+    }
+
+    priority_map = {
+        "low": NotificationPriority.LOW,
+        "normal": NotificationPriority.NORMAL,
+        "high": NotificationPriority.HIGH,
+        "urgent": NotificationPriority.URGENT,
+    }
+
+    notification = Notification(
+        user_id=user_id,
+        type=type_map.get(type, NotificationType.INTERACTION_REMINDER),
+        priority=priority_map.get(priority, NotificationPriority.NORMAL),
+        title=title,
+        message=message,
+        link=link,
+        created_at=datetime.now(timezone.utc),
+    )
+
+    db.add(notification)
+    db.commit()
+    db.refresh(notification)
+
+    return notification
+
+
 async def notify_from_template(
     user_id: int,
     type: NotificationType,
@@ -574,9 +733,10 @@ async def notify_from_template(
 # WebSocket Endpoint Handler
 # ============================================
 
-async def websocket_endpoint(websocket: WebSocket, user_id: Union[int, str]):
+
+async def websocket_endpoint(websocket: WebSocket, user_id: int, org_id: int):
     """
-    Handler pour l'endpoint WebSocket des notifications
+    Handler pour l'endpoint WebSocket des notifications (multi-tenant)
 
     Usage dans FastAPI:
         @app.websocket("/ws/notifications")
@@ -584,46 +744,87 @@ async def websocket_endpoint(websocket: WebSocket, user_id: Union[int, str]):
             websocket: WebSocket,
             current_user: User = Depends(get_current_websocket_user)
         ):
-            await websocket_endpoint(websocket, current_user.id)
+            await websocket_endpoint(websocket, current_user.id, current_user.org_id)
 
     Args:
         websocket: Connexion WebSocket
         user_id: ID de l'utilisateur connecté
+        org_id: ID de l'organisation (multi-tenant)
+
+    Messages supportés (client -> serveur):
+        - {"type": "ping"} -> heartbeat (met à jour last_seen)
+        - {"type": "join", "room": "org:42:resource:contact:123"} -> rejoint une room
+        - {"type": "leave", "room": "org:42:resource:contact:123"} -> quitte une room
     """
-    # Connecter le client
-    await manager.connect(websocket, user_id)
+    # Démarrer le sweeper si pas déjà fait
+    await manager.start()
+
+    # Accepter la connexion et créer les rooms de base
+    await manager.accept(websocket, org_id=org_id, user_id=user_id)
 
     try:
         # Envoyer un message de connexion réussie
-        await websocket.send_json({
-            "type": "connected",
-            "data": {
-                "user_id": user_id,
-                "connected_at": datetime.now(timezone.utc).isoformat()
+        await websocket.send_json(
+            {
+                "type": "connected",
+                "data": {
+                    "user_id": user_id,
+                    "org_id": org_id,
+                    "connected_at": datetime.now(timezone.utc).isoformat(),
+                },
             }
-        })
+        )
 
         # Boucle de réception des messages
         while True:
             # Recevoir les messages du client
-            data = await websocket.receive_json()
+            msg = await websocket.receive_text()
 
-            # Traiter les commandes du client
-            if data.get("type") == "ping":
-                # Répondre au ping
+            # Mettre à jour heartbeat
+            await manager.mark_seen(websocket)
+
+            try:
+                data = json.loads(msg)
+            except json.JSONDecodeError:
+                # Message invalide, on ignore
+                continue
+
+            msg_type = data.get("type")
+
+            # Heartbeat ping
+            if msg_type == "ping":
+                # On peut répondre un pong si besoin
                 await websocket.send_json({"type": "pong"})
+                continue
 
-            elif data.get("type") == "mark_read":
-                # Marquer une notification comme lue
+            # Rejoindre une room
+            elif msg_type == "join" and isinstance(data.get("room"), str):
+                room = data["room"]
+                # Sécurité: n'autorise que des rooms de cette org
+                if not room.startswith(f"org:{org_id}"):
+                    # Policy violation
+                    await manager.disconnect(websocket, code=1008, reason="invalid room")
+                    break
+                await manager.join(websocket, room)
+                continue
+
+            # Quitter une room
+            elif msg_type == "leave" and isinstance(data.get("room"), str):
+                await manager.leave(websocket, data["room"])
+                continue
+
+            # Marquer notification comme lue
+            elif msg_type == "mark_read":
                 notification_id = data.get("notification_id")
                 # TODO: Implémenter la logique de marquage
+                continue
 
-            # Ajouter d'autres commandes selon besoin
+            # Autres commandes: à étendre selon besoin
 
     except WebSocketDisconnect:
         # Déconnecter proprement
-        manager.disconnect(websocket, user_id)
+        await manager.disconnect(websocket, code=1000, reason="client left")
 
     except Exception as e:
-        print(f"❌ Erreur WebSocket User#{user_id}: {e}")
-        manager.disconnect(websocket, user_id)
+        print(f"❌ Erreur WebSocket Org#{org_id} User#{user_id}: {e}")
+        await manager.disconnect(websocket, code=1011, reason="server error")

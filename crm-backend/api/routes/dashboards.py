@@ -1,23 +1,23 @@
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, Query, Path, Body, HTTPException
+from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query
 from sqlalchemy.orm import Session
 
-from core import get_db, get_current_user
+from core import get_current_user, get_db
 from core.cache import cache_response
+from models.organisation_activity import OrganisationActivityType
 from schemas.base import PaginatedResponse
-from schemas.organisation_activity import OrganisationActivityResponse
 from schemas.dashboard_stats import (
     GlobalDashboardStats,
-    OrganisationStatsResponse,
-    OrganisationMonthlyKPI,
     MonthlyAggregateStats,
+    OrganisationMonthlyKPI,
+    OrganisationStatsResponse,
     YearlyAggregateStats,
 )
 from schemas.kpi import KPICreate, KPIUpdate
-from services.organisation_activity import OrganisationActivityService
+from schemas.organisation_activity import OrganisationActivityResponse
 from services.dashboard_stats import DashboardStatsService
-from models.organisation_activity import OrganisationActivityType
+from services.organisation_activity import OrganisationActivityService
 
 router = APIRouter(prefix="/dashboards", tags=["dashboards"])
 
@@ -103,8 +103,7 @@ async def get_organisation_dashboard_stats(
 
 
 @router.get(
-    "/stats/organisation/{organisation_id}/kpis",
-    response_model=List[OrganisationMonthlyKPI]
+    "/stats/organisation/{organisation_id}/kpis", response_model=List[OrganisationMonthlyKPI]
 )
 async def get_organisation_monthly_kpis(
     organisation_id: int = Path(..., gt=0),
@@ -185,10 +184,8 @@ async def delete_dashboard_kpi(
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc))
 
-@router.get(
-    "/stats/month/{year}/{month}",
-    response_model=MonthlyAggregateStats
-)
+
+@router.get("/stats/month/{year}/{month}", response_model=MonthlyAggregateStats)
 @cache_response(ttl=300, key_prefix="dashboards:monthly_aggregate")
 async def get_monthly_aggregate_stats(
     year: int = Path(..., ge=2020, le=2100),
@@ -205,8 +202,7 @@ async def get_monthly_aggregate_stats(
 
 
 @router.get(
-    "/stats/organisation/{organisation_id}/year/{year}",
-    response_model=YearlyAggregateStats
+    "/stats/organisation/{organisation_id}/year/{year}", response_model=YearlyAggregateStats
 )
 @cache_response(ttl=300, key_prefix="dashboards:yearly_aggregate")
 async def get_yearly_aggregate_stats(

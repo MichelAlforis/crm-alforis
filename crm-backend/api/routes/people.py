@@ -1,21 +1,22 @@
 from __future__ import annotations  # Permet les annotations lazy (résout circular imports)
 
-from fastapi import APIRouter, Depends, status, Query
-from sqlalchemy.orm import Session
 from typing import List, Optional
 
-from core import get_db, get_current_user
-from core.events import emit_event, EventType
+from fastapi import APIRouter, Depends, Query, status
+from sqlalchemy.orm import Session
+
+from core import get_current_user, get_db
+from core.events import EventType, emit_event
+from models.organisation import OrganisationType
+from schemas.base import PaginatedResponse
 from schemas.person import (
     PersonCreate,
-    PersonUpdate,
-    PersonResponse,
     PersonDetailResponse,
     PersonOrganizationLinkResponse,
+    PersonResponse,
+    PersonUpdate,
 )
-from schemas.base import PaginatedResponse
-from services.person import PersonService, PersonOrganizationLinkService
-from models.organisation import OrganisationType
+from services.person import PersonOrganizationLinkService, PersonService
 
 router = APIRouter(prefix="/people", tags=["people"])
 
@@ -143,10 +144,7 @@ async def list_person_organisations(
 ):
     link_service = PersonOrganizationLinkService(db)
     links = await link_service.list_for_person(person_id)
-    return [
-        PersonOrganizationLinkResponse.model_validate(link)
-        for link in links
-    ]
+    return [PersonOrganizationLinkResponse.model_validate(link) for link in links]
 
 
 @router.put("/{person_id}", response_model=PersonResponse)

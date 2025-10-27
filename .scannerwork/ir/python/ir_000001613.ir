@@ -1,46 +1,0 @@
-
-
-1int
-
-0int
-"~="strself
-Ã Ã("Ž(
-&
-
-Å Å("#get-field# _spec:$
-"
-
-Å Å("#array-read#:(
-&
-
-Æ! Æ(+"#get-field# _spec:$
-"
-
-Æ! Æ(."#array-read#:,
-*
-
-Æ! Æ(6	"
-#binop !=#2!=:Bbool\
-Z
-
-Ä Ç(	
-canonical_version"3
-pip._vendor.packaging.utilscanonicalize_version:	*
-(
-
-È È(/"#unknown-value#Btuple(
-&
-
-È È("#get-field# _spec:$
-"
-
-È È("#array-read#:(
-&
-
-È È(/"#array-add-last#:(
-&
-
-È È(/"#array-add-last#:
-
-
-È È(/*‡/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/packaging/specifiers.py

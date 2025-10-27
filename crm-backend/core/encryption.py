@@ -5,9 +5,10 @@ Utilise Fernet (AES-256) pour chiffrer/déchiffrer de manière symétrique.
 La clé de chiffrement doit être stockée dans .env (ENCRYPTION_KEY).
 """
 
-from cryptography.fernet import Fernet
-from typing import Optional
 import os
+from typing import Optional
+
+from cryptography.fernet import Fernet
 
 
 class EncryptionService:
@@ -37,7 +38,9 @@ class EncryptionService:
             )
 
         try:
-            self.cipher = Fernet(encryption_key.encode() if isinstance(encryption_key, str) else encryption_key)
+            self.cipher = Fernet(
+                encryption_key.encode() if isinstance(encryption_key, str) else encryption_key
+            )
         except Exception as e:
             raise ValueError(f"Clé de chiffrement invalide: {e}")
 
@@ -55,8 +58,8 @@ class EncryptionService:
             return ""
 
         try:
-            encrypted_bytes = self.cipher.encrypt(plaintext.encode('utf-8'))
-            return encrypted_bytes.decode('utf-8')
+            encrypted_bytes = self.cipher.encrypt(plaintext.encode("utf-8"))
+            return encrypted_bytes.decode("utf-8")
         except Exception as e:
             raise ValueError(f"Erreur lors du chiffrement: {e}")
 
@@ -74,8 +77,8 @@ class EncryptionService:
             return ""
 
         try:
-            decrypted_bytes = self.cipher.decrypt(ciphertext.encode('utf-8'))
-            return decrypted_bytes.decode('utf-8')
+            decrypted_bytes = self.cipher.decrypt(ciphertext.encode("utf-8"))
+            return decrypted_bytes.decode("utf-8")
         except Exception as e:
             raise ValueError(f"Erreur lors du déchiffrement: {e}")
 
@@ -110,6 +113,7 @@ def generate_encryption_key() -> str:
 
 # Instance globale (singleton pattern)
 _encryption_service: Optional[EncryptionService] = None
+
 
 def get_encryption_service() -> EncryptionService:
     """

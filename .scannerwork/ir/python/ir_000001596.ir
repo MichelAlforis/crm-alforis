@@ -1,7 +1,0 @@
-
-.%"Check if the segment contains text."strselfd d("h%
-#
-f f("#get-field# text:/
--
-f f("#dependent-value#*:Bbool
-f f(*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/segment.py

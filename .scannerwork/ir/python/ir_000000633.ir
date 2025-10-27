@@ -1,55 +1,0 @@
-
--1int
-
-0int
-
-1intzip_stat
-Á Á(#	tuple"ç2
-0
-
-Ë Ë(!size"#get-field# file_size:,
-*
-
-Í Í(&"#get-field# date_time:*
-(
-
-Í) Í(3"#unknown-value#Btuple(
-&
-
-Í) Í(3	"
-#is-exact#:Bbool
-
-
-Í) Í(3
-"
-#assume#:	:
-8
-
-Í) Í(3"#set-field# __collection_size:Bint(
-&
-
-Í) Í(3"#array-add-last#:(
-&
-
-Í) Í(3"#array-add-last#:(
-&
-
-Í) Í(3"#array-add-last#:/
--
-
-Í Í(3	date_time"	#binop +#2+:5
-3
-
-Ï Ï(*	timestamp"
-timemktime:Bfloat*
-(
-
-Ì Ì("#unknown-value#Btuple(
-&
-
-Ì Ì("#array-add-last#:(
-&
-
-Ì Ì("#array-add-last#:
-
-Ì Ì(*â/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pkg_resources/__init__.py

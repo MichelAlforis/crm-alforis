@@ -1,22 +1,23 @@
-from fastapi import APIRouter, Depends, status, HTTPException, Query
-from sqlalchemy.orm import Session
-from typing import List, Optional, Dict, Any
+from typing import Any, Dict, List, Optional
 
-from core import get_db, get_current_user
-from core.events import emit_event, EventType
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy.orm import Session
+
+from core import get_current_user, get_db
 from core.cache import cache_response, invalidate_organisation_cache
+from core.events import EventType, emit_event
+from models.organisation_activity import OrganisationActivityType
 from schemas.base import PaginatedResponse
 from schemas.organisation import (
     OrganisationCreate,
-    OrganisationUpdate,
-    OrganisationResponse,
     OrganisationDetailResponse,
+    OrganisationResponse,
+    OrganisationUpdate,
 )
 from schemas.organisation_activity import OrganisationActivityResponse
 from services.organisation import OrganisationService
-from services.person import PersonOrganizationLinkService
 from services.organisation_activity import OrganisationActivityService
-from models.organisation_activity import OrganisationActivityType
+from services.person import PersonOrganizationLinkService
 
 router = APIRouter(prefix="/organisations", tags=["organisations"])
 
@@ -31,7 +32,9 @@ def _extract_user_id(current_user: dict) -> Optional[int]:
     except (TypeError, ValueError):
         return None
 
+
 # ============= GET ROUTES =============
+
 
 @router.get("", response_model=PaginatedResponse[OrganisationResponse])
 @cache_response(ttl=300, key_prefix="organisations:list")
@@ -169,6 +172,7 @@ async def get_organisation(
 
     return OrganisationDetailResponse.model_validate(organisation)
 
+
 @router.get(
     "/{organisation_id}/activity",
     response_model=PaginatedResponse[OrganisationActivityResponse],
@@ -222,6 +226,7 @@ async def get_organisation_activity(
 
 # ============= POST ROUTES =============
 
+
 @router.post("", response_model=OrganisationResponse, status_code=status.HTTP_201_CREATED)
 async def create_organisation(
     organisation: OrganisationCreate,
@@ -265,6 +270,7 @@ async def create_organisation(
 
 # ============= PUT ROUTES =============
 
+
 @router.put("/{organisation_id}", response_model=OrganisationResponse)
 async def update_organisation(
     organisation_id: int,
@@ -293,6 +299,7 @@ async def update_organisation(
 
 # ============= DELETE ROUTES =============
 
+
 @router.delete("/{organisation_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_organisation(
     organisation_id: int,
@@ -319,6 +326,7 @@ async def delete_organisation(
 
 # ============= ACTIVITY ROUTES =============
 
+
 @router.get("/{organisation_id}/activity", response_model=List[OrganisationActivityResponse])
 async def get_organisation_activities(
     organisation_id: int,
@@ -336,9 +344,7 @@ async def get_organisation_activities(
     """
     activity_service = OrganisationActivityService(db)
     activities = await activity_service.get_timeline(
-        organisation_id=organisation_id,
-        limit=limit,
-        before_id=before_id
+        organisation_id=organisation_id, limit=limit, before_id=before_id
     )
     return [OrganisationActivityResponse.model_validate(a) for a in activities]
 
@@ -363,14 +369,13 @@ async def delete_organisation_activity(
     activity = await activity_service.get(activity_id)
     if not activity:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Activity {activity_id} not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Activity {activity_id} not found"
         )
 
     if activity.organisation_id != organisation_id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"Activity {activity_id} does not belong to organisation {organisation_id}"
+            detail=f"Activity {activity_id} does not belong to organisation {organisation_id}",
         )
 
     await activity_service.delete(activity_id)

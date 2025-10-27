@@ -1,48 +1,0 @@
-
-""str
-
-0intuser
-ˆ ˆ(home
-‰ ‰(root
-Š Š(isolated
-‹ ‹(prefix
-Œ Œ(list"¹G
-E
-
-Ž •(scheme"%
-pip._internal.locations
-get_scheme:*
-(
-
-– –("#get-field# purelib:*
-(
-
-– –(*	"#get-field# platlib:)
-'
-
-– –(+
-"#unknown-value#Blist(
-&
-
-– –(+"
-#is-exact#:
-Bbool
-
-
-– –(+"
-#assume#::
-8
-
-– –(+"#set-field# __collection_size:
-Bint(
-&
-
-– –(+"#array-add-last#:
-(
-&
-
-– –(+"#array-add-last#:
-	
-
-– –(+
-*…/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_internal/commands/install.py

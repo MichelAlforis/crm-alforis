@@ -1,13 +1,0 @@
-
-YP"
-        Converts a resource prefix to a directory name in the cache.
-        "strself
-Ø Ø(prefix
-Ø Ø("use_abspath
-Ø$ Ø(4"WC
-A
-
-Ü Ü(A"-
-pip._vendor.distlib.utilpath_to_cache_dir:
-
-Ü Ü(A*/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/distlib/util.py

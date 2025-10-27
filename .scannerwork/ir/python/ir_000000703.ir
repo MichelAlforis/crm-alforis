@@ -1,40 +1,0 @@
-
-
-	0int
-UL"
-    Ensure object appears in the mro even
-    for old-style classes.
-    "strclasses
-ò ò(
-object	tuple"X4
-2
-
-ù ù("#binop not in#2not in:Bbool "
-
-ù ù( *
-ù ù("ó*
-(
-
-û û(""#unknown-value#Btuple(
-&
-
-û û(""
-#is-exact#:Bbool
-
-
-û û(""
-#assume#::
-8
-
-û û("
-"#set-field# __collection_size:	Bint(
-&
-
-û û(""#array-add-last#:$
-"
-
-û û(""	#binop +#2+:
-
-û û(""
-
-ü ü(*â/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/pkg_resources/__init__.py

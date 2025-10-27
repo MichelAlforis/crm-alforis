@@ -1,15 +1,0 @@
-
-ÒÁ"
-    Parse a marker string and return a dictionary containing a marker expression.
-
-    The dictionary will contain keys "op", "lhs" and "rhs" for non-terminals in
-    the expression grammar, or strings. A string contained in quotes is to be
-    interpreted as a literal string, and a string not contained in quotes is a
-    variable (such as os_name).
-    "strmarker_string6 6("XD
-B
-
-ç ç( "/
-%pip._vendor.distlib.util.parse_markermarker:
-
-ç ç( */Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/distlib/util.py

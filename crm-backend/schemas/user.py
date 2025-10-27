@@ -1,9 +1,11 @@
 """Schemas Pydantic pour User."""
 
 from typing import Optional
+
 from pydantic import EmailStr, Field, field_validator
-from schemas.base import BaseSchema, TimestampedSchema
+
 from models.role import UserRole
+from schemas.base import BaseSchema, TimestampedSchema
 
 
 class UserBase(BaseSchema):
@@ -19,15 +21,17 @@ class UserBase(BaseSchema):
 class UserCreate(UserBase):
     """Création d'un utilisateur."""
 
-    password: str = Field(..., min_length=6, max_length=100, description="Mot de passe (min 6 caractères)")
+    password: str = Field(
+        ..., min_length=6, max_length=100, description="Mot de passe (min 6 caractères)"
+    )
     role_id: Optional[int] = Field(None, description="ID du rôle à assigner")
     team_id: Optional[int] = Field(None, description="ID de l'équipe")
 
-    @field_validator('password')
+    @field_validator("password")
     @classmethod
     def validate_password(cls, v: str) -> str:
         if len(v) < 6:
-            raise ValueError('Le mot de passe doit contenir au moins 6 caractères')
+            raise ValueError("Le mot de passe doit contenir au moins 6 caractères")
         return v
 
 
@@ -39,15 +43,17 @@ class UserUpdate(BaseSchema):
     full_name: Optional[str] = Field(None, max_length=255)
     is_active: Optional[bool] = None
     is_superuser: Optional[bool] = None
-    password: Optional[str] = Field(None, min_length=6, max_length=100, description="Nouveau mot de passe (optionnel)")
+    password: Optional[str] = Field(
+        None, min_length=6, max_length=100, description="Nouveau mot de passe (optionnel)"
+    )
     role_id: Optional[int] = None
     team_id: Optional[int] = None
 
-    @field_validator('password')
+    @field_validator("password")
     @classmethod
     def validate_password(cls, v: Optional[str]) -> Optional[str]:
         if v is not None and len(v) < 6:
-            raise ValueError('Le mot de passe doit contenir au moins 6 caractères')
+            raise ValueError("Le mot de passe doit contenir au moins 6 caractères")
         return v
 
 

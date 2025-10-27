@@ -11,28 +11,35 @@ Resources:
 - organisations, people, mandats, interactions, tasks, users, etc.
 """
 
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, Enum as SQLEnum
-from sqlalchemy.orm import relationship
-from datetime import datetime
 import enum
+from datetime import datetime
+
+from sqlalchemy import Boolean, Column, DateTime
+from sqlalchemy import Enum as SQLEnum
+from sqlalchemy import Integer, String, Text
+from sqlalchemy.orm import relationship
 
 from models.base import Base
-from models.role import role_permissions
+
+# Import de la table d'association depuis role.py (définie là-bas)
+# Pour éviter l'import circulaire, on la référence par son nom dans relationship
 
 
 class PermissionAction(str, enum.Enum):
     """Actions possibles sur les ressources"""
+
     CREATE = "create"
     READ = "read"
     UPDATE = "update"
     DELETE = "delete"
-    EXPORT = "export"      # Export Excel/PDF
-    IMPORT = "import"      # Import CSV/Excel
-    MANAGE = "manage"      # Gestion complète (pour admins)
+    EXPORT = "export"  # Export Excel/PDF
+    IMPORT = "import"  # Import CSV/Excel
+    MANAGE = "manage"  # Gestion complète (pour admins)
 
 
 class PermissionResource(str, enum.Enum):
     """Ressources du système"""
+
     ORGANISATIONS = "organisations"
     PEOPLE = "people"
     MANDATS = "mandats"
@@ -58,21 +65,14 @@ class Permission(Base):
     Exemple: Permission(resource="organisations", action="create")
               = Droit de créer des organisations
     """
+
     __tablename__ = "permissions"
 
     id = Column(Integer, primary_key=True, index=True)
 
     # Ressource et action
-    resource = Column(
-        SQLEnum(PermissionResource),
-        nullable=False,
-        index=True
-    )
-    action = Column(
-        SQLEnum(PermissionAction),
-        nullable=False,
-        index=True
-    )
+    resource = Column(SQLEnum(PermissionResource), nullable=False, index=True)
+    action = Column(SQLEnum(PermissionAction), nullable=False, index=True)
 
     # Métadonnées
     name = Column(String(100), unique=True, nullable=False)
@@ -92,10 +92,9 @@ class Permission(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relations
+    # Utilisation de back_populates pour éviter les imports circulaires
     roles = relationship(
-        "Role",
-        secondary=role_permissions,
-        back_populates="permissions"
+        "Role", secondary="role_permissions", back_populates="permissions", lazy="selectin"
     )
 
     def __repr__(self):
@@ -139,7 +138,6 @@ DEFAULT_PERMISSIONS = [
     ("organisations", "delete", "Supprimer les organisations"),
     ("organisations", "export", "Exporter les organisations"),
     ("organisations", "import", "Importer les organisations"),
-
     # People
     ("people", "create", "Créer des contacts"),
     ("people", "read", "Consulter les contacts"),
@@ -147,59 +145,49 @@ DEFAULT_PERMISSIONS = [
     ("people", "delete", "Supprimer les contacts"),
     ("people", "export", "Exporter les contacts"),
     ("people", "import", "Importer les contacts"),
-
     # Mandats
     ("mandats", "create", "Créer des mandats"),
     ("mandats", "read", "Consulter les mandats"),
     ("mandats", "update", "Modifier les mandats"),
     ("mandats", "delete", "Supprimer les mandats"),
     ("mandats", "export", "Exporter les mandats"),
-
     # Interactions
     ("interactions", "create", "Créer des interactions"),
     ("interactions", "read", "Consulter les interactions"),
     ("interactions", "update", "Modifier les interactions"),
     ("interactions", "delete", "Supprimer les interactions"),
-
     # Tasks
     ("tasks", "create", "Créer des tâches"),
     ("tasks", "read", "Consulter les tâches"),
     ("tasks", "update", "Modifier les tâches"),
     ("tasks", "delete", "Supprimer les tâches"),
-
     # Documents
     ("documents", "create", "Téléverser des documents"),
     ("documents", "read", "Consulter les documents"),
     ("documents", "update", "Modifier les documents"),
     ("documents", "delete", "Supprimer les documents"),
-
     # Users
     ("users", "create", "Créer des utilisateurs"),
     ("users", "read", "Consulter les utilisateurs"),
     ("users", "update", "Modifier les utilisateurs"),
     ("users", "delete", "Supprimer les utilisateurs"),
     ("users", "manage", "Gérer les utilisateurs"),
-
     # Roles & Permissions
     ("roles", "create", "Créer des rôles"),
     ("roles", "read", "Consulter les rôles"),
     ("roles", "update", "Modifier les rôles"),
     ("roles", "delete", "Supprimer les rôles"),
     ("roles", "manage", "Gérer les rôles"),
-
     ("permissions", "read", "Consulter les permissions"),
     ("permissions", "manage", "Gérer les permissions"),
-
     # Teams
     ("teams", "create", "Créer des équipes"),
     ("teams", "read", "Consulter les équipes"),
     ("teams", "update", "Modifier les équipes"),
     ("teams", "delete", "Supprimer les équipes"),
-
     # Settings
     ("settings", "read", "Consulter les paramètres"),
     ("settings", "update", "Modifier les paramètres"),
-
     # Reports
     ("reports", "read", "Consulter les rapports"),
     ("reports", "export", "Exporter les rapports"),
@@ -210,37 +198,71 @@ DEFAULT_PERMISSIONS = [
 ROLE_PERMISSIONS_MAP = {
     "admin": [
         # Tous les droits
-        "organisations:*", "people:*", "mandats:*", "interactions:*",
-        "tasks:*", "documents:*", "users:*", "roles:*", "permissions:*",
-        "teams:*", "settings:*", "reports:*"
+        "organisations:*",
+        "people:*",
+        "mandats:*",
+        "interactions:*",
+        "tasks:*",
+        "documents:*",
+        "users:*",
+        "roles:*",
+        "permissions:*",
+        "teams:*",
+        "settings:*",
+        "reports:*",
     ],
-
     "manager": [
         # Gestion complète des données métier
-        "organisations:create", "organisations:read", "organisations:update", "organisations:export",
-        "people:create", "people:read", "people:update", "people:export",
-        "mandats:create", "mandats:read", "mandats:update", "mandats:export",
-        "interactions:create", "interactions:read", "interactions:update",
-        "tasks:create", "tasks:read", "tasks:update", "tasks:delete",
-        "documents:create", "documents:read", "documents:update", "documents:delete",
+        "organisations:create",
+        "organisations:read",
+        "organisations:update",
+        "organisations:export",
+        "people:create",
+        "people:read",
+        "people:update",
+        "people:export",
+        "mandats:create",
+        "mandats:read",
+        "mandats:update",
+        "mandats:export",
+        "interactions:create",
+        "interactions:read",
+        "interactions:update",
+        "tasks:create",
+        "tasks:read",
+        "tasks:update",
+        "tasks:delete",
+        "documents:create",
+        "documents:read",
+        "documents:update",
+        "documents:delete",
         # Lecture des utilisateurs et équipes
-        "users:read", "teams:read",
+        "users:read",
+        "teams:read",
         # Rapports
-        "reports:read", "reports:export",
+        "reports:read",
+        "reports:export",
     ],
-
     "user": [
         # Droits sur ses propres données
-        "organisations:read", "organisations:update",
-        "people:read", "people:update",
-        "mandats:read", "mandats:update",
-        "interactions:create", "interactions:read", "interactions:update",
-        "tasks:create", "tasks:read", "tasks:update",
-        "documents:create", "documents:read",
+        "organisations:read",
+        "organisations:update",
+        "people:read",
+        "people:update",
+        "mandats:read",
+        "mandats:update",
+        "interactions:create",
+        "interactions:read",
+        "interactions:update",
+        "tasks:create",
+        "tasks:read",
+        "tasks:update",
+        "documents:create",
+        "documents:read",
         # Lecture limitée
-        "users:read", "teams:read",
+        "users:read",
+        "teams:read",
     ],
-
     "viewer": [
         # Lecture seule
         "organisations:read",

@@ -5,20 +5,19 @@ Ces endpoints sont utilisés par le site public alforis.fr pour:
 - Désinscription depuis les emails
 """
 
+import logging
 from datetime import datetime, timezone
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status, Header
+from fastapi import APIRouter, Depends, Header, HTTPException, status
 from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy.orm import Session
-
-import logging
 
 from core import get_db
 from core.config import settings
 from models.email import UnsubscribedEmail
-from models.person import Person
 from models.organisation import Organisation
+from models.person import Person
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +26,7 @@ router = APIRouter(prefix="/public", tags=["public"])
 
 class UnsubscribePublicRequest(BaseModel):
     """Requête de désinscription depuis alforis.fr"""
+
     email: EmailStr
     send_id: int
     unsubscribed_at: Optional[datetime] = None
@@ -35,6 +35,7 @@ class UnsubscribePublicRequest(BaseModel):
 
 class UnsubscribePublicResponse(BaseModel):
     """Réponse de désinscription"""
+
     success: bool
     message: str
     email: str
@@ -56,23 +57,22 @@ async def public_unsubscribe(
         if not authorization or not authorization.startswith("Bearer "):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Missing or invalid Authorization header"
+                detail="Missing or invalid Authorization header",
             )
 
         token = authorization.replace("Bearer ", "")
         if token != settings.webhook_secret:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid authentication token"
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication token"
             )
 
         email_lower = payload.email.lower()
         unsubscribed_at = payload.unsubscribed_at or datetime.now(timezone.utc)
 
         # 1. Ajouter à la blacklist globale
-        existing = db.query(UnsubscribedEmail).filter(
-            UnsubscribedEmail.email == email_lower
-        ).first()
+        existing = (
+            db.query(UnsubscribedEmail).filter(UnsubscribedEmail.email == email_lower).first()
+        )
 
         if not existing:
             unsubscribed = UnsubscribedEmail(
@@ -85,19 +85,17 @@ async def public_unsubscribe(
             db.flush()
 
         # 2. Mettre à jour Person
-        updated_people = db.query(Person).filter(
-            Person.email == email_lower
-        ).update(
-            {"email_unsubscribed": True},
-            synchronize_session=False
+        updated_people = (
+            db.query(Person)
+            .filter(Person.email == email_lower)
+            .update({"email_unsubscribed": True}, synchronize_session=False)
         )
 
         # 3. Mettre à jour Organisation
-        updated_orgs = db.query(Organisation).filter(
-            Organisation.email == email_lower
-        ).update(
-            {"email_unsubscribed": True},
-            synchronize_session=False
+        updated_orgs = (
+            db.query(Organisation)
+            .filter(Organisation.email == email_lower)
+            .update({"email_unsubscribed": True}, synchronize_session=False)
         )
 
         db.commit()
@@ -110,13 +108,11 @@ async def public_unsubscribe(
                 "source": payload.source,
                 "updated_people": updated_people,
                 "updated_orgs": updated_orgs,
-            }
+            },
         )
 
         return UnsubscribePublicResponse(
-            success=True,
-            message="Vous êtes désabonné avec succès",
-            email=email_lower
+            success=True, message="Vous êtes désabonné avec succès", email=email_lower
         )
 
     except HTTPException:
@@ -126,5 +122,5 @@ async def public_unsubscribe(
         logger.exception("public_unsubscribe_error", extra={"error": str(e)})
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Erreur lors de la désinscription: {str(e)}"
+            detail=f"Erreur lors de la désinscription: {str(e)}",
         )

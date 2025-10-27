@@ -1,15 +1,0 @@
-
-1("Check if the color is a default color."strself
-Ù Ù($ pip._vendor.rich.color.ColorType"•'
-%
-
-Û Û("#get-field# type:*
-(
-
-Û Û(-"#get-field# DEFAULT:,
-*
-
-Û Û(-"
-#binop ==#2==:Bbool
-
-Û Û(-*}/Users/test/Documents/ALFORIS FINANCE/06. CRM/V1/crm-backend/temp-venv/lib/python3.12/site-packages/pip/_vendor/rich/color.py

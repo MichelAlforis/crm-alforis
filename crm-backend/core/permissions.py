@@ -17,26 +17,22 @@ Usage:
 """
 
 from functools import wraps
-from typing import Optional, List, Callable
-from fastapi import HTTPException, Depends, status
+from typing import Callable, List, Optional
+
+from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from core.database import get_db
-from models.user import User
-from models.role import Role, UserRole
 from models.permission import Permission, PermissionAction, PermissionResource
-
+from models.role import Role, UserRole
+from models.user import User
 
 # ============================================
 # Vérification des Permissions
 # ============================================
 
-def has_permission(
-    user: User,
-    resource: str,
-    action: str,
-    db: Session
-) -> bool:
+
+def has_permission(user: User, resource: str, action: str, db: Session) -> bool:
     """
     Vérifie si un utilisateur a une permission spécifique
 
@@ -60,11 +56,7 @@ def has_permission(
     return user.role.has_permission(resource, action)
 
 
-def has_any_permission(
-    user: User,
-    resource: str,
-    db: Session
-) -> bool:
+def has_any_permission(user: User, resource: str, db: Session) -> bool:
     """
     Vérifie si un utilisateur a n'importe quelle permission sur une ressource
 
@@ -102,10 +94,7 @@ def get_user_permissions(user: User, db: Session) -> List[dict]:
     return [p.to_dict() for p in user.role.permissions]
 
 
-def check_role_level(
-    user: User,
-    min_level: int
-) -> bool:
+def check_role_level(user: User, min_level: int) -> bool:
     """
     Vérifie si l'utilisateur a un niveau de rôle suffisant
 
@@ -126,6 +115,7 @@ def check_role_level(
 # Décorateurs FastAPI
 # ============================================
 
+
 def require_permission(resource: str, action: str):
     """
     Décorateur pour exiger une permission spécifique sur une route
@@ -143,6 +133,7 @@ def require_permission(resource: str, action: str):
     Raises:
         HTTPException: 403 si l'utilisateur n'a pas la permission
     """
+
     def decorator(func: Callable):
         @wraps(func)
         async def wrapper(*args, current_user: User, db: Session = Depends(get_db), **kwargs):
@@ -150,13 +141,14 @@ def require_permission(resource: str, action: str):
             if not has_permission(current_user, resource, action, db):
                 raise HTTPException(
                     status_code=status.HTTP_403_FORBIDDEN,
-                    detail=f"Permission requise: {resource}:{action}"
+                    detail=f"Permission requise: {resource}:{action}",
                 )
 
             # Exécuter la fonction
             return await func(*args, current_user=current_user, db=db, **kwargs)
 
         return wrapper
+
     return decorator
 
 
@@ -185,13 +177,14 @@ def require_role(min_role: UserRole):
             if not check_role_level(current_user, min_level):
                 raise HTTPException(
                     status_code=status.HTTP_403_FORBIDDEN,
-                    detail=f"Rôle requis: {min_role.value} ou supérieur"
+                    detail=f"Rôle requis: {min_role.value} ou supérieur",
                 )
 
             # Exécuter la fonction
             return await func(*args, current_user=current_user, **kwargs)
 
         return wrapper
+
     return decorator
 
 
@@ -215,11 +208,8 @@ def require_admin():
 # Filtrage des Données par Équipe
 # ============================================
 
-def can_access_organisation(
-    user: User,
-    organisation_id: int,
-    db: Session
-) -> bool:
+
+def can_access_organisation(user: User, organisation_id: int, db: Session) -> bool:
     """
     Vérifie si un utilisateur peut accéder à une organisation
 
@@ -280,11 +270,15 @@ def filter_query_by_team(query, user: User, model_class):
     """
     # Gérer user comme dict ou objet
     if isinstance(user, dict):
-        user_role = user.get('role', {}).get('name') if isinstance(user.get('role'), dict) else user.get('role')
-        user_id = user.get('id')
-        user_team_id = user.get('team_id')
+        user_role = (
+            user.get("role", {}).get("name")
+            if isinstance(user.get("role"), dict)
+            else user.get("role")
+        )
+        user_id = user.get("id")
+        user_team_id = user.get("team_id")
     else:
-        user_role = user.role.name if hasattr(user.role, 'name') else user.role
+        user_role = user.role.name if hasattr(user.role, "name") else user.role
         user_id = user.id
         user_team_id = user.team_id
 
@@ -297,6 +291,7 @@ def filter_query_by_team(query, user: User, model_class):
         if user_team_id:
             # Filtrer par team_id du owner
             from models.user import User as UserModel
+
             query = query.join(UserModel, model_class.owner_id == UserModel.id)
             query = query.filter(UserModel.team_id == user_team_id)
         else:
@@ -317,6 +312,7 @@ def filter_query_by_team(query, user: User, model_class):
 # ============================================
 # Initialisation des Permissions par Défaut
 # ============================================
+
 
 def init_default_permissions(db: Session):
     """
@@ -348,7 +344,7 @@ def init_default_permissions(db: Session):
             action=action,
             name=permission_name,
             display_name=display_name,
-            is_system=True  # Permission système
+            is_system=True,  # Permission système
         )
         db.add(permission)
         db.flush()
@@ -376,7 +372,7 @@ def init_default_permissions(db: Session):
                 display_name=display_name,
                 description=description,
                 level=level,
-                is_system=True
+                is_system=True,
             )
             db.add(role)
             db.flush()
@@ -390,7 +386,8 @@ def init_default_permissions(db: Session):
                 resource_prefix = perm_pattern[:-2]
                 # Ajouter toutes les permissions de cette ressource
                 matching_perms = [
-                    p for name, p in created_permissions.items()
+                    p
+                    for name, p in created_permissions.items()
                     if name.startswith(f"{resource_prefix}:")
                 ]
             else:
@@ -412,11 +409,8 @@ def init_default_permissions(db: Session):
 # Helpers Utilitaires
 # ============================================
 
-def get_accessible_resource_ids(
-    user: User,
-    resource_type: str,
-    db: Session
-) -> List[int]:
+
+def get_accessible_resource_ids(user: User, resource_type: str, db: Session) -> List[int]:
     """
     Retourne les IDs des ressources accessibles par l'utilisateur
 
