@@ -81,20 +81,42 @@ def generate_cache_key(*args, **kwargs) -> str:
     """
     Génère une clé de cache unique à partir des arguments
 
+    P0 Optimization: Extrait uniquement les paramètres pertinents pour cache
+    (skip, limit, filters) au lieu de hasher tous les kwargs (Session, User, etc.)
+
     Args:
         *args: Arguments positionnels
         **kwargs: Arguments nommés
 
     Returns:
-        Clé de cache (hash SHA256)
+        Clé de cache lisible (format: skip:limit:filters)
     """
-    # Combiner args et kwargs en string
-    key_data = f"{args}:{sorted(kwargs.items())}"
+    # Extraire uniquement les paramètres de pagination et filtres
+    cache_params = []
 
-    # Hash pour éviter clés trop longues
-    key_hash = hashlib.sha256(key_data.encode()).hexdigest()
+    # Pagination
+    skip = kwargs.get("skip", 0)
+    limit = kwargs.get("limit", 50)
+    cache_params.append(f"skip={skip}")
+    cache_params.append(f"limit={limit}")
 
-    return key_hash
+    # Filtres (ignorer db, current_user, etc.)
+    ignored_keys = {"db", "current_user", "session"}
+    for key in sorted(kwargs.keys()):
+        if key not in ignored_keys and key not in ("skip", "limit"):
+            value = kwargs[key]
+            # Ignorer None et objets complexes
+            if value is not None and not hasattr(value, "__dict__"):
+                cache_params.append(f"{key}={value}")
+
+    # Clé lisible sans hash (plus facile debug et meilleur hit rate)
+    cache_key = ":".join(cache_params)
+
+    # Fallback: si trop long (>200 chars), hasher
+    if len(cache_key) > 200:
+        cache_key = hashlib.sha256(cache_key.encode()).hexdigest()
+
+    return cache_key
 
 
 def get_cache(key: str) -> Optional[Any]:
