@@ -10,15 +10,12 @@ v2: Workflow inbox (status, assignee, next_action_at)
 """
 
 from datetime import datetime
-from typing import List, Literal, Optional
+from typing import List, Optional
 
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
-# Type littéral pour le type d'interaction (v1.1: ajout 'visio')
-InteractionType = Literal["call", "email", "meeting", "visio", "note", "other"]
-
-# Type littéral pour le statut (v2: workflow inbox)
-InteractionStatus = Literal["todo", "in_progress", "done"]
+# Import des enums Python depuis models
+from models.interaction import InteractionStatus, InteractionType
 
 
 class Attachment(BaseModel):
@@ -130,7 +127,7 @@ class InteractionOut(BaseModel):
     id: int
     org_id: Optional[int]
     person_id: Optional[int]
-    type: InteractionType
+    type: str  # Changé de InteractionType à str pour compatibilité JSON
     title: str
     body: Optional[str]
     created_by: int
@@ -143,9 +140,25 @@ class InteractionOut(BaseModel):
     external_participants: List[ExternalParticipant] = Field(default_factory=list)
 
     # v2: Workflow inbox
-    status: InteractionStatus
+    status: str  # Changé de InteractionStatus à str pour compatibilité JSON
     assignee_id: Optional[int]
     next_action_at: Optional[datetime]
+
+    @field_validator("type", mode="before")
+    @classmethod
+    def convert_type_enum_to_str(cls, v):
+        """Convertir InteractionType enum → string pour validation"""
+        if hasattr(v, "value"):
+            return v.value  # InteractionType.EMAIL → 'email'
+        return v
+
+    @field_validator("status", mode="before")
+    @classmethod
+    def convert_status_enum_to_str(cls, v):
+        """Convertir InteractionStatus enum → string pour validation"""
+        if hasattr(v, "value"):
+            return v.value  # InteractionStatus.DONE → 'done'
+        return v
 
     class Config:
         from_attributes = True  # Permet de créer depuis un modèle SQLAlchemy

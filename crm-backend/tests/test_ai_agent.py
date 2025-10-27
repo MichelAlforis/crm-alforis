@@ -62,7 +62,7 @@ class TestAIAgentService:
         org = Organisation(
             name="Test Company",
             website=None,
-            general_email=None,
+            email=None,
         )
         test_db.add(org)
         test_db.commit()

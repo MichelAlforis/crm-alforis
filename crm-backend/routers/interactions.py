@@ -26,7 +26,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel
 from sqlalchemy import desc
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from core import get_current_user, get_db
 from models.interaction import Interaction, InteractionParticipant, InteractionStatus
@@ -96,21 +96,12 @@ def _build_interaction_out(interaction: Interaction) -> InteractionOut:
         # Si lazy-load échoue, on continue avec liste vide
         pass
 
-    # Convertir l'interaction en dict et ajouter les participants
-    # Convertir enums Python → strings pour validation Pydantic (qui utilise Literal[str])
-    interaction_type = interaction.type
-    if hasattr(interaction_type, "value"):
-        interaction_type = interaction_type.value  # Convert InteractionType.EMAIL → 'email'
-
-    interaction_status = getattr(interaction, "status", "todo")
-    if hasattr(interaction_status, "value"):
-        interaction_status = interaction_status.value  # Convert enum → string
-
+    # Construire InteractionOut - les field_validators gèrent enum → str automatiquement
     data = {
         "id": interaction.id,
         "org_id": getattr(interaction, "org_id", None),
         "person_id": getattr(interaction, "person_id", None),
-        "type": interaction_type,  # String attendu par Pydantic Literal
+        "type": interaction.type,  # field_validator convertira enum → str
         "title": getattr(interaction, "title", None) or "",
         "body": getattr(interaction, "body", None) or getattr(interaction, "description", None),
         "created_by": getattr(interaction, "created_by", None),
@@ -120,13 +111,13 @@ def _build_interaction_out(interaction: Interaction) -> InteractionOut:
         "participants": participants_list,
         "external_participants": getattr(interaction, "external_participants", None) or [],
         # V2: Workflow inbox fields
-        "status": interaction_status,  # String attendu par Pydantic Literal
+        "status": getattr(interaction, "status", "todo"),  # field_validator convertira enum → str
         "assignee_id": getattr(interaction, "assignee_id", None),
         "next_action_at": getattr(interaction, "next_action_at", None),
     }
 
-    # TODO: Fix InteractionOut validation - retourner dict temporairement
-    return data  # InteractionOut(**data)
+    # Retourner InteractionOut avec validation automatique
+    return InteractionOut(**data)
 
 
 # ==================== V2 ENDPOINTS (for tests) ====================
@@ -356,7 +347,7 @@ async def delete_interaction(
     db.commit()
 
 
-@router.get("/recent")  # TODO: Fix ENUM validation issues
+@router.get("/recent", response_model=List[InteractionOut])
 async def get_recent_interactions(
     limit: int = Query(5, ge=1, le=20, description="Nombre d'interactions à retourner"),
     db: Session = Depends(get_db),
@@ -366,13 +357,18 @@ async def get_recent_interactions(
     Récupérer les N dernières interactions (toutes organisations/personnes confondues).
 
     Utilisé par le widget Dashboard.
-
-    TEMPORAIRE: Retourne liste vide en attendant fix validation ENUM
     """
-    # TODO: Fixer le problème de validation enum interaction_type
-    # L'erreur vient de la différence entre l'enum Python (membres MAJUSCULES)
-    # et les valeurs DB (minuscules) que Pydantic ne sait pas valider correctement
-    return []
+    # Query avec joinedload pour éviter lazy-loading des participants
+    interactions = (
+        db.query(Interaction)
+        .options(joinedload(Interaction.participants))
+        .order_by(Interaction.created_at.desc())
+        .limit(limit)
+        .all()
+    )
+
+    # Construire les réponses avec field_validator qui gère enum → str
+    return [_build_interaction_out(interaction) for interaction in interactions]
 
 
 @router.get("/by-organisation/{org_id}", response_model=InteractionListResponse)
