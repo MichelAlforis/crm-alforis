@@ -1,4 +1,4 @@
-from models.organisation import Organisation
+from models.organisation import Organisation, OrganisationType
 from models.person import Person
 
 
@@ -65,6 +65,32 @@ def test_bulk_create_organisations_deduplicates_payload(client, test_db):
     assert data["failed"] == 1
     assert len(data["errors"]) == 1
     assert "Doublon dans le payload" in data["errors"][0]["error"]
+
+
+def test_bulk_create_organisations_with_distributor_alias(client, test_db):
+    payload = [
+        {
+            "name": "Distribution Partner",
+            "category": "Wholesale",
+            "country_code": "LU",
+            "language": "FR",
+        }
+    ]
+
+    response = client.post(
+        "/api/v1/imports/organisations/bulk",
+        json=payload,
+        params={"type_org": "distributor"},
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["failed"] == 0
+    created_id = data["created"][0]
+
+    created_org = test_db.query(Organisation).filter(Organisation.id == created_id).first()
+    assert created_org is not None
+    assert created_org.type == OrganisationType.DISTRIBUTEUR
 
 
 def test_bulk_create_organisations_skips_existing(client, test_db, sample_organisation):
@@ -349,6 +375,22 @@ def test_collect_nonempty_emails_utility():
     )
 
     assert emails == {"alice@example.com", "bob@example.com"}
+
+
+def test_collect_nonempty_emails_custom_key():
+    """Test fonction _collect_nonempty_emails avec clé personnalisée"""
+    from api.routes.imports import _collect_nonempty_emails
+
+    emails = _collect_nonempty_emails(
+        [
+            {"personal_email": "primary@example.com"},
+            {"personal_email": "SECONDARY@example.com"},
+            {"personal_email": None},
+        ],
+        key="personal_email",
+    )
+
+    assert emails == {"primary@example.com", "secondary@example.com"}
 
 
 def test_resolve_org_type_utility():

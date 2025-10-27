@@ -877,6 +877,25 @@ class TestCampaignSubscriptions:
         assert subscription.is_active is False
         assert subscription.unsubscribed_at is not None
 
+    def test_unsubscribe_not_found(self, client, test_db, auth_headers):
+        """Test désabonnement d'une souscription inexistante"""
+        campaign = EmailCampaign(
+            name="Missing subscription",
+            status=EmailCampaignStatus.DRAFT,
+            from_name="ALFORIS Finance",
+            from_email="contact@alforis.com",
+            provider=EmailProvider.RESEND,
+        )
+        test_db.add(campaign)
+        test_db.commit()
+
+        response = client.delete(
+            f"/api/v1/email/campaigns/{campaign.id}/subscriptions/99999",
+            headers=auth_headers,
+        )
+        assert response.status_code == 404
+        assert "introuvable" in response.json()["detail"].lower()
+
     def test_list_campaign_subscriptions(self, client, test_db, auth_headers):
         """Test liste des abonnements d'une campagne"""
         campaign = EmailCampaign(
