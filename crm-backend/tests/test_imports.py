@@ -155,6 +155,42 @@ def test_bulk_create_people_rejects_duplicate_emails(client):
     assert "Doublon dans le payload" in data["errors"][0]["error"]
 
 
+def test_bulk_create_people_skips_existing_email_in_db(client, test_db):
+    """Vérifie l'exclusion des emails déjà présents en base"""
+    existing = Person(
+        first_name="Existing",
+        last_name="User",
+        personal_email="existing@example.com",
+        language="FR",
+    )
+    test_db.add(existing)
+    test_db.commit()
+
+    payload = [
+        {
+            "first_name": "New",
+            "last_name": "User",
+            "personal_email": "new@example.com",
+            "language": "FR",
+        },
+        {
+            "first_name": "Duplicate",
+            "last_name": "User",
+            "personal_email": "existing@example.com",
+            "language": "FR",
+        },
+    ]
+
+    response = client.post("/api/v1/imports/people/bulk", json=payload)
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total"] == 2
+    assert len(data["created"]) == 1
+    assert data["failed"] == 1
+    assert any("Email déjà existant en base" in err["error"] for err in data["errors"])
+
+
 # ============================================
 # Tests CSV Imports (lignes 42-179)
 # ============================================
@@ -296,6 +332,23 @@ def test_index_to_row_utility():
 
     assert _index_to_row(0) == 2  # Row 2 (après header)
     assert _index_to_row(5) == 7
+
+
+def test_collect_nonempty_emails_utility():
+    """Test fonction _collect_nonempty_emails"""
+    from api.routes.imports import _collect_nonempty_emails
+
+    emails = _collect_nonempty_emails(
+        [
+            {"email": " Alice@example.com "},
+            {"email": None},
+            {"email": ""},
+            {"email": "bob@example.com"},
+            {},
+        ]
+    )
+
+    assert emails == {"alice@example.com", "bob@example.com"}
 
 
 def test_resolve_org_type_utility():

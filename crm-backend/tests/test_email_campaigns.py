@@ -15,9 +15,11 @@ FIXES par rapport au code legacy:
 - Organisation.name (attribut Python) pour création
 """
 
-import pytest
 from datetime import datetime, timedelta, timezone
 from unittest.mock import Mock, patch
+
+import pytest
+from api.routes.email_campaigns import _extract_user_id
 from models.email import (
     EmailCampaign,
     EmailCampaignStatus,
@@ -34,6 +36,7 @@ from models.email import (
 )
 from models.organisation import Organisation, OrganisationType
 from models.person import Person
+from services.email_service import render_dynamic_content
 
 
 class TestEmailTemplates:
@@ -173,6 +176,11 @@ class TestEmailTemplates:
         response = client.delete(f"/api/v1/email/templates/{template.id}", headers=auth_headers)
         assert response.status_code == 400
         assert "utilisé dans" in response.json()["detail"].lower()
+
+    def test_delete_template_not_found(self, client, auth_headers):
+        """Test suppression d'un template inexistant"""
+        response = client.delete("/api/v1/email/templates/99999", headers=auth_headers)
+        assert response.status_code == 404
 
     @patch("requests.post")
     def test_send_test_email(self, mock_post, client, test_db, auth_headers):
@@ -1218,3 +1226,33 @@ class TestRecipientTracking:
         data = response.json()
         assert len(data) == 1
         assert data[0]["recipient"]["email"] == "notopened@test.com"
+
+
+class TestEmailUtilities:
+    """Tests utilitaires pour la couche email"""
+
+    def test_extract_user_id_variants(self):
+        """Vérifie l'extraction robuste du user_id"""
+        assert _extract_user_id(None) is None
+        assert _extract_user_id({}) is None
+        assert _extract_user_id({"user_id": None}) is None
+        assert _extract_user_id({"user_id": "abc"}) is None
+        assert _extract_user_id({"user_id": "42"}) == 42
+        assert _extract_user_id({"user_id": 7}) == 7
+
+    def test_render_dynamic_content_nested_placeholders(self):
+        """Test remplacement des placeholders dynamiques (y compris nested)"""
+        template_html = (
+            "<h1>Hello {{ user.first_name }}</h1>"
+            "<p>{{ stats.opens }}</p>"
+            "<footer>{{missing}}</footer>"
+        )
+        rendered = render_dynamic_content(
+            template_html,
+            {"user": {"first_name": "Alice"}, "stats": {"opens": 3}, "missing": None},
+        )
+
+        assert "Alice" in rendered
+        assert "3" in rendered
+        assert "{{" not in rendered
+        assert "None" not in rendered
