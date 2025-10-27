@@ -680,16 +680,23 @@ class AddParticipantRequest(BaseModel):
 @router.post("/{interaction_id}/participants", status_code=status.HTTP_201_CREATED)
 async def add_participant_to_interaction(
     interaction_id: int,
-    payload: AddParticipantRequest,
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
+    payload: Optional[AddParticipantRequest] = None,
+    person_id: Optional[int] = None,
+    present: bool = True,
+    role: Optional[str] = None,
 ):
-    """Add participant to interaction"""
+    """Add participant to interaction (accepts JSON body or query params)"""
     from models.person import Person
 
-    person_id = payload.person_id
-    present = payload.present
-    role = payload.role
+    # Support both JSON body and query params for backward compatibility
+    if payload:
+        person_id = payload.person_id
+        present = payload.present
+        role = payload.role
+    elif person_id is None:
+        raise HTTPException(status_code=422, detail="person_id is required")
 
     interaction = db.query(Interaction).filter(Interaction.id == interaction_id).first()
     if not interaction:
