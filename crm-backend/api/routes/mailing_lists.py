@@ -2,12 +2,15 @@
 
 import io
 import json
-from typing import List
+from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
 from sqlalchemy.orm import Session
+from sqlalchemy.orm.query import Query as SQLAlchemyQuery
 
 from core import get_current_user, get_db
+from core.permissions import filter_query_by_team
+from models.mailing_list import MailingList
 from schemas.mailing_list import (
     MailingListCreate,
     MailingListListResponse,
@@ -31,6 +34,73 @@ except ImportError:  # pragma: no cover - executed when pandas missing
     PANDAS_EMPTY_DATA_ERROR = _PandasEmptyDataError
 
 router = APIRouter(prefix="/mailing-lists", tags=["mailing-lists"])
+
+
+def apply_mailing_list_filters(
+    query: SQLAlchemyQuery,
+    params: Dict[str, Any],
+    current_user: dict,
+) -> SQLAlchemyQuery:
+    """
+    Applique exactement les mêmes filtres que le viewer.
+    Utilisé par la route LIST et les exports pour garantir la cohérence.
+    """
+    # 1) Permissions - pas de team filtering pour mailing lists (accessible à tous)
+    # Les mailing lists ne sont pas liées à une équipe spécifique
+
+    # 2) Boolean helper
+    def _get_bool(name: str) -> Optional[bool]:
+        v = params.get(name)
+        if isinstance(v, bool):
+            return v
+        if isinstance(v, str):
+            return v.lower() in ("true", "1", "yes", "y", "oui")
+        return None
+
+    # 3) Extract params
+    only_active = _get_bool("only_active")
+    only_mine = _get_bool("only_mine")
+    target_type = params.get("target_type")
+    search = params.get("search")
+    sort = params.get("sort") or "created_at:desc"
+
+    # 4) Apply filters
+    if only_active:
+        query = query.filter(MailingList.is_active == True)
+
+    if only_mine:
+        # Filtrer par created_by = current user
+        user_id = current_user.get("sub") or current_user.get("id")
+        if user_id:
+            query = query.filter(MailingList.created_by == user_id)
+
+    if target_type:
+        query = query.filter(MailingList.target_type == target_type)
+
+    if search:
+        search_pattern = f"%{search}%"
+        query = query.filter(
+            (MailingList.name.ilike(search_pattern))
+            | (MailingList.description.ilike(search_pattern))
+        )
+
+    # 5) Sorting
+    if sort == "created_at:desc":
+        query = query.order_by(MailingList.created_at.desc())
+    elif sort == "created_at:asc":
+        query = query.order_by(MailingList.created_at.asc())
+    elif sort == "name:asc":
+        query = query.order_by(MailingList.name.asc())
+    elif sort == "name:desc":
+        query = query.order_by(MailingList.name.desc())
+    elif sort == "recipient_count:desc":
+        query = query.order_by(MailingList.recipient_count.desc())
+    elif sort == "recipient_count:asc":
+        query = query.order_by(MailingList.recipient_count.asc())
+    else:
+        query = query.order_by(MailingList.created_at.desc())
+
+    return query
 
 
 def _extract_user_id(current_user: dict) -> int | None:

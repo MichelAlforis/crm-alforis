@@ -8,6 +8,8 @@ Endpoints:
 - GET /exports/mandats/csv : Export CSV mandats
 - GET /exports/mandats/pdf : Export PDF mandats
 - GET /exports/campaigns/csv : Export CSV campagnes email
+- GET /exports/mailing-lists/csv : Export CSV listes de diffusion
+- GET /exports/email-sends/csv : Export CSV historique des envois
 """
 
 from typing import Optional
@@ -16,12 +18,11 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
-from api.routes.organisations import apply_organisation_filters
-from api.routes.people import apply_people_filters
 from core.auth import get_current_user
 from core.database import get_db
 from core.exports import ExportService
-from models.email import EmailCampaign, EmailCampaignStatus
+from models.email import EmailCampaign, EmailCampaignStatus, EmailSend, EmailSendStatus
+from models.mailing_list import MailingList
 from models.mandat import Mandat, MandatStatus, MandatType
 from models.organisation import Organisation, OrganisationCategory
 from models.person import Person
@@ -55,6 +56,9 @@ async def export_organisations_csv(
 
     **Returns:** Fichier CSV téléchargeable
     """
+    # Import local pour éviter circular import
+    from api.routes.organisations import apply_organisation_filters
+
     # Construire les params exactement comme le viewer
     params = {
         "category": category,
@@ -141,6 +145,9 @@ async def export_organisations_excel(
 
     **Returns:** Fichier Excel (.xlsx) téléchargeable
     """
+    # Import local pour éviter circular import
+    from api.routes.organisations import apply_organisation_filters
+
     # Construire les params exactement comme le viewer
     params = {
         "category": category,
@@ -726,4 +733,195 @@ async def export_campaigns_csv(
         buffer,
         media_type="text/csv",
         headers={"Content-Disposition": "attachment; filename=campaigns.csv"},
+    )
+
+
+@router.get("/mailing-lists/csv")
+async def export_mailing_lists_csv(
+    only_active: Optional[bool] = Query(None, description="Filtrer actives/inactives"),
+    only_mine: Optional[bool] = Query(None, description="Seulement mes listes"),
+    target_type: Optional[str] = Query(None, description="Filtrer par type de destinataire"),
+    search: Optional[str] = Query(None, description="Recherche textuelle"),
+    sort: Optional[str] = Query(None, description="Tri (created_at:desc par défaut)"),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Export CSV listes de diffusion avec filtres
+
+    **Utilise EXACTEMENT les mêmes filtres que le viewer**
+
+    **Exemples:**
+    - `/exports/mailing-lists/csv`
+    - `/exports/mailing-lists/csv?only_active=true`
+    - `/exports/mailing-lists/csv?only_mine=true&target_type=contacts`
+
+    **Returns:** Fichier CSV téléchargeable
+    """
+    # Import local pour éviter circular import
+    from api.routes.mailing_lists import apply_mailing_list_filters
+
+    # Construire les params exactement comme le viewer
+    params = {
+        "only_active": only_active,
+        "only_mine": only_mine,
+        "target_type": target_type,
+        "search": search,
+        "sort": sort,
+    }
+
+    # Appliquer les mêmes filtres que le viewer
+    query = db.query(MailingList)
+    query = apply_mailing_list_filters(query, params, current_user)
+
+    mailing_lists = query.all()
+
+    # Préparer les données pour l'export
+    export_data = []
+    for mailing_list in mailing_lists:
+        created_at = mailing_list.created_at.isoformat() if mailing_list.created_at else ""
+        last_used_at = mailing_list.last_used_at.isoformat() if mailing_list.last_used_at else ""
+
+        # Convertir filters JSON en string
+        import json
+
+        filters_str = json.dumps(mailing_list.filters) if mailing_list.filters else "{}"
+
+        export_data.append(
+            {
+                "id": mailing_list.id,
+                "name": mailing_list.name or "",
+                "description": mailing_list.description or "",
+                "target_type": mailing_list.target_type or "",
+                "recipient_count": mailing_list.recipient_count or 0,
+                "filters": filters_str,
+                "is_active": mailing_list.is_active,
+                "last_used_at": last_used_at,
+                "created_at": created_at,
+            }
+        )
+
+    # Export CSV avec headers explicites
+    headers = [
+        "id",
+        "name",
+        "description",
+        "target_type",
+        "recipient_count",
+        "filters",
+        "is_active",
+        "last_used_at",
+        "created_at",
+    ]
+
+    buffer = ExportService.export_csv(
+        data=export_data,
+        filename="mailing_lists.csv",
+        headers=headers,
+    )
+
+    buffer.seek(0)
+    return StreamingResponse(
+        buffer,
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=mailing_lists.csv"},
+    )
+
+
+@router.get("/email-sends/csv")
+async def export_email_sends_csv(
+    campaign_id: Optional[int] = Query(None, description="Filtrer par campagne"),
+    batch_id: Optional[int] = Query(None, description="Filtrer par batch"),
+    status: Optional[EmailSendStatus] = Query(None, description="Filtrer par statut"),
+    recipient_email: Optional[str] = Query(None, description="Filtrer par email destinataire"),
+    search: Optional[str] = Query(None, description="Recherche textuelle"),
+    sort: Optional[str] = Query(None, description="Tri (created_at:desc par défaut)"),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Export CSV historique des envois d'emails avec filtres
+
+    **Utilise EXACTEMENT les mêmes filtres que le viewer**
+
+    **Exemples:**
+    - `/exports/email-sends/csv`
+    - `/exports/email-sends/csv?campaign_id=1`
+    - `/exports/email-sends/csv?status=delivered`
+    - `/exports/email-sends/csv?batch_id=5&status=sent`
+
+    **Returns:** Fichier CSV téléchargeable
+    """
+    # Import local pour éviter circular import
+    from api.routes.email_campaigns import apply_email_send_filters
+
+    # Construire les params exactement comme le viewer
+    params = {
+        "campaign_id": campaign_id,
+        "batch_id": batch_id,
+        "status": status,
+        "recipient_email": recipient_email,
+        "search": search,
+        "sort": sort,
+    }
+
+    # Appliquer les mêmes filtres que le viewer
+    query = db.query(EmailSend)
+    query = apply_email_send_filters(query, params, current_user)
+
+    email_sends = query.all()
+
+    # Préparer les données pour l'export
+    export_data = []
+    for send in email_sends:
+        created_at = send.created_at.isoformat() if send.created_at else ""
+        sent_at = send.sent_at.isoformat() if send.sent_at else ""
+        scheduled_at = send.scheduled_at.isoformat() if send.scheduled_at else ""
+
+        export_data.append(
+            {
+                "id": send.id,
+                "campaign_id": send.campaign_id or "",
+                "batch_id": send.batch_id or "",
+                "step_id": send.step_id or "",
+                "recipient_email": send.recipient_email or "",
+                "recipient_name": send.recipient_name or "",
+                "status": send.status.value if send.status else "",
+                "variant": send.variant.value if send.variant else "",
+                "scheduled_at": scheduled_at,
+                "sent_at": sent_at,
+                "provider_message_id": send.provider_message_id or "",
+                "error_message": send.error_message or "",
+                "created_at": created_at,
+            }
+        )
+
+    # Export CSV avec headers explicites
+    headers = [
+        "id",
+        "campaign_id",
+        "batch_id",
+        "step_id",
+        "recipient_email",
+        "recipient_name",
+        "status",
+        "variant",
+        "scheduled_at",
+        "sent_at",
+        "provider_message_id",
+        "error_message",
+        "created_at",
+    ]
+
+    buffer = ExportService.export_csv(
+        data=export_data,
+        filename="email_sends.csv",
+        headers=headers,
+    )
+
+    buffer.seek(0)
+    return StreamingResponse(
+        buffer,
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=email_sends.csv"},
     )

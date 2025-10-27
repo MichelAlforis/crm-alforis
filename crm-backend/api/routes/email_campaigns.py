@@ -1,12 +1,14 @@
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel
 from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
+from sqlalchemy.orm.query import Query as SQLAlchemyQuery
 
 from core import get_current_user, get_db
 from core.events import EventType, emit_event
+from core.permissions import filter_query_by_team
 from models.email import EmailCampaignStatus, EmailProvider, EmailSend, EmailSendStatus
 from schemas.base import PaginatedResponse
 from schemas.email import (
@@ -33,6 +35,71 @@ from services.email_service import (
 )
 
 router = APIRouter(prefix="/email", tags=["email"])
+
+
+def apply_email_send_filters(
+    query: SQLAlchemyQuery,
+    params: Dict[str, Any],
+    current_user: dict,
+) -> SQLAlchemyQuery:
+    """
+    Applique exactement les mêmes filtres que le viewer.
+    Utilisé par la route LIST et les exports pour garantir la cohérence.
+    """
+    # 1) Permissions - EmailSend est lié à une campagne, appliquer filter_query_by_team
+    query = filter_query_by_team(query, current_user, EmailSend)
+
+    # 2) Extract params
+    campaign_id = params.get("campaign_id")
+    batch_id = params.get("batch_id")
+    status = params.get("status")
+    recipient_email = params.get("recipient_email")
+    search = params.get("search")
+    sort = params.get("sort") or "created_at:desc"
+
+    # 3) Apply filters
+    if campaign_id:
+        query = query.filter(EmailSend.campaign_id == campaign_id)
+
+    if batch_id:
+        query = query.filter(EmailSend.batch_id == batch_id)
+
+    if status:
+        # Support both string and enum
+        if isinstance(status, str):
+            try:
+                status = EmailSendStatus(status)
+            except ValueError:
+                pass
+        query = query.filter(EmailSend.status == status)
+
+    if recipient_email:
+        query = query.filter(EmailSend.recipient_email.ilike(f"%{recipient_email}%"))
+
+    if search:
+        search_pattern = f"%{search}%"
+        query = query.filter(
+            (EmailSend.recipient_email.ilike(search_pattern))
+            | (EmailSend.recipient_name.ilike(search_pattern))
+        )
+
+    # 4) Sorting
+    if sort == "created_at:desc":
+        query = query.order_by(EmailSend.created_at.desc())
+    elif sort == "created_at:asc":
+        query = query.order_by(EmailSend.created_at.asc())
+    elif sort == "sent_at:desc":
+        query = query.order_by(EmailSend.sent_at.desc().nullslast())
+    elif sort == "sent_at:asc":
+        query = query.order_by(EmailSend.sent_at.asc().nullsfirst())
+    elif sort == "status:asc":
+        query = query.order_by(EmailSend.status.asc())
+    elif sort == "status:desc":
+        query = query.order_by(EmailSend.status.desc())
+    else:
+        query = query.order_by(EmailSend.created_at.desc())
+
+    return query
 
 
 def _extract_user_id(current_user: dict) -> Optional[int]:
