@@ -5,6 +5,7 @@
 
 import React from 'react'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
+import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { Card } from '@/components/shared'
 import { Edit, Trash2, Eye, Mail, Phone, MapPin } from 'lucide-react'
 
@@ -222,28 +223,39 @@ export default function DemoTableV2Page() {
       sticky: 'right', // ✨ Sticky column on the right
       priority: 'high', // 📱 Always visible on mobile
       minWidth: '120px',
-      render: (value: number) => (
-        <div className="flex items-center gap-1">
-          <button
-            className="p-1.5 text-blue-600 hover:bg-blue-50 rounded transition-colors"
-            title="Voir"
-          >
-            <Eye className="w-4 h-4" />
-          </button>
-          <button
-            className="p-1.5 text-gray-600 hover:bg-gray-50 rounded transition-colors"
-            title="Modifier"
-          >
-            <Edit className="w-4 h-4" />
-          </button>
-          <button
-            className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors"
-            title="Supprimer"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
-        </div>
-      )
+      render: (value: number, row: DemoContact) => {
+        const actions: OverflowAction[] = [
+          {
+            label: 'Voir',
+            icon: Eye,
+            onClick: () => alert(`Voir contact: ${row.name}`),
+            variant: 'default'
+          },
+          {
+            label: 'Modifier',
+            icon: Edit,
+            onClick: () => alert(`Modifier contact: ${row.name}`),
+            variant: 'default'
+          },
+          {
+            label: 'Supprimer',
+            icon: Trash2,
+            onClick: () => {
+              if (confirm(`Supprimer ${row.name}?`)) {
+                alert('Contact supprimé!')
+              }
+            },
+            variant: 'danger'
+          }
+        ]
+
+        return (
+          <OverflowMenu
+            actions={actions}
+            threshold={3}
+          />
+        )
+      }
     }
   ]
 
@@ -302,10 +314,10 @@ export default function DemoTableV2Page() {
         </Card>
 
         <Card className="p-4 bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
-          <div className="text-2xl mb-2">⚡</div>
-          <h3 className="font-semibold text-gray-900">Performance</h3>
+          <div className="text-2xl mb-2">⋮</div>
+          <h3 className="font-semibold text-gray-900">Menu Overflow</h3>
           <p className="text-xs text-gray-600 mt-1">
-            Optimisé pour grandes tables
+            Actions groupées en "..." sur tactile
           </p>
         </Card>
       </div>
@@ -329,7 +341,11 @@ export default function DemoTableV2Page() {
             <span>Table complète avec scroll horizontal si nécessaire</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="font-bold text-orange-600">Tri:</span>
+            <span className="font-bold text-orange-600">Menu "...":</span>
+            <span>Sur tactile → 3 boutons groupés. Sur souris → boutons visibles</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="font-bold text-purple-600">Tri:</span>
             <span>Cliquez sur les en-têtes pour trier (Nom, Email, Statut, Revenu, Date)</span>
           </li>
         </ul>

@@ -1,7 +1,7 @@
 # 📋 Chapitre 9 - Responsive V2 (Advanced)
 
 **Status :** 🚧 EN COURS
-**Tests :** 3/10 (30%)
+**Tests :** 4/10 (40%)
 **Priorité :** 🟡 Moyenne (amélioration UX)
 
 **Objectif :** Passer d'un responsive "fonctionnel" à un responsive "context-aware" avec optimisations avancées.
@@ -15,7 +15,7 @@
 | V2.1 | Colonnes sticky (left/right) | ✅ OK | TableV2 avec `sticky: 'left' \| 'right'` |
 | V2.2 | Pattern collapse/expand mobile | ✅ OK | `priority: 'high' \| 'medium' \| 'low'` |
 | V2.3 | Détection pointer (coarse/fine) | ✅ OK | Hook `usePointerType()` avec media query |
-| V2.4 | Menu overflow actions tactile | ⬜ TODO | Grouper actions en "..." sur coarse pointer |
+| V2.4 | Menu overflow actions tactile | ✅ OK | OverflowMenu component avec Portal + threshold |
 | V2.5 | **Test** : Table demo responsive | ⏳ À TESTER | `/dashboard/demo-table-v2` |
 
 ## 🎨 Design Fluide & Container Queries - 3 tests
@@ -97,10 +97,14 @@ interface TableV2Props<T> {
 ## 🎯 Prochaines étapes
 
 ### Phase 2 - Optimisations UX
-1. **Menu overflow actions** (V2.4)
-   - Détecter `pointer: coarse`
-   - Grouper 3+ boutons actions dans menu "..."
-   - Utiliser Popover ou Dropdown
+
+1. **✅ Menu overflow actions** (V2.4) - COMPLÉTÉ
+   - Composant `OverflowMenu.tsx` créé
+   - Détection `pointer: coarse` avec hook `usePointerType()`
+   - Groupement automatique 3+ actions dans menu "..."
+   - Portal pour rendering hors overflow parents
+   - Support variants (default/danger/success)
+   - Accessibilité: Escape key, click outside, aria labels
 
 2. **Typography fluide** (V2.6)
    - Remplacer `text-sm`, `text-base` par `clamp()`
@@ -158,10 +162,12 @@ interface TableV2Props<T> {
 
 **Nouveaux fichiers :**
 - `crm-frontend/components/shared/TableV2.tsx` (420 lignes)
-- `crm-frontend/app/dashboard/demo-table-v2/page.tsx` (310 lignes)
+- `crm-frontend/components/shared/OverflowMenu.tsx` (240 lignes) ✨ NEW
+- `crm-frontend/app/dashboard/demo-table-v2/page.tsx` (340 lignes, updated)
 - `checklists/09-responsive-v2.md` (ce fichier)
 
 **Fichiers modifiés :**
-- `crm-frontend/components/shared/index.ts` (+1 export)
+- `crm-frontend/components/shared/index.ts` (+2 exports: TableV2, OverflowMenu)
+- `crm-frontend/app/dashboard/demo-table-v2/page.tsx` (Actions avec OverflowMenu)
 
 **Prêt pour commit :** ✅ Oui
