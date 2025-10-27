@@ -224,5 +224,4 @@ class TaskAutomationService:
             rule_name="custom_followup",
             Organisation_id=Organisation_id,
             person_id=person_id,
-            person_id=person_id,
         )
