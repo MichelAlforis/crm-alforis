@@ -56,32 +56,42 @@ function DropdownPortal({ triggerRef, isOpen, onClose, children }: DropdownPorta
   useEffect(() => {
     if (isOpen && triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect()
-      const viewportHeight = window.innerHeight
-      const viewportWidth = window.innerWidth
+      const vw = window.visualViewport?.width ?? window.innerWidth
+      const vh = window.visualViewport?.height ?? window.innerHeight
       const dropdownWidth = 160
       const dropdownHeight = 200 // Estimate
 
-      // Position below if space, otherwise above
-      const shouldPositionAbove = rect.bottom + dropdownHeight > viewportHeight
+      // Position below if space, otherwise above (viewport coords, no scroll offset)
+      const shouldPositionAbove = rect.bottom + dropdownHeight > vh
 
-      // Calculate left position, ensuring it stays within viewport
-      let leftPos = rect.right - dropdownWidth + window.scrollX
+      // Calculate left position: align right edge of dropdown with right edge of button
+      let leftPos = rect.right - dropdownWidth
 
-      // If dropdown would go off left edge, align to left of trigger instead
-      if (leftPos < 0) {
-        leftPos = rect.left + window.scrollX
+      // Clamp to viewport bounds with margin
+      const margin = 8
+      if (leftPos + dropdownWidth > vw - margin) {
+        leftPos = vw - margin - dropdownWidth
+      }
+      if (leftPos < margin) {
+        leftPos = margin
       }
 
-      // If still off right edge, align to right edge with padding
-      if (leftPos + dropdownWidth > viewportWidth) {
-        leftPos = viewportWidth - dropdownWidth - 8
+      // Calculate top position (viewport coords)
+      let topPos = shouldPositionAbove
+        ? rect.top - dropdownHeight - margin
+        : rect.bottom + margin
+
+      // Clamp top to viewport
+      if (topPos < margin) {
+        topPos = margin
+      }
+      if (topPos + dropdownHeight > vh - margin) {
+        topPos = vh - margin - dropdownHeight
       }
 
       setPosition({
-        top: shouldPositionAbove
-          ? rect.top - dropdownHeight + window.scrollY
-          : rect.bottom + 4 + window.scrollY,
-        left: Math.max(8, leftPos) // Ensure at least 8px from left edge
+        top: Math.round(topPos),
+        left: Math.round(leftPos)
       })
     }
   }, [isOpen, triggerRef])
@@ -155,28 +165,42 @@ function DropdownPortal({ triggerRef, isOpen, onClose, children }: DropdownPorta
   console.log('✅ [DropdownPortal] Rendering dropdown at position:', position)
 
   return createPortal(
-    <div
-      ref={dropdownRef}
-      className="fixed z-[9999]"
-      style={{ top: `${position.top}px`, left: `${position.left}px` }}
-      data-dropdown-content
-      onClick={(e) => {
-        console.log('🖱️  [DropdownPortal] Dropdown clicked - stopping propagation')
-        e.stopPropagation()
-      }}
-      onTouchStart={(e) => {
-        console.log('👆 [DropdownPortal] Dropdown touchstart - stopping propagation')
-        e.stopPropagation()
-      }}
-      onTouchEnd={(e) => {
-        console.log('👆 [DropdownPortal] Dropdown touchend - stopping propagation')
-        e.stopPropagation()
-      }}
-    >
-      <div className="min-w-[160px] bg-white border border-gray-200 rounded-lg shadow-lg py-1 animate-in fade-in slide-in-from-top-2 duration-150">
-        {children}
+    <>
+      {/* Backdrop transparent pour fermer au click */}
+      <div
+        className="fixed inset-0 z-[9998]"
+        onClick={(e) => {
+          console.log('🖱️  [DropdownPortal] Backdrop clicked - closing')
+          e.stopPropagation()
+          onClose()
+        }}
+        onTouchEnd={(e) => {
+          console.log('👆 [DropdownPortal] Backdrop touched - closing')
+          e.stopPropagation()
+          onClose()
+        }}
+      />
+
+      {/* Menu dropdown */}
+      <div
+        ref={dropdownRef}
+        className="fixed z-[9999] transition-opacity duration-150"
+        style={{ top: `${position.top}px`, left: `${position.left}px` }}
+        data-dropdown-content
+        onClick={(e) => {
+          console.log('🖱️  [DropdownPortal] Dropdown clicked - stopping propagation')
+          e.stopPropagation()
+        }}
+        onTouchEnd={(e) => {
+          console.log('👆 [DropdownPortal] Dropdown touchend - stopping propagation')
+          e.stopPropagation()
+        }}
+      >
+        <div className="min-w-[160px] bg-white border border-gray-200 rounded-lg shadow-lg py-1">
+          {children}
+        </div>
       </div>
-    </div>,
+    </>,
     document.body
   )
 }

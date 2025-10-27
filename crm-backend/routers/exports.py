@@ -61,9 +61,6 @@ async def export_organisations_csv(
 
     organisations = query.all()
 
-    if not organisations:
-        raise HTTPException(404, "Aucune organisation à exporter")
-
     # Export CSV with explicit columns (noms d'attributs Python, pas noms DB)
     headers = [
         "id",
@@ -84,6 +81,7 @@ async def export_organisations_csv(
         "is_active",
     ]
 
+    # Permettre l'export même si vide (CSV avec seulement les headers)
     buffer = ExportService.export_csv(
         data=organisations,
         filename="organisations.csv",
@@ -137,9 +135,7 @@ async def export_organisations_excel(
 
     organisations = query.all()
 
-    if not organisations:
-        raise HTTPException(404, "Aucune organisation à exporter")
-
+    # Permettre l'export même si vide
     # Export Excel
     buffer = ExportService.export_organisations_excel(
         organisations=organisations,
@@ -192,9 +188,7 @@ async def export_organisations_pdf(
 
     organisations = query.all()
 
-    if not organisations:
-        raise HTTPException(404, "Aucune organisation à exporter")
-
+    # Permettre l'export même si vide
     # Gérer current_user comme dict ou objet pour l'auteur du PDF
     if isinstance(current_user, dict):
         author_name = current_user.get("username", current_user.get("email", "CRM User"))
@@ -245,9 +239,7 @@ async def export_mandats_csv(
 
     mandats = query.all()
 
-    if not mandats:
-        raise HTTPException(404, "Aucun mandat à exporter")
-
+    # Permettre l'export même si vide
     # Export CSV with explicit columns
     headers = [
         "id",
@@ -311,9 +303,7 @@ async def export_mandats_pdf(
 
     mandats = query.all()
 
-    if not mandats:
-        raise HTTPException(404, "Aucun mandat à exporter")
-
+    # Permettre l'export même si vide
     # Export PDF
     buffer = ExportService.export_mandats_pdf(
         mandats=mandats,
@@ -360,9 +350,7 @@ async def export_people_csv(
 
     people = query.all()
 
-    if not people:
-        raise HTTPException(404, "Aucune personne à exporter")
-
+    # Permettre l'export même si vide
     # Export CSV with explicit columns (noms d'attributs Python)
     headers = [
         "id",
@@ -432,9 +420,7 @@ async def export_people_excel(
 
     people = query.all()
 
-    if not people:
-        raise HTTPException(404, "Aucune personne à exporter")
-
+    # Permettre l'export même si vide
     # Export Excel with explicit columns (noms d'attributs Python)
     headers = [
         "id",
@@ -504,9 +490,7 @@ async def export_people_pdf(
 
     people = query.all()
 
-    if not people:
-        raise HTTPException(404, "Aucune personne à exporter")
-
+    # Permettre l'export même si vide
     # Préparer les données pour le PDF (format similaire à export_organisations_pdf)
     from datetime import datetime
     from io import BytesIO
@@ -637,9 +621,7 @@ async def export_campaigns_csv(
 
     campaigns = query.all()
 
-    if not campaigns:
-        raise HTTPException(404, "Aucune campagne à exporter")
-
+    # Permettre l'export même si vide
     # Préparer les données pour l'export
     export_data = []
     for campaign in campaigns:

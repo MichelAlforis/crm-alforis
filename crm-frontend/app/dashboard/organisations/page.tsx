@@ -91,10 +91,9 @@ export default function OrganisationsPage() {
     is_active:
       filters.values.status === ''
         ? undefined
-        : filters.values.status === 'active'
-          ? 'true'
-          : 'false',
-    country: filters.values.country || undefined,
+        : filters.values.status === 'active',
+    country_code: filters.values.country || undefined,
+    language: filters.values.language || undefined,
   }
 
   const advancedFilterDefinitions = [

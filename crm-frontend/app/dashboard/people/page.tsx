@@ -66,6 +66,13 @@ export default function PeoplePage() {
     },
   })
 
+  // Export parameters matching backend API
+  const exportParams = {
+    role: filters.values.role || undefined,
+    country_code: filters.values.country || undefined,
+    language: filters.values.language || undefined,
+  }
+
   const table = useClientSideTable<Person, PeopleFilters>({
     data: people.data?.items || [],
     searchFields: ['first_name', 'last_name', 'personal_email', 'role'],
@@ -261,7 +268,7 @@ export default function PeoplePage() {
               />
               <ExportButtons
                 resource="people"
-                params={{}}
+                params={exportParams}
                 baseFilename="personnes"
               />
             </div>
