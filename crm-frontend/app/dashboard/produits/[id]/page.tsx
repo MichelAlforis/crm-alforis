@@ -7,7 +7,10 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useProduit, useUpdateProduit, useDeleteProduit } from '@/hooks/useProduits'
-import { Card, Button, Table, Alert, Modal } from '@/components/shared'
+import { Card, Button, Alert, Modal } from '@/components/shared'
+import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
+import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
+import { Eye } from 'lucide-react'
 import { ProduitForm } from '@/components/forms'
 import { SkeletonCard } from '@/components/ui/Skeleton'
 import type { ProduitUpdate } from '@/lib/types'
@@ -90,16 +93,29 @@ export default function ProduitDetailPage() {
     )
   }
 
-  const mandatColumns = [
+  type MandatRow = {
+    id: number
+    numero_mandat: string | null
+    organisation: { id: number; name: string }
+    status: string
+    date_debut: string
+  }
+
+  const mandatColumns: ColumnV2<MandatRow>[] = [
     {
       header: 'N° Mandat',
       accessor: 'numero_mandat',
+      sticky: 'left',
+      priority: 'high',
+      minWidth: '140px',
       render: (value: string | null) => value || '-',
     },
     {
       header: 'Organisation',
       accessor: 'organisation',
-      render: (org: any) => (
+      priority: 'high',
+      minWidth: '200px',
+      render: (org: { id: number; name: string }) => (
         <Link
           href={`/dashboard/organisations/${org.id}`}
           className="text-bleu hover:underline"
@@ -111,6 +127,8 @@ export default function ProduitDetailPage() {
     {
       header: 'Statut',
       accessor: 'status',
+      priority: 'high',
+      minWidth: '120px',
       render: (value: string) => (
         <span
           className={`px-2 py-1 text-xs rounded ${
@@ -128,16 +146,27 @@ export default function ProduitDetailPage() {
     {
       header: 'Date début',
       accessor: 'date_debut',
+      priority: 'medium',
+      minWidth: '120px',
       render: (value: string) => new Date(value).toLocaleDateString('fr-FR'),
     },
     {
       header: 'Actions',
       accessor: 'id',
-      render: (id: number) => (
-        <Link href={`/dashboard/mandats/${id}`} className="text-bleu hover:underline text-sm">
-          Voir
-        </Link>
-      ),
+      sticky: 'right',
+      priority: 'high',
+      minWidth: '120px',
+      render: (id: number) => {
+        const actions: OverflowAction[] = [
+          {
+            label: 'Voir',
+            icon: Eye,
+            onClick: () => window.location.href = `/dashboard/mandats/${id}`,
+            variant: 'default'
+          }
+        ]
+        return <OverflowMenu actions={actions} />
+      },
     },
   ]
 
@@ -204,11 +233,15 @@ export default function ProduitDetailPage() {
         </div>
 
         {produit.mandats && produit.mandats.length > 0 ? (
-          <Table
+          <TableV2<MandatRow>
             columns={mandatColumns}
             data={produit.mandats}
             isLoading={false}
             isEmpty={false}
+            getRowKey={(row) => row.id.toString()}
+            size="md"
+            variant="default"
+            stickyHeader
           />
         ) : (
           <div className="text-center py-8 text-gray-500">
