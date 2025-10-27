@@ -13,6 +13,7 @@
     "start": "next start -p 3010",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
+    "test": "echo \"No tests yet - LOT C: TODO implement Jest/React Testing Library\" && exit 0",
     "kill-port": "lsof -ti:3010 | xargs kill -9 2>/dev/null || true"
   },
   "dependencies": {

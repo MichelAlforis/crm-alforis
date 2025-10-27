@@ -196,7 +196,7 @@ async def ingest_email_event(
 
         # 4. Create Interaction on first open
         if is_first_open and email_send.interaction_id is None:
-            user_id = current_user.get("user_id", 1)
+            user_id = int(current_user.get("sub", 1))  # JWT uses "sub" not "user_id"
             create_interaction_from_email(db, email_send, user_id)
 
     elif payload.event == "clicked":

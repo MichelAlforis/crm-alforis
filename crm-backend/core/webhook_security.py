@@ -16,6 +16,13 @@ from typing import Any, Dict, Optional
 from fastapi import HTTPException, status
 
 
+def _serialize_datetime(obj):
+    """Serializer pour json.dumps() - convertit datetime en ISO 8601"""
+    if isinstance(obj, datetime):
+        return obj.isoformat()
+    raise TypeError(f"Type {type(obj)} not serializable")
+
+
 def compute_hmac_signature(payload: Dict[str, Any], secret: str) -> str:
     """
     Calcule la signature HMAC SHA-256 d'un payload.
@@ -28,7 +35,8 @@ def compute_hmac_signature(payload: Dict[str, Any], secret: str) -> str:
         Signature HMAC en hexadécimal
     """
     # Serialize payload to JSON (sorted keys for consistency)
-    payload_bytes = json.dumps(payload, sort_keys=True).encode("utf-8")
+    # Use default=_serialize_datetime to handle datetime objects
+    payload_bytes = json.dumps(payload, sort_keys=True, default=_serialize_datetime).encode("utf-8")
 
     # Compute HMAC
     signature = hmac.new(
