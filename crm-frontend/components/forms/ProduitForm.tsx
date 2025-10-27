@@ -176,8 +176,8 @@ export function ProduitForm({
         </p>
       </div>
 
-      <div className="flex justify-end gap-3 pt-4">
-        <Button type="submit" disabled={isLoading} variant="primary">
+      <div className="flex flex-col sm:flex-row sm:justify-end gap-3 pt-4">
+        <Button type="submit" disabled={isLoading} variant="primary" className="w-full sm:w-auto">
           {isLoading ? 'Enregistrement...' : submitLabel}
         </Button>
       </div>

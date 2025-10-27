@@ -411,18 +411,18 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
             </div>
 
             {/* Actions */}
-            <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+            <div className="flex flex-col sm:flex-row sm:justify-end gap-3 pt-4 border-t border-gray-200">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors"
+                className="w-full sm:w-auto px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors"
                 disabled={isCreating}
               >
                 Annuler
               </button>
               <button
                 type="submit"
-                className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={isCreating}
               >
                 {isCreating ? 'Création...' : 'Créer la tâche'}
