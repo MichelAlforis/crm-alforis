@@ -9,14 +9,15 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { useOrganisations } from '@/hooks/useOrganisations'
-import { useTableColumns } from '@/hooks/useTableColumns'
 import { useFilters } from '@/hooks/useFilters'
 import { usePagination } from '@/hooks/usePagination'
-import { Card, Button, Table, Alert, AdvancedFilters, ExportButtons } from '@/components/shared'
-import { ColumnSelector } from '@/components/shared/ColumnSelector'
+import { Card, Button, Alert, AdvancedFilters, ExportButtons } from '@/components/shared'
+import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
+import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import SearchBar from '@/components/search/SearchBar'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
-import { OrganisationCategory } from '@/lib/types'
+import { OrganisationCategory, Organisation } from '@/lib/types'
+import { Eye, Edit, Trash2, Mail, Phone, Globe } from 'lucide-react'
 
 const CATEGORY_LABELS: Record<string, string> = {
   Institution: 'Institution',
@@ -155,25 +156,33 @@ export default function OrganisationsPage() {
     },
   ]
 
-  // Define default columns configuration
-  const defaultColumns = useMemo(
+  // Define columns for TableV2
+  const columns: ColumnV2<Organisation>[] = useMemo(
     () => [
       {
-        key: 'name',
         header: 'Nom',
         accessor: 'name',
-        visible: true,
         sortable: true,
+        sticky: 'left',
+        priority: 'high',
+        minWidth: '200px',
+        render: (value: string, row: Organisation) => (
+          <Link
+            href={`/dashboard/organisations/${row.id}`}
+            className="font-medium text-gray-900 hover:text-blue-600 transition-colors"
+          >
+            {value}
+          </Link>
+        )
       },
       {
-        key: 'category',
         header: 'Catégorie',
         accessor: 'category',
-        visible: true,
         sortable: true,
+        priority: 'high',
         render: (value: OrganisationCategory | null) =>
           value ? (
-            <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+            <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
               {CATEGORY_LABELS[value] || value}
             </span>
           ) : (
@@ -181,66 +190,85 @@ export default function OrganisationsPage() {
           ),
       },
       {
-        key: 'email',
         header: 'Email',
         accessor: 'email',
-        visible: true,
         sortable: true,
-        render: (value: string | null) => value || '-',
+        priority: 'high',
+        maxWidth: '280px',
+        render: (value: string | null) => value ? (
+          <a
+            href={`mailto:${value}`}
+            className="flex items-center gap-1 min-w-0 text-blue-600 hover:text-blue-700 hover:underline"
+            title={value}
+          >
+            <Mail className="w-3.5 h-3.5 flex-shrink-0" />
+            <span className="truncate block min-w-0">{value}</span>
+          </a>
+        ) : <span className="text-gray-400">-</span>,
       },
       {
-        key: 'main_phone',
         header: 'Téléphone',
         accessor: 'main_phone',
-        visible: false,
         sortable: true,
-        render: (value: string | null) => value || '-',
+        priority: 'medium',
+        render: (value: string | null) => value ? (
+          <a
+            href={`tel:${value}`}
+            className="flex items-center gap-1 text-gray-700 hover:text-gray-900"
+          >
+            <Phone className="w-3.5 h-3.5 flex-shrink-0" />
+            <span>{value}</span>
+          </a>
+        ) : <span className="text-gray-400">-</span>,
       },
       {
-        key: 'country_code',
         header: 'Pays',
         accessor: 'country_code',
-        visible: true,
         sortable: true,
-        render: (value: string | null) => getCountryLabel(value),
+        priority: 'medium',
+        render: (value: string | null) => (
+          <span className="text-sm">{getCountryLabel(value)}</span>
+        ),
       },
       {
-        key: 'language',
         header: 'Langue',
         accessor: 'language',
-        visible: true,
         sortable: true,
-        render: (value: string | null) => getLanguageLabel(value),
+        priority: 'low',
+        render: (value: string | null) => (
+          <span className="text-sm">{getLanguageLabel(value)}</span>
+        ),
       },
       {
-        key: 'website',
         header: 'Site web',
         accessor: 'website',
-        visible: false,
         sortable: true,
+        priority: 'low',
+        maxWidth: '200px',
         render: (value: string | null) =>
           value ? (
             <a
               href={value}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 hover:underline text-xs truncate max-w-[150px] inline-block"
+              className="flex items-center gap-1 min-w-0 text-blue-600 hover:text-blue-700 hover:underline"
+              title={value}
             >
-              {value}
+              <Globe className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="truncate block min-w-0 text-xs">{value}</span>
             </a>
           ) : (
-            '-'
+            <span className="text-gray-400">-</span>
           ),
       },
       {
-        key: 'is_active',
         header: 'Statut',
         accessor: 'is_active',
-        visible: true,
         sortable: true,
+        priority: 'high',
         render: (value: boolean) => (
           <span
-            className={`px-2 py-1 text-xs rounded ${
+            className={`px-2 py-1 text-xs rounded-full font-medium ${
               value ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
             }`}
           >
@@ -249,34 +277,44 @@ export default function OrganisationsPage() {
         ),
       },
       {
-        key: 'actions',
         header: 'Actions',
         accessor: 'id',
-        visible: true,
-        sortable: false,
-        render: (id: number) => (
-          <Link
-            href={`/dashboard/organisations/${id}`}
-            className="text-bleu hover:underline text-sm"
-          >
-            Voir
-          </Link>
-        ),
+        sticky: 'right',
+        priority: 'high',
+        minWidth: '120px',
+        render: (value: number, row: Organisation) => {
+          const actions: OverflowAction[] = [
+            {
+              label: 'Voir',
+              icon: Eye,
+              onClick: () => router.push(`/dashboard/organisations/${value}`),
+              variant: 'default'
+            },
+            {
+              label: 'Modifier',
+              icon: Edit,
+              onClick: () => router.push(`/dashboard/organisations/${value}?edit=true`),
+              variant: 'default'
+            },
+            {
+              label: 'Supprimer',
+              icon: Trash2,
+              onClick: () => {
+                if (confirm(`Supprimer l'organisation "${row.name}" ?`)) {
+                  // TODO: Implement delete
+                  alert('Suppression à implémenter')
+                }
+              },
+              variant: 'danger'
+            }
+          ]
+
+          return <OverflowMenu actions={actions} />
+        }
       },
     ],
-    []
+    [router]
   )
-
-  // Use the useTableColumns hook
-  const {
-    visibleColumns,
-    columns: allColumns,
-    toggleColumn,
-    resetColumns,
-  } = useTableColumns({
-    storageKey: 'organisations-columns',
-    defaultColumns,
-  })
 
   // Handle sorting
   const handleSort = (key: string) => {
@@ -428,11 +466,6 @@ export default function OrganisationsPage() {
               }}
             />
             <div className="flex gap-2">
-              <ColumnSelector
-                columns={allColumns}
-                onToggle={toggleColumn}
-                onReset={resetColumns}
-              />
               <ExportButtons
                 resource="organisations"
                 params={exportParams}
@@ -452,21 +485,49 @@ export default function OrganisationsPage() {
       {error && <Alert type="error" message={error.message || 'Erreur de chargement'} />}
 
       <Card>
-        <Table
-          columns={visibleColumns}
+        <TableV2<Organisation>
+          columns={columns}
           data={paginatedData || []}
           isLoading={isLoading}
           isEmpty={!filteredAndSortedData || filteredAndSortedData.length === 0}
+          emptyMessage="Aucune organisation trouvée"
           sortConfig={sortConfig}
           onSort={handleSort}
-          pagination={{
-            total: filteredAndSortedData.length,
-            skip: pagination.skip,
-            limit: pagination.limit,
-            onPageChange: pagination.setSkip,
-            onLimitChange: pagination.setLimit,
-          }}
+          getRowKey={(row) => row.id}
+          size="md"
+          variant="default"
+          stickyHeader
         />
+
+        {/* Pagination */}
+        {filteredAndSortedData.length > 0 && (
+          <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
+            <div className="text-sm text-gray-600">
+              Affichage {pagination.skip + 1} à {Math.min(pagination.skip + pagination.limit, filteredAndSortedData.length)} sur {filteredAndSortedData.length} organisations
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => pagination.setSkip(Math.max(0, pagination.skip - pagination.limit))}
+                disabled={pagination.skip === 0}
+              >
+                Précédent
+              </Button>
+              <div className="text-sm text-gray-600">
+                Page {Math.floor(pagination.skip / pagination.limit) + 1} / {Math.ceil(filteredAndSortedData.length / pagination.limit)}
+              </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => pagination.setSkip(pagination.skip + pagination.limit)}
+                disabled={pagination.skip + pagination.limit >= filteredAndSortedData.length}
+              >
+                Suivant
+              </Button>
+            </div>
+          </div>
+        )}
       </Card>
     </div>
   )
