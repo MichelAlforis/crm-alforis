@@ -149,11 +149,15 @@ async def list_interactions(
         query = query.filter(Interaction.person_id == person_id)
     if start_date:
         # Parse ISO datetime string
-        start_dt = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
+        # Handle URL-decoded space (+ becomes space in query params)
+        start_date_fixed = start_date.replace(' ', '+').replace('Z', '+00:00')
+        start_dt = datetime.fromisoformat(start_date_fixed)
         query = query.filter(Interaction.created_at >= start_dt)
     if end_date:
         # Parse ISO datetime string
-        end_dt = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
+        # Handle URL-decoded space (+ becomes space in query params)
+        end_date_fixed = end_date.replace(' ', '+').replace('Z', '+00:00')
+        end_dt = datetime.fromisoformat(end_date_fixed)
         query = query.filter(Interaction.created_at <= end_dt)
     if overdue is not None:
         from datetime import timezone as tz

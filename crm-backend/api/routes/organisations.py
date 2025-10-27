@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from core import get_current_user, get_db
 from core.cache import cache_response, invalidate_organisation_cache
 from core.events import EventType, emit_event
-from models.organisation_activity import OrganisationActivityType
+from models.organisation_activity import OrganisationActivity, OrganisationActivityType
 from schemas.base import PaginatedResponse
 from schemas.organisation import (
     OrganisationCreate,
