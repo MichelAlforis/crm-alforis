@@ -17,7 +17,6 @@ import AIExecutionsList from '@/components/ai/AIExecutionsList'
 import {
   Sparkles,
   CheckCircle,
-  XCircle,
   DollarSign,
   TrendingUp,
   Clock,
@@ -32,7 +31,7 @@ import { useRouter } from 'next/navigation'
 
 export default function AIDashboardPage() {
   const router = useRouter()
-  const { data: stats, isLoading: statsLoading } = useAIStatistics()
+  const { data: stats } = useAIStatistics()
   const { data: executions, isLoading: executionsLoading } = useAIExecutions({ limit: 10 })
 
   const detectDuplicates = useDetectDuplicates()

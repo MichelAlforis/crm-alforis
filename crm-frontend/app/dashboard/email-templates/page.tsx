@@ -33,7 +33,6 @@ interface Template {
 }
 
 export default function EmailTemplatesPage() {
-  const router = useRouter();
   const { toast } = useToast();
   const { confirm, ConfirmDialogComponent } = useConfirm();
 

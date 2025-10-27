@@ -13,11 +13,9 @@ import {
   Send,
   Eye,
   Pause,
-  Play,
   TrendingUp,
   AlertCircle,
   CheckCircle,
-  Clock,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";

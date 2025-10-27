@@ -255,7 +255,7 @@ try:
                 db = next(db_gen)
                 try:
                     user = db.query(User).filter(User.id == int(user_id)).first()
-                    if user and hasattr(user, 'organisation_id'):
+                    if user and hasattr(user, "organisation_id"):
                         org_id = user.organisation_id
                     elif user:
                         # Fallback: organisation par défaut (1) si pas d'org_id
@@ -311,7 +311,7 @@ async def api_exception_handler(request: Request, exc: APIException):
     """Handler pour les exceptions API personnalisées (404, 409, etc.)"""
     return JSONResponse(
         status_code=exc.status_code,
-        content={"detail": exc.detail}
+        content={"detail": exc.message}
     )
 
 @app.exception_handler(Exception)

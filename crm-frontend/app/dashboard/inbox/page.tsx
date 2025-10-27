@@ -1,7 +1,6 @@
 'use client'
 
-import { useState } from 'react'
-import { useInbox, useUpdateInteractionStatus, useUpdateInteractionAssignee, useUpdateInteractionNextAction } from '@/hooks/useInteractions'
+import { useInbox, useUpdateInteractionStatus, useUpdateInteractionNextAction } from '@/hooks/useInteractions'
 import { AdvancedFilters } from '@/components/shared'
 import { useFilters } from '@/hooks/useFilters'
 import type { Interaction, InteractionStatus } from '@/types/interaction'
@@ -30,7 +29,7 @@ function InteractionCard({
   onQuickAction,
 }: {
   interaction: Interaction
-  onQuickAction: (id: number, action: string, value?: any) => void
+  onQuickAction: (id: number, action: string) => void
 }) {
   const typeIcon = INTERACTION_TYPE_ICONS[interaction.type] || '📄'
   const typeLabel = INTERACTION_TYPE_LABELS[interaction.type] || interaction.type
@@ -195,7 +194,6 @@ export default function InboxPage() {
   })
 
   const updateStatus = useUpdateInteractionStatus()
-  const updateAssignee = useUpdateInteractionAssignee()
   const updateNextAction = useUpdateInteractionNextAction()
 
   const advancedFilterDefinitions = [
@@ -233,7 +231,7 @@ export default function InboxPage() {
     },
   ]
 
-  const handleQuickAction = async (id: number, action: string, value?: any) => {
+  const handleQuickAction = async (id: number, action: string) => {
     try {
       switch (action) {
         case 'mark_done':
