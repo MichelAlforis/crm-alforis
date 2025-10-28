@@ -9,15 +9,19 @@ Endpoints:
 - POST /ai/autofill/v2 - Autofill V2 avec multi-sources
 """
 
+import hashlib
+import json
 import secrets
 from datetime import datetime, timedelta
 from typing import Dict, Optional
+from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from core import get_current_user, get_db
 from core.encryption import decrypt_value, encrypt_value
+from models.autofill_decision_log import AutofillDecisionLog
 from models.user import User
 from schemas.integrations import (
     AutofillApplyRequest,
@@ -34,6 +38,7 @@ from schemas.integrations import (
     OutlookSignaturesResponse,
     OutlookSyncResponse,
 )
+from services.autofill_apply_service import AutofillApplyService
 from services.autofill_service_v2 import AutofillServiceV2
 from services.interaction_suggestion_service import InteractionSuggestionService
 from services.matching_scorer import MatchingScorer
@@ -218,6 +223,7 @@ async def autofill_v2(
         entity_type=request.entity_type,
         draft=request.draft,
         context=context,
+        user_id=int(user_id) if user_id else None,
     )
 
     return result
@@ -330,9 +336,117 @@ async def autofill_preview(
         "interaction_suggested": interaction_suggestion is not None,
     }
 
+    # Journaliser la décision de preview pour conformité RGPD
+    user_id_raw = current_user.get("user_id") or current_user.get("sub")
+    best_candidate = matches[0]["candidate"] if matches else {}
+
+    person_id = None
+    organisation_id = None
+    if request.entity_type == "person":
+        person_id = best_candidate.get("id")
+    elif request.entity_type == "organisation":
+        organisation_id = best_candidate.get("id")
+
+    # Essayer d'enrichir avec l'interaction suggérée
+    if interaction_suggestion:
+        person_id = interaction_suggestion.get("person_id") or person_id
+        organisation_id = interaction_suggestion.get("organisation_id") or organisation_id
+
+    try:
+        request_payload = (
+            request.model_dump()  # type: ignore[attr-defined]
+            if hasattr(request, "model_dump")
+            else request.dict()
+        )
+        input_hash = hashlib.sha256(
+            json.dumps(request_payload, sort_keys=True, default=str).encode()
+        ).hexdigest()
+
+        decision_log = AutofillDecisionLog(
+            input_id=f"preview:{uuid4().hex}",
+            input_hash=input_hash,
+            decision=recommendation.value,
+            person_id=person_id,
+            organisation_id=organisation_id,
+            interaction_id=None,
+            scores_json={
+                "matches": matches,
+                "meta": meta,
+            },
+            reason=f"smart_resolver:{recommendation.value}",
+            applied_by_user_id=int(user_id_raw) if user_id_raw else None,
+            was_deduped=0,
+        )
+        db.add(decision_log)
+        db.commit()
+    except Exception as exc:
+        db.rollback()
+        print(f"[AutofillPreview] Unable to persist decision log: {exc}")
+
     return {
         "matches": matches,
         "recommendation": recommendation,
         "interaction_suggestion": interaction_suggestion,
         "meta": meta,
     }
+
+
+# ==========================================
+# Autofill Apply (V1.5+ - Création transactionnelle)
+# ==========================================
+
+
+@router.post("/ai/autofill/apply", response_model=AutofillApplyResponse)
+async def autofill_apply(
+    request: AutofillApplyRequest,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Applique les décisions d'autofill de manière transactionnelle
+
+    Crée/lie:
+    - Person (si apply=True)
+    - Organisation (si apply=True)
+    - Interaction avec participants
+    - AutofillDecisionLog pour traçabilité
+
+    Fonctionnalités:
+    - Idempotence via input_id (rejeu safe)
+    - Déduplication d'interactions (même org + titre + heure ±2h)
+    - Ajout automatique des participants
+    - Journalisation complète avec scores
+
+    Use cases:
+    - Après clic "Créer l'interaction & lier" dans le modal
+    - Workflow auto-apply (score ≥ 100)
+    - Import batch avec suivi décision
+    """
+    try:
+        # Récupérer user_id
+        user_id = current_user.get("user_id") or current_user.get("sub")
+        if not user_id:
+            raise HTTPException(status_code=401, detail="User ID manquant")
+
+        # Initialiser service
+        apply_service = AutofillApplyService(db)
+
+        # Appliquer les décisions
+        result = apply_service.apply(
+            input_id=request.input_id,
+            person_decision=request.person.dict(),
+            organisation_decision=request.organisation.dict(),
+            interaction_data=request.interaction.dict(),
+            dedupe=request.dedupe,
+            current_user_id=int(user_id),
+            context=request.context
+        )
+
+        return AutofillApplyResponse(**result)
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Erreur lors de l'application de l'autofill: {str(e)}"
+        )

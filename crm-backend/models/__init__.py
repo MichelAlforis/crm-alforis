@@ -163,6 +163,8 @@ __all__ = [
     "LeadScore",
     # Known Companies (Autofill)
     "KnownCompany",
+    # Autofill logs
+    "AutofillLog",
 ]
 
 # Backwards compatibility aliases (legacy spelling)

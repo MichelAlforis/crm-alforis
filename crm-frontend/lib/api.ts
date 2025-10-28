@@ -255,7 +255,37 @@ class ApiClient {
   }
 
   /**
-   * Effectue une requête HTTP générique
+   * Tente de rafraîchir le token JWT
+   * @returns true si le refresh a réussi, false sinon
+   */
+  private async tryRefreshToken(): Promise<boolean> {
+    const token = this.getToken()
+    if (!token) return false
+
+    try {
+      const response = await fetch(`${this.baseUrl}/auth/refresh`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        this.setToken(data.access_token)
+        return true
+      }
+
+      return false
+    } catch (error) {
+      console.error('[API] Token refresh failed:', error)
+      return false
+    }
+  }
+
+  /**
+   * Effectue une requête HTTP générique avec gestion automatique du refresh token
    */
   private async request<T>(
     endpoint: string,
@@ -264,22 +294,42 @@ class ApiClient {
     const { params, ...requestConfig } = config
     const url = this.buildUrl(endpoint, params)
 
-    try {
-      const response = await fetch(url, {
+    // Fonction interne pour faire la requête
+    const makeRequest = async (): Promise<Response> => {
+      return await fetch(url, {
         ...requestConfig,
         headers: {
           ...this.getHeaders(requestConfig.method),
           ...requestConfig.headers,
         },
       })
+    }
+
+    try {
+      let response = await makeRequest()
+
+      // Si 401 (Unauthorized), tenter un refresh automatique
+      if (response.status === 401 && !endpoint.includes('/auth/')) {
+        console.log('[API] Token expired, attempting automatic refresh...')
+
+        const refreshSuccess = await this.tryRefreshToken()
+
+        if (refreshSuccess) {
+          console.log('[API] Token refreshed successfully, retrying request...')
+          // Retry la requête avec le nouveau token
+          response = await makeRequest()
+        } else {
+          console.log('[API] Token refresh failed, clearing token and redirecting to login')
+          this.clearToken()
+          // Rediriger vers la page de login
+          if (typeof window !== 'undefined') {
+            window.location.href = '/login'
+          }
+        }
+      }
 
       // Gérer les erreurs HTTP
       if (!response.ok) {
-        if (response.status === 401) {
-          // Token expiré ou invalide
-          this.clearToken()
-        }
-
         const error = await response.json().catch(() => ({}))
 
         // Parser le detail: peut être une string, un array d'erreurs de validation, ou un objet

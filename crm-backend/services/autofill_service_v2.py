@@ -15,8 +15,8 @@ Seuils:
 import hashlib
 import re
 from collections import Counter
-from datetime import datetime
-from typing import Dict, List, Optional, Tuple
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional, Tuple
 
 from phonenumbers import format_number, is_possible_number
 from phonenumbers import parse as pn_parse
@@ -26,6 +26,7 @@ from sqlalchemy.orm import Session
 
 from models.organisation import Organisation
 from models.person import Person
+from services.llm_router import LLMRouter
 from services.outlook_integration import OutlookIntegration
 from services.company_resolver import CompanyResolver
 
@@ -80,8 +81,19 @@ class AutofillServiceV2:
             print(f"[AutofillV2] Outlook désactivé: {e}")
             self.outlook_service = None
 
+        # LLM Router (préparation fallback Mistral → Fallback)
+        try:
+            self.llm_router = LLMRouter()
+        except Exception as e:
+            print(f"[AutofillV2] LLM router désactivé: {e}")
+            self.llm_router = None
+
     async def autofill(
-        self, entity_type: str, draft: Dict, context: Optional[Dict] = None
+        self,
+        entity_type: str,
+        draft: Dict,
+        context: Optional[Dict] = None,
+        user_id: Optional[int] = None,
     ) -> Dict:
         """
         Autofill d'une entité avec pipeline multi-sources
@@ -114,6 +126,8 @@ class AutofillServiceV2:
             "latency_ms": 0,
             "llm_called": False,
             "model": None,
+            "llm_budget_ms": self.llm_router.latency_budget_ms if getattr(self, "llm_router", None) else None,
+            "llm_router_ready": bool(getattr(self, "llm_router", None)),
         }
 
         start_time = datetime.utcnow()
@@ -253,6 +267,15 @@ class AutofillServiceV2:
         # Calculer latence
         duration = (datetime.utcnow() - start_time).total_seconds() * 1000
         meta["latency_ms"] = int(duration)
+
+        # Persister les logs RGPD si user_id fourni
+        self._persist_autofill_logs(
+            user_id=user_id,
+            entity_type=entity_type,
+            draft=draft,
+            suggestions=suggestions,
+            execution_time_ms=meta.get("latency_ms"),
+        )
 
         return {"autofill": suggestions, "tasks": tasks, "meta": meta}
 
@@ -554,3 +577,91 @@ class AutofillServiceV2:
         """Génère un hash SHA256 de l'évidence"""
         content = str(sorted(data.items()))
         return hashlib.sha256(content.encode()).hexdigest()[:16]
+
+    # ==========================================
+    # Logging helpers
+    # ==========================================
+
+    def _persist_autofill_logs(
+        self,
+        user_id: Optional[int],
+        entity_type: str,
+        draft: Dict,
+        suggestions: Dict[str, Dict],
+        execution_time_ms: Optional[int],
+    ) -> None:
+        """Enregistre chaque suggestion dans autofill_logs pour audit/metrics."""
+        if not user_id:
+            return
+
+        logs = []
+        entity_id = self._extract_entity_id(entity_type, draft)
+
+        for field, suggestion in suggestions.items():
+            source = self._normalize_source(str(suggestion.get("source") or "unknown"))
+            logs.append(
+                AutofillLog(
+                    user_id=user_id,
+                    entity_type=entity_type,
+                    entity_id=entity_id,
+                    field=field,
+                    old_value=self._stringify_value(draft.get(field)),
+                    new_value=self._stringify_value(suggestion.get("value")),
+                    confidence=float(suggestion.get("confidence", 0.0)),
+                    source=source,
+                    applied=bool(suggestion.get("applied")),
+                    evidence_hash=self._hash_log_evidence(field, suggestion),
+                    execution_time_ms=execution_time_ms,
+                )
+            )
+
+        if not logs:
+            return
+
+        try:
+            self.db.add_all(logs)
+            self.db.commit()
+        except Exception as exc:
+            self.db.rollback()
+            print(f"[AutofillV2] Unable to persist autofill logs: {exc}")
+
+    def _stringify_value(self, value: Any) -> Optional[str]:
+        """Convertit proprement les valeurs pour stockage texte."""
+        if value is None:
+            return None
+        if isinstance(value, (str, int, float, bool)):
+            return str(value)
+        return str(value)
+
+    def _hash_log_evidence(self, field: str, suggestion: Dict) -> Optional[str]:
+        """Génère un hash stable pour faciliter l'audit sans stocker la donnée brute."""
+        evidence = suggestion.get("evidence") or ""
+        value = suggestion.get("value") or ""
+        payload = f"{field}|{suggestion.get('source')}|{value}|{evidence}"
+        digest = hashlib.sha256(payload.encode()).hexdigest()
+        return digest[:32]
+
+    def _extract_entity_id(self, entity_type: str, draft: Dict) -> Optional[int]:
+        """Tente de retrouver l'ID d'entité si disponible dans le draft."""
+        if not draft:
+            return None
+        if entity_type == "person":
+            return draft.get("person_id") or draft.get("id")
+        if entity_type == "organisation":
+            return draft.get("organisation_id") or draft.get("id")
+        return None
+
+    def _normalize_source(self, raw_source: str) -> str:
+        """Normalise la source pour rester dans les valeurs officielles."""
+        mapping = {
+            "tld_mapping": "rules",
+            "country_language_default": "rules",
+            "e164_normalization": "rules",
+            "default_pattern": "rules",
+            "domain_pattern": "db_pattern",
+            "known_company": "db_pattern",
+            "http_probe": "db_pattern",
+            "outlook_signature": "outlook",
+            "llm": "llm",
+        }
+        return mapping.get(raw_source, raw_source)

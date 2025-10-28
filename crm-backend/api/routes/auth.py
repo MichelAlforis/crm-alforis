@@ -4,6 +4,7 @@ from typing import Dict
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from jose import jwt
 from pydantic import BaseModel, EmailStr, Field, field_validator
 from sqlalchemy.orm import Session
 
@@ -293,28 +294,83 @@ async def get_current_user_info(credentials: HTTPAuthorizationCredentials = Depe
 
 
 @router.post("/refresh", response_model=TokenResponse)
-async def refresh_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
+async def refresh_token(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
+):
     """
-    Rafraîchir un token JWT existant
+    Rafraîchir un token JWT (même expiré)
+
+    **Usage:**
+    - Permet de renouveler un token sans redemander les credentials
+    - Accepte les tokens expirés (si signature valide)
+    - Vérifie que l'utilisateur existe toujours et est actif
+    - Retourne un nouveau token avec date d'expiration actualisée
 
     **Header requis:**
     ```
     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
     ```
 
-    **Retourne:** Un nouveau token avec le même contenu mais un nouveau `exp`
+    **Réponse:**
+    ```json
+    {
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "token_type": "bearer",
+      "expires_in": 86400
+    }
+    ```
     """
     try:
-        # Décoder le token actuel
-        payload = decode_token(credentials.credentials)
+        # Décoder le token (IGNORE l'expiration pour permettre le refresh)
+        payload = jwt.decode(
+            credentials.credentials,
+            settings.secret_key,
+            algorithms=[settings.jwt_algorithm],
+            options={"verify_exp": False}  # ← Clé : ignore l'expiration
+        )
 
-        # Créer un nouveau token avec les mêmes données
+        # Vérifier que l'utilisateur existe toujours et est actif
+        user_id = payload.get("sub")
+        if not user_id:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token invalide: user_id manquant"
+            )
+
+        user = db.query(User).filter(User.id == int(user_id)).first()
+        if not user or not user.is_active:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Utilisateur non trouvé ou désactivé"
+            )
+
+        # Recréer le payload avec les données actuelles de l'utilisateur
+        is_admin_flag = False
+        if user.role and getattr(user.role, "name", None) in {
+            UserRole.ADMIN,
+            UserRole.ADMIN.value,
+            "admin",
+        }:
+            is_admin_flag = True
+        elif user.is_superuser:
+            is_admin_flag = True
+
+        # Créer un nouveau token avec expiration renouvelée
         new_token = create_access_token(
             data={
-                "sub": payload.get("sub"),
-                "email": payload.get("email"),
-                "is_admin": payload.get("is_admin", False),
-                "name": payload.get("name", ""),
+                "sub": str(user.id),
+                "email": user.email,
+                "is_admin": is_admin_flag,
+                "name": user.display_name,
+                "role": (
+                    {
+                        "name": user.role.name if user.role else None,
+                        "level": user.role.level if user.role else 0,
+                    }
+                    if user.role
+                    else None
+                ),
             },
             expires_delta=timedelta(hours=settings.jwt_expiration_hours),
         )
@@ -324,11 +380,16 @@ async def refresh_token(credentials: HTTPAuthorizationCredentials = Depends(secu
             token_type="bearer",
             expires_in=settings.jwt_expiration_hours * 3600,
         )
+
+    except jwt.JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token invalide"
+        )
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Token invalide ou expiré: {str(e)}",
-            headers={"WWW-Authenticate": "Bearer"},
+            detail=f"Erreur lors du refresh: {str(e)}"
         )
 
 

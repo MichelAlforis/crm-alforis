@@ -77,19 +77,19 @@ export default function AIConfigSection() {
   useEffect(() => {
     if (config) {
       setFormData({
-        provider: config.provider,
-        model_name: config.model_name,
+        provider: config.provider ?? AIProvider.ANTHROPIC,
+        model_name: config.model_name ?? 'claude-3-5-sonnet-20241022',
         api_key: '', // Never show API key
-        temperature: config.temperature,
-        max_tokens: config.max_tokens,
-        duplicate_threshold: config.duplicate_threshold,
-        enrichment_threshold: config.enrichment_threshold,
-        quality_threshold: config.quality_threshold,
-        auto_apply_enabled: config.auto_apply_enabled,
-        auto_apply_threshold: config.auto_apply_threshold,
-        daily_budget_usd: config.daily_budget_usd,
-        cache_enabled: config.cache_enabled,
-        cache_ttl_hours: config.cache_ttl_hours,
+        temperature: config.temperature ?? 0.3,
+        max_tokens: config.max_tokens ?? 1000,
+        duplicate_threshold: config.duplicate_threshold ?? 0.85,
+        enrichment_threshold: config.enrichment_threshold ?? 0.70,
+        quality_threshold: config.quality_threshold ?? 0.60,
+        auto_apply_enabled: config.auto_apply_enabled ?? false,
+        auto_apply_threshold: config.auto_apply_threshold ?? 0.95,
+        daily_budget_usd: config.daily_budget_usd ?? 10.0,
+        cache_enabled: config.cache_enabled ?? true,
+        cache_ttl_hours: config.cache_ttl_hours ?? 24,
       })
     }
   }, [config])

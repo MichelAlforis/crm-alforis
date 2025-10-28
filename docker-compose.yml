@@ -105,6 +105,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-crm_password}
       POSTGRES_DB: ${POSTGRES_DB:-crm_db}
       POSTGRES_HOST: postgres
+      # Encryption for API keys in DB
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
       # Microsoft OAuth (Outlook)
       MICROSOFT_CLIENT_ID: ${MICROSOFT_CLIENT_ID}
       MICROSOFT_CLIENT_SECRET: ${MICROSOFT_CLIENT_SECRET}
