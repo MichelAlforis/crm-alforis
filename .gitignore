@@ -42,6 +42,7 @@ docker-compose.override.local.yml
 docker-compose.yml
 nginx/*.local.conf
 
-# Autoriser les exemples
+# Autoriser les exemples et configs dev
 !.env.example
 !.env.sonar
+!docker-compose.override.yml

@@ -15,7 +15,6 @@ services:
       NODE_ENV: development
     command: >
       sh -euc '
-        [ -f scripts/dev-clean.sh ] && chmod +x scripts/dev-clean.sh && ./scripts/dev-clean.sh || echo "skip dev-clean";
         exec npm run dev -- --hostname "0.0.0.0" --port "${PORT:-3010}"
       '
     volumes:

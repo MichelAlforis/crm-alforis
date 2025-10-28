@@ -1,0 +1,63 @@
+# ===========================================
+# DOCKER COMPOSE OVERRIDE - DEV macOS
+# ===========================================
+# Ce fichier override docker-compose.yml automatiquement
+# Optimisé pour éviter les reloads intempestifs sur macOS
+
+services:
+  api:
+    environment:
+      # Empêche la création de .pyc qui triggent le reload
+      PYTHONDONTWRITEBYTECODE: "1"
+      # Force le polling au lieu de inotify (plus stable sur macOS)
+      WATCHFILES_FORCE_POLLING: "true"
+
+    # Override de la commande pour exclure les dossiers problématiques
+    command: >
+      uvicorn main:app
+      --host 0.0.0.0
+      --port 8000
+      --reload
+      --reload-delay 1
+      --reload-exclude 'logs/*'
+      --reload-exclude 'uploads/*'
+      --reload-exclude 'backups/*'
+      --reload-exclude '.venv/*'
+      --reload-exclude 'venv/*'
+      --reload-exclude '**/__pycache__/*'
+      --reload-exclude '**/*.pyc'
+      --reload-exclude 'alembic/versions/*.pyc'
+      --reload-exclude 'supervisord.conf'
+
+    # Volumes optimisés pour macOS (monte seulement le code, pas les outputs)
+    volumes:
+      # Code source - cached pour performances
+      - ./crm-backend:/app:cached
+      # Exclusions explicites (volumes nommés)
+      - api-venv:/app/venv
+      - api-uploads:/app/uploads
+      - api-backups:/app/backups
+      - api-logs:/app/logs
+
+  frontend:
+    environment:
+      # Node & Next.js optimizations
+      NODE_ENV: development
+      NEXT_TELEMETRY_DISABLED: "1"
+      # Skip lint/typecheck in dev (do it in CI)
+      NEXT_DISABLE_ESLINT: "1"
+      NEXT_SKIP_TYPECHECK: "1"
+      # File watching optimizations for macOS
+      CHOKIDAR_USEPOLLING: "false"
+      WATCHPACK_POLLING: "false"
+
+    # Command override to use Turbopack
+    command: >
+      npm run dev -- --turbo --port 3010 --hostname "0.0.0.0"
+
+    # Volumes optimisés - code only, caches in container
+    volumes:
+      - ./crm-frontend:/app:cached
+      # IMPORTANT: Keep node_modules and .next INSIDE the container
+      - /app/node_modules
+      - /app/.next

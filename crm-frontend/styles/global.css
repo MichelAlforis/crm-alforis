@@ -2,6 +2,12 @@
 /*          TPM FINANCE CRM - GLOBAL STYLES       */
 /* =============================================== */
 
+/* =============== IMPORTS =============== */
+/* IMPORTANT: All @import must be at the VERY TOP, before @tailwind and any other rules */
+@import './variables.css';
+@import './components.css';
+@import './utilities.css';
+
 /* Tailwind Directives */
 @tailwind base;
 @tailwind components;
@@ -9,7 +15,6 @@
 
 /* =============== DESIGN TOKENS =============== */
 @layer base {
-  @import './variables.css';
 
   /* =============== BASE STYLES =============== */
   /* Reset & Normalization */
@@ -178,13 +183,13 @@
 }
 
 /* =============== COMPONENTS =============== */
+/* Component imports moved to top of file */
 @layer components {
-  @import './components.css';
 }
 
 /* =============== UTILITIES =============== */
+/* Utility imports moved to top of file */
 @layer utilities {
-  @import './utilities.css';
 
   /* Container with max-width */
   .container {

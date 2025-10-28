@@ -24,9 +24,6 @@ RUN --mount=type=cache,target=/root/.npm \
 # Copier le code source (après les deps pour profiter du cache)
 COPY . .
 
-# Rendre le script exécutable
-RUN chmod +x scripts/dev-clean.sh
-
 # Exposer le port
 EXPOSE 3010
 
