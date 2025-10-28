@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react'
 import { ConfirmDialog, ConfirmDialogType } from '@/components/shared/ConfirmDialog'
+import { logger } from '@/lib/logger'
 
 interface ConfirmOptions {
   title: string
@@ -72,7 +73,7 @@ export function useConfirm(): UseConfirmReturn {
       setIsOpen(false)
       setOptions(null)
     } catch (error) {
-      console.error('Confirmation action failed:', error)
+      logger.error('Confirmation action failed:', error)
       // Ne pas fermer la modale en cas d'erreur
       // L'appelant doit gérer l'erreur et afficher un toast
     } finally {

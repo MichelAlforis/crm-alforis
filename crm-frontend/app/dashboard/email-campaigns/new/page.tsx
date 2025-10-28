@@ -17,6 +17,7 @@ import {
 import { ArrowLeft, Mail, Users, Send } from "lucide-react";
 import { useToast } from "@/hooks/useToast";
 import { Badge } from "@/components/ui/badge";
+import { logger } from '@/lib/logger'
 
 interface Template {
   id: number;
@@ -113,7 +114,7 @@ export default function NewEmailCampaignPage() {
         setTemplates(data);
       }
     } catch (error) {
-      console.error("Error fetching templates:", error);
+      logger.error("Error fetching templates:", error);
     }
   };
 
@@ -145,7 +146,7 @@ export default function NewEmailCampaignPage() {
         setRecipientCount(data.count);
       }
     } catch (error) {
-      console.error("Error fetching recipient count:", error);
+      logger.error("Error fetching recipient count:", error);
     } finally {
       setLoadingCount(false);
     }
@@ -205,7 +206,7 @@ export default function NewEmailCampaignPage() {
         });
       }
     } catch (error) {
-      console.error("Error creating campaign:", error);
+      logger.error("Error creating campaign:", error);
       toast({
         title: "Erreur",
         description: "Une erreur est survenue",

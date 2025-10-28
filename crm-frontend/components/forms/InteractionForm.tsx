@@ -2,6 +2,7 @@
 // ============= INTERACTION FORM - WITH SEARCHABLE MULTI-SELECT =============
 
 'use client'
+import { logger } from '@/lib/logger'
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -113,7 +114,7 @@ export function InteractionForm({
           sublabel: org.category || undefined,
         })
       } catch (err) {
-        console.error('Impossible de pré-charger l\'organisation sélectionnée', err)
+        logger.error('Impossible de pré-charger l\'organisation sélectionnée', err)
       }
     })()
   }, [organisationOptions, initialData?.organisation_id, upsertOrganisationOption])

@@ -7,6 +7,7 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 'use client'
+import { logger } from '@/lib/logger'
 
 import { useCallback, useEffect, useState } from 'react'
 import { useStableWebSocket } from './useStableWebSocket'
@@ -56,24 +57,24 @@ export function useNotifications({
         setNotifications((prev) => [notification, ...prev].slice(0, 50))
         onNotification?.(notification)
       } catch (error) {
-        console.error('[useNotifications] Failed to parse message:', error)
+        logger.error('[useNotifications] Failed to parse message:', error)
       }
     },
     [onNotification]
   )
 
   const handleOpen = useCallback(() => {
-    console.log('[useNotifications] ✅ Connected to notification stream')
+    logger.log('[useNotifications] ✅ Connected to notification stream')
     setIsConnected(true)
   }, [])
 
   const handleClose = useCallback(() => {
-    console.log('[useNotifications] ⚠️ Disconnected from notification stream')
+    logger.log('[useNotifications] ⚠️ Disconnected from notification stream')
     setIsConnected(false)
   }, [])
 
   const handleError = useCallback((event: Event) => {
-    console.error('[useNotifications] ❌ WebSocket error:', event)
+    logger.error('[useNotifications] ❌ WebSocket error:', event)
     setIsConnected(false)
   }, [])
 
@@ -133,7 +134,7 @@ export function NotificationPanel() {
     token,
     enabled: true,
     onNotification: (notification) => {
-      console.log('Nouvelle notification:', notification)
+      logger.log('Nouvelle notification:', notification)
       // Vous pouvez ici afficher un toast, jouer un son, etc.
     },
   })

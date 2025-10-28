@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react'
 import { useToast } from '@/components/ui/Toast'
+import { logger } from '@/lib/logger'
 
 export type ExportFormat = 'csv' | 'excel' | 'pdf'
 
@@ -133,7 +134,7 @@ export function useExport({
           message: `Le fichier ${format.toUpperCase()} a été téléchargé.`,
         })
       } catch (err: any) {
-        console.error('Export error:', err)
+        logger.error('Export error:', err)
 
         let errorMessage = 'Une erreur est survenue lors de l\'export'
 

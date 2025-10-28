@@ -1,4 +1,5 @@
 'use client'
+import { logger } from '@/lib/logger'
 
 /**
  * Offline Sync Hook
@@ -45,7 +46,7 @@ export function useOfflineSync() {
   // Trigger sync when back online
   useEffect(() => {
     if (isOnline && queueLength > 0) {
-      console.log('[useOfflineSync] Back online with queued requests, triggering sync')
+      logger.log('[useOfflineSync] Back online with queued requests, triggering sync')
       offlineSyncService.sync()
     }
   }, [isOnline, queueLength])

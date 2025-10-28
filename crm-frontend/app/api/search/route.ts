@@ -5,6 +5,7 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import type { SearchItem } from '@/lib/search'
+import { logger } from '@/lib/logger'
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
@@ -97,7 +98,7 @@ export async function GET(req: Request) {
       return r.toItems(rows)
     } catch (e) {
       // En cas d'erreur, on retourne un tableau vide pour ne pas casser l'UX
-      console.error(`Search error for ${r.key}:`, e)
+      logger.error(`Search error for ${r.key}:`, e)
       return []
     }
   }

@@ -2,6 +2,7 @@
 // ============= P2 OPTIMIZATION: Hook for Table Web Worker =============
 
 import { useEffect, useRef, useState, useCallback } from 'react'
+import { logger } from '@/lib/logger'
 
 type TableRow = Record<string, any>
 
@@ -62,7 +63,7 @@ export function useTableWorker(options: UseTableWorkerOptions = {}) {
       }
 
       worker.onerror = (error) => {
-        console.error('[useTableWorker] Worker error:', error)
+        logger.error('[useTableWorker] Worker error:', error)
         options.onError?.('Worker initialization failed')
       }
 
@@ -73,7 +74,7 @@ export function useTableWorker(options: UseTableWorkerOptions = {}) {
         workerRef.current = null
       }
     } catch (error) {
-      console.error('[useTableWorker] Failed to create worker:', error)
+      logger.error('[useTableWorker] Failed to create worker:', error)
       options.onError?.('Failed to create worker')
     }
   }, [])
@@ -86,7 +87,7 @@ export function useTableWorker(options: UseTableWorkerOptions = {}) {
       return new Promise((resolve, reject) => {
         if (!workerRef.current) {
           // Fallback: execute synchronously if worker not available
-          console.warn('[useTableWorker] Worker not available, executing synchronously')
+          logger.warn('[useTableWorker] Worker not available, executing synchronously')
           const result = executeSynchronously(message)
           resolve(result)
           return

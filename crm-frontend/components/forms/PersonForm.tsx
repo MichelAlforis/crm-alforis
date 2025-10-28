@@ -2,6 +2,7 @@
 // ============= PERSON FORM - RÉUTILISABLE =============
 
 'use client'
+import { logger } from '@/lib/logger'
 
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -67,7 +68,7 @@ export function PersonForm({
     const email = formValues.personal_email
     if (!email || email.length < 5) return
 
-    if (DBG) console.debug('[PersonForm] Triggering autofill', { email })
+    if (DBG) logger.log('[PersonForm] Triggering autofill', { email })
 
     try {
       const result = await autofill({
@@ -92,7 +93,7 @@ export function PersonForm({
         }
       })
       if (DBG && autoApplied.length > 0) {
-        console.debug('[PersonForm] Auto-applied fields', autoApplied)
+        logger.log('[PersonForm] Auto-applied fields', autoApplied)
       }
 
       // Store non-auto suggestions for manual review
@@ -105,15 +106,15 @@ export function PersonForm({
 
       setSuggestions(manualSuggestions)
       if (DBG && Object.keys(manualSuggestions).length > 0) {
-        console.debug('[PersonForm] Manual suggestions', Object.keys(manualSuggestions))
+        logger.log('[PersonForm] Manual suggestions', Object.keys(manualSuggestions))
       }
     } catch (err) {
-      console.error('[PersonForm] Autofill error:', err)
+      logger.error('[PersonForm] Autofill error:', err)
     }
   }
 
   const handleAcceptSuggestion = (field: string, value: any) => {
-    if (DBG) console.debug('[PersonForm] Accept suggestion', { field, value })
+    if (DBG) logger.log('[PersonForm] Accept suggestion', { field, value })
     setValue(field as keyof PersonInput, value)
     setSuggestions((prev) => {
       const next = { ...prev }
@@ -123,7 +124,7 @@ export function PersonForm({
   }
 
   const handleRejectSuggestion = (field: string) => {
-    if (DBG) console.debug('[PersonForm] Reject suggestion', { field })
+    if (DBG) logger.log('[PersonForm] Reject suggestion', { field })
     setSuggestions((prev) => {
       const next = { ...prev }
       delete next[field]
@@ -155,7 +156,39 @@ export function PersonForm({
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-      {error && <Alert type="error" message={error} />}
+      {error && <Alert type="error" title="Erreur" message={error} />}
+
+      {/* Bouton Autofill */}
+      {!initialData && (
+        <div className="flex items-center gap-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex-1">
+            <p className="text-sm font-medium text-blue-900">
+              Gagnez du temps avec l'autofill intelligent
+            </p>
+            <p className="text-xs text-blue-700 mt-0.5">
+              Remplissez automatiquement les champs depuis vos emails, patterns existants...
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleEmailBlur}
+            disabled={isAutofilling || !formValues.first_name || !formValues.last_name}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-sm whitespace-nowrap"
+          >
+            {isAutofilling ? (
+              <>
+                <span className="animate-spin">⚡</span>
+                <span>Analyse...</span>
+              </>
+            ) : (
+              <>
+                <span>⚡</span>
+                <span>Remplir pour moi</span>
+              </>
+            )}
+          </button>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Input

@@ -17,6 +17,7 @@
 
 import { useEffect, useState, useCallback, useMemo } from 'react'
 import { usePathname } from 'next/navigation'
+import { logger } from '@/lib/logger'
 
 // Types
 export interface ClickData {
@@ -86,7 +87,7 @@ function saveAnalytics(data: AnalyticsData) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
   } catch (error) {
-    console.warn('Failed to save sidebar analytics:', error)
+    logger.warn('Failed to save sidebar analytics:', error)
   }
 }
 

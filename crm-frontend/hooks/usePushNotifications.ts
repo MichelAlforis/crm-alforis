@@ -1,4 +1,5 @@
 'use client'
+import { logger } from '@/lib/logger'
 
 /**
  * Push Notifications Hook
@@ -24,7 +25,7 @@ export function usePushNotifications() {
 
   useEffect(() => {
     if (typeof window === 'undefined' || !('Notification' in window)) {
-      console.log('[Push] Notifications not supported')
+      logger.log('[Push] Notifications not supported')
       return
     }
 
@@ -45,9 +46,9 @@ export function usePushNotifications() {
       setSubscription(existingSubscription)
       setIsSubscribed(!!existingSubscription)
 
-      console.log('[Push] Subscription status:', !!existingSubscription)
+      logger.log('[Push] Subscription status:', !!existingSubscription)
     } catch (error) {
-      console.error('[Push] Failed to check subscription:', error)
+      logger.error('[Push] Failed to check subscription:', error)
     }
   }
 
@@ -65,7 +66,7 @@ export function usePushNotifications() {
       const result = await Notification.requestPermission()
       setPermission(result)
 
-      console.log('[Push] Permission result:', result)
+      logger.log('[Push] Permission result:', result)
 
       if (result === 'granted') {
         return true
@@ -74,7 +75,7 @@ export function usePushNotifications() {
         return false
       }
     } catch (error) {
-      console.error('[Push] Permission request failed:', error)
+      logger.error('[Push] Permission request failed:', error)
       setError('Failed to request notification permission')
       return false
     }
@@ -125,12 +126,12 @@ export function usePushNotifications() {
       })
 
       setIsSubscribed(true)
-      console.log('[Push] Successfully subscribed')
+      logger.log('[Push] Successfully subscribed')
 
       setIsLoading(false)
       return true
     } catch (error) {
-      console.error('[Push] Subscription failed:', error)
+      logger.error('[Push] Subscription failed:', error)
       setError(error instanceof Error ? error.message : 'Failed to subscribe')
       setIsLoading(false)
       return false
@@ -154,12 +155,12 @@ export function usePushNotifications() {
 
       setSubscription(null)
       setIsSubscribed(false)
-      console.log('[Push] Successfully unsubscribed')
+      logger.log('[Push] Successfully unsubscribed')
 
       setIsLoading(false)
       return true
     } catch (error) {
-      console.error('[Push] Unsubscribe failed:', error)
+      logger.error('[Push] Unsubscribe failed:', error)
       setError(error instanceof Error ? error.message : 'Failed to unsubscribe')
       setIsLoading(false)
       return false
@@ -176,9 +177,9 @@ export function usePushNotifications() {
         url: '/dashboard',
       })
 
-      console.log('[Push] Test notification sent')
+      logger.log('[Push] Test notification sent')
     } catch (error) {
-      console.error('[Push] Failed to send notification:', error)
+      logger.error('[Push] Failed to send notification:', error)
       throw error
     }
   }

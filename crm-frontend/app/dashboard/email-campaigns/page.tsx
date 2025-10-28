@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Mail, Plus, Send, Users, TrendingUp, Clock } from "lucide-react";
 import { useToast } from "@/hooks/useToast";
+import { logger } from '@/lib/logger'
 
 interface Campaign {
   id: number;
@@ -64,7 +65,7 @@ export default function EmailCampaignsPage() {
         setCampaigns(data.items || []);
       }
     } catch (error) {
-      console.error("Error fetching campaigns:", error);
+      logger.error("Error fetching campaigns:", error);
       toast({
         title: "Erreur",
         description: "Impossible de charger les campagnes",

@@ -1,5 +1,6 @@
 // components/ui/Toast.tsx - Système de notifications moderne
 'use client'
+import { logger } from '@/lib/logger'
 
 import React, { createContext, useContext, useState, useCallback } from 'react'
 import { CheckCircle, XCircle, AlertTriangle, Info, X } from 'lucide-react'
@@ -182,15 +183,15 @@ function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
 export const toast = {
   success: (title: string, message?: string) => {
     // Cette fonction sera remplacée par le hook dans les composants
-    console.log('Toast success:', title, message)
+    logger.log('Toast success:', title, message)
   },
   error: (title: string, message?: string) => {
-    console.log('Toast error:', title, message)
+    logger.log('Toast error:', title, message)
   },
   warning: (title: string, message?: string) => {
-    console.log('Toast warning:', title, message)
+    logger.log('Toast warning:', title, message)
   },
   info: (title: string, message?: string) => {
-    console.log('Toast info:', title, message)
+    logger.log('Toast info:', title, message)
   },
 }

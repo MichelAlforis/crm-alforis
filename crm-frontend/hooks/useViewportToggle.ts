@@ -21,6 +21,7 @@
  */
 
 import { useState, useCallback, useMemo } from 'react'
+import { logger } from '@/lib/logger'
 
 export type ViewportMode = 'desktop' | 'mobile' | 'tablet'
 
@@ -125,7 +126,7 @@ export function useViewportToggle({
   const setMode = useCallback(
     (mode: ViewportMode) => {
       if (!modes.includes(mode)) {
-        console.warn(`Mode "${mode}" n'est pas dans les modes disponibles:`, modes)
+        logger.warn(`Mode "${mode}" n'est pas dans les modes disponibles:`, modes)
         return
       }
       setCurrentMode(mode)

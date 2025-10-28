@@ -2,6 +2,7 @@
 // ============= KPIs PAGE - ORGANISATION-BASED =============
 
 'use client'
+import { logger } from '@/lib/logger'
 
 import React, { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
@@ -74,7 +75,7 @@ export default function KPIsPage() {
       await fetchKPIs()
       setIsModalOpen(false)
     } catch (err: any) {
-      console.error('Error creating KPI:', err)
+      logger.error('Error creating KPI:', err)
     }
   }
 
@@ -99,7 +100,7 @@ export default function KPIsPage() {
           if (!response.ok) throw new Error('Failed to delete KPI')
           await fetchKPIs()
         } catch (err: any) {
-          console.error('Error deleting KPI:', err)
+          logger.error('Error deleting KPI:', err)
         }
       },
     })

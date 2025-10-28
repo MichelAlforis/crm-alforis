@@ -3,6 +3,7 @@
 // Fournit la logique d'infinite scroll et de recherche pour les composants de sélection
 
 'use client'
+import { logger } from '@/lib/logger'
 
 import {
   useCallback,
@@ -94,7 +95,7 @@ export function usePaginatedOptions<TItem>({
         const totalLoaded = response.skip + response.items.length
         setHasMore(totalLoaded < response.total)
       } catch (error) {
-        console.error('Failed to load paginated options:', error)
+        logger.error('Failed to load paginated options:', error)
         if (!append) {
           setOptions([])
         }

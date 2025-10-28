@@ -20,8 +20,11 @@ from core import get_current_user, get_db
 from core.encryption import decrypt_value, encrypt_value
 from models.user import User
 from schemas.integrations import (
+    AutofillPreviewRequest,
+    AutofillPreviewResponse,
     AutofillV2Request,
     AutofillV2Response,
+    MatchAction,
     OutlookAuthorizeResponse,
     OutlookCallbackRequest,
     OutlookCallbackResponse,
@@ -29,6 +32,7 @@ from schemas.integrations import (
     OutlookSyncResponse,
 )
 from services.autofill_service_v2 import AutofillServiceV2
+from services.matching_scorer import MatchingScorer
 from services.outlook_integration import OutlookIntegration
 
 router = APIRouter(prefix="/integrations", tags=["Integrations"])
@@ -213,3 +217,83 @@ async def autofill_v2(
     )
 
     return result
+
+
+# ==========================================
+# Autofill Preview (V1.5 Smart Resolver)
+# ==========================================
+
+
+@router.post("/ai/autofill/preview", response_model=AutofillPreviewResponse)
+async def autofill_preview(
+    request: AutofillPreviewRequest,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Smart Resolver V1.5 - Preview de matching multi-critères
+
+    Pipeline:
+    1. Recherche candidats potentiels (email, nom, téléphone, domaine)
+    2. Score chaque candidat selon critères pondérés:
+       - Email exact: +100
+       - Nom + Société: +75 (exact) / +50 (fuzzy)
+       - Domaine email match: +40
+       - Téléphone: +50
+       - Titre/Poste: +20
+       - Ville: +10
+    3. Décision automatique:
+       - score ≥ 100 → "apply" (auto-match)
+       - 60 ≤ score < 100 → "preview" (validation humaine)
+       - score < 60 → "create_new"
+
+    Use cases:
+    - Détection doublons avant création
+    - Enrichissement contacts existants
+    - Validation pré-import
+    """
+    import time
+
+    start_time = time.time()
+
+    # Initialiser scorer
+    scorer = MatchingScorer(db)
+
+    # Trouver et scorer candidats
+    if request.entity_type == "person":
+        matches = scorer.find_person_candidates(request.draft, limit=request.limit)
+    elif request.entity_type == "organisation":
+        matches = scorer.find_organisation_candidates(request.draft, limit=request.limit)
+    else:
+        raise HTTPException(
+            status_code=400,
+            detail=f"entity_type invalide: {request.entity_type}",
+        )
+
+    # Déterminer recommandation globale (basée sur le meilleur match)
+    if matches and len(matches) > 0:
+        best_match = matches[0]
+        recommendation = MatchAction(best_match["action"])
+    else:
+        recommendation = MatchAction.CREATE_NEW
+
+    # Calculer métadonnées
+    execution_time_ms = int((time.time() - start_time) * 1000)
+
+    # Critères utilisés (déduits des détails du meilleur match)
+    criteria_used = []
+    if matches and len(matches) > 0:
+        criteria_used = list(matches[0]["details"].keys())
+
+    meta = {
+        "execution_time_ms": execution_time_ms,
+        "candidates_searched": len(matches),
+        "criteria_used": criteria_used,
+        "entity_type": request.entity_type,
+    }
+
+    return {
+        "matches": matches,
+        "recommendation": recommendation,
+        "meta": meta,
+    }

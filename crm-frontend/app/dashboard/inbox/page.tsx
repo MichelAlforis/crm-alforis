@@ -1,4 +1,5 @@
 'use client'
+import { logger } from '@/lib/logger'
 
 import { useInbox, useUpdateInteractionStatus, useUpdateInteractionNextAction } from '@/hooks/useInteractions'
 import { AdvancedFilters } from '@/components/shared'
@@ -253,10 +254,10 @@ export default function InboxPage() {
           break
         }
         default:
-          console.warn('Unknown action:', action)
+          logger.warn('Unknown action:', action)
       }
     } catch (error) {
-      console.error('Quick action failed:', error)
+      logger.error('Quick action failed:', error)
     }
   }
 

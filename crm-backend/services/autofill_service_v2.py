@@ -27,6 +27,7 @@ from sqlalchemy.orm import Session
 from models.organisation import Organisation
 from models.person import Person
 from services.outlook_integration import OutlookIntegration
+from services.company_resolver import CompanyResolver
 
 # Mapping TLD → Pays
 TLD_TO_COUNTRY = {
@@ -68,7 +69,16 @@ class AutofillServiceV2:
     def __init__(self, db: Session):
         self.db = db
         self.confidence_threshold = 0.85  # Seuil auto-apply
-        self.outlook_service = OutlookIntegration(db)
+
+        # Company Resolver (résolution domaine → entreprise)
+        self.company_resolver = CompanyResolver(db, http_timeout=5)
+
+        # Outlook optionnel (nécessite config Microsoft)
+        try:
+            self.outlook_service = OutlookIntegration(db)
+        except Exception as e:
+            print(f"[AutofillV2] Outlook désactivé: {e}")
+            self.outlook_service = None
 
     async def autofill(
         self, entity_type: str, draft: Dict, context: Optional[Dict] = None
@@ -133,6 +143,43 @@ class AutofillServiceV2:
                 suggestions["phone"] = phone_suggestion
 
         # ==========================================
+        # 1.5. COMPANY RESOLVER (30ms) - Entreprise depuis email
+        # ==========================================
+
+        # Résolution automatique company_name + company_website depuis l'email
+        if entity_type == "person" and draft.get("personal_email"):
+            company_info = self.company_resolver.resolve(draft["personal_email"])
+
+            # Si domaine non-personnel ET résolution réussie
+            if not company_info.get("skip_company_autofill") and company_info.get("company_name"):
+                # company_name
+                if not draft.get("company_name") and company_info.get("company_name"):
+                    suggestions["company_name"] = {
+                        "value": company_info["company_name"],
+                        "confidence": company_info["confidence"],
+                        "source": company_info["source"],
+                    }
+
+                # company_website
+                if not draft.get("company_website") and company_info.get("company_website"):
+                    suggestions["company_website"] = {
+                        "value": company_info["company_website"],
+                        "confidence": company_info["confidence"],
+                        "source": company_info["source"],
+                    }
+
+                # company_linkedin
+                if not draft.get("company_linkedin") and company_info.get("company_linkedin"):
+                    suggestions["company_linkedin"] = {
+                        "value": company_info["company_linkedin"],
+                        "confidence": company_info["confidence"],
+                        "source": company_info["source"],
+                    }
+
+                meta["company_resolved"] = True
+                meta["company_source"] = company_info["source"]
+
+        # ==========================================
         # 2. DB PATTERNS (20ms) - Priorité 2
         # ==========================================
 
@@ -151,7 +198,7 @@ class AutofillServiceV2:
         # 3. OUTLOOK (50ms) - Priorité 3
         # ==========================================
 
-        if context.get("outlook_enabled") and budget_mode != "emergency":
+        if self.outlook_service and context.get("outlook_enabled") and budget_mode != "emergency":
             outlook_token = context.get("outlook_access_token")
 
             if outlook_token:

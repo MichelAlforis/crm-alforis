@@ -118,6 +118,11 @@ class Settings(BaseSettings):
     ai_rate_limit_rpm: int = 10  # Requests per minute
     ai_batch_size: int = 10  # Nombre d'items par batch
 
+    # Microsoft OAuth (Outlook Integration)
+    microsoft_client_id: str = ""
+    microsoft_client_secret: str = ""
+    microsoft_redirect_uri: str = "http://localhost:8000/api/v1/integrations/outlook/callback"
+
     class Config:
         env_file = ".env"
         case_sensitive = False

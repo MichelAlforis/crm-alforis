@@ -77,12 +77,19 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     # env_file:
       # - ./crm-backend/.env.local  # Plus utilisé, tout est dans .env racine
       # - ./.env   # Docker Compose charge automatiquement .env racine
     environment:
       # Fallbacks si non définis dans .env.local
       DATABASE_URL: ${DATABASE_URL:-postgresql://${POSTGRES_USER:-crm_user}:${POSTGRES_PASSWORD:-crm_password}@postgres:5432/${POSTGRES_DB:-crm_db}}
+      # Redis Cache & Event Bus
+      REDIS_ENABLED: ${REDIS_ENABLED:-True}
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      REDIS_DB: ${REDIS_DB:-0}
       DEBUG: ${DEBUG:-True}
       SECRET_KEY: ${SECRET_KEY:-dev_secret_key_change_in_production}
       # FORCER localhost pour dev local (ignorer .env qui peut avoir prod)
@@ -98,6 +105,10 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-crm_password}
       POSTGRES_DB: ${POSTGRES_DB:-crm_db}
       POSTGRES_HOST: postgres
+      # Microsoft OAuth (Outlook)
+      MICROSOFT_CLIENT_ID: ${MICROSOFT_CLIENT_ID}
+      MICROSOFT_CLIENT_SECRET: ${MICROSOFT_CLIENT_SECRET}
+      MICROSOFT_REDIRECT_URI: ${MICROSOFT_REDIRECT_URI:-http://localhost:8000/api/v1/integrations/outlook/callback}
     working_dir: /app
     # Command: Use Dockerfile CMD (dev=uvicorn reload, prod=supervisord)
     # Uncomment below for dev mode override:

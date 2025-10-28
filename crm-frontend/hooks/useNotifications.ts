@@ -1,4 +1,5 @@
 'use client'
+import { logger } from '@/lib/logger'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { apiClient } from '@/lib/api'
@@ -62,7 +63,7 @@ function loadSnapshot(): NotificationsSnapshot | null {
       lastSyncedAt: snapshot.lastSyncedAt ?? new Date().toISOString(),
     }
   } catch (error) {
-    console.warn('[useNotifications] Failed to load snapshot', error)
+    logger.warn('[useNotifications] Failed to load snapshot', error)
     return null
   }
 }
@@ -77,7 +78,7 @@ function persistSnapshot(items: NotificationItem[]): void {
     }
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload))
   } catch (error) {
-    console.warn('[useNotifications] Failed to persist snapshot', error)
+    logger.warn('[useNotifications] Failed to persist snapshot', error)
   }
 }
 
@@ -186,7 +187,7 @@ export function useNotifications(): UseNotificationsResult {
             setIsConnecting(false)
           }
         } catch (error) {
-          console.warn('[useNotifications] Failed to parse message', error)
+          logger.warn('[useNotifications] Failed to parse message', error)
         }
       },
     })

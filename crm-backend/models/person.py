@@ -1,7 +1,7 @@
 import enum
 from typing import TYPE_CHECKING, Optional
 
-from sqlalchemy import Boolean, Column, Enum, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import Boolean, Column, DateTime, Enum, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 
@@ -48,6 +48,13 @@ class Person(BaseModel):
     linkedin_url = Column(String(500), nullable=True)
     is_active = Column(Boolean, default=True, index=True)
     email_unsubscribed = Column(Boolean, default=False, nullable=False)
+
+    # RGPD Compliance Fields
+    is_anonymized = Column(Boolean, default=False, nullable=False, index=True)
+    gdpr_consent = Column(Boolean, nullable=True, index=True)
+    gdpr_consent_date = Column(DateTime(timezone=True), nullable=True)
+    anonymized_at = Column(DateTime(timezone=True), nullable=True)
+    last_activity_date = Column(DateTime(timezone=True), nullable=True, index=True)
 
     organizations = relationship(
         "PersonOrganizationLink",

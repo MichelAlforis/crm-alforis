@@ -1,4 +1,5 @@
 'use client'
+import { logger } from '@/lib/logger'
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -45,7 +46,7 @@ export default function MailingListsPage() {
       const response = await apiClient.get<{ items: MailingList[] }>('/mailing-lists')
       setLists(response.data.items || [])
     } catch (error) {
-      console.error('Failed to load lists:', error)
+      logger.error('Failed to load lists:', error)
       showToast({ type: 'error', title: 'Impossible de charger les listes' })
     } finally {
       setIsLoading(false)
@@ -93,7 +94,7 @@ export default function MailingListsPage() {
       setIsModalOpen(false)
       loadLists()
     } catch (error) {
-      console.error('Failed to save list:', error)
+      logger.error('Failed to save list:', error)
       showToast({ type: 'error', title: 'Erreur lors de la sauvegarde' })
     }
   }
@@ -111,7 +112,7 @@ export default function MailingListsPage() {
           showToast({ type: 'success', title: 'Liste supprimée' })
           loadLists()
         } catch (error) {
-          console.error('Failed to delete list:', error)
+          logger.error('Failed to delete list:', error)
           showToast({ type: 'error', title: 'Erreur lors de la suppression' })
         }
       },

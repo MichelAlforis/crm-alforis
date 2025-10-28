@@ -2,6 +2,7 @@
 // ============= REUSABLE HOOK FOR DYNAMIC TABLE COLUMNS =============
 
 import { useState, useEffect, useCallback } from 'react'
+import { logger } from '@/lib/logger'
 
 export interface ColumnConfig<T = any> {
   key: string
@@ -44,7 +45,7 @@ export function useTableColumns<T = any>({
           }))
         )
       } catch (error) {
-        console.error('Failed to load column config from localStorage:', error)
+        logger.error('Failed to load column config from localStorage:', error)
       }
     }
   }, [storageKey])

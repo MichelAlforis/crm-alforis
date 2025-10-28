@@ -1,4 +1,5 @@
 'use client'
+import { logger } from '@/lib/logger'
 
 /**
  * PWA Manager Component
@@ -23,7 +24,7 @@ export function PWAManager() {
 
   useEffect(() => {
     if (typeof window === 'undefined' || !('serviceWorker' in navigator)) {
-      console.log('[PWA] Service Workers not supported')
+      logger.log('[PWA] Service Workers not supported')
       return
     }
 
@@ -35,7 +36,7 @@ export function PWAManager() {
     const handleControllerChange = () => {
       if (refreshing) return
       refreshing = true
-      console.log('[PWA] New Service Worker activated, reloading page...')
+      logger.log('[PWA] New Service Worker activated, reloading page...')
       window.location.reload()
     }
 
@@ -46,11 +47,11 @@ export function PWAManager() {
       try {
         const registration = await navigator.serviceWorker.getRegistration()
         if (registration) {
-          console.log('[PWA] Checking for Service Worker updates...')
+          logger.log('[PWA] Checking for Service Worker updates...')
           await registration.update()
         }
       } catch (error) {
-        console.error('[PWA] Failed to check for updates:', error)
+        logger.error('[PWA] Failed to check for updates:', error)
       }
     }
 
@@ -62,10 +63,10 @@ export function PWAManager() {
 
     // Listen for waiting service worker
     navigator.serviceWorker.ready.then((registration) => {
-      console.log('[PWA] Service Worker ready')
+      logger.log('[PWA] Service Worker ready')
 
       if (registration.waiting) {
-        console.log('[PWA] Update available')
+        logger.log('[PWA] Update available')
         setUpdateAvailable(true)
       }
 
@@ -75,7 +76,7 @@ export function PWAManager() {
 
         newWorker.addEventListener('statechange', () => {
           if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-            console.log('[PWA] New Service Worker installed, update available')
+            logger.log('[PWA] New Service Worker installed, update available')
             setUpdateAvailable(true)
           }
         })

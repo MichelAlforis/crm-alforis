@@ -1,4 +1,5 @@
 'use client'
+import { logger } from '@/lib/logger'
 
 import { useState } from 'react'
 import clsx from 'clsx'
@@ -219,7 +220,7 @@ export default function SettingsPage() {
       setNewPassword('')
       setConfirmPassword('')
     } catch (error: any) {
-      console.error('Erreur lors de la mise à jour du profil:', error)
+      logger.error('Erreur lors de la mise à jour du profil:', error)
       showToast({
         type: 'error',
         title: 'Erreur',

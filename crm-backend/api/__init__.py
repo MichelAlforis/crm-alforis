@@ -23,7 +23,7 @@ from api.routes import (
     users,
     workflows,
 )
-from routers import email_config, email_marketing, exports, help, interactions, search, webhooks
+from routers import dashboard, email_config, email_marketing, exports, help, interactions, search, webhooks
 from webhooks import sendgrid as inbound_sendgrid
 
 # ❌ SUPPRIMÉ (20 oct 2024): kpis
@@ -96,5 +96,8 @@ api_router.include_router(email_marketing.router)
 
 # 📱 PUSH NOTIFICATIONS (Chapitre 8 - PWA)
 api_router.include_router(push_notifications.router)
+
+# 📊 DASHBOARD V2 (Advanced Analytics)
+api_router.include_router(dashboard.router)
 
 __all__ = ["api_router"]

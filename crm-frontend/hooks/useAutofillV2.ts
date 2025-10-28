@@ -11,6 +11,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { useToast } from '@/components/ui/Toast'
 import { apiClient } from '@/lib/api'
+import { logger } from '@/lib/logger'
 
 // ============= TYPES =============
 
@@ -66,7 +67,7 @@ async function fetchAutofillV2(request: AutofillV2Request): Promise<AutofillV2Re
   const token = apiClient.getToken()
   const API_BASE = apiClient.getBaseUrl() // Déjà = http://localhost:8000/api/v1
 
-  if (DBG) console.debug('[autofill] → Request', request)
+  if (DBG) logger.log('[autofill] → Request', request)
 
   const startTime = performance.now()
 
@@ -83,13 +84,13 @@ async function fetchAutofillV2(request: AutofillV2Request): Promise<AutofillV2Re
 
   if (!res.ok) {
     const error = await res.json().catch(() => ({ detail: 'Une erreur est survenue' }))
-    if (DBG) console.error('[autofill] ✗ Error', { status: res.status, error, elapsed })
+    if (DBG) logger.error('[autofill] ✗ Error', { status: res.status, error, elapsed })
     throw new Error(error.detail || `HTTP ${res.status}`)
   }
 
   const response = await res.json()
   if (DBG) {
-    console.debug('[autofill] ← Response', {
+    logger.log('[autofill] ← Response', {
       suggestions: Object.keys(response.autofill || {}),
       tasks: response.tasks?.length || 0,
       elapsed: `${elapsed}ms`,
@@ -132,7 +133,7 @@ export const useAutofillV2 = () => {
   const mutation = useMutation({
     mutationFn: fetchAutofillV2,
     onError: (error: Error) => {
-      console.error('[Autofill V2] Error:', error)
+      logger.error('[Autofill V2] Error:', error)
       showToast({
         type: 'error',
         title: 'Erreur autofill',

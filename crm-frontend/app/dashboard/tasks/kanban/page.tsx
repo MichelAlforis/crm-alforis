@@ -1,4 +1,5 @@
 'use client'
+import { logger } from '@/lib/logger'
 
 import { useState, useEffect } from 'react'
 import { useTasks } from '@/hooks/useTasks'
@@ -191,7 +192,7 @@ export default function KanbanPage() {
       await updateTask(draggedTask.id, { status: newStatus })
       draggedTask = null
     } catch (error) {
-      console.error('Failed to update task status:', error)
+      logger.error('Failed to update task status:', error)
     }
   }
 

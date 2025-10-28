@@ -12,6 +12,7 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 'use client'
+import { logger } from '@/lib/logger'
 
 import { useEffect, useRef } from 'react'
 
@@ -51,7 +52,7 @@ export function useStableWebSocket({
           wsRef.current.send(JSON.stringify({ type: 'ping' }))
         }
       } catch (error) {
-        console.warn('[useStableWebSocket] Heartbeat failed:', error)
+        logger.warn('[useStableWebSocket] Heartbeat failed:', error)
       }
     }, heartbeatIntervalMs)
   }
@@ -81,7 +82,7 @@ export function useStableWebSocket({
       (wsRef.current.readyState === WebSocket.OPEN ||
         wsRef.current.readyState === WebSocket.CONNECTING)
     ) {
-      console.debug('[useStableWebSocket] Already connected/connecting, skipping')
+      logger.log('[useStableWebSocket] Already connected/connecting, skipping')
       return
     }
 
@@ -89,16 +90,16 @@ export function useStableWebSocket({
     manualCloseRef.current = false
 
     try {
-      console.debug('[useStableWebSocket] 🔌 Connecting to', url)
+      logger.log('[useStableWebSocket] 🔌 Connecting to', url)
       wsRef.current = new WebSocket(url)
     } catch (error) {
-      console.error('[useStableWebSocket] ❌ Failed to create WebSocket:', error)
+      logger.error('[useStableWebSocket] ❌ Failed to create WebSocket:', error)
       scheduleReconnect()
       return
     }
 
     wsRef.current.addEventListener('open', () => {
-      console.debug('[useStableWebSocket] ✅ Connected')
+      logger.log('[useStableWebSocket] ✅ Connected')
       reconnectAttemptsRef.current = 0
       startHeartbeat()
       onOpen?.()
@@ -109,7 +110,7 @@ export function useStableWebSocket({
     })
 
     wsRef.current.addEventListener('close', (event) => {
-      console.debug(
+      logger.log(
         '[useStableWebSocket] ⚠️ Connection closed',
         event.code,
         event.reason
@@ -131,7 +132,7 @@ export function useStableWebSocket({
     })
 
     wsRef.current.addEventListener('error', (event) => {
-      console.error('[useStableWebSocket] ❌ WebSocket error:', event)
+      logger.error('[useStableWebSocket] ❌ WebSocket error:', event)
       onError?.(event)
     })
   }
@@ -143,7 +144,7 @@ export function useStableWebSocket({
 
     const maxAttempts = 6
     if (reconnectAttemptsRef.current >= maxAttempts) {
-      console.error('[useStableWebSocket] ❌ Max reconnect attempts reached')
+      logger.error('[useStableWebSocket] ❌ Max reconnect attempts reached')
       return
     }
 
@@ -152,7 +153,7 @@ export function useStableWebSocket({
     const delay = 300 * Math.pow(2, n)
     reconnectAttemptsRef.current += 1
 
-    console.debug(
+    logger.log(
       `[useStableWebSocket] 🔁 Reconnecting in ${Math.round(delay / 1000)}s (attempt ${reconnectAttemptsRef.current})`
     )
 
@@ -172,7 +173,7 @@ export function useStableWebSocket({
         wsRef.current.close(code, reason)
       }
     } catch (error) {
-      console.warn('[useStableWebSocket] Error during disconnect:', error)
+      logger.warn('[useStableWebSocket] Error during disconnect:', error)
     }
 
     wsRef.current = null
@@ -186,10 +187,10 @@ export function useStableWebSocket({
     // Gestion visibilité page (économise ressources)
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        console.debug('[useStableWebSocket] 👁️ Page visible, connecting...')
+        logger.log('[useStableWebSocket] 👁️ Page visible, connecting...')
         connect()
       } else {
-        console.debug('[useStableWebSocket] 🙈 Page hidden, closing...')
+        logger.log('[useStableWebSocket] 🙈 Page hidden, closing...')
         disconnect(1001, 'page hidden')
       }
     }
@@ -203,7 +204,7 @@ export function useStableWebSocket({
 
     // Cleanup garanti
     return () => {
-      console.debug('[useStableWebSocket] 🧹 Cleaning up...')
+      logger.log('[useStableWebSocket] 🧹 Cleaning up...')
       document.removeEventListener('visibilitychange', handleVisibilityChange)
       disconnect(1000, 'component unmount')
     }
@@ -215,7 +216,7 @@ export function useStableWebSocket({
     // Fermer proprement lors du Hot Module Replacement
     if (typeof window !== 'undefined' && (window as any).module?.hot) {
       ;(window as any).module.hot.dispose(() => {
-        console.debug('[useStableWebSocket] 🔥 HMR dispose, closing...')
+        logger.log('[useStableWebSocket] 🔥 HMR dispose, closing...')
         disconnect(1000, 'hmr dispose')
       })
     }

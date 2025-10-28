@@ -33,6 +33,7 @@ from models.interaction import (
     InteractionStatus,
     InteractionType,
 )
+from models.known_company import KnownCompany
 from models.kpi import DashboardKPI
 from models.mailing_list import MailingList
 from models.mandat import Mandat, MandatStatus, MandatType
@@ -159,6 +160,8 @@ __all__ = [
     "InteractionStatus",
     # Lead Scoring
     "LeadScore",
+    # Known Companies (Autofill)
+    "KnownCompany",
 ]
 
 # Backwards compatibility aliases (legacy spelling)

@@ -21,6 +21,7 @@
 import { useEffect, useState, useCallback, useMemo } from 'react'
 import { usePathname } from 'next/navigation'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { logger } from '@/lib/logger'
 
 export interface SidebarItem {
   label: string
@@ -96,7 +97,7 @@ export function useSidebar(sections: SidebarSection[] = []) {
       try {
         localStorage.setItem('sidebar-submenus-state', JSON.stringify(openSubmenus))
       } catch (error) {
-        console.warn('Failed to save sidebar submenus state:', error)
+        logger.warn('Failed to save sidebar submenus state:', error)
       }
     }
   }, [openSubmenus])
@@ -107,7 +108,7 @@ export function useSidebar(sections: SidebarSection[] = []) {
       try {
         localStorage.setItem('sidebar-collapsed', String(collapsed))
       } catch (error) {
-        console.warn('Failed to save sidebar collapsed state:', error)
+        logger.warn('Failed to save sidebar collapsed state:', error)
       }
     }
   }, [collapsed])
@@ -118,7 +119,7 @@ export function useSidebar(sections: SidebarSection[] = []) {
       try {
         localStorage.setItem('sidebar-favorites', JSON.stringify(favorites))
       } catch (error) {
-        console.warn('Failed to save sidebar favorites:', error)
+        logger.warn('Failed to save sidebar favorites:', error)
       }
     }
   }, [favorites])
@@ -129,7 +130,7 @@ export function useSidebar(sections: SidebarSection[] = []) {
       try {
         localStorage.setItem('sidebar-hidden-sections', JSON.stringify(hiddenSections))
       } catch (error) {
-        console.warn('Failed to save sidebar hidden sections:', error)
+        logger.warn('Failed to save sidebar hidden sections:', error)
       }
     }
   }, [hiddenSections])

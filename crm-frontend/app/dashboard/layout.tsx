@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import Navbar from '@/components/shared/Navbar'
 import Sidebar from '@/components/shared/Sidebar'
+import Footer from '@/components/shared/Footer'
 import QueryProvider from '@/components/providers/QueryProvider'
 import OfflineIndicator from '@/components/pwa/OfflineIndicator'
 import { BannerManager } from '@/components/pwa/BannerManager'
@@ -84,6 +85,9 @@ export default function DashboardLayout({
                   {children}
                 </div>
               </main>
+
+              {/* Footer with Legal Links */}
+              <Footer />
             </div>
 
             {/* PWA Components */}

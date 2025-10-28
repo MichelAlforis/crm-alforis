@@ -244,3 +244,122 @@ class PhoneNormalizationResponse(BaseModel):
     normalized: str = Field(..., description="Numéro normalisé E.164")
     country_code: Optional[str] = Field(None, description="Code pays détecté")
     is_valid: bool = Field(..., description="True si numéro valide")
+
+
+# ======================
+# Autofill Preview (V1.5 Smart Resolver)
+# ======================
+
+
+class MatchAction(str, Enum):
+    """Action recommandée pour un match"""
+
+    APPLY = "apply"  # Auto-apply (score ≥ 100)
+    PREVIEW = "preview"  # Validation humaine (60 ≤ score < 100)
+    CREATE_NEW = "create_new"  # Créer nouvelle fiche (score < 60)
+
+
+class MatchCandidate(BaseModel):
+    """Un candidat potentiel pour matching"""
+
+    score: int = Field(..., description="Score de matching total")
+    action: MatchAction = Field(..., description="Action recommandée")
+    details: Dict[str, int] = Field(
+        ..., description="Détail des points par critère (email_exact, name_fuzzy, etc.)"
+    )
+    candidate: Dict[str, Any] = Field(..., description="Données du candidat (Person ou Organisation)")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "score": 140,
+                "action": "apply",
+                "details": {
+                    "email_exact": 100,
+                    "email_domain": 40
+                },
+                "candidate": {
+                    "id": 42,
+                    "first_name": "Jean",
+                    "last_name": "Dupont",
+                    "personal_email": "j.dupont@mandarine-gestion.com",
+                    "company_name": "Mandarine Gestion"
+                }
+            }
+        }
+
+
+class AutofillPreviewRequest(BaseModel):
+    """
+    Requête de preview pour Smart Resolver V1.5
+
+    Envoie un brouillon et reçoit les candidats potentiels scorés
+    """
+
+    entity_type: str = Field(..., description="Type d'entité: 'person' ou 'organisation'")
+    draft: Dict[str, Any] = Field(..., description="Données partielles saisies")
+    limit: int = Field(default=5, le=10, description="Nombre max de candidats à retourner")
+
+    @field_validator("entity_type")
+    @classmethod
+    def validate_entity_type(cls, v: str) -> str:
+        if v not in ["person", "organisation"]:
+            raise ValueError("entity_type doit être 'person' ou 'organisation'")
+        return v
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "entity_type": "person",
+                "draft": {
+                    "first_name": "Jean",
+                    "last_name": "Dupont",
+                    "personal_email": "j.dupont@mandarine-gestion.com",
+                    "phone": "01 23 45 67 89"
+                },
+                "limit": 5
+            }
+        }
+
+
+class AutofillPreviewResponse(BaseModel):
+    """
+    Réponse du Smart Resolver avec candidats scorés
+
+    Retourne:
+    - matches: liste de candidats potentiels avec scores
+    - recommendation: action globale recommandée (basée sur le meilleur match)
+    - meta: métadonnées d'exécution
+    """
+
+    matches: List[MatchCandidate] = Field(..., description="Candidats potentiels triés par score")
+    recommendation: MatchAction = Field(..., description="Action recommandée globale")
+    meta: Dict[str, Any] = Field(
+        default={},
+        description="Métadonnées: temps d'exécution, critères utilisés, etc."
+    )
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "matches": [
+                    {
+                        "score": 140,
+                        "action": "apply",
+                        "details": {"email_exact": 100, "email_domain": 40},
+                        "candidate": {
+                            "id": 42,
+                            "first_name": "Jean",
+                            "last_name": "Dupont",
+                            "personal_email": "j.dupont@mandarine-gestion.com"
+                        }
+                    }
+                ],
+                "recommendation": "apply",
+                "meta": {
+                    "execution_time_ms": 15,
+                    "candidates_searched": 3,
+                    "criteria_used": ["email", "name", "phone"]
+                }
+            }
+        }

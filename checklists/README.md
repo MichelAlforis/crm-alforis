@@ -34,6 +34,14 @@ Checklists complètes pour valider le frontend en production, organisées par mo
 | **15. Accessibilité** | [15-accessibilite.md](15-accessibilite.md) | 5 | ✅ Complet | 5/5 (100%) |
 | **17. Intelligence Artificielle** | [17-ia.md](17-ia.md) | 15 | ✅ Complet | 12/15 (80%) |
 
+### 🔴 Conformité Légale & Commercial (BLOQUANT)
+
+| Chapitre | Fichier | Items | Status | Score |
+|----------|---------|-------|--------|-------|
+| **18. Légal & Commercial** | [18-legal-commercial.md](18-legal-commercial.md) | 4 | 🔴 CRITIQUE | 2/4 (50%) |
+
+**⚠️ BLOQUANT COMMERCIALISATION** : CGV/CGU et DPA manquants (obligatoires avant vente externe)
+
 ### ⬜ Tests À Faire (41/312 - 13%)
 
 | Chapitre | Fichier | Tests | Status |

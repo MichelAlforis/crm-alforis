@@ -15,6 +15,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { api } from '@/lib/axios'
 import useSWR from 'swr'
 import { toast } from 'react-hot-toast'
+import { logger } from '@/lib/logger'
 
 // Types d'activités (backend enum)
 export type ActivityType =
@@ -151,7 +152,7 @@ export function useActivities(options: UseActivitiesOptions = {}): UseActivities
 
       return newActivity
     } catch (err: any) {
-      console.error('Erreur création activité:', err)
+      logger.error('Erreur création activité:', err)
       toast.error(err.response?.data?.detail || 'Erreur lors de la création')
       return null
     } finally {
@@ -171,7 +172,7 @@ export function useActivities(options: UseActivitiesOptions = {}): UseActivities
 
       return true
     } catch (err: any) {
-      console.error('Erreur suppression activité:', err)
+      logger.error('Erreur suppression activité:', err)
       toast.error(err.response?.data?.detail || 'Erreur lors de la suppression')
       return false
     } finally {

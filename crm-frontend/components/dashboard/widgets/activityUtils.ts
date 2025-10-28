@@ -18,6 +18,7 @@ import type { LucideIcon } from 'lucide-react'
 
 import type { OrganisationActivity, OrganisationActivityType } from '@/lib/types'
 import { humanizeKey } from '@/lib/utils'
+import { logger } from '@/lib/logger'
 
 export interface ActivityVisual {
   icon: LucideIcon
@@ -61,7 +62,7 @@ export function formatRelativeTime(dateString: string | null | undefined): strin
 
   // Check for invalid date
   if (isNaN(date.getTime())) {
-    console.warn('Invalid date string:', dateString)
+    logger.warn('Invalid date string:', dateString)
     return 'Date invalide'
   }
 

@@ -297,3 +297,113 @@ async def get_metrics(
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Metrics error: {str(e)}")
+
+
+@router.get("/cache")
+async def get_cache_stats():
+    """
+    Statistiques Redis cache (public endpoint)
+
+    Returns:
+        Dict avec hits, misses, hit_rate, keys_count, memory_used
+    """
+    from core.cache import get_cache_stats
+
+    try:
+        stats = get_cache_stats()
+        return {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            **stats,
+        }
+    except Exception as e:
+        return {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "available": False,
+            "error": str(e),
+        }
+
+
+@router.delete("/cache")
+async def clear_cache(
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Vide le cache Redis (admin only)
+
+    Returns:
+        Dict avec nombre de clés supprimées
+    """
+    from core.cache import invalidate_all_caches
+
+    # TODO: Ajouter vérification admin
+    # if not current_user.is_admin:
+    #     raise HTTPException(status_code=403, detail="Admin access required")
+
+    try:
+        deleted = invalidate_all_caches()
+        return {
+            "message": f"{deleted} cache keys deleted",
+            "deleted_count": deleted,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Cache clear error: {str(e)}")
+
+
+@router.get("/gdpr")
+async def get_gdpr_stats(
+    db: Session = Depends(get_db),
+):
+    """
+    Statistiques RGPD (public endpoint)
+
+    Returns:
+        Dict avec total contacts, anonymisés, avec/sans consentement
+    """
+    try:
+        from models.person import Person
+        from models.organisation import Organisation
+
+        # Stats People
+        total_people = db.query(Person).count()
+        anonymized_people = db.query(Person).filter(Person.is_anonymized == True).count()
+        with_consent_people = db.query(Person).filter(Person.gdpr_consent == True).count()
+        without_consent_people = db.query(Person).filter(
+            (Person.gdpr_consent == False) | (Person.gdpr_consent == None)
+        ).count()
+
+        # Stats Organisations
+        total_orgs = db.query(Organisation).count()
+        anonymized_orgs = db.query(Organisation).filter(Organisation.is_anonymized == True).count()
+        with_consent_orgs = db.query(Organisation).filter(Organisation.gdpr_consent == True).count()
+
+        # Calcul inactifs (18+ mois)
+        inactive_threshold = datetime.now(timezone.utc) - timedelta(days=18*30)
+        inactive_people = db.query(Person).filter(
+            Person.last_activity_date < inactive_threshold,
+            Person.is_anonymized == False
+        ).count()
+
+        return {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "people": {
+                "total": total_people,
+                "anonymized": anonymized_people,
+                "with_consent": with_consent_people,
+                "without_consent": without_consent_people,
+                "inactive_18m": inactive_people,
+                "compliance_rate": round((with_consent_people / total_people * 100) if total_people > 0 else 0, 1)
+            },
+            "organisations": {
+                "total": total_orgs,
+                "anonymized": anonymized_orgs,
+                "with_consent": with_consent_orgs,
+            },
+            "status": "compliant" if (with_consent_people / total_people * 100 if total_people > 0 else 100) > 80 else "warning"
+        }
+    except Exception as e:
+        return {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "error": str(e),
+            "status": "error"
+        }

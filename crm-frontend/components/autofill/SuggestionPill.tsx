@@ -9,6 +9,8 @@
  * - Actions: Accepter (Enter), Rejeter (Esc)
  */
 
+'use client'
+
 import React from 'react'
 import { Check, X, Info, Sparkles, Database, Mail, Globe } from 'lucide-react'
 import type { AutofillSuggestion, AutofillSourceType } from '@/hooks/useAutofillV2'

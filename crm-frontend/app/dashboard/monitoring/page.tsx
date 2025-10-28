@@ -1,5 +1,6 @@
 'use client'
 
+import { logger } from '@/lib/logger'
 import React, { useEffect, useState } from 'react'
 import { Card } from '@/components/shared'
 
@@ -50,6 +51,37 @@ interface Workers {
   status: string
 }
 
+interface CacheStats {
+  available: boolean
+  hits?: number
+  misses?: number
+  total_requests?: number
+  hit_rate?: number
+  keys_count?: number
+  memory_used?: string
+  error?: string
+  timestamp: string
+}
+
+interface GDPRStats {
+  people: {
+    total: number
+    anonymized: number
+    with_consent: number
+    without_consent: number
+    inactive_18m: number
+    compliance_rate: number
+  }
+  organisations: {
+    total: number
+    anonymized: number
+    with_consent: number
+  }
+  status: 'compliant' | 'warning' | 'error'
+  error?: string
+  timestamp: string
+}
+
 interface MonitoringData {
   status: 'healthy' | 'warning' | 'degraded' | 'critical'
   timestamp: string
@@ -62,23 +94,24 @@ interface MonitoringData {
 
 export default function MonitoringPage() {
   const [data, setData] = useState<MonitoringData | null>(null)
+  const [cacheStats, setCacheStats] = useState<CacheStats | null>(null)
+  const [gdprStats, setGdprStats] = useState<GDPRStats | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [autoRefresh, setAutoRefresh] = useState(true)
+  const [clearingCache, setClearingCache] = useState(false)
+
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '') || 'http://localhost:8000'
+  const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null
 
   const fetchMonitoring = async () => {
     try {
-      // Use base URL without /api/v1 suffix
-      const API_BASE = process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '') || 'http://localhost:8000'
-      const token = localStorage.getItem('auth_token')
-
       const response = await fetch(`${API_BASE}/api/v1/monitoring/health`, {
         headers: {
           Authorization: token ? `Bearer ${token}` : '',
         },
       })
 
-      // If 401, token missing or expired - redirect to login
       if (response.status === 401) {
         if (token) {
           localStorage.removeItem('access_token')
@@ -95,14 +128,75 @@ export default function MonitoringPage() {
       setData(result)
       setError(null)
     } catch (err: any) {
+      logger.error('Monitoring fetch error:', err)
       setError(err.message || 'Erreur lors du chargement des métriques')
     } finally {
       setLoading(false)
     }
   }
 
+  const fetchCacheStats = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/api/v1/monitoring/cache`)
+
+      if (response.ok) {
+        const result = await response.json()
+        setCacheStats(result)
+      }
+    } catch (err: any) {
+      logger.error('Cache stats fetch error:', err)
+      // Silent fail - cache stats sont optionnels
+    }
+  }
+
+  const fetchGdprStats = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/api/v1/monitoring/gdpr`)
+
+      if (response.ok) {
+        const result = await response.json()
+        setGdprStats(result)
+      }
+    } catch (err: any) {
+      logger.error('GDPR stats fetch error:', err)
+      // Silent fail - GDPR stats sont optionnels
+    }
+  }
+
+  const handleClearCache = async () => {
+    if (!confirm('Êtes-vous sûr de vouloir vider le cache Redis ?')) {
+      return
+    }
+
+    setClearingCache(true)
+    try {
+      const response = await fetch(`${API_BASE}/api/v1/monitoring/cache`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: token ? `Bearer ${token}` : '',
+        },
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        alert(`✅ Cache vidé : ${result.deleted_count} clés supprimées`)
+        // Refresh stats
+        await fetchCacheStats()
+      } else {
+        throw new Error('Failed to clear cache')
+      }
+    } catch (err: any) {
+      logger.error('Cache clear error:', err)
+      alert(`❌ Erreur : ${err.message}`)
+    } finally {
+      setClearingCache(false)
+    }
+  }
+
   useEffect(() => {
     fetchMonitoring()
+    fetchCacheStats()
+    fetchGdprStats()
   }, [])
 
   useEffect(() => {
@@ -110,6 +204,8 @@ export default function MonitoringPage() {
 
     const interval = setInterval(() => {
       fetchMonitoring()
+      fetchCacheStats()
+      fetchGdprStats()
     }, 5000) // Refresh every 5 seconds
 
     return () => clearInterval(interval)
@@ -173,7 +269,10 @@ export default function MonitoringPage() {
     <div className="p-6 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Monitoring Système</h1>
+        <div>
+          <h1 className="text-2xl font-bold">Monitoring Système</h1>
+          <p className="text-sm text-gray-500 mt-1">Vue temps réel des performances et du cache</p>
+        </div>
         <div className="flex items-center gap-4">
           <button
             onClick={() => setAutoRefresh(!autoRefresh)}
@@ -262,6 +361,213 @@ export default function MonitoringPage() {
         </Card>
       </div>
 
+      {/* Redis Cache Stats - NEW! */}
+      {cacheStats && (
+        <Card className="mb-6 border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50">
+          <div className="p-4">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white text-xl">⚡</span>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">Redis Cache</h3>
+                  <p className="text-xs text-gray-600">Performance & Hit Rate</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                {cacheStats.available ? (
+                  <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">
+                    ✓ ONLINE
+                  </span>
+                ) : (
+                  <span className="px-3 py-1 bg-gray-200 text-gray-600 rounded-full text-xs font-semibold">
+                    ✗ OFFLINE
+                  </span>
+                )}
+                <button
+                  onClick={handleClearCache}
+                  disabled={!cacheStats.available || clearingCache}
+                  className="px-3 py-1 bg-red-100 text-red-700 hover:bg-red-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-xs font-medium transition-colors"
+                >
+                  {clearingCache ? '⏳ Clearing...' : '🗑️ Clear Cache'}
+                </button>
+              </div>
+            </div>
+
+            {cacheStats.available ? (
+              <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+                {/* Hit Rate */}
+                <div className="bg-white rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 mb-1">Hit Rate</p>
+                  <p className="text-2xl font-bold text-blue-600">{cacheStats.hit_rate?.toFixed(1)}%</p>
+                  <div className="mt-2 bg-gray-200 rounded-full h-1.5">
+                    <div
+                      className="h-1.5 rounded-full bg-blue-500 transition-all duration-300"
+                      style={{ width: `${Math.min(cacheStats.hit_rate || 0, 100)}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Hits */}
+                <div className="bg-white rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 mb-1">Hits</p>
+                  <p className="text-2xl font-bold text-green-600">{cacheStats.hits?.toLocaleString()}</p>
+                  <p className="text-xs text-gray-500 mt-1">Requests</p>
+                </div>
+
+                {/* Misses */}
+                <div className="bg-white rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 mb-1">Misses</p>
+                  <p className="text-2xl font-bold text-orange-600">{cacheStats.misses?.toLocaleString()}</p>
+                  <p className="text-xs text-gray-500 mt-1">Requests</p>
+                </div>
+
+                {/* Total */}
+                <div className="bg-white rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 mb-1">Total</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {cacheStats.total_requests?.toLocaleString()}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">Requests</p>
+                </div>
+
+                {/* Keys */}
+                <div className="bg-white rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 mb-1">Keys</p>
+                  <p className="text-2xl font-bold text-purple-600">{cacheStats.keys_count?.toLocaleString()}</p>
+                  <p className="text-xs text-gray-500 mt-1">Stored</p>
+                </div>
+
+                {/* Memory */}
+                <div className="bg-white rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 mb-1">Memory</p>
+                  <p className="text-2xl font-bold text-indigo-600">{cacheStats.memory_used || 'N/A'}</p>
+                  <p className="text-xs text-gray-500 mt-1">Used</p>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-white rounded-lg p-4 text-center">
+                <p className="text-gray-600 text-sm">
+                  {cacheStats.error || 'Redis cache non disponible'}
+                </p>
+                <p className="text-xs text-gray-500 mt-2">
+                  Vérifiez que Redis est démarré et accessible
+                </p>
+              </div>
+            )}
+          </div>
+        </Card>
+      )}
+
+      {/* RGPD Compliance - NEW! */}
+      {gdprStats && (
+        <Card className="mb-6 border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50">
+          <div className="p-4">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white text-xl">🔒</span>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">RGPD Compliance</h3>
+                  <p className="text-xs text-gray-600">Conformité données personnelles</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                {gdprStats.status === 'compliant' ? (
+                  <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">
+                    ✓ CONFORME
+                  </span>
+                ) : gdprStats.status === 'warning' ? (
+                  <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-semibold">
+                    ⚠ ATTENTION
+                  </span>
+                ) : (
+                  <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold">
+                    ✗ ERREUR
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {gdprStats.error ? (
+              <div className="bg-white rounded-lg p-4 text-center">
+                <p className="text-gray-600 text-sm">{gdprStats.error}</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                {/* Compliance Rate */}
+                <div className="bg-white rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 mb-1">Taux Conformité</p>
+                  <p className="text-2xl font-bold text-purple-600">
+                    {gdprStats.people.compliance_rate.toFixed(1)}%
+                  </p>
+                  <div className="mt-2 bg-gray-200 rounded-full h-1.5">
+                    <div
+                      className={`h-1.5 rounded-full transition-all duration-300 ${
+                        gdprStats.people.compliance_rate > 80
+                          ? 'bg-green-500'
+                          : gdprStats.people.compliance_rate > 50
+                          ? 'bg-orange-500'
+                          : 'bg-red-500'
+                      }`}
+                      style={{ width: `${Math.min(gdprStats.people.compliance_rate, 100)}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Total Contacts */}
+                <div className="bg-white rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 mb-1">Total Contacts</p>
+                  <p className="text-2xl font-bold text-gray-900">{gdprStats.people.total.toLocaleString()}</p>
+                  <p className="text-xs text-gray-500 mt-1">Personnes</p>
+                </div>
+
+                {/* With Consent */}
+                <div className="bg-white rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 mb-1">Avec Consentement</p>
+                  <p className="text-2xl font-bold text-green-600">
+                    {gdprStats.people.with_consent.toLocaleString()}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {((gdprStats.people.with_consent / gdprStats.people.total) * 100).toFixed(0)}%
+                  </p>
+                </div>
+
+                {/* Anonymized */}
+                <div className="bg-white rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 mb-1">Anonymisés</p>
+                  <p className="text-2xl font-bold text-blue-600">
+                    {gdprStats.people.anonymized.toLocaleString()}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">Contacts</p>
+                </div>
+
+                {/* Inactive 18m */}
+                <div className="bg-white rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 mb-1">Inactifs 18M+</p>
+                  <p className="text-2xl font-bold text-orange-600">
+                    {gdprStats.people.inactive_18m.toLocaleString()}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">À anonymiser</p>
+                </div>
+              </div>
+            )}
+
+            {/* Warning if low compliance */}
+            {gdprStats.people.compliance_rate < 50 && (
+              <div className="mt-4 bg-orange-50 border border-orange-200 rounded-lg p-3">
+                <p className="text-sm text-orange-800">
+                  ⚠️ <strong>Conformité faible:</strong> Collectez le consentement RGPD de vos contacts pour être
+                  conforme.
+                </p>
+              </div>
+            )}
+          </div>
+        </Card>
+      )}
+
       {/* Database & Workers */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         {/* Database Stats */}
@@ -335,9 +641,7 @@ export default function MonitoringPage() {
                   <div className="flex justify-between items-start">
                     <div>
                       <p className="font-medium text-sm text-gray-900">{error.title || error.type}</p>
-                      {error.description && (
-                        <p className="text-xs text-gray-600 mt-1">{error.description}</p>
-                      )}
+                      {error.description && <p className="text-xs text-gray-600 mt-1">{error.description}</p>}
                     </div>
                     {error.timestamp && (
                       <span className="text-xs text-gray-500">

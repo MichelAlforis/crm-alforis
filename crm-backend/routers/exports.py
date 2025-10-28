@@ -212,6 +212,9 @@ async def export_organisations_pdf(
 
     **Returns:** Fichier PDF téléchargeable
     """
+    # Import local pour éviter circular dependency
+    from api.routes.organisations import apply_organisation_filters
+
     # Construire les params exactement comme le viewer
     params = {
         "category": category,
@@ -269,6 +272,9 @@ async def export_mandats_csv(
 
     **Returns:** Fichier CSV téléchargeable
     """
+    # Import local pour éviter circular dependency
+    from core.permissions import filter_query_by_team
+
     # Query avec permissions
     query = db.query(Mandat)
     query = filter_query_by_team(query, current_user, Mandat)
@@ -333,6 +339,9 @@ async def export_mandats_pdf(
 
     **Returns:** Fichier PDF téléchargeable
     """
+    # Import local pour éviter circular dependency
+    from core.permissions import filter_query_by_team
+
     # Query avec permissions
     query = db.query(Mandat)
     query = filter_query_by_team(query, current_user, Mandat)
@@ -383,6 +392,9 @@ async def export_people_csv(
 
     **Returns:** Fichier CSV téléchargeable
     """
+    # Import local pour éviter circular dependency
+    from api.routes.people import apply_people_filters
+
     # Construire les params exactement comme le viewer
     params = {
         "role": role,
@@ -460,6 +472,9 @@ async def export_people_excel(
 
     **Returns:** Fichier Excel (.xlsx) téléchargeable
     """
+    # Import local pour éviter circular dependency
+    from api.routes.people import apply_people_filters
+
     # Construire les params exactement comme le viewer
     params = {
         "role": role,
@@ -537,6 +552,9 @@ async def export_people_pdf(
 
     **Returns:** Fichier PDF téléchargeable
     """
+    # Import local pour éviter circular dependency
+    from api.routes.people import apply_people_filters
+
     # Construire les params exactement comme le viewer
     params = {
         "role": role,

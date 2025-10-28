@@ -1,4 +1,5 @@
 'use client'
+import { logger } from '@/lib/logger'
 
 /**
  * PWA Install Prompt Component
@@ -61,7 +62,7 @@ export function PWAInstallPrompt() {
 
     // Listen for successful installation
     window.addEventListener('appinstalled', () => {
-      console.log('[PWA] App successfully installed')
+      logger.log('[PWA] App successfully installed')
       setShowPrompt(false)
       setDeferredPrompt(null)
     })
@@ -80,10 +81,10 @@ export function PWAInstallPrompt() {
     // Wait for the user's response
     const { outcome } = await deferredPrompt.userChoice
 
-    console.log(`[PWA] User response: ${outcome}`)
+    logger.log(`[PWA] User response: ${outcome}`)
 
     if (outcome === 'accepted') {
-      console.log('[PWA] User accepted the install prompt')
+      logger.log('[PWA] User accepted the install prompt')
     }
 
     // Clear the deferredPrompt

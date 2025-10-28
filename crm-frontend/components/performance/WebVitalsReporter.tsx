@@ -2,6 +2,7 @@
 // ============= P2 OPTIMIZATION: Web Vitals Reporter =============
 
 'use client'
+import { logger } from '@/lib/logger'
 
 import { useEffect } from 'react'
 import { onCLS, onFCP, onLCP, onTTFB, onINP, type Metric } from 'web-vitals'
@@ -43,7 +44,7 @@ export function WebVitalsReporter({ debug = false, analyticsEndpoint }: WebVital
 
       // Console log in debug mode
       if (debug) {
-        console.log(
+        logger.log(
           `[Web Vitals] ${status} ${name}: ${Math.round(value)}${name === 'CLS' ? '' : 'ms'} (${rating})`
         )
       }
@@ -104,7 +105,7 @@ function sendToAnalytics(endpoint: string, metric: Metric) {
       keepalive: true,
     }).catch((error) => {
       if (process.env.NODE_ENV === 'development') {
-        console.error('[WebVitals] Failed to send metric:', error)
+        logger.error('[WebVitals] Failed to send metric:', error)
       }
     })
   }
@@ -122,7 +123,7 @@ if (typeof window !== 'undefined') {
       console.table(parsed)
       return parsed
     }
-    console.log('No Web Vitals data yet. Refresh the page and try again.')
+    logger.log('No Web Vitals data yet. Refresh the page and try again.')
     return null
   }
 }

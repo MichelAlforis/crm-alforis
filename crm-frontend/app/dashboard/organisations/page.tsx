@@ -3,6 +3,7 @@
 // Updated: Pagination with fun design
 
 'use client'
+import { logger } from '@/lib/logger'
 
 import React, { useMemo, useState } from 'react'
 import Link from 'next/link'
@@ -416,7 +417,7 @@ export default function OrganisationsPage() {
   // Paginate the filtered and sorted data (client-side pagination)
   const paginatedData = useMemo(() => {
     const sliced = filteredAndSortedData.slice(pagination.skip, pagination.skip + pagination.limit)
-    console.log('🎯 PAGINATION:', {
+    logger.log('🎯 PAGINATION:', {
       total: filteredAndSortedData.length,
       skip: pagination.skip,
       limit: pagination.limit,

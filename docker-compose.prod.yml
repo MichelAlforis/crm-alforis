@@ -23,6 +23,8 @@ networks:
 volumes:
   postgres-data:
     driver: local
+  redis-data:
+    driver: local
   api-uploads:
     driver: local
   api-backups:
@@ -30,6 +32,31 @@ volumes:
 
 # --- Services ---
 services:
+
+  # ========================================
+  # REDIS (Cache & Event Bus)
+  # ========================================
+  redis:
+    image: redis:7-alpine
+    restart: always
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --appendonly yes
+    ports:
+      - "127.0.0.1:${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - crm-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   # ========================================
   # POSTGRES
@@ -85,10 +112,17 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     # Docker Compose charge automatiquement .env à la racine
     environment:
       # URL de connexion PostgreSQL (utilise le nom du service 'postgres')
       DATABASE_URL: postgresql://${POSTGRES_USER:-crm_user}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-crm_db}
+      # Redis Cache & Event Bus
+      REDIS_ENABLED: "True"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
       # Sécurité
       DEBUG: "False"
       SECRET_KEY: ${SECRET_KEY:?SECRET_KEY doit être défini dans .env}

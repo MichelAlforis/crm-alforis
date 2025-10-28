@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useLocalStorage } from './useLocalStorage'
+import { logger } from '@/lib/logger'
 
 export interface OnboardingStep {
   target: string
@@ -42,7 +43,7 @@ interface UseOnboardingReturn {
  *   steps: ONBOARDING_STEPS,
  *   storageKey: 'dashboard-onboarding-completed',
  *   autoStart: true,
- *   onComplete: () => console.log('Onboarding terminé!')
+ *   onComplete: () => logger.log('Onboarding terminé!')
  * })
  *
  * <Joyride

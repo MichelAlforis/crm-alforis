@@ -7,6 +7,7 @@ from sqlalchemy import (
     CheckConstraint,
     Column,
     Date,
+    DateTime,
     Enum,
     ForeignKey,
     Index,
@@ -214,6 +215,13 @@ class Organisation(BaseModel):
     potential_amount = Column("montant_potentiel", Numeric(15, 2), nullable=True)
     signature_date = Column("date_signature", Date, nullable=True)
     signature_probability = Column("probabilite_signature", Integer, nullable=True)
+
+    # RGPD Compliance Fields
+    is_anonymized = Column(Boolean, default=False, nullable=False, index=True)
+    gdpr_consent = Column(Boolean, nullable=True, index=True)
+    gdpr_consent_date = Column(DateTime(timezone=True), nullable=True)
+    anonymized_at = Column(DateTime(timezone=True), nullable=True)
+    last_activity_date = Column(DateTime(timezone=True), nullable=True, index=True)
 
     # Relations
     mandats = relationship(

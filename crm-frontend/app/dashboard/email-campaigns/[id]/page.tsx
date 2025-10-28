@@ -20,6 +20,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useToast } from "@/hooks/useToast";
+import { logger } from '@/lib/logger'
 
 interface Campaign {
   id: number;
@@ -114,7 +115,7 @@ export default function EmailCampaignDetailPage() {
         router.back();
       }
     } catch (error) {
-      console.error("Error fetching campaign:", error);
+      logger.error("Error fetching campaign:", error);
       toast({
         title: "Erreur",
         description: "Impossible de charger la campagne",
@@ -146,7 +147,7 @@ export default function EmailCampaignDetailPage() {
         setPreviewPage(page);
       }
     } catch (error) {
-      console.error("Error fetching previews:", error);
+      logger.error("Error fetching previews:", error);
       toast({
         title: "Erreur",
         description: "Impossible de charger les prévisualisations",
@@ -183,7 +184,7 @@ export default function EmailCampaignDetailPage() {
         });
       }
     } catch (error) {
-      console.error("Error preparing campaign:", error);
+      logger.error("Error preparing campaign:", error);
       toast({
         title: "Erreur",
         description: "Une erreur est survenue",

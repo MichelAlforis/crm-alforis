@@ -83,6 +83,12 @@ class User(BaseModel):
     encrypted_outlook_refresh_token = Column(Text, nullable=True)
     outlook_token_expires_at = Column(DateTime(timezone=True), nullable=True)
 
+    # CGU/CGV Acceptance (Legal Compliance)
+    cgu_accepted = Column(Boolean, default=False, nullable=False, index=True)
+    cgu_accepted_at = Column(DateTime(timezone=True), nullable=True)
+    cgu_version = Column(String(20), nullable=True)  # e.g., "1.0"
+    cgu_acceptance_ip = Column(String(45), nullable=True)  # IPv4/IPv6
+
     def __repr__(self) -> str:
         return f"<User(id={self.id}, email='{self.email}')>"
 

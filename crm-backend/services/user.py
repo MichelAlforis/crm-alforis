@@ -1,5 +1,6 @@
 """Service pour la gestion des utilisateurs."""
 
+from datetime import datetime, timezone
 from typing import List, Optional, Tuple
 
 from sqlalchemy import or_
@@ -57,6 +58,10 @@ class UserService(BaseService[User, UserCreate, UserUpdate]):
             is_superuser=schema.is_superuser,
             role_id=schema.role_id,
             team_id=schema.team_id,
+            # CGU Acceptance
+            cgu_accepted=schema.cgu_accepted,
+            cgu_accepted_at=datetime.now(timezone.utc) if schema.cgu_accepted else None,
+            cgu_version=schema.cgu_version if schema.cgu_accepted else None,
         )
 
         self.db.add(user)

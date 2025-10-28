@@ -1,4 +1,5 @@
 'use client'
+import { logger } from '@/lib/logger'
 
 import { useEffect, useState } from 'react'
 import { X, Download, Smartphone } from 'lucide-react'
@@ -62,7 +63,7 @@ export default function InstallPrompt() {
     const { outcome } = await deferredPrompt.userChoice
 
     if (outcome === 'accepted') {
-      console.log('PWA installée')
+      logger.log('PWA installée')
     }
 
     // Réinitialiser

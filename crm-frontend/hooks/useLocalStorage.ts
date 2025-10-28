@@ -2,6 +2,7 @@
 // Hook pour synchroniser l'état avec localStorage
 
 import { useState, useEffect, useCallback } from 'react'
+import { logger } from '@/lib/logger'
 
 /**
  * Hook pour synchroniser l'état avec localStorage
@@ -29,7 +30,7 @@ export function useLocalStorage<T>(
       // Parser le JSON stocké ou retourner initialValue
       return item ? JSON.parse(item) : initialValue
     } catch (error) {
-      console.error(`Error reading localStorage key "${key}":`, error)
+      logger.error(`Error reading localStorage key "${key}":`, error)
       return initialValue
     }
   })
@@ -50,7 +51,7 @@ export function useLocalStorage<T>(
           window.localStorage.setItem(key, JSON.stringify(valueToStore))
         }
       } catch (error) {
-        console.error(`Error setting localStorage key "${key}":`, error)
+        logger.error(`Error setting localStorage key "${key}":`, error)
       }
     },
     [key, storedValue]

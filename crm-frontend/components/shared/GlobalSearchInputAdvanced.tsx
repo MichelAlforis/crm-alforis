@@ -2,6 +2,7 @@
 // components/shared/GlobalSearchInputAdvanced.tsx — Recherche en temps réel avec toutes les fonctionnalités
 // ============================
 'use client'
+import { logger } from '@/lib/logger'
 
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
@@ -63,7 +64,7 @@ export default function GlobalSearchInputAdvanced({
         setSearchHistory(JSON.parse(stored))
       }
     } catch (e) {
-      console.error('Error loading search history:', e)
+      logger.error('Error loading search history:', e)
     }
   }, [])
 
@@ -121,7 +122,7 @@ export default function GlobalSearchInputAdvanced({
         setIsLoading(false)
       })
       .catch(err => {
-        console.error('Search error:', err)
+        logger.error('Search error:', err)
         setQuickResults([])
         setIsLoading(false)
       })

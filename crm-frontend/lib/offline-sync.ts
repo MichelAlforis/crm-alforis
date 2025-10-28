@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger'
 /**
  * Offline Sync Service
  *
@@ -40,13 +41,13 @@ export class OfflineSyncService {
 
     // Listen for online event
     window.addEventListener('online', () => {
-      console.log('[OfflineSync] Network back online, starting sync...')
+      logger.log('[OfflineSync] Network back online, starting sync...')
       this.sync()
     })
 
     // Listen for custom sync event
     window.addEventListener('online-sync', () => {
-      console.log('[OfflineSync] Manual sync triggered')
+      logger.log('[OfflineSync] Manual sync triggered')
       this.sync()
     })
   }
@@ -58,10 +59,10 @@ export class OfflineSyncService {
       const stored = localStorage.getItem(QUEUE_KEY)
       if (stored) {
         this.queue = JSON.parse(stored)
-        console.log(`[OfflineSync] Loaded ${this.queue.length} queued requests`)
+        logger.log(`[OfflineSync] Loaded ${this.queue.length} queued requests`)
       }
     } catch (error) {
-      console.error('[OfflineSync] Failed to load queue:', error)
+      logger.error('[OfflineSync] Failed to load queue:', error)
       this.queue = []
     }
   }
@@ -72,7 +73,7 @@ export class OfflineSyncService {
     try {
       localStorage.setItem(QUEUE_KEY, JSON.stringify(this.queue))
     } catch (error) {
-      console.error('[OfflineSync] Failed to save queue:', error)
+      logger.error('[OfflineSync] Failed to save queue:', error)
     }
   }
 
@@ -89,7 +90,7 @@ export class OfflineSyncService {
     this.queue.push(queuedRequest)
     this.saveQueue()
 
-    console.log(`[OfflineSync] Added request to queue: ${request.method} ${request.url}`)
+    logger.log(`[OfflineSync] Added request to queue: ${request.method} ${request.url}`)
   }
 
   /**
@@ -97,17 +98,17 @@ export class OfflineSyncService {
    */
   async sync(): Promise<{ success: number; failed: number }> {
     if (this.isSyncing) {
-      console.log('[OfflineSync] Sync already in progress')
+      logger.log('[OfflineSync] Sync already in progress')
       return { success: 0, failed: 0 }
     }
 
     if (!navigator.onLine) {
-      console.log('[OfflineSync] Still offline, cannot sync')
+      logger.log('[OfflineSync] Still offline, cannot sync')
       return { success: 0, failed: 0 }
     }
 
     if (this.queue.length === 0) {
-      console.log('[OfflineSync] Queue is empty, nothing to sync')
+      logger.log('[OfflineSync] Queue is empty, nothing to sync')
       return { success: 0, failed: 0 }
     }
 
@@ -115,7 +116,7 @@ export class OfflineSyncService {
     let success = 0
     let failed = 0
 
-    console.log(`[OfflineSync] Syncing ${this.queue.length} requests...`)
+    logger.log(`[OfflineSync] Syncing ${this.queue.length} requests...`)
 
     // Process queue in order
     const requests = [...this.queue]
@@ -134,25 +135,25 @@ export class OfflineSyncService {
 
         if (response.ok) {
           success++
-          console.log(`[OfflineSync] ✓ Synced: ${request.method} ${request.url}`)
+          logger.log(`[OfflineSync] ✓ Synced: ${request.method} ${request.url}`)
         } else {
           failed++
           // Re-queue failed request
           this.queue.push(request)
-          console.error(`[OfflineSync] ✗ Failed: ${request.method} ${request.url} (${response.status})`)
+          logger.error(`[OfflineSync] ✗ Failed: ${request.method} ${request.url} (${response.status})`)
         }
       } catch (error) {
         failed++
         // Re-queue failed request
         this.queue.push(request)
-        console.error(`[OfflineSync] ✗ Error syncing: ${request.method} ${request.url}`, error)
+        logger.error(`[OfflineSync] ✗ Error syncing: ${request.method} ${request.url}`, error)
       }
     }
 
     this.saveQueue()
     this.isSyncing = false
 
-    console.log(`[OfflineSync] Sync complete: ${success} success, ${failed} failed`)
+    logger.log(`[OfflineSync] Sync complete: ${success} success, ${failed} failed`)
 
     // Emit custom event for UI updates
     window.dispatchEvent(
@@ -177,7 +178,7 @@ export class OfflineSyncService {
   clearQueue() {
     this.queue = []
     this.saveQueue()
-    console.log('[OfflineSync] Queue cleared')
+    logger.log('[OfflineSync] Queue cleared')
   }
 }
 

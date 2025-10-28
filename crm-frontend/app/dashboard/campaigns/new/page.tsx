@@ -1,4 +1,5 @@
 'use client'
+import { logger } from '@/lib/logger'
 
 import React from 'react'
 import { useRouter } from 'next/navigation'
@@ -34,7 +35,7 @@ export default function NewCampaignPage() {
       })
       router.push(`/dashboard/campaigns/${campaign.id}`)
     } catch (err: any) {
-      console.error('Failed to create campaign:', err)
+      logger.error('Failed to create campaign:', err)
       showToast({
         type: 'error',
         title: err?.response?.data?.detail || 'Impossible de créer la campagne',
@@ -48,13 +49,13 @@ export default function NewCampaignPage() {
     // Sauvegarde locale pour le moment (peut être étendu avec un endpoint backend)
     try {
       localStorage.setItem('campaign_draft', JSON.stringify(formData))
-      console.log('Draft saved to localStorage')
+      logger.log('Draft saved to localStorage')
       showToast({
         type: 'success',
         title: 'Brouillon sauvegardé',
       })
     } catch (err) {
-      console.error('Failed to save draft:', err)
+      logger.error('Failed to save draft:', err)
       showToast({
         type: 'error',
         title: 'Erreur lors de la sauvegarde',

@@ -24,6 +24,7 @@
  */
 
 import { useEffect, useState } from 'react'
+import { logger } from '@/lib/logger'
 
 export interface AutocompleteOption {
   id: number
@@ -125,7 +126,7 @@ export function useEntityPreload<T = any>({
         if (onError && err instanceof Error) {
           onError(err)
         } else {
-          console.error(`Erreur lors du pré-chargement de l'entité ${entityId}:`, err)
+          logger.error(`Erreur lors du pré-chargement de l'entité ${entityId}:`, err)
         }
       }
     })()

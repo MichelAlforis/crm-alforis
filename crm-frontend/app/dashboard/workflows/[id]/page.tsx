@@ -1,4 +1,5 @@
 'use client'
+import { logger } from '@/lib/logger'
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
@@ -67,7 +68,7 @@ export default function WorkflowDetailPage() {
       await toggleWorkflow(workflowId, newStatus)
       fetchWorkflow(workflowId)
     } catch (error) {
-      console.error('Erreur toggle:', error)
+      logger.error('Erreur toggle:', error)
     }
   }
 
@@ -83,7 +84,7 @@ export default function WorkflowDetailPage() {
           await deleteWorkflow(workflowId)
           router.push('/workflows')
         } catch (error) {
-          console.error('Erreur suppression:', error)
+          logger.error('Erreur suppression:', error)
         }
       },
     })
@@ -98,7 +99,7 @@ export default function WorkflowDetailPage() {
       fetchExecutions(workflowId)
       fetchStats(workflowId)
     } catch (error) {
-      console.error('Erreur exécution:', error)
+      logger.error('Erreur exécution:', error)
     }
   }
 
@@ -107,7 +108,7 @@ export default function WorkflowDetailPage() {
       const newWorkflow = await duplicateWorkflow(workflowId)
       router.push(`/dashboard/workflows/${newWorkflow.id}`)
     } catch (error) {
-      console.error('Erreur duplication:', error)
+      logger.error('Erreur duplication:', error)
     }
   }
 

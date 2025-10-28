@@ -13,7 +13,7 @@
  *     router.push(`/templates/${result.id}`)
  *   },
  *   onError: (err) => {
- *     console.error('Erreur création:', err)
+ *     logger.error('Erreur création:', err)
  *   }
  * })
  *
@@ -25,6 +25,7 @@
  */
 
 import { useState, useCallback } from 'react'
+import { logger } from '@/lib/logger'
 
 export interface UseAsyncActionOptions<TArgs extends any[], TResult> {
   /**

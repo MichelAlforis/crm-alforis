@@ -1,4 +1,5 @@
 'use client'
+import { logger } from '@/lib/logger'
 
 import { useState, useEffect } from 'react'
 import { useTaskViews, useTasks } from '@/hooks/useTasks'
@@ -269,7 +270,7 @@ export default function TaskdeskPage() {
     try {
       await quickAction(id, action as any)
     } catch (error) {
-      console.error('Quick action failed:', error)
+      logger.error('Quick action failed:', error)
     }
   }
 

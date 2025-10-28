@@ -6,6 +6,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/components/ui/Toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Upload, FileText, CheckCircle2, AlertCircle, Download } from 'lucide-react';
+import { logger } from '@/lib/logger'
 
 interface CSVRow {
   [key: string]: string;
@@ -294,7 +295,7 @@ export default function ImportUnifiedForm() {
       });
 
     } catch (error) {
-      console.error('Erreur:', error);
+      logger.error('Erreur:', error);
       showToast({
         type: 'error',
         title: 'Erreur',

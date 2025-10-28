@@ -2,6 +2,7 @@
 // ============= UTILITAIRE CLIENT WEBSOCKET =============
 
 'use client'
+import { logger } from '@/lib/logger'
 
 interface WebSocketClientOptions {
   url: string
@@ -191,7 +192,7 @@ export class WebSocketClient {
     if (this.options.logger) {
       this.options.logger(message, ...args)
     } else if (process.env.NODE_ENV !== 'production') {
-      console.debug('[WebSocketClient]', message, ...args)
+      logger.log('[WebSocketClient]', message, ...args)
     }
   }
 }

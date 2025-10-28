@@ -47,6 +47,20 @@ export const SIDEBAR_SECTIONS: SidebarSection[] = [
     description: "Vue d'ensemble",
     badge: null,
     gradient: 'from-blue-500 to-cyan-500',
+    submenu: [
+      {
+        label: 'Dashboard V1',
+        href: '/dashboard',
+        icon: LayoutDashboard,
+        description: 'Vue classique',
+      },
+      {
+        label: 'Dashboard V2',
+        href: '/dashboard/v2',
+        icon: Sparkles,
+        description: 'Analytics avancées & IA',
+      },
+    ],
   },
 
   // ========================================

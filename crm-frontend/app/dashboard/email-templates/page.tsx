@@ -20,6 +20,7 @@ import {
 import { Plus, Mail, Edit, Trash2, Eye } from "lucide-react";
 import { useToast } from "@/hooks/useToast";
 import { useConfirm } from "@/hooks/useConfirm";
+import { logger } from '@/lib/logger'
 
 interface Template {
   id: number;
@@ -66,7 +67,7 @@ export default function EmailTemplatesPage() {
         setTemplates(data);
       }
     } catch (error) {
-      console.error("Error fetching templates:", error);
+      logger.error("Error fetching templates:", error);
       toast({
         title: "Erreur",
         description: "Impossible de charger les templates",
@@ -120,7 +121,7 @@ export default function EmailTemplatesPage() {
         });
       }
     } catch (error) {
-      console.error("Error creating template:", error);
+      logger.error("Error creating template:", error);
       toast({
         title: "Erreur",
         description: "Une erreur est survenue",
@@ -160,7 +161,7 @@ export default function EmailTemplatesPage() {
             });
           }
         } catch (error) {
-          console.error("Error deleting template:", error);
+          logger.error("Error deleting template:", error);
           toast({
             title: "Erreur",
             description: "Une erreur est survenue",
