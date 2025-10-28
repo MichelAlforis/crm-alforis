@@ -12,7 +12,9 @@ import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import { useToast } from '@/components/ui/Toast'
 import { HelpTooltip } from '@/components/help/HelpTooltip'
 import { useAutofillV2, type AutofillSuggestion } from '@/hooks/useAutofillV2'
+import { useAutofillPreview, type MatchCandidate } from '@/hooks/useAutofillPreview'
 import { SuggestionPill } from '@/components/autofill/SuggestionPill'
+import MatchPreviewModal from '@/components/modals/MatchPreviewModal'
 
 interface PersonFormProps {
   initialData?: Person
@@ -32,7 +34,10 @@ export function PersonForm({
   const { showToast } = useToast()
   const firstErrorRef = useRef<HTMLInputElement>(null)
   const { autofill, isLoading: isAutofilling } = useAutofillV2()
+  const { preview, isLoading: isPreviewing } = useAutofillPreview()
   const [suggestions, setSuggestions] = useState<Record<string, AutofillSuggestion>>({})
+  const [showMatchModal, setShowMatchModal] = useState(false)
+  const [matchCandidates, setMatchCandidates] = useState<MatchCandidate[]>([])
 
   const {
     register,
@@ -63,14 +68,58 @@ export function PersonForm({
     }
   }, [errors, setFocus])
 
-  // Trigger autofill when email is entered
+  // V1.5 Smart Resolver: Preview + Autofill
   const handleEmailBlur = async () => {
     const email = formValues.personal_email
     if (!email || email.length < 5) return
 
-    if (DBG) logger.log('[PersonForm] Triggering autofill', { email })
+    if (DBG) logger.log('[PersonForm] Triggering smart resolver', { email })
 
     try {
+      // Step 1: Check for duplicate candidates (Preview)
+      const previewResult = await preview({
+        entity_type: 'person',
+        draft: {
+          first_name: formValues.first_name,
+          last_name: formValues.last_name,
+          personal_email: email,
+          phone: formValues.phone,
+        },
+        limit: 5,
+      })
+
+      if (DBG) {
+        logger.log('[PersonForm] Preview result', {
+          recommendation: previewResult.recommendation,
+          matches: previewResult.matches.length,
+        })
+      }
+
+      // Decision based on recommendation
+      if (previewResult.recommendation === 'apply' && previewResult.matches.length > 0) {
+        // Auto-merge with best match
+        const bestMatch = previewResult.matches[0].candidate
+        if (DBG) logger.log('[PersonForm] Auto-applying best match', bestMatch)
+
+        Object.entries(bestMatch).forEach(([field, value]) => {
+          if (value && !formValues[field as keyof PersonInput]) {
+            setValue(field as keyof PersonInput, value)
+          }
+        })
+
+        showToast({
+          type: 'success',
+          title: 'Contact trouvé',
+          message: 'Les informations ont été enrichies automatiquement.',
+        })
+      } else if (previewResult.recommendation === 'preview' && previewResult.matches.length > 0) {
+        // Show validation modal
+        setMatchCandidates(previewResult.matches)
+        setShowMatchModal(true)
+        return // Stop here, modal will handle the rest
+      }
+
+      // Step 2: Run autofill for field suggestions (if no match or create_new)
       const result = await autofill({
         entity_type: 'person',
         draft: {
@@ -108,6 +157,54 @@ export function PersonForm({
       if (DBG && Object.keys(manualSuggestions).length > 0) {
         logger.log('[PersonForm] Manual suggestions', Object.keys(manualSuggestions))
       }
+    } catch (err) {
+      logger.error('[PersonForm] Smart resolver error:', err)
+    }
+  }
+
+  // Handle selecting an existing candidate from modal
+  const handleSelectCandidate = (candidate: Record<string, any>) => {
+    if (DBG) logger.log('[PersonForm] Selected candidate', candidate)
+
+    // Merge candidate data into form
+    Object.entries(candidate).forEach(([field, value]) => {
+      if (value && field !== 'id' && field !== 'created_at' && field !== 'updated_at') {
+        setValue(field as keyof PersonInput, value)
+      }
+    })
+
+    showToast({
+      type: 'success',
+      title: 'Contact sélectionné',
+      message: 'Les informations ont été remplies avec les données existantes.',
+    })
+  }
+
+  // Handle creating new (continue with autofill)
+  const handleCreateNew = async () => {
+    if (DBG) logger.log('[PersonForm] User chose to create new')
+
+    // Run regular autofill
+    try {
+      const result = await autofill({
+        entity_type: 'person',
+        draft: {
+          first_name: formValues.first_name,
+          last_name: formValues.last_name,
+          personal_email: formValues.personal_email,
+        },
+        context: {
+          budget_mode: 'normal',
+          outlook_enabled: true,
+        },
+      })
+
+      // Auto-apply suggestions
+      Object.entries(result.autofill).forEach(([field, suggestion]) => {
+        if (suggestion.auto_apply) {
+          setValue(field as keyof PersonInput, suggestion.value)
+        }
+      })
     } catch (err) {
       logger.error('[PersonForm] Autofill error:', err)
     }
@@ -172,10 +269,10 @@ export function PersonForm({
           <button
             type="button"
             onClick={handleEmailBlur}
-            disabled={isAutofilling || !formValues.first_name || !formValues.last_name}
+            disabled={isAutofilling || isPreviewing || !formValues.first_name || !formValues.last_name}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-sm whitespace-nowrap"
           >
-            {isAutofilling ? (
+            {(isAutofilling || isPreviewing) ? (
               <>
                 <span className="animate-spin">⚡</span>
                 <span>Analyse...</span>
@@ -337,6 +434,16 @@ export function PersonForm({
       >
         {submitLabel}
       </Button>
+
+      {/* Match Preview Modal */}
+      <MatchPreviewModal
+        isOpen={showMatchModal}
+        onClose={() => setShowMatchModal(false)}
+        matches={matchCandidates}
+        entityType="person"
+        onSelectCandidate={handleSelectCandidate}
+        onCreateNew={handleCreateNew}
+      />
     </form>
   )
 }

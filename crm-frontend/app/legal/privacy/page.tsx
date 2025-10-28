@@ -1,4 +1,5 @@
 import React from 'react'
+import DownloadPDFButton from '@/components/legal/DownloadPDFButton'
 
 export const metadata = {
   title: 'Politique de Confidentialité | CRM Alforis',
@@ -23,6 +24,14 @@ export default function PrivacyPolicyPage() {
             <span>Conforme RGPD (Articles 13 et 14)</span>
           </div>
         </div>
+
+        {/* Download Button */}
+        <DownloadPDFButton
+          documentType="privacy"
+          title="Télécharger la Politique de Confidentialité"
+          description="Format PDF pour conformité RGPD"
+          className="mb-6"
+        />
 
         {/* Content */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 prose prose-sm max-w-none">

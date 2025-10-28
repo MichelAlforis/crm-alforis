@@ -1,4 +1,5 @@
 import React from 'react'
+import DownloadPDFButton from '@/components/legal/DownloadPDFButton'
 
 export const metadata = {
   title: 'CGV - Conditions Générales de Vente | CRM Alforis',
@@ -23,6 +24,14 @@ export default function CGVPage() {
             <span>SaaS B2B</span>
           </div>
         </div>
+
+        {/* Download Button */}
+        <DownloadPDFButton
+          documentType="cgv"
+          title="Télécharger les CGV"
+          description="Format PDF pour signature client"
+          className="mb-6"
+        />
 
         {/* Content */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 prose prose-sm max-w-none">

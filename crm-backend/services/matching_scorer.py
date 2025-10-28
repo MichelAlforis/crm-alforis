@@ -117,20 +117,12 @@ class MatchingScorer:
             details["phone"] = 50
 
         # 5. Titre/Poste match (+20)
-        draft_title = draft.get("title", "")
-        candidate_title = candidate.title or ""
+        draft_title = draft.get("title") or draft.get("job_title") or ""
+        candidate_title = candidate.job_title or ""
 
         if draft_title and candidate_title and fuzzy_match(draft_title, candidate_title, 0.7):
             score += 20
-            details["title"] = 20
-
-        # 6. Ville match (+10)
-        draft_city = draft.get("city", "")
-        candidate_city = candidate.city or ""
-
-        if draft_city and candidate_city and fuzzy_match(draft_city, candidate_city, 0.9):
-            score += 10
-            details["city"] = 10
+            details["job_title"] = 20
 
         # Décision
         if score >= 100:
@@ -150,8 +142,8 @@ class MatchingScorer:
                 "last_name": candidate.last_name,
                 "personal_email": candidate.personal_email,
                 "phone": candidate.phone,
-                "title": candidate.title,
-                "company_name": candidate.company_name,
+                "job_title": candidate.job_title,
+                "company_name": getattr(candidate, 'company_name', None),
             }
         }
 
@@ -250,8 +242,8 @@ class MatchingScorer:
                 details["email_domain"] = 40
 
         # 3. Nom société match (+75 si exact, +50 si fuzzy)
-        draft_name = draft.get("nom", "")
-        candidate_name = candidate.nom or ""
+        draft_name = draft.get("nom") or draft.get("name") or ""
+        candidate_name = candidate.name or ""
 
         if draft_name and candidate_name:
             if normalize_string(draft_name) == normalize_string(candidate_name):
@@ -325,10 +317,11 @@ class MatchingScorer:
             candidates.extend(by_email)
 
         # Recherche par nom
-        nom = draft.get("nom", "").strip()
+        nom = draft.get("nom") or draft.get("name") or ""
+        nom = nom.strip()
         if nom:
             by_name = self.db.query(Organisation).filter(
-                func.lower(Organisation.nom).like(f"%{nom.lower()}%")
+                func.lower(Organisation.name).like(f"%{nom.lower()}%")
             ).limit(10).all()
             candidates.extend(by_name)
 

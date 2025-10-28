@@ -82,10 +82,10 @@ export function AIInsightsWidget({
 
     try {
       const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-      const token = localStorage.getItem('access_token')
+      const token = localStorage.getItem('auth_token')
 
       const response = await fetch(
-        `${API_BASE}/api/v1/dashboard/ai-insights?limit=${limit}`,
+        `${API_BASE}/dashboard/ai-insights?limit=${limit}`,
         {
           headers: {
             Authorization: token ? `Bearer ${token}` : '',

@@ -41,10 +41,10 @@ export default function DashboardV2Page() {
     setIsLoadingKPIs(true)
     try {
       const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-      const token = localStorage.getItem('access_token')
+      const token = localStorage.getItem('auth_token')
 
       const response = await fetch(
-        `${API_BASE}/api/v1/dashboard/kpis?period=${kpiPeriod}`,
+        `${API_BASE}/dashboard/kpis?period=${kpiPeriod}`,
         {
           headers: {
             Authorization: token ? `Bearer ${token}` : '',
@@ -90,31 +90,31 @@ export default function DashboardV2Page() {
   const renderExecutiveView = () => (
     <>
       {/* Hero Section */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
+      <div className="mb-4 md:mb-6">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
           <div>
-            <h1 className="text-3xl font-bold text-ardoise flex items-center gap-2">
-              <Sparkles className="h-8 w-8 text-purple-500" />
+            <h1 className="text-2xl md:text-3xl font-bold text-ardoise flex items-center gap-2">
+              <Sparkles className="h-6 w-6 md:h-8 md:w-8 text-purple-500" />
               Dashboard V2 - Executive
             </h1>
-            <p className="text-gray-600 mt-1">
+            <p className="text-sm md:text-base text-gray-600 mt-1">
               Vision stratégique de votre activité en temps réel
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
             <select
               value={kpiPeriod}
               onChange={(e) => setKpiPeriod(e.target.value as any)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-bleu"
+              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-bleu min-h-[44px]"
             >
               <option value="week">7 jours</option>
               <option value="month">30 jours</option>
               <option value="quarter">90 jours</option>
             </select>
-            <Link href="/dashboard-v2/customize">
-              <Button variant="ghost" size="sm">
+            <Link href="/dashboard/v2/customize" className="w-full sm:w-auto">
+              <Button variant="ghost" size="sm" className="w-full sm:w-auto min-h-[44px]">
                 <Settings className="h-4 w-4 mr-2" />
-                Personnaliser
+                <span className="sm:inline">Personnaliser</span>
               </Button>
             </Link>
           </div>
@@ -127,7 +127,7 @@ export default function DashboardV2Page() {
       </div>
 
       {/* KPI Cards Row */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 md:mb-6">
         <KPICardWidget
           title="Organisations"
           value={kpiData?.organisations?.value || 0}
@@ -208,7 +208,7 @@ export default function DashboardV2Page() {
       </div>
 
       {/* Quick KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 md:mb-6">
         <KPICardWidget
           title="Pipeline"
           value="0"
@@ -259,7 +259,7 @@ export default function DashboardV2Page() {
       </div>
 
       {/* Team KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 md:mb-6">
         <KPICardWidget
           title="Organisations"
           value={kpiData?.organisations?.value || 0}
@@ -310,15 +310,15 @@ export default function DashboardV2Page() {
   )
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* View Selector */}
-      <Card className="p-4">
-        <div className="flex items-center justify-between gap-4">
+      <Card className="p-3 md:p-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-2">
             <LayoutIcon className="h-5 w-5 text-gray-600" />
             <span className="font-medium text-gray-700">Vue:</span>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
             {viewConfigs.map((config) => {
               const Icon = config.icon
               const isActive = selectedView === config.id
@@ -326,7 +326,7 @@ export default function DashboardV2Page() {
                 <button
                   key={config.id}
                   onClick={() => setSelectedView(config.id)}
-                  className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
+                  className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center justify-center gap-2 min-h-[44px] ${
                     isActive
                       ? 'bg-bleu text-white shadow-md'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -334,7 +334,7 @@ export default function DashboardV2Page() {
                   title={config.description}
                 >
                   <Icon className="h-4 w-4" />
-                  {config.label}
+                  <span className="whitespace-nowrap">{config.label}</span>
                 </button>
               )
             })}

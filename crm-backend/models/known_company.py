@@ -4,7 +4,7 @@ Table de référence des entreprises connues avec domaines, sites web, et Linked
 """
 from sqlalchemy import Column, Integer, String, Boolean, Float, TIMESTAMP
 from sqlalchemy.sql import func
-from core.database import Base
+from models.base import Base
 
 
 class KnownCompany(Base):

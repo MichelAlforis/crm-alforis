@@ -1,4 +1,5 @@
 import React from 'react'
+import DownloadPDFButton from '@/components/legal/DownloadPDFButton'
 
 export const metadata = {
   title: 'DPA - Data Processing Agreement | CRM Alforis',
@@ -31,17 +32,12 @@ export default function DPAPage() {
         </div>
 
         {/* Download Button */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-semibold text-gray-900">Télécharger le DPA</p>
-              <p className="text-xs text-gray-600 mt-1">Format PDF prêt à signer</p>
-            </div>
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
-              📥 Télécharger PDF
-            </button>
-          </div>
-        </div>
+        <DownloadPDFButton
+          documentType="dpa"
+          title="Télécharger le DPA"
+          description="Format PDF prêt à signer"
+          className="mb-6"
+        />
 
         {/* Content */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 prose prose-sm max-w-none">

@@ -38,3 +38,7 @@ openai==1.54.0  # OpenAI GPT API
 cryptography==42.0.0  # Chiffrement AES-256 (Fernet) pour API keys
 phonenumbers==8.13.27  # Phone number parsing & E.164 normalization
 beautifulsoup4==4.12.3  # HTML parsing pour signatures Outlook
+
+# 2FA / TOTP
+pyotp==2.9.0  # Time-based One-Time Password (RFC 6238)
+qrcode==7.4.2  # QR code generation for 2FA setup

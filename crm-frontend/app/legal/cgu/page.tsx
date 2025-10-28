@@ -1,4 +1,5 @@
 import React from 'react'
+import DownloadPDFButton from '@/components/legal/DownloadPDFButton'
 
 export const metadata = {
   title: 'CGU - Conditions Générales d\'Utilisation | CRM Alforis',
@@ -19,6 +20,14 @@ export default function CGUPage() {
             Version : 1.0 – Mise à jour du 28 octobre 2025
           </p>
         </div>
+
+        {/* Download Button */}
+        <DownloadPDFButton
+          documentType="cgu"
+          title="Télécharger les CGU"
+          description="Format PDF pour archivage"
+          className="mb-6"
+        />
 
         {/* Content */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 prose prose-sm max-w-none">

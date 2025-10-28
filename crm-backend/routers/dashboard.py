@@ -13,7 +13,7 @@ from models import (
     User, Organisation, Person, Task, Interaction,
     OrganisationActivity, EmailCampaign, EmailSend
 )
-from core.security import get_current_user
+from core.auth import get_current_user
 
 router = APIRouter(prefix="/dashboard", tags=["dashboard"])
 
@@ -208,7 +208,9 @@ def calculate_health_score(
     score = min(100, interactions_count * 10)
 
     if last_interaction:
-        days_since = (datetime.utcnow() - last_interaction).days
+        # Make datetime timezone-aware if it isn't already
+        now = datetime.now(last_interaction.tzinfo) if last_interaction.tzinfo else datetime.utcnow()
+        days_since = (now - last_interaction).days
         if days_since < 7:
             score += 20
         elif days_since < 30:
@@ -468,11 +470,11 @@ async def get_email_performance(
     ).scalar() or 0
 
     opened = db.query(func.count(EmailSend.id)).filter(
-        and_(EmailSend.created_at >= start_date, EmailSend.opened.is_(True))
+        and_(EmailSend.created_at >= start_date, EmailSend.status == "opened")
     ).scalar() or 0
 
     clicked = db.query(func.count(EmailSend.id)).filter(
-        and_(EmailSend.created_at >= start_date, EmailSend.clicked.is_(True))
+        and_(EmailSend.created_at >= start_date, EmailSend.status == "clicked")
     ).scalar() or 0
 
     bounced = db.query(func.count(EmailSend.id)).filter(

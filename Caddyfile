@@ -1,0 +1,118 @@
+# Caddyfile - Configuration SSL/TLS automatique pour CRM Alforis
+# Caddy gère automatiquement Let's Encrypt (renouvellement auto tous les 60 jours)
+
+# ============================================================
+# PRODUCTION - crm.alforis.fr
+# ============================================================
+
+crm.alforis.fr {
+    # Automatic HTTPS with Let's Encrypt
+    # Caddy obtient et renouvelle automatiquement les certificats
+
+    # Frontend Next.js
+    reverse_proxy frontend:3010 {
+        # Health check
+        health_uri /api/health
+        health_interval 30s
+        health_timeout 5s
+    }
+
+    # API Backend
+    handle /api/* {
+        reverse_proxy api:8000 {
+            # Health check
+            health_uri /api/v1/health
+            health_interval 30s
+            health_timeout 5s
+        }
+    }
+
+    # WebSocket pour notifications temps réel
+    handle /ws/* {
+        reverse_proxy api:8000
+    }
+
+    # Security headers
+    header {
+        # HSTS (force HTTPS for 1 year)
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+        # Prevent clickjacking
+        X-Frame-Options "SAMEORIGIN"
+
+        # Prevent MIME sniffing
+        X-Content-Type-Options "nosniff"
+
+        # XSS Protection
+        X-XSS-Protection "1; mode=block"
+
+        # Referrer Policy
+        Referrer-Policy "strict-origin-when-cross-origin"
+
+        # Content Security Policy (à adapter selon tes besoins)
+        Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' wss:; frame-ancestors 'self';"
+
+        # Remove Server header
+        -Server
+    }
+
+    # Compression
+    encode gzip zstd
+
+    # Logs
+    log {
+        output file /var/log/caddy/crm-access.log
+        format json
+    }
+
+    # Rate limiting (basic, Caddy 2.7+)
+    # Pour rate limiting avancé, voir https://github.com/mholt/caddy-ratelimit
+}
+
+# ============================================================
+# STAGING - staging.crm.alforis.fr (optionnel)
+# ============================================================
+
+staging.crm.alforis.fr {
+    reverse_proxy frontend:3010
+
+    handle /api/* {
+        reverse_proxy api:8000
+    }
+
+    # Basic Auth pour protéger staging
+    basicauth {
+        alforis $2a$14$Zkx19XLiW6VYouLHR6/je.S3/vLbKLdeKbPYWZ1jR2j5Jy9.7pHOy
+        # Password: "alforis2025" (généré avec: caddy hash-password --plaintext 'alforis2025')
+        # À CHANGER en production !
+    }
+
+    header {
+        X-Robots-Tag "noindex, nofollow"
+    }
+
+    log {
+        output file /var/log/caddy/staging-access.log
+    }
+}
+
+# ============================================================
+# LOCAL DEVELOPMENT - localhost
+# ============================================================
+
+localhost:3010 {
+    reverse_proxy frontend:3010
+}
+
+localhost:8000 {
+    reverse_proxy api:8000
+}
+
+# ============================================================
+# HEALTHCHECK ENDPOINT (accessible sans domaine)
+# ============================================================
+
+:2019 {
+    # Caddy admin API (internal only)
+    bind 127.0.0.1
+}

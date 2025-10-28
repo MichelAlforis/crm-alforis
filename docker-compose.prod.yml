@@ -29,9 +29,49 @@ volumes:
     driver: local
   api-backups:
     driver: local
+  caddy-data:
+    driver: local
+  caddy-config:
+    driver: local
+  caddy-logs:
+    driver: local
 
 # --- Services ---
 services:
+
+  # ========================================
+  # CADDY (Reverse Proxy + SSL/TLS Auto)
+  # ========================================
+  caddy:
+    image: caddy:2.7-alpine
+    restart: always
+    ports:
+      - "80:80"      # HTTP (redirect to HTTPS)
+      - "443:443"    # HTTPS
+      - "443:443/udp"  # HTTP/3 (QUIC)
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+      - caddy-logs:/var/log/caddy
+    networks:
+      - crm-network
+    depends_on:
+      - api
+      - frontend
+    environment:
+      - DOMAIN=${DOMAIN:-crm.alforis.fr}
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:2019/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   # ========================================
   # REDIS (Cache & Event Bus)

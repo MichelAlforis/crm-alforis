@@ -10,6 +10,7 @@ from api.routes import (
     health,
     imports,
     integrations,
+    legal,
     mailing_lists,
     mandats,
     monitoring,
@@ -20,6 +21,8 @@ from api.routes import (
     public,
     push_notifications,
     tasks,
+    totp,
+    trials,
     users,
     workflows,
 )
@@ -99,5 +102,14 @@ api_router.include_router(push_notifications.router)
 
 # 📊 DASHBOARD V2 (Advanced Analytics)
 api_router.include_router(dashboard.router)
+
+# 📄 LEGAL DOCUMENTS (CGU, CGV, DPA, Privacy) - PDF Downloads
+api_router.include_router(legal.router)
+
+# 🔐 TWO-FACTOR AUTHENTICATION (2FA / TOTP)
+api_router.include_router(totp.router)
+
+# 🎁 TRIAL MANAGEMENT (Free Trial System)
+api_router.include_router(trials.router)
 
 __all__ = ["api_router"]

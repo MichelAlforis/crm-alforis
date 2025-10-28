@@ -49,15 +49,15 @@ export const SIDEBAR_SECTIONS: SidebarSection[] = [
     gradient: 'from-blue-500 to-cyan-500',
     submenu: [
       {
-        label: 'Dashboard V1',
+        label: 'Dashboard',
         href: '/dashboard',
-        icon: LayoutDashboard,
-        description: 'Vue classique',
+        icon: Sparkles,
+        description: 'Vue principale avec analytics avancées',
       },
       {
-        label: 'Dashboard V2',
-        href: '/dashboard/v2',
-        icon: Sparkles,
+        label: 'Dashboard Legacy',
+        href: '/dashboard/legacy',
+        icon: LayoutDashboard,
         description: 'Analytics avancées & IA',
       },
     ],

@@ -89,6 +89,24 @@ class User(BaseModel):
     cgu_version = Column(String(20), nullable=True)  # e.g., "1.0"
     cgu_acceptance_ip = Column(String(45), nullable=True)  # IPv4/IPv6
 
+    # Two-Factor Authentication (2FA / TOTP)
+    totp_secret = Column(String(32), nullable=True)  # Base32-encoded TOTP secret
+    totp_enabled = Column(Boolean, default=False, nullable=False, index=True)
+    totp_enabled_at = Column(DateTime(timezone=True), nullable=True)
+    backup_codes = Column(Text, nullable=True)  # JSON array of hashed backup codes
+
+    # Trial Management (SaaS Free Trial)
+    trial_started_at = Column(DateTime(timezone=True), nullable=True, index=True)
+    trial_ends_at = Column(DateTime(timezone=True), nullable=True, index=True)
+    trial_extended_at = Column(DateTime(timezone=True), nullable=True)  # Si prolongation accordée
+    trial_converted_at = Column(DateTime(timezone=True), nullable=True)  # Date conversion payant
+    subscription_status = Column(
+        String(20),
+        default="trial",
+        nullable=False,
+        index=True
+    )  # trial, active, grace_period, expired, cancelled
+
     def __repr__(self) -> str:
         return f"<User(id={self.id}, email='{self.email}')>"
 
@@ -111,3 +129,25 @@ class User(BaseModel):
             "email": self.email,
             "is_admin": self.role.name == UserRole.ADMIN if self.role else False,
         }
+
+    @property
+    def is_trial_active(self) -> bool:
+        """Vérifie si le trial est encore actif."""
+        if not self.trial_ends_at:
+            return False
+        if self.subscription_status in ["active", "cancelled"]:
+            return False
+        return datetime.now() < self.trial_ends_at
+
+    @property
+    def days_remaining_trial(self) -> int:
+        """Nombre de jours restants dans le trial (0 si expiré)."""
+        if not self.trial_ends_at or self.subscription_status != "trial":
+            return 0
+        delta = self.trial_ends_at - datetime.now()
+        return max(0, delta.days)
+
+    @property
+    def is_in_grace_period(self) -> bool:
+        """Vérifie si le compte est en période de grâce."""
+        return self.subscription_status == "grace_period"
