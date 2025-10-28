@@ -152,32 +152,46 @@ class AutofillServiceV2:
 
             # Si domaine non-personnel ET résolution réussie
             if not company_info.get("skip_company_autofill") and company_info.get("company_name"):
+                # Mapper la source du CompanyResolver vers AutofillSourceType valide
+                resolver_source = company_info.get("source", "db_pattern")
+                # known_companies_* → db_pattern, http_probe → db_pattern
+                autofill_source = "db_pattern"  # Source générique pour company resolver
+
                 # company_name
                 if not draft.get("company_name") and company_info.get("company_name"):
                     suggestions["company_name"] = {
+                        "field": "company_name",
                         "value": company_info["company_name"],
                         "confidence": company_info["confidence"],
-                        "source": company_info["source"],
+                        "source": autofill_source,
+                        "evidence": f"Résolu depuis {resolver_source}",
+                        "auto_apply": company_info["confidence"] >= 0.7,
                     }
 
                 # company_website
                 if not draft.get("company_website") and company_info.get("company_website"):
                     suggestions["company_website"] = {
+                        "field": "company_website",
                         "value": company_info["company_website"],
                         "confidence": company_info["confidence"],
-                        "source": company_info["source"],
+                        "source": autofill_source,
+                        "evidence": f"Résolu depuis {resolver_source}",
+                        "auto_apply": company_info["confidence"] >= 0.7,
                     }
 
                 # company_linkedin
                 if not draft.get("company_linkedin") and company_info.get("company_linkedin"):
                     suggestions["company_linkedin"] = {
+                        "field": "company_linkedin",
                         "value": company_info["company_linkedin"],
                         "confidence": company_info["confidence"],
-                        "source": company_info["source"],
+                        "source": autofill_source,
+                        "evidence": f"Résolu depuis {resolver_source}",
+                        "auto_apply": company_info["confidence"] >= 0.7,
                     }
 
                 meta["company_resolved"] = True
-                meta["company_source"] = company_info["source"]
+                meta["company_source"] = resolver_source
 
         # ==========================================
         # 2. DB PATTERNS (20ms) - Priorité 2

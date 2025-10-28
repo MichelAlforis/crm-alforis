@@ -363,3 +363,121 @@ class AutofillPreviewResponse(BaseModel):
                 }
             }
         }
+
+
+# ======================
+# Interaction Suggestion & Apply (V1.5+)
+# ======================
+
+
+class InteractionParticipantInput(BaseModel):
+    """Participant d'une interaction"""
+
+    person_id: int = Field(..., description="ID de la Person participante")
+    role: str = Field(..., description="Rôle: 'owner', 'external', 'participant'")
+
+
+class InteractionSuggestion(BaseModel):
+    """Suggestion d'interaction déduite par l'autofill"""
+
+    type: str = Field(..., description="Type: email, call, meeting, note, share_material")
+    title: str = Field(..., description="Titre de l'interaction")
+    occurred_at: str = Field(..., description="Date/heure ISO 8601")
+    channel: str = Field(..., description="Channel: email, phone, video, in_person, other")
+    summary: Optional[str] = Field(None, description="Résumé/notes")
+    participants: List[InteractionParticipantInput] = Field(
+        default=[], description="Liste des participants avec leurs rôles"
+    )
+    organisation_id: Optional[int] = Field(None, description="ID Organisation liée")
+    confidence: float = Field(..., ge=0.0, le=1.0, description="Confiance de la suggestion")
+    reasons: List[str] = Field(default=[], description="Raisons de la suggestion")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "type": "email",
+                "title": "Échange email: présentation gamme",
+                "occurred_at": "2025-10-28T08:05:00Z",
+                "channel": "email",
+                "summary": "Demande d'intro + proposition de call",
+                "participants": [
+                    {"person_id": 123, "role": "external"},
+                    {"person_id": 1, "role": "owner"}
+                ],
+                "organisation_id": 456,
+                "confidence": 0.84,
+                "reasons": ["Sujet d'email fourni", "Type détecté: email"]
+            }
+        }
+
+
+class EntityApplyDecision(BaseModel):
+    """Décision d'application pour une entité (Person/Organisation)"""
+
+    id: Optional[int] = Field(None, description="ID de l'entité existante à utiliser")
+    apply: bool = Field(True, description="Appliquer cette entité")
+    data: Optional[Dict[str, Any]] = Field(None, description="Données à créer/merger si nouvel enregistrement")
+
+
+class AutofillApplyRequest(BaseModel):
+    """
+    Requête pour appliquer les décisions d'autofill
+
+    Crée/lie Person, Organisation, Interaction de manière transactionnelle
+    """
+
+    input_id: str = Field(..., description="ID unique de l'input pour idempotence")
+    person: EntityApplyDecision = Field(..., description="Décision pour Person")
+    organisation: EntityApplyDecision = Field(..., description="Décision pour Organisation")
+    interaction: InteractionSuggestion = Field(..., description="Interaction suggérée à créer")
+    dedupe: bool = Field(default=True, description="Activer déduplication d'interactions")
+    context: Optional[Dict[str, Any]] = Field(None, description="Contexte additionnel (email_subject, etc.)")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "input_id": "autofill_987abc",
+                "person": {"id": 123, "apply": True},
+                "organisation": {"id": 456, "apply": True},
+                "interaction": {
+                    "type": "email",
+                    "title": "Échange email: présentation gamme",
+                    "occurred_at": "2025-10-28T08:05:00Z",
+                    "channel": "email",
+                    "summary": "Demande d'intro",
+                    "participants": [
+                        {"person_id": 123, "role": "external"},
+                        {"person_id": 1, "role": "owner"}
+                    ],
+                    "organisation_id": 456,
+                    "confidence": 0.84,
+                    "reasons": []
+                },
+                "dedupe": True
+            }
+        }
+
+
+class AutofillApplyResponse(BaseModel):
+    """Résultat de l'application d'autofill"""
+
+    status: str = Field(..., description="Status: 'applied', 'deduped', 'error'")
+    person_id: Optional[int] = Field(None, description="ID Person créée/liée")
+    organisation_id: Optional[int] = Field(None, description="ID Organisation créée/liée")
+    interaction_id: Optional[int] = Field(None, description="ID Interaction créée")
+    deduped: bool = Field(default=False, description="Interaction dédupliquée (existante réutilisée)")
+    decision_log_id: Optional[int] = Field(None, description="ID du log de décision")
+    message: Optional[str] = Field(None, description="Message de retour")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "status": "applied",
+                "person_id": 123,
+                "organisation_id": 456,
+                "interaction_id": 789,
+                "deduped": False,
+                "decision_log_id": 1001,
+                "message": "Interaction créée et liée avec succès"
+            }
+        }

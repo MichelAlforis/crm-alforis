@@ -20,10 +20,13 @@ from core import get_current_user, get_db
 from core.encryption import decrypt_value, encrypt_value
 from models.user import User
 from schemas.integrations import (
+    AutofillApplyRequest,
+    AutofillApplyResponse,
     AutofillPreviewRequest,
     AutofillPreviewResponse,
     AutofillV2Request,
     AutofillV2Response,
+    InteractionSuggestion,
     MatchAction,
     OutlookAuthorizeResponse,
     OutlookCallbackRequest,
@@ -32,6 +35,7 @@ from schemas.integrations import (
     OutlookSyncResponse,
 )
 from services.autofill_service_v2 import AutofillServiceV2
+from services.interaction_suggestion_service import InteractionSuggestionService
 from services.matching_scorer import MatchingScorer
 from services.outlook_integration import OutlookIntegration
 
@@ -277,6 +281,39 @@ async def autofill_preview(
     else:
         recommendation = MatchAction.CREATE_NEW
 
+    # Suggérer une interaction si entités résolues
+    interaction_suggestion = None
+    if matches and len(matches) > 0 and best_match["score"] >= 60:
+        # Récupérer IDs des entités pour la suggestion
+        person_id = None
+        organisation_id = None
+
+        if request.entity_type == "person" and best_match["score"] >= 60:
+            person_id = best_match["candidate"]["id"]
+            # Tenter de résoudre l'organisation depuis l'email
+            if request.draft.get("personal_email"):
+                org_matches = scorer.find_organisation_candidates(
+                    {"email": request.draft["personal_email"]},
+                    limit=1
+                )
+                if org_matches and org_matches[0]["score"] >= 60:
+                    organisation_id = org_matches[0]["candidate"]["id"]
+        elif request.entity_type == "organisation":
+            organisation_id = best_match["candidate"]["id"]
+
+        # Générer la suggestion d'interaction
+        if person_id or organisation_id:
+            suggestion_service = InteractionSuggestionService(db)
+            user_id = current_user.get("user_id", 1)  # Fallback à 1 si pas d'user_id
+
+            interaction_suggestion = suggestion_service.suggest_interaction(
+                draft=request.draft,
+                person_id=person_id,
+                organisation_id=organisation_id,
+                current_user_id=user_id,
+                context={}
+            )
+
     # Calculer métadonnées
     execution_time_ms = int((time.time() - start_time) * 1000)
 
@@ -290,10 +327,12 @@ async def autofill_preview(
         "candidates_searched": len(matches),
         "criteria_used": criteria_used,
         "entity_type": request.entity_type,
+        "interaction_suggested": interaction_suggestion is not None,
     }
 
     return {
         "matches": matches,
         "recommendation": recommendation,
+        "interaction_suggestion": interaction_suggestion,
         "meta": meta,
     }
