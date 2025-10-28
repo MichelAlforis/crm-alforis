@@ -15,8 +15,9 @@
 | Tests unitaires basiques (3) | ✅      | 30min | tests/test_ai_statistics.py (nouveau)        |
 | Tester endpoints avec curl   | ✅      | 15min | test_ai_endpoints.sh + validation manuelle   |
 | Documenter config LLM        | ✅      | 20min | LLM-CONFIGURATION.md (nouveau)               |
+| Fix Pydantic v2 Settings     | ✅      | 10min | core/config.py                               |
 
-**Total:** ✅ **5/5 tasks completed** (80 minutes)
+**Total:** ✅ **6/6 tasks completed** (90 minutes)
 
 ---
 
