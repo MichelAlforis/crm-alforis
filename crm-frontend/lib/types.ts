@@ -836,6 +836,74 @@ export interface WebhookEventOption {
   label: string
 }
 
+// ============= AUTOFILL STATS =============
+
+export interface AutofillStats {
+  period: {
+    days: number
+    since: string
+    until: string
+  }
+  apply_rate: {
+    total_suggestions: number
+    total_applied: number
+    rate: number
+  }
+  avg_latency_ms: {
+    value: number
+    p50: number
+    p95: number
+    p99: number
+  }
+  source_mix: Record<
+    string,
+    {
+      count: number
+      percentage: number
+    }
+  >
+  pattern_confidence_by_domain: Array<{
+    domain: string
+    samples: number
+    avg_confidence: number
+  }>
+  top_fields: Array<{
+    field: string
+    count: number
+    apply_rate: number
+  }>
+}
+
+export interface AutofillTimelineEntry {
+  date: string
+  suggestions: number
+  applied: number
+  apply_rate: number
+}
+
+export interface AutofillTimelineResponse {
+  period: {
+    days: number
+  }
+  timeline: AutofillTimelineEntry[]
+}
+
+export interface AutofillLeaderboardEntry {
+  rank: number
+  user_id: number | null
+  user_name: string
+  total_suggestions: number
+  total_applied: number
+  apply_rate: number
+}
+
+export interface AutofillLeaderboardResponse {
+  period: {
+    days: number
+  }
+  leaderboard: AutofillLeaderboardEntry[]
+}
+
 // ============= NOTIFICATIONS =============
 
 export type NotificationType =

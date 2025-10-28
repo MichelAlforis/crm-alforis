@@ -49,6 +49,9 @@ import {
   WebhookUpdateInput,
   WebhookRotateSecretInput,
   WebhookEventOption,
+  AutofillStats,
+  AutofillTimelineResponse,
+  AutofillLeaderboardResponse,
   EmailTemplate,
   EmailTemplateInput,
   EmailTemplateUpdateInput,
@@ -972,6 +975,20 @@ class ApiClient {
 
   async getWebhookEvents(): Promise<WebhookEventOption[]> {
     return this.request<WebhookEventOption[]>('/webhooks/events/available')
+  }
+
+  // ============= AUTOFILL STATS ENDPOINTS =============
+
+  async getAutofillStats(params?: { days?: number }): Promise<AutofillStats> {
+    return this.request<AutofillStats>('/ai/autofill/stats', { params })
+  }
+
+  async getAutofillTimeline(params?: { days?: number }): Promise<AutofillTimelineResponse> {
+    return this.request<AutofillTimelineResponse>('/ai/autofill/stats/timeline', { params })
+  }
+
+  async getAutofillLeaderboard(): Promise<AutofillLeaderboardResponse> {
+    return this.request<AutofillLeaderboardResponse>('/ai/autofill/stats/leaderboard')
   }
 
   // ============= DASHBOARD STATS ENDPOINTS =============

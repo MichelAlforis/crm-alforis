@@ -1,121 +1,202 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import {
+  AlertCircle,
   ArrowLeft,
-  Plug,
-  Mail,
-  Webhook,
-  Link2,
-  Shield,
-  CheckCircle2,
-  XCircle,
-  Copy,
-  RefreshCw,
-  Eye,
-  EyeOff,
-  Zap,
   Brain,
+  CheckCircle2,
+  Copy,
+  Link2,
+  Loader2,
+  Mail,
+  RefreshCw,
+  Shield,
+  Webhook,
+  XCircle,
 } from 'lucide-react'
+import clsx from 'clsx'
 import { useToast } from '@/components/ui/Toast'
+import { useEmailConfig, type EmailConfiguration } from '@/hooks/useEmailConfig'
+import {
+  useWebhooks,
+  useUpdateWebhook,
+} from '@/hooks/useWebhooks'
+import {
+  useAutofillLeaderboard,
+  useAutofillStats,
+  useAutofillTimeline,
+} from '@/hooks/useAutofillStats'
+import type { Webhook as WebhookType } from '@/lib/types'
 import AIConfigSection from './AIConfigSection'
 
 type Tab = 'email' | 'webhooks' | 'ai' | 'connectors'
 
 export default function IntegrationsSettingsPage() {
   const { showToast } = useToast()
+  const router = useRouter()
   const searchParams = useSearchParams()
-  const [activeTab, setActiveTab] = useState<Tab>((searchParams.get('tab') as Tab) || 'email')
 
-  // États pour les APIs Email
-  const [resendApiKey, setResendApiKey] = useState('re_xxxxxxxxxxxxxxxxxxxxx')
-  const [showResendKey, setShowResendKey] = useState(false)
-  const [resendStatus, setResendStatus] = useState<'connected' | 'disconnected'>('connected')
+  const [activeTab, setActiveTab] = useState<Tab>(
+    (searchParams.get('tab') as Tab) || 'email',
+  )
 
-  // États pour les Webhooks
-  const [webhooks, setWebhooks] = useState([
-    {
-      id: '1',
-      name: 'Lead créé',
-      url: 'https://api.example.com/webhooks/lead-created',
-      events: ['lead.created'],
-      status: 'active' as const,
-      lastTrigger: '2024-03-15 14:30',
-    },
-    {
-      id: '2',
-      name: 'Email envoyé',
-      url: 'https://api.example.com/webhooks/email-sent',
-      events: ['email.sent', 'email.delivered'],
-      status: 'active' as const,
-      lastTrigger: '2024-03-15 16:45',
-    },
-  ])
+  // ------- Email configuration --------
+  const {
+    getActiveConfiguration,
+    testConfiguration,
+  } = useEmailConfig()
+  const [activeEmailConfig, setActiveEmailConfig] = useState<EmailConfiguration | null>(null)
+  const [isLoadingEmail, setIsLoadingEmail] = useState(true)
+  const [emailError, setEmailError] = useState<string | null>(null)
+  const [isTestingEmail, setIsTestingEmail] = useState(false)
 
-  // États pour les Connecteurs
-  const [connectors] = useState([
-    {
-      id: 'zapier',
-      name: 'Zapier',
-      description: 'Automatisez vos workflows avec 5000+ apps',
-      icon: Zap,
-      status: 'available' as const,
-      color: 'orange',
-    },
-    {
-      id: 'make',
-      name: 'Make (Integromat)',
-      description: 'Créez des scénarios d\'automatisation complexes',
-      icon: Link2,
-      status: 'available' as const,
-      color: 'purple',
-    },
-  ])
+  useEffect(() => {
+    let cancelled = false
 
-  const handleCopyApiKey = () => {
-    navigator.clipboard.writeText(resendApiKey)
-    showToast({
-      type: 'success',
-      title: 'Clé API copiée',
-      message: 'La clé a été copiée dans le presse-papiers',
-    })
-  }
+    const fetchActiveConfig = async () => {
+      setIsLoadingEmail(true)
+      setEmailError(null)
+      try {
+        const config = await getActiveConfiguration()
+        if (!cancelled) {
+          setActiveEmailConfig(config)
+        }
+      } catch (error: any) {
+        if (!cancelled) {
+          setEmailError(error?.message ?? 'Impossible de charger la configuration email')
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoadingEmail(false)
+        }
+      }
+    }
 
-  const handleTestResend = async () => {
-    showToast({
-      type: 'info',
-      title: 'Test en cours...',
-      message: 'Envoi d\'un email de test via Resend',
-    })
+    void fetchActiveConfig()
 
-    setTimeout(() => {
+    return () => {
+      cancelled = true
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const handleCopySender = () => {
+    if (!activeEmailConfig?.from_email) {
+      showToast({
+        type: 'warning',
+        title: 'Aucune adresse',
+        message: "Ajoutez d'abord un expéditeur dans la configuration email.",
+      })
+      return
+    }
+
+    navigator.clipboard.writeText(activeEmailConfig.from_email).then(() => {
       showToast({
         type: 'success',
-        title: 'Connexion réussie',
-        message: 'L\'API Resend fonctionne correctement',
+        title: 'Adresse copiée',
+        message: `${activeEmailConfig.from_email} a été copiée`,
       })
-    }, 1500)
+    })
   }
 
-  const handleToggleWebhook = (id: string) => {
-    setWebhooks((prev) =>
-      prev.map((wh) =>
-        wh.id === id
-          ? { ...wh, status: wh.status === 'active' ? 'inactive' : 'active' }
-          : wh
-      )
+  const handleTestEmail = async () => {
+    if (!activeEmailConfig) {
+      showToast({
+        type: 'warning',
+        title: 'Pas de configuration active',
+        message: 'Ajoutez ou activez une configuration email avant de tester.',
+      })
+      return
+    }
+
+    const target = window.prompt('Envoyer un email de test à :', '')
+    if (!target) return
+
+    setIsTestingEmail(true)
+    try {
+      const result = await testConfiguration(activeEmailConfig.id, target)
+      if (result.success) {
+        showToast({
+          type: 'success',
+          title: 'Email envoyé',
+          message: `Test envoyé via ${result.provider.toUpperCase()}`,
+        })
+      } else {
+        showToast({
+          type: 'error',
+          title: 'Test échoué',
+          message: result.error ?? 'Le fournisseur a refusé le test.',
+        })
+      }
+    } catch (error: any) {
+      showToast({
+        type: 'error',
+        title: 'Erreur lors du test',
+        message: error?.message ?? 'Impossible de contacter le fournisseur.',
+      })
+    } finally {
+      setIsTestingEmail(false)
+    }
+  }
+
+  const emailStatus: 'connected' | 'disconnected' =
+    activeEmailConfig && !emailError ? 'connected' : 'disconnected'
+
+  // ------- Webhooks --------
+  const {
+    data: webhooksData,
+    isLoading: isLoadingWebhooks,
+    error: webhooksError,
+  } = useWebhooks()
+  const updateWebhook = useUpdateWebhook()
+  const isWebhookMutating = updateWebhook.status === 'pending'
+
+  const handleToggleWebhook = (webhook: WebhookType) => {
+    updateWebhook.mutate(
+      {
+        id: webhook.id,
+        data: { is_active: !webhook.is_active },
+      },
+      {
+        onSuccess: () => {
+          showToast({
+            type: 'success',
+            title: webhook.is_active ? 'Webhook désactivé' : 'Webhook activé',
+            message: webhook.url,
+          })
+        },
+        onError: (error: any) => {
+          showToast({
+            type: 'error',
+            title: 'Impossible de sauvegarder',
+            message: error?.message ?? 'Erreur lors de la mise à jour du webhook',
+          })
+        },
+      },
     )
   }
 
-  const handleConnectZapier = () => {
-    showToast({
-      type: 'info',
-      title: 'Fonctionnalité à venir',
-      message: 'La connexion Zapier sera disponible prochainement',
-    })
-  }
+  // ------- Autofill stats (AI tab) --------
+  const {
+    data: autofillStats,
+    isLoading: isLoadingAutofillStats,
+  } = useAutofillStats(14)
+  const { data: autofillTimeline } = useAutofillTimeline(7)
+  const { data: autofillLeaderboard } = useAutofillLeaderboard()
+
+  const topSourceMix = useMemo(() => {
+    if (!autofillStats) return []
+    return Object.entries(autofillStats.source_mix)
+      .filter(([, value]) => value.count > 0)
+      .sort((a, b) => b[1].count - a[1].count)
+      .slice(0, 3)
+  }, [autofillStats])
+
+  const timelinePreview = autofillTimeline?.timeline ?? []
+  const leaderboardPreview = autofillLeaderboard?.leaderboard.slice(0, 5) ?? []
 
   const tabs = [
     { id: 'email' as Tab, label: 'Email', icon: Mail },
@@ -124,10 +205,14 @@ export default function IntegrationsSettingsPage() {
     { id: 'connectors' as Tab, label: 'Connecteurs', icon: Link2 },
   ]
 
+  const handleTabChange = (tab: Tab) => {
+    setActiveTab(tab)
+    router.replace(`/dashboard/settings/integrations?tab=${tab}`, { scroll: false })
+  }
+
   return (
     <div className="p-6 lg:p-8 max-w-5xl mx-auto space-y-8">
-      {/* Header */}
-      <div>
+      <header>
         <Link
           href="/dashboard/settings"
           className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 mb-4"
@@ -138,75 +223,70 @@ export default function IntegrationsSettingsPage() {
 
         <h1 className="text-3xl font-bold text-gray-900">Intégrations</h1>
         <p className="text-gray-600 mt-2">
-          Connectez votre CRM avec vos outils favoris et configurez l'IA
+          Connectez votre CRM avec vos outils externes et pilotez l’automatisation.
         </p>
-      </div>
+      </header>
 
-      {/* Tabs */}
       <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-          {tabs.map((tab) => {
-            const Icon = tab.icon
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`
-                  flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap
-                  ${
-                    activeTab === tab.id
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }
-                `}
-              >
-                <Icon className="w-5 h-5" />
-                {tab.label}
-              </button>
-            )
-          })}
+          {tabs.map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              onClick={() => handleTabChange(id)}
+              className={clsx(
+                'flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition',
+                activeTab === id
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+              )}
+            >
+              <Icon className="w-5 h-5" />
+              {label}
+            </button>
+          ))}
         </nav>
       </div>
 
-      {/* Tab Content */}
       <div className="space-y-8">
-        {/* Email Tab */}
         {activeTab === 'email' && (
           <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-6">
               <Mail className="h-6 w-6 text-blue-500" />
               <div>
                 <h2 className="text-xl font-semibold text-gray-900">
-                  APIs Email
+                  Fournisseur d’envoi
                 </h2>
                 <p className="text-sm text-gray-500">
-                  Configurez votre fournisseur d&apos;envoi d&apos;emails
+                  Gérez l’API utilisée pour vos emails transactionnels.
                 </p>
               </div>
             </div>
 
-            {/* Resend API */}
             <div className="rounded-xl border border-gray-100 bg-gray-50 p-5">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                    <Mail className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Resend</h3>
-                    <p className="text-xs text-gray-500">
-                      Service d&apos;envoi d&apos;emails transactionnels
+              <div className="flex items-start justify-between">
+                <div className="space-y-1">
+                  <p className="text-xs uppercase tracking-wide text-gray-500">
+                    Provider actif
+                  </p>
+                  <p className="text-lg font-semibold text-gray-900">
+                    {activeEmailConfig?.provider?.toUpperCase() ?? 'Non configuré'}
+                  </p>
+                  {activeEmailConfig?.from_email && (
+                    <p className="text-sm text-gray-600">
+                      Expéditeur :{' '}
+                      <span className="font-medium">{activeEmailConfig.from_email}</span>
                     </p>
-                  </div>
+                  )}
                 </div>
                 <span
-                  className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${
-                    resendStatus === 'connected'
+                  className={clsx(
+                    'inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold',
+                    emailStatus === 'connected'
                       ? 'bg-emerald-50 text-emerald-600'
-                      : 'bg-gray-100 text-gray-600'
-                  }`}
+                      : 'bg-gray-100 text-gray-600',
+                  )}
                 >
-                  {resendStatus === 'connected' ? (
+                  {emailStatus === 'connected' ? (
                     <>
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       Connecté
@@ -214,299 +294,379 @@ export default function IntegrationsSettingsPage() {
                   ) : (
                     <>
                       <XCircle className="w-3.5 h-3.5" />
-                      Déconnecté
+                      Non configuré
                     </>
                   )}
                 </span>
               </div>
 
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Clé API Resend
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <div className="flex-1 relative">
-                      <input
-                        type={showResendKey ? 'text' : 'password'}
-                        value={resendApiKey}
-                        onChange={(e) => setResendApiKey(e.target.value)}
-                        className="w-full rounded-lg border border-gray-300 px-4 py-2 pr-10 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
-                      />
-                      <button
-                        onClick={() => setShowResendKey(!showResendKey)}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-gray-100"
-                      >
-                        {showResendKey ? (
-                          <EyeOff className="w-4 h-4 text-gray-500" />
-                        ) : (
-                          <Eye className="w-4 h-4 text-gray-500" />
-                        )}
-                      </button>
-                    </div>
-                    <button
-                      onClick={handleCopyApiKey}
-                      className="p-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition"
-                      title="Copier la clé"
-                    >
-                      <Copy className="w-4 h-4 text-gray-600" />
-                    </button>
-                    <button
-                      onClick={handleTestResend}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition"
-                    >
-                      <RefreshCw className="w-4 h-4" />
-                      Tester
-                    </button>
+              <div className="mt-6 space-y-4">
+                {isLoadingEmail ? (
+                  <div className="flex items-center gap-3 text-sm text-gray-500">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Chargement de la configuration…
                   </div>
-                  <p className="text-xs text-gray-500 mt-2">
-                    Obtenez votre clé API sur{' '}
-                    <a
-                      href="https://resend.com/api-keys"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline"
-                    >
-                      resend.com/api-keys
-                    </a>
+                ) : emailError ? (
+                  <p className="flex items-center gap-2 text-sm text-red-600">
+                    <AlertCircle className="h-4 w-4" />
+                    {emailError}
                   </p>
-                </div>
+                ) : activeEmailConfig ? (
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <button
+                      onClick={handleCopySender}
+                      className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
+                    >
+                      <Copy className="h-4 w-4" />
+                      Copier l’adresse expéditeur
+                    </button>
+                    <button
+                      onClick={handleTestEmail}
+                      disabled={isTestingEmail}
+                      className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition disabled:opacity-60"
+                    >
+                      {isTestingEmail ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <RefreshCw className="h-4 w-4" />
+                      )}
+                      Tester l’envoi
+                    </button>
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-600">
+                    Aucun provider n’est encore défini. Configurez Resend, Sendgrid ou Mailgun pour
+                    envoyer vos emails transactionnels.
+                  </p>
+                )}
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-gray-200">
-                  <div>
-                    <p className="text-xs text-gray-500">Emails envoyés (30j)</p>
-                    <p className="text-lg font-bold text-gray-900">1,247</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Taux de livraison</p>
-                    <p className="text-lg font-bold text-emerald-600">98.5%</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Quota mensuel</p>
-                    <p className="text-lg font-bold text-gray-900">10,000</p>
-                  </div>
+                <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                  <button
+                    onClick={() => router.push('/dashboard/settings/email-apis')}
+                    className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-1.5 font-medium text-gray-700 hover:bg-gray-50 transition"
+                  >
+                    Ouvrir la gestion complète
+                  </button>
+                  <span>
+                    Besoin d’aide ? Consultez la{' '}
+                    <a
+                      className="text-blue-600 hover:underline"
+                      href="https://resend.com/docs"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      documentation Resend
+                    </a>
+                  </span>
                 </div>
               </div>
-            </div>
-
-            {/* Autres providers (SendGrid, Mailgun) - placeholder */}
-            <div className="mt-4 p-4 rounded-xl border border-dashed border-gray-300 bg-gray-50/50">
-              <p className="text-sm text-gray-600 text-center">
-                D&apos;autres fournisseurs (SendGrid, Mailgun, etc.) pourront être
-                ajoutés ici
-              </p>
             </div>
           </section>
         )}
 
-        {/* Webhooks Tab */}
         {activeTab === 'webhooks' && (
           <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <Webhook className="h-6 w-6 text-purple-500" />
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900">Webhooks</h2>
+                  <h2 className="text-xl font-semibold text-gray-900">Webhooks sortants</h2>
                   <p className="text-sm text-gray-500">
-                    Recevez des notifications en temps réel
+                    Déclenchez vos automatisations sur les événements clés du CRM.
                   </p>
                 </div>
               </div>
               <button
-                onClick={() =>
-                  showToast({
-                    type: 'info',
-                    title: 'Fonctionnalité à venir',
-                    message: 'La création de webhooks sera disponible prochainement',
-                  })
-                }
+                onClick={() => router.push('/dashboard/settings/webhooks')}
                 className="px-4 py-2 rounded-lg bg-purple-600 text-white text-sm font-semibold hover:bg-purple-700 transition"
               >
-                + Nouveau webhook
+                Gérer les webhooks
               </button>
             </div>
 
-            <div className="space-y-3">
-              {webhooks.map((webhook) => (
-                <div
-                  key={webhook.id}
-                  className="flex items-start justify-between p-4 rounded-xl border border-gray-100 hover:border-purple-200 hover:bg-purple-50/30 transition"
-                >
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="font-semibold text-gray-900">
-                        {webhook.name}
-                      </h3>
-                      <span
-                        className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                          webhook.status === 'active'
-                            ? 'bg-emerald-50 text-emerald-600'
-                            : 'bg-gray-100 text-gray-600'
-                        }`}
-                      >
-                        <div
-                          className={`w-1.5 h-1.5 rounded-full ${
-                            webhook.status === 'active'
-                              ? 'bg-emerald-500'
-                              : 'bg-gray-400'
-                          }`}
-                        />
-                        {webhook.status === 'active' ? 'Actif' : 'Inactif'}
-                      </span>
+            {isLoadingWebhooks ? (
+              <div className="flex items-center gap-3 text-sm text-gray-500">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Chargement des webhooks…
+              </div>
+            ) : webhooksError ? (
+              <p className="flex items-center gap-2 text-sm text-red-600">
+                <AlertCircle className="h-4 w-4" />
+                {webhooksError instanceof Error
+                  ? webhooksError.message
+                  : 'Impossible de récupérer les webhooks'}
+              </p>
+            ) : (webhooksData?.length ?? 0) === 0 ? (
+              <div className="rounded-xl border border-dashed border-gray-200 p-5 text-sm text-gray-600">
+                Aucun webhook n’est encore configuré. Utilisez le bouton « Gérer » pour en créer un.
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {webhooksData?.map((webhook) => (
+                  <div
+                    key={webhook.id}
+                    className="flex items-start justify-between p-4 rounded-xl border border-gray-100 hover:border-purple-200 hover:bg-purple-50/30 transition"
+                  >
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="font-semibold text-gray-900">
+                          {webhook.description || 'Webhook sans titre'}
+                        </h3>
+                        <span
+                          className={clsx(
+                            'inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold',
+                            webhook.is_active
+                              ? 'bg-emerald-50 text-emerald-600'
+                              : 'bg-gray-100 text-gray-600',
+                          )}
+                        >
+                          <span
+                            className={clsx(
+                              'block h-1.5 w-1.5 rounded-full',
+                              webhook.is_active ? 'bg-emerald-500' : 'bg-gray-400',
+                            )}
+                          />
+                          {webhook.is_active ? 'Actif' : 'Inactif'}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 font-mono break-words mb-2">
+                        {webhook.url}
+                      </p>
+                      <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500">
+                        <span>
+                          Événements : {webhook.events.length > 0 ? webhook.events.join(', ') : '—'}
+                        </span>
+                        <span>
+                          Créé le{' '}
+                          {new Date(webhook.created_at).toLocaleDateString('fr-FR', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric',
+                          })}
+                        </span>
+                      </div>
                     </div>
-
-                    <p className="text-sm text-gray-600 mb-2 font-mono">
-                      {webhook.url}
-                    </p>
-
-                    <div className="flex items-center gap-4 text-xs text-gray-500">
-                      <span>
-                        Événements: {webhook.events.map((e) => e).join(', ')}
-                      </span>
-                      <span>Dernier déclenchement: {webhook.lastTrigger}</span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleToggleWebhook(webhook)}
+                        disabled={isWebhookMutating}
+                        className="px-3 py-1.5 rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 transition disabled:opacity-60"
+                      >
+                        {webhook.is_active ? 'Désactiver' : 'Activer'}
+                      </button>
+                      <button
+                        onClick={() => router.push(`/dashboard/settings/webhooks?id=${webhook.id}`)}
+                        className="px-3 py-1.5 rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 transition"
+                      >
+                        Ouvrir
+                      </button>
                     </div>
                   </div>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
 
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleToggleWebhook(webhook.id)}
-                      className="px-3 py-1.5 rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 transition"
-                    >
-                      {webhook.status === 'active' ? 'Désactiver' : 'Activer'}
-                    </button>
-                    <button
-                      onClick={() =>
-                        showToast({
-                          type: 'info',
-                          title: 'Fonctionnalité à venir',
-                          message: 'L\'édition de webhooks sera disponible prochainement',
-                        })
-                      }
-                      className="px-3 py-1.5 rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 transition"
-                    >
-                      Éditer
-                    </button>
+        {activeTab === 'ai' && (
+          <section className="space-y-6">
+            <AIConfigSection />
+
+            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+              <div className="flex items-center gap-3 mb-6">
+                <Brain className="h-6 w-6 text-indigo-500" />
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    Autofill – Statistiques d’usage
+                  </h2>
+                  <p className="text-sm text-gray-500">
+                    Mesurez l’adoption et la qualité des suggestions générées.
+                  </p>
+                </div>
+              </div>
+
+              {isLoadingAutofillStats ? (
+                <div className="flex items-center gap-3 text-sm text-gray-500">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Lecture des métriques…
+                </div>
+              ) : !autofillStats ? (
+                <p className="text-sm text-gray-600">
+                  Aucune donnée collectée pour le moment. Activez les logs et utilisez l’autofill
+                  pour alimenter ces métriques.
+                </p>
+              ) : (
+                <div className="space-y-6">
+                  <div className="grid gap-4 md:grid-cols-3">
+                    <StatCard
+                      label="Suggestions (14j)"
+                      value={autofillStats.apply_rate.total_suggestions.toLocaleString('fr-FR')}
+                      caption={`${autofillStats.apply_rate.total_applied.toLocaleString('fr-FR')} appliquées`}
+                    />
+                    <StatCard
+                      label="Taux d’acceptation"
+                      value={`${(autofillStats.apply_rate.rate * 100).toFixed(1)} %`}
+                      caption="Suggestions acceptées / proposées"
+                    />
+                    <StatCard
+                      label="Latence p95"
+                      value={`${autofillStats.avg_latency_ms.p95} ms`}
+                      caption={`Moyenne ${autofillStats.avg_latency_ms.value} ms`}
+                    />
+                  </div>
+
+                  {topSourceMix.length > 0 && (
+                    <div>
+                      <h3 className="text-sm font-semibold text-gray-900 mb-2">
+                        Sources les plus utilisées
+                      </h3>
+                      <div className="grid gap-3 md:grid-cols-3">
+                        {topSourceMix.map(([source, data]) => (
+                          <div
+                            key={source}
+                            className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-sm"
+                          >
+                            <p className="font-semibold text-gray-900 uppercase">
+                              {source.replace('_', ' ')}
+                            </p>
+                            <p className="text-gray-600">
+                              {data.count} suggestions ({data.percentage.toFixed(1)} %)
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {autofillStats.pattern_confidence_by_domain.length > 0 && (
+                    <div>
+                      <h3 className="text-sm font-semibold text-gray-900 mb-2">
+                        Domaines les plus fiables
+                      </h3>
+                      <div className="grid gap-3 md:grid-cols-2">
+                        {autofillStats.pattern_confidence_by_domain.slice(0, 4).map((item) => (
+                          <div
+                            key={item.domain}
+                            className="rounded-lg border border-gray-100 bg-white px-4 py-3 text-sm shadow-sm"
+                          >
+                            <p className="font-semibold text-gray-900">{item.domain}</p>
+                            <p className="text-gray-600">
+                              {item.samples} échantillons – confiance moyenne{' '}
+                              {(item.avg_confidence * 100).toFixed(1)} %
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <div>
+                      <h3 className="text-sm font-semibold text-gray-900 mb-2">
+                        Timeline (7 derniers jours)
+                      </h3>
+                      <ul className="space-y-2 text-sm text-gray-600">
+                        {timelinePreview.map((entry) => (
+                          <li
+                            key={entry.date}
+                            className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-3 py-2"
+                          >
+                            <span>{entry.date}</span>
+                            <span className="text-gray-900 font-medium">
+                              {entry.suggestions} sugg. – {(entry.apply_rate * 100).toFixed(0)} %
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-gray-900 mb-2">
+                        Top contributeurs (30 jours)
+                      </h3>
+                      <ul className="space-y-2 text-sm text-gray-600">
+                        {leaderboardPreview.length === 0 ? (
+                          <li className="rounded-lg border border-dashed border-gray-200 px-3 py-2">
+                            Pas encore de leaderboard – commencez à utiliser l’autofill.
+                          </li>
+                        ) : (
+                          leaderboardPreview.map((entry) => (
+                            <li
+                              key={entry.rank}
+                              className="flex items-center justify-between rounded-lg border border-gray-100 bg-white px-3 py-2 shadow-sm"
+                            >
+                              <span>
+                                #{entry.rank} – {entry.user_name}
+                              </span>
+                              <span className="text-gray-900 font-medium">
+                                {(entry.apply_rate * 100).toFixed(0)} %
+                              </span>
+                            </li>
+                          ))
+                        )}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              ))}
+              )}
             </div>
           </section>
         )}
 
-        {/* AI Tab */}
-        {activeTab === 'ai' && <AIConfigSection />}
-
-        {/* Connectors Tab */}
         {activeTab === 'connectors' && (
           <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-6">
               <Link2 className="h-6 w-6 text-orange-500" />
               <div>
-                <h2 className="text-xl font-semibold text-gray-900">
-                  Connecteurs Externes
-                </h2>
+                <h2 className="text-xl font-semibold text-gray-900">Connecteurs externes</h2>
                 <p className="text-sm text-gray-500">
-                  Automatisez vos workflows avec des plateformes tierces
+                  Zapier, Make, Slack… Ces intégrations arrivent prochainement pour automatiser vos
+                  workflows.
                 </p>
               </div>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
-              {connectors.map((connector) => {
-                const Icon = connector.icon
-                return (
-                  <div
-                    key={connector.id}
-                    className="rounded-xl border border-gray-100 bg-gray-50 p-5 hover:border-orange-200 hover:bg-orange-50/30 transition"
-                  >
-                    <div className="flex items-start gap-4">
-                      <div
-                        className={`w-12 h-12 rounded-lg bg-gradient-to-br from-${connector.color}-500 to-${connector.color}-600 flex items-center justify-center`}
-                      >
-                        <Icon className="w-6 h-6 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900">
-                          {connector.name}
-                        </h3>
-                        <p className="text-sm text-gray-600 mt-1">
-                          {connector.description}
-                        </p>
-                        <button
-                          onClick={handleConnectZapier}
-                          className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
-                        >
-                          <Plug className="w-4 h-4" />
-                          Connecter
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
+            <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50/50 p-6 text-sm text-gray-600">
+              Nous finalisons l’API publique et les connecteurs (Zapier/Make). Laissez-nous un
+              message si vous souhaitez participer à la bêta privée.
             </div>
           </section>
         )}
       </div>
 
-      {/* Journal de sécurité (Affiché sur tous les onglets) */}
       <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
         <div className="flex items-center gap-3 mb-6">
           <Shield className="h-6 w-6 text-indigo-500" />
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">
-              Journal de Sécurité
-            </h2>
+            <h2 className="text-xl font-semibold text-gray-900">Journal de sécurité</h2>
             <p className="text-sm text-gray-500">
-              Historique des connexions et modifications API
+              Historique des modifications liées aux intégrations (bientôt disponible).
             </p>
           </div>
         </div>
 
-        <div className="space-y-2 text-sm">
-          {[
-            {
-              date: '2024-03-15 14:30',
-              action: 'Clé API Resend testée',
-              status: 'success',
-            },
-            {
-              date: '2024-03-14 09:15',
-              action: 'Webhook "Lead créé" activé',
-              status: 'info',
-            },
-            {
-              date: '2024-03-13 16:45',
-              action: 'Clé API Resend mise à jour',
-              status: 'warning',
-            },
-            {
-              date: '2024-03-12 11:20',
-              action: 'Configuration IA mise à jour',
-              status: 'success',
-            },
-          ].map((log, idx) => (
-            <div
-              key={idx}
-              className="flex items-center justify-between p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition"
-            >
-              <div className="flex items-center gap-3">
-                <div
-                  className={`w-2 h-2 rounded-full ${
-                    log.status === 'success'
-                      ? 'bg-emerald-500'
-                      : log.status === 'warning'
-                        ? 'bg-yellow-500'
-                        : 'bg-blue-500'
-                  }`}
-                />
-                <span className="text-gray-900">{log.action}</span>
-              </div>
-              <span className="text-xs text-gray-500">{log.date}</span>
-            </div>
-          ))}
+        <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50/50 p-5 text-sm text-gray-600">
+          Le log d’audit détaillé (clés API, changements de webhooks, connexions externes) sera
+          exposé ici une fois le module de traçabilité finalisé.
         </div>
       </section>
+    </div>
+  )
+}
+
+function StatCard({
+  label,
+  value,
+  caption,
+}: {
+  label: string
+  value: string
+  caption?: string
+}) {
+  return (
+    <div className="rounded-xl border border-gray-100 bg-white px-4 py-3 shadow-sm">
+      <p className="text-xs uppercase tracking-wide text-gray-500">{label}</p>
+      <p className="text-2xl font-semibold text-gray-900 mt-1">{value}</p>
+      {caption && <p className="text-xs text-gray-500 mt-1">{caption}</p>}
     </div>
   )
 }

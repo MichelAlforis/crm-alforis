@@ -17,6 +17,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
 from core.config import settings
+from services.autofill_prompt_templates import build_llm_payload
 
 
 @dataclass
@@ -63,13 +64,21 @@ class LLMRouter:
         Pour l'instant, renvoie un résultat vide : l'appel réseau sera
         implémenté une fois les métriques stabilisées.
         """
+        payload = build_llm_payload(
+            raw_snippet=draft.get("raw_snippet", ""),
+            primary_email=draft.get("primary_email", ""),
+            name_hint=draft.get("name_hint"),
+            phone_hint=draft.get("phone_hint"),
+            organisation_hint=draft.get("organisation_hint"),
+        )
+
         return LLMResult(
             provider=self.primary_provider,
             model=self.primary_model,
-            payload=None,
+            payload=payload,
             latency_ms=0,
             used_fallback=False,
-            error="llm_not_enabled",
+            error="llm_not_configured",
         )
 
     def describe(self) -> Dict[str, Any]:
