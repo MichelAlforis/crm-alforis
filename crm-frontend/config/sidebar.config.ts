@@ -43,24 +43,10 @@ export const SIDEBAR_SECTIONS: SidebarSection[] = [
   {
     label: 'Dashboard',
     href: '/dashboard',
-    icon: LayoutDashboard,
-    description: "Vue d'ensemble",
+    icon: Sparkles,
+    description: "Vue d'ensemble avec analytics avancées",
     badge: null,
     gradient: 'from-blue-500 to-cyan-500',
-    submenu: [
-      {
-        label: 'Dashboard',
-        href: '/dashboard',
-        icon: Sparkles,
-        description: 'Vue principale avec analytics avancées',
-      },
-      {
-        label: 'Dashboard Legacy',
-        href: '/dashboard/legacy',
-        icon: LayoutDashboard,
-        description: 'Analytics avancées & IA',
-      },
-    ],
   },
 
   // ========================================
