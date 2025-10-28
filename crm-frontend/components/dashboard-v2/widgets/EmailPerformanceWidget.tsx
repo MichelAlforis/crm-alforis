@@ -72,14 +72,14 @@ export function EmailPerformanceWidget({
 
   if (isLoading) {
     return (
-      <Card className="h-full">
+      <Card padding="none" className="h-full">
         <CardHeader title={title} icon={<Mail className="h-5 w-5 text-bleu" />} />
-        <CardBody>
-          <div className="space-y-4 animate-pulse">
-            <div className="h-20 bg-gray-200 rounded"></div>
-            <div className="grid grid-cols-3 gap-3">
+        <CardBody className="@container">
+          <div className="flex animate-pulse flex-col gap-fluid-3">
+            <div className="h-20 rounded bg-gray-200" />
+            <div className="grid grid-cols-1 gap-fluid-2 @md:grid-cols-3">
               {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="h-16 bg-gray-200 rounded"></div>
+                <div key={i} className="h-16 rounded bg-gray-200" />
               ))}
             </div>
           </div>
@@ -90,7 +90,7 @@ export function EmailPerformanceWidget({
 
   if (error || !data) {
     return (
-      <Card className="h-full">
+      <Card padding="none" className="h-full">
         <CardHeader title={title} icon={<Mail className="h-5 w-5 text-bleu" />} />
         <CardBody>
           <Alert type="error" message={error || 'Aucune donnée disponible'} />
@@ -100,85 +100,85 @@ export function EmailPerformanceWidget({
   }
 
   return (
-    <Card className="h-full">
+    <Card padding="none" className="h-full">
       <CardHeader
         title={title}
         subtitle={getPeriodLabel()}
         icon={<Mail className="h-5 w-5 text-bleu" />}
       />
-      <CardBody className="space-y-4">
+      <CardBody className="@container flex flex-col gap-fluid-3">
         {/* Total sent */}
-        <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Send className="h-8 w-8 text-bleu" />
-              <div>
-                <p className="text-2xl font-bold text-bleu">{data.total_sent.toLocaleString()}</p>
-                <p className="text-sm text-gray-600">Emails envoyés</p>
-              </div>
+        <div className="rounded-lg border border-blue-200 bg-blue-50 p-fluid-4">
+          <div className="flex items-center gap-fluid-3">
+            <Send className="h-8 w-8 text-bleu" />
+            <div>
+              <p className="text-fluid-2xl font-bold text-bleu">
+                {data.total_sent.toLocaleString()}
+              </p>
+              <p className="text-fluid-sm text-gray-600">Emails envoyés</p>
             </div>
           </div>
         </div>
 
         {/* Stats grid */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 gap-fluid-2 @md:grid-cols-3">
           {/* Delivery rate */}
-          <div className="p-3 bg-green-50 rounded-lg border border-green-200 text-center">
-            <CheckCircle className="h-6 w-6 text-green-600 mx-auto mb-1" />
-            <p className="text-xl font-bold text-green-700">{data.delivery_rate}%</p>
-            <p className="text-xs text-gray-600">Délivrés</p>
-            <p className="text-xs text-gray-500 mt-1">{data.delivered}</p>
+          <div className="rounded-lg border border-green-200 bg-green-50 p-fluid-3 text-center">
+            <CheckCircle className="mx-auto mb-1 h-6 w-6 text-green-600" />
+            <p className="text-fluid-xl font-bold text-green-700">{data.delivery_rate}%</p>
+            <p className="text-fluid-xs text-gray-600">Délivrés</p>
+            <p className="mt-1 text-fluid-xs text-gray-500">{data.delivered}</p>
           </div>
 
           {/* Open rate */}
-          <div className="p-3 bg-blue-50 rounded-lg border border-blue-200 text-center">
-            <Mail className="h-6 w-6 text-blue-600 mx-auto mb-1" />
-            <p className="text-xl font-bold text-blue-700">{data.open_rate}%</p>
-            <p className="text-xs text-gray-600">Ouverts</p>
-            <p className="text-xs text-gray-500 mt-1">{data.opened}</p>
+          <div className="rounded-lg border border-blue-200 bg-blue-50 p-fluid-3 text-center">
+            <Mail className="mx-auto mb-1 h-6 w-6 text-blue-600" />
+            <p className="text-fluid-xl font-bold text-blue-700">{data.open_rate}%</p>
+            <p className="text-fluid-xs text-gray-600">Ouverts</p>
+            <p className="mt-1 text-fluid-xs text-gray-500">{data.opened}</p>
           </div>
 
           {/* Click rate */}
-          <div className="p-3 bg-purple-50 rounded-lg border border-purple-200 text-center">
-            <MousePointer className="h-6 w-6 text-purple-600 mx-auto mb-1" />
-            <p className="text-xl font-bold text-purple-700">{data.click_rate}%</p>
-            <p className="text-xs text-gray-600">Cliqués</p>
-            <p className="text-xs text-gray-500 mt-1">{data.clicked}</p>
+          <div className="rounded-lg border border-purple-200 bg-purple-50 p-fluid-3 text-center">
+            <MousePointer className="mx-auto mb-1 h-6 w-6 text-purple-600" />
+            <p className="text-fluid-xl font-bold text-purple-700">{data.click_rate}%</p>
+            <p className="text-fluid-xs text-gray-600">Cliqués</p>
+            <p className="mt-1 text-fluid-xs text-gray-500">{data.clicked}</p>
           </div>
         </div>
 
         {/* Bounced */}
         {data.bounced > 0 && (
-          <div className="p-3 bg-red-50 rounded border border-red-200">
-            <div className="flex items-center gap-2 text-red-700">
+          <div className="rounded border border-red-200 bg-red-50 p-fluid-3">
+            <div className="flex items-center gap-fluid-2 text-red-700">
               <XCircle className="h-5 w-5" />
               <div className="flex-1">
-                <p className="text-sm font-medium">{data.bounced} emails rejetés</p>
-                <p className="text-xs text-red-600">Vérifiez la qualité de vos listes</p>
+                <p className="text-fluid-sm font-medium">{data.bounced} emails rejetés</p>
+                <p className="text-fluid-xs text-red-600">Vérifiez la qualité de vos listes</p>
               </div>
             </div>
           </div>
         )}
 
         {/* Benchmark indicators */}
-        <div className="pt-3 border-t border-gray-200">
-          <p className="text-xs text-gray-500 mb-2">Benchmarks moyens:</p>
-          <div className="grid grid-cols-3 gap-2 text-xs">
+        <div className="border-t border-gray-200 pt-fluid-2">
+          <p className="mb-fluid-2 text-fluid-xs text-gray-500">Benchmarks moyens:</p>
+          <div className="grid grid-cols-1 gap-fluid-1 text-fluid-xs @sm:grid-cols-3">
             <div>
               <span className="text-gray-600">Délivr:</span>{' '}
-              <span className={data.delivery_rate >= 95 ? 'text-green-600 font-medium' : 'text-orange-600'}>
+              <span className={data.delivery_rate >= 95 ? 'font-medium text-green-600' : 'text-orange-600'}>
                 95%+
               </span>
             </div>
             <div>
               <span className="text-gray-600">Ouv:</span>{' '}
-              <span className={data.open_rate >= 20 ? 'text-green-600 font-medium' : 'text-orange-600'}>
+              <span className={data.open_rate >= 20 ? 'font-medium text-green-600' : 'text-orange-600'}>
                 20%+
               </span>
             </div>
             <div>
               <span className="text-gray-600">Clic:</span>{' '}
-              <span className={data.click_rate >= 3 ? 'text-green-600 font-medium' : 'text-orange-600'}>
+              <span className={data.click_rate >= 3 ? 'font-medium text-green-600' : 'text-orange-600'}>
                 3%+
               </span>
             </div>

@@ -5,7 +5,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Box, Maximize2, Minimize2, User, Mail, Phone, MapPin } from 'lucide-react'
+import { Box, Maximize2, Minimize2, Mail, Phone, MapPin } from 'lucide-react'
 
 export default function DemoContainerQueriesPage() {
   const [containerWidth, setContainerWidth] = useState<'small' | 'medium' | 'large'>('large')

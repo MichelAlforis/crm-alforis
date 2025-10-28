@@ -51,7 +51,7 @@ interface DropdownPortalProps {
 function DropdownPortal({ triggerRef, isOpen, onClose, children }: DropdownPortalProps) {
   const [position, setPosition] = useState({ top: 0, left: 0 })
   const dropdownRef = useRef<HTMLDivElement | null>(null)
-  const openedAtRef = useRef<number>(0)
+  // const openedAtRef = useRef<number>(0)
 
   useEffect(() => {
     if (isOpen && triggerRef.current) {

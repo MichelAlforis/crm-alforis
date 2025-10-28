@@ -4,7 +4,7 @@
 'use client'
 
 import React, { useState, useRef } from 'react'
-import { Upload, X, File, FileText, Image as ImageIcon, Paperclip } from 'lucide-react'
+import { Upload, X, File, FileText, Image as ImageIcon } from 'lucide-react'
 
 export interface UploadedFile {
   id: string

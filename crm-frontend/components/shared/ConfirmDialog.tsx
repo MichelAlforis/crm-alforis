@@ -4,7 +4,7 @@
 'use client'
 
 import React from 'react'
-import { AlertTriangle, Trash2, Power, Info, CheckCircle } from 'lucide-react'
+import { AlertTriangle, Power, Info, CheckCircle } from 'lucide-react'
 import clsx from 'clsx'
 
 export type ConfirmDialogType = 'danger' | 'warning' | 'info' | 'success'

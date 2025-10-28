@@ -38,7 +38,7 @@ export function BannerManager() {
   const { permission, isSubscribed, subscribe } = usePushNotifications()
 
   // Onboarding callback (sera géré par OnboardingTour directement)
-  const [onboardingCallback, setOnboardingCallback] = useState<(() => void) | null>(null)
+  // Onboarding callback removed
 
   // État PWA
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
@@ -239,7 +239,7 @@ export function BannerManager() {
             {/* Indicateur de queue */}
             {queue.length > 1 && (
               <div className="flex gap-1 mt-3 justify-center">
-                {queue.map((banner, index) => (
+                {queue.map((banner) => (
                   <div
                     key={banner.id}
                     className={`w-1.5 h-1.5 rounded-full transition-colors ${

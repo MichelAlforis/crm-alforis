@@ -8,7 +8,7 @@ import { logger } from '@/lib/logger'
 import React, { useState, useEffect } from 'react'
 import { useAIConfig, useUpdateAIConfig } from '@/hooks/useAI'
 import { AIProvider } from '@/types/ai'
-import { Settings, Save, Eye, EyeOff, Zap, Key, ExternalLink, CheckCircle, AlertCircle, Brain } from 'lucide-react'
+import { Save, Eye, EyeOff, Zap, Key, ExternalLink, CheckCircle, AlertCircle, Brain } from 'lucide-react'
 import clsx from 'clsx'
 import { apiClient } from '@/lib/api'
 

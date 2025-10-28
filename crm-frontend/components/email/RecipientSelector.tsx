@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Users, Filter, Eye } from 'lucide-react'
+import { Users } from 'lucide-react'
 import { Card, CardHeader, CardBody } from '@/components/shared/Card'
 import { Button } from '@/components/shared/Button'
 import { Select } from '@/components/shared/Select'

@@ -1,11 +1,10 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
-import { User, Phone, FileText, Eye, Clock, MousePointerClick, Mail, TrendingUp } from 'lucide-react'
+import { User, Phone, FileText, Eye, MousePointerClick, Mail } from 'lucide-react'
 import { Card, CardBody } from '@/components/shared/Card'
 import { Button } from '@/components/shared/Button'
-import { Badge } from '@/components/shared/Badge'
 
 interface RecipientWithTracking {
   id: number

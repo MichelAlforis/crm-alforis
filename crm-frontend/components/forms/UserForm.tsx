@@ -55,7 +55,7 @@ export function UserForm({
 
   const handleFormSubmit = async (data: UserCreate & { confirm_password?: string }) => {
     // Retirer confirm_password avant envoi
-    const { confirm_password, ...submitData } = data
+    const { confirm_password: _confirmPassword, ...submitData } = data
     await onSubmit(submitData)
   }
 

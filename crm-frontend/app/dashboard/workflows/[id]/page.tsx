@@ -21,7 +21,6 @@ import {
   BookTemplate,
   Zap,
   Target,
-  Users,
   Mail,
   ListTodo,
   Bell,
@@ -113,7 +112,7 @@ export default function WorkflowDetailPage() {
   }
 
   // Helper: Traduire trigger en langage naturel
-  const getTriggerDescription = (triggerType: string, triggerConfig: any) => {
+  const getTriggerDescription = (triggerType: string, _triggerConfig: any) => {
     const descriptions: Record<string, string> = {
       // Entités principales
       organisation_created: '🏢 Quand une nouvelle organisation est créée',

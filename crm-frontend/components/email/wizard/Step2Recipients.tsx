@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Save, List, Download } from 'lucide-react'
+import { Save } from 'lucide-react'
 import { RecipientSelectorTableV2, RecipientFilters } from '../RecipientSelectorTableV2'
 import { Button } from '@/components/shared/Button'
 import { Select } from '@/components/shared/Select'

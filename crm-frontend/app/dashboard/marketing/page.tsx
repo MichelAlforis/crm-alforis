@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Mail, List, FileText, TrendingUp, Send, Users, Clock, AlertCircle } from 'lucide-react'
+import { Mail, List, FileText, TrendingUp, Send, Users, Clock } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { apiClient } from '@/lib/api'

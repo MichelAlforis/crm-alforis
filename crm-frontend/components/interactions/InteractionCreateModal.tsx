@@ -6,7 +6,6 @@
 import React, { useState } from 'react'
 import { X, Phone, Mail, Users, Coffee, FileText, Calendar } from 'lucide-react'
 import { Input } from '@/components/shared/Input'
-import { Select } from '@/components/shared/Select'
 
 interface InteractionCreateModalProps {
   isOpen: boolean
@@ -36,7 +35,7 @@ export default function InteractionCreateModal({
   const [error, setError] = useState<string | null>(null)
 
   // Données du formulaire
-  const [selectedOrgId, setSelectedOrgId] = useState(organisationId || 0)
+  const [selectedOrgId] = useState(organisationId || 0)
   const [type, setType] = useState('appel')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')

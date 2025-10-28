@@ -29,9 +29,9 @@ export default function MailingListsPage() {
   const router = useRouter()
   const {
     lists,
-    isLoading,
+    isLoading: _isLoading,
     deleteList,
-    isDeleting,
+    isDeleting: _isDeleting,
   } = useMailingLists()
 
   const { confirm, ConfirmDialogComponent } = useConfirm()

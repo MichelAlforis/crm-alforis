@@ -4,7 +4,7 @@
 'use client'
 import { logger } from '@/lib/logger'
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Input, Button, Alert, Select } from '@/components/shared'
 import { Person, PersonInput } from '@/lib/types'
@@ -32,7 +32,6 @@ export function PersonForm({
   submitLabel = 'Créer',
 }: PersonFormProps) {
   const { showToast } = useToast()
-  const firstErrorRef = useRef<HTMLInputElement>(null)
   const { autofill, isLoading: isAutofilling } = useAutofillV2()
   const { preview, isLoading: isPreviewing } = useAutofillPreview()
   const [suggestions, setSuggestions] = useState<Record<string, AutofillSuggestion>>({})
@@ -147,7 +146,7 @@ export function PersonForm({
 
       // Store non-auto suggestions for manual review
       const manualSuggestions = Object.entries(result.autofill)
-        .filter(([_, suggestion]) => !suggestion.auto_apply)
+        .filter(([, suggestion]) => !suggestion.auto_apply)
         .reduce((acc, [field, suggestion]) => {
           acc[field] = suggestion
           return acc

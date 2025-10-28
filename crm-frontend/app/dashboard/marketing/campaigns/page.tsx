@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react'
 import Link from 'next/link'
-import { Plus, Eye, Mail, Send, Clock, CheckCircle, XCircle, TrendingUp, Users, Calendar, Edit, Trash2, Download, Copy } from 'lucide-react'
+import { Plus, Eye, Mail, Send, Clock, CheckCircle, XCircle, TrendingUp, Calendar, Edit, Trash2, Download, Copy } from 'lucide-react'
 import { Card, CardHeader, CardBody, Button } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
@@ -33,7 +33,7 @@ const STATUS_LABELS = {
 }
 
 export default function CampaignsPage() {
-  const { campaigns, isLoading, error, deleteCampaign, isDeleting, refetch } = useEmailCampaigns()
+  const { campaigns, isLoading: _isLoading, error, deleteCampaign, isDeleting: _isDeleting, refetch } = useEmailCampaigns()
   const [statusFilter, setStatusFilter] = useState<string | null>(null)
   const { confirm, ConfirmDialogComponent } = useConfirm()
   const { showToast } = useToast()

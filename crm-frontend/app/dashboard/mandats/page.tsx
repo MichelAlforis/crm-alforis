@@ -95,7 +95,7 @@ export default function MandatsPage() {
     })
   }
 
-  const { data, isLoading, error } = useMandats({
+  const { data, isLoading: _isLoading, error } = useMandats({
     limit: 100,
     status: filters.values.status || undefined,
   })

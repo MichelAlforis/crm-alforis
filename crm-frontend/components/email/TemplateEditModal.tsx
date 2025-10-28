@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { X, Monitor, Smartphone, Save, Mail } from 'lucide-react'
+import { X, Monitor, Smartphone, Save } from 'lucide-react'
 import {
   Dialog,
   DialogContent,

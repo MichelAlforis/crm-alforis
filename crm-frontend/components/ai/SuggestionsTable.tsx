@@ -3,7 +3,7 @@
  */
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import { AISuggestion, AISuggestionType, AISuggestionStatus } from '@/types/ai'
 import {
   CheckCircle,

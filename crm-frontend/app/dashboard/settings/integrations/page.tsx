@@ -566,17 +566,35 @@ export default function IntegrationsSettingsPage() {
                         Timeline (7 derniers jours)
                       </h3>
                       <ul className="space-y-2 text-sm text-gray-600">
-                        {timelinePreview.map((entry) => (
-                          <li
-                            key={entry.date}
-                            className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-3 py-2"
-                          >
-                            <span>{entry.date}</span>
-                            <span className="text-gray-900 font-medium">
-                              {entry.suggestions} sugg. – {(entry.apply_rate * 100).toFixed(0)} %
-                            </span>
-                          </li>
-                        ))}
+                        {timelinePreview.map((entry) => {
+                          const applyRate = Math.min(100, Math.round(entry.apply_rate * 100))
+                          const ignored = Math.max(entry.suggestions - entry.applied, 0)
+                          return (
+                            <li
+                              key={entry.date}
+                              className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2"
+                            >
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="font-medium text-gray-900">{entry.date}</span>
+                                <span className="text-gray-900 font-medium">
+                                  {entry.suggestions} sugg. · {applyRate} %
+                                </span>
+                              </div>
+                              <div className="mt-2">
+                                <div className="flex items-center justify-between text-xs text-gray-500">
+                                  <span>{entry.applied} appliquées</span>
+                                  <span>{ignored} ignorées</span>
+                                </div>
+                                <div className="mt-1 h-2 w-full rounded-full bg-gray-200 overflow-hidden">
+                                  <div
+                                    className="h-full bg-gradient-to-r from-indigo-500 to-blue-500 transition-all"
+                                    style={{ width: `${applyRate}%` }}
+                                  />
+                                </div>
+                              </div>
+                            </li>
+                          )
+                        })}
                       </ul>
                     </div>
                     <div>

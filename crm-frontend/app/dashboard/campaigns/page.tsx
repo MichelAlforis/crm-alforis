@@ -28,7 +28,7 @@ const STATUS_LABELS = {
 }
 
 export default function CampaignsPage() {
-  const { campaigns, isLoading, error } = useEmailCampaigns()
+  const { campaigns, isLoading: _isLoading, error } = useEmailCampaigns()
   const [statusFilter, setStatusFilter] = useState<string | null>(null)
 
   // Calcul des statistiques
@@ -115,7 +115,7 @@ export default function CampaignsPage() {
       sticky: 'right',
       priority: 'high',
       minWidth: '120px',
-      render: (id: number, row: EmailCampaign) => {
+      render: (id: number) => {
         const actions: OverflowAction[] = [
           {
             label: 'Voir',

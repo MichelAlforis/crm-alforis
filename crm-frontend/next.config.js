@@ -1,6 +1,6 @@
 const withPWA = require('@ducanh2912/next-pwa').default({
   dest: 'public',
-  disable: false, // Activé en dev pour tester le mode offline
+  disable: process.env.NODE_ENV === 'development', // Désactivé en dev pour éviter les problèmes CORS
   register: true,
   skipWaiting: true,
   runtimeCaching: [
@@ -117,15 +117,12 @@ const withPWA = require('@ducanh2912/next-pwa').default({
       }
     },
     {
-      urlPattern: /\/api\/.*$/i,
-      handler: 'NetworkFirst',
+      // Ne cache QUE les appels API internes Next.js (pas localhost:8000)
+      urlPattern: ({ url }) => url.origin === self.location.origin && url.pathname.startsWith('/api/v1'),
+      handler: 'NetworkOnly', // Pas de cache pour les API calls en dev
       method: 'GET',
       options: {
-        cacheName: 'api-cache',
-        expiration: {
-          maxEntries: 16,
-          maxAgeSeconds: 5 * 60 // 5 minutes
-        },
+        cacheName: 'next-api-cache',
         networkTimeoutSeconds: 10
       }
     }
@@ -201,16 +198,20 @@ const nextConfig = {
     ];
   },
 
-  // Rewrites pour proxy API (optionnel)
+  // Rewrites pour proxy API (bypass CORS en dev)
   async rewrites() {
-    const apiProxyBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '')
-    if (!apiProxyBase) {
+    // En dev, proxy vers localhost:8000 pour éviter CORS
+    // En prod, on utilise le même domaine donc pas besoin
+    const isDev = process.env.NODE_ENV === 'development'
+    const apiProxyBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') || 'http://localhost:8000/api/v1'
+
+    if (!isDev) {
       return []
     }
 
     return [
       {
-        source: '/api/v1/:path*',
+        source: '/_devapi/:path*',
         destination: `${apiProxyBase}/:path*`,
       },
     ]

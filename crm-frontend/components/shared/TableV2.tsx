@@ -6,7 +6,7 @@
 
 import React, { useState } from 'react'
 import clsx from 'clsx'
-import { ChevronUp, ChevronDown, ChevronsUpDown, ChevronRight, MoreVertical } from 'lucide-react'
+import { ChevronUp, ChevronDown, ChevronsUpDown, ChevronRight } from 'lucide-react'
 
 // ============= TYPES =============
 export interface ColumnV2<T = any> {
@@ -231,10 +231,10 @@ export function TableV2<T = any>({
   size = 'md',
   stickyHeader = false,
   mobileCollapse = true,
-  overflowMenu = false,
+  overflowMenu: _overflowMenu = false,
   rowKey,
 }: TableV2Props<T>) {
-  const { isCoarse } = usePointerType()
+  const { isCoarse: _isCoarse } = usePointerType()
 
   // Size styles
   const sizes = {

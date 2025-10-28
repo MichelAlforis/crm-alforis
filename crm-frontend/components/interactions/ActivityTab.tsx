@@ -23,12 +23,12 @@ export interface ActivityTabProps {
   canCreate?: boolean
 }
 
-export default function ActivityTab({ orgId, personId, canCreate = true }: ActivityTabProps) {
-  // Hooks (un seul sera actif)
-  const orgQuery = orgId ? useOrgInteractions(orgId) : null
-  const personQuery = personId ? usePersonInteractions(personId) : null
+export function ActivityTab({ orgId, personId, canCreate = true }: ActivityTabProps) {
+  // Hooks (always call both unconditionally)
+  const orgQuery = useOrgInteractions(orgId || 0)
+  const personQuery = usePersonInteractions(personId || 0)
 
-  const activeQuery = orgQuery || personQuery
+  const activeQuery = orgId ? orgQuery : personQuery
   const deleteMutation = useDeleteInteraction()
 
   // Grouper par jour

@@ -5,7 +5,7 @@ Endpoints pour métriques et analytics sur l'utilisation de l'autofill V2
 """
 
 import math
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from statistics import mean
 from typing import Dict, List, Optional
 
@@ -15,9 +15,20 @@ from sqlalchemy.orm import Session
 
 from core import get_current_user, get_db
 from models.autofill_decision_log import AutofillDecisionLog
+from models.autofill_log import AutofillLog
 from models.user import User
 
 router = APIRouter(prefix="/ai", tags=["AI Statistics"])
+
+
+# ============================================
+# Constants
+# ============================================
+
+# Limits for queries and UI display
+MAX_DOMAIN_SAMPLES = 500  # Memory limit for domain confidence samples
+TOP_FIELDS_LIMIT = 10     # Top fields to display in dashboard
+LEADERBOARD_LIMIT = 10    # Top users in leaderboard
 
 
 # ============================================
@@ -76,9 +87,9 @@ async def get_autofill_statistics(
     """
 
     # Date de début
-    since = datetime.utcnow() - timedelta(days=days)
+    since = datetime.now(timezone.utc) - timedelta(days=days)
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
 
     total_suggestions = (
         db.query(func.count(AutofillLog.id))
@@ -141,7 +152,7 @@ async def get_autofill_statistics(
             AutofillLog.source.in_(["db_pattern"]),
             AutofillLog.new_value.isnot(None),
         )
-        .limit(500)
+        .limit(MAX_DOMAIN_SAMPLES)
         .all()
     )
     for email_value, confidence in domain_rows:
@@ -174,7 +185,7 @@ async def get_autofill_statistics(
         .filter(AutofillLog.created_at >= since)
         .group_by(AutofillLog.field)
         .order_by(func.count(AutofillLog.id).desc())
-        .limit(10)
+        .limit(TOP_FIELDS_LIMIT)
         .all()
     )
 
@@ -228,7 +239,7 @@ async def get_autofill_timeline(
     - Taux d'application
     """
 
-    since = datetime.utcnow() - timedelta(days=days - 1)
+    since = datetime.now(timezone.utc) - timedelta(days=days - 1)
 
     rows = (
         db.query(
@@ -285,7 +296,7 @@ async def get_autofill_leaderboard(
     """
 
     # Par défaut: période glissante de 30 jours
-    since = datetime.utcnow() - timedelta(days=30)
+    since = datetime.now(timezone.utc) - timedelta(days=30)
 
     rows = (
         db.query(
@@ -299,7 +310,7 @@ async def get_autofill_leaderboard(
         .group_by(AutofillLog.user_id)
         .having(func.count(AutofillLog.id) > 0)
         .order_by(func.count(AutofillLog.id).desc())
-        .limit(10)
+        .limit(LEADERBOARD_LIMIT)
         .all()
     )
 

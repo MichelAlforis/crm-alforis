@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Send, Calendar, Clock, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { ArrowLeft, Send, Calendar, AlertCircle, CheckCircle2 } from 'lucide-react'
 import { Card, CardHeader, CardBody } from '@/components/shared/Card'
 import { Button } from '@/components/shared/Button'
 import { Alert } from '@/components/shared/Alert'
@@ -11,7 +11,6 @@ import { Select } from '@/components/shared/Select'
 import { apiClient } from '@/lib/api'
 import { useToast } from '@/components/ui/Toast'
 import { useEmailTemplates } from '@/hooks/useEmailAutomation'
-import type { EmailTemplate } from '@/lib/types'
 import { logger } from '@/lib/logger'
 
 interface EmailCampaign {

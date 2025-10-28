@@ -14,14 +14,12 @@ import {
   Power,
   PowerOff,
   ArrowLeft,
-  Loader2,
   Key,
-  AlertCircle,
 } from 'lucide-react'
 import { useEmailConfig, EmailConfiguration, EmailProvider } from '@/hooks/useEmailConfig'
 import { useToast } from '@/components/ui/Toast'
 import { useConfirm } from '@/hooks/useConfirm'
-import { Card, CardHeader, CardBody } from '@/components/shared/Card'
+import { Card, CardBody } from '@/components/shared/Card'
 import { Button } from '@/components/shared/Button'
 import { Input } from '@/components/shared/Input'
 import { Select } from '@/components/shared/Select'

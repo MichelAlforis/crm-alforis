@@ -1,7 +1,7 @@
 """Add CGU acceptance fields to users table
 
 Revision ID: 20251028_0912
-Revises: known_companies_v1
+Revises: 20251028_add_known_companies
 Create Date: 2025-10-28 09:12:00.000000
 
 """
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision: str = '20251028_0912'
-down_revision: Union[str, None] = 'known_companies_v1'
+down_revision: Union[str, None] = '20251028_add_known_companies'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

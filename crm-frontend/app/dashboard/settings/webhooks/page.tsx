@@ -223,8 +223,6 @@ export default function WebhookSettingsPage() {
     await copyToClipboard(secret)
   }
 
-  const isSaving = createWebhook.isPending || updateWebhook.isPending
-
   return (
     <div className="space-y-6">
       <div className="space-y-2">

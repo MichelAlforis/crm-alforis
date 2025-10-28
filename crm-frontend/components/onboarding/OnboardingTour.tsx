@@ -265,7 +265,7 @@ export function OnboardingTour({ children }: OnboardingTourProps) {
           height: '24px',
         }),
       }}
-      prevButton={({ currentStep, setCurrentStep, steps }) => {
+      prevButton={({ currentStep, setCurrentStep, steps: _steps }) => {
         const isFirst = currentStep === 0
         return (
           <button

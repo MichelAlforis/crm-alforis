@@ -97,11 +97,6 @@ export function PWAInstallPrompt() {
     setDismissed(true)
     localStorage.setItem('pwa-install-dismissed', 'true')
   }
-
-  const handleIOSInstructions = () => {
-    setShowPrompt(true)
-  }
-
   // Don't show if already installed or dismissed
   if (isStandalone || dismissed || !showPrompt) {
     return null

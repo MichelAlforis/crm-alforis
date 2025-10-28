@@ -3,11 +3,10 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Mail, Eye, MousePointerClick, Ban, Clock, Filter, TrendingUp, Users, AlertCircle } from 'lucide-react'
+import { ArrowLeft, Mail, Eye, MousePointerClick, Ban, TrendingUp, Users } from 'lucide-react'
 import { Card, CardHeader, CardBody } from '@/components/shared/Card'
 import { Button } from '@/components/shared/Button'
 import { Alert } from '@/components/shared/Alert'
-import { Input } from '@/components/shared/Input'
 import { RecipientTrackingList } from '@/components/email/RecipientTrackingList'
 import { apiClient } from '@/lib/api'
 import { useToast } from '@/components/ui/Toast'
@@ -160,7 +159,7 @@ export default function BatchTrackingPage() {
     }
   }
 
-  const handleNoteClick = (personId: number, recipient: RecipientWithTracking) => {
+  const handleNoteClick = (personId: number, _recipient: RecipientWithTracking) => {
     // Rediriger vers la fiche personne avec param pour ouvrir modal note
     router.push(`/dashboard/people/${personId}?action=add-note&context=email`)
   }

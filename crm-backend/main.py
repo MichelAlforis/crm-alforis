@@ -141,6 +141,8 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],  # Allow frontend to read custom headers
+    max_age=600,  # Cache preflight requests for 10 minutes
 )
 logger.info(f"CORS middleware enabled for origins: {ALLOWED_ORIGINS}")
 
@@ -377,3 +379,4 @@ if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False)
 # test optimisation $(date)
+

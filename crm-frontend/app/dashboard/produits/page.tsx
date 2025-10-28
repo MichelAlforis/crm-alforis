@@ -81,7 +81,7 @@ export default function ProduitsPage() {
     },
   ]
 
-  const { data, isLoading, error } = useProduits({
+  const { data, isLoading: _isLoading, error } = useProduits({
     limit: 100,
     type: filters.values.type || undefined,
     status: filters.values.status || undefined,

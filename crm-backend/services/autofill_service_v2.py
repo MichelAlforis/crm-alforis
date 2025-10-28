@@ -13,6 +13,7 @@ Seuils:
 """
 
 import hashlib
+import json
 import re
 from collections import Counter
 from datetime import datetime, timedelta
@@ -26,9 +27,9 @@ from sqlalchemy.orm import Session
 
 from models.organisation import Organisation
 from models.person import Person
+from services.company_resolver import CompanyResolver
 from services.llm_router import LLMRouter
 from services.outlook_integration import OutlookIntegration
-from services.company_resolver import CompanyResolver
 
 # Mapping TLD → Pays
 TLD_TO_COUNTRY = {
@@ -124,11 +125,21 @@ class AutofillServiceV2:
             "mode": "rules",
             "cache_hit": False,
             "latency_ms": 0,
+            "execution_time_ms": 0,
             "llm_called": False,
             "model": None,
+            "llm_provider": None,
+            "llm_used": False,
+            "llm_latency_ms": None,
+            "llm_retries": 0,
+            "llm_cached": False,
+            "llm_error": None,
+            "llm_payload_hash": None,
             "llm_budget_ms": self.llm_router.latency_budget_ms if getattr(self, "llm_router", None) else None,
             "llm_router_ready": bool(getattr(self, "llm_router", None)),
+            "sources_used": [],
         }
+        warnings: List[str] = []
 
         start_time = datetime.utcnow()
 
@@ -250,11 +261,56 @@ class AutofillServiceV2:
         # 4. LLM FALLBACK (300ms) - Priorité 4
         # ==========================================
 
-        # TODO: À implémenter si budget_mode == "normal" et incertitudes
-        # if budget_mode == "normal" and has_uncertainties:
-        #     llm_suggestions = await self._enrich_from_llm(draft, suggestions)
-        #     meta["llm_called"] = True
-        #     meta["model"] = "claude-3-5-sonnet-20241022"
+        if self._should_call_llm(entity_type, draft, suggestions, budget_mode):
+            meta["llm_called"] = True
+
+            existing_sources = self._collect_sources(suggestions)
+
+            try:
+                llm_result = await self.llm_router.generate_autofill_context(  # type: ignore[union-attr]
+                    draft=draft,
+                    suggestions=suggestions,
+                    metadata={
+                        "entity_type": entity_type,
+                        "budget_mode": budget_mode,
+                        "existing_sources": existing_sources,
+                        "user_id": user_id,
+                        "outlook_enabled": context.get("outlook_enabled", False),
+                    },
+                )
+
+                meta["llm_provider"] = llm_result.provider
+                meta["model"] = llm_result.model
+                meta["llm_latency_ms"] = llm_result.latency_ms
+                meta["llm_retries"] = llm_result.retries
+                meta["llm_cached"] = llm_result.cached
+                meta["llm_error"] = llm_result.error
+                meta["llm_payload_hash"] = llm_result.payload_hash
+
+                if llm_result.content:
+                    merge_result = self._merge_llm_suggestions(
+                        entity_type=entity_type,
+                        llm_content=llm_result.content,
+                        suggestions=suggestions,
+                    )
+
+                    if merge_result["suggestions_added"] > 0:
+                        meta["mode"] = f"{meta['mode']}+llm"
+                        meta["llm_used"] = True
+
+                    if merge_result["tasks"]:
+                        tasks.extend(merge_result["tasks"])
+
+                    if merge_result["warnings"]:
+                        warnings.extend(merge_result["warnings"])
+
+                    if merge_result["meta"]:
+                        meta.update(merge_result["meta"])
+                else:
+                    if llm_result.error:
+                        warnings.append(llm_result.error)
+            except Exception as exc:  # pragma: no cover - résilience
+                warnings.append(f"llm_exception:{exc}")
 
         # ==========================================
         # Finalisation
@@ -267,6 +323,23 @@ class AutofillServiceV2:
         # Calculer latence
         duration = (datetime.utcnow() - start_time).total_seconds() * 1000
         meta["latency_ms"] = int(duration)
+        meta["execution_time_ms"] = meta["latency_ms"]
+
+        # Normaliser les sources utilisées
+        sources_used = self._collect_sources(suggestions)
+        meta["sources_used"] = sources_used
+        if sources_used and "llm" in sources_used:
+            meta["llm_used"] = True
+
+        meta["task_count"] = len(tasks)
+        meta["budget_mode"] = budget_mode
+
+        if warnings:
+            meta["warnings"] = warnings
+
+        # S'assurer que chaque suggestion expose son champ cible
+        for field, suggestion in suggestions.items():
+            suggestion.setdefault("field", field)
 
         # Persister les logs RGPD si user_id fourni
         self._persist_autofill_logs(
@@ -550,6 +623,307 @@ class AutofillServiceV2:
         return tasks
 
     # ==========================================
+    # LLM Helpers
+    # ==========================================
+
+    def _should_call_llm(
+        self,
+        entity_type: str,
+        draft: Dict,
+        suggestions: Dict[str, Dict],
+        budget_mode: str,
+    ) -> bool:
+        """Détermine si l'enrichissement LLM est nécessaire."""
+        if budget_mode != "normal":
+            return False
+
+        if not getattr(self, "llm_router", None):
+            return False
+
+        if not self.llm_router:  # type: ignore[truthy-function]
+            return False
+
+        if not suggestions:
+            return True
+
+        for field in self._critical_fields(entity_type):
+            if self._has_confident_value(field, draft, suggestions):
+                continue
+            return True
+
+        return False
+
+    def _critical_fields(self, entity_type: str) -> List[str]:
+        if entity_type == "person":
+            return [
+                "email",
+                "personal_email",
+                "phone",
+                "job_title",
+                "company_name",
+                "company_website",
+                "linkedin_url",
+            ]
+        if entity_type == "organisation":
+            return [
+                "name",
+                "domain",
+                "website",
+                "phone",
+                "city",
+                "country",
+            ]
+        return []
+
+    def _field_aliases(self, field: str) -> List[str]:
+        aliases = {
+            "email": ["email", "personal_email", "work_email"],
+            "personal_email": ["personal_email", "email", "work_email"],
+            "phone": ["phone", "personal_phone", "work_phone", "mobile"],
+            "company_name": ["company_name", "organisation_name", "organization_name", "name"],
+            "company_website": ["company_website", "website", "website_guess", "domain"],
+            "linkedin_url": ["linkedin_url"],
+            "name": ["name", "organisation_name", "organization_name"],
+            "website": ["website", "domain", "website_guess"],
+        }
+        return aliases.get(field, [field])
+
+    def _has_confident_value(self, field: str, draft: Dict, suggestions: Dict[str, Dict]) -> bool:
+        confidence_threshold = 0.75
+        for alias in self._field_aliases(field):
+            value = draft.get(alias)
+            if value not in (None, ""):
+                return True
+
+            suggestion = suggestions.get(alias)
+            if suggestion and float(suggestion.get("confidence", 0.0) or 0.0) >= confidence_threshold:
+                return True
+
+        return False
+
+    def _collect_sources(self, suggestions: Dict[str, Dict]) -> List[str]:
+        sources = {
+            self._normalize_source(str(suggestion.get("source") or ""))
+            for suggestion in suggestions.values()
+            if suggestion.get("source")
+        }
+        sources.discard("")
+        return sorted(sources)
+
+    def _merge_llm_suggestions(
+        self,
+        entity_type: str,
+        llm_content: str,
+        suggestions: Dict[str, Dict],
+    ) -> Dict[str, Any]:
+        """Fusionne les suggestions générées par le LLM."""
+        parsed = self._parse_llm_content(llm_content)
+        if parsed is None:
+            return {
+                "suggestions_added": 0,
+                "tasks": [],
+                "warnings": ["llm_parse_failed"],
+                "meta": {},
+            }
+
+        suggestions_added = 0
+        tasks: List[Dict[str, Any]] = []
+        additional_meta: Dict[str, Any] = {}
+        warnings: List[str] = []
+
+        if "needs_web_enrichment" in parsed:
+            additional_meta["needs_web_enrichment"] = bool(parsed.get("needs_web_enrichment"))
+        if parsed.get("web_enrichment_todo"):
+            additional_meta["web_enrichment_todo"] = parsed.get("web_enrichment_todo")
+        if parsed.get("recommendation"):
+            additional_meta["llm_recommendation"] = parsed.get("recommendation")
+
+        # Persons enrichment
+        persons = parsed.get("persons") or []
+        if persons:
+            person_data = persons[0] or {}
+            confidence = person_data.get("confidence", 0.0) or 0.0
+            evidence = ", ".join(person_data.get("evidence", [])) if person_data.get("evidence") else None
+
+            suggestions_added += int(
+                self._upsert_suggestion(
+                    suggestions,
+                    field="email",
+                    value=person_data.get("email"),
+                    confidence=confidence,
+                    source="llm",
+                    evidence=evidence,
+                )
+            )
+            suggestions_added += int(
+                self._upsert_suggestion(
+                    suggestions,
+                    field="first_name",
+                    value=person_data.get("first_name"),
+                    confidence=confidence,
+                    source="llm",
+                    evidence=evidence,
+                )
+            )
+            suggestions_added += int(
+                self._upsert_suggestion(
+                    suggestions,
+                    field="last_name",
+                    value=person_data.get("last_name"),
+                    confidence=confidence,
+                    source="llm",
+                    evidence=evidence,
+                )
+            )
+            suggestions_added += int(
+                self._upsert_suggestion(
+                    suggestions,
+                    field="job_title",
+                    value=person_data.get("job_title"),
+                    confidence=confidence,
+                    source="llm",
+                    evidence=evidence,
+                )
+            )
+            suggestions_added += int(
+                self._upsert_suggestion(
+                    suggestions,
+                    field="phone",
+                    value=person_data.get("phone"),
+                    confidence=confidence,
+                    source="llm",
+                    evidence=evidence,
+                )
+            )
+
+        # Organisation enrichment
+        organisations = parsed.get("organisations") or []
+        if organisations:
+            organisation_data = organisations[0] or {}
+            org_confidence = organisation_data.get("confidence", 0.0) or 0.0
+            org_evidence = ", ".join(organisation_data.get("evidence", [])) if organisation_data.get("evidence") else None
+
+            target_fields = (
+                {
+                    "company_name": organisation_data.get("name"),
+                    "company_website": organisation_data.get("website_guess"),
+                }
+                if entity_type == "person"
+                else {
+                    "name": organisation_data.get("name"),
+                    "website": organisation_data.get("website_guess"),
+                }
+            )
+
+            if entity_type != "person":
+                target_fields.update({
+                    "domain": organisation_data.get("domain"),
+                    "phone": organisation_data.get("phone"),
+                    "city": organisation_data.get("city"),
+                    "country": organisation_data.get("country"),
+                    "address": organisation_data.get("address"),
+                })
+
+            for field, value in target_fields.items():
+                suggestions_added += int(
+                    self._upsert_suggestion(
+                        suggestions,
+                        field=field,
+                        value=value,
+                        confidence=org_confidence,
+                        source="llm",
+                        evidence=org_evidence,
+                    )
+                )
+
+        # Interaction suggestion → tâche
+        interaction = parsed.get("interaction_suggestion") or {}
+        if interaction.get("title"):
+            tasks.append(
+                {
+                    "title": interaction.get("title"),
+                    "description": interaction.get("summary"),
+                    "priority": "medium",
+                    "due_date": interaction.get("occurred_at"),
+                    "metadata": {
+                        "type": interaction.get("type"),
+                        "channel": interaction.get("channel"),
+                        "participants": interaction.get("participants"),
+                        "source": "llm",
+                    },
+                }
+            )
+
+        return {
+            "suggestions_added": suggestions_added,
+            "tasks": tasks,
+            "warnings": warnings,
+            "meta": additional_meta,
+        }
+
+    def _parse_llm_content(self, content: str) -> Optional[Dict[str, Any]]:
+        """Tente de parser la sortie brute du LLM en JSON."""
+        if not content:
+            return None
+
+        candidate = content.strip()
+
+        if candidate.startswith("```"):
+            candidate = candidate.strip("`").strip()
+            if candidate.startswith("json"):
+                candidate = candidate[4:]
+            candidate = candidate.strip()
+
+        try:
+            return json.loads(candidate)
+        except json.JSONDecodeError:
+            start = candidate.find("{")
+            end = candidate.rfind("}")
+            if start != -1 and end != -1 and end > start:
+                snippet = candidate[start : end + 1]
+                try:
+                    return json.loads(snippet)
+                except json.JSONDecodeError:
+                    return None
+        return None
+
+    def _upsert_suggestion(
+        self,
+        suggestions: Dict[str, Dict],
+        *,
+        field: str,
+        value: Any,
+        confidence: Any,
+        source: str,
+        evidence: Optional[str] = None,
+    ) -> bool:
+        """Insère une suggestion si elle est plus pertinente que l'existante."""
+        if value in (None, ""):
+            return False
+
+        try:
+            confidence_value = float(confidence or 0.0)
+        except (TypeError, ValueError):
+            confidence_value = 0.0
+
+        existing = suggestions.get(field)
+        existing_confidence = float(existing.get("confidence", 0.0)) if existing else 0.0
+
+        if existing and existing_confidence >= confidence_value:
+            return False
+
+        suggestions[field] = {
+            "field": field,
+            "value": value,
+            "confidence": round(confidence_value, 3),
+            "source": source,
+            "evidence": evidence,
+        }
+        suggestions[field]["auto_apply"] = confidence_value >= self.confidence_threshold
+
+        return True
+
+    # ==========================================
     # Helpers
     # ==========================================
 
@@ -591,6 +965,11 @@ class AutofillServiceV2:
         execution_time_ms: Optional[int],
     ) -> None:
         """Enregistre chaque suggestion dans autofill_logs pour audit/metrics."""
+        # TODO: Migrer vers AutofillDecisionLog pour le nouveau système
+        # Pour l'instant, désactivé car AutofillLog n'existe plus
+        return
+
+        # Code désactivé temporairement
         if not user_id:
             return
 

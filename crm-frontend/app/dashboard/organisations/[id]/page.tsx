@@ -105,7 +105,7 @@ export default function OrganisationDetailPage() {
         title: `Organisation ${newStatus ? 'réactivée' : 'désactivée'} avec succès`,
       })
       setConfirmDialog({ isOpen: false, type: 'deactivate' })
-    } catch (err) {
+    } catch (_error) {
       showToast({
         type: 'error',
         title: `Erreur lors de ${newStatus ? 'la réactivation' : 'la désactivation'}`,
@@ -144,7 +144,7 @@ export default function OrganisationDetailPage() {
       setTimeout(() => {
         router.push('/dashboard/organisations')
       }, 500)
-    } catch (err) {
+    } catch (_error) {
       showToast({
         type: 'error',
         title: 'Erreur lors de la suppression',
@@ -184,51 +184,6 @@ export default function OrganisationDetailPage() {
     const lang = LANGUAGE_OPTIONS.find((option) => option.code === code)
     return lang ? `${lang.flag} ${lang.name}` : code
   }
-
-  const mandatColumns = [
-    {
-      header: 'N° Mandat',
-      accessor: 'numero_mandat',
-      render: (value: string | null) => value || '-',
-    },
-    {
-      header: 'Statut',
-      accessor: 'status',
-      render: (value: string) => (
-        <span
-          className={`px-2 py-1 text-xs rounded ${
-            value === 'ACTIF' || value === 'SIGNE'
-              ? 'bg-green-100 text-green-800'
-              : value === 'EXPIRE' || value === 'RESILIE'
-                ? 'bg-red-100 text-red-800'
-                : 'bg-yellow-100 text-yellow-800'
-          }`}
-        >
-          {STATUS_LABELS[value] || value}
-        </span>
-      ),
-    },
-    {
-      header: 'Date début',
-      accessor: 'date_debut',
-      render: (value: string) => new Date(value).toLocaleDateString('fr-FR'),
-    },
-    {
-      header: 'Date fin',
-      accessor: 'date_fin',
-      render: (value: string | null) =>
-        value ? new Date(value).toLocaleDateString('fr-FR') : 'Indéterminée',
-    },
-    {
-      header: 'Actions',
-      accessor: 'id',
-      render: (id: number) => (
-        <Link href={`/dashboard/mandats/${id}`} className="text-bleu hover:underline text-sm">
-          Voir
-        </Link>
-      ),
-    },
-  ]
 
   return (
     <div className="space-y-6">

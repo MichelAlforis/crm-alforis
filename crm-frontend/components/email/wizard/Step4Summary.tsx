@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Check, Mail, Users, Settings, TrendingUp, AlertCircle } from 'lucide-react'
+import { Mail, Users, Settings, TrendingUp } from 'lucide-react'
 import { Alert } from '@/components/shared/Alert'
 import { apiClient } from '@/lib/api'
 import { RecipientFilters } from '../RecipientSelectorTable'

@@ -1,9 +1,9 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Mail, Eye, MousePointerClick, Ban, Clock, Calendar, User, Filter, Search, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowLeft, Eye, MousePointerClick, Ban, Calendar, User, Filter, Search, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Card, CardHeader, CardBody } from '@/components/shared/Card'
 import { Button } from '@/components/shared/Button'
 import { Alert } from '@/components/shared/Alert'
@@ -62,7 +62,6 @@ const getStatusBadge = (status: string) => {
 
 export default function SendStatsPage() {
   const params = useParams<{ id: string; sendId: string }>()
-  const router = useRouter()
   const campaignId = params?.id ? parseInt(params.id, 10) : 0
   const sendId = params?.sendId ? parseInt(params.sendId, 10) : 0
   const { showToast } = useToast()

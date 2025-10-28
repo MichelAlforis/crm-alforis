@@ -95,7 +95,7 @@ export default function NewCampaignPage() {
 
       logger.log('📤 Création campagne avec produit:', payload)
 
-      const response = await apiClient.post<CampaignResponse>('/email/campaigns', payload)
+      await apiClient.post<CampaignResponse>('/email/campaigns', payload)
 
       showToast({
         type: 'success',

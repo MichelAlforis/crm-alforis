@@ -2,7 +2,6 @@
 import { logger } from '@/lib/logger'
 
 import React, { useState, useEffect } from 'react'
-import Link from 'next/link'
 import { Plus, Edit, Trash2, List, Users, Calendar } from 'lucide-react'
 import { Card, CardHeader, CardBody, Button } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
@@ -31,7 +30,7 @@ export default function MailingListsPage() {
   const { showToast } = useToast()
   const { confirm, ConfirmDialogComponent } = useConfirm()
   const [lists, setLists] = useState<MailingList[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [_isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingList, setEditingList] = useState<MailingList | null>(null)
   const [formData, setFormData] = useState({

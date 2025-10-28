@@ -2,16 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import {
-  ArrowLeft,
-  CreditCard,
-  Users,
-  UserPlus,
-  Download,
-  Shield,
-  CheckCircle2,
-} from 'lucide-react'
-import { useAuth } from '@/hooks/useAuth'
+import { ArrowLeft, CreditCard, Users, UserPlus } from 'lucide-react'
 import { useToast } from '@/components/ui/Toast'
 import {
   useBillingSummary,
@@ -19,7 +10,6 @@ import {
 } from '@/hooks/useSettingsData'
 
 export default function TeamSettingsPage() {
-  const { user } = useAuth()
   const { showToast } = useToast()
   const billingSummary = useBillingSummary()
   const { members: teamMembers, pendingInvites } = useTeamOverview()

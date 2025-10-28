@@ -176,7 +176,7 @@ interface TaskFilters {
 }
 
 export default function TaskdeskPage() {
-  const { overdue, today, next7, overdueCount, todayCount, next7Count, stats } = useTaskViews()
+  const { overdue, today, next7, overdueCount, todayCount, stats } = useTaskViews()
   const { quickAction } = useTasks()
   const [isFormOpen, setIsFormOpen] = useState(false)
 

@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { FileText, Plus, Edit, Trash2, Eye, Download } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -13,7 +12,6 @@ import { TemplatePreviewModal } from '@/components/email/TemplatePreviewModal'
 import { TemplateEditModal } from '@/components/email/TemplateEditModal'
 
 export default function TemplatesPage() {
-  const router = useRouter()
   const {
     templates,
     isLoading: loading,
@@ -214,7 +212,7 @@ export default function TemplatesPage() {
       <TemplateCreateModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        onSuccess={(templateId) => {
+        onSuccess={(_templateId) => {
           setIsCreateModalOpen(false)
         }}
       />

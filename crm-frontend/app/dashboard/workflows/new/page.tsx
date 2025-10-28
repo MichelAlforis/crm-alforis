@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import {
@@ -12,7 +12,6 @@ import {
   AlertCircle,
   Wand2,
   Code,
-  Eye,
 } from 'lucide-react'
 import { HelpTooltip } from '@/components/help/HelpTooltip'
 
@@ -105,10 +104,10 @@ export default function NewWorkflowPage() {
   const [description, setDescription] = useState('')
   const [triggerType, setTriggerType] = useState('manual')
   const [triggerConfig, setTriggerConfig] = useState('{}')
-  const [conditions, setConditions] = useState('')
   const [actionsJson, setActionsJson] = useState('[]')
 
   // Données du builder visuel
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [builderData, setBuilderData] = useState<{ nodes: any[]; edges: any[] }>({
     nodes: [],
     edges: [],
@@ -131,19 +130,12 @@ export default function NewWorkflowPage() {
       if (triggerConfig.trim() && triggerConfig !== '{}') {
         try {
           parsedTriggerConfig = JSON.parse(triggerConfig)
-        } catch (err) {
+        } catch {
           throw new Error('Configuration trigger invalide (JSON mal formé)')
         }
       }
 
-      let parsedConditions = null
-      if (conditions.trim()) {
-        try {
-          parsedConditions = JSON.parse(conditions)
-        } catch (err) {
-          throw new Error('Conditions invalides (JSON mal formé)')
-        }
-      }
+      const parsedConditions = null
 
       let parsedActions = []
 
@@ -166,7 +158,7 @@ export default function NewWorkflowPage() {
           if (!Array.isArray(parsedActions)) {
             throw new Error('Actions doit être un tableau')
           }
-        } catch (err) {
+        } catch {
           throw new Error('Actions invalides (JSON mal formé)')
         }
       }

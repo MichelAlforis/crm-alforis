@@ -69,30 +69,30 @@ export function KPICardWidget({
 
   if (isLoading) {
     return (
-      <Card className="h-full animate-pulse">
-        <div className="p-6 space-y-3">
-          <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-          <div className="h-10 bg-gray-300 rounded w-1/2"></div>
-          <div className="h-3 bg-gray-200 rounded w-1/3"></div>
+      <Card padding="none" className="h-full animate-pulse">
+        <div className="flex flex-col gap-fluid-2 p-fluid-4 @md:p-fluid-5">
+          <div className="h-4 w-2/3 rounded bg-gray-200" />
+          <div className="h-10 w-1/2 rounded bg-gray-300" />
+          <div className="h-3 w-1/3 rounded bg-gray-200" />
         </div>
       </Card>
     )
   }
 
   return (
-    <Card className="h-full hover:shadow-lg transition-shadow">
-      <div className="p-6 space-y-3">
-        <div className="flex items-start justify-between">
-          <p className="text-sm font-medium text-gray-600">{title}</p>
+    <Card padding="none" className="h-full transition-shadow hover:shadow-lg">
+      <div className="flex h-full flex-col gap-fluid-2 p-fluid-4 @md:p-fluid-5">
+        <div className="flex items-start justify-between gap-fluid-2">
+          <p className="text-fluid-sm font-medium text-gray-600">{title}</p>
           {getTrendIcon()}
         </div>
 
-        <div className={`text-4xl font-bold ${colorMap[color]}`}>
+        <div className={`text-fluid-3xl font-bold leading-tight ${colorMap[color]}`}>
           {formatValue(value)}
         </div>
 
         {changePercent !== undefined && (
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex items-center gap-fluid-2 text-fluid-sm">
             <span className={`font-medium ${getTrendColor()}`}>
               {changePercent > 0 ? '+' : ''}{changePercent.toFixed(1)}%
             </span>
@@ -101,7 +101,7 @@ export function KPICardWidget({
         )}
 
         {previousValue !== undefined && changePercent === undefined && (
-          <div className="text-sm text-gray-500">
+          <div className="text-fluid-sm text-gray-500">
             Précédent: {formatValue(previousValue)}
           </div>
         )}

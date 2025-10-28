@@ -145,7 +145,8 @@ export default function Sidebar() {
       {/* Sidebar */}
       <aside
         className={clsx(
-          'fixed lg:sticky top-0 z-40 h-screen',
+          'fixed lg:sticky top-0 z-40',
+          'h-screen', // Garde toujours la hauteur de l'écran
           'bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900',
           'border-r border-white/10',
           'transition-all duration-300 ease-in-out',

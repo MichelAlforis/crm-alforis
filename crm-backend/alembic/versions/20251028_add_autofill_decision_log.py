@@ -1,7 +1,7 @@
 """Add autofill_decision_logs table for traceability
 
-Revision ID: 20251028_add_autofill_decision_log
-Revises: 20251028_add_known_companies
+Revision ID: autofill_decision_v1
+Revises: 20251028_add_trial
 Create Date: 2025-10-28
 
 """
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '20251028_add_autofill_decision_log'
-down_revision = '20251028_add_known_companies'
+revision = 'autofill_decision_v1'
+down_revision = '20251028_add_trial'
 branch_labels = None
 depends_on = None
 

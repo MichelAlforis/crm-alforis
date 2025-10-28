@@ -88,7 +88,7 @@ export default function EmailCampaignDetailPage() {
   const [currentPreviewIndex, setCurrentPreviewIndex] = useState(0);
   const [totalPreviews, setTotalPreviews] = useState(0);
   const [previewPage, setPreviewPage] = useState(1);
-  const [loadingPreviews, setLoadingPreviews] = useState(false);
+  const [_loadingPreviews, setLoadingPreviews] = useState(false);
 
   useEffect(() => {
     fetchCampaign();

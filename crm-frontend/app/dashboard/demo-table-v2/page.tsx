@@ -105,7 +105,7 @@ export default function DemoTableV2Page() {
       sticky: 'left', // ✨ Sticky column on the left
       priority: 'high', // 📱 Always visible on mobile
       minWidth: '200px',
-      render: (value: string, row: DemoContact) => (
+      render: (value: string) => (
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
             {value.charAt(0)}

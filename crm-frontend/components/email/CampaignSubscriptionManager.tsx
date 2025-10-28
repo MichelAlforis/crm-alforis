@@ -37,12 +37,13 @@ export function CampaignSubscriptionManager({
   const [selectedCampaignId, setSelectedCampaignId] = useState<number | null>(null)
 
   // Récupérer les abonnements
+  const personSubscriptions = usePersonSubscriptions(entityType === 'person' ? entityId : 0)
+  const organisationSubscriptions = useOrganisationSubscriptions(entityType === 'organisation' ? entityId : 0)
+
   const {
     subscriptions,
     isLoading: isLoadingSubscriptions,
-  } = entityType === 'person'
-    ? usePersonSubscriptions(entityId)
-    : useOrganisationSubscriptions(entityId)
+  } = entityType === 'person' ? personSubscriptions : organisationSubscriptions
 
   // Récupérer la liste des campagnes disponibles
   const { data: campaigns = [], isLoading: isLoadingCampaigns } = useQuery<Campaign[]>({

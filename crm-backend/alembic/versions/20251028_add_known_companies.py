@@ -1,6 +1,6 @@
 """Add known_companies table for autofill
 
-Revision ID: known_companies_v1
+Revision ID: 20251028_add_known_companies
 Revises: autofill_logs_v1
 Create Date: 2025-10-28 08:00:00
 
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 from sqlalchemy import text
 
 # revision identifiers, used by Alembic.
-revision: str = 'known_companies_v1'
+revision: str = '20251028_add_known_companies'
 down_revision: Union[str, None] = 'autofill_logs_v1'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None

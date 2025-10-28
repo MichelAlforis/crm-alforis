@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import clsx from 'clsx'
 import {
   ArrowLeft,
   BarChart3,

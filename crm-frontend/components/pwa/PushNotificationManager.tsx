@@ -13,7 +13,7 @@
  */
 
 import React from 'react'
-import { Bell, BellOff } from 'lucide-react'
+import { Bell } from 'lucide-react'
 import { usePushNotifications } from '@/hooks/usePushNotifications'
 
 export function PushNotificationManager() {

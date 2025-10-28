@@ -3,7 +3,7 @@
 
 'use client'
 
-import React, { useEffect, useCallback, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Input, Button, Alert, Select, EntityAutocompleteInput } from '@/components/shared'
 import { MandatDistribution, MandatDistributionCreate, MandatStatus, Organisation } from '@/lib/types'

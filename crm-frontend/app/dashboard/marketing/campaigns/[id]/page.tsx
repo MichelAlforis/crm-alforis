@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Mail, Eye, MousePointerClick, Ban, Send, Edit, Trash2, Plus, Clock, ChevronLeft, ChevronRight, TrendingUp } from 'lucide-react'
+import { ArrowLeft, Mail, Eye, MousePointerClick, Ban, Edit, Trash2, Plus, Clock, ChevronLeft, ChevronRight, TrendingUp } from 'lucide-react'
 import { Card, Alert, Button } from '@/components/shared'
 import { useEmailCampaign, useEmailCampaignStats } from '@/hooks/useEmailAutomation'
 import { useToast } from '@/components/ui/Toast'
@@ -50,7 +50,7 @@ export default function CampaignDetailPage() {
   const router = useRouter()
   const campaignId = params?.id ? parseInt(params.id, 10) : 0
 
-  const { data: campaign, isLoading, error, refetch } = useEmailCampaign(campaignId)
+  const { data: campaign, isLoading, error, refetch: _refetch } = useEmailCampaign(campaignId)
   const { data: stats } = useEmailCampaignStats(campaignId)
   const { showToast } = useToast()
   const { confirm, ConfirmDialogComponent } = useConfirm()

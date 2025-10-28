@@ -13,7 +13,7 @@ interface ArticleRatingProps {
   articleTitle?: string
 }
 
-export function ArticleRating({ articleId, articleTitle }: ArticleRatingProps) {
+export function ArticleRating({ articleId }: ArticleRatingProps) {
   const [hasRated, setHasRated] = useState(false)
   const [showFeedback, setShowFeedback] = useState(false)
   const [rating, setRating] = useState<'positive' | 'negative' | null>(null)
@@ -36,7 +36,7 @@ export function ArticleRating({ articleId, articleTitle }: ArticleRatingProps) {
           title: 'Merci !',
           message: 'Votre avis nous aide à améliorer la documentation.',
         })
-      } catch (error) {
+      } catch (_error) {
         showToast({
           type: 'error',
           title: 'Erreur',
@@ -62,7 +62,7 @@ export function ArticleRating({ articleId, articleTitle }: ArticleRatingProps) {
         title: 'Merci pour votre retour !',
         message: 'Nous allons améliorer cet article.',
       })
-    } catch (error) {
+    } catch (_error) {
       showToast({
         type: 'error',
         title: 'Erreur',

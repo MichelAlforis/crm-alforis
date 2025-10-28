@@ -24,6 +24,7 @@ import {
 import Link from 'next/link'
 import { ActivityWidget } from '@/components/dashboard/widgets/ActivityWidget'
 import { DashboardInteractionsWidget } from '@/components/interactions/DashboardInteractionsWidget'
+import { logger } from '@/lib/logger'
 
 type DashboardView = 'executive' | 'commercial' | 'manager' | 'custom'
 
@@ -57,7 +58,7 @@ export default function DashboardV2Page() {
       const result = await response.json()
       setKpiData(result)
     } catch (err) {
-      console.error('Error fetching KPIs:', err)
+      logger.error('Error fetching KPIs:', err)
     } finally {
       setIsLoadingKPIs(false)
     }
@@ -90,235 +91,255 @@ export default function DashboardV2Page() {
   const renderExecutiveView = () => (
     <>
       {/* Hero Section */}
-      <div className="mb-4 md:mb-6">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-ardoise flex items-center gap-2">
-              <Sparkles className="h-6 w-6 md:h-8 md:w-8 text-purple-500" />
+      <section className="@container flex flex-col gap-fluid-3 pb-fluid-3">
+        <header className="flex flex-col @lg:flex-row @lg:items-center @lg:justify-between gap-fluid-3">
+          <div className="flex flex-col gap-fluid-1">
+            <h1 className="text-fluid-3xl font-bold text-ardoise flex items-center gap-fluid-2">
+              <Sparkles className="h-6 w-6 text-purple-500 @md:h-8 @md:w-8" />
               Dashboard V2 - Executive
             </h1>
-            <p className="text-sm md:text-base text-gray-600 mt-1">
+            <p className="text-fluid-base text-gray-600">
               Vision stratégique de votre activité en temps réel
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+          <div className="flex flex-col @sm:flex-row items-stretch @sm:items-center gap-fluid-2 @lg:gap-fluid-3">
             <select
               value={kpiPeriod}
               onChange={(e) => setKpiPeriod(e.target.value as any)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-bleu min-h-[44px]"
+              className="w-full @sm:w-auto rounded-lg border border-gray-300 bg-white px-fluid-3 py-fluid-2 text-fluid-sm focus:outline-none focus:ring-2 focus:ring-bleu min-h-[44px]"
             >
               <option value="week">7 jours</option>
               <option value="month">30 jours</option>
               <option value="quarter">90 jours</option>
             </select>
-            <Link href="/dashboard/v2/customize" className="w-full sm:w-auto">
-              <Button variant="ghost" size="sm" className="w-full sm:w-auto min-h-[44px]">
-                <Settings className="h-4 w-4 mr-2" />
-                <span className="sm:inline">Personnaliser</span>
+            <Link href="/dashboard/v2/customize" className="w-full @sm:w-auto">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full @sm:w-auto min-h-[44px] justify-center gap-2 px-fluid-3 py-fluid-2 text-fluid-sm"
+              >
+                <Settings className="h-4 w-4" />
+                <span className="@sm:inline">Personnaliser</span>
               </Button>
             </Link>
           </div>
-        </div>
+        </header>
 
         <Alert
           type="info"
           message="🚀 Nouveau! Dashboard V2 avec analytics avancées et insights IA. Personnalisez votre vue selon vos besoins."
         />
-      </div>
+      </section>
 
       {/* KPI Cards Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 md:mb-6">
-        <KPICardWidget
-          title="Organisations"
-          value={kpiData?.organisations?.value || 0}
-          previousValue={kpiData?.organisations?.previous_value}
-          changePercent={kpiData?.organisations?.change_percent}
-          trend={kpiData?.organisations?.trend}
-          color="blue"
-          isLoading={isLoadingKPIs}
-        />
-        <KPICardWidget
-          title="Contacts"
-          value={kpiData?.contacts?.value || 0}
-          previousValue={kpiData?.contacts?.previous_value}
-          changePercent={kpiData?.contacts?.change_percent}
-          trend={kpiData?.contacts?.trend}
-          color="purple"
-          isLoading={isLoadingKPIs}
-        />
-        <KPICardWidget
-          title="Tâches"
-          value={kpiData?.tasks?.value || 0}
-          previousValue={kpiData?.tasks?.previous_value}
-          changePercent={kpiData?.tasks?.change_percent}
-          trend={kpiData?.tasks?.trend}
-          color="orange"
-          isLoading={isLoadingKPIs}
-        />
-        <KPICardWidget
-          title="Interactions"
-          value={kpiData?.interactions?.value || 0}
-          previousValue={kpiData?.interactions?.previous_value}
-          changePercent={kpiData?.interactions?.change_percent}
-          trend={kpiData?.interactions?.trend}
-          color="green"
-          isLoading={isLoadingKPIs}
-        />
-      </div>
+      <section className="@container pb-fluid-4">
+        <div className="grid grid-cols-1 gap-fluid-3 @sm:grid-cols-2 @xl:grid-cols-4">
+          <KPICardWidget
+            title="Organisations"
+            value={kpiData?.organisations?.value || 0}
+            previousValue={kpiData?.organisations?.previous_value}
+            changePercent={kpiData?.organisations?.change_percent}
+            trend={kpiData?.organisations?.trend}
+            color="blue"
+            isLoading={isLoadingKPIs}
+          />
+          <KPICardWidget
+            title="Contacts"
+            value={kpiData?.contacts?.value || 0}
+            previousValue={kpiData?.contacts?.previous_value}
+            changePercent={kpiData?.contacts?.change_percent}
+            trend={kpiData?.contacts?.trend}
+            color="purple"
+            isLoading={isLoadingKPIs}
+          />
+          <KPICardWidget
+            title="Tâches"
+            value={kpiData?.tasks?.value || 0}
+            previousValue={kpiData?.tasks?.previous_value}
+            changePercent={kpiData?.tasks?.change_percent}
+            trend={kpiData?.tasks?.trend}
+            color="orange"
+            isLoading={isLoadingKPIs}
+          />
+          <KPICardWidget
+            title="Interactions"
+            value={kpiData?.interactions?.value || 0}
+            previousValue={kpiData?.interactions?.previous_value}
+            changePercent={kpiData?.interactions?.change_percent}
+            trend={kpiData?.interactions?.trend}
+            color="green"
+            isLoading={isLoadingKPIs}
+          />
+        </div>
+      </section>
 
       {/* AI Insights - Full width */}
-      <div className="mb-6">
+      <section className="@container pb-fluid-4">
         <AIInsightsWidget limit={5} />
-      </div>
+      </section>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <RevenueChartWidget
-          title="Évolution du revenu"
-          period="30days"
-          chartType="area"
-        />
-        <TopClientsWidget
-          title="Top Clients"
-          limit={10}
-          sortBy="health_score"
-        />
-      </div>
+      <section className="@container pb-fluid-4">
+        <div className="grid grid-cols-1 gap-fluid-4 @lg:grid-cols-2">
+          <RevenueChartWidget
+            title="Évolution du revenu"
+            period="30days"
+            chartType="area"
+          />
+          <TopClientsWidget
+            title="Top Clients"
+            limit={10}
+            sortBy="health_score"
+          />
+        </div>
+      </section>
 
       {/* Analytics Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <EmailPerformanceWidget period="30days" />
-        <div className="lg:col-span-2">
-          <ActivityWidget limit={10} />
+      <section className="@container pb-fluid-4">
+        <div className="grid grid-cols-1 gap-fluid-4 @lg:grid-cols-3">
+          <EmailPerformanceWidget period="30days" />
+          <div className="@lg:col-span-2">
+            <ActivityWidget limit={10} />
+          </div>
         </div>
-      </div>
+      </section>
     </>
   )
 
   const renderCommercialView = () => (
     <>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-ardoise flex items-center gap-2">
-          <Briefcase className="h-8 w-8 text-bleu" />
+      <section className="@container flex flex-col gap-fluid-2 pb-fluid-4">
+        <h1 className="text-fluid-3xl font-bold text-ardoise flex items-center gap-fluid-2">
+          <Briefcase className="h-7 w-7 text-bleu @md:h-8 @md:w-8" />
           Dashboard V2 - Commercial
         </h1>
-        <p className="text-gray-600 mt-1">
+        <p className="text-fluid-base text-gray-600">
           Optimisez votre pipeline et vos actions commerciales
         </p>
-      </div>
+      </section>
 
       {/* Quick KPIs */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 md:mb-6">
-        <KPICardWidget
-          title="Pipeline"
-          value="0"
-          color="blue"
-          format="currency"
-          isLoading={isLoadingKPIs}
-        />
-        <KPICardWidget
-          title="Tâches du jour"
-          value={kpiData?.tasks?.value || 0}
-          color="orange"
-          isLoading={isLoadingKPIs}
-        />
-        <KPICardWidget
-          title="Interactions cette semaine"
-          value={kpiData?.interactions?.value || 0}
-          color="green"
-          isLoading={isLoadingKPIs}
-        />
-      </div>
+      <section className="@container pb-fluid-4">
+        <div className="grid grid-cols-1 gap-fluid-3 @sm:grid-cols-2 @xl:grid-cols-3">
+          <KPICardWidget
+            title="Pipeline"
+            value="0"
+            color="blue"
+            format="currency"
+            isLoading={isLoadingKPIs}
+          />
+          <KPICardWidget
+            title="Tâches du jour"
+            value={kpiData?.tasks?.value || 0}
+            color="orange"
+            isLoading={isLoadingKPIs}
+          />
+          <KPICardWidget
+            title="Interactions cette semaine"
+            value={kpiData?.interactions?.value || 0}
+            color="green"
+            isLoading={isLoadingKPIs}
+          />
+        </div>
+      </section>
 
       {/* Commercial specific widgets */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <TopClientsWidget
-          title="Leads prioritaires"
-          limit={10}
-          sortBy="health_score"
-        />
-        <DashboardInteractionsWidget limit={10} />
-      </div>
+      <section className="@container pb-fluid-4">
+        <div className="grid grid-cols-1 gap-fluid-4 @lg:grid-cols-2">
+          <TopClientsWidget
+            title="Leads prioritaires"
+            limit={10}
+            sortBy="health_score"
+          />
+          <DashboardInteractionsWidget limit={10} />
+        </div>
+      </section>
 
-      <div className="mb-6">
+      <section className="@container pb-fluid-4">
         <ActivityWidget limit={15} />
-      </div>
+      </section>
     </>
   )
 
   const renderManagerView = () => (
     <>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-ardoise flex items-center gap-2">
-          <Users className="h-8 w-8 text-vert" />
+      <section className="@container flex flex-col gap-fluid-2 pb-fluid-4">
+        <h1 className="text-fluid-3xl font-bold text-ardoise flex items-center gap-fluid-2">
+          <Users className="h-7 w-7 text-vert @md:h-8 @md:w-8" />
           Dashboard V2 - Manager
         </h1>
-        <p className="text-gray-600 mt-1">
+        <p className="text-fluid-base text-gray-600">
           Pilotez la performance de votre équipe
         </p>
-      </div>
+      </section>
 
       {/* Team KPIs */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 md:mb-6">
-        <KPICardWidget
-          title="Organisations"
-          value={kpiData?.organisations?.value || 0}
-          changePercent={kpiData?.organisations?.change_percent}
-          trend={kpiData?.organisations?.trend}
-          color="blue"
-          isLoading={isLoadingKPIs}
-        />
-        <KPICardWidget
-          title="Tâches actives"
-          value={kpiData?.tasks?.value || 0}
-          changePercent={kpiData?.tasks?.change_percent}
-          trend={kpiData?.tasks?.trend}
-          color="orange"
-          isLoading={isLoadingKPIs}
-        />
-        <KPICardWidget
-          title="Taux de conversion"
-          value="0"
-          format="percent"
-          color="green"
-          isLoading={isLoadingKPIs}
-        />
-        <KPICardWidget
-          title="Objectif mensuel"
-          value="0"
-          format="currency"
-          color="purple"
-          isLoading={isLoadingKPIs}
-        />
-      </div>
+      <section className="@container pb-fluid-4">
+        <div className="grid grid-cols-1 gap-fluid-3 @sm:grid-cols-2 @xl:grid-cols-4">
+          <KPICardWidget
+            title="Organisations"
+            value={kpiData?.organisations?.value || 0}
+            changePercent={kpiData?.organisations?.change_percent}
+            trend={kpiData?.organisations?.trend}
+            color="blue"
+            isLoading={isLoadingKPIs}
+          />
+          <KPICardWidget
+            title="Tâches actives"
+            value={kpiData?.tasks?.value || 0}
+            changePercent={kpiData?.tasks?.change_percent}
+            trend={kpiData?.tasks?.trend}
+            color="orange"
+            isLoading={isLoadingKPIs}
+          />
+          <KPICardWidget
+            title="Taux de conversion"
+            value="0"
+            format="percent"
+            color="green"
+            isLoading={isLoadingKPIs}
+          />
+          <KPICardWidget
+            title="Objectif mensuel"
+            value="0"
+            format="currency"
+            color="purple"
+            isLoading={isLoadingKPIs}
+          />
+        </div>
+      </section>
 
       {/* Manager analytics */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <RevenueChartWidget
-          title="Performance équipe"
-          period="90days"
-          chartType="bar"
-        />
-        <AIInsightsWidget limit={5} />
-      </div>
+      <section className="@container pb-fluid-4">
+        <div className="grid grid-cols-1 gap-fluid-4 @lg:grid-cols-2">
+          <RevenueChartWidget
+            title="Performance équipe"
+            period="90days"
+            chartType="bar"
+          />
+          <AIInsightsWidget limit={5} />
+        </div>
+      </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <EmailPerformanceWidget period="30days" />
-        <TopClientsWidget limit={10} sortBy="revenue" />
-      </div>
+      <section className="@container pb-fluid-4">
+        <div className="grid grid-cols-1 gap-fluid-4 @lg:grid-cols-2">
+          <EmailPerformanceWidget period="30days" />
+          <TopClientsWidget limit={10} sortBy="revenue" />
+        </div>
+      </section>
     </>
   )
 
   return (
-    <div className="space-y-4 md:space-y-6">
+    <div className="@container flex flex-col gap-fluid-4 @md:gap-fluid-5 @xl:gap-fluid-6 pt-fluid-2 pb-[max(2rem,env(safe-area-inset-bottom))]">
       {/* View Selector */}
-      <Card className="p-3 md:p-4">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex items-center gap-2">
+      <Card padding="none" className="@container p-fluid-3 @md:p-fluid-4">
+        <div className="flex flex-col @sm:flex-row @sm:items-center @sm:justify-between gap-fluid-3">
+          <div className="flex items-center gap-fluid-2 text-fluid-base text-gray-700">
             <LayoutIcon className="h-5 w-5 text-gray-600" />
-            <span className="font-medium text-gray-700">Vue:</span>
+            <span className="font-medium">Vue:</span>
           </div>
-          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <div className="grid grid-cols-1 gap-fluid-2 @sm:grid-cols-3 w-full @lg:w-auto">
             {viewConfigs.map((config) => {
               const Icon = config.icon
               const isActive = selectedView === config.id
@@ -326,14 +347,14 @@ export default function DashboardV2Page() {
                 <button
                   key={config.id}
                   onClick={() => setSelectedView(config.id)}
-                  className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center justify-center gap-2 min-h-[44px] ${
+                  className={`flex items-center justify-center gap-2 rounded-lg px-fluid-3 py-fluid-2 text-fluid-sm font-medium transition-all min-h-[44px] ${
                     isActive
                       ? 'bg-bleu text-white shadow-md'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                   title={config.description}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="h-4 w-4 flex-shrink-0" />
                   <span className="whitespace-nowrap">{config.label}</span>
                 </button>
               )

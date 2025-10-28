@@ -115,14 +115,22 @@ class Settings(BaseSettings):
     ai_monthly_budget_usd: float = 300.0  # Budget mensuel max
 
     # Autofill LLM routing (Mistral + fallback)
-    llm_primary_provider: str = "mistral"
+    llm_primary_provider: str = "auto"
+    llm_secondary_provider: str = "auto"
+    llm_provider_order: str = "mistral,openai,anthropic,ollama,other"
     llm_primary_model: str = "mistral-large-latest"
     mistral_api_key: str = ""
     mistral_api_base: str = "https://api.mistral.ai"
     llm_fallback_provider: str = "anthropic"
     llm_fallback_model: str = "claude-3-5-sonnet-20241022"
-    llm_request_timeout_ms: int = 600
+    llm_request_timeout_ms: int = 6000
     llm_latency_budget_ms: int = 800
+    llm_max_retries: int = 1
+    llm_circuit_breaker_threshold: int = 3
+    llm_circuit_breaker_cooldown_seconds: int = 600
+    llm_cache_ttl_seconds: int = 60
+    llm_timeout_ms: int = 6000
+    llm_cost_cap_eur: float = 2.0
 
     # AI Rate Limiting
     ai_rate_limit_rpm: int = 10  # Requests per minute

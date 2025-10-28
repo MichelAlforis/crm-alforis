@@ -7,7 +7,7 @@
  */
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import Navbar from '@/components/shared/Navbar'
@@ -65,14 +65,14 @@ export default function DashboardLayout({
     <QueryProvider>
       <SidebarProvider>
         <OnboardingTour>
-          <div className="dashboard-layout flex">
+          <div className="dashboard-layout flex min-h-screen">
             {/* Sidebar Navigation - État partagé via SidebarContext */}
             <Sidebar />
 
             {/* Main Content Area */}
             <div
               className={clsx(
-                'flex flex-col min-h-screen flex-1 transition-all duration-300 ease-in-out',
+                'flex flex-col flex-1 transition-all duration-300 ease-in-out',
                 'w-full lg:w-auto overflow-x-hidden'
               )}
             >
@@ -80,7 +80,7 @@ export default function DashboardLayout({
               <Navbar />
 
               {/* Page Content */}
-              <main className="flex-1 overflow-auto bg-gray-50">
+              <main className="flex-1 bg-gray-50">
                 <div className="dashboard-content animate-fadeIn">
                   {children}
                 </div>

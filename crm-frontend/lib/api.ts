@@ -64,13 +64,19 @@ import {
   EmailSend,
   EmailSendFilters,
 } from './types'
-
+import { logger } from './logger'
 
 import type { ApiError } from './types'
 
-// En production, utiliser un chemin relatif pour éviter les problèmes CORS et mixed content
-// Le reverse proxy Nginx fera le routage vers l'API backend
-const API_BASE_URL = 'http://localhost:8000/api/v1'  // TOUJOURS utiliser l'URL directe en dev
+// En production, on récupère l'URL depuis NEXT_PUBLIC_API_URL (configurée via l'infra)
+// Fallback local en dev pour éviter les problèmes CORS lorsqu'on n'a pas de reverse proxy
+const API_BASE_URL = (() => {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL?.trim()
+  if (envUrl) {
+    return envUrl.replace(/\/$/, '')
+  }
+  return 'http://localhost:8000/api/v1'
+})()
 
 // ============= TYPES INTERNES =============
 
@@ -282,7 +288,7 @@ class ApiClient {
 
       return false
     } catch (error) {
-      console.error('[API] Token refresh failed:', error)
+      logger.error('[API] Token refresh failed:', error)
       return false
     }
   }
@@ -313,16 +319,16 @@ class ApiClient {
 
       // Si 401 (Unauthorized), tenter un refresh automatique
       if (response.status === 401 && !endpoint.includes('/auth/')) {
-        console.log('[API] Token expired, attempting automatic refresh...')
+        logger.info('[API] Token expired, attempting automatic refresh...')
 
         const refreshSuccess = await this.tryRefreshToken()
 
         if (refreshSuccess) {
-          console.log('[API] Token refreshed successfully, retrying request...')
+          logger.info('[API] Token refreshed successfully, retrying request...')
           // Retry la requête avec le nouveau token
           response = await makeRequest()
         } else {
-          console.log('[API] Token refresh failed, clearing token and redirecting to login')
+          logger.warn('[API] Token refresh failed, clearing token and redirecting to login')
           this.clearToken()
           // Rediriger vers la page de login
           if (typeof window !== 'undefined') {
