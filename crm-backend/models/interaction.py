@@ -173,6 +173,20 @@ class Interaction(BaseModel):
     # Participants externes (liste d'objets { name, email, company })
     external_participants = Column(JSON, nullable=False, default=list)
 
+    # ===== Phase 1.5: Email Sync Integration =====
+    # External source tracking (pour idempotence et traçabilité)
+    external_source = Column(String(50), nullable=True, index=True)  # "email_sync", "outlook_api", etc.
+    external_id = Column(String(500), nullable=True, index=True)  # ID from source system
+
+    # Direction de la communication
+    direction = Column(String(20), nullable=True, index=True)  # "in", "out", "internal"
+
+    # Thread ID pour regrouper les conversations email
+    thread_id = Column(String(255), nullable=True, index=True)
+
+    # Date réelle de l'interaction (vs created_at = quand elle a été enregistrée)
+    interaction_date = Column(DateTime(timezone=True), nullable=True, index=True)
+
     # ===== V2: Workflow Inbox =====
     # Status de l'interaction (workflow)
     # Note: Utilise SAEnum avec valeurs string pour éviter binding sur noms Python (TODO→todo)

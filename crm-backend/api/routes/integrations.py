@@ -2187,6 +2187,7 @@ async def sync_all_emails(
     total_synced = 0
     total_duplicates = 0
     total_linked = 0
+    total_interactions_created = 0
     accounts_ok = 0
     errors = []
     account_details = []
@@ -2201,6 +2202,7 @@ async def sync_all_emails(
             "emails_new": 0,
             "emails_duplicates": 0,
             "auto_linked": 0,
+            "interactions_created": 0,
             "error": None,
         }
 
@@ -2320,6 +2322,56 @@ async def sync_all_emails(
                     account_stats["emails_new"] += 1
                     total_synced += 1
 
+                    # ========================================
+                    # PHASE 1.5: Auto-create Interaction
+                    # ========================================
+                    if linked_person_id:
+                        from models.interaction import Interaction
+
+                        # Check if interaction already exists (idempotence)
+                        existing_interaction = db.query(Interaction).filter(
+                            Interaction.external_source == "email_sync",
+                            Interaction.external_id == str(email_msg.id if hasattr(email_msg, 'id') else msg.get("id", "")),
+                        ).first()
+
+                        if not existing_interaction:
+                            # Determine direction
+                            direction = "out" if sender == account.email else "in"
+
+                            # Get person's primary org if available
+                            org_id = None
+                            if linked_person_id:
+                                from models.person import Person
+                                person_obj = db.query(Person).filter(Person.id == linked_person_id).first()
+                                # Person might have organizations via PersonOrganizationLink, but for now set to None
+                                # TODO: Get primary org from PersonOrganizationLink
+
+                            # Create interaction
+                            interaction = Interaction(
+                                type="email",
+                                person_id=linked_person_id,
+                                org_id=org_id,
+                                title=subject[:200] if subject else "(No subject)",
+                                description=email_msg.body_html or email_msg.body_text or "",
+                                created_by=user_id,
+                                external_source="email_sync",
+                                external_id=msg.get("id", ""),
+                                direction=direction,
+                                thread_id=email_msg.thread_id,
+                                interaction_date=email_msg.sent_at,
+                                external_participants={
+                                    "from": sender,
+                                    "to": recipients_to or [],
+                                    "cc": recipients_cc or [],
+                                },
+                                status="done",  # Email already happened, not a todo
+                            )
+
+                            db.add(interaction)
+                            account_stats["interactions_created"] += 1
+                            total_interactions_created += 1
+                            logger.debug(f"   📝 Auto-created interaction for email from {sender}")
+
                 except Exception as e_msg:
                     logger.error(f"   ❌ Erreur traitement message: {e_msg}", exc_info=True)
                     # Continue avec les autres messages
@@ -2328,7 +2380,7 @@ async def sync_all_emails(
             # Commit pour ce compte
             db.commit()
             accounts_ok += 1
-            logger.info(f"   ✅ {account_stats['emails_new']} nouveaux, {account_stats['emails_duplicates']} doublons, {account_stats['auto_linked']} linked")
+            logger.info(f"   ✅ {account_stats['emails_new']} nouveaux, {account_stats['emails_duplicates']} doublons, {account_stats['auto_linked']} linked, {account_stats['interactions_created']} interactions")
 
         except Exception as e:
             db.rollback()
@@ -2345,10 +2397,11 @@ async def sync_all_emails(
     # 4. RÉSULTAT FINAL
     result = {
         "success": True,
-        "message": f"Synchronisation terminée: {total_synced} emails importés",
+        "message": f"Synchronisation terminée: {total_synced} emails importés, {total_interactions_created} interactions créées",
         "total_emails_synced": total_synced,
         "duplicates_skipped": total_duplicates,
         "auto_linked_people": total_linked,
+        "interactions_created": total_interactions_created,
         "accounts_processed": accounts_ok,
         "accounts_total": len(accounts),
         "errors": errors,
@@ -2359,7 +2412,7 @@ async def sync_all_emails(
         },
     }
 
-    logger.info(f"✅ Sync complete: {total_synced} emails, {total_duplicates} duplicates, {total_linked} linked")
+    logger.info(f"✅ Sync complete: {total_synced} emails, {total_duplicates} duplicates, {total_linked} linked, {total_interactions_created} interactions")
     return result
 
 

@@ -58,6 +58,7 @@ const MAX_VISIBLE = 8
 export default function NotificationBell({ className, buttonClassName }: NotificationBellProps) {
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
+  const [showTooltip, setShowTooltip] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const {
@@ -117,23 +118,34 @@ export default function NotificationBell({ className, buttonClassName }: Notific
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
         className={clsx(
-          'relative inline-flex items-center justify-center rounded-xl border border-border bg-foreground px-3 py-2 text-text-secondary transition-all duration-200',
-          'hover:border-primary/40 hover:text-primary hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-          'dark:bg-slate-800/80 dark:text-slate-300 dark:border-slate-700 dark:hover:border-blue-500/50 dark:hover:text-blue-400 dark:hover:bg-slate-700/80',
+          'relative w-10 h-10 flex items-center justify-center rounded-lg text-slate-600 dark:text-slate-300 transition-all duration-200',
+          'hover:bg-white/80 dark:hover:bg-slate-700/80 hover:scale-110 active:scale-95',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
           buttonClassName
         )}
         aria-label="Ouvrir les notifications"
-        title={statusLabel}
       >
         <Bell className={clsx('h-5 w-5', unreadCount > 0 && 'animate-bounce')} aria-hidden />
 
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 inline-flex min-w-[20px] items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-600 px-1.5 py-0.5 text-[10px] font-bold text-white shadow-lg">
+          <span className="absolute -top-1 -right-1 inline-flex min-w-[18px] h-[18px] items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-pink-600 px-1 text-[10px] font-bold text-white shadow-lg shadow-red-500/50 animate-pulse border-2 border-white dark:border-slate-800">
             {unreadCount > 99 ? '99+' : unreadCount}
           </span>
         )}
       </button>
+
+      {/* Tooltip */}
+      {showTooltip && !isOpen && (
+        <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 z-50 animate-in fade-in zoom-in-95 duration-200 pointer-events-none">
+          <div className="bg-slate-900 dark:bg-slate-800 text-white px-3 py-2 rounded-lg shadow-xl text-sm font-medium whitespace-nowrap border border-slate-700/50">
+            {unreadCount > 0 ? `${unreadCount} notification${unreadCount > 1 ? 's' : ''}` : 'Notifications'}
+            <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-2 h-2 bg-slate-900 dark:bg-slate-800 border-l border-t border-slate-700/50 rotate-45" />
+          </div>
+        </div>
+      )}
 
       {isOpen && (
         <div className="absolute right-0 z-50 mt-3 w-80 overflow-hidden rounded-2xl border border-border bg-foreground shadow-2xl ring-1 ring-black/5 dark:bg-slate-800 dark:border-slate-700">

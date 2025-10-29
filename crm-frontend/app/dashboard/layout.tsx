@@ -13,13 +13,13 @@ import { useAuth } from '@/hooks/useAuth'
 import Navbar from '@/components/shared/Navbar'
 import Sidebar from '@/components/shared/Sidebar'
 import Footer from '@/components/shared/Footer'
+import NavigationProgress from '@/components/shared/NavigationProgress'
 import QueryProvider from '@/components/providers/QueryProvider'
 import OfflineIndicator from '@/components/pwa/OfflineIndicator'
 import { BannerManager } from '@/components/pwa/BannerManager'
 import { OnboardingTour } from '@/components/onboarding/OnboardingTour'
 import { SidebarProvider } from '@/contexts/SidebarContext'
 import { Loader2 } from 'lucide-react'
-import clsx from 'clsx'
 
 export default function DashboardLayout({
   children,
@@ -65,28 +65,26 @@ export default function DashboardLayout({
     <QueryProvider>
       <SidebarProvider>
         <OnboardingTour>
-          <div className="dashboard-layout flex min-h-screen">
-            {/* Sidebar Navigation - État partagé via SidebarContext */}
+          {/* Global Navigation Progress Bar */}
+          <NavigationProgress />
+
+          <div className="dashboard-layout flex h-screen overflow-hidden">
+            {/* Sidebar Navigation - Fixed, always visible */}
             <Sidebar />
 
-            {/* Main Content Area */}
-            <div
-              className={clsx(
-                'flex flex-col flex-1 transition-all duration-300 ease-in-out',
-                'w-full lg:w-auto overflow-x-hidden'
-              )}
-            >
-              {/* Top Navbar */}
+            {/* Main Content Area - Scrollable */}
+            <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+              {/* Top Navbar - Fixed at top */}
               <Navbar />
 
-              {/* Page Content */}
-              <main className="flex-1 bg-gray-50">
+              {/* Page Content - Scrollable */}
+              <main className="flex-1 bg-gray-50 overflow-y-auto">
                 <div className="dashboard-content animate-fadeIn">
                   {children}
                 </div>
               </main>
 
-              {/* Footer with Legal Links */}
+              {/* Footer - Scrolls with content */}
               <Footer />
             </div>
 

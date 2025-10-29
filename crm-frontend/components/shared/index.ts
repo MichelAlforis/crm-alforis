@@ -22,6 +22,12 @@ export { ConfirmDialog } from './ConfirmDialog'
 export { default as NotificationBell } from './NotificationBell'
 export { default as ThemeToggle } from './ThemeToggle'
 export { default as PaginationBar } from './PaginationBar'
+
+// DataTable Premium System
+export { DataTable } from './DataTable'
+export type { Column, QuickAction, BulkAction, DataTableProps } from './DataTable/types'
+
+// Types
 export type { SelectOption } from './SearchableSelect'
 export type { EntityOption } from './EntityAutocompleteInput'
 export type { PaginationBarProps } from './PaginationBar'

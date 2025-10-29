@@ -1,24 +1,17 @@
 // app/dashboard/organisations/page.tsx
 // ============= ORGANISATIONS LIST PAGE =============
-// Updated: Pagination with fun design
 
 'use client'
-import { logger } from '@/lib/logger'
 
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Eye, Edit, Trash2, Mail, Phone, Globe, Download, Building } from 'lucide-react'
 import { useOrganisations } from '@/hooks/useOrganisations'
-import { useFilters } from '@/hooks/useFilters'
-import { usePagination } from '@/hooks/usePagination'
-import { Card, Button, Alert, AdvancedFilters, ExportButtons } from '@/components/shared'
-import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
-import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
-import SearchBar from '@/components/search/SearchBar'
+import { Card, Button, Alert } from '@/components/shared'
+import { DataTable, Column, QuickAction, BulkAction } from '@/components/shared/DataTable'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import { OrganisationCategory, Organisation } from '@/lib/types'
-import { Eye, Edit, Trash2, Mail, Phone, Globe } from 'lucide-react'
 
 const CATEGORY_LABELS: Record<string, string> = {
   Institution: 'Institution',
@@ -30,505 +23,296 @@ const CATEGORY_LABELS: Record<string, string> = {
   Autres: 'Autres',
 }
 
-interface OrganisationFilters {
-  category: string
-  status: string
-  country: string
-  language: string
-  createdFrom: string
-  createdTo: string
-}
-
 export default function OrganisationsPage() {
   const router = useRouter()
 
-  // Local state for search and sorting
-  const [searchText, setSearchText] = useState('')
-  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' }>({
-    key: 'name',
-    direction: 'asc',
-  })
-
-  // Use pagination hook
-  const pagination = usePagination({ initialLimit: 20 })
-
-  // Use new useFilters hook for cleaner state management
-  const filters = useFilters<OrganisationFilters>({
-    initialValues: {
-      category: '',
-      status: '',
-      country: '',
-      language: '',
-      createdFrom: '',
-      createdTo: '',
-    },
-  })
-
   const { data, isLoading, error } = useOrganisations({
     skip: 0,
-    limit: 200, // API max limit is 200
-    category: filters.values.category || undefined,
-    is_active:
-      filters.values.status === ''
-        ? undefined
-        : filters.values.status === 'active',
-    country_code: filters.values.country || undefined,
-    language: filters.values.language || undefined,
+    limit: 200,
   })
 
   const getCountryLabel = (code?: string | null) => {
-    if (!code) return '-'
+    if (!code) return null
     const country = COUNTRY_OPTIONS.find((option) => option.code === code)
     return country ? `${country.flag} ${country.name}` : code
   }
 
   const getLanguageLabel = (code?: string | null) => {
-    if (!code) return '-'
+    if (!code) return null
     const lang = LANGUAGE_OPTIONS.find((option) => option.code === code)
     return lang ? `${lang.flag} ${lang.name}` : code
   }
 
-  const exportParams = {
-    category: filters.values.category || undefined,
-    is_active:
-      filters.values.status === ''
-        ? undefined
-        : filters.values.status === 'active',
-    country_code: filters.values.country || undefined,
-    language: filters.values.language || undefined,
-  }
-
-  const advancedFilterDefinitions = [
-    {
-      key: 'category',
-      label: 'Catégorie',
-      type: 'select' as const,
-      options: [
-        { value: '', label: 'Toutes les catégories' },
-        ...Object.keys(CATEGORY_LABELS).map((value) => ({
-          value,
-          label: CATEGORY_LABELS[value],
-        })),
-      ],
-    },
-    {
-      key: 'status',
-      label: 'Statut',
-      type: 'select' as const,
-      options: [
-        { value: '', label: 'Tous les statuts' },
-        { value: 'active', label: 'Actives' },
-        { value: 'inactive', label: 'Inactives' },
-      ],
-    },
-    {
-      key: 'country',
-      label: 'Pays',
-      type: 'select' as const,
-      options: [
-        { value: '', label: 'Tous les pays' },
-        ...COUNTRY_OPTIONS.filter((option) => option.code).map((option) => ({
-          value: option.code,
-          label: `${option.flag} ${option.name}`,
-        })),
-      ],
-    },
-    {
-      key: 'language',
-      label: 'Langue',
-      type: 'select' as const,
-      options: [
-        { value: '', label: 'Toutes les langues' },
-        ...LANGUAGE_OPTIONS.filter((option) => option.code).map((option) => ({
-          value: option.code,
-          label: `${option.flag} ${option.name}`,
-        })),
-      ],
-    },
-    {
-      key: 'createdFrom',
-      label: 'Créées après',
-      type: 'date' as const,
-    },
-    {
-      key: 'createdTo',
-      label: 'Créées avant',
-      type: 'date' as const,
-    },
-  ]
-
-  // Define columns for TableV2
-  const columns: ColumnV2<Organisation>[] = useMemo(
+  // Define columns for DataTable
+  const columns: Column<Organisation>[] = useMemo(
     () => [
       {
+        id: 'name',
         header: 'Nom',
         accessor: 'name',
         sortable: true,
-        sticky: 'left',
-        priority: 'high',
-        minWidth: '200px',
-        render: (value: string, row: Organisation) => (
+        searchable: true,
+        render: (value, row) => (
           <Link
             href={`/dashboard/organisations/${row.id}`}
-            className="font-medium text-gray-900 hover:text-blue-600 transition-colors"
+            className="font-medium text-gray-900 dark:text-slate-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            onClick={(e) => e.stopPropagation()}
           >
             {value}
           </Link>
-        )
+        ),
       },
       {
+        id: 'category',
         header: 'Catégorie',
         accessor: 'category',
         sortable: true,
-        priority: 'high',
+        searchable: true,
         render: (value: OrganisationCategory | null) =>
           value ? (
-            <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
+            <span className="px-2 py-1 bg-blue-100 dark:bg-blue-500/20 text-blue-800 dark:text-blue-300 text-xs rounded-full font-medium">
               {CATEGORY_LABELS[value] || value}
             </span>
           ) : (
-            <span className="text-gray-400 text-xs">-</span>
+            <span className="text-gray-400 dark:text-slate-500">-</span>
           ),
       },
       {
+        id: 'email',
         header: 'Email',
         accessor: 'email',
         sortable: true,
-        priority: 'high',
-        maxWidth: '280px',
-        render: (value: string | null) => value ? (
-          <a
-            href={`mailto:${value}`}
-            className="flex items-center gap-1 min-w-0 text-blue-600 hover:text-blue-700 hover:underline"
-            title={value}
-          >
-            <Mail className="w-3.5 h-3.5 flex-shrink-0" />
-            <span className="truncate block min-w-0">{value}</span>
-          </a>
-        ) : <span className="text-gray-400">-</span>,
+        searchable: true,
+        render: (value) =>
+          value ? (
+            <a
+              href={`mailto:${value}`}
+              className="text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Mail className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="truncate">{value}</span>
+            </a>
+          ) : (
+            <span className="text-gray-400 dark:text-slate-500">-</span>
+          ),
       },
       {
+        id: 'phone',
         header: 'Téléphone',
         accessor: 'main_phone',
         sortable: true,
-        priority: 'medium',
-        render: (value: string | null) => value ? (
-          <a
-            href={`tel:${value}`}
-            className="flex items-center gap-1 text-gray-700 hover:text-gray-900"
-          >
-            <Phone className="w-3.5 h-3.5 flex-shrink-0" />
-            <span>{value}</span>
-          </a>
-        ) : <span className="text-gray-400">-</span>,
+        render: (value) =>
+          value ? (
+            <a
+              href={`tel:${value}`}
+              className="text-sm text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-slate-100 flex items-center gap-1"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Phone className="w-3.5 h-3.5 flex-shrink-0" />
+              <span>{value}</span>
+            </a>
+          ) : (
+            <span className="text-gray-400 dark:text-slate-500">-</span>
+          ),
       },
       {
+        id: 'country',
         header: 'Pays',
         accessor: 'country_code',
         sortable: true,
-        priority: 'medium',
-        render: (value: string | null) => (
-          <span className="text-sm">{getCountryLabel(value)}</span>
-        ),
+        render: (value) => {
+          const label = getCountryLabel(value)
+          return label ? (
+            <span className="text-sm text-gray-700 dark:text-slate-300">{label}</span>
+          ) : (
+            <span className="text-gray-400 dark:text-slate-500">-</span>
+          )
+        },
       },
       {
+        id: 'language',
         header: 'Langue',
         accessor: 'language',
         sortable: true,
-        priority: 'low',
-        render: (value: string | null) => (
-          <span className="text-sm">{getLanguageLabel(value)}</span>
-        ),
+        render: (value) => {
+          const label = getLanguageLabel(value)
+          return label ? (
+            <span className="text-sm text-gray-700 dark:text-slate-300">{label}</span>
+          ) : (
+            <span className="text-gray-400 dark:text-slate-500">-</span>
+          )
+        },
       },
       {
+        id: 'website',
         header: 'Site web',
         accessor: 'website',
         sortable: true,
-        priority: 'low',
-        maxWidth: '200px',
-        render: (value: string | null) =>
+        render: (value) =>
           value ? (
             <a
               href={value}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1 min-w-0 text-blue-600 hover:text-blue-700 hover:underline"
-              title={value}
+              className="text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+              onClick={(e) => e.stopPropagation()}
             >
               <Globe className="w-3.5 h-3.5 flex-shrink-0" />
-              <span className="truncate block min-w-0 text-xs">{value}</span>
+              <span className="truncate text-xs">{value}</span>
             </a>
           ) : (
-            <span className="text-gray-400">-</span>
+            <span className="text-gray-400 dark:text-slate-500">-</span>
           ),
       },
       {
+        id: 'status',
         header: 'Statut',
         accessor: 'is_active',
         sortable: true,
-        priority: 'high',
         render: (value: boolean) => (
           <span
             className={`px-2 py-1 text-xs rounded-full font-medium ${
-              value ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+              value
+                ? 'bg-green-100 dark:bg-green-500/20 text-green-800 dark:text-green-300'
+                : 'bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-slate-300'
             }`}
           >
             {value ? 'Active' : 'Inactive'}
           </span>
         ),
       },
-      {
-        header: 'Actions',
-        accessor: 'id',
-        sticky: 'right',
-        priority: 'high',
-        minWidth: '120px',
-        render: (value: number, row: Organisation) => {
-          const actions: OverflowAction[] = [
-            {
-              label: 'Voir',
-              icon: Eye,
-              onClick: () => router.push(`/dashboard/organisations/${value}`),
-              variant: 'default'
-            },
-            {
-              label: 'Modifier',
-              icon: Edit,
-              onClick: () => router.push(`/dashboard/organisations/${value}?edit=true`),
-              variant: 'default'
-            },
-            {
-              label: 'Supprimer',
-              icon: Trash2,
-              onClick: () => {
-                if (confirm(`Supprimer l'organisation "${row.name}" ?`)) {
-                  // TODO: Implement delete
-                  alert('Suppression à implémenter')
-                }
-              },
-              variant: 'danger'
-            }
-          ]
+    ],
+    []
+  )
 
-          return <OverflowMenu actions={actions} />
-        }
+  // Define quick actions (appear on row hover)
+  const quickActions: QuickAction<Organisation>[] = useMemo(
+    () => [
+      {
+        id: 'view',
+        label: 'Voir',
+        icon: Eye,
+        onClick: (row) => {
+          router.push(`/dashboard/organisations/${row.id}`)
+        },
+      },
+      {
+        id: 'edit',
+        label: 'Modifier',
+        icon: Edit,
+        onClick: (row) => {
+          router.push(`/dashboard/organisations/${row.id}?edit=true`)
+        },
+      },
+      {
+        id: 'delete',
+        label: 'Supprimer',
+        icon: Trash2,
+        onClick: (row) => {
+          if (confirm(`Supprimer l'organisation "${row.name}" ?`)) {
+            alert('Suppression à implémenter')
+          }
+        },
+        variant: 'danger',
       },
     ],
     [router]
   )
 
-  // Handle sorting
-  const handleSort = (key: string) => {
-    setSortConfig((prevConfig) => ({
-      key,
-      direction: prevConfig.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc',
-    }))
-  }
-
-  // Filter and sort data
-  const filteredAndSortedData = useMemo(() => {
-    const filtered =
-      data?.items?.filter((org) => {
-        const search = searchText.toLowerCase()
-        const matchesSearch =
-          org.name.toLowerCase().includes(search) ||
-          org.email?.toLowerCase().includes(search) ||
-          ''
-
-        const matchesCategory = filters.values.category
-          ? org.category === filters.values.category
-          : true
-
-        const matchesStatus =
-          filters.values.status === ''
-            ? true
-            : filters.values.status === 'active'
-              ? org.is_active
-              : !org.is_active
-
-        const matchesCountry = filters.values.country
-          ? org.country_code === filters.values.country
-          : true
-
-        const matchesLanguage = filters.values.language
-          ? (org.language || '').toUpperCase() === filters.values.language
-          : true
-
-        const createdAt = org.created_at ? new Date(org.created_at) : null
-        const matchesCreatedFrom = filters.values.createdFrom
-          ? createdAt && createdAt >= new Date(filters.values.createdFrom)
-          : true
-
-        const matchesCreatedTo = filters.values.createdTo
-          ? createdAt && createdAt <= new Date(filters.values.createdTo)
-          : true
-
-        return (
-          matchesSearch &&
-          matchesCategory &&
-          matchesStatus &&
-          matchesCountry &&
-          matchesLanguage &&
-          matchesCreatedFrom &&
-          matchesCreatedTo
-        )
-      }) || []
-
-    // Sort the filtered data
-    return [...filtered].sort((a, b) => {
-      const aValue = (a as any)[sortConfig.key]
-      const bValue = (b as any)[sortConfig.key]
-
-      // Handle null/undefined values
-      if (aValue == null) return 1
-      if (bValue == null) return -1
-
-      // Handle boolean values
-      if (typeof aValue === 'boolean') {
-        return sortConfig.direction === 'asc'
-          ? aValue === bValue
-            ? 0
-            : aValue
-              ? -1
-              : 1
-          : aValue === bValue
-            ? 0
-            : aValue
-              ? 1
-              : -1
-      }
-
-      // Handle string values
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return sortConfig.direction === 'asc'
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue)
-      }
-
-      // Handle numeric values
-      if (typeof aValue === 'number' && typeof bValue === 'number') {
-        return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue
-      }
-
-      return 0
-    })
-  }, [data?.items, searchText, filters.values, sortConfig])
-
-  // Paginate the filtered and sorted data (client-side pagination)
-  const paginatedData = useMemo(() => {
-    const sliced = filteredAndSortedData.slice(pagination.skip, pagination.skip + pagination.limit)
-    logger.log('🎯 PAGINATION:', {
-      total: filteredAndSortedData.length,
-      skip: pagination.skip,
-      limit: pagination.limit,
-      showing: sliced.length,
-      page: Math.floor(pagination.skip / pagination.limit) + 1
-    })
-    return sliced
-  }, [filteredAndSortedData, pagination.skip, pagination.limit])
+  // Define bulk actions (appear when rows are selected)
+  const bulkActions: BulkAction<Organisation>[] = useMemo(
+    () => [
+      {
+        id: 'export',
+        label: 'Exporter la sélection',
+        icon: Download,
+        onClick: (rows) => {
+          console.log('Exporting', rows.length, 'organisations')
+          alert(`Export de ${rows.length} organisation(s) (à implémenter)`)
+        },
+      },
+      {
+        id: 'delete',
+        label: 'Supprimer la sélection',
+        icon: Trash2,
+        onClick: (rows) => {
+          if (confirm(`Supprimer ${rows.length} organisation(s) ?`)) {
+            alert('Suppression en masse à implémenter')
+          }
+        },
+        variant: 'danger',
+      },
+    ],
+    []
+  )
 
   return (
     <div className="space-y-6">
-      {/* Header with back button */}
+      {/* Breadcrumb */}
+      <Link
+        href="/dashboard"
+        className="inline-flex items-center gap-2 text-gray-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors mb-2"
+      >
+        <ArrowLeft className="w-5 h-5" />
+        <span className="font-medium">Retour à l'annuaire</span>
+      </Link>
+
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/dashboard"
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span className="text-sm">Annuaire</span>
-          </Link>
-          <span className="text-gray-400">•</span>
-          <h1 className="text-3xl font-bold text-ardoise">Organisations</h1>
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Organisations</h1>
+          <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
+            Gérez vos organisations et institutions.
+          </p>
         </div>
         <div className="flex gap-2">
           <Link href="/dashboard/organisations/import">
-            <Button variant="secondary">Importer</Button>
+            <Button variant="secondary">📥 Importer</Button>
           </Link>
           <Link href="/dashboard/organisations/new">
-            <Button variant="primary">+ Nouvelle organisation</Button>
+            <Button variant="primary">
+              <Building className="w-4 h-4" />
+              Nouvelle organisation
+            </Button>
           </Link>
         </div>
       </div>
 
-      <Card>
-        <div className="space-y-4">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <SearchBar
-              placeholder="Rechercher une organisation…"
-              entityType="organisations"
-              onQueryChange={setSearchText}
-              onSubmit={setSearchText}
-              onSelectSuggestion={(suggestion) => {
-                if (suggestion?.id) {
-                  router.push(`/dashboard/organisations/${suggestion.id}`)
-                }
-              }}
-            />
-            <div className="flex gap-2">
-              <ExportButtons
-                resource="organisations"
-                params={exportParams}
-                baseFilename="organisations"
-              />
-            </div>
-          </div>
-          <AdvancedFilters
-            filters={advancedFilterDefinitions}
-            values={filters.values}
-            onChange={filters.handleChange}
-            onReset={filters.reset}
-          />
-        </div>
-      </Card>
-
+      {/* Error Alert */}
       {error && <Alert type="error" message={error.message || 'Erreur de chargement'} />}
 
+      {/* DataTable Premium */}
       <Card>
-        <TableV2<Organisation>
+        <DataTable<Organisation>
+          data={data?.items || []}
           columns={columns}
-          data={paginatedData || []}
+          keyExtractor={(row) => row.id}
+          searchable={{
+            placeholder: 'Rechercher une organisation...',
+            fields: ['name', 'email', 'category'],
+          }}
+          bulkActions={bulkActions}
+          quickActions={quickActions}
+          onRowClick={(row) => {
+            router.push(`/dashboard/organisations/${row.id}`)
+          }}
           isLoading={isLoading}
-          isEmpty={!filteredAndSortedData || filteredAndSortedData.length === 0}
-          emptyMessage="Aucune organisation trouvée"
-          sortConfig={sortConfig}
-          onSort={handleSort}
-          getRowKey={(row) => row.id}
-          size="md"
-          variant="default"
-          stickyHeader
+          isEmpty={!data?.items || data.items.length === 0}
+          emptyState={{
+            title: 'Aucune organisation',
+            description: 'Commencez par ajouter votre première organisation.',
+            action: {
+              label: 'Nouvelle organisation',
+              onClick: () => router.push('/dashboard/organisations/new'),
+            },
+          }}
+          pagination={{
+            pageSize: 20,
+            showPageSize: true,
+            pageSizeOptions: [10, 20, 50, 100],
+          }}
         />
-
-        {/* Pagination */}
-        {filteredAndSortedData.length > 0 && (
-          <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
-            <div className="text-sm text-gray-600">
-              Affichage {pagination.skip + 1} à {Math.min(pagination.skip + pagination.limit, filteredAndSortedData.length)} sur {filteredAndSortedData.length} organisations
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => pagination.setSkip(Math.max(0, pagination.skip - pagination.limit))}
-                disabled={pagination.skip === 0}
-              >
-                Précédent
-              </Button>
-              <div className="text-sm text-gray-600">
-                Page {Math.floor(pagination.skip / pagination.limit) + 1} / {Math.ceil(filteredAndSortedData.length / pagination.limit)}
-              </div>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => pagination.setSkip(pagination.skip + pagination.limit)}
-                disabled={pagination.skip + pagination.limit >= filteredAndSortedData.length}
-              >
-                Suivant
-              </Button>
-            </div>
-          </div>
-        )}
       </Card>
     </div>
   )
