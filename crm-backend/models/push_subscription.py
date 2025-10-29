@@ -7,7 +7,7 @@ Stores Web Push subscription data for PWA notifications
 from datetime import datetime, UTC
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text
 from sqlalchemy.orm import relationship
-from core.database import Base
+from models.base import Base
 
 
 class PushSubscription(Base):

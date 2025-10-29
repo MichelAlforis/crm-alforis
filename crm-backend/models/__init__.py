@@ -64,6 +64,9 @@ from models.team import Team
 from models.user import User
 from models.user_email_account import UserEmailAccount
 from models.outlook_signature_pending import OutlookSignaturePending
+from models.email_message import EmailMessage
+from models.email_attachment import EmailAttachment
+from models.push_subscription import PushSubscription
 from models.webhook import Webhook
 from models.workflow import (
     Workflow,
@@ -109,6 +112,9 @@ __all__ = [
     "User",
     "UserEmailAccount",
     "OutlookSignaturePending",
+    "EmailMessage",
+    "EmailAttachment",
+    "PushSubscription",
     "Team",
     # Tasks
     "Task",

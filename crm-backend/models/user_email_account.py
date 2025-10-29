@@ -17,7 +17,7 @@ from datetime import datetime
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 
-from core.database import Base
+from models.base import Base
 
 
 class UserEmailAccount(Base):

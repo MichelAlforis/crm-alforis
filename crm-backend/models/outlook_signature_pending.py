@@ -8,7 +8,7 @@ from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, T
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
-from core.database import Base
+from models.base import Base
 
 
 class OutlookSignaturePending(Base):

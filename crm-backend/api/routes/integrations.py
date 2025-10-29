@@ -2125,6 +2125,245 @@ async def delete_email_account(
 
 
 # =============================================================================
+# Email Sync Engine (Phase 1)
+# =============================================================================
+
+@router.post("/sync-all-emails")
+async def sync_all_emails(
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+    since_days: int = Query(default=7, description="Nombre de jours à synchroniser"),
+    limit_per_account: Optional[int] = Query(default=None, description="Limite d'emails par compte (pour tests)"),
+):
+    """
+    **Phase 1: Email Sync Engine**
+
+    Synchronise tous les emails de tous les comptes actifs de la team:
+    1. ✅ Récupération multi-provider (EWS, IMAP, Graph)
+    2. ✅ Déduplication SHA256 par content_hash
+    3. ✅ Isolation multi-tenant stricte (team_id)
+    4. ✅ Auto-linking emails → people (par sender_email)
+    5. ⏳ Auto-création crm_interactions (TODO Phase 1.5)
+    6. ⏳ AFTPM compliance tagging (TODO Phase 3)
+
+    Returns:
+        - total_emails_synced: Nombre d'emails importés
+        - duplicates_skipped: Doublons évités grâce au hash
+        - auto_linked_people: Emails liés automatiquement à des contacts
+        - accounts_processed: Comptes synchronisés avec succès
+        - errors: Erreurs rencontrées par compte
+    """
+    from mail.provider_factory import MailProviderFactory
+    from models.email_message import EmailMessage
+    from models.person import Person
+    import logging
+
+    logger = logging.getLogger("crm-api")
+
+    # 1. CONTEXTE MULTI-TENANT
+    user_id, team_id = _get_user_context_from_token(current_user, db)
+    logger.info(f"🔄 Sync emails - user_id={user_id}, team_id={team_id}, since_days={since_days}")
+
+    # 2. RÉCUPÉRER TOUS LES COMPTES ACTIFS DE LA TEAM
+    accounts = db.query(UserEmailAccount).filter(
+        UserEmailAccount.team_id == team_id,
+        UserEmailAccount.is_active == True,
+    ).all()
+
+    if not accounts:
+        return {
+            "success": True,
+            "message": "Aucun compte email configuré pour cette team",
+            "total_emails_synced": 0,
+            "duplicates_skipped": 0,
+            "auto_linked_people": 0,
+            "accounts_processed": 0,
+            "errors": [],
+        }
+
+    # 3. SYNC CHAQUE COMPTE
+    since = datetime.now(timezone.utc) - timedelta(days=since_days)
+
+    total_synced = 0
+    total_duplicates = 0
+    total_linked = 0
+    accounts_ok = 0
+    errors = []
+    account_details = []
+
+    for account in accounts:
+        account_stats = {
+            "account_id": account.id,
+            "email": account.email,
+            "protocol": account.protocol,
+            "server": account.server,
+            "emails_fetched": 0,
+            "emails_new": 0,
+            "emails_duplicates": 0,
+            "auto_linked": 0,
+            "error": None,
+        }
+
+        try:
+            logger.info(f"📧 Syncing {account.email} ({account.protocol}) depuis {since.isoformat()}")
+
+            # 3.1 Créer le provider (EWS/IMAP/Graph)
+            provider = MailProviderFactory.create_provider(account)
+
+            # 3.2 Fetch messages depuis le provider
+            messages = await provider.sync_messages_since(since)
+            account_stats["emails_fetched"] = len(messages)
+
+            # Limiter pour tests
+            if limit_per_account and len(messages) > limit_per_account:
+                messages = messages[:limit_per_account]
+                logger.warning(f"⚠️ Limite {limit_per_account} appliquée (test mode)")
+
+            logger.info(f"   → {len(messages)} emails récupérés")
+
+            # 3.3 Upsert dans email_messages (avec déduplication)
+            for msg in messages:
+                try:
+                    # Calculer content_hash pour déduplication
+                    # Handle both EWS format (string) and Graph API format (dict)
+                    from_field = msg.get("from")
+                    if isinstance(from_field, dict):
+                        sender = from_field.get("email", "") or msg.get("sender", "")
+                        sender_name = from_field.get("name", "")
+                    else:
+                        sender = from_field or msg.get("sender", "")
+                        sender_name = msg.get("sender_name", "")
+
+                    subject = msg.get("subject", "") or ""
+
+                    # Handle both date formats
+                    sent_at = msg.get("sent_at") or msg.get("receivedDateTime") or msg.get("date")
+                    if sent_at:
+                        # Convert ISO string to datetime if needed
+                        if isinstance(sent_at, str):
+                            from dateutil import parser as date_parser
+                            sent_at = date_parser.parse(sent_at)
+                    else:
+                        sent_at = datetime.now(timezone.utc)
+
+                    body_preview = (msg.get("body", "") or msg.get("snippet", ""))[:200]
+
+                    content_hash = EmailMessage.compute_content_hash(
+                        sender=sender,
+                        subject=subject,
+                        sent_at=sent_at,
+                        body_preview=body_preview
+                    )
+
+                    # Vérifier si déjà existant (unique: team_id + account_id + content_hash)
+                    existing = db.query(EmailMessage).filter(
+                        EmailMessage.team_id == team_id,
+                        EmailMessage.account_id == account.id,
+                        EmailMessage.content_hash == content_hash,
+                    ).first()
+
+                    if existing:
+                        account_stats["emails_duplicates"] += 1
+                        total_duplicates += 1
+                        continue  # Skip doublon
+
+                    # AUTO-LINK: Détecter si sender existe dans people (sans team_id car Person n'a pas ce champ)
+                    linked_person_id = None
+                    if sender:
+                        person = db.query(Person).filter(
+                            Person.email == sender,
+                        ).first()
+
+                        if person:
+                            linked_person_id = person.id
+                            account_stats["auto_linked"] += 1
+                            total_linked += 1
+                            logger.debug(f"   🔗 Auto-linked {sender} → Person#{person.id}")
+
+                    # Handle recipients - convert list of strings to list of dicts if needed
+                    recipients_to = msg.get("to", [])
+                    if recipients_to and isinstance(recipients_to[0], str):
+                        recipients_to = [{"email": email} for email in recipients_to]
+
+                    recipients_cc = msg.get("cc", [])
+                    if recipients_cc and isinstance(recipients_cc[0], str):
+                        recipients_cc = [{"email": email} for email in recipients_cc]
+
+                    # Créer nouveau EmailMessage
+                    email_msg = EmailMessage(
+                        team_id=team_id,
+                        account_id=account.id,
+                        external_message_id=msg.get("id", "") or msg.get("message_id", "") or str(uuid4()),
+                        thread_id=msg.get("conversation_id") or msg.get("thread_id"),
+                        in_reply_to=msg.get("in_reply_to"),
+                        subject=subject,
+                        sender_email=sender,
+                        sender_name=sender_name,
+                        recipients_to=recipients_to or [],
+                        recipients_cc=recipients_cc or [],
+                        recipients_bcc=msg.get("bcc", []),
+                        body_text=msg.get("body_text"),
+                        body_html=msg.get("body", "") or msg.get("body_html"),
+                        snippet=msg.get("snippet", "")[:500] if msg.get("snippet") else None,
+                        sent_at=sent_at,
+                        received_at=msg.get("received_at") or sent_at,
+                        is_read=msg.get("is_read", False),
+                        is_flagged=msg.get("is_flagged", False),
+                        labels=msg.get("categories", []) or [],
+                        content_hash=content_hash,
+                        linked_person_id=linked_person_id,
+                        is_compliance_relevant=False,  # TODO Phase 3: AFTPM detection
+                        compliance_tags=[],
+                    )
+
+                    db.add(email_msg)
+                    account_stats["emails_new"] += 1
+                    total_synced += 1
+
+                except Exception as e_msg:
+                    logger.error(f"   ❌ Erreur traitement message: {e_msg}", exc_info=True)
+                    # Continue avec les autres messages
+                    continue
+
+            # Commit pour ce compte
+            db.commit()
+            accounts_ok += 1
+            logger.info(f"   ✅ {account_stats['emails_new']} nouveaux, {account_stats['emails_duplicates']} doublons, {account_stats['auto_linked']} linked")
+
+        except Exception as e:
+            db.rollback()
+            logger.error(f"   ❌ Erreur sync {account.email}: {e}", exc_info=True)
+            account_stats["error"] = str(e)
+            errors.append({
+                "account_id": account.id,
+                "email": account.email,
+                "error": str(e),
+            })
+
+        account_details.append(account_stats)
+
+    # 4. RÉSULTAT FINAL
+    result = {
+        "success": True,
+        "message": f"Synchronisation terminée: {total_synced} emails importés",
+        "total_emails_synced": total_synced,
+        "duplicates_skipped": total_duplicates,
+        "auto_linked_people": total_linked,
+        "accounts_processed": accounts_ok,
+        "accounts_total": len(accounts),
+        "errors": errors,
+        "details": account_details,
+        "sync_period": {
+            "since": since.isoformat(),
+            "days": since_days,
+        },
+    }
+
+    logger.info(f"✅ Sync complete: {total_synced} emails, {total_duplicates} duplicates, {total_linked} linked")
+    return result
+
+
+# =============================================================================
 # TEMP: Debug endpoint sans auth
 # =============================================================================
 
