@@ -12,17 +12,19 @@ Endpoints:
 import hashlib
 import json
 import secrets
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, Optional
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from core import get_current_user, get_db
-from core.encryption import decrypt_value, encrypt_value
+from core.encryption import encrypt_value
 from models.autofill_decision_log import AutofillDecisionLog
 from models.user import User
+from models.user_email_account import UserEmailAccount
 from schemas.integrations import (
     AutofillApplyRequest,
     AutofillApplyResponse,
@@ -67,10 +69,21 @@ async def outlook_authorize(
     # Générer state CSRF
     state = secrets.token_urlsafe(32)
 
-    # Stocker state temporairement (TODO: Redis ou session)
-    # Pour l'instant, on retourne juste l'URL
+    user_id = current_user.get("user_id") or current_user.get("sub")
+    login_hint = current_user.get("email")
 
-    authorization_url = outlook_service.get_authorization_url(state)
+    if user_id:
+        try:
+            user = db.query(User).filter(User.id == int(user_id)).first()
+        except (ValueError, TypeError):
+            user = db.query(User).filter(User.email == user_id).first()
+        if user and user.email:
+            login_hint = user.email
+
+    authorization_url = outlook_service.get_authorization_url(
+        state,
+        login_hint=login_hint,
+    )
 
     return {
         "authorization_url": authorization_url,
@@ -96,40 +109,57 @@ async def outlook_callback(
     # Échanger code contre token
     token_data = await outlook_service.exchange_code_for_token(request.code)
 
+    if not token_data.get("refresh_token"):
+        raise HTTPException(
+            status_code=400,
+            detail="Permission offline_access absente. Veuillez reconnecter Outlook en accordant l'accès hors ligne.",
+        )
+
+    identity = await outlook_service.validate_token_identity(token_data)
+    microsoft_email = identity.get("email")
+    microsoft_profile = identity.get("profile", {})
+
     # Récupérer user
     user_id = current_user.get("user_id") or current_user.get("sub")
     if not user_id:
         raise HTTPException(status_code=401, detail="User ID manquant dans le token")
-    user = db.query(User).filter(User.id == int(user_id)).first()
+
+    try:
+        user = db.query(User).filter(User.id == int(user_id)).first()
+    except (ValueError, TypeError):
+        user = db.query(User).filter(
+            (User.username == user_id) | (User.email == user_id)
+        ).first()
 
     if not user:
         raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
 
+    expires_in_raw = token_data.get("expires_in", 3600)
+    try:
+        expires_in = int(expires_in_raw)
+    except (TypeError, ValueError):
+        expires_in = 3600
+
+    expires_at = datetime.now(timezone.utc) + timedelta(seconds=expires_in)
+
     # Stocker tokens chiffrés (legacy - pour compatibilité)
     user.encrypted_outlook_access_token = encrypt_value(token_data["access_token"])
     user.encrypted_outlook_refresh_token = encrypt_value(token_data["refresh_token"])
-    user.outlook_token_expires_at = datetime.utcnow() + timedelta(
-        seconds=token_data.get("expires_in", 3600)
-    )
+    user.outlook_token_expires_at = expires_at
     user.outlook_connected = True
 
     # Enregistrer le consentement RGPD (implicite via le flow OAuth)
-    from datetime import timezone
     user.outlook_consent_given = True
     user.outlook_consent_date = datetime.now(timezone.utc)
 
+    db.add(user)
     db.commit()
+    db.refresh(user)
 
-    # Récupérer le profil Microsoft pour avoir l'email exact (après commit - optionnel)
-    # Si ça échoue, on le fera à la première synchro
-    microsoft_email = None
-    try:
-        microsoft_profile = await outlook_service.get_user_profile(token_data["access_token"])
-        microsoft_email = microsoft_profile.get("mail") or microsoft_profile.get("userPrincipalName")
+    # Créer/mettre à jour l'entrée dans user_email_accounts (multi-adresse)
+    from models.user_email_account import UserEmailAccount
 
-        # Créer/mettre à jour l'entrée dans user_email_accounts (multi-adresse)
-        from models.user_email_account import UserEmailAccount
-
+    if microsoft_email:
         email_account = (
             db.query(UserEmailAccount)
             .filter(
@@ -140,40 +170,40 @@ async def outlook_callback(
             .first()
         )
 
-        if not email_account:
-            # Créer nouvelle entrée
-            email_account = UserEmailAccount(
-                user_id=user.id,
-                email=microsoft_email,
-                provider="outlook",
-                display_name=microsoft_profile.get("displayName"),
-                is_primary=True,  # Premier compte Outlook = primary
-                is_active=True,
-                encrypted_access_token=encrypt_value(token_data["access_token"]),
-                encrypted_refresh_token=encrypt_value(token_data["refresh_token"]),
-                token_expires_at=datetime.utcnow() + timedelta(seconds=token_data.get("expires_in", 3600)),
-                consent_given=True,
-                consent_date=datetime.now(timezone.utc),
-                microsoft_user_id=microsoft_profile.get("id"),
-                user_principal_name=microsoft_profile.get("userPrincipalName"),
-                job_title=microsoft_profile.get("jobTitle"),
-                office_location=microsoft_profile.get("officeLocation"),
-            )
-            db.add(email_account)
+        try:
+            if not email_account:
+                email_account = UserEmailAccount(
+                    user_id=user.id,
+                    email=microsoft_email,
+                    provider="outlook",
+                    display_name=microsoft_profile.get("displayName"),
+                    is_primary=True,
+                    is_active=True,
+                    encrypted_access_token=encrypt_value(token_data["access_token"]),
+                    encrypted_refresh_token=encrypt_value(token_data["refresh_token"]),
+                    token_expires_at=expires_at,
+                    consent_given=True,
+                    consent_date=datetime.now(timezone.utc),
+                    microsoft_user_id=microsoft_profile.get("id"),
+                    user_principal_name=microsoft_profile.get("userPrincipalName"),
+                    job_title=microsoft_profile.get("jobTitle"),
+                    office_location=microsoft_profile.get("officeLocation"),
+                )
+                db.add(email_account)
+            else:
+                email_account.encrypted_access_token = encrypt_value(token_data["access_token"])
+                email_account.encrypted_refresh_token = encrypt_value(token_data["refresh_token"])
+                email_account.token_expires_at = expires_at
+                email_account.is_active = True
+                email_account.display_name = microsoft_profile.get("displayName")
+                email_account.job_title = microsoft_profile.get("jobTitle")
+                email_account.office_location = microsoft_profile.get("officeLocation")
             db.commit()
-        else:
-            # Mettre à jour tokens
-            email_account.encrypted_access_token = encrypt_value(token_data["access_token"])
-            email_account.encrypted_refresh_token = encrypt_value(token_data["refresh_token"])
-            email_account.token_expires_at = datetime.utcnow() + timedelta(seconds=token_data.get("expires_in", 3600))
-            email_account.is_active = True
-            email_account.display_name = microsoft_profile.get("displayName")
-            email_account.job_title = microsoft_profile.get("jobTitle")
-            email_account.office_location = microsoft_profile.get("officeLocation")
-            db.commit()
-    except Exception as e:
-        # Ne pas bloquer la connexion si l'appel Graph API échoue
-        print(f"[WARNING] Impossible de récupérer le profil Microsoft: {e}")
+        except Exception as e:
+            db.rollback()
+            print(f"[WARNING] Impossible de mettre à jour user_email_accounts: {e}")
+    else:
+        print("[WARNING] Impossible de déterminer l'email Microsoft principal")
 
     return {
         "status": "connected",
@@ -228,7 +258,7 @@ async def outlook_search(
     if not user or not user.outlook_connected:
         raise HTTPException(status_code=400, detail="Outlook non connecté")
 
-    access_token = decrypt_value(user.encrypted_outlook_access_token)
+    access_token = await outlook_service.get_valid_access_token(user)
 
     # Recherche contextuelle
     results = await outlook_service.search_messages_by_query(
@@ -269,7 +299,7 @@ async def outlook_search_debug(
     if not user or not user.outlook_connected:
         raise HTTPException(status_code=400, detail="Outlook non connecté")
 
-    access_token = decrypt_value(user.encrypted_outlook_access_token)
+    access_token = await outlook_service.get_valid_access_token(user)
     results = await outlook_service.search_messages_by_query(access_token, query=query, limit=limit)
 
     # Return full messages for debugging
@@ -289,6 +319,8 @@ async def outlook_debug_me(
     """DEBUG: Quel compte Outlook est connecté?"""
     import httpx
 
+    outlook_service = OutlookIntegration(db)
+
     user_id = current_user.get("user_id") or current_user.get("sub")
     if not user_id:
         raise HTTPException(status_code=401, detail="User ID manquant")
@@ -297,7 +329,7 @@ async def outlook_debug_me(
     if not user or not user.outlook_connected:
         raise HTTPException(status_code=400, detail="Outlook non connecté")
 
-    access_token = decrypt_value(user.encrypted_outlook_access_token)
+    access_token = await outlook_service.get_valid_access_token(user)
 
     # Appel Graph API /me
     async with httpx.AsyncClient() as client:
@@ -325,12 +357,19 @@ async def outlook_debug_me(
 @router.get("/outlook/debug/messages-raw")
 async def outlook_debug_messages_raw(
     days: int = Query(30, ge=1, le=365),
+    no_filter: bool = Query(False, description="Si True, retire le filtre date pour tout récupérer"),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
-    """DEBUG: Appel Graph API brut avec logs détaillés"""
+    """
+    DEBUG: Appel Graph API brut avec logs détaillés
+
+    Test avec no_filter=true pour voir si le problème vient du filtre date
+    """
     import httpx
     from datetime import datetime, timedelta
+
+    outlook_service = OutlookIntegration(db)
 
     user_id = current_user.get("user_id") or current_user.get("sub")
     if not user_id:
@@ -340,7 +379,7 @@ async def outlook_debug_messages_raw(
     if not user or not user.outlook_connected:
         raise HTTPException(status_code=400, detail="Outlook non connecté")
 
-    access_token = decrypt_value(user.encrypted_outlook_access_token)
+    access_token = await outlook_service.get_valid_access_token(user)
     start_date = (datetime.utcnow() - timedelta(days=days)).isoformat() + "Z"
 
     # Appel Graph API brut
@@ -348,10 +387,13 @@ async def outlook_debug_messages_raw(
         url = "https://graph.microsoft.com/v1.0/me/messages"
         params = {
             "$top": 100,
-            "$filter": f"sentDateTime ge {start_date}",
             "$orderby": "sentDateTime desc",
             "$select": "id,subject,from,sentDateTime",
         }
+
+        # Ajouter filtre date seulement si no_filter=False
+        if not no_filter:
+            params["$filter"] = f"sentDateTime ge {start_date}"
 
         response = await client.get(url, params=params, headers={"Authorization": f"Bearer {access_token}"})
         response.raise_for_status()
@@ -369,12 +411,82 @@ async def outlook_debug_messages_raw(
             "messages": messages[:5],  # Premiers 5 pour éviter gros payload
             "message_dates": [msg.get("sentDateTime") for msg in messages],
             "debug_info": {
-                "filter": params["$filter"],
+                "filter_applied": not no_filter,
+                "filter": params.get("$filter", "AUCUN FILTRE (récupère TOUS les messages)"),
                 "top": params["$top"],
                 "days_requested": days,
-                "start_date": start_date,
+                "start_date": start_date if not no_filter else "N/A",
             }
         }
+
+
+@router.get("/outlook/debug/folders")
+async def outlook_debug_folders(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """DEBUG: Liste tous les dossiers Outlook (récursif)"""
+    outlook_service = OutlookIntegration(db)
+
+    user_id = current_user.get("user_id") or current_user.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=401, detail="User ID manquant")
+
+    user = db.query(User).filter(User.id == int(user_id)).first()
+    if not user or not user.outlook_connected:
+        raise HTTPException(status_code=400, detail="Outlook non connecté")
+
+    access_token = await outlook_service.get_valid_access_token(user)
+
+    folders = await outlook_service.list_all_primary_folders(access_token)
+
+    return {
+        "folder_count": len(folders),
+        "folders": [
+            {
+                "id": f.get("id"),
+                "displayName": f.get("displayName"),
+                "wellKnownName": f.get("wellKnownName"),
+                "parentFolderId": f.get("parentFolderId"),
+                "totalItemCount": f.get("totalItemCount", 0),
+                "unreadItemCount": f.get("unreadItemCount", 0),
+            }
+            for f in folders
+        ],
+    }
+
+
+@router.get("/outlook/debug/test-all-folders")
+async def outlook_debug_test_all_folders(
+    days: int = Query(90, ge=1, le=365),
+    limit: int = Query(50, ge=0, le=1000),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """DEBUG: Test récupération messages de TOUS les dossiers"""
+    outlook_service = OutlookIntegration(db)
+
+    user_id = current_user.get("user_id") or current_user.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=401, detail="User ID manquant")
+
+    user = db.query(User).filter(User.id == int(user_id)).first()
+    if not user or not user.outlook_connected:
+        raise HTTPException(status_code=400, detail="Outlook non connecté")
+
+    access_token = await outlook_service.get_valid_access_token(user)
+
+    messages = await outlook_service.get_recent_messages_from_all_folders(
+        access_token, days=days, limit=limit
+    )
+
+    return {
+        "days_requested": days,
+        "limit_requested": limit,
+        "message_count": len(messages),
+        "messages": messages[:5],  # Premiers 5
+        "message_dates": [msg.get("receivedDateTime") for msg in messages[:10]],
+    }
 
 
 @router.get("/outlook/sync", response_model=OutlookSyncResponse)
@@ -408,13 +520,10 @@ async def outlook_sync(
     if not user or not user.outlook_connected:
         raise HTTPException(status_code=400, detail="Outlook non connecté")
 
-    # Déchiffrer token
-    access_token = decrypt_value(user.encrypted_outlook_access_token)
+    access_token = await outlook_service.get_valid_access_token(user)
 
-    # TODO: Vérifier expiration et refresh si nécessaire
-
-    # Récupérer messages avec pagination
-    messages = await outlook_service.get_recent_messages(access_token, limit=limit, days=days)
+    # Récupérer messages de TOUS les dossiers (folder-based, with deduplication)
+    messages = await outlook_service.get_recent_messages_from_all_folders(access_token, limit=limit, days=days)
 
     # Extraire signatures (avec filtre anti-marketing)
     signatures = outlook_service.extract_signatures_from_messages(
@@ -488,8 +597,8 @@ async def outlook_get_profile(
     if not user or not user.outlook_connected:
         raise HTTPException(status_code=400, detail="Outlook non connecté")
 
-    # Déchiffrer token
-    access_token = decrypt_value(user.encrypted_outlook_access_token)
+    # Récupérer un token valide (refresh auto si besoin)
+    access_token = await outlook_service.get_valid_access_token(user)
 
     # Appeler Microsoft Graph /me
     profile = await outlook_service.get_user_profile(access_token)
@@ -812,6 +921,7 @@ async def autofill_v2(
     - Pattern email auto si ≥2 contacts confirmés
     """
     autofill_service = AutofillServiceV2(db)
+    outlook_service = OutlookIntegration(db)
 
     # Récupérer user pour Outlook
     user_id = current_user.get("user_id")
@@ -822,11 +932,17 @@ async def autofill_v2(
 
     # Ajouter Outlook si connecté
     if user and user.outlook_connected:
-        context["outlook_enabled"] = True
-        context["outlook_access_token"] = decrypt_value(
-            user.encrypted_outlook_access_token
-        )
+        try:
+            context["outlook_access_token"] = await outlook_service.get_valid_access_token(user)
+            context["outlook_enabled"] = True
+        except HTTPException as exc:
+            if exc.status_code in (400, 401):
+                context.pop("outlook_access_token", None)
+                context["outlook_enabled"] = False
+            else:
+                raise
     else:
+        context.pop("outlook_access_token", None)
         context["outlook_enabled"] = False
 
     # Budget mode par défaut
@@ -1065,3 +1181,1031 @@ async def autofill_apply(
             status_code=500,
             detail=f"Erreur lors de l'application de l'autofill: {str(e)}"
         )
+
+
+# ==========================================
+# IMAP Direct Connection (Simple & Efficace)
+# ==========================================
+
+@router.post("/mail/connect-imap")
+async def connect_imap(
+    email: str = Query(..., description="Adresse email Microsoft 365"),
+    app_password: str = Query(..., description="Mot de passe d'application"),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    🔌 Connecter boîte mail IMAP + App Password
+
+    Workflow: https://aka.ms/MFASetup → https://account.microsoft.com/security
+    """
+    from datetime import datetime, timezone
+    from core.encryption import encrypt_value
+    from mail.providers.imap_provider import IMAPProvider
+
+    user_id = current_user.get("user_id") or current_user.get("sub")
+    user = db.query(User).filter(User.id == int(user_id)).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    try:
+        imap = IMAPProvider(host="outlook.office365.com", username=email, app_password=app_password)
+        test_result = await imap.test_connection()
+
+        if not test_result["success"]:
+            raise HTTPException(status_code=401, detail=f"IMAP failed: {test_result.get('error')}")
+
+        user.imap_connected = True
+        user.imap_host = "outlook.office365.com"
+        user.imap_email = email
+        user.encrypted_imap_password = encrypt_value(app_password)
+        user.imap_connected_at = datetime.now(timezone.utc)
+        db.commit()
+
+        return {"success": True, "email": email, "folders_count": test_result.get("folders_count", 0)}
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/mail/sync-imap")
+async def sync_imap(
+    days: int = Query(90, ge=1, le=365),
+    limit: int = Query(200, ge=1, le=1000),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """📧 Sync emails IMAP (ALL folders)"""
+    from datetime import datetime, timedelta, timezone
+    from time import time
+    from core.encryption import decrypt_value
+    from mail.providers.imap_provider import IMAPProvider
+
+    user_id = current_user.get("user_id") or current_user.get("sub")
+    user = db.query(User).filter(User.id == int(user_id)).first()
+    if not user or not user.imap_connected:
+        raise HTTPException(status_code=400, detail="IMAP not connected")
+
+    app_password = decrypt_value(user.encrypted_imap_password)
+    imap = IMAPProvider(host=user.imap_host, username=user.imap_email, app_password=app_password)
+
+    start = time()
+    since = datetime.now(timezone.utc) - timedelta(days=days)
+    messages = await imap.sync_messages_since(since, limit=limit)
+
+    return {
+        "success": True,
+        "message_count": len(messages),
+        "messages": messages[:10],
+        "sync_duration_seconds": round(time() - start, 2),
+    }
+
+
+@router.delete("/mail/disconnect-imap")
+async def disconnect_imap(db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    """🔌 Disconnect IMAP"""
+    user_id = current_user.get("user_id") or current_user.get("sub")
+    user = db.query(User).filter(User.id == int(user_id)).first()
+    if user:
+        user.imap_connected = False
+        user.imap_host = None
+        user.imap_email = None
+        user.encrypted_imap_password = None
+        user.imap_connected_at = None
+        db.commit()
+    return {"success": True}
+
+
+# ==========================================
+# EWS/IMAP Mail Connector (test providers)
+# ==========================================
+
+@router.get("/mail/test-providers")
+async def test_mail_providers(
+    days: int = Query(90, ge=1, le=365, description="Jours dans le passé"),
+    limit: int = Query(50, ge=1, le=500, description="Limite de messages"),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    🧪 TEST: Essaie EWS puis IMAP pour récupérer les messages
+
+    Ce endpoint remplace Graph API par EWS/IMAP pour contourner les restrictions IONOS.
+
+    Ordre d'essai:
+    1. EWS (Exchange Web Services) - accès complet Exchange
+    2. IMAP (avec XOAUTH2) - fallback universel
+
+    Returns:
+        {
+            "provider_used": "ews" | "imap",
+            "message_count": 42,
+            "messages": [...],
+            "provider_tests": [...]
+        }
+    """
+    from datetime import datetime, timedelta, timezone
+    from core.config import settings
+    from mail.adapter import SmartMailAdapter
+    from mail.providers.ews_provider import EWSProvider
+    from mail.providers.imap_provider import IMAPProvider
+
+    user_id = current_user.get("user_id") or current_user.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=401, detail="User ID manquant")
+
+    user = db.query(User).filter(User.id == int(user_id)).first()
+    if not user or not user.outlook_connected:
+        raise HTTPException(status_code=400, detail="Outlook non connecté")
+
+    # Email de l'utilisateur (UPN)
+    user_email = user.email
+
+    # Construire les providers
+    providers = []
+
+    # 1. EWS Provider
+    try:
+        ews = EWSProvider(
+            tenant_id=settings.outlook_tenant,
+            client_id=settings.outlook_client_id,
+            client_secret=settings.outlook_client_secret,
+            email=user_email,
+        )
+        providers.append(ews)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"EWS init failed: {e}")
+
+    # 2. IMAP Provider (optionnel, nécessite token IMAP ou app password)
+    # Pour l'instant, on teste juste EWS
+    # Si vous avez un token IMAP OAuth2 ou app password, ajoutez:
+    # imap = IMAPProvider(
+    #     host="outlook.office365.com",
+    #     username=user_email,
+    #     access_token=imap_token,  # ou app_password=app_pwd
+    # )
+    # providers.append(imap)
+
+    # Adapter
+    adapter = SmartMailAdapter(providers)
+
+    # Test de connexion de tous les providers
+    provider_tests = await adapter.test_all_providers()
+
+    # Récupération des messages
+    since = datetime.now(timezone.utc) - timedelta(days=days)
+
+    try:
+        messages = await adapter.sync_messages_since(since, limit=limit)
+
+        return {
+            "success": True,
+            "provider_used": adapter.get_active_provider_name(),
+            "days_requested": days,
+            "limit_requested": limit,
+            "message_count": len(messages),
+            "messages": messages[:5],  # Premiers 5 pour preview
+            "message_dates": [msg.get("receivedDateTime") for msg in messages[:10]],
+            "provider_tests": provider_tests,
+        }
+
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e),
+            "provider_tests": provider_tests,
+        }
+
+
+# ==========================================
+# IMAP Integration (Fallback + Future-proof)
+# ==========================================
+
+
+@router.post("/mail/connect-imap")
+async def connect_imap(
+    email: str = Query(..., description="Email address (e.g., michel.marques@alforis.fr)"),
+    app_password: str = Query(..., description="Microsoft App Password"),
+    host: str = Query("outlook.office365.com", description="IMAP host"),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Connecte un compte email via IMAP avec App Password
+
+    Prérequis Microsoft:
+    1. Activer MFA sur le compte
+    2. Créer App Password: https://account.microsoft.com/security
+    3. Utiliser ce password (format: xxxx xxxx xxxx xxxx)
+
+    Cette méthode est universelle et survivra à la dépréciation d'EWS (sept 2026)
+    """
+    from mail.providers.imap_provider import IMAPProvider
+
+    user_id = current_user.get("user_id") or current_user.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=401, detail="User ID manquant")
+
+    try:
+        user_id_int = int(user_id)
+    except (ValueError, TypeError):
+        raise HTTPException(status_code=400, detail="User ID invalide")
+
+    user = db.query(User).filter(User.id == user_id_int).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
+
+    # Test connexion IMAP
+    try:
+        imap = IMAPProvider(
+            host=host,
+            username=email,
+            app_password=app_password,
+        )
+
+        test_result = await imap.test_connection()
+
+        if not test_result.get("success"):
+            raise HTTPException(
+                status_code=400,
+                detail=f"Connexion IMAP échouée: {test_result.get('error')}"
+            )
+
+        # Stocker credentials (chiffrés)
+        user.imap_host = host
+        user.imap_email = email
+        user.encrypted_imap_password = encrypt_value(app_password)
+        user.imap_connected = True
+        user.imap_connected_at = datetime.now(timezone.utc)
+
+        db.commit()
+
+        return {
+            "success": True,
+            "message": f"IMAP connecté avec succès pour {email}",
+            "host": host,
+            "folders_count": test_result.get("folders_count", 0),
+        }
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Erreur IMAP: {str(e)}")
+
+
+@router.get("/mail/sync-imap")
+async def sync_imap(
+    days: int = Query(30, ge=1, le=365, description="Nombre de jours à synchroniser"),
+    limit: int = Query(200, ge=0, le=1000, description="Limite de messages (0 = tous)"),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Synchronise les emails via IMAP
+
+    Récupère:
+    - INBOX (boîte de réception)
+    - Sent Items (éléments envoyés)
+    - Déduplique par Message-ID
+
+    Fallback universel si Graph API a des problèmes
+    """
+    from mail.providers.imap_provider import IMAPProvider
+    from core.encryption import decrypt_value
+
+    user_id = current_user.get("user_id") or current_user.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=401, detail="User ID manquant")
+
+    try:
+        user_id_int = int(user_id)
+    except (ValueError, TypeError):
+        raise HTTPException(status_code=400, detail="User ID invalide")
+
+    user = db.query(User).filter(User.id == user_id_int).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
+
+    if not user.imap_connected or not user.encrypted_imap_password:
+        raise HTTPException(
+            status_code=400,
+            detail="IMAP non connecté. Utilisez POST /integrations/mail/connect-imap d'abord"
+        )
+
+    try:
+        app_password = decrypt_value(user.encrypted_imap_password)
+
+        imap = IMAPProvider(
+            host=user.imap_host,
+            username=user.imap_email,
+            app_password=app_password,
+        )
+
+        since = datetime.now(timezone.utc) - timedelta(days=days)
+        messages = await imap.sync_messages_since(since, limit=limit if limit > 0 else 500)
+
+        return {
+            "success": True,
+            "message_count": len(messages),
+            "messages": messages,
+            "sync_params": {
+                "days": days,
+                "limit": limit,
+                "since": since.isoformat(),
+                "host": user.imap_host,
+                "email": user.imap_email,
+            }
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur synchro IMAP: {str(e)}")
+
+
+# ==========================================
+# O365 OAuth (EWS/IMAP) - Professional Exchange Online
+# ==========================================
+
+
+@router.post("/o365/authorize")
+async def o365_authorize(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Démarre le flow OAuth O365 (EWS/IMAP)
+
+    Compatible Exchange Online uniquement (pas Basic Auth)
+    Scopes: EWS.AccessAsUser.All, IMAP.AccessAsUser.All
+    """
+    from services.o365_oauth_service import O365OAuthService
+
+    service = O365OAuthService(db)
+    state = secrets.token_urlsafe(32)
+
+    user_id = current_user.get("user_id") or current_user.get("sub")
+    login_hint = current_user.get("email")
+
+    if user_id:
+        try:
+            user = db.query(User).filter(User.id == int(user_id)).first()
+        except (ValueError, TypeError):
+            user = db.query(User).filter(User.email == user_id).first()
+        if user and user.email:
+            login_hint = user.email
+
+    authorization_url = service.get_authorization_url(
+        state=state,
+        login_hint=login_hint,
+    )
+
+    return {
+        "authorization_url": authorization_url,
+        "state": state,
+    }
+
+
+@router.post("/o365/callback-dev/{user_id}")
+async def o365_callback_dev(
+    user_id: int,
+    code: str = Query(..., description="Authorization code from Microsoft"),
+    state: str = Query(..., description="CSRF state token"),
+    db: Session = Depends(get_db),
+):
+    """
+    Callback OAuth O365 (DEV - sans auth)
+    """
+    from services.o365_oauth_service import O365OAuthService
+
+    service = O365OAuthService(db)
+
+    # Échanger code → tokens
+    token_data = await service.exchange_code_for_token(code)
+
+    if not token_data.get("refresh_token"):
+        raise HTTPException(
+            status_code=400,
+            detail="Permission offline_access absente. Reconnectez O365.",
+        )
+
+    # Valider identité
+    identity = await service.validate_token_identity(token_data)
+    microsoft_email = identity.get("email")
+
+    # Récupérer user
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
+
+    # Calculer expiration
+    expires_in_raw = token_data.get("expires_in", 3600)
+    try:
+        expires_in = int(expires_in_raw)
+    except (TypeError, ValueError):
+        expires_in = 3600
+
+    expires_at = datetime.now(timezone.utc) + timedelta(seconds=expires_in)
+
+    # Stocker tokens chiffrés
+    user.encrypted_o365_access_token = encrypt_value(token_data["access_token"])
+    user.encrypted_o365_refresh_token = encrypt_value(token_data["refresh_token"])
+    user.o365_token_expires_at = expires_at
+    user.o365_connected = True
+    user.o365_consent_given = True
+    user.o365_consent_date = datetime.now(timezone.utc)
+
+    db.commit()
+
+    return {
+        "success": True,
+        "message": "O365 OAuth connected",
+        "email": microsoft_email,
+        "expires_at": expires_at.isoformat(),
+    }
+
+
+@router.post("/o365/callback")
+async def o365_callback(
+    code: str = Query(..., description="Authorization code from Microsoft"),
+    state: str = Query(..., description="CSRF state token"),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Callback OAuth O365
+
+    Échange le code contre access_token + refresh_token
+    Stocke les tokens chiffrés en BDD
+    """
+    from services.o365_oauth_service import O365OAuthService
+
+    service = O365OAuthService(db)
+
+    # TODO: Vérifier state CSRF
+
+    # Échanger code → tokens
+    token_data = await service.exchange_code_for_token(code)
+
+    if not token_data.get("refresh_token"):
+        raise HTTPException(
+            status_code=400,
+            detail="Permission offline_access absente. Reconnectez O365.",
+        )
+
+    # Valider identité
+    identity = await service.validate_token_identity(token_data)
+    microsoft_email = identity.get("email")
+
+    # Récupérer user
+    user_id = current_user.get("user_id") or current_user.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=401, detail="User ID manquant")
+
+    try:
+        user = db.query(User).filter(User.id == int(user_id)).first()
+    except (ValueError, TypeError):
+        user = db.query(User).filter(User.email == user_id).first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
+
+    # Calculer expiration
+    expires_in_raw = token_data.get("expires_in", 3600)
+    try:
+        expires_in = int(expires_in_raw)
+    except (TypeError, ValueError):
+        expires_in = 3600
+
+    expires_at = datetime.now(timezone.utc) + timedelta(seconds=expires_in)
+
+    # Stocker tokens chiffrés
+    user.encrypted_o365_access_token = encrypt_value(token_data["access_token"])
+    user.encrypted_o365_refresh_token = encrypt_value(token_data["refresh_token"])
+    user.o365_token_expires_at = expires_at
+    user.o365_connected = True
+    user.o365_consent_given = True
+    user.o365_consent_date = datetime.now(timezone.utc)
+
+    db.commit()
+
+    return {
+        "success": True,
+        "message": "O365 OAuth connecté avec succès",
+        "email": microsoft_email,
+        "expires_at": expires_at.isoformat(),
+    }
+
+
+@router.get("/o365/test-ews")
+async def o365_test_ews(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Teste la connexion EWS (Exchange Web Services) avec OAuth2
+
+    Nécessite O365 OAuth déjà connecté
+    Compatible Exchange Online uniquement
+    """
+    from services.o365_oauth_service import O365OAuthService
+
+    service = O365OAuthService(db)
+
+    user_id = current_user.get("user_id") or current_user.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=401, detail="User ID manquant")
+
+    try:
+        user_id_int = int(user_id)
+    except (ValueError, TypeError):
+        raise HTTPException(status_code=400, detail="User ID invalide")
+
+    user = db.query(User).filter(User.id == user_id_int).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
+
+    if not user.o365_connected:
+        raise HTTPException(
+            status_code=400,
+            detail="O365 non connecté. Utilisez POST /integrations/o365/authorize d'abord",
+        )
+
+    # Récupérer token valide (refresh si nécessaire)
+    access_token = await service.get_valid_access_token(user)
+
+    # Tester EWS OAuth
+    result = await service.test_ews_connection_with_oauth(
+        access_token=access_token,
+        email=user.email,
+    )
+
+    return result
+
+
+@router.get("/o365/test-ews-direct/{user_id}")
+async def o365_test_ews_direct(
+    user_id: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Teste EWS directement sans auth (DEV ONLY - à supprimer en prod)
+    """
+    from services.o365_oauth_service import O365OAuthService
+
+    service = O365OAuthService(db)
+
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
+
+    if not user.o365_connected:
+        raise HTTPException(
+            status_code=400,
+            detail="O365 OAuth non connecté. Appelez d'abord /o365/authorize puis /o365/callback",
+        )
+
+    try:
+        access_token = await service.get_valid_access_token(user)
+        result = await service.test_ews_connection_with_oauth(access_token, user.email)
+        return result
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+@router.get("/o365/test-imap")
+async def o365_test_imap(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Teste la connexion IMAP avec OAuth2 token (XOAUTH2)
+
+    Nécessite O365 OAuth déjà connecté
+    """
+    from services.o365_oauth_service import O365OAuthService
+
+    service = O365OAuthService(db)
+
+    user_id = current_user.get("user_id") or current_user.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=401, detail="User ID manquant")
+
+    try:
+        user_id_int = int(user_id)
+    except (ValueError, TypeError):
+        raise HTTPException(status_code=400, detail="User ID invalide")
+
+    user = db.query(User).filter(User.id == user_id_int).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
+
+    if not user.o365_connected:
+        raise HTTPException(
+            status_code=400,
+            detail="O365 non connecté. Utilisez POST /integrations/o365/authorize d'abord",
+        )
+
+    # Récupérer token valide (refresh si nécessaire)
+    access_token = await service.get_valid_access_token(user)
+
+    # Tester IMAP OAuth
+    result = await service.test_imap_connection_with_oauth(
+        access_token=access_token,
+        email=user.email,
+    )
+
+    return result
+
+
+# =====================================
+# 🔍 DEBUG: Décoder le token O365 stocké
+# =====================================
+@router.get("/o365/debug-token/{user_id}")
+async def debug_o365_token(user_id: int, db: Session = Depends(get_db)):
+    from core.encryption import decrypt_value
+    import base64
+    import json
+
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user or not user.encrypted_o365_access_token:
+        return {"error": "No token found"}
+
+    try:
+        # Déchiffrer le token stocké
+        token = decrypt_value(user.encrypted_o365_access_token)
+        parts = token.split(".")
+        if len(parts) != 3:
+            return {"error": f"Invalid JWT structure ({len(parts)} parts)"}
+
+        payload_b64 = parts[1]
+        # Ajuster le padding base64
+        payload_b64 += "=" * ((4 - len(payload_b64) % 4) % 4)
+        payload = json.loads(base64.b64decode(payload_b64))
+
+        return {
+            "success": True,
+            "email": user.email,
+            "aud": payload.get("aud"),
+            "scp": payload.get("scp"),
+            "appid": payload.get("appid"),
+            "upn": payload.get("upn"),
+            "raw_payload": payload,
+        }
+    except Exception as e:
+        import traceback
+        return {"error": str(e), "trace": traceback.format_exc()}
+
+
+# =====================================
+# 🔧 TEST: IONOS Exchange avec Basic Auth
+# =====================================
+class IONOSTestRequest(BaseModel):
+    email: str
+    password: str
+    server: str = "exchange.ionos.eu"
+
+
+@router.post("/ionos/test-ews")
+async def ionos_test_ews(request: IONOSTestRequest):
+    """
+    Test connexion IONOS Exchange avec Basic Auth
+    """
+    from mail.providers.ews_provider import EWSProvider
+
+    try:
+        ews = EWSProvider(
+            email=request.email,
+            password=request.password,
+            server=request.server,
+        )
+
+        result = await ews.test_connection()
+        return result
+
+    except Exception as e:
+        import traceback
+        return {
+            "success": False,
+            "provider": "ews_ionos",
+            "email": request.email,
+            "server": request.server,
+            "error": str(e),
+            "trace": traceback.format_exc(),
+        }
+
+
+# =============================================================================
+# EMAIL ACCOUNTS MANAGEMENT (Multi-Provider Multi-Tenant)
+# =============================================================================
+
+def _get_user_id_from_token(current_user: dict, db: Session) -> int:
+    """
+    Extract user_id from JWT token.
+    Handles both numeric IDs and non-numeric (dev tokens) by looking up by email.
+    """
+    user_id_raw = current_user.get("user_id") or current_user.get("sub")
+    if not user_id_raw:
+        raise HTTPException(401, "User ID manquant dans le token")
+
+    # Try converting to int
+    try:
+        return int(user_id_raw)
+    except (ValueError, TypeError):
+        # Fallback: lookup user by email if user_id is non-numeric
+        user_email = current_user.get("email")
+        if not user_email:
+            raise HTTPException(401, f"User ID non-numérique et pas d'email: {user_id_raw}")
+        user = db.query(User).filter(User.email == user_email).first()
+        if not user:
+            raise HTTPException(404, f"Utilisateur non trouvé: {user_email}")
+        return user.id
+
+
+class AddEmailAccountRequest(BaseModel):
+    """Request pour ajouter un compte email"""
+    email: str
+    protocol: str  # "ews", "imap", "graph"
+    server: str | None = None  # "exchange.ionos.eu", "imap.ionos.fr:993"
+    password: str | None = None  # Pour EWS/IMAP Basic Auth
+    provider: str | None = None  # "ionos", "gmail", "outlook", etc (optionnel, pour référence)
+
+
+@router.post("/email-accounts")
+async def add_email_account(
+    request: AddEmailAccountRequest,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Ajouter un compte email pour l'utilisateur connecté.
+
+    Supporte plusieurs protocols:
+    - **EWS** (Exchange Web Services): IONOS, Microsoft Exchange on-premise
+    - **IMAP**: Gmail, IONOS mail, autres
+    - **Graph API**: Microsoft 365 OAuth (à venir)
+
+    Exemples:
+
+    IONOS EWS (Exchange):
+    ```json
+    {
+        "email": "michel.marques@alforis.fr",
+        "protocol": "ews",
+        "server": "exchange.ionos.eu",
+        "password": "...",
+        "provider": "ionos"
+    }
+    ```
+
+    IONOS IMAP:
+    ```json
+    {
+        "email": "contact@alforis.fr",
+        "protocol": "imap",
+        "server": "imap.ionos.fr:993",
+        "password": "...",
+        "provider": "ionos"
+    }
+    ```
+    """
+    from core.encryption import encrypt_value
+
+    # Validation selon protocol
+    if request.protocol in ("ews", "imap"):
+        if not request.server:
+            raise HTTPException(400, f"{request.protocol.upper()} nécessite un 'server'")
+        if not request.password:
+            raise HTTPException(400, f"{request.protocol.upper()} nécessite un 'password'")
+    elif request.protocol == "graph":
+        raise HTTPException(400, "Graph API OAuth pas encore implémenté - utilisez EWS ou IMAP")
+    else:
+        raise HTTPException(400, f"Protocol inconnu: {request.protocol}. Supportés: ews, imap")
+
+    # Vérifier si compte existe déjà
+    user_id = _get_user_id_from_token(current_user, db)
+
+    existing = db.query(UserEmailAccount).filter(
+        UserEmailAccount.user_id == user_id,
+        UserEmailAccount.email == request.email,
+        UserEmailAccount.protocol == request.protocol,
+    ).first()
+
+    if existing:
+        raise HTTPException(400, f"Compte {request.email} ({request.protocol}) existe déjà")
+
+    # Créer le compte
+    account = UserEmailAccount(
+        user_id=user_id,
+        email=request.email,
+        protocol=request.protocol,
+        server=request.server,
+        provider=request.provider or request.protocol,
+        encrypted_password=encrypt_value(request.password) if request.password else None,
+        is_active=True,
+        created_at=datetime.now(timezone.utc),
+        updated_at=datetime.now(timezone.utc),
+    )
+
+    db.add(account)
+    db.commit()
+    db.refresh(account)
+
+    return {
+        "success": True,
+        "account": {
+            "id": account.id,
+            "email": account.email,
+            "protocol": account.protocol,
+            "server": account.server,
+            "provider": account.provider,
+            "is_active": account.is_active,
+            "created_at": account.created_at.isoformat(),
+        }
+    }
+
+
+@router.get("/email-accounts")
+async def list_email_accounts(
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Liste tous les comptes email configurés pour l'utilisateur connecté.
+    """
+    user_id = _get_user_id_from_token(current_user, db)
+
+    accounts = db.query(UserEmailAccount).filter(
+        UserEmailAccount.user_id == user_id
+    ).all()
+
+    return {
+        "accounts": [
+            {
+                "id": acc.id,
+                "email": acc.email,
+                "protocol": acc.protocol,
+                "server": acc.server,
+                "provider": acc.provider,
+                "is_active": acc.is_active,
+                "created_at": acc.created_at.isoformat(),
+            }
+            for acc in accounts
+        ]
+    }
+
+
+@router.post("/email-accounts/{account_id}/test")
+async def test_email_account(
+    account_id: int,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Tester la connexion d'un compte email.
+    """
+    from mail.provider_factory import MailProviderFactory
+
+    user_id = _get_user_id_from_token(current_user, db)
+
+    account = db.query(UserEmailAccount).filter(
+        UserEmailAccount.id == account_id,
+        UserEmailAccount.user_id == user_id,
+    ).first()
+
+    if not account:
+        raise HTTPException(404, "Account not found")
+
+    result = await MailProviderFactory.test_connection(account)
+    return result
+
+
+@router.delete("/email-accounts/{account_id}")
+async def delete_email_account(
+    account_id: int,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Supprimer un compte email.
+    """
+    user_id = _get_user_id_from_token(current_user, db)
+
+    account = db.query(UserEmailAccount).filter(
+        UserEmailAccount.id == account_id,
+        UserEmailAccount.user_id == user_id,
+    ).first()
+
+    if not account:
+        raise HTTPException(404, "Account not found")
+
+    db.delete(account)
+    db.commit()
+
+    return {"success": True, "message": f"Account {account.email} supprimé"}
+
+
+# =============================================================================
+# TEMP: Debug endpoint sans auth
+# =============================================================================
+
+@router.post("/debug/email-accounts/{user_id}")
+async def debug_add_email_account(
+    user_id: int,
+    request: AddEmailAccountRequest,
+    db: Session = Depends(get_db),
+):
+    """
+    TEMP: Ajouter un compte email SANS AUTH pour debug.
+    """
+    from core.encryption import encrypt_value
+
+    # Validation
+    if request.protocol in ("ews", "imap"):
+        if not request.server:
+            raise HTTPException(400, f"{request.protocol.upper()} nécessite un 'server'")
+        if not request.password:
+            raise HTTPException(400, f"{request.protocol.upper()} nécessite un 'password'")
+
+    # Vérifier si compte existe déjà
+    existing = db.query(UserEmailAccount).filter(
+        UserEmailAccount.user_id == user_id,
+        UserEmailAccount.email == request.email,
+        UserEmailAccount.protocol == request.protocol,
+    ).first()
+
+    if existing:
+        raise HTTPException(400, f"Compte {request.email} ({request.protocol}) existe déjà")
+
+    # Créer le compte
+    account = UserEmailAccount(
+        user_id=user_id,
+        email=request.email,
+        protocol=request.protocol,
+        server=request.server,
+        provider=request.provider or request.protocol,
+        encrypted_password=encrypt_value(request.password) if request.password else None,
+        is_active=True,
+        created_at=datetime.now(timezone.utc),
+        updated_at=datetime.now(timezone.utc),
+    )
+
+    db.add(account)
+    db.commit()
+    db.refresh(account)
+
+    return {
+        "success": True,
+        "account": {
+            "id": account.id,
+            "email": account.email,
+            "protocol": account.protocol,
+            "server": account.server,
+            "provider": account.provider,
+            "is_active": account.is_active,
+            "created_at": account.created_at.isoformat(),
+        }
+    }
+
+
+@router.get("/debug/email-accounts/{user_id}")
+async def debug_list_email_accounts(
+    user_id: int,
+    db: Session = Depends(get_db),
+):
+    """TEMP: Liste comptes SANS AUTH"""
+    accounts = db.query(UserEmailAccount).filter(
+        UserEmailAccount.user_id == user_id
+    ).all()
+
+    return {
+        "accounts": [
+            {
+                "id": acc.id,
+                "email": acc.email,
+                "protocol": acc.protocol,
+                "server": acc.server,
+                "provider": acc.provider,
+                "is_active": acc.is_active,
+                "created_at": acc.created_at.isoformat(),
+            }
+            for acc in accounts
+        ]
+    }
+
+
+@router.post("/debug/email-accounts/test/{account_id}")
+async def debug_test_connection(
+    account_id: int,
+    db: Session = Depends(get_db),
+):
+    """TEMP: Test connexion SANS AUTH"""
+    from mail.provider_factory import MailProviderFactory
+
+    account = db.query(UserEmailAccount).filter(
+        UserEmailAccount.id == account_id,
+    ).first()
+
+    if not account:
+        raise HTTPException(404, "Account not found")
+
+    result = await MailProviderFactory.test_connection(account)
+    return result

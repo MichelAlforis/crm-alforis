@@ -27,15 +27,22 @@ class UserEmailAccount(Base):
     
     # Informations du compte
     email = Column(String(255), nullable=False, index=True)
-    provider = Column(String(50), nullable=False, index=True)  # 'outlook', 'gmail', etc.
+    provider = Column(String(50), nullable=False, index=True)  # 'ionos', 'outlook', 'gmail', etc.
     display_name = Column(String(255), nullable=True)
     is_primary = Column(Boolean, default=False, nullable=False)
     is_active = Column(Boolean, default=True, nullable=False)
-    
-    # OAuth tokens (chiffrés avec Fernet AES-256)
+
+    # Configuration serveur (pour IONOS, Exchange on-premise, etc.)
+    server = Column(String(255), nullable=True)  # ex: exchange.ionos.eu
+    protocol = Column(String(20), nullable=True)  # 'ews', 'imap', 'graph'
+
+    # Credentials (chiffrés avec Fernet AES-256)
+    # OAuth (Microsoft, Google)
     encrypted_access_token = Column(Text, nullable=True)
     encrypted_refresh_token = Column(Text, nullable=True)
     token_expires_at = Column(DateTime(timezone=True), nullable=True)
+    # Basic Auth (IONOS, Exchange on-premise)
+    encrypted_password = Column(Text, nullable=True)
     
     # RGPD
     consent_given = Column(Boolean, default=False, nullable=False)
