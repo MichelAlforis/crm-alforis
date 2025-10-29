@@ -66,6 +66,8 @@ from models.user_email_account import UserEmailAccount
 from models.outlook_signature_pending import OutlookSignaturePending
 from models.email_message import EmailMessage
 from models.email_attachment import EmailAttachment
+from models.autofill_suggestion import AutofillSuggestion
+from models.ai_memory import AIMemory
 from models.push_subscription import PushSubscription
 from models.webhook import Webhook
 from models.workflow import (
@@ -114,6 +116,8 @@ __all__ = [
     "OutlookSignaturePending",
     "EmailMessage",
     "EmailAttachment",
+    "AutofillSuggestion",
+    "AIMemory",
     "PushSubscription",
     "Team",
     # Tasks
