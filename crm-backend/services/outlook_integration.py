@@ -29,16 +29,16 @@ class OutlookIntegration:
     """Service d'intégration Microsoft Outlook via Graph API"""
 
     GRAPH_BASE_URL = "https://graph.microsoft.com/v1.0"
-    AUTH_BASE_URL = "https://login.microsoftonline.com/common/oauth2/v2.0"
-
-    # Scopes nécessaires
-    SCOPES = ["Mail.Read", "Contacts.Read", "offline_access"]
 
     def __init__(self, db: Session):
         self.db = db
-        self.client_id = settings.microsoft_client_id
-        self.client_secret = settings.microsoft_client_secret
-        self.redirect_uri = settings.microsoft_redirect_uri
+        self.client_id = settings.outlook_client_id
+        self.client_secret = settings.outlook_client_secret
+        self.redirect_uri = settings.outlook_redirect_uri
+        self.tenant = settings.outlook_tenant
+        self.auth_url = settings.outlook_auth_url or f"https://login.microsoftonline.com/{self.tenant}/oauth2/v2.0/authorize"
+        self.token_url = settings.outlook_token_url or f"https://login.microsoftonline.com/{self.tenant}/oauth2/v2.0/token"
+        self.scopes = settings.outlook_scopes.split()
 
     # ==========================================
     # OAuth Flow
@@ -54,7 +54,7 @@ class OutlookIntegration:
         Returns:
             URL d'autorisation Microsoft
         """
-        scopes_str = " ".join(self.SCOPES)
+        scopes_str = " ".join(self.scopes)
         params = {
             "client_id": self.client_id,
             "response_type": "code",
@@ -65,7 +65,7 @@ class OutlookIntegration:
         }
 
         query_string = "&".join([f"{k}={quote(str(v))}" for k, v in params.items()])
-        return f"{self.AUTH_BASE_URL}/authorize?{query_string}"
+        return f"{self.auth_url}?{query_string}"
 
     async def exchange_code_for_token(self, code: str) -> Dict:
         """
@@ -84,7 +84,7 @@ class OutlookIntegration:
         """
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                f"{self.AUTH_BASE_URL}/token",
+                self.token_url,
                 data={
                     "client_id": self.client_id,
                     "client_secret": self.client_secret,
@@ -110,7 +110,7 @@ class OutlookIntegration:
         """
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                f"{self.AUTH_BASE_URL}/token",
+                self.token_url,
                 data={
                     "client_id": self.client_id,
                     "client_secret": self.client_secret,
@@ -126,6 +126,90 @@ class OutlookIntegration:
     # ==========================================
     # Graph API Calls
     # ==========================================
+
+    async def get_user_profile(self, access_token: str) -> Dict:
+        """
+        Récupère le profil de l'utilisateur Microsoft connecté
+
+        Args:
+            access_token: Token d'accès Microsoft
+
+        Returns:
+            {
+                "id": "...",
+                "displayName": "Michel Marques",
+                "mail": "michel.marques@alforis.fr",
+                "userPrincipalName": "michel.marques@alforis.fr",
+                "jobTitle": "...",
+                "officeLocation": "..."
+            }
+        """
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                f"{self.GRAPH_BASE_URL}/me",
+                headers={"Authorization": f"Bearer {access_token}"},
+            )
+            response.raise_for_status()
+            return response.json()
+
+    async def search_messages_by_query(
+        self, access_token: str, query: str, limit: int = 10
+    ) -> Dict:
+        """
+        Recherche contextuelle dans les emails (MODE 1 - Autofill intelligent)
+
+        Args:
+            access_token: Token d'accès Microsoft
+            query: Requête de recherche (nom, email, entreprise...)
+            limit: Nombre max de résultats (défaut: 10)
+
+        Returns:
+            {
+                "messages": [...],
+                "signatures": [...],
+                "last_contact_date": "2025-01-15T10:30:00Z",
+                "company_domains": ["acme.com", "example.fr"]
+            }
+        """
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                f"{self.GRAPH_BASE_URL}/me/messages",
+                params={
+                    "$search": f'"{query}"',
+                    "$top": limit,
+                    "$select": "id,subject,from,toRecipients,sentDateTime,body,uniqueBody",
+                    "$orderby": "sentDateTime desc",
+                },
+                headers={
+                    "Authorization": f"Bearer {access_token}",
+                    "ConsistencyLevel": "eventual",  # Requis pour $search
+                },
+            )
+
+            response.raise_for_status()
+            messages = response.json().get("value", [])
+
+            # Extraire signatures
+            signatures = self.extract_signatures_from_messages(messages)
+
+            # Détecter company domains
+            company_domains = set()
+            for sig in signatures:
+                if sig.get("email"):
+                    domain = sig["email"].split("@")[-1]
+                    company_domains.add(domain)
+
+            # Trouver date du dernier échange
+            last_contact_date = None
+            if messages:
+                last_contact_date = messages[0].get("sentDateTime")
+
+            return {
+                "messages": messages,
+                "signatures": signatures,
+                "last_contact_date": last_contact_date,
+                "company_domains": list(company_domains),
+            }
 
     async def get_recent_messages(
         self, access_token: str, limit: int = 50, days: int = 30
@@ -225,6 +309,51 @@ class OutlookIntegration:
             return unanswered
 
     # ==========================================
+    # Filtres anti-pollution
+    # ==========================================
+
+    # Blocklist emails marketing/newsletters
+    EMAIL_BLOCKLIST_PATTERNS = [
+        r"noreply",
+        r"no-reply",
+        r"notification",
+        r"newsletter",
+        r"marketing",
+        r"promo",
+        r"support@.*",
+        r"info@.*",
+        r"contact@.*",
+        r".*@outlook\.com$",  # Emails publicitaires Outlook
+        r".*@.*\.onmicrosoft\.com$",
+        r"bounce",
+        r"mailer",
+        r"postmaster",
+        r"unsubscribe",
+    ]
+
+    def is_marketing_email(self, email: str) -> bool:
+        """
+        Détecte si un email est probablement du marketing/spam
+
+        Args:
+            email: Adresse email à vérifier
+
+        Returns:
+            True si email marketing, False sinon
+        """
+        if not email:
+            return True
+
+        email_lower = email.lower()
+
+        # Vérifier contre la blocklist
+        for pattern in self.EMAIL_BLOCKLIST_PATTERNS:
+            if re.search(pattern, email_lower):
+                return True
+
+        return False
+
+    # ==========================================
     # Parsing Signatures
     # ==========================================
 
@@ -291,15 +420,18 @@ class OutlookIntegration:
 
         return signature if signature else None
 
-    def extract_signatures_from_messages(self, messages: List[Dict]) -> List[Dict]:
+    def extract_signatures_from_messages(
+        self, messages: List[Dict], filter_marketing: bool = True
+    ) -> List[Dict]:
         """
         Extrait les signatures de plusieurs messages
 
         Args:
             messages: Liste de messages Outlook
+            filter_marketing: Filtrer les emails marketing (défaut: True)
 
         Returns:
-            Liste de signatures uniques
+            Liste de signatures uniques (filtrées)
         """
         signatures = []
         seen_emails = set()
@@ -311,11 +443,16 @@ class OutlookIntegration:
             if signature and signature.get("email"):
                 email = signature["email"]
 
+                # Filtrer emails marketing
+                if filter_marketing and self.is_marketing_email(email):
+                    continue
+
                 # Éviter doublons
                 if email not in seen_emails:
                     seen_emails.add(email)
                     signature["source_message_id"] = msg.get("id")
                     signature["source_date"] = msg.get("sentDateTime")
+                    signature["is_validated"] = False  # Nécessite validation manuelle
                     signatures.append(signature)
 
         return signatures

@@ -62,6 +62,8 @@ from models.role import Role, UserRole
 from models.task import Task, TaskPriority, TaskStatus
 from models.team import Team
 from models.user import User
+from models.user_email_account import UserEmailAccount
+from models.outlook_signature_pending import OutlookSignaturePending
 from models.webhook import Webhook
 from models.workflow import (
     Workflow,
@@ -105,6 +107,8 @@ __all__ = [
     "PersonOrganizationLink",
     "PersonRole",
     "User",
+    "UserEmailAccount",
+    "OutlookSignaturePending",
     "Team",
     # Tasks
     "Task",

@@ -31,6 +31,7 @@ import {
 } from '@/hooks/useAutofillStats'
 import type { Webhook as WebhookType } from '@/lib/types'
 import AIConfigSection from './AIConfigSection'
+import OutlookConnector from '@/components/integrations/OutlookConnector'
 
 type Tab = 'email' | 'webhooks' | 'ai' | 'connectors'
 
@@ -631,21 +632,27 @@ export default function IntegrationsSettingsPage() {
         )}
 
         {activeTab === 'connectors' && (
-          <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="flex items-center gap-3 mb-6">
-              <Link2 className="h-6 w-6 text-orange-500" />
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900">Connecteurs externes</h2>
-                <p className="text-sm text-gray-500">
-                  Zapier, Make, Slack… Ces intégrations arrivent prochainement pour automatiser vos
-                  workflows.
-                </p>
-              </div>
-            </div>
+          <section className="space-y-6">
+            {/* Outlook Connector */}
+            <OutlookConnector />
 
-            <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50/50 p-6 text-sm text-gray-600">
-              Nous finalisons l’API publique et les connecteurs (Zapier/Make). Laissez-nous un
-              message si vous souhaitez participer à la bêta privée.
+            {/* Autres connecteurs (à venir) */}
+            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+              <div className="flex items-center gap-3 mb-6">
+                <Link2 className="h-6 w-6 text-orange-500" />
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900">Autres connecteurs</h2>
+                  <p className="text-sm text-gray-500">
+                    Zapier, Make, Slack… Ces intégrations arrivent prochainement pour automatiser
+                    vos workflows.
+                  </p>
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50/50 p-6 text-sm text-gray-600">
+                Nous finalisons l'API publique et les connecteurs (Zapier/Make). Laissez-nous un
+                message si vous souhaitez participer à la bêta privée.
+              </div>
             </div>
           </section>
         )}

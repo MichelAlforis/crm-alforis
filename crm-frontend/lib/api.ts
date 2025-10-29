@@ -997,6 +997,68 @@ class ApiClient {
     return this.request<AutofillLeaderboardResponse>('/ai/autofill/stats/leaderboard')
   }
 
+  // ============= OUTLOOK INTEGRATION ENDPOINTS =============
+
+  async outlookAuthorize(): Promise<{ authorization_url: string; state: string }> {
+    return this.request<{ authorization_url: string; state: string }>(
+      '/integrations/outlook/authorize',
+      { method: 'POST' }
+    )
+  }
+
+  async outlookCallback(code: string, state: string): Promise<{ status: string; message: string; expires_in: number }> {
+    return this.request<{ status: string; message: string; expires_in: number }>(
+      '/integrations/outlook/callback',
+      {
+        method: 'POST',
+        body: JSON.stringify({ code, state })
+      }
+    )
+  }
+
+  async outlookSync(limit: number = 50): Promise<{ messages_count: number; signatures_count: number; signatures: any[] }> {
+    return this.request<{ messages_count: number; signatures_count: number; signatures: any[] }>(
+      `/integrations/outlook/sync?limit=${limit}`
+    )
+  }
+
+  async outlookGetSignatures(): Promise<{ signatures: any[] }> {
+    return this.request<{ signatures: any[] }>(
+      '/integrations/outlook/signatures'
+    )
+  }
+
+  async outlookDisconnect(): Promise<{ status: string; message: string }> {
+    return this.request<{ status: string; message: string }>(
+      '/integrations/outlook/disconnect',
+      { method: 'DELETE' }
+    )
+  }
+
+  async outlookDeleteData(): Promise<{ status: string; message: string; deleted_logs: number; deleted_decisions: number }> {
+    return this.request<{ status: string; message: string; deleted_logs: number; deleted_decisions: number }>(
+      '/integrations/outlook/data',
+      { method: 'DELETE' }
+    )
+  }
+
+  async outlookGetProfile(): Promise<{
+    crm_user_email: string
+    microsoft_account: {
+      email: string
+      display_name: string
+      user_principal_name: string
+      id: string
+      job_title?: string
+      office_location?: string
+    }
+    match: boolean
+  }> {
+    return this.request(
+      '/integrations/outlook/me'
+    )
+  }
+
   // ============= DASHBOARD STATS ENDPOINTS =============
   // ✅ NEW: Endpoints pour les statistiques dashboard (remplace KPIs)
 

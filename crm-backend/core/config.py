@@ -137,9 +137,16 @@ class Settings(BaseSettings):
     ai_batch_size: int = 10  # Nombre d'items par batch
 
     # Microsoft OAuth (Outlook Integration)
-    microsoft_client_id: str = ""
-    microsoft_client_secret: str = ""
-    microsoft_redirect_uri: str = "http://localhost:8000/api/v1/integrations/outlook/callback"
+    outlook_client_id: str = ""
+    outlook_client_secret: str = ""
+    outlook_tenant: str = "common"
+    outlook_redirect_uri: str = "http://localhost:3010/oauth/outlook/callback"
+    outlook_scopes: str = "https://graph.microsoft.com/Mail.Read https://graph.microsoft.com/Contacts.Read offline_access"
+    outlook_auth_url: str = ""
+    outlook_token_url: str = ""
+
+    # Encryption (Fernet AES-256 pour tokens OAuth)
+    encryption_key: str = ""
 
     model_config = SettingsConfigDict(
         env_file=".env",

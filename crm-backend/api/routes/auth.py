@@ -1,6 +1,6 @@
 from collections import defaultdict
 from datetime import datetime, timedelta
-from typing import Dict
+from typing import Dict, Optional
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -74,11 +74,18 @@ class TokenResponse(BaseModel):
     expires_in: int  # en secondes
 
 
+class OutlookIntegrationInfo(BaseModel):
+    """Informations sur l'intégration Outlook"""
+    outlook_connected: bool = False
+    outlook_token_expires_at: Optional[str] = None
+
+
 class UserInfo(BaseModel):
     """Informations utilisateur"""
 
     email: str
     is_admin: bool = False
+    outlook_integration: Optional[OutlookIntegrationInfo] = None
 
 
 class ChangePasswordRequest(BaseModel):
@@ -119,7 +126,11 @@ TEST_USERS = {
 
 
 @router.post("/login", response_model=TokenResponse)
-async def login(request: Request, db: Session = Depends(get_db)):
+async def login(
+    credentials: LoginRequest,
+    request: Request,
+    db: Session = Depends(get_db)
+):
     """
     Authentifier un utilisateur et retourner un token JWT
 
@@ -160,23 +171,7 @@ async def login(request: Request, db: Session = Depends(get_db)):
             detail="Trop de tentatives de connexion. Veuillez réessayer dans 5 minutes.",
         )
 
-    payload = None
-    try:
-        payload = await request.json()
-    except Exception:
-        form = await request.form()
-        payload = {
-            "email": form.get("username") or form.get("email"),
-            "password": form.get("password"),
-        }
-
-    if not payload:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Missing credentials",
-        )
-
-    credentials = LoginRequest(**payload)
+    # FastAPI a déjà parsé le JSON et validé avec Pydantic via le paramètre credentials
 
     # Vérifier les credentials via la base
     normalized_email = credentials.email.lower()
@@ -265,7 +260,10 @@ async def login(request: Request, db: Session = Depends(get_db)):
 
 
 @router.get("/me", response_model=UserInfo)
-async def get_current_user_info(credentials: HTTPAuthorizationCredentials = Depends(security)):
+async def get_current_user_info(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
+):
     """
     Récupérer les informations de l'utilisateur connecté
 
@@ -278,13 +276,35 @@ async def get_current_user_info(credentials: HTTPAuthorizationCredentials = Depe
     ```json
     {
       "email": "admin@tpmfinance.com",
-      "is_admin": true
+      "is_admin": true,
+      "outlook_integration": {
+        "outlook_connected": true,
+        "outlook_token_expires_at": "2025-11-01T12:00:00Z"
+      }
     }
     ```
     """
     try:
         payload = decode_token(credentials.credentials)
-        return UserInfo(email=payload.get("email", ""), is_admin=payload.get("is_admin", False))
+        email = payload.get("email", "")
+        is_admin = payload.get("is_admin", False)
+
+        # Récupérer infos Outlook depuis la DB
+        from models.user import User
+        user = db.query(User).filter(User.email == email).first()
+
+        outlook_integration = None
+        if user:
+            outlook_integration = OutlookIntegrationInfo(
+                outlook_connected=user.outlook_connected,
+                outlook_token_expires_at=user.outlook_token_expires_at.isoformat() if user.outlook_token_expires_at else None
+            )
+
+        return UserInfo(
+            email=email,
+            is_admin=is_admin,
+            outlook_integration=outlook_integration
+        )
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

@@ -76,12 +76,23 @@ class User(BaseModel):
     push_subscriptions = relationship(
         "PushSubscription", back_populates="user", cascade="all, delete-orphan"
     )
+    email_accounts = relationship(
+        "UserEmailAccount", back_populates="user", cascade="all, delete-orphan"
+    )
+    outlook_signatures_pending = relationship(
+        "OutlookSignaturePending",
+        foreign_keys="[OutlookSignaturePending.user_id]",
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )
 
     # Outlook Integration (Phase 1)
     outlook_connected = Column(Boolean, default=False, nullable=False)
     encrypted_outlook_access_token = Column(Text, nullable=True)
     encrypted_outlook_refresh_token = Column(Text, nullable=True)
     outlook_token_expires_at = Column(DateTime(timezone=True), nullable=True)
+    outlook_consent_given = Column(Boolean, default=False, nullable=False)  # RGPD
+    outlook_consent_date = Column(DateTime(timezone=True), nullable=True)  # RGPD
 
     # CGU/CGV Acceptance (Legal Compliance)
     cgu_accepted = Column(Boolean, default=False, nullable=False, index=True)
