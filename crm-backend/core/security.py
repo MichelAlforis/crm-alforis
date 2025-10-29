@@ -9,7 +9,7 @@ from core.config import settings
 from core.exceptions import ForbiddenError, UnauthorizedError
 
 # Configuration du hachage des mots de passe
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 security = HTTPBearer()
 
 

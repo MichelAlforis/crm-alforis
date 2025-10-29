@@ -13,6 +13,12 @@
 import React, { useEffect, useState } from 'react'
 import { Bell, Download, X, Sparkles } from 'lucide-react'
 import { usePushNotifications } from '@/hooks/usePushNotifications'
+import { usePersistentFlag } from '@/hooks/usePersistentFlag'
+
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
+}
 
 type BannerType = 'pwa-install' | 'push-notifications' | 'onboarding'
 
@@ -41,14 +47,19 @@ export function BannerManager() {
   // Onboarding callback removed
 
   // État PWA
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [isPWAInstalled, setIsPWAInstalled] = useState(false)
+
+  // Persistent dismissal flags
+  const [pwaDismissed, setPwaDismissed, pwaDismissedRef] = usePersistentFlag('pwa-install-dismissed')
+  const [pushDismissed, setPushDismissed, pushDismissedRef] = usePersistentFlag('push-notifications-dismissed')
+  const [onboardingDismissed, setOnboardingDismissed, onboardingDismissedRef] = usePersistentFlag('onboarding-dismissed')
 
   // Capturer l'événement PWA install
   useEffect(() => {
-    const handler = (e: Event) => {
-      e.preventDefault()
-      setDeferredPrompt(e)
+    const handler = (event: Event) => {
+      event.preventDefault()
+      setDeferredPrompt(event as BeforeInstallPromptEvent)
     }
 
     window.addEventListener('beforeinstallprompt', handler)
@@ -77,21 +88,21 @@ export function BannerManager() {
           deferredPrompt.prompt()
           const { outcome } = await deferredPrompt.userChoice
           if (outcome === 'accepted') {
-            localStorage.setItem('pwa-install-dismissed', 'true')
+            setPwaDismissed(true)
             setDeferredPrompt(null)
             showNextBanner()
           }
         }
       },
       onDismiss: () => {
-        localStorage.setItem('pwa-install-dismissed', 'true')
+        setPwaDismissed(true)
         showNextBanner()
       },
       shouldShow: () => {
         return (
           !isPWAInstalled &&
           deferredPrompt !== null &&
-          !localStorage.getItem('pwa-install-dismissed')
+          !pwaDismissedRef.current
         )
       },
     },
@@ -110,12 +121,12 @@ export function BannerManager() {
         const success = await subscribe()
         setIsLoading(false)
         if (success) {
-          localStorage.setItem('push-notifications-dismissed', 'true')
+          setPushDismissed(true)
           showNextBanner()
         }
       },
       onDismiss: () => {
-        localStorage.setItem('push-notifications-dismissed', 'true')
+        setPushDismissed(true)
         showNextBanner()
       },
       shouldShow: () => {
@@ -124,7 +135,7 @@ export function BannerManager() {
           'Notification' in window &&
           permission !== 'denied' &&
           !isSubscribed &&
-          !localStorage.getItem('push-notifications-dismissed')
+          !pushDismissedRef.current
         )
       },
     },
@@ -139,24 +150,26 @@ export function BannerManager() {
       actionLabel: 'Démarrer la visite',
       dismissLabel: 'Ignorer',
       onAction: () => {
-        localStorage.setItem('onboarding-dismissed', 'true')
+        setOnboardingDismissed(true)
         setCurrentBanner(null)
         // Déclencher l'événement pour OnboardingTour
         window.dispatchEvent(new CustomEvent('start-onboarding'))
       },
       onDismiss: () => {
-        localStorage.setItem('onboarding-dismissed', 'true')
+        setOnboardingDismissed(true)
         showNextBanner()
       },
       shouldShow: () => {
-        const hasCompletedOnboarding = localStorage.getItem('onboarding-completed') === 'true'
-        const hasDismissed = localStorage.getItem('onboarding-dismissed') === 'true'
-        return !hasCompletedOnboarding && !hasDismissed
+        const hasCompletedOnboarding =
+          typeof window !== 'undefined' &&
+          localStorage.getItem('onboarding-completed') === 'true'
+        return !hasCompletedOnboarding && !onboardingDismissedRef.current
       },
     },
   ]
 
   // Construire la queue au montage et à chaque changement
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     const availableBanners = allBanners
       .filter((banner) => banner.shouldShow())
@@ -170,7 +183,16 @@ export function BannerManager() {
         setCurrentBanner(availableBanners[0])
       }, 2000)
     }
-  }, [deferredPrompt, isSubscribed, permission, isPWAInstalled])
+  }, [
+    deferredPrompt,
+    isSubscribed,
+    permission,
+    isPWAInstalled,
+    pushDismissed,
+    pwaDismissed,
+    onboardingDismissed,
+  ])
+  /* eslint-enable react-hooks/exhaustive-deps */
 
   // Afficher le banner suivant dans la queue
   const showNextBanner = () => {

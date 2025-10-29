@@ -15,6 +15,7 @@
 import React from 'react'
 import { Bell } from 'lucide-react'
 import { usePushNotifications } from '@/hooks/usePushNotifications'
+import { usePersistentFlag } from '@/hooks/usePersistentFlag'
 
 export function PushNotificationManager() {
   const {
@@ -26,8 +27,15 @@ export function PushNotificationManager() {
     unsubscribe,
   } = usePushNotifications()
 
+  const [isDismissed, setIsDismissed] = usePersistentFlag('push-notifications-dismissed')
+
   // Don't show if notifications not supported
   if (typeof window !== 'undefined' && !('Notification' in window)) {
+    return null
+  }
+
+  // Don't show if user dismissed the prompt
+  if (isDismissed) {
     return null
   }
 
@@ -83,9 +91,7 @@ export function PushNotificationManager() {
               <button
                 onClick={() => {
                   // Hide this prompt (can be shown again in settings)
-                  localStorage.setItem('push-notifications-dismissed', 'true')
-                  // Force re-render to hide
-                  window.location.reload()
+                  setIsDismissed(true)
                 }}
                 className="px-4 py-2 rounded-md text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               >

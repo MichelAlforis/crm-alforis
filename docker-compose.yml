@@ -92,8 +92,8 @@ services:
       REDIS_DB: ${REDIS_DB:-0}
       DEBUG: ${DEBUG:-True}
       SECRET_KEY: ${SECRET_KEY:-dev_secret_key_change_in_production}
-      # FORCER localhost pour dev local (ignorer .env qui peut avoir prod)
-      ALLOWED_ORIGINS: '["http://localhost:3010","http://127.0.0.1:3010","http://localhost:3000"]'
+      # Respecte .env (fallback inclut localhost + domaines publics)
+      ALLOWED_ORIGINS: '${ALLOWED_ORIGINS:-["http://localhost:3010","http://127.0.0.1:3010","http://localhost:3000","https://crm.alforis.fr","https://staging.crm.alforis.fr"]}'
       JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
       JWT_EXPIRATION_HOURS: ${JWT_EXPIRATION_HOURS:-24}
       ENVIRONMENT: ${ENVIRONMENT:-development}

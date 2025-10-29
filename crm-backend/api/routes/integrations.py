@@ -186,7 +186,7 @@ async def outlook_callback(
 @router.get("/outlook/search")
 async def outlook_search(
     query: str = Query(..., min_length=2, description="Nom, email ou entreprise à rechercher"),
-    limit: int = Query(10, le=20),
+    limit: int = Query(25, ge=1, le=50),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
@@ -244,9 +244,143 @@ async def outlook_search(
     }
 
 
+@router.get("/outlook/search/debug")
+async def outlook_search_debug(
+    query: str = Query(..., min_length=2),
+    limit: int = Query(5, le=20),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """DEBUG: Retourne les messages bruts de la recherche (temporaire)"""
+    outlook_service = OutlookIntegration(db)
+
+    user_id = current_user.get("user_id") or current_user.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=401, detail="User ID manquant")
+
+    try:
+        user_id_int = int(user_id)
+        user = db.query(User).filter(User.id == user_id_int).first()
+    except ValueError:
+        user = db.query(User).filter(
+            (User.username == user_id) | (User.email == user_id)
+        ).first()
+
+    if not user or not user.outlook_connected:
+        raise HTTPException(status_code=400, detail="Outlook non connecté")
+
+    access_token = decrypt_value(user.encrypted_outlook_access_token)
+    results = await outlook_service.search_messages_by_query(access_token, query=query, limit=limit)
+
+    # Return full messages for debugging
+    return {
+        "query": query,
+        "message_count": len(results.get("messages", [])),
+        "messages": results.get("messages", []),
+        "signatures": results.get("signatures", []),
+    }
+
+
+@router.get("/outlook/debug/me")
+async def outlook_debug_me(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """DEBUG: Quel compte Outlook est connecté?"""
+    import httpx
+
+    user_id = current_user.get("user_id") or current_user.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=401, detail="User ID manquant")
+
+    user = db.query(User).filter(User.id == int(user_id)).first()
+    if not user or not user.outlook_connected:
+        raise HTTPException(status_code=400, detail="Outlook non connecté")
+
+    access_token = decrypt_value(user.encrypted_outlook_access_token)
+
+    # Appel Graph API /me
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            "https://graph.microsoft.com/v1.0/me",
+            headers={"Authorization": f"Bearer {access_token}"}
+        )
+        response.raise_for_status()
+        me_data = response.json()
+
+    return {
+        "crm_user_id": user.id,
+        "crm_email": user.email,
+        "outlook_account": {
+            "mail": me_data.get("mail"),
+            "userPrincipalName": me_data.get("userPrincipalName"),
+            "displayName": me_data.get("displayName"),
+            "jobTitle": me_data.get("jobTitle"),
+            "officeLocation": me_data.get("officeLocation"),
+        },
+        "token_expires_at": user.outlook_token_expires_at.isoformat() if user.outlook_token_expires_at else None,
+    }
+
+
+@router.get("/outlook/debug/messages-raw")
+async def outlook_debug_messages_raw(
+    days: int = Query(30, ge=1, le=365),
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """DEBUG: Appel Graph API brut avec logs détaillés"""
+    import httpx
+    from datetime import datetime, timedelta
+
+    user_id = current_user.get("user_id") or current_user.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=401, detail="User ID manquant")
+
+    user = db.query(User).filter(User.id == int(user_id)).first()
+    if not user or not user.outlook_connected:
+        raise HTTPException(status_code=400, detail="Outlook non connecté")
+
+    access_token = decrypt_value(user.encrypted_outlook_access_token)
+    start_date = (datetime.utcnow() - timedelta(days=days)).isoformat() + "Z"
+
+    # Appel Graph API brut
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        url = "https://graph.microsoft.com/v1.0/me/messages"
+        params = {
+            "$top": 100,
+            "$filter": f"sentDateTime ge {start_date}",
+            "$orderby": "sentDateTime desc",
+            "$select": "id,subject,from,sentDateTime",
+        }
+
+        response = await client.get(url, params=params, headers={"Authorization": f"Bearer {access_token}"})
+        response.raise_for_status()
+        data = response.json()
+
+        messages = data.get("value", [])
+        next_link = data.get("@odata.nextLink")
+
+        return {
+            "request_url": str(response.url),
+            "status_code": response.status_code,
+            "message_count": len(messages),
+            "has_next_link": next_link is not None,
+            "next_link": next_link,
+            "messages": messages[:5],  # Premiers 5 pour éviter gros payload
+            "message_dates": [msg.get("sentDateTime") for msg in messages],
+            "debug_info": {
+                "filter": params["$filter"],
+                "top": params["$top"],
+                "days_requested": days,
+                "start_date": start_date,
+            }
+        }
+
+
 @router.get("/outlook/sync", response_model=OutlookSyncResponse)
 async def outlook_sync(
-    limit: int = Query(50, le=100),
+    limit: int = Query(50, ge=0, le=1000, description="Nombre max de messages (0 = illimité)"),
+    days: int = Query(30, ge=1, le=365, description="Nombre de jours dans le passé"),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
@@ -255,6 +389,10 @@ async def outlook_sync(
 
     Récupère les messages récents et extrait les signatures
     ⚠️ Les signatures vont en salle d'attente pour validation manuelle
+
+    Paramètres:
+    - limit: 0 = illimité (aspirateur exhaustif), >0 = limité
+    - days: Nombre de jours dans le passé (défaut: 30)
     """
     from models.outlook_signature_pending import OutlookSignaturePending
     import json
@@ -275,8 +413,8 @@ async def outlook_sync(
 
     # TODO: Vérifier expiration et refresh si nécessaire
 
-    # Récupérer messages
-    messages = await outlook_service.get_recent_messages(access_token, limit=limit)
+    # Récupérer messages avec pagination
+    messages = await outlook_service.get_recent_messages(access_token, limit=limit, days=days)
 
     # Extraire signatures (avec filtre anti-marketing)
     signatures = outlook_service.extract_signatures_from_messages(
