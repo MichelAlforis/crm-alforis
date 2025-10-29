@@ -1897,10 +1897,15 @@ async def ionos_test_ews(request: IONOSTestRequest):
 # EMAIL ACCOUNTS MANAGEMENT (Multi-Provider Multi-Tenant)
 # =============================================================================
 
-def _get_user_id_from_token(current_user: dict, db: Session) -> int:
+def _get_user_context_from_token(current_user: dict, db: Session) -> tuple[int, int]:
     """
-    Extract user_id from JWT token.
-    Handles both numeric IDs and non-numeric (dev tokens) by looking up by email.
+    Extract (user_id, team_id) from JWT token pour MULTI-TENANT isolation.
+
+    Returns:
+        tuple[int, int]: (user_id, team_id)
+
+    Raises:
+        HTTPException: Si user/team non trouvé ou team_id manquant
     """
     user_id_raw = current_user.get("user_id") or current_user.get("sub")
     if not user_id_raw:
@@ -1908,7 +1913,7 @@ def _get_user_id_from_token(current_user: dict, db: Session) -> int:
 
     # Try converting to int
     try:
-        return int(user_id_raw)
+        user_id = int(user_id_raw)
     except (ValueError, TypeError):
         # Fallback: lookup user by email if user_id is non-numeric
         user_email = current_user.get("email")
@@ -1917,7 +1922,17 @@ def _get_user_id_from_token(current_user: dict, db: Session) -> int:
         user = db.query(User).filter(User.email == user_email).first()
         if not user:
             raise HTTPException(404, f"Utilisateur non trouvé: {user_email}")
-        return user.id
+        user_id = user.id
+
+    # Récupérer le team_id de l'utilisateur (OBLIGATOIRE pour multi-tenant)
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(404, f"User {user_id} non trouvé")
+
+    if not user.team_id:
+        raise HTTPException(403, f"User {user_id} n'a pas de team assignée - multi-tenant requis")
+
+    return (user_id, user.team_id)
 
 
 class AddEmailAccountRequest(BaseModel):
@@ -1980,21 +1995,23 @@ async def add_email_account(
     else:
         raise HTTPException(400, f"Protocol inconnu: {request.protocol}. Supportés: ews, imap")
 
-    # Vérifier si compte existe déjà
-    user_id = _get_user_id_from_token(current_user, db)
+    # MULTI-TENANT: Récupérer user_id ET team_id
+    user_id, team_id = _get_user_context_from_token(current_user, db)
 
+    # Vérifier si compte existe déjà DANS CETTE TEAM (isolation)
     existing = db.query(UserEmailAccount).filter(
-        UserEmailAccount.user_id == user_id,
+        UserEmailAccount.team_id == team_id,  # ISOLATION PAR TEAM!
         UserEmailAccount.email == request.email,
         UserEmailAccount.protocol == request.protocol,
     ).first()
 
     if existing:
-        raise HTTPException(400, f"Compte {request.email} ({request.protocol}) existe déjà")
+        raise HTTPException(400, f"Compte {request.email} ({request.protocol}) existe déjà dans votre équipe")
 
-    # Créer le compte
+    # Créer le compte avec team_id (ISOLATION MULTI-TENANT)
     account = UserEmailAccount(
-        user_id=user_id,
+        team_id=team_id,  # OBLIGATOIRE - contexte tenant
+        user_id=user_id,  # Audit trail - qui a configuré
         email=request.email,
         protocol=request.protocol,
         server=request.server,
@@ -2029,12 +2046,14 @@ async def list_email_accounts(
     db: Session = Depends(get_db),
 ):
     """
-    Liste tous les comptes email configurés pour l'utilisateur connecté.
+    Liste tous les comptes email de la TEAM (multi-tenant isolation).
+    Retourne TOUS les comptes de l'équipe, pas seulement ceux de l'user.
     """
-    user_id = _get_user_id_from_token(current_user, db)
+    user_id, team_id = _get_user_context_from_token(current_user, db)
 
+    # ISOLATION PAR TEAM - tous les comptes de l'équipe
     accounts = db.query(UserEmailAccount).filter(
-        UserEmailAccount.user_id == user_id
+        UserEmailAccount.team_id == team_id  # MULTI-TENANT!
     ).all()
 
     return {
@@ -2060,19 +2079,20 @@ async def test_email_account(
     db: Session = Depends(get_db),
 ):
     """
-    Tester la connexion d'un compte email.
+    Tester la connexion d'un compte email (avec isolation team).
     """
     from mail.provider_factory import MailProviderFactory
 
-    user_id = _get_user_id_from_token(current_user, db)
+    user_id, team_id = _get_user_context_from_token(current_user, db)
 
+    # Vérifier que le compte appartient à la TEAM (sécurité multi-tenant)
     account = db.query(UserEmailAccount).filter(
         UserEmailAccount.id == account_id,
-        UserEmailAccount.user_id == user_id,
+        UserEmailAccount.team_id == team_id,  # ISOLATION!
     ).first()
 
     if not account:
-        raise HTTPException(404, "Account not found")
+        raise HTTPException(404, "Account not found or access denied")
 
     result = await MailProviderFactory.test_connection(account)
     return result
@@ -2085,17 +2105,18 @@ async def delete_email_account(
     db: Session = Depends(get_db),
 ):
     """
-    Supprimer un compte email.
+    Supprimer un compte email (avec isolation team).
     """
-    user_id = _get_user_id_from_token(current_user, db)
+    user_id, team_id = _get_user_context_from_token(current_user, db)
 
+    # Vérifier que le compte appartient à la TEAM (sécurité multi-tenant)
     account = db.query(UserEmailAccount).filter(
         UserEmailAccount.id == account_id,
-        UserEmailAccount.user_id == user_id,
+        UserEmailAccount.team_id == team_id,  # ISOLATION!
     ).first()
 
     if not account:
-        raise HTTPException(404, "Account not found")
+        raise HTTPException(404, "Account not found or access denied")
 
     db.delete(account)
     db.commit()
