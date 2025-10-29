@@ -14,6 +14,7 @@ import Navbar from '@/components/shared/Navbar'
 import Sidebar from '@/components/shared/Sidebar'
 import Footer from '@/components/shared/Footer'
 import NavigationProgress from '@/components/shared/NavigationProgress'
+import { CommandPalette, useCommandPalette } from '@/components/shared/CommandPalette'
 import QueryProvider from '@/components/providers/QueryProvider'
 import OfflineIndicator from '@/components/pwa/OfflineIndicator'
 import { BannerManager } from '@/components/pwa/BannerManager'
@@ -28,6 +29,7 @@ export default function DashboardLayout({
 }) {
   const { isAuthenticated, isLoading } = useAuth()
   const router = useRouter()
+  const { open: commandPaletteOpen, setOpen: setCommandPaletteOpen } = useCommandPalette()
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -67,6 +69,9 @@ export default function DashboardLayout({
         <OnboardingTour>
           {/* Global Navigation Progress Bar */}
           <NavigationProgress />
+
+          {/* Command Palette - ⌘K/Ctrl+K */}
+          <CommandPalette open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
 
           <div className="dashboard-layout flex h-screen overflow-hidden">
             {/* Sidebar Navigation - Fixed, always visible */}

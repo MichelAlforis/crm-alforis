@@ -15,6 +15,26 @@
     "react-hooks/exhaustive-deps": "warn",
     "react-hooks/rules-of-hooks": "error",
     "@next/next/no-img-element": "warn",
-    "@next/next/google-font-preconnect": "warn"
-  }
+    "@next/next/google-font-preconnect": "warn",
+
+    "max-lines": ["warn", {
+      "max": 500,
+      "skipBlankLines": true,
+      "skipComments": true
+    }],
+    "max-lines-per-function": ["warn", {
+      "max": 80,
+      "skipBlankLines": true,
+      "skipComments": true
+    }],
+    "complexity": ["warn", 12]
+  },
+  "overrides": [
+    {
+      "files": ["**/pages/**", "**/app/**/page.tsx", "**/app/**/layout.tsx"],
+      "rules": {
+        "max-lines": ["warn", { "max": 800 }]
+      }
+    }
+  ]
 }

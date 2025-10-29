@@ -27,6 +27,9 @@ export { default as PaginationBar } from './PaginationBar'
 export { DataTable } from './DataTable'
 export type { Column, QuickAction, BulkAction, DataTableProps } from './DataTable/types'
 
+// Command Palette - ⌘K
+export { CommandPalette, useCommandPalette } from './CommandPalette'
+
 // Types
 export type { SelectOption } from './SearchableSelect'
 export type { EntityOption } from './EntityAutocompleteInput'
