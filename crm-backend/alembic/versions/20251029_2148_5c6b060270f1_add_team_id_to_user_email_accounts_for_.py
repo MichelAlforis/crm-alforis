@@ -1,0 +1,1024 @@
+"""add_team_id_to_user_email_accounts_for_multi_tenant
+
+Revision ID: 5c6b060270f1
+Revises: e6629099b1ba
+Create Date: 2025-10-29 21:48:32.919315+00:00
+
+"""
+from typing import Sequence, Union
+
+from alembic import op
+import sqlalchemy as sa
+from sqlalchemy.dialects import postgresql
+
+# revision identifiers, used by Alembic.
+revision: str = '5c6b060270f1'
+down_revision: Union[str, None] = 'e6629099b1ba'
+branch_labels: Union[str, Sequence[str], None] = None
+depends_on: Union[str, Sequence[str], None] = None
+
+
+def upgrade() -> None:
+    # ### CLEANED UP - ONLY user_email_accounts changes ###
+
+    # ÉTAPE 1: Ajouter team_id NULLABLE d'abord
+    op.add_column('user_email_accounts', sa.Column('team_id', sa.Integer(), nullable=True))
+
+    # ÉTAPE 2: Remplir team_id depuis users.team_id pour les lignes existantes
+    op.execute("""
+        UPDATE user_email_accounts
+        SET team_id = users.team_id
+        FROM users
+        WHERE user_email_accounts.user_id = users.id
+    """)
+
+    # ÉTAPE 3: Rendre team_id NOT NULL maintenant qu'il est rempli
+    op.alter_column('user_email_accounts', 'team_id',
+               existing_type=sa.INTEGER(),
+               nullable=False)
+
+    # ÉTAPE 4: user_id devient NULLABLE (optionnel, pour audit trail)
+    op.alter_column('user_email_accounts', 'user_id',
+               existing_type=sa.INTEGER(),
+               nullable=True)
+
+    # ÉTAPE 5: Créer index sur team_id
+    op.create_index(op.f('ix_user_email_accounts_team_id'), 'user_email_accounts', ['team_id'], unique=False)
+
+    # ÉTAPE 6: Modifier les FK
+    op.drop_constraint('user_email_accounts_user_id_fkey', 'user_email_accounts', type_='foreignkey')
+    op.create_foreign_key(None, 'user_email_accounts', 'teams', ['team_id'], ['id'], ondelete='CASCADE')
+    op.create_foreign_key(None, 'user_email_accounts', 'users', ['user_id'], ['id'], ondelete='SET NULL')
+
+    # ### end Alembic commands ###
+
+
+def _OLD_upgrade_removed() -> None:
+    # OLD CODE REMOVED TO AVOID DROP TABLE ERRORS
+    op.drop_index('ix_interactions_date', table_name='interactions')
+    op.drop_index('ix_interactions_id', table_name='interactions')
+    op.drop_index('ix_interactions_investor_id', table_name='interactions')
+    op.drop_table('interactions')
+    op.drop_index('ix_investors_country_code', table_name='investors')
+    op.drop_index('ix_investors_email', table_name='investors')
+    op.drop_index('ix_investors_id', table_name='investors')
+    op.drop_index('ix_investors_is_active', table_name='investors')
+    op.drop_index('ix_investors_language', table_name='investors')
+    op.drop_index('ix_investors_name', table_name='investors')
+    op.drop_index('ix_investors_pipeline_stage', table_name='investors')
+    op.drop_table('investors')
+    op.drop_index('ix_person_org_links_id', table_name='person_org_links')
+    op.drop_index('ix_person_org_links_organization_id', table_name='person_org_links')
+    op.drop_index('ix_person_org_links_organization_type', table_name='person_org_links')
+    op.drop_index('ix_person_org_links_person_id', table_name='person_org_links')
+    op.drop_table('person_org_links')
+    op.drop_index('ix_fournisseur_interactions_date', table_name='fournisseur_interactions')
+    op.drop_index('ix_fournisseur_interactions_fournisseur_id', table_name='fournisseur_interactions')
+    op.drop_index('ix_fournisseur_interactions_id', table_name='fournisseur_interactions')
+    op.drop_table('fournisseur_interactions')
+    op.drop_index('ix_contacts_id', table_name='contacts')
+    op.drop_index('ix_contacts_investor_id', table_name='contacts')
+    op.drop_table('contacts')
+    op.drop_index('idx_audit_action_date', table_name='audit_logs')
+    op.drop_index('idx_audit_entity', table_name='audit_logs')
+    op.drop_index('idx_audit_user_date', table_name='audit_logs')
+    op.drop_index('ix_audit_logs_action', table_name='audit_logs')
+    op.drop_index('ix_audit_logs_created_at', table_name='audit_logs')
+    op.drop_index('ix_audit_logs_entity_id', table_name='audit_logs')
+    op.drop_index('ix_audit_logs_entity_type', table_name='audit_logs')
+    op.drop_index('ix_audit_logs_id', table_name='audit_logs')
+    op.drop_index('ix_audit_logs_user_id', table_name='audit_logs')
+    op.drop_table('audit_logs')
+    op.drop_index('ix_outlook_signatures_email_domain', table_name='outlook_signatures')
+    op.drop_index('ix_outlook_signatures_parsed_email', table_name='outlook_signatures')
+    op.drop_index('ix_outlook_signatures_received_at', table_name='outlook_signatures')
+    op.drop_index('ix_outlook_signatures_user_id', table_name='outlook_signatures')
+    op.drop_table('outlook_signatures')
+    op.drop_index('ix_kpis_id', table_name='kpis')
+    op.drop_index('ix_kpis_investor_id', table_name='kpis')
+    op.drop_table('kpis')
+    op.drop_index('ix_autofill_logs_applied', table_name='autofill_logs')
+    op.drop_index('ix_autofill_logs_created_at', table_name='autofill_logs')
+    op.drop_index('ix_autofill_logs_entity', table_name='autofill_logs')
+    op.drop_index('ix_autofill_logs_field', table_name='autofill_logs')
+    op.drop_index('ix_autofill_logs_source', table_name='autofill_logs')
+    op.drop_index('ix_autofill_logs_source_applied', table_name='autofill_logs')
+    op.drop_index('ix_autofill_logs_user_id', table_name='autofill_logs')
+    op.drop_table('autofill_logs')
+    op.drop_index('ix_fournisseur_contacts_fournisseur_id', table_name='fournisseur_contacts')
+    op.drop_index('ix_fournisseur_contacts_id', table_name='fournisseur_contacts')
+    op.drop_table('fournisseur_contacts')
+    op.drop_index('ix_push_subscriptions_endpoint', table_name='push_subscriptions')
+    op.drop_index('ix_push_subscriptions_id', table_name='push_subscriptions')
+    op.drop_index('ix_push_subscriptions_user_id', table_name='push_subscriptions')
+    op.drop_table('push_subscriptions')
+    op.drop_index('ix_fournisseur_kpis_fournisseur_id', table_name='fournisseur_kpis')
+    op.drop_index('ix_fournisseur_kpis_id', table_name='fournisseur_kpis')
+    op.drop_table('fournisseur_kpis')
+    op.drop_index('ix_email_configurations_id', table_name='email_configurations')
+    op.drop_index('ix_email_configurations_is_active', table_name='email_configurations')
+    op.drop_table('email_configurations')
+    op.drop_index('ix_fournisseurs_country_code', table_name='fournisseurs')
+    op.drop_index('ix_fournisseurs_email', table_name='fournisseurs')
+    op.drop_index('ix_fournisseurs_id', table_name='fournisseurs')
+    op.drop_index('ix_fournisseurs_is_active', table_name='fournisseurs')
+    op.drop_index('ix_fournisseurs_language', table_name='fournisseurs')
+    op.drop_index('ix_fournisseurs_name', table_name='fournisseurs')
+    op.drop_index('ix_fournisseurs_stage', table_name='fournisseurs')
+    op.drop_table('fournisseurs')
+    op.alter_column('autofill_decision_logs', 'was_deduped',
+               existing_type=sa.INTEGER(),
+               server_default=None,
+               existing_nullable=False)
+    op.drop_index('idx_autofill_decision_created', table_name='autofill_decision_logs')
+    op.drop_index('idx_autofill_decision_interaction', table_name='autofill_decision_logs')
+    op.drop_index('idx_autofill_decision_org', table_name='autofill_decision_logs')
+    op.drop_index('idx_autofill_decision_person', table_name='autofill_decision_logs')
+    op.alter_column('campaign_subscriptions', 'is_active',
+               existing_type=sa.BOOLEAN(),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('campaign_subscriptions', 'updated_at',
+               existing_type=postgresql.TIMESTAMP(timezone=True),
+               server_default=sa.text('now()'),
+               nullable=False)
+    op.create_index(op.f('ix_campaign_subscriptions_id'), 'campaign_subscriptions', ['id'], unique=False)
+    op.alter_column('crm_interactions', 'type',
+               existing_type=postgresql.ENUM('call', 'email', 'meeting', 'note', 'other', name='interaction_type'),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('crm_interactions', 'attachments',
+               existing_type=postgresql.JSON(astext_type=sa.Text()),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('crm_interactions', 'external_participants',
+               existing_type=postgresql.JSON(astext_type=sa.Text()),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('crm_interactions', 'updated_at',
+               existing_type=postgresql.TIMESTAMP(timezone=True),
+               server_default=sa.text('now()'),
+               nullable=False)
+    op.drop_index('idx_crm_interactions_created_at', table_name='crm_interactions')
+    op.drop_index('idx_crm_interactions_created_by', table_name='crm_interactions')
+    op.drop_index('idx_crm_interactions_org_created_at', table_name='crm_interactions')
+    op.drop_index('idx_crm_interactions_person_created_at', table_name='crm_interactions')
+    op.drop_index('idx_interactions_assignee', table_name='crm_interactions', postgresql_where='(assignee_id IS NOT NULL)')
+    op.drop_index('idx_interactions_next_action', table_name='crm_interactions', postgresql_where='(next_action_at IS NOT NULL)')
+    op.create_index('idx_interactions_created_at', 'crm_interactions', ['created_at'], unique=False)
+    op.create_index('idx_interactions_org_created_at', 'crm_interactions', ['org_id', 'created_at'], unique=False)
+    op.create_index('idx_interactions_person_created_at', 'crm_interactions', ['person_id', 'created_at'], unique=False)
+    op.create_index(op.f('ix_crm_interactions_assignee_id'), 'crm_interactions', ['assignee_id'], unique=False)
+    op.create_index(op.f('ix_crm_interactions_created_by'), 'crm_interactions', ['created_by'], unique=False)
+    op.create_index(op.f('ix_crm_interactions_id'), 'crm_interactions', ['id'], unique=False)
+    op.create_index(op.f('ix_crm_interactions_next_action_at'), 'crm_interactions', ['next_action_at'], unique=False)
+    op.create_index(op.f('ix_crm_interactions_org_id'), 'crm_interactions', ['org_id'], unique=False)
+    op.create_index(op.f('ix_crm_interactions_person_id'), 'crm_interactions', ['person_id'], unique=False)
+    op.create_index(op.f('ix_crm_interactions_status'), 'crm_interactions', ['status'], unique=False)
+    op.alter_column('email_campaigns', 'provider',
+               existing_type=postgresql.ENUM('resend', 'sendgrid', 'mailgun', name='emailprovider'),
+               server_default=None,
+               nullable=False)
+    op.create_index('idx_email_campaign_provider', 'email_campaigns', ['provider'], unique=False)
+    op.alter_column('email_event_tracking', 'status',
+               existing_type=postgresql.ENUM('sent', 'opened', 'clicked', 'bounced', name='email_status'),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('email_event_tracking', 'open_count',
+               existing_type=sa.INTEGER(),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('email_event_tracking', 'click_count',
+               existing_type=sa.INTEGER(),
+               server_default=None,
+               existing_nullable=False)
+    op.drop_index('idx_email_event_tracking_org', table_name='email_event_tracking')
+    op.drop_constraint('uq_email_event_provider_ext', 'email_event_tracking', type_='unique')
+    op.drop_index('idx_email_event_tracking_person_sent', table_name='email_event_tracking')
+    op.create_index('idx_email_event_tracking_person_sent', 'email_event_tracking', ['person_id', 'sent_at'], unique=False)
+    op.create_index(op.f('ix_email_event_tracking_external_id'), 'email_event_tracking', ['external_id'], unique=False)
+    op.create_index(op.f('ix_email_event_tracking_id'), 'email_event_tracking', ['id'], unique=False)
+    op.create_index(op.f('ix_email_event_tracking_organisation_id'), 'email_event_tracking', ['organisation_id'], unique=False)
+    op.create_index(op.f('ix_email_event_tracking_person_id'), 'email_event_tracking', ['person_id'], unique=False)
+    op.create_index(op.f('ix_email_event_tracking_provider'), 'email_event_tracking', ['provider'], unique=False)
+    op.create_index(op.f('ix_email_event_tracking_sent_at'), 'email_event_tracking', ['sent_at'], unique=False)
+    op.create_index(op.f('ix_email_event_tracking_status'), 'email_event_tracking', ['status'], unique=False)
+    op.alter_column('email_send_batches', 'status',
+               existing_type=postgresql.ENUM('QUEUED', 'SCHEDULED', 'SENDING', 'SENT', 'DELIVERED', 'OPENED', 'CLICKED', 'FAILED', 'BOUNCED', 'UNSUBSCRIBED', 'COMPLAINED', name='emailsendstatus'),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('email_send_batches', 'total_recipients',
+               existing_type=sa.INTEGER(),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('email_send_batches', 'sent_count',
+               existing_type=sa.INTEGER(),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('email_send_batches', 'delivered_count',
+               existing_type=sa.INTEGER(),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('email_send_batches', 'opened_count',
+               existing_type=sa.INTEGER(),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('email_send_batches', 'clicked_count',
+               existing_type=sa.INTEGER(),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('email_send_batches', 'bounced_count',
+               existing_type=sa.INTEGER(),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('email_send_batches', 'failed_count',
+               existing_type=sa.INTEGER(),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('email_send_batches', 'created_at',
+               existing_type=postgresql.TIMESTAMP(timezone=True),
+               nullable=False,
+               existing_server_default=sa.text('CURRENT_TIMESTAMP'))
+    op.alter_column('email_send_batches', 'updated_at',
+               existing_type=postgresql.TIMESTAMP(timezone=True),
+               nullable=False,
+               existing_server_default=sa.text('CURRENT_TIMESTAMP'))
+    op.create_index(op.f('ix_email_send_batches_id'), 'email_send_batches', ['id'], unique=False)
+    op.drop_index('idx_interaction_participants_interaction', table_name='interaction_participants')
+    op.drop_index('idx_interaction_participants_person', table_name='interaction_participants')
+    op.drop_index('idx_known_companies_domain', table_name='known_companies')
+    op.drop_index('idx_known_companies_industry', table_name='known_companies')
+    op.drop_index('idx_known_companies_verified', table_name='known_companies')
+    op.alter_column('lead_scores', 'score',
+               existing_type=sa.INTEGER(),
+               server_default=None,
+               existing_nullable=False)
+    op.drop_index('idx_lead_scores_score', table_name='lead_scores', postgresql_where='(score > 0)')
+    op.create_index('idx_lead_scores_score', 'lead_scores', ['score'], unique=False)
+    op.create_index(op.f('ix_lead_scores_score'), 'lead_scores', ['score'], unique=False)
+    op.drop_column('lead_scores', 'created_at')
+    op.drop_column('lead_scores', 'updated_at')
+    op.alter_column('mailing_lists', 'target_type',
+               existing_type=sa.VARCHAR(length=50),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('mailing_lists', 'filters',
+               existing_type=postgresql.JSONB(astext_type=sa.Text()),
+               server_default=None,
+               type_=sa.JSON(),
+               existing_nullable=False)
+    op.alter_column('mailing_lists', 'recipient_count',
+               existing_type=sa.INTEGER(),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('mailing_lists', 'is_active',
+               existing_type=sa.BOOLEAN(),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('mailing_lists', 'updated_at',
+               existing_type=postgresql.TIMESTAMP(timezone=True),
+               server_default=sa.text('now()'),
+               nullable=False)
+    op.drop_index('ix_mailing_lists_created_by', table_name='mailing_lists')
+    op.drop_index('ix_mailing_lists_is_active', table_name='mailing_lists')
+    op.create_index(op.f('ix_mailing_lists_id'), 'mailing_lists', ['id'], unique=False)
+    op.drop_index('idx_mandats_number_trgm', table_name='mandats', postgresql_using='gin')
+    op.alter_column('organisations', 'email_unsubscribed',
+               existing_type=sa.BOOLEAN(),
+               server_default=None,
+               nullable=False)
+    op.alter_column('organisations', 'is_anonymized',
+               existing_type=sa.BOOLEAN(),
+               server_default=None,
+               existing_nullable=False)
+    op.drop_index('idx_organisations_anonymized', table_name='organisations')
+    op.drop_index('idx_organisations_email_trgm', table_name='organisations', postgresql_using='gin')
+    op.drop_index('idx_organisations_email_unsubscribed', table_name='organisations', postgresql_where='(email_unsubscribed = false)')
+    op.drop_index('idx_organisations_gdpr_consent', table_name='organisations')
+    op.drop_index('idx_organisations_last_activity', table_name='organisations')
+    op.drop_index('idx_organisations_nom_trgm', table_name='organisations', postgresql_using='gin')
+    op.drop_index('idx_organisations_search', table_name='organisations', postgresql_using='gin')
+    op.create_index(op.f('ix_organisations_gdpr_consent'), 'organisations', ['gdpr_consent'], unique=False)
+    op.create_index(op.f('ix_organisations_is_anonymized'), 'organisations', ['is_anonymized'], unique=False)
+    op.create_index(op.f('ix_organisations_last_activity_date'), 'organisations', ['last_activity_date'], unique=False)
+    op.alter_column('outlook_signatures_pending', 'status',
+               existing_type=sa.VARCHAR(length=20),
+               server_default=None,
+               existing_comment='pending | approved | rejected',
+               existing_nullable=False)
+    op.alter_column('outlook_signatures_pending', 'is_likely_marketing',
+               existing_type=sa.BOOLEAN(),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('outlook_signatures_pending', 'created_at',
+               existing_type=postgresql.TIMESTAMP(timezone=True),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('people', 'email_unsubscribed',
+               existing_type=sa.BOOLEAN(),
+               server_default=None,
+               nullable=False)
+    op.alter_column('people', 'is_anonymized',
+               existing_type=sa.BOOLEAN(),
+               server_default=None,
+               existing_nullable=False)
+    op.drop_index('idx_people_anonymized', table_name='people')
+    op.drop_index('idx_people_email_search', table_name='people')
+    op.drop_index('idx_people_email_trgm', table_name='people', postgresql_using='gin')
+    op.drop_index('idx_people_email_unsubscribed', table_name='people', postgresql_where='(email_unsubscribed = false)')
+    op.drop_index('idx_people_gdpr_consent', table_name='people')
+    op.drop_index('idx_people_last_activity', table_name='people')
+    op.drop_index('idx_people_nom_trgm', table_name='people', postgresql_using='gin')
+    op.drop_index('idx_people_prenom_trgm', table_name='people', postgresql_using='gin')
+    op.drop_index('idx_people_search', table_name='people', postgresql_using='gin')
+    op.create_index(op.f('ix_people_gdpr_consent'), 'people', ['gdpr_consent'], unique=False)
+    op.create_index(op.f('ix_people_is_anonymized'), 'people', ['is_anonymized'], unique=False)
+    op.create_index(op.f('ix_people_last_activity_date'), 'people', ['last_activity_date'], unique=False)
+    op.alter_column('unsubscribed_emails', 'email',
+               existing_type=sa.VARCHAR(length=255),
+               comment=None,
+               existing_comment='Email désabonné (stocké en minuscules)',
+               existing_nullable=False)
+    op.alter_column('unsubscribed_emails', 'source',
+               existing_type=sa.VARCHAR(length=50),
+               server_default=None,
+               comment=None,
+               existing_comment='Source du désabonnement: web, email, manual',
+               existing_nullable=False)
+    op.alter_column('unsubscribed_emails', 'reason',
+               existing_type=sa.TEXT(),
+               comment=None,
+               existing_comment='Raison optionnelle du désabonnement',
+               existing_nullable=True)
+    op.alter_column('unsubscribed_emails', 'created_at',
+               existing_type=postgresql.TIMESTAMP(timezone=True),
+               nullable=False,
+               existing_server_default=sa.text('now()'))
+    op.alter_column('unsubscribed_emails', 'updated_at',
+               existing_type=postgresql.TIMESTAMP(timezone=True),
+               nullable=False,
+               existing_server_default=sa.text('now()'))
+    op.create_index(op.f('ix_unsubscribed_emails_id'), 'unsubscribed_emails', ['id'], unique=False)
+    op.drop_table_comment(
+        'unsubscribed_emails',
+        existing_comment='Liste noire globale des emails désabonnés',
+        schema=None
+    )
+
+    # ÉTAPE 1: Ajouter team_id NULLABLE d'abord
+    op.add_column('user_email_accounts', sa.Column('team_id', sa.Integer(), nullable=True))
+
+    # ÉTAPE 2: Remplir team_id depuis users.team_id pour les lignes existantes
+    op.execute("""
+        UPDATE user_email_accounts
+        SET team_id = users.team_id
+        FROM users
+        WHERE user_email_accounts.user_id = users.id
+    """)
+
+    # ÉTAPE 3: Rendre team_id NOT NULL maintenant qu'il est rempli
+    op.alter_column('user_email_accounts', 'team_id',
+               existing_type=sa.INTEGER(),
+               nullable=False)
+
+    # ÉTAPE 4: user_id devient NULLABLE (optionnel, pour audit trail)
+    op.alter_column('user_email_accounts', 'user_id',
+               existing_type=sa.INTEGER(),
+               nullable=True)
+    op.alter_column('user_email_accounts', 'created_at',
+               existing_type=postgresql.TIMESTAMP(timezone=True),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('user_email_accounts', 'updated_at',
+               existing_type=postgresql.TIMESTAMP(timezone=True),
+               server_default=None,
+               existing_nullable=False)
+    op.create_index(op.f('ix_user_email_accounts_team_id'), 'user_email_accounts', ['team_id'], unique=False)
+    op.drop_constraint('user_email_accounts_user_id_fkey', 'user_email_accounts', type_='foreignkey')
+    op.create_foreign_key(None, 'user_email_accounts', 'teams', ['team_id'], ['id'], ondelete='CASCADE')
+    op.create_foreign_key(None, 'user_email_accounts', 'users', ['user_id'], ['id'], ondelete='SET NULL')
+    op.alter_column('users', 'outlook_connected',
+               existing_type=sa.BOOLEAN(),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('users', 'outlook_consent_given',
+               existing_type=sa.BOOLEAN(),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('users', 'o365_connected',
+               existing_type=sa.BOOLEAN(),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('users', 'o365_consent_given',
+               existing_type=sa.BOOLEAN(),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('users', 'imap_connected',
+               existing_type=sa.BOOLEAN(),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('users', 'cgu_accepted',
+               existing_type=sa.BOOLEAN(),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('users', 'totp_enabled',
+               existing_type=sa.BOOLEAN(),
+               server_default=None,
+               existing_nullable=False)
+    op.alter_column('users', 'subscription_status',
+               existing_type=sa.VARCHAR(length=20),
+               server_default=None,
+               existing_nullable=False)
+    # ### end Alembic commands ###
+
+
+def downgrade() -> None:
+    # ### CLEANED UP - ONLY user_email_accounts reversal ###
+
+    # Revert FK changes
+    op.drop_constraint(None, 'user_email_accounts', type_='foreignkey')  # team FK
+    op.drop_constraint(None, 'user_email_accounts', type_='foreignkey')  # user FK (SET NULL)
+    op.create_foreign_key('user_email_accounts_user_id_fkey', 'user_email_accounts', 'users', ['user_id'], ['id'], ondelete='CASCADE')
+
+    # Drop index
+    op.drop_index(op.f('ix_user_email_accounts_team_id'), table_name='user_email_accounts')
+
+    # Revert user_id to NOT NULL
+    op.alter_column('user_email_accounts', 'user_id',
+               existing_type=sa.INTEGER(),
+               nullable=False)
+
+    # Drop team_id column
+    op.drop_column('user_email_accounts', 'team_id')
+
+    # ### end Alembic commands ###
+
+
+def _OLD_downgrade_removed() -> None:
+    # OLD CODE REMOVED
+    op.alter_column('users', 'subscription_status',
+               existing_type=sa.VARCHAR(length=20),
+               server_default=sa.text("'trial'::character varying"),
+               existing_nullable=False)
+    op.alter_column('users', 'totp_enabled',
+               existing_type=sa.BOOLEAN(),
+               server_default=sa.text('false'),
+               existing_nullable=False)
+    op.alter_column('users', 'cgu_accepted',
+               existing_type=sa.BOOLEAN(),
+               server_default=sa.text('false'),
+               existing_nullable=False)
+    op.alter_column('users', 'imap_connected',
+               existing_type=sa.BOOLEAN(),
+               server_default=sa.text('false'),
+               existing_nullable=False)
+    op.alter_column('users', 'o365_consent_given',
+               existing_type=sa.BOOLEAN(),
+               server_default=sa.text('false'),
+               existing_nullable=False)
+    op.alter_column('users', 'o365_connected',
+               existing_type=sa.BOOLEAN(),
+               server_default=sa.text('false'),
+               existing_nullable=False)
+    op.alter_column('users', 'outlook_consent_given',
+               existing_type=sa.BOOLEAN(),
+               server_default=sa.text('false'),
+               existing_nullable=False)
+    op.alter_column('users', 'outlook_connected',
+               existing_type=sa.BOOLEAN(),
+               server_default=sa.text('false'),
+               existing_nullable=False)
+    op.drop_constraint(None, 'user_email_accounts', type_='foreignkey')
+    op.drop_constraint(None, 'user_email_accounts', type_='foreignkey')
+    op.create_foreign_key('user_email_accounts_user_id_fkey', 'user_email_accounts', 'users', ['user_id'], ['id'], ondelete='CASCADE')
+    op.drop_index(op.f('ix_user_email_accounts_team_id'), table_name='user_email_accounts')
+    op.alter_column('user_email_accounts', 'updated_at',
+               existing_type=postgresql.TIMESTAMP(timezone=True),
+               server_default=sa.text('now()'),
+               existing_nullable=False)
+    op.alter_column('user_email_accounts', 'created_at',
+               existing_type=postgresql.TIMESTAMP(timezone=True),
+               server_default=sa.text('now()'),
+               existing_nullable=False)
+    op.alter_column('user_email_accounts', 'user_id',
+               existing_type=sa.INTEGER(),
+               nullable=False)
+    op.drop_column('user_email_accounts', 'team_id')
+    op.create_table_comment(
+        'unsubscribed_emails',
+        'Liste noire globale des emails désabonnés',
+        existing_comment=None,
+        schema=None
+    )
+    op.drop_index(op.f('ix_unsubscribed_emails_id'), table_name='unsubscribed_emails')
+    op.alter_column('unsubscribed_emails', 'updated_at',
+               existing_type=postgresql.TIMESTAMP(timezone=True),
+               nullable=True,
+               existing_server_default=sa.text('now()'))
+    op.alter_column('unsubscribed_emails', 'created_at',
+               existing_type=postgresql.TIMESTAMP(timezone=True),
+               nullable=True,
+               existing_server_default=sa.text('now()'))
+    op.alter_column('unsubscribed_emails', 'reason',
+               existing_type=sa.TEXT(),
+               comment='Raison optionnelle du désabonnement',
+               existing_nullable=True)
+    op.alter_column('unsubscribed_emails', 'source',
+               existing_type=sa.VARCHAR(length=50),
+               server_default=sa.text("'web'::character varying"),
+               comment='Source du désabonnement: web, email, manual',
+               existing_nullable=False)
+    op.alter_column('unsubscribed_emails', 'email',
+               existing_type=sa.VARCHAR(length=255),
+               comment='Email désabonné (stocké en minuscules)',
+               existing_nullable=False)
+    op.drop_index(op.f('ix_people_last_activity_date'), table_name='people')
+    op.drop_index(op.f('ix_people_is_anonymized'), table_name='people')
+    op.drop_index(op.f('ix_people_gdpr_consent'), table_name='people')
+    op.create_index('idx_people_search', 'people', [sa.text("to_tsvector('french'::regconfig, (((COALESCE(prenom, ''::character varying)::text || ' '::text) || COALESCE(nom, ''::character varying)::text) || ' '::text) || COALESCE(email, ''::character varying)::text)")], unique=False, postgresql_using='gin')
+    op.create_index('idx_people_prenom_trgm', 'people', ['prenom'], unique=False, postgresql_using='gin')
+    op.create_index('idx_people_nom_trgm', 'people', ['nom'], unique=False, postgresql_using='gin')
+    op.create_index('idx_people_last_activity', 'people', ['last_activity_date'], unique=False)
+    op.create_index('idx_people_gdpr_consent', 'people', ['gdpr_consent'], unique=False)
+    op.create_index('idx_people_email_unsubscribed', 'people', ['email_unsubscribed'], unique=False, postgresql_where='(email_unsubscribed = false)')
+    op.create_index('idx_people_email_trgm', 'people', ['personal_email'], unique=False, postgresql_using='gin')
+    op.create_index('idx_people_email_search', 'people', [sa.text('lower(email::text)')], unique=False)
+    op.create_index('idx_people_anonymized', 'people', ['is_anonymized'], unique=False)
+    op.alter_column('people', 'is_anonymized',
+               existing_type=sa.BOOLEAN(),
+               server_default=sa.text('false'),
+               existing_nullable=False)
+    op.alter_column('people', 'email_unsubscribed',
+               existing_type=sa.BOOLEAN(),
+               server_default=sa.text('false'),
+               nullable=True)
+    op.alter_column('outlook_signatures_pending', 'created_at',
+               existing_type=postgresql.TIMESTAMP(timezone=True),
+               server_default=sa.text('now()'),
+               existing_nullable=False)
+    op.alter_column('outlook_signatures_pending', 'is_likely_marketing',
+               existing_type=sa.BOOLEAN(),
+               server_default=sa.text('false'),
+               existing_nullable=False)
+    op.alter_column('outlook_signatures_pending', 'status',
+               existing_type=sa.VARCHAR(length=20),
+               server_default=sa.text("'pending'::character varying"),
+               existing_comment='pending | approved | rejected',
+               existing_nullable=False)
+    op.drop_index(op.f('ix_organisations_last_activity_date'), table_name='organisations')
+    op.drop_index(op.f('ix_organisations_is_anonymized'), table_name='organisations')
+    op.drop_index(op.f('ix_organisations_gdpr_consent'), table_name='organisations')
+    op.create_index('idx_organisations_search', 'organisations', [sa.text("to_tsvector('french'::regconfig, COALESCE(nom, ''::character varying)::text)")], unique=False, postgresql_using='gin')
+    op.create_index('idx_organisations_nom_trgm', 'organisations', ['nom'], unique=False, postgresql_using='gin')
+    op.create_index('idx_organisations_last_activity', 'organisations', ['last_activity_date'], unique=False)
+    op.create_index('idx_organisations_gdpr_consent', 'organisations', ['gdpr_consent'], unique=False)
+    op.create_index('idx_organisations_email_unsubscribed', 'organisations', ['email_unsubscribed'], unique=False, postgresql_where='(email_unsubscribed = false)')
+    op.create_index('idx_organisations_email_trgm', 'organisations', ['email'], unique=False, postgresql_using='gin')
+    op.create_index('idx_organisations_anonymized', 'organisations', ['is_anonymized'], unique=False)
+    op.alter_column('organisations', 'is_anonymized',
+               existing_type=sa.BOOLEAN(),
+               server_default=sa.text('false'),
+               existing_nullable=False)
+    op.alter_column('organisations', 'email_unsubscribed',
+               existing_type=sa.BOOLEAN(),
+               server_default=sa.text('false'),
+               nullable=True)
+    op.create_index('idx_mandats_number_trgm', 'mandats', ['number'], unique=False, postgresql_using='gin')
+    op.drop_index(op.f('ix_mailing_lists_id'), table_name='mailing_lists')
+    op.create_index('ix_mailing_lists_is_active', 'mailing_lists', ['is_active'], unique=False)
+    op.create_index('ix_mailing_lists_created_by', 'mailing_lists', ['created_by'], unique=False)
+    op.alter_column('mailing_lists', 'updated_at',
+               existing_type=postgresql.TIMESTAMP(timezone=True),
+               server_default=None,
+               nullable=True)
+    op.alter_column('mailing_lists', 'is_active',
+               existing_type=sa.BOOLEAN(),
+               server_default=sa.text('true'),
+               existing_nullable=False)
+    op.alter_column('mailing_lists', 'recipient_count',
+               existing_type=sa.INTEGER(),
+               server_default=sa.text('0'),
+               existing_nullable=False)
+    op.alter_column('mailing_lists', 'filters',
+               existing_type=sa.JSON(),
+               server_default=sa.text("'{}'::jsonb"),
+               type_=postgresql.JSONB(astext_type=sa.Text()),
+               existing_nullable=False)
+    op.alter_column('mailing_lists', 'target_type',
+               existing_type=sa.VARCHAR(length=50),
+               server_default=sa.text("'contacts'::character varying"),
+               existing_nullable=False)
+    op.add_column('lead_scores', sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False))
+    op.add_column('lead_scores', sa.Column('created_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False))
+    op.drop_index(op.f('ix_lead_scores_score'), table_name='lead_scores')
+    op.drop_index('idx_lead_scores_score', table_name='lead_scores')
+    op.create_index('idx_lead_scores_score', 'lead_scores', [sa.text('score DESC')], unique=False, postgresql_where='(score > 0)')
+    op.alter_column('lead_scores', 'score',
+               existing_type=sa.INTEGER(),
+               server_default=sa.text('0'),
+               existing_nullable=False)
+    op.create_index('idx_known_companies_verified', 'known_companies', ['verified'], unique=False)
+    op.create_index('idx_known_companies_industry', 'known_companies', ['industry'], unique=False)
+    op.create_index('idx_known_companies_domain', 'known_companies', ['domain'], unique=False)
+    op.create_index('idx_interaction_participants_person', 'interaction_participants', ['person_id'], unique=False)
+    op.create_index('idx_interaction_participants_interaction', 'interaction_participants', ['interaction_id'], unique=False)
+    op.drop_index(op.f('ix_email_send_batches_id'), table_name='email_send_batches')
+    op.alter_column('email_send_batches', 'updated_at',
+               existing_type=postgresql.TIMESTAMP(timezone=True),
+               nullable=True,
+               existing_server_default=sa.text('CURRENT_TIMESTAMP'))
+    op.alter_column('email_send_batches', 'created_at',
+               existing_type=postgresql.TIMESTAMP(timezone=True),
+               nullable=True,
+               existing_server_default=sa.text('CURRENT_TIMESTAMP'))
+    op.alter_column('email_send_batches', 'failed_count',
+               existing_type=sa.INTEGER(),
+               server_default=sa.text('0'),
+               existing_nullable=False)
+    op.alter_column('email_send_batches', 'bounced_count',
+               existing_type=sa.INTEGER(),
+               server_default=sa.text('0'),
+               existing_nullable=False)
+    op.alter_column('email_send_batches', 'clicked_count',
+               existing_type=sa.INTEGER(),
+               server_default=sa.text('0'),
+               existing_nullable=False)
+    op.alter_column('email_send_batches', 'opened_count',
+               existing_type=sa.INTEGER(),
+               server_default=sa.text('0'),
+               existing_nullable=False)
+    op.alter_column('email_send_batches', 'delivered_count',
+               existing_type=sa.INTEGER(),
+               server_default=sa.text('0'),
+               existing_nullable=False)
+    op.alter_column('email_send_batches', 'sent_count',
+               existing_type=sa.INTEGER(),
+               server_default=sa.text('0'),
+               existing_nullable=False)
+    op.alter_column('email_send_batches', 'total_recipients',
+               existing_type=sa.INTEGER(),
+               server_default=sa.text('0'),
+               existing_nullable=False)
+    op.alter_column('email_send_batches', 'status',
+               existing_type=postgresql.ENUM('QUEUED', 'SCHEDULED', 'SENDING', 'SENT', 'DELIVERED', 'OPENED', 'CLICKED', 'FAILED', 'BOUNCED', 'UNSUBSCRIBED', 'COMPLAINED', name='emailsendstatus'),
+               server_default=sa.text("'QUEUED'::emailsendstatus"),
+               existing_nullable=False)
+    op.drop_index(op.f('ix_email_event_tracking_status'), table_name='email_event_tracking')
+    op.drop_index(op.f('ix_email_event_tracking_sent_at'), table_name='email_event_tracking')
+    op.drop_index(op.f('ix_email_event_tracking_provider'), table_name='email_event_tracking')
+    op.drop_index(op.f('ix_email_event_tracking_person_id'), table_name='email_event_tracking')
+    op.drop_index(op.f('ix_email_event_tracking_organisation_id'), table_name='email_event_tracking')
+    op.drop_index(op.f('ix_email_event_tracking_id'), table_name='email_event_tracking')
+    op.drop_index(op.f('ix_email_event_tracking_external_id'), table_name='email_event_tracking')
+    op.drop_index('idx_email_event_tracking_person_sent', table_name='email_event_tracking')
+    op.create_index('idx_email_event_tracking_person_sent', 'email_event_tracking', ['person_id', sa.text('sent_at DESC NULLS LAST')], unique=False)
+    op.create_unique_constraint('uq_email_event_provider_ext', 'email_event_tracking', ['provider', 'external_id'])
+    op.create_index('idx_email_event_tracking_org', 'email_event_tracking', ['organisation_id'], unique=False)
+    op.alter_column('email_event_tracking', 'click_count',
+               existing_type=sa.INTEGER(),
+               server_default=sa.text('0'),
+               existing_nullable=False)
+    op.alter_column('email_event_tracking', 'open_count',
+               existing_type=sa.INTEGER(),
+               server_default=sa.text('0'),
+               existing_nullable=False)
+    op.alter_column('email_event_tracking', 'status',
+               existing_type=postgresql.ENUM('sent', 'opened', 'clicked', 'bounced', name='email_status'),
+               server_default=sa.text("'sent'::email_status"),
+               existing_nullable=False)
+    op.drop_index('idx_email_campaign_provider', table_name='email_campaigns')
+    op.alter_column('email_campaigns', 'provider',
+               existing_type=postgresql.ENUM('resend', 'sendgrid', 'mailgun', name='emailprovider'),
+               server_default=sa.text("'resend'::emailprovider"),
+               nullable=True)
+    op.drop_index(op.f('ix_crm_interactions_status'), table_name='crm_interactions')
+    op.drop_index(op.f('ix_crm_interactions_person_id'), table_name='crm_interactions')
+    op.drop_index(op.f('ix_crm_interactions_org_id'), table_name='crm_interactions')
+    op.drop_index(op.f('ix_crm_interactions_next_action_at'), table_name='crm_interactions')
+    op.drop_index(op.f('ix_crm_interactions_id'), table_name='crm_interactions')
+    op.drop_index(op.f('ix_crm_interactions_created_by'), table_name='crm_interactions')
+    op.drop_index(op.f('ix_crm_interactions_assignee_id'), table_name='crm_interactions')
+    op.drop_index('idx_interactions_person_created_at', table_name='crm_interactions')
+    op.drop_index('idx_interactions_org_created_at', table_name='crm_interactions')
+    op.drop_index('idx_interactions_created_at', table_name='crm_interactions')
+    op.create_index('idx_interactions_next_action', 'crm_interactions', ['next_action_at'], unique=False, postgresql_where='(next_action_at IS NOT NULL)')
+    op.create_index('idx_interactions_assignee', 'crm_interactions', ['assignee_id'], unique=False, postgresql_where='(assignee_id IS NOT NULL)')
+    op.create_index('idx_crm_interactions_person_created_at', 'crm_interactions', ['person_id', 'created_at'], unique=False)
+    op.create_index('idx_crm_interactions_org_created_at', 'crm_interactions', ['org_id', 'created_at'], unique=False)
+    op.create_index('idx_crm_interactions_created_by', 'crm_interactions', ['created_by'], unique=False)
+    op.create_index('idx_crm_interactions_created_at', 'crm_interactions', ['created_at'], unique=False)
+    op.alter_column('crm_interactions', 'updated_at',
+               existing_type=postgresql.TIMESTAMP(timezone=True),
+               server_default=None,
+               nullable=True)
+    op.alter_column('crm_interactions', 'external_participants',
+               existing_type=postgresql.JSON(astext_type=sa.Text()),
+               server_default=sa.text("'[]'::json"),
+               existing_nullable=False)
+    op.alter_column('crm_interactions', 'attachments',
+               existing_type=postgresql.JSON(astext_type=sa.Text()),
+               server_default=sa.text("'[]'::json"),
+               existing_nullable=False)
+    op.alter_column('crm_interactions', 'type',
+               existing_type=postgresql.ENUM('call', 'email', 'meeting', 'note', 'other', name='interaction_type'),
+               server_default=sa.text("'note'::interaction_type"),
+               existing_nullable=False)
+    op.drop_index(op.f('ix_campaign_subscriptions_id'), table_name='campaign_subscriptions')
+    op.alter_column('campaign_subscriptions', 'updated_at',
+               existing_type=postgresql.TIMESTAMP(timezone=True),
+               server_default=None,
+               nullable=True)
+    op.alter_column('campaign_subscriptions', 'is_active',
+               existing_type=sa.BOOLEAN(),
+               server_default=sa.text('true'),
+               existing_nullable=False)
+    op.create_index('idx_autofill_decision_person', 'autofill_decision_logs', ['person_id'], unique=False)
+    op.create_index('idx_autofill_decision_org', 'autofill_decision_logs', ['organisation_id'], unique=False)
+    op.create_index('idx_autofill_decision_interaction', 'autofill_decision_logs', ['interaction_id'], unique=False)
+    op.create_index('idx_autofill_decision_created', 'autofill_decision_logs', ['created_at'], unique=False)
+    op.alter_column('autofill_decision_logs', 'was_deduped',
+               existing_type=sa.INTEGER(),
+               server_default=sa.text('0'),
+               existing_nullable=False)
+    op.create_table('fournisseurs',
+    sa.Column('name', sa.VARCHAR(length=255), autoincrement=False, nullable=False),
+    sa.Column('email', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('phone', sa.VARCHAR(length=20), autoincrement=False, nullable=True),
+    sa.Column('website', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('company', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('activity', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('stage', postgresql.ENUM('PROSPECT_FROID', 'PROSPECT_TIEDE', 'PROSPECT_CHAUD', 'EN_NEGOCIATION', 'FOURNISSEUR', 'INACTIF', name='stagefournisseur'), autoincrement=False, nullable=True),
+    sa.Column('type_fournisseur', postgresql.ENUM('ASSET_MANAGER', 'PRESTATAIRE', 'DISTRIBUTEUR', 'ASSURANCE', 'AUTRE', name='typefournisseur'), autoincrement=False, nullable=True),
+    sa.Column('notes', sa.TEXT(), autoincrement=False, nullable=True),
+    sa.Column('is_active', sa.BOOLEAN(), autoincrement=False, nullable=True),
+    sa.Column('country_code', sa.VARCHAR(length=2), autoincrement=False, nullable=True),
+    sa.Column('language', sa.VARCHAR(length=5), autoincrement=False, nullable=True),
+    sa.Column('id', sa.INTEGER(), server_default=sa.text("nextval('fournisseurs_id_seq'::regclass)"), autoincrement=True, nullable=False),
+    sa.Column('created_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.PrimaryKeyConstraint('id', name='fournisseurs_pkey'),
+    postgresql_ignore_search_path=False
+    )
+    op.create_index('ix_fournisseurs_stage', 'fournisseurs', ['stage'], unique=False)
+    op.create_index('ix_fournisseurs_name', 'fournisseurs', ['name'], unique=False)
+    op.create_index('ix_fournisseurs_language', 'fournisseurs', ['language'], unique=False)
+    op.create_index('ix_fournisseurs_is_active', 'fournisseurs', ['is_active'], unique=False)
+    op.create_index('ix_fournisseurs_id', 'fournisseurs', ['id'], unique=False)
+    op.create_index('ix_fournisseurs_email', 'fournisseurs', ['email'], unique=False)
+    op.create_index('ix_fournisseurs_country_code', 'fournisseurs', ['country_code'], unique=False)
+    op.create_table('email_configurations',
+    sa.Column('name', sa.VARCHAR(length=100), autoincrement=False, nullable=False),
+    sa.Column('description', sa.TEXT(), autoincrement=False, nullable=True),
+    sa.Column('is_active', sa.BOOLEAN(), autoincrement=False, nullable=False),
+    sa.Column('provider', postgresql.ENUM('resend', 'sendgrid', 'mailgun', name='emailprovider'), autoincrement=False, nullable=False),
+    sa.Column('api_key_encrypted', sa.TEXT(), autoincrement=False, nullable=False),
+    sa.Column('provider_config', sa.TEXT(), autoincrement=False, nullable=True),
+    sa.Column('from_name', sa.VARCHAR(length=100), autoincrement=False, nullable=True),
+    sa.Column('from_email', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('reply_to', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('rate_limit_per_minute', sa.INTEGER(), autoincrement=False, nullable=False),
+    sa.Column('batch_size', sa.INTEGER(), autoincrement=False, nullable=False),
+    sa.Column('track_opens', sa.BOOLEAN(), autoincrement=False, nullable=False),
+    sa.Column('track_clicks', sa.BOOLEAN(), autoincrement=False, nullable=False),
+    sa.Column('created_by', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('updated_by', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('last_tested_at', postgresql.TIMESTAMP(), autoincrement=False, nullable=True),
+    sa.Column('test_status', sa.VARCHAR(length=20), autoincrement=False, nullable=True),
+    sa.Column('test_error', sa.TEXT(), autoincrement=False, nullable=True),
+    sa.Column('id', sa.INTEGER(), autoincrement=True, nullable=False),
+    sa.Column('created_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.ForeignKeyConstraint(['created_by'], ['users.id'], name='email_configurations_created_by_fkey'),
+    sa.ForeignKeyConstraint(['updated_by'], ['users.id'], name='email_configurations_updated_by_fkey'),
+    sa.PrimaryKeyConstraint('id', name='email_configurations_pkey')
+    )
+    op.create_index('ix_email_configurations_is_active', 'email_configurations', ['is_active'], unique=False)
+    op.create_index('ix_email_configurations_id', 'email_configurations', ['id'], unique=False)
+    op.create_table('fournisseur_kpis',
+    sa.Column('fournisseur_id', sa.INTEGER(), autoincrement=False, nullable=False),
+    sa.Column('year', sa.INTEGER(), autoincrement=False, nullable=False),
+    sa.Column('month', sa.INTEGER(), autoincrement=False, nullable=False),
+    sa.Column('rdv_count', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('pitchs', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('due_diligences', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('closings', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('revenue', sa.DOUBLE_PRECISION(precision=53), autoincrement=False, nullable=True),
+    sa.Column('commission_rate', sa.DOUBLE_PRECISION(precision=53), autoincrement=False, nullable=True),
+    sa.Column('notes', sa.TEXT(), autoincrement=False, nullable=True),
+    sa.Column('id', sa.INTEGER(), autoincrement=True, nullable=False),
+    sa.Column('created_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.ForeignKeyConstraint(['fournisseur_id'], ['fournisseurs.id'], name='fournisseur_kpis_fournisseur_id_fkey'),
+    sa.PrimaryKeyConstraint('id', name='fournisseur_kpis_pkey')
+    )
+    op.create_index('ix_fournisseur_kpis_id', 'fournisseur_kpis', ['id'], unique=False)
+    op.create_index('ix_fournisseur_kpis_fournisseur_id', 'fournisseur_kpis', ['fournisseur_id'], unique=False)
+    op.create_table('push_subscriptions',
+    sa.Column('id', sa.INTEGER(), autoincrement=True, nullable=False),
+    sa.Column('user_id', sa.INTEGER(), autoincrement=False, nullable=False),
+    sa.Column('endpoint', sa.TEXT(), autoincrement=False, nullable=False),
+    sa.Column('p256dh_key', sa.VARCHAR(length=255), autoincrement=False, nullable=False),
+    sa.Column('auth_key', sa.VARCHAR(length=255), autoincrement=False, nullable=False),
+    sa.Column('created_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.Column('last_used', postgresql.TIMESTAMP(timezone=True), autoincrement=False, nullable=True),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], name='push_subscriptions_user_id_fkey', ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id', name='push_subscriptions_pkey')
+    )
+    op.create_index('ix_push_subscriptions_user_id', 'push_subscriptions', ['user_id'], unique=False)
+    op.create_index('ix_push_subscriptions_id', 'push_subscriptions', ['id'], unique=False)
+    op.create_index('ix_push_subscriptions_endpoint', 'push_subscriptions', ['endpoint'], unique=False)
+    op.create_table('fournisseur_contacts',
+    sa.Column('fournisseur_id', sa.INTEGER(), autoincrement=False, nullable=False),
+    sa.Column('name', sa.VARCHAR(length=255), autoincrement=False, nullable=False),
+    sa.Column('email', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('phone', sa.VARCHAR(length=20), autoincrement=False, nullable=True),
+    sa.Column('title', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('notes', sa.TEXT(), autoincrement=False, nullable=True),
+    sa.Column('id', sa.INTEGER(), autoincrement=True, nullable=False),
+    sa.Column('created_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.ForeignKeyConstraint(['fournisseur_id'], ['fournisseurs.id'], name='fournisseur_contacts_fournisseur_id_fkey'),
+    sa.PrimaryKeyConstraint('id', name='fournisseur_contacts_pkey')
+    )
+    op.create_index('ix_fournisseur_contacts_id', 'fournisseur_contacts', ['id'], unique=False)
+    op.create_index('ix_fournisseur_contacts_fournisseur_id', 'fournisseur_contacts', ['fournisseur_id'], unique=False)
+    op.create_table('autofill_logs',
+    sa.Column('id', sa.INTEGER(), autoincrement=True, nullable=False),
+    sa.Column('user_id', sa.INTEGER(), autoincrement=False, nullable=False),
+    sa.Column('entity_type', sa.VARCHAR(length=50), autoincrement=False, nullable=False),
+    sa.Column('entity_id', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('field', sa.VARCHAR(length=100), autoincrement=False, nullable=False),
+    sa.Column('old_value', sa.TEXT(), autoincrement=False, nullable=True),
+    sa.Column('new_value', sa.TEXT(), autoincrement=False, nullable=True),
+    sa.Column('confidence', sa.DOUBLE_PRECISION(precision=53), autoincrement=False, nullable=False),
+    sa.Column('source', sa.VARCHAR(length=50), autoincrement=False, nullable=False),
+    sa.Column('applied', sa.BOOLEAN(), server_default=sa.text('false'), autoincrement=False, nullable=False),
+    sa.Column('evidence_hash', sa.VARCHAR(length=64), autoincrement=False, nullable=True),
+    sa.Column('execution_time_ms', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('created_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], name='autofill_logs_user_id_fkey', ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id', name='autofill_logs_pkey')
+    )
+    op.create_index('ix_autofill_logs_user_id', 'autofill_logs', ['user_id'], unique=False)
+    op.create_index('ix_autofill_logs_source_applied', 'autofill_logs', ['source', 'applied'], unique=False)
+    op.create_index('ix_autofill_logs_source', 'autofill_logs', ['source'], unique=False)
+    op.create_index('ix_autofill_logs_field', 'autofill_logs', ['field'], unique=False)
+    op.create_index('ix_autofill_logs_entity', 'autofill_logs', ['entity_type', 'entity_id'], unique=False)
+    op.create_index('ix_autofill_logs_created_at', 'autofill_logs', ['created_at'], unique=False)
+    op.create_index('ix_autofill_logs_applied', 'autofill_logs', ['applied'], unique=False)
+    op.create_table('kpis',
+    sa.Column('investor_id', sa.INTEGER(), autoincrement=False, nullable=False),
+    sa.Column('year', sa.INTEGER(), autoincrement=False, nullable=False),
+    sa.Column('month', sa.INTEGER(), autoincrement=False, nullable=False),
+    sa.Column('rdv_count', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('pitchs', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('due_diligences', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('closings', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('revenue', sa.DOUBLE_PRECISION(precision=53), autoincrement=False, nullable=True),
+    sa.Column('commission_rate', sa.DOUBLE_PRECISION(precision=53), autoincrement=False, nullable=True),
+    sa.Column('notes', sa.TEXT(), autoincrement=False, nullable=True),
+    sa.Column('id', sa.INTEGER(), autoincrement=True, nullable=False),
+    sa.Column('created_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.ForeignKeyConstraint(['investor_id'], ['investors.id'], name='kpis_investor_id_fkey'),
+    sa.PrimaryKeyConstraint('id', name='kpis_pkey')
+    )
+    op.create_index('ix_kpis_investor_id', 'kpis', ['investor_id'], unique=False)
+    op.create_index('ix_kpis_id', 'kpis', ['id'], unique=False)
+    op.create_table('outlook_signatures',
+    sa.Column('id', sa.INTEGER(), autoincrement=True, nullable=False),
+    sa.Column('user_id', sa.INTEGER(), autoincrement=False, nullable=False),
+    sa.Column('email_domain', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('source_message_id', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('raw_html', sa.TEXT(), autoincrement=False, nullable=True),
+    sa.Column('parsed_email', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('parsed_phone', sa.VARCHAR(length=50), autoincrement=False, nullable=True),
+    sa.Column('parsed_job_title', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('parsed_company', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('received_at', postgresql.TIMESTAMP(timezone=True), autoincrement=False, nullable=True),
+    sa.Column('created_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], name='outlook_signatures_user_id_fkey', ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id', name='outlook_signatures_pkey')
+    )
+    op.create_index('ix_outlook_signatures_user_id', 'outlook_signatures', ['user_id'], unique=False)
+    op.create_index('ix_outlook_signatures_received_at', 'outlook_signatures', ['received_at'], unique=False)
+    op.create_index('ix_outlook_signatures_parsed_email', 'outlook_signatures', ['parsed_email'], unique=False)
+    op.create_index('ix_outlook_signatures_email_domain', 'outlook_signatures', ['email_domain'], unique=False)
+    op.create_table('audit_logs',
+    sa.Column('id', sa.INTEGER(), autoincrement=True, nullable=False),
+    sa.Column('entity_type', sa.VARCHAR(length=50), autoincrement=False, nullable=False),
+    sa.Column('entity_id', sa.INTEGER(), autoincrement=False, nullable=False),
+    sa.Column('action', sa.VARCHAR(length=20), autoincrement=False, nullable=False),
+    sa.Column('field_name', sa.VARCHAR(length=100), autoincrement=False, nullable=True),
+    sa.Column('old_value', sa.TEXT(), autoincrement=False, nullable=True),
+    sa.Column('new_value', sa.TEXT(), autoincrement=False, nullable=True),
+    sa.Column('user_id', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('ip_address', sa.VARCHAR(length=45), autoincrement=False, nullable=True),
+    sa.Column('user_agent', sa.VARCHAR(length=500), autoincrement=False, nullable=True),
+    sa.Column('created_at', postgresql.TIMESTAMP(), autoincrement=False, nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], name='audit_logs_user_id_fkey'),
+    sa.PrimaryKeyConstraint('id', name='audit_logs_pkey')
+    )
+    op.create_index('ix_audit_logs_user_id', 'audit_logs', ['user_id'], unique=False)
+    op.create_index('ix_audit_logs_id', 'audit_logs', ['id'], unique=False)
+    op.create_index('ix_audit_logs_entity_type', 'audit_logs', ['entity_type'], unique=False)
+    op.create_index('ix_audit_logs_entity_id', 'audit_logs', ['entity_id'], unique=False)
+    op.create_index('ix_audit_logs_created_at', 'audit_logs', ['created_at'], unique=False)
+    op.create_index('ix_audit_logs_action', 'audit_logs', ['action'], unique=False)
+    op.create_index('idx_audit_user_date', 'audit_logs', ['user_id', 'created_at'], unique=False)
+    op.create_index('idx_audit_entity', 'audit_logs', ['entity_type', 'entity_id', 'created_at'], unique=False)
+    op.create_index('idx_audit_action_date', 'audit_logs', ['action', 'created_at'], unique=False)
+    op.create_table('contacts',
+    sa.Column('investor_id', sa.INTEGER(), autoincrement=False, nullable=False),
+    sa.Column('name', sa.VARCHAR(length=255), autoincrement=False, nullable=False),
+    sa.Column('email', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('phone', sa.VARCHAR(length=20), autoincrement=False, nullable=True),
+    sa.Column('title', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('notes', sa.TEXT(), autoincrement=False, nullable=True),
+    sa.Column('id', sa.INTEGER(), autoincrement=True, nullable=False),
+    sa.Column('created_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.ForeignKeyConstraint(['investor_id'], ['investors.id'], name='contacts_investor_id_fkey'),
+    sa.PrimaryKeyConstraint('id', name='contacts_pkey')
+    )
+    op.create_index('ix_contacts_investor_id', 'contacts', ['investor_id'], unique=False)
+    op.create_index('ix_contacts_id', 'contacts', ['id'], unique=False)
+    op.create_table('fournisseur_interactions',
+    sa.Column('fournisseur_id', sa.INTEGER(), autoincrement=False, nullable=False),
+    sa.Column('type', postgresql.ENUM('APPEL', 'EMAIL', 'REUNION', 'WEBINAIRE', 'AUTRE', name='interactiontype'), autoincrement=False, nullable=False),
+    sa.Column('date', sa.VARCHAR(length=10), autoincrement=False, nullable=False),
+    sa.Column('duration_minutes', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('subject', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('notes', sa.TEXT(), autoincrement=False, nullable=True),
+    sa.Column('id', sa.INTEGER(), autoincrement=True, nullable=False),
+    sa.Column('created_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.ForeignKeyConstraint(['fournisseur_id'], ['fournisseurs.id'], name='fournisseur_interactions_fournisseur_id_fkey'),
+    sa.PrimaryKeyConstraint('id', name='fournisseur_interactions_pkey')
+    )
+    op.create_index('ix_fournisseur_interactions_id', 'fournisseur_interactions', ['id'], unique=False)
+    op.create_index('ix_fournisseur_interactions_fournisseur_id', 'fournisseur_interactions', ['fournisseur_id'], unique=False)
+    op.create_index('ix_fournisseur_interactions_date', 'fournisseur_interactions', ['date'], unique=False)
+    op.create_table('person_org_links',
+    sa.Column('person_id', sa.INTEGER(), autoincrement=False, nullable=False),
+    sa.Column('organization_type', postgresql.ENUM('INVESTOR', 'FOURNISSEUR', name='organizationtype'), autoincrement=False, nullable=False),
+    sa.Column('organization_id', sa.INTEGER(), autoincrement=False, nullable=False),
+    sa.Column('job_title', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('work_email', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('work_phone', sa.VARCHAR(length=20), autoincrement=False, nullable=True),
+    sa.Column('is_primary', sa.BOOLEAN(), autoincrement=False, nullable=True),
+    sa.Column('notes', sa.TEXT(), autoincrement=False, nullable=True),
+    sa.Column('id', sa.INTEGER(), autoincrement=True, nullable=False),
+    sa.Column('created_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.ForeignKeyConstraint(['person_id'], ['people.id'], name='person_org_links_person_id_fkey', ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id', name='person_org_links_pkey'),
+    sa.UniqueConstraint('person_id', 'organization_type', 'organization_id', name='uq_person_org_unique')
+    )
+    op.create_index('ix_person_org_links_person_id', 'person_org_links', ['person_id'], unique=False)
+    op.create_index('ix_person_org_links_organization_type', 'person_org_links', ['organization_type'], unique=False)
+    op.create_index('ix_person_org_links_organization_id', 'person_org_links', ['organization_id'], unique=False)
+    op.create_index('ix_person_org_links_id', 'person_org_links', ['id'], unique=False)
+    op.create_table('investors',
+    sa.Column('name', sa.VARCHAR(length=255), autoincrement=False, nullable=False),
+    sa.Column('email', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('phone', sa.VARCHAR(length=20), autoincrement=False, nullable=True),
+    sa.Column('website', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('pipeline_stage', postgresql.ENUM('LEAD', 'QUALIFIED', 'PROSPECT', 'QUALIFICATION', 'PROPOSITION', 'NEGOCIATION', 'SIGNE', 'PERDU', 'INACTIF', name='pipelinestage'), autoincrement=False, nullable=True),
+    sa.Column('client_type', postgresql.ENUM('CGPI', 'WHOLESALE', 'INSTITUTIONNEL', 'AUTRE', name='clienttype'), autoincrement=False, nullable=True),
+    sa.Column('company', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('industry', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('notes', sa.TEXT(), autoincrement=False, nullable=True),
+    sa.Column('is_active', sa.BOOLEAN(), autoincrement=False, nullable=True),
+    sa.Column('country_code', sa.VARCHAR(length=2), autoincrement=False, nullable=True),
+    sa.Column('language', sa.VARCHAR(length=5), autoincrement=False, nullable=True),
+    sa.Column('id', sa.INTEGER(), server_default=sa.text("nextval('investors_id_seq'::regclass)"), autoincrement=True, nullable=False),
+    sa.Column('created_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.PrimaryKeyConstraint('id', name='investors_pkey'),
+    postgresql_ignore_search_path=False
+    )
+    op.create_index('ix_investors_pipeline_stage', 'investors', ['pipeline_stage'], unique=False)
+    op.create_index('ix_investors_name', 'investors', ['name'], unique=False)
+    op.create_index('ix_investors_language', 'investors', ['language'], unique=False)
+    op.create_index('ix_investors_is_active', 'investors', ['is_active'], unique=False)
+    op.create_index('ix_investors_id', 'investors', ['id'], unique=False)
+    op.create_index('ix_investors_email', 'investors', ['email'], unique=False)
+    op.create_index('ix_investors_country_code', 'investors', ['country_code'], unique=False)
+    op.create_table('interactions',
+    sa.Column('investor_id', sa.INTEGER(), autoincrement=False, nullable=False),
+    sa.Column('type', postgresql.ENUM('APPEL', 'EMAIL', 'REUNION', 'WEBINAIRE', 'AUTRE', name='interactiontype'), autoincrement=False, nullable=False),
+    sa.Column('date', sa.VARCHAR(length=10), autoincrement=False, nullable=False),
+    sa.Column('duration_minutes', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('subject', sa.VARCHAR(length=255), autoincrement=False, nullable=True),
+    sa.Column('notes', sa.TEXT(), autoincrement=False, nullable=True),
+    sa.Column('id', sa.INTEGER(), autoincrement=True, nullable=False),
+    sa.Column('created_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.ForeignKeyConstraint(['investor_id'], ['investors.id'], name='interactions_investor_id_fkey'),
+    sa.PrimaryKeyConstraint('id', name='interactions_pkey')
+    )
+    op.create_index('ix_interactions_investor_id', 'interactions', ['investor_id'], unique=False)
+    op.create_index('ix_interactions_id', 'interactions', ['id'], unique=False)
+    op.create_index('ix_interactions_date', 'interactions', ['date'], unique=False)
+    # ### end Alembic commands ###

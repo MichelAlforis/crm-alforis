@@ -1,13 +1,16 @@
 """
-Modèle SQLAlchemy pour les comptes email utilisateurs (multi-comptes)
+Modèle SQLAlchemy pour les comptes email (MULTI-TENANT)
 
-Permet à un utilisateur de connecter plusieurs comptes email:
-- Outlook professionnel (michel.marques@alforis.fr)
-- Outlook personnel (michel@outlook.com)
-- Gmail (michel.marques@gmail.com)
-- etc.
+IMPORTANT: Les comptes email sont liés à une TEAM (tenant), pas directement à un user!
+Un user peut être admin de plusieurs teams, donc ses comptes email sont contextualisés
+par team pour isoler les données (RGPD, sécurité).
 
-Chaque compte stocke ses propres tokens OAuth chiffrés
+Exemple:
+- Team Alforis → email michel.marques@alforis.fr, contact@alforis.fr
+- Team Autre Boîte → email michel@autreboite.com
+
+user_id = qui a configuré le compte (audit trail)
+team_id = à quelle team/tenant appartient ce compte (isolation des données)
 """
 
 from datetime import datetime
@@ -23,8 +26,13 @@ class UserEmailAccount(Base):
     __tablename__ = "user_email_accounts"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
-    
+
+    # MULTI-TENANT: team_id = contexte d'isolation (OBLIGATOIRE)
+    team_id = Column(Integer, ForeignKey("teams.id", ondelete="CASCADE"), nullable=False, index=True)
+
+    # user_id = qui a configuré le compte (audit trail, peut être NULL si config par admin)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True)
+
     # Informations du compte
     email = Column(String(255), nullable=False, index=True)
     provider = Column(String(50), nullable=False, index=True)  # 'ionos', 'outlook', 'gmail', etc.
@@ -59,7 +67,8 @@ class UserEmailAccount(Base):
     updated_at = Column(DateTime(timezone=True), default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
     # Relations
-    user = relationship("User", back_populates="email_accounts")
+    team = relationship("Team", backref="email_accounts")
+    user = relationship("User", backref="configured_email_accounts")
 
     def __repr__(self):
-        return f"<UserEmailAccount(id={self.id}, user_id={self.user_id}, email='{self.email}', provider='{self.provider}')>"
+        return f"<UserEmailAccount(id={self.id}, team_id={self.team_id}, email='{self.email}', provider='{self.provider}')>"

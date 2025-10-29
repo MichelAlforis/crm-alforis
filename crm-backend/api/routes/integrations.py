@@ -2209,3 +2209,99 @@ async def debug_test_connection(
 
     result = await MailProviderFactory.test_connection(account)
     return result
+
+
+# =============================================================================
+# MULTI-ACCOUNT EMAIL SYNC FOR AI AUTOFILL
+# =============================================================================
+
+@router.post("/debug/email-accounts/sync-all/{user_id}")
+async def debug_sync_all_accounts(
+    user_id: int,
+    db: Session = Depends(get_db),
+    since_days: int = Query(default=7),
+):
+    """
+    TEMP: Sync tous les comptes email et parse les signatures SANS AUTH
+
+    Pour chaque compte actif de l'utilisateur:
+    1. Récupère les emails depuis N jours
+    2. Parse les signatures
+    3. Extrait les infos de contact (email, tel, entreprise)
+    4. Les prépare pour l'IA d'autofill
+    """
+    from mail.provider_factory import MailProviderFactory
+    from datetime import datetime, timezone, timedelta
+    import re
+
+    # Récupérer tous les comptes actifs
+    accounts = db.query(UserEmailAccount).filter(
+        UserEmailAccount.user_id == user_id,
+        UserEmailAccount.is_active == True,
+    ).all()
+
+    if not accounts:
+        return {
+            "success": True,
+            "message": "Aucun compte email configuré",
+            "accounts_synced": 0,
+        }
+
+    since = datetime.now(timezone.utc) - timedelta(days=since_days)
+
+    total_emails = 0
+    signatures_found = 0
+    accounts_synced = 0
+    errors = []
+    results = []
+
+    for account in accounts:
+        try:
+            logger.info(f"Syncing account {account.email} ({account.protocol})")
+            provider = MailProviderFactory.create_provider(account)
+            messages = await provider.sync_messages_since(since)
+
+            account_result = {
+                "account_id": account.id,
+                "email": account.email,
+                "protocol": account.protocol,
+                "server": account.server,
+                "emails_count": len(messages),
+                "sample_subjects": [m.get("subject", "")[:50] for m in messages[:5]],
+            }
+
+            total_emails += len(messages)
+            accounts_synced += 1
+            results.append(account_result)
+
+            # Parser signatures (pattern simple pour détecter)
+            for msg in messages:
+                body = msg.get("body", "")
+                if body and any(p in body.lower() for p in ["cordialement", "regards", "best regards", "@"]):
+                    # Extraire emails et téléphones
+                    emails_found = re.findall(r'[\w\.-]+@[\w\.-]+\.\w+', body)
+                    phones_found = re.findall(r'[\+\d][\d\s\.\-\(\)]{8,}', body)
+
+                    if emails_found or phones_found:
+                        signatures_found += 1
+                        logger.info(f"Signature trouvée: {len(emails_found)} emails, {len(phones_found)} tels")
+
+        except Exception as e:
+            logger.error(f"Erreur sync {account.email}: {e}", exc_info=True)
+            errors.append({
+                "account_id": account.id,
+                "email": account.email,
+                "error": str(e),
+            })
+
+    return {
+        "success": True,
+        "accounts_synced": accounts_synced,
+        "total_accounts": len(accounts),
+        "total_emails": total_emails,
+        "signatures_found": signatures_found,
+        "since_days": since_days,
+        "since": since.isoformat(),
+        "results": results,
+        "errors": errors if errors else None,
+    }
