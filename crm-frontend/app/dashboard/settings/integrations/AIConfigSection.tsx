@@ -36,12 +36,14 @@ export default function AIConfigSection() {
   const [apiKeys, setApiKeys] = useState({
     anthropic: '',
     openai: '',
+    mistral: '',
     ollama: '',
   })
 
   const [apiKeysStatus, setApiKeysStatus] = useState({
     anthropic_configured: false,
     openai_configured: false,
+    mistral_configured: false,
     ollama_configured: false,
     using_env_fallback: true,
   })
@@ -49,6 +51,7 @@ export default function AIConfigSection() {
   const [showApiKeys, setShowApiKeys] = useState({
     anthropic: false,
     openai: false,
+    mistral: false,
     ollama: false,
   })
 
@@ -113,6 +116,7 @@ export default function AIConfigSection() {
       const payload: any = {}
       if (apiKeys.anthropic) payload.anthropic_key = apiKeys.anthropic
       if (apiKeys.openai) payload.openai_key = apiKeys.openai
+      if (apiKeys.mistral) payload.mistral_key = apiKeys.mistral
       if (apiKeys.ollama) payload.ollama_url = apiKeys.ollama
 
       const response = await fetch(`${apiClient.getBaseUrl()}/ai/config/api-keys`, {
@@ -127,7 +131,7 @@ export default function AIConfigSection() {
       if (response.ok) {
         const result = await response.json()
         setApiKeysStatus(result.status)
-        setApiKeys({ anthropic: '', openai: '', ollama: '' }) // Clear inputs
+        setApiKeys({ anthropic: '', openai: '', mistral: '', ollama: '' }) // Clear inputs
         alert('✅ Clés API sauvegardées avec succès!')
       } else {
         const error = await response.json()
@@ -308,6 +312,53 @@ export default function AIConfigSection() {
             </div>
           </div>
 
+          {/* Mistral AI */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="block text-sm font-medium text-gray-700">
+                Mistral AI API Key (EU - RGPD)
+              </label>
+              <div className="flex items-center gap-2">
+                {apiKeysStatus.mistral_configured ? (
+                  <span className="text-xs text-green-600 flex items-center gap-1">
+                    <CheckCircle className="h-4 w-4" />
+                    Configurée
+                  </span>
+                ) : (
+                  <span className="text-xs text-gray-500">Non configurée</span>
+                )}
+                <a
+                  href="https://console.mistral.ai/api-keys/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-blue-600 hover:underline flex items-center gap-1"
+                >
+                  Obtenir une clé
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </div>
+            </div>
+            <div className="relative">
+              <input
+                type={showApiKeys.mistral ? 'text' : 'password'}
+                value={apiKeys.mistral}
+                onChange={(e) => setApiKeys({ ...apiKeys, mistral: e.target.value })}
+                className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                placeholder="xxxxxxxxxxxxxxxxxx"
+              />
+              <button
+                type="button"
+                onClick={() => setShowApiKeys({ ...showApiKeys, mistral: !showApiKeys.mistral })}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                {showApiKeys.mistral ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              </button>
+            </div>
+            <p className="text-xs text-gray-500">
+              🇪🇺 Hébergé en Europe - Compatible RGPD - Fallback prioritaire pour Phase 2
+            </p>
+          </div>
+
           {/* Ollama */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
@@ -347,7 +398,7 @@ export default function AIConfigSection() {
           <button
             type="button"
             onClick={handleSaveApiKeys}
-            disabled={isSavingKeys || (!apiKeys.anthropic && !apiKeys.openai && !apiKeys.ollama)}
+            disabled={isSavingKeys || (!apiKeys.anthropic && !apiKeys.openai && !apiKeys.mistral && !apiKeys.ollama)}
             className="w-full px-4 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isSavingKeys ? (

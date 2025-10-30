@@ -1,0 +1,85 @@
+name: Size Guard - Prevent Large Files
+
+on:
+  pull_request:
+    paths:
+      - 'crm-backend/**/*.py'
+      - 'crm-frontend/**/*.ts'
+      - 'crm-frontend/**/*.tsx'
+      - 'crm-frontend/**/*.js'
+      - 'crm-frontend/**/*.jsx'
+
+jobs:
+  check-file-sizes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check Python files > 600 lines
+        run: |
+          echo "🔍 Checking Python files..."
+          LARGE_FILES=""
+
+          while IFS= read -r file; do
+            LINES=$(wc -l < "$file" | tr -d ' ')
+            if [ "$LINES" -gt 600 ]; then
+              LARGE_FILES="$LARGE_FILES\n  ❌ $file ($LINES lines)"
+            fi
+          done < <(find crm-backend -name "*.py" -not -path "*/migrations/*" -not -path "*/__pycache__/*")
+
+          if [ -n "$LARGE_FILES" ]; then
+            echo "❌ Python files exceeding 600 lines:"
+            echo -e "$LARGE_FILES"
+            echo ""
+            echo "Please refactor these files to reduce complexity."
+            echo "See REFACTOR_GUIDE.md for guidance."
+            exit 1
+          else
+            echo "✅ All Python files under 600 lines"
+          fi
+
+      - name: Check TypeScript/JavaScript files > 500 lines
+        run: |
+          echo "🔍 Checking TypeScript/JavaScript files..."
+          LARGE_FILES=""
+
+          while IFS= read -r file; do
+            # Skip node_modules, .next, etc.
+            if [[ "$file" =~ node_modules|\.next|dist|build ]]; then
+              continue
+            fi
+
+            LINES=$(wc -l < "$file" | tr -d ' ')
+
+            # Exception for pages/layouts (max 800 lines)
+            if [[ "$file" =~ page\.tsx$ ]] || [[ "$file" =~ layout\.tsx$ ]]; then
+              if [ "$LINES" -gt 800 ]; then
+                LARGE_FILES="$LARGE_FILES\n  ❌ $file ($LINES lines, max 800 for pages)"
+              fi
+            else
+              if [ "$LINES" -gt 500 ]; then
+                LARGE_FILES="$LARGE_FILES\n  ❌ $file ($LINES lines)"
+              fi
+            fi
+          done < <(find crm-frontend -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx")
+
+          if [ -n "$LARGE_FILES" ]; then
+            echo "❌ Files exceeding line limits:"
+            echo -e "$LARGE_FILES"
+            echo ""
+            echo "Please refactor these files to reduce complexity."
+            echo "See REFACTOR_GUIDE.md for guidance."
+            exit 1
+          else
+            echo "✅ All TypeScript/JavaScript files within limits"
+          fi
+
+      - name: Report summary
+        if: success()
+        run: |
+          echo "✅ All files pass size checks!"
+          echo ""
+          echo "Limits:"
+          echo "  - Python: 600 lines max"
+          echo "  - TypeScript/JS: 500 lines max (800 for pages/layouts)"

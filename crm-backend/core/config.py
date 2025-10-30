@@ -136,14 +136,53 @@ class Settings(BaseSettings):
     ai_rate_limit_rpm: int = 10  # Requests per minute
     ai_batch_size: int = 10  # Nombre d'items par batch
 
-    # Microsoft OAuth (Outlook Integration)
+    # Microsoft OAuth - App 1: Graph API (Primary)
     outlook_client_id: str = ""
     outlook_client_secret: str = ""
-    outlook_tenant: str = "common"
+    outlook_tenant: str = "organizations"
     outlook_redirect_uri: str = "http://localhost:3010/oauth/outlook/callback"
-    outlook_scopes: str = "https://graph.microsoft.com/Mail.Read https://graph.microsoft.com/Contacts.Read offline_access"
+    outlook_scopes: str = "openid profile offline_access https://graph.microsoft.com/Mail.Read https://graph.microsoft.com/Contacts.Read"
     outlook_auth_url: str = ""
     outlook_token_url: str = ""
+    outlook_allowed_domains: Union[str, List[str]] = []
+
+    # Microsoft OAuth - App 2: EWS/IMAP (Fallback)
+    o365_client_id: str = ""
+    o365_client_secret: str = ""
+    o365_tenant_id: str = ""
+    o365_redirect_uri: str = "http://localhost:3010/oauth/o365/callback"
+    o365_scopes: str = "https://outlook.office365.com/EWS.AccessAsUser.All https://outlook.office365.com/IMAP.AccessAsUser.All offline_access"
+    o365_auth_url: str = ""
+    o365_token_url: str = ""
+
+    # Mail Provider Strategy
+    mail_primary_provider: str = "graph"  # graph | imap | auto
+    mail_fallback_enabled: bool = True
+    mail_fallback_provider: str = "imap"
+    mail_retry_count: int = 3
+    mail_retry_delay_ms: int = 2000
+
+    @field_validator("outlook_allowed_domains", mode="before")
+    @classmethod
+    def parse_outlook_allowed_domains(cls, value):
+        if value in (None, ""):
+            return []
+        if isinstance(value, str):
+            value = value.strip()
+            if not value:
+                return []
+            if value.startswith("["):
+                try:
+                    parsed = json.loads(value)
+                    if isinstance(parsed, list):
+                        return parsed
+                    return [str(parsed)]
+                except json.JSONDecodeError:
+                    return [v.strip() for v in value.split(",") if v.strip()]
+            return [v.strip() for v in value.split(",") if v.strip()]
+        if isinstance(value, (list, tuple, set)):
+            return [str(v).strip() for v in value if str(v).strip()]
+        return [str(value).strip()]
 
     # Encryption (Fernet AES-256 pour tokens OAuth)
     encryption_key: str = ""

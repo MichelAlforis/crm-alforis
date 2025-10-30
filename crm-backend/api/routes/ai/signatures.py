@@ -9,10 +9,11 @@ POST /ai/suggestions/{id}/reject - Reject suggestion
 """
 
 import logging
-from typing import Optional
+from datetime import datetime
+from typing import Any, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from core import get_current_user, get_db
@@ -34,8 +35,10 @@ class ParseSignatureRequest(BaseModel):
 
 
 class ParseSignatureResponse(BaseModel):
+    model_config = {"protected_namespaces": ()}
+
     success: bool
-    data: Optional[dict] = None
+    data: Optional[Any] = Field(None, description="Extracted signature fields")
     confidence: Optional[float] = None
     model_used: Optional[str] = None
     processing_time_ms: Optional[int] = None

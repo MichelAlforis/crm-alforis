@@ -38,6 +38,8 @@ openai==1.54.0  # OpenAI GPT API
 cryptography==42.0.0  # Chiffrement AES-256 (Fernet) pour API keys
 phonenumbers==8.13.27  # Phone number parsing & E.164 normalization
 beautifulsoup4==4.12.3  # HTML parsing pour signatures Outlook
+exchangelib==5.4.2  # EWS (Exchange Web Services) pour Outlook/M365
+imap-tools==1.7.1  # IMAP client (fallback si EWS bloqué)
 
 # 2FA / TOTP
 pyotp==2.9.0  # Time-based One-Time Password (RFC 6238)

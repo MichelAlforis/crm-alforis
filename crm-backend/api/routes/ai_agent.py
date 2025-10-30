@@ -767,6 +767,7 @@ class SaveAPIKeysRequest(BaseModel):
 
     anthropic_key: Optional[str] = None
     openai_key: Optional[str] = None
+    mistral_key: Optional[str] = None
     ollama_url: Optional[str] = None
 
     @field_validator("anthropic_key")
@@ -783,12 +784,20 @@ class SaveAPIKeysRequest(BaseModel):
             raise ValueError("Clé OpenAI invalide (doit commencer par sk-)")
         return v
 
+    @field_validator("mistral_key")
+    @classmethod
+    def validate_mistral_key(cls, v):
+        if v and len(v) < 20:
+            raise ValueError("Clé Mistral invalide (trop courte)")
+        return v
+
 
 class APIKeysStatusResponse(BaseModel):
     """Statut des clés API (sans exposer les clés)"""
 
     anthropic_configured: bool
     openai_configured: bool
+    mistral_configured: bool
     ollama_configured: bool
     last_updated_at: Optional[str] = None
     using_env_fallback: bool
@@ -843,6 +852,9 @@ async def save_api_keys(
     if request.openai_key:
         config.encrypted_openai_key = encryption.encrypt(request.openai_key)
 
+    if request.mistral_key:
+        config.encrypted_mistral_key = encryption.encrypt(request.mistral_key)
+
     if request.ollama_url:
         config.encrypted_ollama_url = encryption.encrypt(request.ollama_url)
 
@@ -856,6 +868,7 @@ async def save_api_keys(
         "status": {
             "anthropic_configured": bool(config.encrypted_anthropic_key),
             "openai_configured": bool(config.encrypted_openai_key),
+            "mistral_configured": bool(config.encrypted_mistral_key),
             "ollama_configured": bool(config.encrypted_ollama_url),
         },
     }
@@ -893,6 +906,7 @@ async def get_api_keys_status(
     return APIKeysStatusResponse(
         anthropic_configured=bool(config.encrypted_anthropic_key),
         openai_configured=bool(config.encrypted_openai_key),
+        mistral_configured=bool(config.encrypted_mistral_key),
         ollama_configured=bool(config.encrypted_ollama_url),
         last_updated_at=(
             config.api_keys_updated_at.isoformat() if config.api_keys_updated_at else None
@@ -901,6 +915,7 @@ async def get_api_keys_status(
             [
                 config.encrypted_anthropic_key,
                 config.encrypted_openai_key,
+                config.encrypted_mistral_key,
                 config.encrypted_ollama_url,
             ]
         ),

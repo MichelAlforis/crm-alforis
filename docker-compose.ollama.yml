@@ -1,0 +1,10 @@
+# docker-compose.ollama.yml
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports: ["11434:11434"]
+    volumes: ["./ollama:/root/.ollama"]
+    environment:
+      - OLLAMA_NUM_PARALLEL=2
+    restart: unless-stopped

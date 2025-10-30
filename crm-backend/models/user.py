@@ -86,13 +86,28 @@ class User(BaseModel):
         cascade="all, delete-orphan"
     )
 
-    # Outlook Integration (Phase 1)
+    # Outlook Integration (Phase 1 - OAuth Graph API)
     outlook_connected = Column(Boolean, default=False, nullable=False)
     encrypted_outlook_access_token = Column(Text, nullable=True)
     encrypted_outlook_refresh_token = Column(Text, nullable=True)
     outlook_token_expires_at = Column(DateTime(timezone=True), nullable=True)
     outlook_consent_given = Column(Boolean, default=False, nullable=False)  # RGPD
     outlook_consent_date = Column(DateTime(timezone=True), nullable=True)  # RGPD
+
+    # O365 OAuth Integration (Phase 2 - EWS/IMAP OAuth)
+    o365_connected = Column(Boolean, default=False, nullable=False)
+    encrypted_o365_access_token = Column(Text, nullable=True)
+    encrypted_o365_refresh_token = Column(Text, nullable=True)
+    o365_token_expires_at = Column(DateTime(timezone=True), nullable=True)
+    o365_consent_given = Column(Boolean, default=False, nullable=False)
+    o365_consent_date = Column(DateTime(timezone=True), nullable=True)
+
+    # IMAP Integration (Phase 3 - Direct IMAP avec App Password - Fallback ultime)
+    imap_connected = Column(Boolean, default=False, nullable=False)
+    imap_host = Column(String(255), nullable=True)  # ex: outlook.office365.com
+    imap_email = Column(String(255), nullable=True)  # ex: michel.marques@alforis.fr
+    encrypted_imap_password = Column(Text, nullable=True)  # App Password chiffré
+    imap_connected_at = Column(DateTime(timezone=True), nullable=True)
 
     # CGU/CGV Acceptance (Legal Compliance)
     cgu_accepted = Column(Boolean, default=False, nullable=False, index=True)

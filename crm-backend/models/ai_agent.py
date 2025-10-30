@@ -251,6 +251,7 @@ class AIConfiguration(BaseModel):
     # API Keys chiffrées (depuis frontend)
     encrypted_anthropic_key = Column(Text, nullable=True)  # Clé Anthropic chiffrée
     encrypted_openai_key = Column(Text, nullable=True)  # Clé OpenAI chiffrée
+    encrypted_mistral_key = Column(Text, nullable=True)  # Clé Mistral AI chiffrée (EU - RGPD)
     encrypted_ollama_url = Column(Text, nullable=True)  # URL Ollama custom chiffrée
     api_keys_updated_at = Column(DateTime, nullable=True)
     api_keys_updated_by = Column(Integer, ForeignKey("users.id"), nullable=True)

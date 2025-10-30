@@ -12,8 +12,11 @@ Scopes requis:
 - Contacts.Read: Lecture contacts
 """
 
+import base64
+import json
+import logging
 import re
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional
 from urllib.parse import quote
 
@@ -24,6 +27,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
 from core.config import settings
+from core.encryption import decrypt_value, encrypt_value
 from models.user import User
 
 
@@ -31,27 +35,39 @@ class OutlookIntegration:
     """Service d'intégration Microsoft Outlook via Graph API"""
 
     GRAPH_BASE_URL = "https://graph.microsoft.com/v1.0"
+    MSA_TENANT_ID = "9188040d-6c67-4c5b-b112-36a304b66dad"
 
     def __init__(self, db: Session):
         self.db = db
         self.client_id = settings.outlook_client_id
         self.client_secret = settings.outlook_client_secret
         self.redirect_uri = settings.outlook_redirect_uri
-        self.tenant = settings.outlook_tenant
+        self.tenant = (settings.outlook_tenant or "organizations").strip() or "organizations"
         self.auth_url = settings.outlook_auth_url or f"https://login.microsoftonline.com/{self.tenant}/oauth2/v2.0/authorize"
         self.token_url = settings.outlook_token_url or f"https://login.microsoftonline.com/{self.tenant}/oauth2/v2.0/token"
         self.scopes = settings.outlook_scopes.split()
+        self.allowed_domains = [domain.lower() for domain in settings.outlook_allowed_domains] if settings.outlook_allowed_domains else []
 
     # ==========================================
     # OAuth Flow
     # ==========================================
 
-    def get_authorization_url(self, state: str) -> str:
+    def get_authorization_url(
+        self,
+        state: str,
+        *,
+        login_hint: Optional[str] = None,
+        force_prompt: bool = True,
+        domain_hint: Optional[str] = None,
+    ) -> str:
         """
         Génère l'URL d'autorisation OAuth
 
         Args:
             state: État CSRF pour sécuriser le callback
+            login_hint: Email suggéré pour pré-remplir le sélecteur Microsoft
+            force_prompt: Force select_account pour éviter la session MSA cachée
+            domain_hint: Hint Microsoft (organizations, consumers, ...)
 
         Returns:
             URL d'autorisation Microsoft
@@ -65,6 +81,17 @@ class OutlookIntegration:
             "scope": scopes_str,
             "state": state,
         }
+
+        if force_prompt:
+            params["prompt"] = "select_account"
+
+        if login_hint:
+            params["login_hint"] = login_hint
+
+        if domain_hint:
+            params["domain_hint"] = domain_hint
+        elif self.allowed_domains:
+            params["domain_hint"] = "organizations"
 
         query_string = "&".join([f"{k}={quote(str(v))}" for k, v in params.items()])
         return f"{self.auth_url}?{query_string}"
@@ -100,6 +127,122 @@ class OutlookIntegration:
             response.raise_for_status()
             return response.json()
 
+    @staticmethod
+    def _decode_jwt_without_verification(token: str) -> Dict:
+        try:
+            _header, payload, _signature = token.split(".")
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail="ID token Microsoft invalide") from exc
+
+        padding = "=" * (-len(payload) % 4)
+        try:
+            decoded = base64.urlsafe_b64decode((payload + padding).encode("ascii"))
+            return json.loads(decoded.decode("utf-8"))
+        except (ValueError, json.JSONDecodeError) as exc:
+            raise HTTPException(status_code=400, detail="Impossible de décoder l'ID token Microsoft") from exc
+
+    def _is_domain_allowed(self, email: str) -> bool:
+        if not self.allowed_domains:
+            return True
+        if not email or "@" not in email:
+            return False
+        domain = email.split("@", 1)[1].lower()
+        return domain in self.allowed_domains
+
+    async def validate_token_identity(self, token_data: Dict) -> Dict:
+        """Valide qu'un token correspond à un compte professionnel autorisé.
+
+        Returns:
+            {
+                "email": "...",
+                "tenant_id": "...",
+                "profile": {...},
+                "claims": {...},
+                "emails_considered": ["..."]
+            }
+        """
+
+        logger = logging.getLogger(__name__)
+
+        id_token = token_data.get("id_token")
+        access_token = token_data.get("access_token")
+
+        if not id_token or not access_token:
+            raise HTTPException(status_code=400, detail="Réponse Microsoft incomplète (tokens manquants)")
+
+        claims = self._decode_jwt_without_verification(id_token)
+        tenant_id = (claims.get("tid") or claims.get("tenantId") or "").lower()
+
+        if tenant_id in {"", self.MSA_TENANT_ID}:
+            raise HTTPException(
+                status_code=400,
+                detail="Compte personnel Microsoft détecté. Utilisez un compte professionnel ou scolaire.",
+            )
+
+        preferred_username = (claims.get("preferred_username") or claims.get("upn") or "").lower()
+        email_claim = (claims.get("email") or "").lower()
+
+        select_fields = "id,displayName,mail,userPrincipalName,jobTitle,officeLocation,proxyAddresses"
+        try:
+            profile = await self.get_user_profile(access_token, select=select_fields)
+        except httpx.HTTPStatusError as exc:
+            logger.warning("Impossible de récupérer proxyAddresses (%s), fallback minimal", exc)
+            profile = await self.get_user_profile(access_token)
+
+        candidates: List[str] = []
+
+        # proxyAddresses: primary SMTP is uppercase
+        proxy_addresses = profile.get("proxyAddresses") or []
+        primary_proxy = None
+        secondary_proxies: List[str] = []
+        for addr in proxy_addresses:
+            if not isinstance(addr, str) or ":" not in addr:
+                continue
+            prefix, value = addr.split(":", 1)
+            if prefix == "SMTP":
+                primary_proxy = value.lower()
+            elif prefix.lower() == "smtp":
+                secondary_proxies.append(value.lower())
+
+        if primary_proxy:
+            candidates.append(primary_proxy)
+        candidates.extend(secondary_proxies)
+
+        mail_field = (profile.get("mail") or "").lower()
+        if mail_field:
+            candidates.append(mail_field)
+
+        upn_field = (profile.get("userPrincipalName") or "").lower()
+        if upn_field:
+            candidates.append(upn_field)
+
+        if preferred_username:
+            candidates.append(preferred_username)
+        if email_claim:
+            candidates.append(email_claim)
+
+        # Déduplication en conservant l'ordre
+        emails_considered: List[str] = []
+        seen = set()
+        for email in candidates:
+            if email and email not in seen:
+                emails_considered.append(email)
+                seen.add(email)
+
+        if not emails_considered:
+            raise HTTPException(status_code=400, detail="Impossible de déterminer l'adresse email Outlook")
+
+        if self.allowed_domains and not any(self._is_domain_allowed(email) for email in emails_considered):
+            raise HTTPException(status_code=400, detail="Adresse email hors domaines autorisés")
+
+        return {
+            "email": emails_considered[0],
+            "tenant_id": tenant_id,
+            "profile": profile,
+            "claims": claims,
+            "emails_considered": emails_considered,
+        }
+
     async def refresh_access_token(self, refresh_token: str) -> Dict:
         """
         Rafraîchit l'access token avec le refresh token
@@ -125,16 +268,131 @@ class OutlookIntegration:
             response.raise_for_status()
             return response.json()
 
+    async def get_valid_access_token(
+        self,
+        user: User,
+        *,
+        force_refresh: bool = False,
+        refresh_margin: int = 300,
+    ) -> str:
+        """Récupère ou renouvelle le token Outlook de l'utilisateur.
+
+        Args:
+            user: Utilisateur CRM avec tokens chiffrés
+            force_refresh: Force le refresh même si le token semble valide
+            refresh_margin: Nombre de secondes avant expiration pour déclencher un refresh
+
+        Returns:
+            access_token Microsoft Graph valide
+
+        Raises:
+            HTTPException: si Outlook non connecté ou tokens invalides
+        """
+
+        logger = logging.getLogger(__name__)
+
+        if not user or not user.outlook_connected:
+            raise HTTPException(status_code=400, detail="Outlook non connecté")
+
+        if not user.encrypted_outlook_access_token:
+            raise HTTPException(status_code=400, detail="Token Outlook manquant")
+
+        try:
+            access_token = decrypt_value(user.encrypted_outlook_access_token)
+        except Exception as exc:
+            logger.error("Impossible de déchiffrer access token Outlook: %s", exc)
+            raise HTTPException(status_code=500, detail="Token Outlook illisible") from exc
+
+        now_utc = datetime.now(timezone.utc)
+        expires_at = user.outlook_token_expires_at
+        if expires_at is not None:
+            try:
+                expires_utc = (
+                    expires_at.astimezone(timezone.utc)
+                    if expires_at.tzinfo
+                    else expires_at.replace(tzinfo=timezone.utc)
+                )
+            except Exception:
+                expires_utc = expires_at if expires_at.tzinfo else expires_at.replace(tzinfo=timezone.utc)
+        else:
+            expires_utc = None
+
+        if (
+            not force_refresh
+            and access_token
+            and expires_utc is not None
+            and (expires_utc - now_utc).total_seconds() > max(refresh_margin, 0)
+        ):
+            return access_token
+
+        if not user.encrypted_outlook_refresh_token:
+            raise HTTPException(status_code=400, detail="Refresh token Outlook manquant")
+
+        try:
+            refresh_token = decrypt_value(user.encrypted_outlook_refresh_token)
+        except Exception as exc:
+            logger.error("Impossible de déchiffrer refresh token Outlook: %s", exc)
+            raise HTTPException(status_code=500, detail="Refresh token Outlook illisible") from exc
+
+        try:
+            token_data = await self.refresh_access_token(refresh_token)
+        except httpx.HTTPStatusError as exc:
+            status = exc.response.status_code if exc.response else 502
+            logger.warning("Refresh token Outlook rejeté (status=%s): %s", status, exc)
+            raise HTTPException(status_code=401, detail="Refresh token Outlook invalide") from exc
+        except Exception as exc:
+            logger.error("Erreur inattendue lors du refresh token Outlook: %s", exc)
+            raise HTTPException(status_code=502, detail="Echec du refresh token Outlook") from exc
+
+        new_access_token = token_data.get("access_token")
+        if not new_access_token:
+            logger.error("Refresh Outlook sans access_token dans la réponse: %s", token_data)
+            raise HTTPException(status_code=502, detail="Réponse Microsoft invalide (access_token manquant)")
+
+        new_refresh_token = token_data.get("refresh_token") or refresh_token
+        expires_in_raw = token_data.get("expires_in", 3600)
+        try:
+            expires_seconds = int(expires_in_raw)
+        except (TypeError, ValueError):
+            logger.warning(
+                "Valeur expires_in invalide (%s), fallback 3600s pour user_id=%s",
+                expires_in_raw,
+                user.id,
+            )
+            expires_seconds = 3600
+
+        try:
+            user.encrypted_outlook_access_token = encrypt_value(new_access_token)
+            if new_refresh_token:
+                user.encrypted_outlook_refresh_token = encrypt_value(new_refresh_token)
+            user.outlook_token_expires_at = now_utc + timedelta(seconds=expires_seconds)
+            self.db.add(user)
+            self.db.commit()
+            self.db.refresh(user)
+        except Exception as exc:
+            logger.error("Impossible de mettre à jour les tokens Outlook en base: %s", exc)
+            self.db.rollback()
+            raise HTTPException(status_code=500, detail="Echec de mise à jour des tokens Outlook") from exc
+
+        logger.info(
+            "Token Outlook rafraîchi pour user_id=%s, expire dans %ss",
+            user.id,
+            expires_seconds,
+        )
+
+        return new_access_token
+
     # ==========================================
     # Graph API Calls
     # ==========================================
 
-    async def get_user_profile(self, access_token: str) -> Dict:
+    async def get_user_profile(self, access_token: str, select: Optional[str] = None) -> Dict:
         """
         Récupère le profil de l'utilisateur Microsoft connecté
 
         Args:
             access_token: Token d'accès Microsoft
+            select: Champs Graph API à sélectionner (optionnel)
 
         Returns:
             {
@@ -146,9 +404,12 @@ class OutlookIntegration:
                 "officeLocation": "..."
             }
         """
+        params = {"$select": select} if select else None
+
         async with httpx.AsyncClient() as client:
             response = await client.get(
                 f"{self.GRAPH_BASE_URL}/me",
+                params=params,
                 headers={"Authorization": f"Bearer {access_token}"},
             )
             response.raise_for_status()
@@ -584,6 +845,258 @@ class OutlookIntegration:
             if limit > 0:
                 return collected[:limit]
             return collected
+
+    async def _list_child_folders(
+        self, client: httpx.AsyncClient, folder_id: str, headers: dict
+    ) -> List[Dict]:
+        """
+        Liste récursivement les sous-dossiers d'un dossier
+
+        Args:
+            client: Client httpx
+            folder_id: ID du dossier parent
+            headers: Headers avec Authorization
+
+        Returns:
+            Liste de sous-dossiers
+        """
+        url = f"{self.GRAPH_BASE_URL}/me/mailFolders/{folder_id}/childFolders"
+        folders = []
+        params = {"$top": 100}
+
+        while url:
+            response = await client.get(url, headers=headers, params=params)
+            response.raise_for_status()
+            data = response.json()
+            folders.extend(data.get("value", []))
+            url = data.get("@odata.nextLink")
+            params = None  # nextLink contient déjà les params
+
+        return folders
+
+    async def list_all_primary_folders(self, access_token: str) -> List[Dict]:
+        """
+        Liste TOUS les dossiers de la boîte primaire (récursif, sans archives)
+
+        Args:
+            access_token: Token d'accès Microsoft
+
+        Returns:
+            Liste complète de dossiers (racine + enfants)
+        """
+        import logging
+
+        logger = logging.getLogger(__name__)
+
+        headers = {"Authorization": f"Bearer {access_token}"}
+        root_url = f"{self.GRAPH_BASE_URL}/me/mailFolders"
+        folders = []
+        params = {"$top": 100}
+
+        async with httpx.AsyncClient(timeout=60.0) as client:
+            # 1. Récupérer dossiers racine
+            url = root_url
+            while url:
+                response = await client.get(url, headers=headers, params=params)
+                response.raise_for_status()
+                data = response.json()
+
+                for folder in data.get("value", []):
+                    # Exclure archives
+                    well_known = (folder.get("wellKnownName") or "").lower()
+                    if well_known in {"archivemsgfolderroot", "archive"}:
+                        logger.info(f"Skipping archive folder: {folder.get('displayName')}")
+                        continue
+                    folders.append(folder)
+
+                url = data.get("@odata.nextLink")
+                params = None
+
+            # 2. Descendre récursivement dans les sous-dossiers
+            all_folders = []
+            queue = folders[:]
+
+            while queue:
+                parent = queue.pop(0)
+                all_folders.append(parent)
+
+                # Récupérer enfants
+                try:
+                    children = await self._list_child_folders(
+                        client, parent["id"], headers
+                    )
+
+                    for child in children:
+                        well_known = (child.get("wellKnownName") or "").lower()
+                        if well_known in {"archivemsgfolderroot", "archive"}:
+                            continue
+                        queue.append(child)
+
+                except Exception as e:
+                    logger.warning(
+                        f"Failed to list children of {parent.get('displayName')}: {e}"
+                    )
+                    continue
+
+        logger.info(f"Found {len(all_folders)} primary folders")
+        return all_folders
+
+    async def _fetch_folder_messages(
+        self,
+        access_token: str,
+        folder_id: str,
+        start_date: str,
+        limit: int = None,
+    ) -> List[Dict]:
+        """
+        Récupère messages d'un dossier spécifique avec pagination
+
+        Args:
+            access_token: Token d'accès Microsoft
+            folder_id: ID du dossier
+            start_date: Date de début ISO (format: 2025-01-01T00:00:00Z)
+            limit: Limite optionnelle
+
+        Returns:
+            Liste de messages
+        """
+        import asyncio
+        import logging
+
+        logger = logging.getLogger(__name__)
+
+        headers = {"Authorization": f"Bearer {access_token}"}
+        url = f"{self.GRAPH_BASE_URL}/me/mailFolders/{folder_id}/messages"
+        params = {
+            "$top": 100,
+            "$select": "id,subject,from,toRecipients,receivedDateTime,body,uniqueBody,parentFolderId,hasAttachments",
+            "$filter": f"receivedDateTime ge {start_date}",
+            "$orderby": "receivedDateTime desc",
+        }
+
+        collected = []
+
+        async with httpx.AsyncClient(timeout=60.0) as client:
+            while url:
+                # Retry logic
+                for attempt in range(3):
+                    try:
+                        if params is not None:
+                            response = await client.get(url, headers=headers, params=params)
+                        else:
+                            response = await client.get(url, headers=headers)
+
+                        if response.status_code in (429, 503):
+                            retry_after = int(response.headers.get("Retry-After", 2))
+                            wait_time = retry_after * (attempt + 1)
+                            logger.warning(
+                                f"Rate limit, waiting {wait_time}s (attempt {attempt + 1}/3)"
+                            )
+                            await asyncio.sleep(wait_time)
+                            continue
+
+                        response.raise_for_status()
+                        break
+
+                    except httpx.TimeoutException:
+                        if attempt == 2:
+                            raise
+                        await asyncio.sleep(2)
+
+                data = response.json()
+                messages = data.get("value", [])
+                collected.extend(messages)
+
+                if limit and len(collected) >= limit:
+                    return collected[:limit]
+
+                url = data.get("@odata.nextLink")
+                params = None
+
+        return collected
+
+    async def get_recent_messages_from_all_folders(
+        self, access_token: str, days: int = 90, limit: int = 0
+    ) -> List[Dict]:
+        """
+        Récupère messages de TOUS les dossiers primaires (sans archives)
+
+        Stratégie:
+        1. Liste tous les dossiers (récursif)
+        2. Priorise Inbox et SentItems
+        3. Récupère messages dossier par dossier
+        4. Déduplique par ID
+
+        Args:
+            access_token: Token d'accès Microsoft
+            days: Nombre de jours dans le passé
+            limit: Limite (0 = illimité)
+
+        Returns:
+            Liste dédupliquée de messages
+        """
+        import logging
+        from datetime import datetime, timezone, timedelta
+
+        logger = logging.getLogger(__name__)
+
+        # 1. Lister tous les dossiers
+        start_time = datetime.now()
+        folders = await self.list_all_primary_folders(access_token)
+        logger.info(f"Listed {len(folders)} folders in {(datetime.now() - start_time).total_seconds():.2f}s")
+
+        # 2. Prioriser Inbox/Sent pour remplir vite
+        def folder_priority(folder: Dict) -> int:
+            name = (folder.get("wellKnownName") or folder.get("displayName", "")).lower()
+            if name in {"inbox", "boîte de réception"}:
+                return 0
+            if name in {"sentitems", "éléments envoyés"}:
+                return 1
+            return 2
+
+        folders.sort(key=folder_priority)
+
+        # 3. Date de début
+        start_date = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat().replace("+00:00", "Z")
+
+        # 4. Récupérer messages dossier par dossier
+        seen_ids = set()
+        collected = []
+
+        for folder in folders:
+            folder_name = folder.get("displayName", folder.get("id"))
+            logger.info(f"Fetching messages from folder: {folder_name}")
+
+            try:
+                messages = await self._fetch_folder_messages(
+                    access_token, folder["id"], start_date, limit=None
+                )
+
+                # Dédupliquer
+                for msg in messages:
+                    msg_id = msg.get("id")
+                    if msg_id and msg_id not in seen_ids:
+                        seen_ids.add(msg_id)
+                        collected.append(msg)
+
+                        if limit and len(collected) >= limit:
+                            logger.info(
+                                f"Reached limit of {limit} messages across {len(seen_ids)} unique"
+                            )
+                            return collected[:limit]
+
+                logger.info(
+                    f"Folder {folder_name}: {len(messages)} messages, {len(collected)} total unique"
+                )
+
+            except Exception as e:
+                logger.error(f"Failed to fetch messages from {folder_name}: {e}")
+                continue
+
+        logger.info(
+            f"Collected {len(collected)} unique messages from {len(folders)} folders"
+        )
+        return collected
 
     async def get_sent_messages_without_reply(
         self, access_token: str, older_than_days: int = 3
