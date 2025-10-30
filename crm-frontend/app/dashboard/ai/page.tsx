@@ -4,13 +4,14 @@
  */
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import {
   useAIStatistics,
   useAIExecutions,
   useDetectDuplicates,
   useEnrichOrganisations,
   useCheckQuality,
+  useParseSignature,
 } from '@/hooks/useAI'
 import AIStatCard from '@/components/ai/AIStatCard'
 import AIExecutionsList from '@/components/ai/AIExecutionsList'
@@ -25,6 +26,9 @@ import {
   FileCheck,
   Settings,
   List,
+  Mail,
+  X,
+  AlertCircle,
 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -37,8 +41,20 @@ export default function AIDashboardPage() {
   const detectDuplicates = useDetectDuplicates()
   const enrichOrganisations = useEnrichOrganisations()
   const checkQuality = useCheckQuality()
+  const parseSignature = useParseSignature()
+
+  const [showParseModal, setShowParseModal] = useState(false)
+  const [emailBody, setEmailBody] = useState('')
+  const [parseResult, setParseResult] = useState<any>(null)
 
   const cacheHitRate = stats?.cache_hit_rate ? (stats.cache_hit_rate * 100).toFixed(0) : '0'
+
+  const handleParse = async () => {
+    if (!emailBody.trim()) return
+
+    const result = await parseSignature.mutateAsync({ email_body: emailBody })
+    setParseResult(result)
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 p-6">
@@ -111,7 +127,7 @@ export default function AIDashboardPage() {
         {/* Quick Actions */}
         <div className="bg-white rounded-2xl shadow-lg p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Actions rapides</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Detect Duplicates */}
             <button
               onClick={() => detectDuplicates.mutate({ limit: 100 })}
@@ -165,6 +181,20 @@ export default function AIDashboardPage() {
                 Vérifie la cohérence des données
               </p>
             </button>
+
+            {/* Parse Signature */}
+            <button
+              onClick={() => setShowParseModal(true)}
+              className="group p-6 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <Mail className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-lg font-bold text-white">Parser Signature</h3>
+              <p className="text-sm text-orange-100 mt-2">
+                Extraire infos d'une signature email
+              </p>
+            </button>
           </div>
         </div>
 
@@ -201,6 +231,118 @@ export default function AIDashboardPage() {
           )}
         </div>
       </div>
+
+      {/* Parse Signature Modal */}
+      {showParseModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg">
+                  <Mail className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Parser Signature Email</h2>
+                  <p className="text-sm text-gray-600">Extraction automatique des coordonnées</p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setShowParseModal(false)
+                  setParseResult(null)
+                  setEmailBody('')
+                }}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <X className="h-5 w-5 text-gray-500" />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-6 space-y-6">
+              {/* Input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Corps de l'email (avec signature)
+                </label>
+                <textarea
+                  value={emailBody}
+                  onChange={(e) => setEmailBody(e.target.value)}
+                  placeholder="Collez le corps complet de l'email ici...&#10;&#10;Exemple:&#10;Bonjour,&#10;&#10;Merci pour votre retour.&#10;&#10;Cordialement,&#10;Jean Dupont&#10;Directeur Commercial&#10;ACME Corp&#10;Tel: +33 1 23 45 67 89&#10;jean.dupont@acme.fr&#10;www.acme.fr"
+                  rows={10}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent font-mono text-sm"
+                />
+              </div>
+
+              {/* Parse Button */}
+              <button
+                onClick={handleParse}
+                disabled={parseSignature.isPending || !emailBody.trim()}
+                className="w-full py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {parseSignature.isPending ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
+                    Parsing en cours...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-5 w-5" />
+                    Parser la signature
+                  </>
+                )}
+              </button>
+
+              {/* Results */}
+              {parseResult && (
+                <div className="border-t border-gray-200 pt-6">
+                  {parseResult.success ? (
+                    <div className="space-y-4">
+                      {/* Success Header */}
+                      <div className="flex items-center gap-2 text-green-600">
+                        <CheckCircle className="h-5 w-5" />
+                        <span className="font-semibold">
+                          Parsing réussi ({parseResult.confidence ? (parseResult.confidence * 100).toFixed(0) + '%' : 'N/A'} confiance)
+                        </span>
+                      </div>
+
+                      {/* Metadata */}
+                      <div className="flex gap-4 text-sm text-gray-600">
+                        <span>🤖 {parseResult.model_used || 'IA'}</span>
+                        <span>⏱️ {parseResult.processing_time_ms || 0}ms</span>
+                        {parseResult.from_cache && <span>💾 Cached</span>}
+                      </div>
+
+                      {/* Extracted Data */}
+                      {parseResult.data && Object.keys(parseResult.data).length > 0 ? (
+                        <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                          <h3 className="font-semibold text-gray-900 mb-3">Données extraites:</h3>
+                          <div className="grid grid-cols-2 gap-3">
+                            {Object.entries(parseResult.data).map(([key, value]) => (
+                              <div key={key} className="bg-white rounded p-3 border border-gray-200">
+                                <p className="text-xs text-gray-500 uppercase tracking-wide">{key.replace(/_/g, ' ')}</p>
+                                <p className="font-medium text-gray-900 mt-1">{String(value)}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-gray-500 italic">Aucune donnée extraite</p>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 text-red-600">
+                      <AlertCircle className="h-5 w-5" />
+                      <span>Erreur: {parseResult.error || 'Échec du parsing'}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

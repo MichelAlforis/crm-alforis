@@ -457,6 +457,46 @@ export const useUpdateAIConfig = () => {
   })
 }
 
+// ============= SIGNATURE PARSING =============
+
+/**
+ * Parse email signature with AI
+ */
+export const useParseSignature = () => {
+  const { toast } = useToast()
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (data: { email_body: string; team_id?: number }) => {
+      const response = await apiClient.post('/ai/parse-signature', data)
+      return response.data
+    },
+    onSuccess: (data) => {
+      if (data.success) {
+        toast({
+          title: '✅ Signature parsée',
+          description: `${data.confidence ? (data.confidence * 100).toFixed(0) + '% confiance' : 'Données extraites'} - ${data.model_used || 'IA'}`,
+        })
+        // Rafraîchir les suggestions
+        queryClient.invalidateQueries({ queryKey: ['ai', 'suggestions'] })
+      } else {
+        toast({
+          title: 'Échec du parsing',
+          description: data.error || 'Erreur inconnue',
+          variant: 'destructive',
+        })
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Erreur',
+        description: error.message,
+        variant: 'destructive',
+      })
+    },
+  })
+}
+
 // ============= CUSTOM HOOKS =============
 
 /**

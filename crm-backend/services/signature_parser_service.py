@@ -25,6 +25,7 @@ from sqlalchemy.orm import Session
 from core.config import settings
 from models.ai_memory import AIMemory
 from models.autofill_suggestion import AutofillSuggestion
+from services.ai_config_loader import get_ai_config_loader
 
 logger = logging.getLogger("crm-api")
 
@@ -43,6 +44,7 @@ class SignatureParserService:
 
     def __init__(self, db: Session):
         self.db = db
+        self.config_loader = get_ai_config_loader(db)
 
     async def parse_signature(
         self,
@@ -199,13 +201,17 @@ class SignatureParserService:
         try:
             import httpx
 
+            ollama_url = self.config_loader.get_ollama_url()
+            if not ollama_url:
+                return {"success": False, "error": "Ollama URL not configured"}
+
             prompt = self._build_prompt(signature_text)
 
-            async with httpx.AsyncClient(timeout=30.0) as client:
+            async with httpx.AsyncClient(timeout=60.0) as client:
                 response = await client.post(
-                    "http://localhost:11434/api/generate",
+                    f"{ollama_url}/api/generate",
                     json={
-                        "model": "mistral:7b-instruct",
+                        "model": "mistral",  # or "mistral:latest"
                         "prompt": prompt,
                         "stream": False,
                         "format": "json"
@@ -233,7 +239,7 @@ class SignatureParserService:
         try:
             import httpx
 
-            mistral_api_key = getattr(settings, 'MISTRAL_API_KEY', None)
+            mistral_api_key = self.config_loader.get_mistral_key()
             if not mistral_api_key:
                 return {"success": False, "error": "MISTRAL_API_KEY not configured"}
 
@@ -275,7 +281,7 @@ class SignatureParserService:
         try:
             import httpx
 
-            openai_api_key = getattr(settings, 'OPENAI_API_KEY', None)
+            openai_api_key = self.config_loader.get_openai_key()
             if not openai_api_key:
                 return {"success": False, "error": "OPENAI_API_KEY not configured"}
 
@@ -317,7 +323,7 @@ class SignatureParserService:
         try:
             import httpx
 
-            claude_api_key = getattr(settings, 'ANTHROPIC_API_KEY', None)
+            claude_api_key = self.config_loader.get_anthropic_key()
             if not claude_api_key:
                 return {"success": False, "error": "ANTHROPIC_API_KEY not configured"}
 
@@ -356,7 +362,9 @@ class SignatureParserService:
                         "provider": "anthropic"
                     }
                 else:
-                    return {"success": False, "error": f"Claude returned {response.status_code}"}
+                    error_detail = response.text
+                    logger.error(f"Claude API error {response.status_code}: {error_detail}")
+                    return {"success": False, "error": f"Claude returned {response.status_code}: {error_detail[:100]}"}
 
         except Exception as e:
             return {"success": False, "error": str(e)}
@@ -472,7 +480,7 @@ JSON output:"""
         if cached:
             return {
                 "success": True,
-                "data": cached.response_json.get("data", {}),
+                "data": cached.response_json,  # response_json already contains the data dict
                 "confidence": cached.confidence_score,
                 "model_used": f"{cached.model_used} (cached)",
                 "processing_time_ms": 0,
