@@ -8,14 +8,19 @@ Endpoints sécurisés par Bearer Token pour recevoir:
 
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict
+from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, Header, HTTPException, Request, status
+from fastapi.responses import JSONResponse
+from fastapi.security import HTTPAuthorizationCredentials
+from pydantic import ValidationError
 from sqlalchemy import and_
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+from svix.webhooks import Webhook, WebhookVerificationError
 
 from core import get_db, verify_webhook_token
+from core.config import settings
 from core.exceptions import ConflictError
 from core.rate_limit import PUBLIC_WEBHOOK_LIMIT, limiter
 from models.email import EmailEvent, EmailEventType, EmailSend, UnsubscribedEmail
@@ -53,9 +58,11 @@ RESEND_EVENT_MAPPING = {
 @limiter.limit(PUBLIC_WEBHOOK_LIMIT)  # 10 req/min max
 async def receive_resend_webhook(
     request: Request,
-    event: ResendWebhookEvent,
     db: Session = Depends(get_db),
-    _auth: bool = Depends(verify_webhook_token),
+    authorization: Optional[str] = Header(default=None, alias="Authorization"),
+    svix_id: Optional[str] = Header(default=None, alias="svix-id"),
+    svix_timestamp: Optional[str] = Header(default=None, alias="svix-timestamp"),
+    svix_signature: Optional[str] = Header(default=None, alias="svix-signature"),
 ):
     """
     Recevoir un événement Resend depuis le proxy alforis.fr.
@@ -71,7 +78,89 @@ async def receive_resend_webhook(
     - email.complained → COMPLAINED
     - email.scheduled → QUEUED
     """
+    raw_body = await request.body()
+    if not raw_body:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Empty webhook payload",
+        )
+
+    payload_text = raw_body.decode("utf-8")
+    is_authenticated = False
+
+    # 0. Vérifier l'authentification via Bearer Token (proxy alforis.fr)
+    if authorization:
+        scheme, _, token = authorization.partition(" ")
+        if scheme.lower() == "bearer" and token:
+            credentials = HTTPAuthorizationCredentials(scheme=scheme, credentials=token)
+            try:
+                await verify_webhook_token(credentials)
+                is_authenticated = True
+            except HTTPException as exc:  # pragma: no cover - erreur déjà gérée par FastAPI
+                logger.warning(
+                    "resend_webhook_invalid_bearer",
+                    extra={"error": exc.detail, "status_code": exc.status_code},
+                )
+                raise
+        else:
+            logger.warning(
+                "resend_webhook_malformed_authorization",
+                extra={"authorization": authorization},
+            )
+
+    # 0bis. Vérifier signature Resend si pas d'auth proxy (Resend -> CRM direct)
+    if not is_authenticated:
+        secret = settings.resend_signing_secret
+        if not secret:
+            logger.error("resend_webhook_missing_secret")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="RESEND_SIGNING_SECRET not configured",
+            )
+
+        if not (svix_id and svix_timestamp and svix_signature):
+            logger.warning(
+                "resend_webhook_missing_svix_headers",
+                extra={
+                    "has_svix_id": bool(svix_id),
+                    "has_svix_timestamp": bool(svix_timestamp),
+                    "has_svix_signature": bool(svix_signature),
+                },
+            )
+            return JSONResponse(
+                status_code=status.HTTP_202_ACCEPTED,
+                content={
+                    "success": False,
+                    "message": "Missing svix headers, event ignored",
+                },
+            )
+
+        webhook = Webhook(secret)
+        try:
+            webhook.verify(
+                payload_text,
+                {
+                    "svix-id": svix_id,
+                    "svix-timestamp": svix_timestamp,
+                    "svix-signature": svix_signature,
+                },
+            )
+            is_authenticated = True
+        except WebhookVerificationError:
+            logger.error(
+                "resend_webhook_invalid_signature",
+                extra={"svix_id": svix_id, "svix_timestamp": svix_timestamp},
+            )
+            return JSONResponse(
+                status_code=status.HTTP_202_ACCEPTED,
+                content={
+                    "success": False,
+                    "message": "Invalid Resend signature, event ignored",
+                },
+            )
+
     try:
+        event = ResendWebhookEvent.model_validate_json(payload_text)
         # 1. Trouver l'EmailSend correspondant via provider_message_id
         email_send = (
             db.query(EmailSend)
@@ -192,6 +281,18 @@ async def receive_resend_webhook(
             event_id=email_event.id,
         )
 
+    except ValidationError as exc:
+        logger.warning(
+            "resend_webhook_invalid_payload",
+            extra={"errors": exc.errors()},
+        )
+        return JSONResponse(
+            status_code=status.HTTP_202_ACCEPTED,
+            content={
+                "success": False,
+                "message": "Invalid payload, event ignored",
+            },
+        )
     except Exception as e:
         db.rollback()
         logger.exception("resend_webhook_error", extra={"error": str(e)})

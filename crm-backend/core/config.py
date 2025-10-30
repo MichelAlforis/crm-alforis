@@ -80,6 +80,7 @@ class Settings(BaseSettings):
 
     # Webhook Security (pour alforis.fr -> CRM)
     webhook_secret: str = ""  # Token Bearer pour authentifier les webhooks entrants
+    resend_signing_secret: str = ""  # Secret HMAC Resend (svix) pour webhooks entrants
 
     # JWT Secret partagé avec alforis.fr pour désinscription
     unsubscribe_jwt_secret: str = ""  # Même secret que JWT_SECRET sur alforis.fr

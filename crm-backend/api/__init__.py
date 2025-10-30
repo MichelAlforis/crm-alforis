@@ -4,6 +4,7 @@ from api.routes import (
     ai_agent,
     ai_statistics,
     auth,
+    autofill_jobs,
     dashboards,
     email_campaigns,
     email_intelligence,
@@ -85,6 +86,9 @@ api_router.include_router(ai_agent.router)
 
 # 📊 EMAIL INTELLIGENCE DASHBOARD (Acte IV.1)
 api_router.include_router(email_intelligence.router)
+
+# 🔄 AUTOFILL JOBS (Acte IV.2 - Option 1)
+api_router.include_router(autofill_jobs.router)
 
 # 🤖 AI STATISTICS & INTEGRATIONS (Chapitre 17)
 api_router.include_router(ai_statistics.router)
