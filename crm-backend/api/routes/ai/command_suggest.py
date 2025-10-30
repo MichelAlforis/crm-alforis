@@ -139,12 +139,11 @@ def generate_suggestions_from_intent(
     elif intent == "search":
         search_term = entities.get("search_term", query).strip()
         if search_term:
-            # Search people
+            # Search people (Person model doesn't have team_id isolation)
             people = db.query(Person).filter(
-                Person.team_id == current_user.team_id,
                 (Person.first_name.ilike(f"%{search_term}%") |
                  Person.last_name.ilike(f"%{search_term}%") |
-                 Person.email.ilike(f"%{search_term}%"))
+                 Person.personal_email.ilike(f"%{search_term}%"))
             ).limit(5).all()
 
             for person in people:
@@ -152,15 +151,14 @@ def generate_suggestions_from_intent(
                     type="person",
                     action="view",
                     label=f"{person.first_name} {person.last_name}",
-                    description=person.email or "Voir le contact",
+                    description=person.personal_email or person.role or "Voir le contact",
                     confidence=0.88,
                     icon="👤",
                     metadata={"person_id": person.id}
                 ))
 
-            # Search organisations
+            # Search organisations (no team isolation in current schema)
             orgs = db.query(Organisation).filter(
-                Organisation.team_id == current_user.team_id,
                 Organisation.name.ilike(f"%{search_term}%")
             ).limit(5).all()
 
@@ -293,10 +291,10 @@ async def get_recent_suggestions(
     """
     suggestions = []
 
-    # Recent interactions
-    recent_interactions = db.query(Interaction).filter(
-        Interaction.team_id == current_user.team_id
-    ).order_by(Interaction.interaction_date.desc()).limit(5).all()
+    # Recent interactions (no team isolation)
+    recent_interactions = db.query(Interaction).order_by(
+        Interaction.interaction_date.desc()
+    ).limit(5).all()
 
     for interaction in recent_interactions:
         if interaction.person_id:
