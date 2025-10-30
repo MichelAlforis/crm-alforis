@@ -72,6 +72,13 @@ export default function AIDashboardPage() {
 
           <div className="flex gap-3">
             <Link
+              href="/dashboard/ai/intelligence"
+              className="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-all flex items-center gap-2 font-medium shadow-lg"
+            >
+              <TrendingUp className="h-4 w-4" />
+              Dashboard Intelligence
+            </Link>
+            <Link
               href="/dashboard/ai/suggestions"
               className="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
             >

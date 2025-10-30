@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
 from core import get_current_user, get_db
-from models import EmailMessage, AIMemory, AutofillSuggestion, CRMInteraction
+from models import EmailMessage, AIMemory, AutofillSuggestion, Interaction
 
 router = APIRouter(prefix="/email-intelligence", tags=["Email Intelligence"])
 
@@ -176,13 +176,13 @@ async def get_intent_distribution(
     since_date = datetime.now(timezone.utc) - timedelta(days=days)
 
     results = db.query(
-        CRMInteraction.intent,
-        func.count(CRMInteraction.id).label('count')
+        Interaction.intent,
+        func.count(Interaction.id).label('count')
     ).filter(
-        CRMInteraction.team_id == team_id,
-        CRMInteraction.intent.isnot(None),
-        CRMInteraction.created_at >= since_date
-    ).group_by(CRMInteraction.intent).all()
+        Interaction.team_id == team_id,
+        Interaction.intent.isnot(None),
+        Interaction.created_at >= since_date
+    ).group_by(Interaction.intent).all()
 
     total = sum(r.count for r in results)
 
