@@ -15,6 +15,7 @@ Confidence scoring:
 import hashlib
 import json
 import logging
+import os
 import re
 import time
 from typing import Dict, List, Optional, Tuple
@@ -94,13 +95,23 @@ class SignatureParserService:
                 "processing_time_ms": int((time.time() - start_time) * 1000)
             }
 
+        # 2.5. 🌐 Web enrichment (Acte V): Try to get company context
+        web_context = None
+        if os.getenv("AUTOFILL_USE_WEB_ENRICHMENT", "true").lower() == "true":
+            try:
+                web_context = await self._get_web_context(signature_text)
+                if web_context and web_context.get("confidence", 0) > 0.5:
+                    logger.info(f"🌐 Web context found with confidence {web_context.get('confidence'):.2f}")
+            except Exception as e:
+                logger.warning(f"⚠️ Web enrichment failed (non-blocking): {e}")
+
         # 3. Try AI providers in order
         result = None
 
         # Try Ollama local first
         try:
             logger.info("🤖 Trying Ollama local...")
-            result = await self._parse_with_ollama(signature_text)
+            result = await self._parse_with_ollama(signature_text, web_context)
             if result and result.get("success"):
                 logger.info("✅ Ollama succeeded")
         except Exception as e:
@@ -110,7 +121,7 @@ class SignatureParserService:
         if not result or not result.get("success"):
             try:
                 logger.info("🤖 Fallback to Mistral API EU...")
-                result = await self._parse_with_mistral(signature_text)
+                result = await self._parse_with_mistral(signature_text, web_context)
                 if result and result.get("success"):
                     logger.info("✅ Mistral API succeeded")
             except Exception as e:
@@ -120,7 +131,7 @@ class SignatureParserService:
         if not result or not result.get("success"):
             try:
                 logger.info("🤖 Fallback to OpenAI...")
-                result = await self._parse_with_openai(signature_text)
+                result = await self._parse_with_openai(signature_text, web_context)
                 if result and result.get("success"):
                     logger.info("✅ OpenAI succeeded")
             except Exception as e:
@@ -130,7 +141,7 @@ class SignatureParserService:
         if not result or not result.get("success"):
             try:
                 logger.info("🤖 Fallback to Claude...")
-                result = await self._parse_with_claude(signature_text)
+                result = await self._parse_with_claude(signature_text, web_context)
                 if result and result.get("success"):
                     logger.info("✅ Claude succeeded")
             except Exception as e:
@@ -196,7 +207,58 @@ class SignatureParserService:
         # Limit to reasonable size (signatures are usually < 500 chars)
         return signature[:500] if len(signature) > 500 else signature
 
-    async def _parse_with_ollama(self, signature_text: str) -> Dict:
+    async def _get_web_context(self, signature_text: str) -> Optional[Dict]:
+        """
+        🌐 Get web enrichment context for the signature (Acte V).
+
+        Tries to extract company name and enrich it via web search.
+        Returns None if enrichment fails (graceful degradation).
+        """
+        try:
+            # Extract potential company name using simple heuristics
+            # Look for lines with multiple capital letters (likely company names)
+            lines = signature_text.strip().split('\n')
+            company_name = None
+
+            for line in lines:
+                line = line.strip()
+                # Skip common signature markers
+                if any(marker in line.lower() for marker in ['cordialement', 'regards', 'merci', 'thanks']):
+                    continue
+                # Look for words with capital letters (company names often capitalized)
+                if len(line) > 3 and any(c.isupper() for c in line):
+                    # Skip if it looks like a person name (First Last)
+                    words = line.split()
+                    if len(words) == 2 and all(w[0].isupper() and w[1:].islower() for w in words if w):
+                        continue  # Likely a person name, not company
+                    # This could be a company
+                    company_name = line
+                    break
+
+            if not company_name:
+                return None
+
+            # Call enrichment service
+            from services.web_enrichment_service import get_enrichment_service
+            enrichment_service = get_enrichment_service()
+
+            result = enrichment_service.enrich_organisation(
+                name=company_name,
+                country="FR",  # Default to France, could be smarter
+                force_refresh=False
+            )
+
+            if result and result.get("confidence", 0) > 0.3:
+                logger.info(f"🌐 Web context found for '{company_name}': {result.get('website')}")
+                return result
+
+            return None
+
+        except Exception as e:
+            logger.warning(f"⚠️ Failed to get web context: {e}")
+            return None
+
+    async def _parse_with_ollama(self, signature_text: str, web_context: Optional[Dict] = None) -> Dict:
         """Parse with Ollama local (mistral:7b-instruct)"""
         try:
             import httpx
@@ -205,7 +267,7 @@ class SignatureParserService:
             if not ollama_url:
                 return {"success": False, "error": "Ollama URL not configured"}
 
-            prompt = self._build_prompt(signature_text)
+            prompt = self._build_prompt(signature_text, web_context)
 
             async with httpx.AsyncClient(timeout=60.0) as client:
                 response = await client.post(
@@ -234,7 +296,7 @@ class SignatureParserService:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    async def _parse_with_mistral(self, signature_text: str) -> Dict:
+    async def _parse_with_mistral(self, signature_text: str, web_context: Optional[Dict] = None) -> Dict:
         """Parse with Mistral API (EU hosted)"""
         try:
             import httpx
@@ -243,7 +305,7 @@ class SignatureParserService:
             if not mistral_api_key:
                 return {"success": False, "error": "MISTRAL_API_KEY not configured"}
 
-            prompt = self._build_prompt(signature_text)
+            prompt = self._build_prompt(signature_text, web_context)
 
             async with httpx.AsyncClient(timeout=30.0) as client:
                 response = await client.post(
@@ -276,7 +338,7 @@ class SignatureParserService:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    async def _parse_with_openai(self, signature_text: str) -> Dict:
+    async def _parse_with_openai(self, signature_text: str, web_context: Optional[Dict] = None) -> Dict:
         """Parse with OpenAI GPT-4"""
         try:
             import httpx
@@ -285,7 +347,7 @@ class SignatureParserService:
             if not openai_api_key:
                 return {"success": False, "error": "OPENAI_API_KEY not configured"}
 
-            prompt = self._build_prompt(signature_text)
+            prompt = self._build_prompt(signature_text, web_context)
 
             async with httpx.AsyncClient(timeout=30.0) as client:
                 response = await client.post(
@@ -318,7 +380,7 @@ class SignatureParserService:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    async def _parse_with_claude(self, signature_text: str) -> Dict:
+    async def _parse_with_claude(self, signature_text: str, web_context: Optional[Dict] = None) -> Dict:
         """Parse with Claude (Anthropic)"""
         try:
             import httpx
@@ -327,7 +389,7 @@ class SignatureParserService:
             if not claude_api_key:
                 return {"success": False, "error": "ANTHROPIC_API_KEY not configured"}
 
-            prompt = self._build_prompt(signature_text)
+            prompt = self._build_prompt(signature_text, web_context)
 
             async with httpx.AsyncClient(timeout=30.0) as client:
                 response = await client.post(
@@ -369,12 +431,20 @@ class SignatureParserService:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def _build_prompt(self, signature_text: str) -> str:
-        """Build prompt for AI models"""
-        return f"""Extract contact information from this email signature.
+    def _build_prompt(self, signature_text: str, web_context: Optional[Dict] = None) -> str:
+        """
+        Build prompt for AI models with optional web enrichment context.
+
+        Args:
+            signature_text: Email signature to parse
+            web_context: Optional enrichment data from web search
+        """
+
+        # Base instruction
+        prompt = """Extract contact information from this email signature.
 Return ONLY valid JSON with these fields (set to null if not found):
 
-{{
+{
   "name": "Full name",
   "first_name": "First name",
   "last_name": "Last name",
@@ -383,13 +453,61 @@ Return ONLY valid JSON with these fields (set to null if not found):
   "email": "email@example.com",
   "phone": "phone number",
   "mobile": "mobile number",
-  "website": "https://example.com"
-}}
+  "website": "https://example.com",
+  "address": "Full address",
+  "linkedin": "LinkedIn URL"
+}
+
+"""
+
+        # Add web enrichment context if available (Acte V)
+        if web_context and web_context.get("confidence", 0) > 0.5:
+            prompt += f"""🌐 WEB ENRICHMENT CONTEXT (confidence: {web_context.get('confidence', 0):.2f}):
+The following information was found about the company mentioned in the signature:
+- Website: {web_context.get('website') or 'not found'}
+- Address: {web_context.get('address') or 'not found'}
+- Phone: {web_context.get('phone') or 'not found'}
+- LinkedIn: {web_context.get('linkedin') or 'not found'}
+
+Use this context to fill missing fields or validate your extraction.
+If the signature is incomplete, use web context data when it makes sense.
+
+"""
+
+        # Few-shot examples (3 FR + 2 EN)
+        prompt += """EXAMPLES:
+
+Example 1 (French):
+Signature: "Cordialement,\\nMarie Dubois\\nResponsable Marketing\\nTechCorp France\\n+33 1 23 45 67 89\\nmarie.dubois@techcorp.fr"
+Output: {"name": "Marie Dubois", "first_name": "Marie", "last_name": "Dubois", "job_title": "Responsable Marketing", "company": "TechCorp France", "phone": "+33 1 23 45 67 89", "email": "marie.dubois@techcorp.fr"}
+
+Example 2 (French):
+Signature: "Bien à vous,\\nPierre Martin\\nDirecteur Général\\nACME SAS\\n06 12 34 56 78\\nwww.acme.fr"
+Output: {"name": "Pierre Martin", "first_name": "Pierre", "last_name": "Martin", "job_title": "Directeur Général", "company": "ACME SAS", "mobile": "06 12 34 56 78", "website": "https://www.acme.fr"}
+
+Example 3 (French with address):
+Signature: "Cordialement,\\nSophie Laurent\\nChargée de clientèle\\nBanque Populaire\\n15 rue de Rivoli, 75001 Paris\\nsophie.laurent@bp.fr\\n01 42 86 00 00"
+Output: {"name": "Sophie Laurent", "first_name": "Sophie", "last_name": "Laurent", "job_title": "Chargée de clientèle", "company": "Banque Populaire", "address": "15 rue de Rivoli, 75001 Paris", "email": "sophie.laurent@bp.fr", "phone": "01 42 86 00 00"}
+
+Example 4 (English):
+Signature: "Best regards,\\nJohn Smith\\nSales Manager\\nGlobal Solutions Inc.\\njohn.smith@globalsolutions.com\\n+1 555-123-4567"
+Output: {"name": "John Smith", "first_name": "John", "last_name": "Smith", "job_title": "Sales Manager", "company": "Global Solutions Inc.", "email": "john.smith@globalsolutions.com", "phone": "+1 555-123-4567"}
+
+Example 5 (English with LinkedIn):
+Signature: "Kind regards,\\nEmily Johnson\\nCEO & Founder\\nStartup Ventures\\nlinkedin.com/in/emilyjohnson\\nemily@startupventures.io"
+Output: {"name": "Emily Johnson", "first_name": "Emily", "last_name": "Johnson", "job_title": "CEO & Founder", "company": "Startup Ventures", "linkedin": "https://linkedin.com/in/emilyjohnson", "email": "emily@startupventures.io"}
+
+"""
+
+        # Actual signature to parse
+        prompt += f"""Now extract from this signature:
 
 Signature text:
 {signature_text}
 
 JSON output:"""
+
+        return prompt
 
     def _validate_fields(self, data: Dict) -> Dict:
         """Validate and clean extracted fields"""
@@ -408,14 +526,18 @@ JSON output:"""
                 if self.PHONE_REGEX.match(phone):
                     validated[field] = phone
 
-        # URL validation
-        if data.get("website"):
-            url = data["website"].strip()
-            if self.URL_REGEX.match(url):
-                validated["website"] = url
+        # URL validation (website, linkedin)
+        for field in ["website", "linkedin"]:
+            if data.get(field):
+                url = data[field].strip()
+                # Add https:// if missing
+                if not url.startswith("http"):
+                    url = "https://" + url
+                if self.URL_REGEX.match(url):
+                    validated[field] = url
 
         # Text fields (no validation, just strip)
-        text_fields = ["name", "first_name", "last_name", "job_title", "company"]
+        text_fields = ["name", "first_name", "last_name", "job_title", "company", "address"]
         for field in text_fields:
             if data.get(field):
                 validated[field] = data[field].strip()
@@ -435,17 +557,19 @@ JSON output:"""
         score = 0.0
         max_score = 0.0
 
-        # Weights per field
+        # Weights per field (Acte V: added address, linkedin)
         weights = {
-            "name": 0.15,
-            "first_name": 0.10,
-            "last_name": 0.10,
-            "job_title": 0.15,
+            "name": 0.12,
+            "first_name": 0.08,
+            "last_name": 0.08,
+            "job_title": 0.12,
             "company": 0.15,
             "email": 0.20,
-            "phone": 0.10,
-            "mobile": 0.10,
-            "website": 0.05
+            "phone": 0.08,
+            "mobile": 0.08,
+            "website": 0.04,
+            "address": 0.03,
+            "linkedin": 0.02
         }
 
         signature_lower = signature_text.lower()
