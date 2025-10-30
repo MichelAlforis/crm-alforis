@@ -6,6 +6,7 @@ from api.routes import (
     auth,
     dashboards,
     email_campaigns,
+    email_intelligence,
     external_webhooks,
     health,
     imports,
@@ -81,6 +82,9 @@ api_router.include_router(workflows.router)
 
 # 🧠 AI AGENT (Phase 3.0)
 api_router.include_router(ai_agent.router)
+
+# 📊 EMAIL INTELLIGENCE DASHBOARD (Acte IV.1)
+api_router.include_router(email_intelligence.router)
 
 # 🤖 AI STATISTICS & INTEGRATIONS (Chapitre 17)
 api_router.include_router(ai_statistics.router)

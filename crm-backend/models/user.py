@@ -133,6 +133,10 @@ class User(BaseModel):
         index=True
     )  # trial, active, grace_period, expired, cancelled
 
+    # Password Reset
+    reset_token = Column(String(255), nullable=True, index=True)  # Hashed token for security
+    reset_token_expires_at = Column(DateTime(timezone=True), nullable=True)
+
     def __repr__(self) -> str:
         return f"<User(id={self.id}, email='{self.email}')>"
 

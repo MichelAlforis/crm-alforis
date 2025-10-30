@@ -1,6 +1,8 @@
 from collections import defaultdict
 from datetime import datetime, timedelta
 from typing import Dict, Optional
+import secrets
+import hashlib
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -92,6 +94,26 @@ class ChangePasswordRequest(BaseModel):
     """Requête de changement de mot de passe"""
 
     current_password: str = Field(..., description="Mot de passe actuel")
+    new_password: str = Field(
+        ..., min_length=6, max_length=100, description="Nouveau mot de passe (min 6 caractères)"
+    )
+
+    @field_validator("new_password")
+    @classmethod
+    def validate_new_password(cls, v: str) -> str:
+        if len(v) < 6:
+            raise ValueError("Le mot de passe doit contenir au moins 6 caractères")
+        return v
+
+
+class ForgotPasswordRequest(BaseModel):
+    """Requête de réinitialisation de mot de passe"""
+    email: EmailStr
+
+
+class ResetPasswordRequest(BaseModel):
+    """Requête de nouveau mot de passe avec token"""
+    token: str = Field(..., description="Token de réinitialisation reçu par email")
     new_password: str = Field(
         ..., min_length=6, max_length=100, description="Nouveau mot de passe (min 6 caractères)"
     )
@@ -485,4 +507,149 @@ async def change_password(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Erreur lors du changement de mot de passe: {str(e)}",
+        )
+
+
+@router.post("/forgot-password")
+async def forgot_password(
+    request: ForgotPasswordRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    Demander un lien de réinitialisation de mot de passe
+
+    **Body:**
+    ```json
+    {
+      "email": "user@example.com"
+    }
+    ```
+
+    **Réponse:**
+    ```json
+    {
+      "message": "Si cet email existe, un lien de réinitialisation a été envoyé"
+    }
+    ```
+
+    **Sécurité:**
+    - Retourne toujours le même message (empêche l'énumération d'emails)
+    - Token valide 1 heure
+    - Token hashé en base (sécurité)
+    """
+    try:
+        # Normaliser l'email
+        normalized_email = request.email.lower()
+
+        # Chercher l'utilisateur
+        user = db.query(User).filter(User.email == normalized_email).first()
+
+        # IMPORTANT: Ne pas révéler si l'email existe ou non (sécurité)
+        if user and user.is_active:
+            # Générer un token sécurisé (32 bytes = 64 caractères hex)
+            raw_token = secrets.token_urlsafe(32)
+
+            # Hasher le token avant stockage (comme un mot de passe)
+            hashed_token = hashlib.sha256(raw_token.encode()).hexdigest()
+
+            # Sauvegarder le token hashé et son expiration (1 heure)
+            user.reset_token = hashed_token
+            user.reset_token_expires_at = datetime.utcnow() + timedelta(hours=1)
+            db.commit()
+
+            # TODO: Envoyer l'email avec le raw_token (non hashé)
+            # Frontend URL: {FRONTEND_URL}/auth/reset-password?token={raw_token}
+            reset_url = f"{settings.frontend_url}/auth/reset-password?token={raw_token}"
+            print(f"[DEBUG] Reset URL: {reset_url}")  # TODO: Remplacer par email
+
+            # TODO Phase 2: Intégrer Resend pour envoyer l'email
+            # from services.email_service import send_password_reset_email
+            # await send_password_reset_email(
+            #     to_email=user.email,
+            #     reset_url=reset_url,
+            #     user_name=user.display_name
+            # )
+
+        # Retourner toujours le même message (sécurité: pas d'énumération d'emails)
+        return {
+            "message": "Si cet email existe, un lien de réinitialisation a été envoyé"
+        }
+
+    except Exception as e:
+        db.rollback()
+        # Ne pas révéler d'informations sur l'erreur au client
+        print(f"[ERROR] Forgot password error: {str(e)}")
+        return {
+            "message": "Si cet email existe, un lien de réinitialisation a été envoyé"
+        }
+
+
+@router.post("/reset-password")
+async def reset_password(
+    request: ResetPasswordRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    Réinitialiser le mot de passe avec un token valide
+
+    **Body:**
+    ```json
+    {
+      "token": "token_reçu_par_email",
+      "new_password": "nouveau_mot_de_passe"
+    }
+    ```
+
+    **Réponse:**
+    ```json
+    {
+      "message": "Mot de passe réinitialisé avec succès"
+    }
+    ```
+
+    **Erreurs:**
+    - 400: Token invalide ou expiré
+    - 500: Erreur serveur
+    """
+    try:
+        # Hasher le token reçu pour comparaison
+        hashed_token = hashlib.sha256(request.token.encode()).hexdigest()
+
+        # Chercher l'utilisateur avec ce token
+        user = db.query(User).filter(
+            User.reset_token == hashed_token,
+            User.reset_token_expires_at > datetime.utcnow()  # Token non expiré
+        ).first()
+
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Token invalide ou expiré"
+            )
+
+        # Vérifier que l'utilisateur est actif
+        if not user.is_active:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Compte utilisateur désactivé"
+            )
+
+        # Mettre à jour le mot de passe
+        user.hashed_password = get_password_hash(request.new_password)
+
+        # Invalider le token (usage unique)
+        user.reset_token = None
+        user.reset_token_expires_at = None
+
+        db.commit()
+
+        return {"message": "Mot de passe réinitialisé avec succès"}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erreur lors de la réinitialisation: {str(e)}"
         )

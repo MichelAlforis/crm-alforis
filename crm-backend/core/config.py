@@ -22,6 +22,9 @@ class Settings(BaseSettings):
     jwt_algorithm: str = "HS256"
     jwt_expiration_hours: int = 24
 
+    # Frontend
+    frontend_url: str = "http://localhost:3000"
+
     # CORS - Accepte string ou list
     allowed_origins: Union[str, List[str]] = [
         "http://localhost:3000",

@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import Link from 'next/link'
 import { Input, Button, Alert } from '@/components/shared'
 import { LoginRequest } from '@/lib/types'
 import { useToast } from '@/components/ui/Toast'
@@ -101,16 +102,8 @@ export function LoginForm({ onSubmit, isLoading, error }: LoginFormProps) {
 
           {/* Forgot Password Link */}
           <div className="mt-2 text-right">
-            <button
-              type="button"
-              onClick={() => {
-                // Phase 2: Will navigate to /auth/forgot-password
-                showToast({
-                  type: 'info',
-                  title: 'Fonctionnalité à venir',
-                  message: 'La réinitialisation de mot de passe sera disponible prochainement.',
-                })
-              }}
+            <Link
+              href="/auth/forgot-password"
               className="text-sm font-medium text-orange-500 hover:text-orange-600 transition-colors inline-flex items-center gap-1 group"
             >
               <span>Mot de passe oublié?</span>
@@ -122,7 +115,7 @@ export function LoginForm({ onSubmit, isLoading, error }: LoginFormProps) {
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
-            </button>
+            </Link>
           </div>
         </div>
       </div>
