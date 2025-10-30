@@ -4,6 +4,7 @@ from api.routes import (
     ai_agent,
     ai_statistics,
     auth,
+    autofill_hitl,
     autofill_jobs,
     dashboards,
     email_campaigns,
@@ -90,6 +91,9 @@ api_router.include_router(email_intelligence.router)
 
 # 🔄 AUTOFILL JOBS (Acte IV.2 - Option 1)
 api_router.include_router(autofill_jobs.router)
+
+# 🤝 AUTOFILL HITL v2 (Acte V - Human-In-The-Loop)
+api_router.include_router(autofill_hitl.router)
 
 # 🌐 WEB ENRICHMENT (Acte V - AI + Internet)
 api_router.include_router(enrichment.router)
