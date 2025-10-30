@@ -100,19 +100,46 @@ export default function LoginPage() {
 
             {/* Content */}
             <div className="relative p-8 md:p-10">
-              {/* Logo/Brand */}
+              {/* Logo */}
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-center mb-8"
+                className="flex justify-center mb-10"
               >
-                <h1 className="text-4xl font-bold text-gray-900 tracking-tight mb-2">
-                  Alforis
-                </h1>
-                <p className="text-gray-500 font-medium text-sm tracking-wide">
-                  CRM FINANCE
-                </p>
+                <svg
+                  width="72"
+                  height="72"
+                  viewBox="0 0 64 64"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="drop-shadow-lg"
+                >
+                  <defs>
+                    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style={{ stopColor: '#f97316', stopOpacity: 1 }} />
+                      <stop offset="100%" style={{ stopColor: '#ea580c', stopOpacity: 1 }} />
+                    </linearGradient>
+                  </defs>
+
+                  {/* Rounded background */}
+                  <rect width="64" height="64" rx="16" fill="url(#logoGrad)" />
+
+                  {/* Network connections */}
+                  <circle cx="20" cy="20" r="4" fill="white" opacity="0.95" />
+                  <circle cx="44" cy="20" r="4" fill="white" opacity="0.95" />
+                  <circle cx="32" cy="35" r="4" fill="white" opacity="0.95" />
+                  <circle cx="20" cy="48" r="4" fill="white" opacity="0.95" />
+                  <circle cx="44" cy="48" r="4" fill="white" opacity="0.95" />
+
+                  {/* Connection lines */}
+                  <line x1="20" y1="20" x2="32" y2="35" stroke="white" strokeWidth="2.5" opacity="0.7" strokeLinecap="round" />
+                  <line x1="44" y1="20" x2="32" y2="35" stroke="white" strokeWidth="2.5" opacity="0.7" strokeLinecap="round" />
+                  <line x1="32" y1="35" x2="20" y2="48" stroke="white" strokeWidth="2.5" opacity="0.7" strokeLinecap="round" />
+                  <line x1="32" y1="35" x2="44" y2="48" stroke="white" strokeWidth="2.5" opacity="0.7" strokeLinecap="round" />
+                  <line x1="20" y1="20" x2="44" y2="20" stroke="white" strokeWidth="2.5" opacity="0.5" strokeLinecap="round" />
+                  <line x1="20" y1="48" x2="44" y2="48" stroke="white" strokeWidth="2.5" opacity="0.5" strokeLinecap="round" />
+                </svg>
               </motion.div>
 
               {/* Login Form */}

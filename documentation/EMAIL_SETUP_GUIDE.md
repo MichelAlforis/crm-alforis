@@ -339,6 +339,61 @@ Une fois les emails créés et testés :
 
 ---
 
-**Dernière mise à jour :** 28 Octobre 2025
+## 🐛 Troubleshooting : Webhook Resend
+
+### Problème : CPU 150% + "Signature invalide" en boucle (30 Oct 2025)
+
+**Symptômes :**
+- CPU serveur saturé (150%)
+- Processus "Killed" par OOM
+- Logs : 62+ "❌ Signature invalide - Webhook rejeté" / 100 lignes
+
+**Cause :**
+Webhook Resend en boucle infinie → Serveur rejette (401) → Resend réessaie → CPU saturé
+
+**Solution :**
+
+1. **Désactiver temporairement le webhook sur https://resend.com/webhooks**
+   - Stoppe l'hémorragie immédiatement
+
+2. **Resynchroniser le secret :**
+   ```bash
+   # Sur dashboard Resend : Régénérer le signing secret
+   # Copier le nouveau whsec_XXX
+
+   # Sur serveur :
+   ssh -i ~/.ssh/id_rsa_hetzner root@159.69.108.234
+   nano /root/alforis/.env.local
+   # Mettre à jour RESEND_SIGNING_SECRET=whsec_XXX
+   pm2 restart alforis-site
+   ```
+
+3. **Réactiver le webhook et tester**
+   ```bash
+   # Vérifier logs :
+   pm2 logs alforis-site --lines 50
+   # Chercher : "✅ Signature vérifiée avec succès"
+   ```
+
+**Code webhook validé :** `/root/alforis/app/api/webhooks/resend/route.js`
+- Bibliothèque `svix` installée
+- Méthode `Webhook.verify()` implémentée
+
+**Debug utile :**
+```bash
+# Compter erreurs signature
+tail -100 /root/.pm2/logs/alforis-site-error.log | grep -c "Signature invalide"
+
+# Vérifier secret actuel
+grep RESEND_SIGNING_SECRET /root/alforis/.env.local
+```
+
+**Références :**
+- Resend Webhooks : https://resend.com/docs/dashboard/webhooks/verify-webhooks-requests
+- Dashboard : https://resend.com/webhooks
+
+---
+
+**Dernière mise à jour :** 30 Octobre 2025
 **Responsable :** Michel Marques
 **Contact technique :** [À compléter]

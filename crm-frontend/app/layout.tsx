@@ -10,13 +10,13 @@ import Providers from './providers'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Alforis CRM',
-    template: '%s | Alforis CRM',
+    default: 'CRM Finance',
+    template: '%s | CRM',
   },
   description: 'Plateforme CRM intelligente pour la gestion de patrimoine',
-  keywords: ['CRM', 'Alforis Finance', 'Gestion de Patrimoine', 'Investisseurs', 'Finance'],
-  authors: [{ name: 'Alforis Finance' }],
-  creator: 'Alforis Finance',
+  keywords: ['CRM', 'Finance', 'Gestion de Patrimoine', 'Investisseurs'],
+  authors: [{ name: 'Alforis' }],
+  creator: 'Alforis',
   manifest: '/manifest.json',
   icons: {
     icon: [
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'Alforis',
+    title: 'CRM',
   },
   formatDetection: {
     telephone: true,
@@ -39,13 +39,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
-    title: 'Alforis CRM',
+    title: 'CRM Finance',
     description: 'Plateforme CRM intelligente pour la gestion de patrimoine',
-    siteName: 'Alforis CRM',
+    siteName: 'CRM Finance',
   },
   twitter: {
     card: 'summary',
-    title: 'Alforis CRM',
+    title: 'CRM Finance',
     description: 'Gestion de patrimoine intelligente',
   },
 }
@@ -81,8 +81,8 @@ export default function RootLayout({
         <link rel="dns-prefetch" href={process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'} />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-title" content="Alforis" />
-        <meta name="application-name" content="Alforis CRM" />
+        <meta name="apple-mobile-web-app-title" content="CRM" />
+        <meta name="application-name" content="CRM" />
         <meta name="msapplication-TileColor" content="#E39F70" />
         <meta name="color-scheme" content="light dark" />
       </head>
