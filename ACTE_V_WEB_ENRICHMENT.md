@@ -21,7 +21,18 @@ Quand l'IA parse un email et extrait:
 
 ---
 
-## 📦 LIVRABLES (État au 2025-10-30)
+## 📦 LIVRABLES (État au 2025-10-30 - Option A Complétée)
+
+### ✅ **Option A: Quick Win (30 min) - TERMINÉ**
+
+**Commits pushés:**
+- `a7cf3217`: Service + API + Migration (898 lignes)
+- `c663b782`: Intégration pipeline (66 lignes)
+- `1a5fa5dc`: Feature flags + .env.example (112 lignes)
+
+**Total: 1076 lignes ajoutées**
+
+---
 
 ### ✅ **Backend (Complété)**
 
@@ -118,35 +129,70 @@ SERPAPI_API_KEY=your_key_here
 
 ---
 
-## 📊 PROCHAINES ÉTAPES
+## 📊 STATUT DÉPLOIEMENT PRODUCTION
 
-### 🚧 **À Faire (Pendant ton repas)**
+### ✅ **Déployé sur https://crm.alforis.fr**
 
-#### **3. Intégration Pipeline Autofill** (⏳ EN COURS)
-Modifier `email_autofill_pipeline.py` pour auto-enrichir:
-- Hook après parsing email
-- Si organisation manque données (website, phone, etc.)
-- Appeler `enrich_organisation()`
-- Stocker dans `AutofillSuggestion` avec flag `web_enriched=True`
+**Effectué:**
+1. ✅ Code pushé sur GitHub (3 commits)
+2. ✅ Git pull sur serveur Hetzner
+3. ✅ Migration DB appliquée manuellement (colonnes + indexes)
+4. ✅ Feature flags ajoutés au .env production
+5. ✅ API container rebuild avec nouveau code
+6. ⚠️  Route `/api/v1/enrichment/*` déployée mais nécessite SERPAPI_API_KEY
 
-#### **4. Migration DB** (⏳ À FAIRE)
-Ajouter colonnes à `autofill_suggestions`:
-```sql
-ALTER TABLE autofill_suggestions ADD COLUMN web_enriched BOOLEAN DEFAULT FALSE;
-ALTER TABLE autofill_suggestions ADD COLUMN enrichment_confidence FLOAT;
-ALTER TABLE autofill_suggestions ADD COLUMN enrichment_source VARCHAR(50);
+**Configuration Production (.env):**
+```bash
+SERPAPI_API_KEY=YOUR_KEY_HERE  # ⚠️ À configurer
+AUTOFILL_USE_WEB_ENRICHMENT=true
+AUTOFILL_THRESHOLD=0.92
+AUTOFILL_WEB_MIN_CONFIDENCE=0.70
 ```
 
-#### **5. Frontend Badge** (⏳ À FAIRE)
-Composant `EnrichedBadge.tsx`:
-- Badge "🌐 Enrichi depuis le web" sur suggestions
-- Indicateur confiance: 🟢 High (>80%) | 🟡 Medium (50-80%) | 🔴 Low (<50%)
+**Test manuel (après ajout clé API):**
+```bash
+curl -X POST "https://crm.alforis.fr/api/v1/enrichment/organisation" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Alforis Finance", "country": "FR"}'
+```
 
-#### **6. Frontend Bouton Manuel** (⏳ À FAIRE)
-Bouton "🔍 Enrichir depuis le web" sur:
-- Page organisations
-- Page suggestions autofill
-- Appelle API `POST /enrichment/organisation`
+---
+
+## 📊 PROCHAINES ÉTAPES (Après Option A)
+
+### 🎯 **Option B: Prompt LLM + HITL v2 (2-3h)**
+
+#### **1. Prompt LLM avec web_context** (1h)
+Modifier `signature_parser_service.py`:
+- Ajouter `web_context` au prompt (website, address, etc.)
+- Few-shots examples (3 FR + 2 EN)
+- LLM router avec fallback (Mistral → GPT → Claude)
+- Auto-apply guardrails (3 conditions)
+
+#### **2. HITL v2 Frontend** (1-2h)
+Composant `AutofillSuggestionsV2.tsx`:
+- Badge "🌐 Enrichi web" avec confidence
+- Bulk actions (valider/rejeter 10 suggestions)
+- Filtres avancés (source, champ, confidence)
+- Diff viewer avant/après
+- Bouton "🔍 Enrichir manuellement"
+
+#### **3. Traçabilité & RGPD** (30 min)
+- Decision log par suggestion
+- Audit trail (qui a vu/validé quoi)
+- Robots.txt compliance
+
+#### **4. Tests & Qualité** (1h)
+- Unit tests enrichment service
+- Integration tests (5 cas réels)
+- Evaluation set (30 emails anonymisés)
+- Métriques: précision/rappel par champ
+
+#### **5. Observabilité** (30 min)
+- Prometheus metrics (enrichment_requests_total, enrichment_confidence_avg)
+- Budget guardrails (alerte si >90 req/mois)
+- Slack notifications
 
 ---
 
@@ -269,4 +315,50 @@ url = url.rstrip('/')                  # Remove trailing /
 
 ---
 
-**Fin du document - À mettre à jour au retour de repas! 🍽️**
+## ✅ RÉSUMÉ OPTION A (TERMINÉ)
+
+### **Ce qui a été fait (30 min):**
+
+1. **Feature Flags** (5 min) ✅
+   - Créé `.env.example` avec tous les flags autofill
+   - Intégré dans `web_enrichment_service.py`
+   - Intégré dans `email_autofill_pipeline.py`
+
+2. **Migration DB Production** (10 min) ✅
+   - Colonnes ajoutées: `web_enriched`, `enrichment_confidence`, `enrichment_source`, `enriched_at`
+   - Indexes créés pour performance
+   - API rebuild avec nouveau code
+
+3. **Code Pushé GitHub** (5 min) ✅
+   - 3 commits (1076 lignes)
+   - Déployé sur serveur Hetzner
+
+4. **Documentation** (5 min) ✅
+   - Ce fichier mis à jour avec statut complet
+   - Instructions test incluses
+
+### **Prêt pour test:**
+
+Une fois `SERPAPI_API_KEY` configurée dans `/srv/crm-alforis/.env`:
+
+```bash
+# 1. Tester enrichment manuel
+curl -X POST "https://crm.alforis.fr/api/v1/enrichment/organisation" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Alforis Finance", "country": "FR"}'
+
+# 2. Vérifier cache stats
+curl https://crm.alforis.fr/api/v1/enrichment/cache-stats \
+  -H "Authorization: Bearer $TOKEN"
+
+# 3. Tester pipeline autofill complet
+# (envoyer email → webhook → pipeline → autofill + enrichment)
+```
+
+### **Prochaine session: Option B (2-3h)**
+Voir section "PROCHAINES ÉTAPES" ci-dessus.
+
+---
+
+**Dernière mise à jour: 2025-10-30 (Option A terminée)**
