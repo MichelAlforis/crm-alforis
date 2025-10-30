@@ -961,3 +961,62 @@ async def delete_api_key(
     db.commit()
 
     return {"message": f"Clé API {provider} supprimée avec succès"}
+
+
+# ============= INTENT DETECTION =============
+
+from pydantic import BaseModel, Field
+from services.intent_detection_service import IntentDetectionService
+
+
+class DetectIntentRequest(BaseModel):
+    """Requête de détection d'intention"""
+    email_body: str = Field(..., min_length=10, description="Corps de l'email")
+    subject: Optional[str] = Field(None, description="Sujet de l'email")
+    interaction_id: Optional[int] = Field(None, description="ID de l'interaction CRM")
+
+
+class DetectIntentResponse(BaseModel):
+    """Réponse de détection d'intention"""
+    success: bool
+    intent: Optional[str] = None
+    confidence: Optional[float] = None
+    reasoning: Optional[str] = None
+    model_used: Optional[str] = None
+    processing_time_ms: int
+    error: Optional[str] = None
+    from_cache: bool = False
+
+
+@router.post("/detect-intent", response_model=DetectIntentResponse)
+async def detect_intent(
+    request: DetectIntentRequest,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Détecte l'intention d'un email avec IA
+
+    Catégories possibles:
+    - meeting_request: Demande de rendez-vous
+    - info_request: Demande d'information
+    - follow_up: Relance/suivi
+    - introduction: Présentation initiale
+    - quotation_request: Demande de devis
+    - closing: Conclusion d'affaire
+    - complaint: Réclamation
+    - thank_you: Remerciement
+    - unsubscribe: Désabonnement
+    - other: Autre
+    """
+    team_id = current_user.get("team_id", 1)
+
+    service = IntentDetectionService(db)
+    result = await service.detect_intent(
+        email_body=request.email_body,
+        subject=request.subject,
+        interaction_id=request.interaction_id,
+        team_id=team_id
+    )
+
+    return DetectIntentResponse(**result)
