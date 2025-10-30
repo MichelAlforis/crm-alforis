@@ -15,21 +15,31 @@ export default function LoginPage() {
     <div className="relative min-h-screen overflow-hidden">
       {/* Video Background */}
       <div className="absolute inset-0">
-        {/* Placeholder for video - add your video element here */}
-        <div
-          className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
-          style={{
-            backgroundImage: `
-              radial-gradient(circle at 20% 50%, rgba(227, 159, 112, 0.15) 0%, transparent 50%),
-              radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%)
-            `
-          }}
+        {/* Optimized Video Background - 705KB WebM */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="w-full h-full object-cover opacity-50"
+          style={{ willChange: 'auto' }}
         >
-          {/* Video will go here - for now gradient placeholder */}
-          {/* <video autoPlay loop muted playsInline className="w-full h-full object-cover opacity-40">
-            <source src="/videos/finance-abstract-loop.mp4" type="video/mp4" />
-          </video> */}
-        </div>
+          {/* WebM for modern browsers (90% smaller - 705KB) */}
+          <source src="/Video_auth_optimized.webm" type="video/webm" />
+          {/* MP4 fallback (1MB) */}
+          <source src="/Video_auth_optimized.mp4" type="video/mp4" />
+          {/* Gradient fallback for browsers without video support */}
+          <div
+            className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
+            style={{
+              backgroundImage: `
+                radial-gradient(circle at 20% 50%, rgba(227, 159, 112, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%)
+              `
+            }}
+          />
+        </video>
 
         {/* Overlay gradient for readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/40 to-slate-900/60" />
