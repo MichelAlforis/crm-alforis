@@ -58,54 +58,81 @@ export function LoginForm({ onSubmit, isLoading, error }: LoginFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="w-full max-w-md mx-auto">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-ardoise mb-2">Connexion</h2>
-        <p className="text-gray-600">Connectez-vous à votre compte CRM</p>
-      </div>
-
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="w-full space-y-6">
       {(error || localError) && (
-        <Alert 
-          type="error" 
+        <Alert
+          type="error"
           message={error || localError}
           onClose={() => setLocalError('')}
         />
       )}
 
-      <Input
-        label="Email"
-        type="email"
-        {...register('email', {
-          required: 'Email requis',
-          pattern: {
-            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-            message: 'Email invalide',
-          },
-        })}
-        error={errors.email?.message}
-        placeholder="vous@example.com"
-      />
+      <div className="space-y-4">
+        <Input
+          label="Email"
+          type="email"
+          {...register('email', {
+            required: 'Email requis',
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: 'Email invalide',
+            },
+          })}
+          error={errors.email?.message}
+          placeholder="vous@example.com"
+          className="transition-all duration-200"
+        />
 
-      <Input
-        label="Mot de passe"
-        type="password"
-        {...register('password', {
-          required: 'Mot de passe requis',
-          minLength: {
-            value: 6,
-            message: 'Minimum 6 caractères',
-          },
-        })}
-        error={errors.password?.message}
-        placeholder="••••••••"
-      />
+        <div>
+          <Input
+            label="Mot de passe"
+            type="password"
+            {...register('password', {
+              required: 'Mot de passe requis',
+              minLength: {
+                value: 6,
+                message: 'Minimum 6 caractères',
+              },
+            })}
+            error={errors.password?.message}
+            placeholder="••••••••"
+            className="transition-all duration-200"
+          />
+
+          {/* Forgot Password Link */}
+          <div className="mt-2 text-right">
+            <button
+              type="button"
+              onClick={() => {
+                // Phase 2: Will navigate to /auth/forgot-password
+                showToast({
+                  type: 'info',
+                  title: 'Fonctionnalité à venir',
+                  message: 'La réinitialisation de mot de passe sera disponible prochainement.',
+                })
+              }}
+              className="text-sm font-medium text-orange-500 hover:text-orange-600 transition-colors inline-flex items-center gap-1 group"
+            >
+              <span>Mot de passe oublié?</span>
+              <svg
+                className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
 
       <Button
         type="submit"
         variant="primary"
         size="lg"
         isLoading={isLoading}
-        className="w-full"
+        className="w-full mt-6 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
       >
         Se connecter
       </Button>

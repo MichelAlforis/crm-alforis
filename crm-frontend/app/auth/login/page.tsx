@@ -1,9 +1,10 @@
 // app/auth/login/page.tsx
-// ============= LOGIN PAGE =============
+// ============= LOGIN PAGE - PREMIUM DESIGN =============
 
 'use client'
 
 import React from 'react'
+import { motion } from 'framer-motion'
 import { LoginForm } from '@/components/forms'
 import { useAuth } from '@/hooks/useAuth'
 
@@ -11,13 +12,147 @@ export default function LoginPage() {
   const { login, isSubmitting, error } = useAuth()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-bleu to-blue-600 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-lg p-8">
-        <LoginForm
-          onSubmit={login}
-          isLoading={isSubmitting}
-          error={error}
+    <div className="relative min-h-screen overflow-hidden">
+      {/* Video Background */}
+      <div className="absolute inset-0">
+        {/* Placeholder for video - add your video element here */}
+        <div
+          className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
+          style={{
+            backgroundImage: `
+              radial-gradient(circle at 20% 50%, rgba(227, 159, 112, 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%)
+            `
+          }}
+        >
+          {/* Video will go here - for now gradient placeholder */}
+          {/* <video autoPlay loop muted playsInline className="w-full h-full object-cover opacity-40">
+            <source src="/videos/finance-abstract-loop.mp4" type="video/mp4" />
+          </video> */}
+        </div>
+
+        {/* Overlay gradient for readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/40 to-slate-900/60" />
+
+        {/* Animated subtle glow */}
+        <motion.div
+          className="absolute inset-0"
+          animate={{
+            background: [
+              'radial-gradient(circle at 30% 40%, rgba(227, 159, 112, 0.1) 0%, transparent 50%)',
+              'radial-gradient(circle at 70% 60%, rgba(227, 159, 112, 0.15) 0%, transparent 50%)',
+              'radial-gradient(circle at 30% 40%, rgba(227, 159, 112, 0.1) 0%, transparent 50%)',
+            ],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
         />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{
+            type: 'spring',
+            stiffness: 300,
+            damping: 30,
+            duration: 0.6,
+          }}
+          className="w-full max-w-md"
+        >
+          {/* Glassmorphism Card */}
+          <div
+            className="relative rounded-[20px] overflow-hidden"
+            style={{
+              backdropFilter: 'blur(12px) saturate(180%)',
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.90) 100%)',
+              border: '1px solid rgba(227, 159, 112, 0.2)',
+              boxShadow: `
+                0 0 0 1px rgba(255, 255, 255, 0.8),
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 16px 64px rgba(0, 0, 0, 0.2),
+                0 24px 96px rgba(227, 159, 112, 0.15)
+              `,
+            }}
+          >
+            {/* Inner glow */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: 'radial-gradient(circle at 50% 0%, rgba(227, 159, 112, 0.05) 0%, transparent 60%)',
+              }}
+            />
+
+            {/* Content */}
+            <div className="relative p-8 md:p-10">
+              {/* Logo/Brand */}
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="text-center mb-8"
+              >
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-orange-100 to-orange-50 mb-4 shadow-lg">
+                  <svg
+                    className="w-8 h-8 text-orange-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                    />
+                  </svg>
+                </div>
+                <h1 className="text-3xl font-bold text-gray-900 tracking-tight mb-2">
+                  Alforis CRM
+                </h1>
+                <p className="text-gray-500 font-medium">
+                  Gestion de patrimoine intelligente
+                </p>
+              </motion.div>
+
+              {/* Login Form */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <LoginForm
+                  onSubmit={login}
+                  isLoading={isSubmitting}
+                  error={error}
+                />
+              </motion.div>
+
+              {/* Footer */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="mt-6 text-center text-sm text-gray-500"
+              >
+                <p>© 2025 Alforis Finance. Tous droits réservés.</p>
+              </motion.div>
+            </div>
+          </div>
+
+          {/* Subtle bottom glow */}
+          <div
+            className="absolute -bottom-32 left-1/2 -translate-x-1/2 w-full h-32 opacity-30 blur-3xl"
+            style={{
+              background: 'radial-gradient(circle, rgba(227, 159, 112, 0.4) 0%, transparent 70%)',
+            }}
+          />
+        </motion.div>
       </div>
     </div>
   )
