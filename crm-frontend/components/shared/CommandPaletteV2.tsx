@@ -42,6 +42,7 @@ import {
   VolumeX,
 } from 'lucide-react'
 import { useGlobalSearch } from '@/hooks/useGlobalSearch'
+import { useAiSuggestions } from '@/hooks/useAiSuggestions'
 import { parseCommand, formatCommandSummary } from '@/lib/commandParser'
 import { getHistory, addToHistory, type HistoryItem } from '@/lib/commandHistory'
 import { analyzeClipboard, type ClipboardSuggestion } from '@/lib/clipboardDetection'
@@ -63,6 +64,11 @@ export function CommandPaletteV2({ open, onOpenChange }: CommandPaletteV2Props) 
   const inputRef = useRef<HTMLInputElement>(null)
 
   const { results, isSearching } = useGlobalSearch(search)
+  const { suggestions: aiSuggestions, isLoading: aiLoading, intent, entities } = useAiSuggestions({
+    query: search,
+    enabled: open && search.length >= 2,
+    debounceMs: 300,
+  })
   const parsedCommand = parseCommand(search)
 
   // Initialize feedback system
@@ -283,20 +289,47 @@ export function CommandPaletteV2({ open, onOpenChange }: CommandPaletteV2Props) 
               </Command.Group>
             )}
 
-            {/* Parsed Command Suggestion */}
-            {showParsedCommand && !showCalculator && (
-              <Command.Group heading="💡 Suggestion intelligente" className="mb-2">
-                <CommandItemV2
-                  icon={Sparkles}
-                  onSelect={() => runCommand(() => console.log('Execute parsed command', parsedCommand), search)}
-                >
-                  <div className="flex flex-col gap-0.5">
-                    <span>{formatCommandSummary(parsedCommand)}</span>
-                    <span className="text-xs text-gray-500 dark:text-slate-500">
-                      {Math.round(parsedCommand.confidence * 100)}% de confiance
-                    </span>
-                  </div>
-                </CommandItemV2>
+            {/* AI Suggestions */}
+            {aiSuggestions.length > 0 && !showCalculator && mode === 'command' && (
+              <Command.Group heading="🤖 Suggestions IA" className="mb-2">
+                {aiSuggestions.slice(0, 5).map((suggestion, idx) => (
+                  <CommandItemV2
+                    key={`ai-${idx}`}
+                    icon={Sparkles}
+                    onSelect={() => {
+                      haptic('medium')
+                      playSound('execute')
+
+                      // Handle different suggestion types
+                      if (suggestion.type === 'navigation' && suggestion.metadata?.url) {
+                        router.push(suggestion.metadata.url)
+                        onOpenChange(false)
+                      } else if (suggestion.type === 'person' && suggestion.metadata?.person_id) {
+                        router.push(`/dashboard/people/${suggestion.metadata.person_id}`)
+                        onOpenChange(false)
+                      } else if (suggestion.type === 'organisation' && suggestion.metadata?.organisation_id) {
+                        router.push(`/dashboard/organisations/${suggestion.metadata.organisation_id}`)
+                        onOpenChange(false)
+                      } else {
+                        // Generic action
+                        console.log('AI Suggestion:', suggestion)
+                        onOpenChange(false)
+                      }
+
+                      addToHistory({ query: search, type: 'action' })
+                    }}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span>{suggestion.icon}</span>
+                      <div className="flex flex-col gap-0.5">
+                        <span>{suggestion.label}</span>
+                        <span className="text-xs text-gray-500 dark:text-slate-500">
+                          {suggestion.description}
+                        </span>
+                      </div>
+                    </div>
+                  </CommandItemV2>
+                ))}
               </Command.Group>
             )}
 

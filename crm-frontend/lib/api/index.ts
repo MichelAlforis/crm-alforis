@@ -11,6 +11,7 @@ import { TasksApi } from './tasks'
 import { IntegrationsApi } from './integrations'
 import { ProductsApi } from './products'
 import { MandatsApi } from './mandats'
+import { AiApi } from './ai'
 import { logger } from '../logger'
 
 // ============= CONFIGURATION =============
@@ -152,6 +153,7 @@ class ApiClient extends BaseApiClient {
   public integrations: IntegrationsApi
   public products: ProductsApi
   public mandats: MandatsApi
+  public ai: AiApi
 
   constructor(baseUrl: string) {
     super(baseUrl)
@@ -165,6 +167,7 @@ class ApiClient extends BaseApiClient {
     this.integrations = new IntegrationsApi(this)
     this.products = new ProductsApi(this)
     this.mandats = new MandatsApi(this)
+    this.ai = new AiApi(this)
   }
 
   // Rétrocompatibilité: méthodes directes (délèguent aux modules)

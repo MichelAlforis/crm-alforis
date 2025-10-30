@@ -1,9 +1,11 @@
 /**
  * useGlobalSearch - Hook for global search across entities
  * Searches: people, organisations, tasks
+ * Uses Fuse.js for fuzzy matching
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
+import Fuse from 'fuse.js'
 import { usePeople } from './usePeople'
 import { useOrganisations } from './useOrganisations'
 import { Person, Organisation, Task } from '@/lib/types'
@@ -17,6 +19,7 @@ export interface SearchResult {
   subtitle?: string
   url: string
   data: Person | Organisation | Task
+  score?: number // Fuse.js relevance score (lower = better match)
 }
 
 export function useGlobalSearch(query: string) {
@@ -26,6 +29,37 @@ export function useGlobalSearch(query: string) {
   const { people } = usePeople()
   const { data: organisations } = useOrganisations({ skip: 0, limit: 200 })
 
+  // Fuse.js instances for fuzzy search
+  const fusePeople = useMemo(() => {
+    const peopleList = people.data?.items || []
+    return new Fuse(peopleList, {
+      keys: [
+        { name: 'first_name', weight: 2 },
+        { name: 'last_name', weight: 2 },
+        { name: 'personal_email', weight: 1 },
+        { name: 'role', weight: 1 },
+      ],
+      threshold: 0.4, // 0 = exact match, 1 = match anything
+      includeScore: true,
+      minMatchCharLength: 2,
+    })
+  }, [people.data])
+
+  const fuseOrgs = useMemo(() => {
+    const orgsList = organisations?.items || []
+    return new Fuse(orgsList, {
+      keys: [
+        { name: 'name', weight: 2 },
+        { name: 'email', weight: 1 },
+        { name: 'category', weight: 1 },
+        { name: 'sector', weight: 1 },
+      ],
+      threshold: 0.4,
+      includeScore: true,
+      minMatchCharLength: 2,
+    })
+  }, [organisations])
+
   useEffect(() => {
     if (!query || query.length < 2) {
       setResults([])
@@ -33,67 +67,43 @@ export function useGlobalSearch(query: string) {
     }
 
     setIsSearching(true)
-    const searchLower = query.toLowerCase()
-
     const searchResults: SearchResult[] = []
 
-    // Search people
-    people.data?.items?.forEach((person) => {
-      const fullName = `${person.first_name} ${person.last_name}`.toLowerCase()
-      const email = person.personal_email?.toLowerCase() || ''
-      const role = person.role?.toLowerCase() || ''
-
-      if (
-        fullName.includes(searchLower) ||
-        email.includes(searchLower) ||
-        role.includes(searchLower)
-      ) {
-        searchResults.push({
-          id: person.id,
-          type: 'person',
-          title: `${person.first_name} ${person.last_name}`,
-          subtitle: person.personal_email || person.role || undefined,
-          url: `/dashboard/people/${person.id}`,
-          data: person,
-        })
-      }
+    // Fuzzy search people
+    const peopleResults = fusePeople.search(query)
+    peopleResults.forEach(({ item: person, score }) => {
+      searchResults.push({
+        id: person.id,
+        type: 'person',
+        title: `${person.first_name} ${person.last_name}`,
+        subtitle: person.personal_email || person.role || undefined,
+        url: `/dashboard/people/${person.id}`,
+        data: person,
+        score, // Add score for sorting
+      })
     })
 
-    // Search organisations
-    organisations?.items?.forEach((org) => {
-      const name = org.name.toLowerCase()
-      const email = org.email?.toLowerCase() || ''
-      const category = org.category?.toLowerCase() || ''
-
-      if (
-        name.includes(searchLower) ||
-        email.includes(searchLower) ||
-        category.includes(searchLower)
-      ) {
-        searchResults.push({
-          id: org.id,
-          type: 'organisation',
-          title: org.name,
-          subtitle: org.category || org.email || undefined,
-          url: `/dashboard/organisations/${org.id}`,
-          data: org,
-        })
-      }
+    // Fuzzy search organisations
+    const orgResults = fuseOrgs.search(query)
+    orgResults.forEach(({ item: org, score }) => {
+      searchResults.push({
+        id: org.id,
+        type: 'organisation',
+        title: org.name,
+        subtitle: org.category || org.email || undefined,
+        url: `/dashboard/organisations/${org.id}`,
+        data: org,
+        score, // Add score for sorting
+      })
     })
 
-    // Sort by relevance (starts with query = higher)
-    searchResults.sort((a, b) => {
-      const aStartsWith = a.title.toLowerCase().startsWith(searchLower)
-      const bStartsWith = b.title.toLowerCase().startsWith(searchLower)
-      if (aStartsWith && !bStartsWith) return -1
-      if (!aStartsWith && bStartsWith) return 1
-      return 0
-    })
+    // Sort by score (lower score = better match)
+    searchResults.sort((a, b) => (a.score || 1) - (b.score || 1))
 
     // Limit to 10 results
     setResults(searchResults.slice(0, 10))
     setIsSearching(false)
-  }, [query, people.data, organisations])
+  }, [query, fusePeople, fuseOrgs])
 
   return {
     results,
