@@ -19,6 +19,7 @@ from models import (
 )
 from services.signature_parser_service import SignatureParserService
 from services.intent_detection_service import IntentDetectionService
+from services.web_enrichment_service import get_enrichment_service
 
 logger = logging.getLogger(__name__)
 
@@ -222,6 +223,9 @@ class EmailAutofillPipeline:
 
             self.metrics["suggestions_created"] += 1
 
+            # 🌐 Web enrichment (Acte V)
+            await self._enrich_suggestion(suggestion, data)
+
             # Auto-apply if high confidence
             if confidence >= self.auto_apply_threshold:
                 await self._auto_apply_suggestion(suggestion, data, email)
@@ -395,6 +399,68 @@ class EmailAutofillPipeline:
 """
 
         return summary.strip()
+
+    async def _enrich_suggestion(
+        self,
+        suggestion: AutofillSuggestion,
+        data: Dict
+    ):
+        """
+        🌐 Web enrichment (Acte V)
+        Enrichit automatiquement les données d'organisation via recherche web
+        """
+
+        try:
+            company_name = data.get("company")
+
+            if not company_name:
+                return  # Pas d'entreprise à enrichir
+
+            # Skip si déjà enrichi
+            if suggestion.web_enriched:
+                logger.debug(f"⏭️  Suggestion {suggestion.id} already enriched")
+                return
+
+            # Call enrichment service
+            enrichment_service = get_enrichment_service()
+
+            result = enrichment_service.enrich_organisation(
+                name=company_name,
+                country="FR",  # TODO: detect country from email domain
+                force_refresh=False
+            )
+
+            # Store enrichment data in suggestion
+            if result.get("confidence", 0) > 0.3:  # Only store if minimum confidence
+                suggestion.web_enriched = True
+                suggestion.enrichment_confidence = result.get("confidence")
+                suggestion.enrichment_source = result.get("source")
+                suggestion.enriched_at = datetime.now(timezone.utc)
+
+                # Merge enriched data into suggested_data
+                if not data.get("website") and result.get("website"):
+                    data["website"] = result["website"]
+
+                if not data.get("address") and result.get("address"):
+                    data["address"] = result["address"]
+
+                if not data.get("phone") and result.get("phone"):
+                    data["phone"] = result["phone"]
+
+                if not data.get("linkedin") and result.get("linkedin"):
+                    data["linkedin"] = result["linkedin"]
+
+                # Update suggestion with enriched data
+                suggestion.suggested_data = data
+
+                logger.info(f"🌐 Enriched '{company_name}' (confidence={result['confidence']})")
+                self.metrics["web_enriched"] = self.metrics.get("web_enriched", 0) + 1
+            else:
+                logger.debug(f"⚠️  Low confidence enrichment for '{company_name}' ({result.get('confidence')})")
+
+        except Exception as e:
+            logger.warning(f"⚠️  Enrichment failed for suggestion {suggestion.id}: {e}")
+            # Don't fail the whole pipeline for enrichment errors
 
 
 async def run_autofill_pipeline(
