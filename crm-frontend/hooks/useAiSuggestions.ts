@@ -4,8 +4,13 @@
  */
 
 import { useState, useEffect, useCallback } from 'react'
-import { api } from '@/lib/api'
-import type { CommandSuggestion, CommandSuggestResponse } from '@/lib/api/ai'
+import { apiClient } from '@/lib/api'
+
+interface CommandSuggestion {
+  label: string
+  value: string
+  type?: string
+}
 
 interface UseAiSuggestionsOptions {
   query: string
@@ -46,9 +51,9 @@ export function useAiSuggestions({
     setError(null)
 
     try {
-      const response: CommandSuggestResponse = await api.ai.getCommandSuggestions(searchQuery, 10)
+      const response = await apiClient.getAiCommandSuggestions(searchQuery, 10)
 
-      setSuggestions(response.suggestions)
+      setSuggestions(response.suggestions || [])
       setIntent(response.intent)
       setEntities(response.entities)
     } catch (err) {

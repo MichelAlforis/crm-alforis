@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 
-export default function OutlookCallbackPage() {
+function OutlookCallbackContent() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
@@ -59,5 +59,17 @@ export default function OutlookCallbackPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+export default function OutlookCallbackPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+      </div>
+    }>
+      <OutlookCallbackContent />
+    </Suspense>
   )
 }
