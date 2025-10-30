@@ -15,6 +15,7 @@ from core.database import get_db
 from core.security import create_access_token, decode_token, get_password_hash, verify_password
 from models.role import Role, UserRole
 from models.user import User
+from services.transactional_email_service import TransactionalEmailService
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 security = HTTPBearer()
@@ -557,18 +558,21 @@ async def forgot_password(
             user.reset_token_expires_at = datetime.utcnow() + timedelta(hours=1)
             db.commit()
 
-            # TODO: Envoyer l'email avec le raw_token (non hashé)
-            # Frontend URL: {FRONTEND_URL}/auth/reset-password?token={raw_token}
+            # Envoyer l'email avec le raw_token (non hashé)
             reset_url = f"{settings.frontend_url}/auth/reset-password?token={raw_token}"
-            print(f"[DEBUG] Reset URL: {reset_url}")  # TODO: Remplacer par email
 
-            # TODO Phase 2: Intégrer Resend pour envoyer l'email
-            # from services.email_service import send_password_reset_email
-            # await send_password_reset_email(
-            #     to_email=user.email,
-            #     reset_url=reset_url,
-            #     user_name=user.display_name
-            # )
+            # Envoyer l'email via Resend
+            email_service = TransactionalEmailService()
+            email_sent = await email_service.send_password_reset_email(
+                to_email=user.email,
+                reset_url=reset_url,
+                user_name=user.display_name
+            )
+
+            if email_sent:
+                print(f"[INFO] Password reset email sent to {user.email}")
+            else:
+                print(f"[WARN] Failed to send email, but token created. Reset URL: {reset_url}")
 
         # Retourner toujours le même message (sécurité: pas d'énumération d'emails)
         return {
