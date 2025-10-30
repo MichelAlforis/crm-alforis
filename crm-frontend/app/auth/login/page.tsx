@@ -107,26 +107,11 @@ export default function LoginPage() {
                 transition={{ delay: 0.2 }}
                 className="text-center mb-8"
               >
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-orange-100 to-orange-50 mb-4 shadow-lg">
-                  <svg
-                    className="w-8 h-8 text-orange-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                    />
-                  </svg>
-                </div>
-                <h1 className="text-3xl font-bold text-gray-900 tracking-tight mb-2">
-                  Alforis CRM
+                <h1 className="text-4xl font-bold text-gray-900 tracking-tight mb-2">
+                  Alforis
                 </h1>
-                <p className="text-gray-500 font-medium">
-                  Gestion de patrimoine intelligente
+                <p className="text-gray-500 font-medium text-sm tracking-wide">
+                  CRM FINANCE
                 </p>
               </motion.div>
 

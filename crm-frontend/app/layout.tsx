@@ -10,18 +10,26 @@ import Providers from './providers'
 
 export const metadata: Metadata = {
   title: {
-    default: 'TPM Finance CRM',
-    template: '%s | TPM Finance CRM',
+    default: 'Alforis CRM',
+    template: '%s | Alforis CRM',
   },
-  description: 'Plateforme CRM professionnelle pour la gestion des investisseurs, fournisseurs et interactions',
-  keywords: ['CRM', 'TPM Finance', 'Gestion', 'Investisseurs', 'Fournisseurs'],
-  authors: [{ name: 'TPM Finance' }],
-  creator: 'TPM Finance',
+  description: 'Plateforme CRM intelligente pour la gestion de patrimoine',
+  keywords: ['CRM', 'Alforis Finance', 'Gestion de Patrimoine', 'Investisseurs', 'Finance'],
+  authors: [{ name: 'Alforis Finance' }],
+  creator: 'Alforis Finance',
   manifest: '/manifest.json',
+  icons: {
+    icon: [
+      { url: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'TPM CRM',
+    title: 'Alforis',
   },
   formatDetection: {
     telephone: true,
@@ -31,14 +39,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
-    title: 'TPM Finance CRM',
-    description: 'Plateforme CRM professionnelle pour la gestion des investisseurs',
-    siteName: 'TPM Finance CRM',
+    title: 'Alforis CRM',
+    description: 'Plateforme CRM intelligente pour la gestion de patrimoine',
+    siteName: 'Alforis CRM',
   },
   twitter: {
     card: 'summary',
-    title: 'TPM Finance CRM',
-    description: 'Plateforme CRM professionnelle',
+    title: 'Alforis CRM',
+    description: 'Gestion de patrimoine intelligente',
   },
 }
 
@@ -71,33 +79,11 @@ export default function RootLayout({
         {/* P2 Optimization: Preconnect to API (reduces connection time for LCP) */}
         <link rel="preconnect" href={process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'} />
         <link rel="dns-prefetch" href={process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'} />
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/favicon/apple-touch-icon.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon/favicon-32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon/favicon-16.png"
-        />
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#E39F70" />
-        <link rel="shortcut icon" href="/favicon/favicon.ico" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-title" content="TPM CRM" />
-        <meta name="application-name" content="TPM CRM" />
+        <meta name="apple-mobile-web-app-title" content="Alforis" />
+        <meta name="application-name" content="Alforis CRM" />
         <meta name="msapplication-TileColor" content="#E39F70" />
-        <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
-        <meta name="theme-color" content="#E39F70" />
         <meta name="color-scheme" content="light dark" />
       </head>
       <body className="bg-background text-text-primary min-h-screen transition-colors duration-300">
