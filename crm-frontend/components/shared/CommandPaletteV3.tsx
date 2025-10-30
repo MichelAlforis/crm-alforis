@@ -232,7 +232,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
               <Command
                 className="relative rounded-[20px] overflow-hidden"
                 style={{
-                  backdropFilter: 'blur(40px) saturate(180%)',
+                  backdropFilter: 'blur(12px) saturate(180%)',
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.90) 100%)',
                   border: '1px solid rgba(227, 159, 112, 0.15)',
                   boxShadow: `
