@@ -25,7 +25,7 @@ from models.user import User
 
 logger = logging.getLogger("crm-api")
 
-router = APIRouter()
+router = APIRouter(prefix="/autofill-hitl", tags=["autofill-hitl"])
 
 
 # ========== SCHEMAS ==========
