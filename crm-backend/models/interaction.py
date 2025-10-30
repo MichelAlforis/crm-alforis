@@ -181,7 +181,16 @@ class Interaction(BaseModel):
     # Direction de la communication
     direction = Column(String(20), nullable=True, index=True)  # "in", "out", "internal"
 
-    # Thread ID pour regrouper les conversations email
+    # Thread ID pour regrouper les conversations email (FK vers email_threads)
+    # Note: Utilise l'ID interne du thread (email_threads.id) pour cohérence relationnelle
+    email_thread_id = Column(
+        Integer,
+        ForeignKey("email_threads.id", ondelete=ONDELETE_SET_NULL),
+        nullable=True,
+        index=True,
+    )
+
+    # Thread ID externe (Message-ID / References from email headers) - conservé pour compatibilité
     thread_id = Column(String(255), nullable=True, index=True)
 
     # Date réelle de l'interaction (vs created_at = quand elle a été enregistrée)
@@ -235,6 +244,13 @@ class Interaction(BaseModel):
         cascade="all, delete-orphan",
         passive_deletes=True,
         back_populates="interaction",
+    )
+
+    # Thread email (conversation groupée)
+    thread = relationship(
+        "EmailThread",
+        foreign_keys=[email_thread_id],
+        back_populates="interactions",
     )
 
     def __repr__(self) -> str:

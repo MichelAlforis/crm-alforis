@@ -7,6 +7,7 @@ from api.routes import (
     autofill_hitl,
     autofill_jobs,
     dashboards,
+    email_accounts,
     email_campaigns,
     email_intelligence,
     enrichment,
@@ -18,6 +19,7 @@ from api.routes import (
     mailing_lists,
     mandats,
     monitoring,
+    oauth_callbacks,
     org_links,
     organisations,
     people,
@@ -73,6 +75,12 @@ api_router.include_router(inbound_sendgrid.router)
 ## 📧 EMAIL CONFIGURATION & MAILING LISTS (Chapitre 6)
 api_router.include_router(email_config.router)
 api_router.include_router(mailing_lists.router)
+
+## 📧 MULTI-MAIL ACCOUNTS (Multi-tenant email accounts management)
+api_router.include_router(email_accounts.router)
+
+## 🔐 OAUTH2 CALLBACKS (Gmail & Outlook OAuth)
+api_router.include_router(oauth_callbacks.router)
 
 # 🔗 WEBHOOKS EXTERNES (alforis.fr → CRM)
 api_router.include_router(external_webhooks.router)

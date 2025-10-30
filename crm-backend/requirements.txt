@@ -30,8 +30,10 @@ psutil==5.9.8  # System metrics (CPU, RAM, disk)
 # Rate Limiting
 slowapi==0.1.9
 
-# Cache
+# Cache & Background Workers
 redis==5.0.0
+celery==5.3.4  # Distributed task queue
+flower==2.0.1  # Celery monitoring UI
 
 # AI Agent
 anthropic==0.39.0  # Anthropic Claude API
@@ -40,7 +42,17 @@ cryptography==42.0.0  # Chiffrement AES-256 (Fernet) pour API keys
 phonenumbers==8.13.27  # Phone number parsing & E.164 normalization
 beautifulsoup4==4.12.3  # HTML parsing pour signatures Outlook
 exchangelib==5.4.2  # EWS (Exchange Web Services) pour Outlook/M365
-imap-tools==1.7.1  # IMAP client (fallback si EWS bloqué)
+imap-tools==1.7.1  # IMAP client moderne pour multi-mail sync
+
+# OAuth2 providers
+google-auth==2.25.2  # Gmail OAuth2
+google-auth-oauthlib==1.2.0  # Gmail OAuth flow
+google-api-python-client==2.111.0  # Gmail API
+msal==1.26.0  # Microsoft Authentication Library (Outlook OAuth)
+
+# NLP & Entity Extraction
+spacy==3.7.2  # Industrial-strength NLP
+# Note: Modèle français à télécharger: python -m spacy download fr_core_news_lg
 
 # 2FA / TOTP
 pyotp==2.9.0  # Time-based One-Time Password (RFC 6238)

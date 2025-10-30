@@ -9,6 +9,10 @@ Celery est utilisé pour:
 """
 
 import os
+import sys
+from pathlib import Path
+import sys
+from pathlib import Path
 
 try:
     from celery import Celery
@@ -45,12 +49,23 @@ except ImportError:  # Fallback lightweight stub for tests
         return None
 
 
+# S'assurer que le dossier parent est dans le PYTHONPATH pour import `tasks`
+TASKS_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = TASKS_DIR.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.append(str(PROJECT_ROOT))
+
 # Configuration Redis (broker + backend)
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", REDIS_URL)
 CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", REDIS_URL)
 
 # Créer l'application Celery
+# S'assurer que le dossier backend est dans le PYTHONPATH quand tasks est importé
+BASE_DIR = Path(__file__).resolve().parent
+if str(BASE_DIR) not in sys.path:
+    sys.path.append(str(BASE_DIR))
+
 celery_app = Celery(
     "crm_alforis",
     broker=CELERY_BROKER_URL,

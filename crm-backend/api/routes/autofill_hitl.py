@@ -14,13 +14,15 @@ from datetime import datetime, timezone
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
 
 from core import get_current_user, get_db
 from models.autofill_decision_log import AutofillDecisionLog
 from models.autofill_suggestion import AutofillSuggestion
+from models.email_blacklist import EmailBlacklist
+from models.email_message import EmailMessage
 from models.user import User
 
 logger = logging.getLogger("crm-api")
@@ -43,6 +45,8 @@ class SuggestionFilter(BaseModel):
 
 
 class SuggestionResponse(BaseModel):
+    model_config = ConfigDict(protected_namespaces=())
+
     id: int
     source_email_id: Optional[int]
     target_type: str  # contact, organisation
@@ -448,3 +452,124 @@ async def get_audit_trail(
         suggestion_id=suggestion_id,
         entries=entries
     )
+
+
+# ========== BLACKLIST ==========
+
+class BlacklistSenderRequest(BaseModel):
+    """Request pour blacklister un expéditeur"""
+    email: str  # Email exact ou pattern
+    pattern_type: str = "email"  # "email", "domain", "wildcard"
+    reason: Optional[str] = None
+    delete_existing_suggestions: bool = True  # Supprimer les suggestions existantes
+
+
+class BlacklistSenderResponse(BaseModel):
+    """Response après blacklist"""
+    success: bool
+    pattern: str
+    pattern_type: str
+    suggestions_deleted: int
+
+
+@router.post("/blacklist-sender", response_model=BlacklistSenderResponse)
+async def blacklist_sender(
+    request: BlacklistSenderRequest,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    🚫 Blacklister un expéditeur pour ne plus créer de suggestions
+
+    Permet de bloquer automatiquement:
+    - Email exact: "noreply@microsoft.com"
+    - Domaine complet: "@mailchimp.com"
+    - Wildcard: "noreply@*"
+
+    Options:
+    - delete_existing_suggestions: Supprimer les suggestions existantes de cet expéditeur (défaut: true)
+    """
+    team_id = current_user.get("team_id")
+    user_id = current_user.get("user_id")
+
+    if not team_id:
+        raise HTTPException(status_code=400, detail="No team_id in token")
+
+    # Validate pattern_type
+    if request.pattern_type not in ["email", "domain", "wildcard"]:
+        raise HTTPException(status_code=400, detail="Invalid pattern_type. Must be: email, domain, or wildcard")
+
+    # Normalize pattern
+    pattern = request.email.strip().lower()
+
+    # For domain pattern, ensure it starts with @
+    if request.pattern_type == "domain" and not pattern.startswith('@'):
+        pattern = '@' + pattern
+
+    try:
+        # Check if already blacklisted
+        existing = db.query(EmailBlacklist).filter(
+            EmailBlacklist.team_id == team_id,
+            EmailBlacklist.pattern == pattern
+        ).first()
+
+        if existing:
+            logger.info(f"Pattern already blacklisted: {pattern}")
+        else:
+            # Add to blacklist
+            blacklist_entry = EmailBlacklist(
+                team_id=team_id,
+                pattern=pattern,
+                pattern_type=request.pattern_type,
+                reason=request.reason,
+                created_by=user_id,
+                created_at=datetime.now(timezone.utc)
+            )
+            db.add(blacklist_entry)
+            logger.info(f"✅ Blacklisted {request.pattern_type}: {pattern}")
+
+        # Optionally delete existing suggestions from this sender
+        suggestions_deleted = 0
+        if request.delete_existing_suggestions:
+            # Find all emails matching this pattern
+            matching_emails = []
+
+            if request.pattern_type == "email":
+                matching_emails = db.query(EmailMessage.id).filter(
+                    EmailMessage.sender_email.ilike(pattern)
+                ).all()
+            elif request.pattern_type == "domain":
+                matching_emails = db.query(EmailMessage.id).filter(
+                    EmailMessage.sender_email.ilike(f"%{pattern}")
+                ).all()
+            elif request.pattern_type == "wildcard":
+                pattern_prefix = pattern.replace('*', '')
+                matching_emails = db.query(EmailMessage.id).filter(
+                    EmailMessage.sender_email.ilike(f"{pattern_prefix}%")
+                ).all()
+
+            email_ids = [e.id for e in matching_emails]
+
+            if email_ids:
+                # Delete suggestions from these emails
+                deleted = db.query(AutofillSuggestion).filter(
+                    AutofillSuggestion.team_id == team_id,
+                    AutofillSuggestion.email_id.in_(email_ids)
+                ).delete(synchronize_session=False)
+
+                suggestions_deleted = deleted
+                logger.info(f"🗑️  Deleted {suggestions_deleted} suggestions from blacklisted sender")
+
+        db.commit()
+
+        return BlacklistSenderResponse(
+            success=True,
+            pattern=pattern,
+            pattern_type=request.pattern_type,
+            suggestions_deleted=suggestions_deleted
+        )
+
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Failed to blacklist sender: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to blacklist: {str(e)}")

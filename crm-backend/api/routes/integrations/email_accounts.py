@@ -15,6 +15,7 @@ Providers supportés:
 - Generic IMAP (Gmail, etc.)
 """
 
+from datetime import datetime, timezone
 from typing import Dict, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query

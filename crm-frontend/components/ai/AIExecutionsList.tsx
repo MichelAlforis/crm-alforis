@@ -53,6 +53,11 @@ export default function AIExecutionsList({ executions, onSelectExecution }: AIEx
     <div className="space-y-3">
       {executions.map((execution) => {
         const taskConfig = TASK_CONFIG[execution.task_type]
+        // Vérifier que taskConfig existe, sinon utiliser des valeurs par défaut
+        if (!taskConfig) {
+          console.warn(`Unknown task_type: ${execution.task_type}`)
+          return null
+        }
         const TaskIcon = taskConfig.icon
         const isRunning = execution.status === 'running'
         const isSuccess = execution.status === 'completed'

@@ -170,25 +170,27 @@ async def get_intent_distribution(
     current_user: dict = Depends(get_current_user)
 ):
     """
-    Répartition des intentions détectées
+    Répartition des intentions détectées (basé sur AIMemory)
     """
     team_id = current_user.get("team_id", 1)
     since_date = datetime.now(timezone.utc) - timedelta(days=days)
 
+    # Utiliser AIMemory avec task_type='intent_detection'
     results = db.query(
-        Interaction.intent,
-        func.count(Interaction.id).label('count')
+        AIMemory.response_json['intent'].astext.label('intent'),
+        func.count(AIMemory.id).label('count')
     ).filter(
-        Interaction.team_id == team_id,
-        Interaction.intent.isnot(None),
-        Interaction.created_at >= since_date
-    ).group_by(Interaction.intent).all()
+        AIMemory.team_id == team_id,
+        AIMemory.task_type == 'intent_detection',
+        AIMemory.response_json['intent'].isnot(None),
+        AIMemory.created_at >= since_date
+    ).group_by(AIMemory.response_json['intent'].astext).all()
 
     total = sum(r.count for r in results)
 
     return [
         IntentDistribution(
-            intent=r.intent,
+            intent=r.intent or "unknown",
             count=r.count,
             percentage=(r.count / total * 100) if total > 0 else 0
         )
@@ -314,15 +316,15 @@ async def get_activity_timeline(
         AIMemory.created_at >= since_date
     ).group_by(func.date(AIMemory.created_at)).all()
 
-    # Auto-applied par jour
+    # Auto-applied par jour (utiliser created_at car applied_at n'existe pas)
     auto_timeline = db.query(
-        func.date(AutofillSuggestion.applied_at).label('date'),
+        func.date(AutofillSuggestion.created_at).label('date'),
         func.count(AutofillSuggestion.id).label('count')
     ).filter(
         AutofillSuggestion.team_id == team_id,
         AutofillSuggestion.status == 'auto_applied',
-        AutofillSuggestion.applied_at >= since_date
-    ).group_by(func.date(AutofillSuggestion.applied_at)).all()
+        AutofillSuggestion.created_at >= since_date
+    ).group_by(func.date(AutofillSuggestion.created_at)).all()
 
     # Merge timelines
     dates_map = {}

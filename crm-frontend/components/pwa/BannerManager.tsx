@@ -41,7 +41,7 @@ export function BannerManager() {
   const [queue, setQueue] = useState<Banner[]>([])
 
   // Hooks
-  const { permission, isSubscribed, subscribe } = usePushNotifications()
+  const { permission, isSubscribed, subscribe, error: pushError } = usePushNotifications()
 
   // Onboarding callback (sera géré par OnboardingTour directement)
   // Onboarding callback removed
@@ -120,10 +120,10 @@ export function BannerManager() {
         setIsLoading(true)
         const success = await subscribe()
         setIsLoading(false)
-        if (success) {
-          setPushDismissed(true)
-          showNextBanner()
-        }
+        // Toujours dismiss le banner après une tentative
+        // (même en cas d'échec, pour éviter la boucle infinie)
+        setPushDismissed(true)
+        showNextBanner()
       },
       onDismiss: () => {
         setPushDismissed(true)
@@ -240,6 +240,13 @@ export function BannerManager() {
             <p className="text-xs text-gray-600 dark:text-gray-300 mb-3">
               {currentBanner.description}
             </p>
+
+            {/* Afficher l'erreur si c'est le banner push notifications */}
+            {currentBanner.id === 'push-notifications' && pushError && (
+              <div className="mb-3 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded text-xs text-red-600 dark:text-red-400">
+                {pushError}
+              </div>
+            )}
 
             {/* Actions */}
             <div className="flex gap-2">

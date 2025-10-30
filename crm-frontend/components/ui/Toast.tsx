@@ -19,6 +19,7 @@ interface ToastContextValue {
   toasts: Toast[]
   showToast: (toast: Omit<Toast, 'id'>) => void
   hideToast: (id: string) => void
+  toast: (toast: Omit<Toast, 'id'>) => void
 }
 
 const ToastContext = createContext<ToastContextValue | undefined>(undefined)
@@ -82,7 +83,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <ToastContext.Provider value={{ toasts, showToast, hideToast }}>
+    <ToastContext.Provider value={{ toasts, showToast, hideToast, toast: showToast }}>
       {children}
       <ToastContainer toasts={toasts} onClose={hideToast} />
     </ToastContext.Provider>

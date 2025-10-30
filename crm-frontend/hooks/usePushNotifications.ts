@@ -54,7 +54,7 @@ export function usePushNotifications() {
 
   const requestPermission = async (): Promise<boolean> => {
     if (!('Notification' in window)) {
-      setError('Notifications not supported in this browser')
+      setError('Les notifications ne sont pas supportées par votre navigateur')
       return false
     }
 
@@ -70,13 +70,17 @@ export function usePushNotifications() {
 
       if (result === 'granted') {
         return true
+      } else if (result === 'denied') {
+        setError('Vous avez refusé les notifications. Réactivez-les dans les paramètres de votre navigateur.')
+        return false
       } else {
-        setError('Notification permission denied')
+        // 'default' - user closed the dialog without choosing
+        setError('Veuillez autoriser les notifications pour continuer')
         return false
       }
     } catch (error) {
       logger.error('[Push] Permission request failed:', error)
-      setError('Failed to request notification permission')
+      setError('Impossible de demander la permission pour les notifications')
       return false
     }
   }

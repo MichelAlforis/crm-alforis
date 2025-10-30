@@ -111,6 +111,7 @@ services:
       MICROSOFT_CLIENT_ID: ${MICROSOFT_CLIENT_ID}
       MICROSOFT_CLIENT_SECRET: ${MICROSOFT_CLIENT_SECRET}
       MICROSOFT_REDIRECT_URI: ${MICROSOFT_REDIRECT_URI:-http://localhost:8000/api/v1/integrations/outlook/callback}
+      PYTHONPATH: /app
     working_dir: /app
     # Command: Use Dockerfile CMD (dev=uvicorn reload, prod=supervisord)
     # Uncomment below for dev mode override:
@@ -192,7 +193,7 @@ services:
       options: { max-size: "10m", max-file: "3" }
 
   # ========================================
-  # REDIS (Cache)
+  # REDIS (Cache & Celery Broker)
   # ========================================
   redis:
     image: redis:7-alpine
@@ -206,3 +207,134 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+    logging:
+      driver: "json-file"
+      options: { max-size: "10m", max-file: "3" }
+
+  # ========================================
+  # CELERY WORKER (Background Tasks)
+  # ========================================
+  celery-worker:
+    build:
+      context: ./crm-backend
+      dockerfile: Dockerfile
+      target: ${BUILD_TARGET:-development}
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://${POSTGRES_USER:-crm_user}:${POSTGRES_PASSWORD:-crm_password}@postgres:5432/${POSTGRES_DB:-crm_db}}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      REDIS_ENABLED: ${REDIS_ENABLED:-True}
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      REDIS_DB: ${REDIS_DB:-0}
+      SECRET_KEY: ${SECRET_KEY:-dev_secret_key_change_in_production}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      POSTGRES_USER: ${POSTGRES_USER:-crm_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-crm_password}
+      POSTGRES_DB: ${POSTGRES_DB:-crm_db}
+      POSTGRES_HOST: postgres
+      PYTHONPATH: /app
+    working_dir: /app
+    command: celery -A celery_app worker --loglevel=info --concurrency=2 --max-tasks-per-child=100
+    volumes:
+      - ./crm-backend:/app:cached
+      - api-venv:/app/venv
+      - api-logs:/app/logs
+    networks:
+      - crm-network
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A celery_app inspect ping || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options: { max-size: "10m", max-file: "3" }
+
+  # ========================================
+  # CELERY BEAT (Periodic Task Scheduler)
+  # ========================================
+  celery-beat:
+    build:
+      context: ./crm-backend
+      dockerfile: Dockerfile
+      target: ${BUILD_TARGET:-development}
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      celery-worker:
+        condition: service_started
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://${POSTGRES_USER:-crm_user}:${POSTGRES_PASSWORD:-crm_password}@postgres:5432/${POSTGRES_DB:-crm_db}}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      REDIS_ENABLED: ${REDIS_ENABLED:-True}
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      REDIS_DB: ${REDIS_DB:-0}
+      SECRET_KEY: ${SECRET_KEY:-dev_secret_key_change_in_production}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      POSTGRES_USER: ${POSTGRES_USER:-crm_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-crm_password}
+      POSTGRES_DB: ${POSTGRES_DB:-crm_db}
+      POSTGRES_HOST: postgres
+      PYTHONPATH: /app
+    working_dir: /app
+    command: celery -A celery_app beat --loglevel=info --schedule=/tmp/celerybeat-schedule
+    volumes:
+      - ./crm-backend:/app:cached
+      - api-venv:/app/venv
+      - api-logs:/app/logs
+    networks:
+      - crm-network
+    logging:
+      driver: "json-file"
+      options: { max-size: "10m", max-file: "3" }
+
+  # ========================================
+  # FLOWER (Celery Monitoring UI)
+  # ========================================
+  flower:
+    build:
+      context: ./crm-backend
+      dockerfile: Dockerfile
+      target: ${BUILD_TARGET:-development}
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+      celery-worker:
+        condition: service_started
+    environment:
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      CELERY_BROKER_URL: ${REDIS_URL:-redis://redis:6379/0}
+      CELERY_RESULT_BACKEND: ${REDIS_URL:-redis://redis:6379/0}
+      PYTHONPATH: /app
+    working_dir: /app
+    command: celery -A celery_app flower --port=5555
+    ports:
+      - "127.0.0.1:5555:5555"
+    volumes:
+      - ./crm-backend:/app:cached
+      - api-venv:/app/venv
+    networks:
+      - crm-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5555 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options: { max-size: "10m", max-file: "3" }

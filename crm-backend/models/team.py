@@ -16,6 +16,7 @@ class Team(BaseModel):
     is_active = Column(Boolean, default=True, nullable=False, index=True)
 
     members = relationship("User", back_populates="team", cascade="all, delete-orphan")
+    email_threads = relationship("EmailThread", back_populates="team", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
         return f"<Team(id={self.id}, name='{self.name}')>"

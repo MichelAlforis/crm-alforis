@@ -16,7 +16,8 @@ from models import (
     Interaction,
     Person,
     Organisation,
-    AIMemory
+    AIMemory,
+    EmailBlacklist
 )
 from services.signature_parser_service import SignatureParserService
 from services.intent_detection_service import IntentDetectionService
@@ -37,6 +38,16 @@ class EmailAutofillPipeline:
     5. Return metrics
     """
 
+    # Blacklist statique pour patterns courants
+    STATIC_BLACKLIST = [
+        'noreply@', 'no-reply@', 'donotreply@', 'do-not-reply@',
+        'automated@', 'notification@', 'notifications@',
+        'support@', 'help@', 'info@',
+        'newsletter@', 'marketing@', 'campaigns@',
+        '@mailchimp.com', '@sendgrid.net', '@sendinblue.com',
+        'abuse@hetzner.com', 'mailer-daemon@'
+    ]
+
     def __init__(
         self,
         db: Session,
@@ -52,6 +63,9 @@ class EmailAutofillPipeline:
         self.signature_parser = SignatureParserService(db)
         self.intent_detector = IntentDetectionService(db)
 
+        # Cache blacklist DB pour éviter requêtes répétées
+        self.blacklist_cache: Optional[List[EmailBlacklist]] = None
+
         # Metrics
         self.metrics = {
             "emails_processed": 0,
@@ -62,6 +76,7 @@ class EmailAutofillPipeline:
             "suggestions_created": 0,
             "auto_applied": 0,
             "manual_review": 0,
+            "blacklisted": 0,
             "errors": 0,
             "processing_time_ms": 0
         }
@@ -139,26 +154,17 @@ class EmailAutofillPipeline:
         # Fetch unparsed emails from last N days
         since_date = datetime.now(timezone.utc) - timedelta(days=days_back)
 
-        # Get emails without suggestions OR without intent detection
+        # Get emails without suggestions
         emails = self.db.query(EmailMessage).outerjoin(
             AutofillSuggestion,
             EmailMessage.id == AutofillSuggestion.email_id
-        ).outerjoin(
-            Interaction,
-            and_(
-                Interaction.external_source == 'email_sync',
-                Interaction.external_id == func.cast(EmailMessage.id, func.Text())
-            )
         ).filter(
             EmailMessage.team_id == team_id,
             EmailMessage.received_at >= since_date,
             func.coalesce(EmailMessage.body_text, EmailMessage.body_html).isnot(None),
             func.length(func.coalesce(EmailMessage.body_text, EmailMessage.body_html)) > 50,
-            # Either no suggestion OR no intent detection
-            func.or_(
-                AutofillSuggestion.id.is_(None),
-                Interaction.intent.is_(None)
-            )
+            # No suggestion yet
+            AutofillSuggestion.id.is_(None)
         ).order_by(EmailMessage.received_at.desc()).limit(self.max_emails).all()
 
         return emails
@@ -176,8 +182,53 @@ class EmailAutofillPipeline:
         # 2. Detect intent
         await self._detect_intent(email, email_body, team_id)
 
+    def _is_blacklisted(self, sender_email: str, team_id: int) -> bool:
+        """
+        Vérifie si l'expéditeur est blacklisté (statique + DB)
+
+        Returns:
+            True si l'email doit être ignoré
+        """
+        if not sender_email:
+            return False
+
+        sender_lower = sender_email.lower()
+
+        # 1. Check static blacklist
+        for pattern in self.STATIC_BLACKLIST:
+            pattern_lower = pattern.lower()
+            if pattern_lower.startswith('@'):
+                # Domain pattern
+                if sender_lower.endswith(pattern_lower):
+                    logger.debug(f"⛔ Blacklisted (static domain): {sender_email}")
+                    return True
+            else:
+                # Prefix pattern
+                if sender_lower.startswith(pattern_lower):
+                    logger.debug(f"⛔ Blacklisted (static prefix): {sender_email}")
+                    return True
+
+        # 2. Check DB blacklist (with cache)
+        if self.blacklist_cache is None:
+            self.blacklist_cache = self.db.query(EmailBlacklist).filter(
+                EmailBlacklist.team_id == team_id
+            ).all()
+
+        for blacklist_entry in self.blacklist_cache:
+            if blacklist_entry.matches(sender_email):
+                logger.debug(f"⛔ Blacklisted (DB {blacklist_entry.pattern_type}): {sender_email}")
+                return True
+
+        return False
+
     async def _parse_signature(self, email: EmailMessage, email_body: str, team_id: int):
         """Parse email signature and create/apply suggestions"""
+
+        # Check blacklist
+        if self._is_blacklisted(email.sender_email, team_id):
+            logger.info(f"⛔ Skipping blacklisted sender: {email.sender_email}")
+            self.metrics["blacklisted"] += 1
+            return
 
         # Check if already parsed
         existing = self.db.query(AutofillSuggestion).filter(
@@ -207,103 +258,107 @@ class EmailAutofillPipeline:
             data = result.get("data", {})
             confidence = result.get("confidence", 0.0)
 
-            # Create suggestion
-            suggestion = AutofillSuggestion(
-                email_id=email.id,
-                team_id=team_id,
-                suggested_data=data,
-                confidence_score=confidence,
-                model_used=result.get("model_used", "unknown"),
-                processing_time_ms=result.get("processing_time_ms", 0),
-                status="pending",
-                created_at=datetime.now(timezone.utc)
-            )
+            # Define field categories
+            PERSON_FIELDS = {'first_name', 'last_name', 'name', 'email', 'phone', 'mobile', 'job_title', 'linkedin'}
+            ORG_FIELDS = {'company', 'website', 'address'}
 
-            self.db.add(suggestion)
+            # Find or match person by email
+            person = None
+            if data.get("email"):
+                person_query = self.db.query(Person).filter(
+                    Person.email == data["email"]
+                )
+                if hasattr(Person, "team_id"):
+                    person_query = person_query.filter(Person.team_id == team_id)
+                person = person_query.first()
+
+            # Find or match organisation by company name
+            # NOTE: Organisation model doesn't have team_id (legacy model)
+            # For now, we'll create suggestions without linking to existing organisations
+            organisation = None
+            # if data.get("company"):
+            #     organisation = self.db.query(Organisation).filter(
+            #         Organisation.name.ilike(f"%{data['company']}%")
+            #     ).first()
+
+            # Create one suggestion per field extracted
+            suggestions_created = []
+            for field_name, suggested_value in data.items():
+                if not suggested_value:
+                    continue  # Skip empty fields
+
+                # Determine if this is a Person or Organisation field
+                is_person_field = field_name in PERSON_FIELDS
+                is_org_field = field_name in ORG_FIELDS
+
+                # Get current value from person or organisation
+                current_value = None
+                suggestion_person_id = None
+                suggestion_org_id = None
+
+                if is_person_field and person:
+                    current_value = getattr(person, field_name, None)
+                    suggestion_person_id = person.id
+                elif is_org_field and organisation:
+                    # Map company -> name for Organisation model
+                    org_field_name = 'name' if field_name == 'company' else field_name
+                    current_value = getattr(organisation, org_field_name, None)
+                    suggestion_org_id = organisation.id
+
+                # Create suggestion
+                suggestion = AutofillSuggestion(
+                    team_id=team_id,
+                    person_id=suggestion_person_id,
+                    organisation_id=suggestion_org_id,
+                    email_id=email.id,
+                    suggestion_type="signature_parse",
+                    field_name=field_name,
+                    current_value=str(current_value) if current_value else None,
+                    suggested_value=str(suggested_value),
+                    confidence_score=confidence,
+                    source_model=result.get("model_used", "unknown"),
+                    status="pending",
+                    auto_applied=False,
+                    created_at=datetime.now(timezone.utc)
+                )
+
+                self.db.add(suggestion)
+                suggestions_created.append(suggestion)
+                self.metrics["suggestions_created"] += 1
+
             self.db.flush()
 
-            self.metrics["suggestions_created"] += 1
-
-            # 🌐 Web enrichment (Acte V)
-            await self._enrich_suggestion(suggestion, data)
-
-            # Auto-apply if high confidence
+            # Auto-apply if high confidence + safe fields
             if confidence >= self.auto_apply_threshold:
-                await self._auto_apply_suggestion(suggestion, data, email)
-                self.metrics["auto_applied"] += 1
+                await self._auto_apply_suggestions(suggestions_created, data, email, team_id)
+                self.metrics["auto_applied"] += len(suggestions_created)
             else:
-                self.metrics["manual_review"] += 1
+                self.metrics["manual_review"] += len(suggestions_created)
+                # Commit suggestions for manual review
+                self.db.commit()
 
         except Exception as e:
             logger.error(f"❌ Error parsing signature for email {email.id}: {e}")
             self.metrics["errors"] += 1
 
     async def _detect_intent(self, email: EmailMessage, email_body: str, team_id: int):
-        """Detect email intent and update interaction"""
+        """Detect email intent and update interaction
 
-        # Find or create interaction
-        interaction = self.db.query(Interaction).filter(
-            Interaction.external_source == 'email_sync',
-            Interaction.external_id == str(email.id)
-        ).first()
+        NOTE: Intent detection temporarily disabled - Interaction model doesn't have 'intent' field
+        TODO: Add intent field to Interaction model or store in AIMemory only
+        """
+        # Disabled until intent field is added to Interaction model
+        logger.debug(f"⏭️  Intent detection skipped for email {email.id} (feature disabled)")
+        return
 
-        if interaction and interaction.intent:
-            logger.debug(f"⏭️  Email {email.id} already has intent detected")
-            return
-
-        try:
-            # Detect intent
-            result = await self.intent_detector.detect_intent(
-                email_body=email_body,
-                subject=email.subject,
-                interaction_id=interaction.id if interaction else None,
-                team_id=team_id
-            )
-
-            if not result.get("success"):
-                return
-
-            # Track cache hit
-            if result.get("from_cache"):
-                self.metrics["intents_cached"] += 1
-            else:
-                self.metrics["intents_detected"] += 1
-
-            # Update or create interaction
-            if interaction:
-                interaction.intent = result.get("intent")
-                interaction.intent_confidence = result.get("confidence")
-                interaction.intent_detected_at = datetime.now(timezone.utc)
-            else:
-                # Create minimal interaction for tracking
-                interaction = Interaction(
-                    team_id=team_id,
-                    type="email_inbound",
-                    direction="inbound",
-                    status="completed",
-                    external_source="email_sync",
-                    external_id=str(email.id),
-                    intent=result.get("intent"),
-                    intent_confidence=result.get("confidence"),
-                    intent_detected_at=datetime.now(timezone.utc),
-                    occurred_at=email.received_at,
-                    created_at=datetime.now(timezone.utc)
-                )
-                self.db.add(interaction)
-
-            self.db.flush()
-
-        except Exception as e:
-            logger.error(f"❌ Error detecting intent for email {email.id}: {e}")
-            self.metrics["errors"] += 1
-
-    async def _auto_apply_suggestion(
+    async def _auto_apply_suggestions(
         self,
-        suggestion: AutofillSuggestion,
+        suggestions: List[AutofillSuggestion],
         data: Dict,
-        email: EmailMessage
+        email: EmailMessage,
+        team_id: int
     ):
-        """Auto-apply high-confidence suggestion to database"""
+        """Auto-apply high-confidence suggestions to database"""
 
         try:
             email_addr = data.get("email")
@@ -314,13 +369,13 @@ class EmailAutofillPipeline:
             # Find or create Person
             person = self.db.query(Person).filter(
                 Person.email == email_addr,
-                Person.team_id == suggestion.team_id
+                Person.team_id == team_id
             ).first()
 
             if not person:
                 # Create new person
                 person = Person(
-                    team_id=suggestion.team_id,
+                    team_id=team_id,
                     first_name=data.get("first_name"),
                     last_name=data.get("last_name"),
                     email=email_addr,
@@ -354,12 +409,12 @@ class EmailAutofillPipeline:
             if company_name:
                 org = self.db.query(Organisation).filter(
                     Organisation.name.ilike(f"%{company_name}%"),
-                    Organisation.team_id == suggestion.team_id
+                    Organisation.team_id == team_id
                 ).first()
 
                 if not org:
                     org = Organisation(
-                        team_id=suggestion.team_id,
+                        team_id=team_id,
                         name=company_name,
                         website=data.get("website"),
                         created_at=datetime.now(timezone.utc),
@@ -369,15 +424,21 @@ class EmailAutofillPipeline:
                     self.db.flush()
                     logger.info(f"✅ Auto-created Organisation: {company_name}")
 
-            # Mark suggestion as applied
-            suggestion.status = "applied"
-            suggestion.applied_at = datetime.now(timezone.utc)
-            suggestion.applied_by = "ai_autofill_pipeline"
+                # Link person to organisation
+                if person and not person.organisation_id:
+                    person.organisation_id = org.id
+
+            # Mark all suggestions as auto_applied
+            for suggestion in suggestions:
+                suggestion.status = "auto_applied"
+                suggestion.auto_applied = True
+                suggestion.auto_applied_reason = f"confidence={suggestion.confidence_score:.2f} >= {self.auto_apply_threshold}"
+                suggestion.reviewed_at = datetime.now(timezone.utc)
 
             self.db.commit()
 
         except Exception as e:
-            logger.error(f"❌ Error auto-applying suggestion {suggestion.id}: {e}")
+            logger.error(f"❌ Error auto-applying suggestions: {e}")
             self.db.rollback()
             raise
 
@@ -390,6 +451,7 @@ class EmailAutofillPipeline:
 📊 Batch Autofill Pipeline - Summary
 
 📧 Emails processed: {m['emails_processed']}
+⛔ Blacklisted (skipped): {m['blacklisted']}
 ✍️  Signatures parsed: {m['signatures_parsed']} (+ {m['signatures_cached']} cached)
 🎯 Intents detected: {m['intents_detected']} (+ {m['intents_cached']} cached)
 💡 Suggestions created: {m['suggestions_created']}
@@ -401,72 +463,6 @@ class EmailAutofillPipeline:
 
         return summary.strip()
 
-    async def _enrich_suggestion(
-        self,
-        suggestion: AutofillSuggestion,
-        data: Dict
-    ):
-        """
-        🌐 Web enrichment (Acte V)
-        Enrichit automatiquement les données d'organisation via recherche web
-        """
-
-        try:
-            # Check feature flag
-            if not os.getenv("AUTOFILL_USE_WEB_ENRICHMENT", "true").lower() == "true":
-                logger.debug("⏭️  Web enrichment disabled via feature flag")
-                return
-
-            company_name = data.get("company")
-
-            if not company_name:
-                return  # Pas d'entreprise à enrichir
-
-            # Skip si déjà enrichi
-            if suggestion.web_enriched:
-                logger.debug(f"⏭️  Suggestion {suggestion.id} already enriched")
-                return
-
-            # Call enrichment service
-            enrichment_service = get_enrichment_service()
-
-            result = enrichment_service.enrich_organisation(
-                name=company_name,
-                country="FR",  # TODO: detect country from email domain
-                force_refresh=False
-            )
-
-            # Store enrichment data in suggestion
-            if result.get("confidence", 0) > 0.3:  # Only store if minimum confidence
-                suggestion.web_enriched = True
-                suggestion.enrichment_confidence = result.get("confidence")
-                suggestion.enrichment_source = result.get("source")
-                suggestion.enriched_at = datetime.now(timezone.utc)
-
-                # Merge enriched data into suggested_data
-                if not data.get("website") and result.get("website"):
-                    data["website"] = result["website"]
-
-                if not data.get("address") and result.get("address"):
-                    data["address"] = result["address"]
-
-                if not data.get("phone") and result.get("phone"):
-                    data["phone"] = result["phone"]
-
-                if not data.get("linkedin") and result.get("linkedin"):
-                    data["linkedin"] = result["linkedin"]
-
-                # Update suggestion with enriched data
-                suggestion.suggested_data = data
-
-                logger.info(f"🌐 Enriched '{company_name}' (confidence={result['confidence']})")
-                self.metrics["web_enriched"] = self.metrics.get("web_enriched", 0) + 1
-            else:
-                logger.debug(f"⚠️  Low confidence enrichment for '{company_name}' ({result.get('confidence')})")
-
-        except Exception as e:
-            logger.warning(f"⚠️  Enrichment failed for suggestion {suggestion.id}: {e}")
-            # Don't fail the whole pipeline for enrichment errors
 
 
 async def run_autofill_pipeline(

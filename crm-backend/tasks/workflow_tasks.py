@@ -39,7 +39,7 @@ from models.workflow import (
     WorkflowTriggerType,
 )
 from services.workflow_engine import WorkflowEngine
-from tasks.celery_app import celery_app
+from .celery_app import celery_app
 
 logger = get_task_logger(__name__)
 

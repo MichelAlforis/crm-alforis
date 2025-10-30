@@ -16,6 +16,44 @@ import { useAutofillPreview, type MatchCandidate } from '@/hooks/useAutofillPrev
 import { SuggestionPill } from '@/components/autofill/SuggestionPill'
 import MatchPreviewModal from '@/components/modals/MatchPreviewModal'
 
+const PERSON_FIELD_MAP: Record<string, keyof PersonInput> = {
+  // Emails
+  email: 'personal_email',
+  personal_email: 'personal_email',
+  // Téléphones
+  phone: 'personal_phone',
+  personal_phone: 'personal_phone',
+  mobile: 'personal_phone',
+  // Métadonnées
+  job_title: 'role',
+  role: 'role',
+  country: 'country_code',
+  country_code: 'country_code',
+  language: 'language',
+  linkedin_url: 'linkedin_url',
+  notes: 'notes',
+  first_name: 'first_name',
+  last_name: 'last_name',
+}
+
+const PERSON_FIELDS_SET = new Set<keyof PersonInput>([
+  'first_name',
+  'last_name',
+  'personal_email',
+  'personal_phone',
+  'role',
+  'linkedin_url',
+  'notes',
+  'country_code',
+  'language',
+])
+
+function mapSuggestionField(field: string): keyof PersonInput | null {
+  const normalized = PERSON_FIELD_MAP[field]
+  if (normalized) return normalized
+  return PERSON_FIELDS_SET.has(field as keyof PersonInput) ? (field as keyof PersonInput) : null
+}
+
 interface PersonFormProps {
   initialData?: Person
   onSubmit: (data: PersonInput) => Promise<void>
@@ -101,8 +139,11 @@ export function PersonForm({
         if (DBG) logger.log('[PersonForm] Auto-applying best match', bestMatch)
 
         Object.entries(bestMatch).forEach(([field, value]) => {
-          if (value && !formValues[field as keyof PersonInput]) {
-            setValue(field as keyof PersonInput, value)
+          const targetField = mapSuggestionField(field)
+          if (!targetField) return
+
+          if (value && !formValues[targetField]) {
+            setValue(targetField, value as PersonInput[typeof targetField])
           }
         })
 
@@ -135,9 +176,12 @@ export function PersonForm({
       // Auto-apply high confidence suggestions
       const autoApplied: string[] = []
       Object.entries(result.autofill).forEach(([field, suggestion]) => {
+        const targetField = mapSuggestionField(field)
+        if (!targetField) return
+
         if (suggestion.auto_apply) {
-          setValue(field as keyof PersonInput, suggestion.value)
-          autoApplied.push(field)
+          setValue(targetField, suggestion.value as PersonInput[typeof targetField])
+          autoApplied.push(targetField)
         }
       })
       if (DBG && autoApplied.length > 0) {
@@ -145,12 +189,18 @@ export function PersonForm({
       }
 
       // Store non-auto suggestions for manual review
-      const manualSuggestions = Object.entries(result.autofill)
-        .filter(([, suggestion]) => !suggestion.auto_apply)
-        .reduce((acc, [field, suggestion]) => {
-          acc[field] = suggestion
+      const manualSuggestions = Object.entries(result.autofill).reduce(
+        (acc, [field, suggestion]) => {
+          if (suggestion.auto_apply) return acc
+
+          const targetField = mapSuggestionField(field)
+          if (!targetField) return acc
+
+          acc[targetField] = suggestion
           return acc
-        }, {} as Record<string, AutofillSuggestion>)
+        },
+        {} as Record<string, AutofillSuggestion>
+      )
 
       setSuggestions(manualSuggestions)
       if (DBG && Object.keys(manualSuggestions).length > 0) {
@@ -167,9 +217,12 @@ export function PersonForm({
 
     // Merge candidate data into form
     Object.entries(candidate).forEach(([field, value]) => {
-      if (value && field !== 'id' && field !== 'created_at' && field !== 'updated_at') {
-        setValue(field as keyof PersonInput, value)
-      }
+      if (!value || field === 'id' || field === 'created_at' || field === 'updated_at') return
+
+      const targetField = mapSuggestionField(field)
+      if (!targetField) return
+
+      setValue(targetField, value as PersonInput[typeof targetField])
     })
 
     showToast({
@@ -200,9 +253,12 @@ export function PersonForm({
 
       // Auto-apply suggestions
       Object.entries(result.autofill).forEach(([field, suggestion]) => {
-        if (suggestion.auto_apply) {
-          setValue(field as keyof PersonInput, suggestion.value)
-        }
+        if (!suggestion.auto_apply) return
+
+        const targetField = mapSuggestionField(field)
+        if (!targetField) return
+
+        setValue(targetField, suggestion.value as PersonInput[typeof targetField])
       })
     } catch (err) {
       logger.error('[PersonForm] Autofill error:', err)

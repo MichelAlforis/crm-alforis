@@ -32,6 +32,7 @@ import {
 import type { Webhook as WebhookType } from '@/lib/types'
 import AIConfigSection from './AIConfigSection'
 import OutlookConnector from '@/components/integrations/OutlookConnector'
+import EmailAccountsManager from '@/components/integrations/EmailAccountsManager'
 
 type Tab = 'email' | 'webhooks' | 'ai' | 'connectors'
 
@@ -250,7 +251,8 @@ export default function IntegrationsSettingsPage() {
 
       <div className="space-y-8">
         {activeTab === 'email' && (
-          <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <>
+            <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-6">
               <Mail className="h-6 w-6 text-blue-500" />
               <div>
@@ -362,7 +364,13 @@ export default function IntegrationsSettingsPage() {
                 </div>
               </div>
             </div>
-          </section>
+            </section>
+
+            {/* Multi-Mail Accounts Manager */}
+            <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm mt-6">
+              <EmailAccountsManager />
+            </section>
+          </>
         )}
 
         {activeTab === 'webhooks' && (

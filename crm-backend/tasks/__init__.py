@@ -1,9 +1,5 @@
-"""
-Module des tâches asynchrones Celery
+"""Expose Celery app and tasks package."""
 
-Ce module contient toutes les tâches Celery pour:
-- Workflows automatisés
-- Emails automation
-- Rappels
-- Synchronisations
-"""
+from .celery_app import celery_app
+
+__all__ = ["celery_app"]

@@ -155,6 +155,28 @@ const nextConfig = {
     return config;
   },
 
+  // Configuration Turbopack (utilisé en dev avec --turbo)
+  experimental: {
+    turbo: {
+      rules: {
+        // Les règles webpack sont automatiquement converties par Next.js
+        // Pour watchOptions, Turbopack les gère automatiquement
+      },
+      resolveAlias: {
+        // Ajoutez ici des alias si nécessaire
+      },
+      resolveExtensions: [
+        '.mdx',
+        '.tsx',
+        '.ts',
+        '.jsx',
+        '.js',
+        '.mjs',
+        '.json',
+      ],
+    },
+  },
+
   // Configuration pour @xyflow/react (Next 15)
   transpilePackages: ['@xyflow/react'],
 
@@ -189,6 +211,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: https:",
+              "media-src 'self' data:",
               "connect-src 'self' http://localhost:8000 http://127.0.0.1:8000 ws://localhost:8000 ws://127.0.0.1:8000 https://crm.alforis.fr wss://crm.alforis.fr",
               "frame-ancestors 'none'",
             ].join('; '),

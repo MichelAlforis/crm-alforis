@@ -22,7 +22,8 @@ import {
   RefreshCw,
   History,
   AlertCircle,
-  Sparkles
+  Sparkles,
+  Ban
 } from 'lucide-react'
 
 interface Suggestion {
@@ -55,6 +56,9 @@ export default function AutofillHITLPage() {
   const [filters, setFilters] = useState<Filters>({})
   const [loading, setLoading] = useState(false)
   const [showFilters, setShowFilters] = useState(false)
+  const [blacklistingEmail, setBlacklistingEmail] = useState<string | null>(null)
+
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'
 
   // Fetch suggestions
   const fetchSuggestions = async () => {
@@ -66,7 +70,7 @@ export default function AutofillHITLPage() {
       if (filters.min_confidence) params.append('min_confidence', String(filters.min_confidence))
       if (filters.enrichment_source) params.append('enrichment_source', filters.enrichment_source)
 
-      const res = await fetch(`/api/v1/autofill-hitl/suggestions?${params}`, {
+      const res = await fetch(`${API_BASE}/autofill-hitl/suggestions?${params}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -92,7 +96,7 @@ export default function AutofillHITLPage() {
     if (selected.size === 0) return
 
     try {
-      const res = await fetch('/api/v1/autofill-hitl/bulk-approve', {
+      const res = await fetch(`${API_BASE}/autofill-hitl/bulk-approve`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -119,7 +123,7 @@ export default function AutofillHITLPage() {
     if (selected.size === 0) return
 
     try {
-      const res = await fetch('/api/v1/autofill-hitl/bulk-reject', {
+      const res = await fetch(`${API_BASE}/autofill-hitl/bulk-reject`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -138,6 +142,61 @@ export default function AutofillHITLPage() {
       }
     } catch (error) {
       console.error('Bulk reject failed:', error)
+    }
+  }
+
+  // Blacklist sender
+  const blacklistSender = async (email: string) => {
+    if (!email) {
+      alert('❌ Email manquant')
+      return
+    }
+
+    const confirmed = confirm(
+      `⛔ Bloquer définitivement l'expéditeur "${email}" ?\n\n` +
+      `Cela va :\n` +
+      `• Ajouter ${email} à la blacklist\n` +
+      `• Supprimer toutes les suggestions existantes de cet expéditeur\n` +
+      `• Empêcher la création de nouvelles suggestions\n\n` +
+      `Cette action est irréversible.`
+    )
+
+    if (!confirmed) return
+
+    setBlacklistingEmail(email)
+
+    try {
+      const res = await fetch(`${API_BASE}/autofill-hitl/blacklist-sender`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: email,
+          pattern_type: 'email',
+          reason: 'Bloqué via interface HITL',
+          delete_existing_suggestions: true
+        })
+      })
+
+      if (res.ok) {
+        const result = await res.json()
+        alert(
+          `✅ Expéditeur bloqué avec succès!\n\n` +
+          `• Pattern: ${result.pattern}\n` +
+          `• Suggestions supprimées: ${result.suggestions_deleted}`
+        )
+        fetchSuggestions()
+      } else {
+        const error = await res.json()
+        alert(`❌ Erreur: ${error.detail || 'Échec du blocage'}`)
+      }
+    } catch (error) {
+      console.error('Blacklist failed:', error)
+      alert('❌ Erreur lors du blocage de l\'expéditeur')
+    } finally {
+      setBlacklistingEmail(null)
     }
   }
 
@@ -412,6 +471,28 @@ export default function AutofillHITLPage() {
                         title="Historique"
                       >
                         <History className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={async () => {
+                          // Get email from source
+                          if (!suggestion.source_email_id) {
+                            const email = prompt('Email de l\'expéditeur à bloquer:')
+                            if (email) {
+                              await blacklistSender(email)
+                            }
+                          } else {
+                            // TODO: Fetch email.sender_email from API
+                            const email = prompt('Email de l\'expéditeur à bloquer:')
+                            if (email) {
+                              await blacklistSender(email)
+                            }
+                          }
+                        }}
+                        disabled={blacklistingEmail !== null}
+                        className="p-1 text-orange-600 hover:bg-orange-50 rounded disabled:opacity-50"
+                        title="Bloquer cet expéditeur"
+                      >
+                        <Ban className="w-4 h-4" />
                       </button>
                     </div>
                   </td>

@@ -20,9 +20,16 @@ export function DataTablePagination({
   totalItems,
   onPageChange
 }: DataTablePaginationProps) {
-  const totalPages = Math.ceil(totalItems / pageSize)
-  const startItem = (currentPage - 1) * pageSize + 1
-  const endItem = Math.min(currentPage * pageSize, totalItems)
+  // Gérer les cas où les valeurs sont invalides
+  const safePageSize = Number.isFinite(pageSize) && pageSize > 0 ? pageSize : 1
+  const safeTotalItems = Number.isFinite(totalItems) && totalItems > 0 ? totalItems : 0
+  const safeCurrentPage =
+    Number.isFinite(currentPage) && currentPage > 0 ? Math.floor(currentPage) : 1
+
+  const totalPages = safeTotalItems > 0 ? Math.max(1, Math.ceil(safeTotalItems / safePageSize)) : 1
+  const clampedCurrentPage = Math.min(Math.max(safeCurrentPage, 1), totalPages)
+  const startItem = safeTotalItems > 0 ? (clampedCurrentPage - 1) * safePageSize + 1 : 0
+  const endItem = safeTotalItems > 0 ? Math.min(clampedCurrentPage * safePageSize, safeTotalItems) : 0
 
   const getPageNumbers = () => {
     const pages: (number | string)[] = []
@@ -34,13 +41,17 @@ export function DataTablePagination({
 
     pages.push(1)
 
-    if (currentPage > 3) pages.push('...')
+    if (clampedCurrentPage > 3) pages.push('...')
 
-    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+    for (
+      let i = Math.max(2, clampedCurrentPage - 1);
+      i <= Math.min(totalPages - 1, clampedCurrentPage + 1);
+      i++
+    ) {
       pages.push(i)
     }
 
-    if (currentPage < totalPages - 2) pages.push('...')
+    if (clampedCurrentPage < totalPages - 2) pages.push('...')
 
     if (totalPages > 1) pages.push(totalPages)
 
@@ -57,8 +68,8 @@ export function DataTablePagination({
 
       <div className="flex items-center gap-1">
         <button
-          onClick={() => onPageChange(currentPage - 1)}
-          disabled={currentPage === 1}
+          onClick={() => onPageChange(clampedCurrentPage - 1)}
+          disabled={clampedCurrentPage === 1}
           className="p-2 rounded-lg border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
           <ChevronLeft className="w-4 h-4" />
@@ -71,7 +82,7 @@ export function DataTablePagination({
             disabled={page === '...'}
             className={clsx(
               'min-w-[36px] h-9 px-3 text-sm font-medium rounded-lg transition-all',
-              page === currentPage
+              page === clampedCurrentPage
                 ? 'bg-blue-600 text-white'
                 : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700',
               page === '...' && 'cursor-default hover:bg-transparent'
@@ -82,8 +93,8 @@ export function DataTablePagination({
         ))}
 
         <button
-          onClick={() => onPageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
+          onClick={() => onPageChange(clampedCurrentPage + 1)}
+          disabled={clampedCurrentPage === totalPages || totalPages === 0}
           className="p-2 rounded-lg border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
           <ChevronRight className="w-4 h-4" />

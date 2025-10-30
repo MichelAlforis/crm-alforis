@@ -2,6 +2,8 @@
 
 Script de déploiement Docker automatisé pour le CRM Alforis.
 
+ssh -i ~/.ssh/id_rsa_hetzner root@159.69.108.234
+
 ## 📋 Pré-requis
 
 ### Local

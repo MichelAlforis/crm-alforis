@@ -45,7 +45,7 @@ crm.alforis.fr {
         Referrer-Policy "strict-origin-when-cross-origin"
 
         # Content Security Policy (à adapter selon tes besoins)
-        Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' wss:; frame-ancestors 'self';"
+        Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' wss:; media-src 'self' data:; frame-ancestors 'self';"
 
         # Remove Server header
         -Server

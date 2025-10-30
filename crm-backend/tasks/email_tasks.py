@@ -13,7 +13,7 @@ from core.database import SessionLocal
 from core.exceptions import ValidationError
 from models.email import EmailCampaign, EmailCampaignStatus, EmailSend, EmailSendStatus
 from services.email_service import EmailDeliveryService
-from tasks.celery_app import celery_app
+from .celery_app import celery_app
 
 logger = logging.getLogger(__name__)
 

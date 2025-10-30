@@ -965,7 +965,7 @@ async def delete_api_key(
 
 # ============= INTENT DETECTION =============
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from services.intent_detection_service import IntentDetectionService
 
 
@@ -978,6 +978,7 @@ class DetectIntentRequest(BaseModel):
 
 class DetectIntentResponse(BaseModel):
     """Réponse de détection d'intention"""
+    model_config = ConfigDict(protected_namespaces=())
     success: bool
     intent: Optional[str] = None
     confidence: Optional[float] = None

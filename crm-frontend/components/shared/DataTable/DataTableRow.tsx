@@ -33,7 +33,12 @@ export function DataTableRow<T = any>({
 
   const getCellValue = (column: Column<T>, row: T) => {
     if (column.accessor) {
-      return column.accessor(row)
+      // Si accessor est une fonction, l'appeler avec row
+      if (typeof column.accessor === 'function') {
+        return column.accessor(row)
+      }
+      // Si accessor est une string, l'utiliser comme clé
+      return row[column.accessor as keyof T]
     }
     if (column.accessorKey) {
       return row[column.accessorKey]
