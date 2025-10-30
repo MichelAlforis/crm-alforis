@@ -8,6 +8,7 @@ from api.routes import (
     dashboards,
     email_campaigns,
     email_intelligence,
+    enrichment,
     external_webhooks,
     health,
     imports,
@@ -89,6 +90,9 @@ api_router.include_router(email_intelligence.router)
 
 # 🔄 AUTOFILL JOBS (Acte IV.2 - Option 1)
 api_router.include_router(autofill_jobs.router)
+
+# 🌐 WEB ENRICHMENT (Acte V - AI + Internet)
+api_router.include_router(enrichment.router)
 
 # 🤖 AI STATISTICS & INTEGRATIONS (Chapitre 17)
 api_router.include_router(ai_statistics.router)

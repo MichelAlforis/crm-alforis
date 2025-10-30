@@ -55,6 +55,12 @@ class AutofillSuggestion(Base):
     auto_applied = Column(Boolean, default=False, nullable=False)
     auto_applied_reason = Column(String(200), nullable=True)  # "confidence>=0.92 + safe_field"
 
+    # Web enrichment (Acte V)
+    web_enriched = Column(Boolean, default=False, nullable=False, index=True)
+    enrichment_confidence = Column(Float, nullable=True)  # 0.0 - 1.0
+    enrichment_source = Column(String(50), nullable=True, index=True)  # "serpapi", "brave", "custom"
+    enriched_at = Column(DateTime(timezone=True), nullable=True)
+
     # Timestamps
     created_at = Column(DateTime(timezone=True), default=datetime.utcnow, nullable=False)
 
