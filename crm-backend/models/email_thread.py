@@ -9,7 +9,7 @@ from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, JSON
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
-from database import Base
+from models.base import Base
 
 
 class EmailThread(Base):
@@ -45,7 +45,7 @@ class EmailThread(Base):
     # Premier email du thread (interaction_id)
     first_interaction_id = Column(
         Integer,
-        ForeignKey("interactions.id"),
+        ForeignKey("crm_interactions.id"),
         nullable=True,
         index=True,
     )
@@ -53,7 +53,7 @@ class EmailThread(Base):
     # Dernier email du thread (interaction_id)
     last_interaction_id = Column(
         Integer,
-        ForeignKey("interactions.id"),
+        ForeignKey("crm_interactions.id"),
         nullable=True,
         index=True,
     )
@@ -63,7 +63,7 @@ class EmailThread(Base):
 
     # Métadonnées du thread (JSON)
     # Contient: message_ids, in_reply_to_ids, references, etc.
-    metadata = Column(JSON, default=dict)
+    thread_metadata = Column(JSON, default=dict)
 
     # Timestamps
     created_at = Column(DateTime, default=datetime.now, nullable=False)
@@ -79,10 +79,10 @@ class EmailThread(Base):
     team = relationship("Team", back_populates="email_threads")
 
     # Relation avec les interactions (emails du thread)
-    # Note: Ajouté via Interaction.thread_id FK
+    # Note: Ajouté via Interaction.email_thread_id FK
     interactions = relationship(
         "Interaction",
-        foreign_keys="Interaction.thread_id",
+        foreign_keys="Interaction.email_thread_id",
         back_populates="thread",
         lazy="dynamic",
     )

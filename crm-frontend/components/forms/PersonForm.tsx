@@ -15,6 +15,8 @@ import { useAutofillV2, type AutofillSuggestion } from '@/hooks/useAutofillV2'
 import { useAutofillPreview, type MatchCandidate } from '@/hooks/useAutofillPreview'
 import { SuggestionPill } from '@/components/autofill/SuggestionPill'
 import MatchPreviewModal from '@/components/modals/MatchPreviewModal'
+import { useContextMenu } from '@/hooks/useContextMenu'
+import { FieldContextMenu } from '@/components/ui/FieldContextMenu'
 
 const PERSON_FIELD_MAP: Record<string, keyof PersonInput> = {
   // Emails
@@ -75,6 +77,8 @@ export function PersonForm({
   const [suggestions, setSuggestions] = useState<Record<string, AutofillSuggestion>>({})
   const [showMatchModal, setShowMatchModal] = useState(false)
   const [matchCandidates, setMatchCandidates] = useState<MatchCandidate[]>([])
+  const contextMenu = useContextMenu()
+  const [contextMenuField, setContextMenuField] = useState<string | null>(null)
 
   const {
     register,
@@ -284,6 +288,26 @@ export function PersonForm({
     })
   }
 
+  // Handle context menu open
+  const handleFieldContextMenu = (e: React.MouseEvent, fieldName: string) => {
+    contextMenu.onContextMenu(e)
+    setContextMenuField(fieldName)
+  }
+
+  // Handle suggestion selection from context menu
+  const handleContextMenuSelect = (value: string) => {
+    if (!contextMenuField) return
+    if (DBG) logger.log('[PersonForm] Context menu select', { field: contextMenuField, value })
+    setValue(contextMenuField as keyof PersonInput, value as any)
+    contextMenu.hideMenu()
+    setContextMenuField(null)
+    showToast({
+      type: 'success',
+      title: 'Suggestion appliquée',
+      message: `Le champ "${contextMenuField}" a été rempli avec la suggestion.`,
+    })
+  }
+
   const handleFormSubmit = async (data: PersonInput) => {
     try {
       await onSubmit(data)
@@ -369,23 +393,27 @@ export function PersonForm({
             size="sm"
           />
         </div>
-        <Input
-          {...register('role')}
-          error={errors.role?.message}
-          placeholder="ex: Directeur des partenariats"
-        />
+        <div onContextMenu={(e) => handleFieldContextMenu(e, 'role')}>
+          <Input
+            {...register('role')}
+            error={errors.role?.message}
+            placeholder="ex: Directeur des partenariats"
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Input
-            label="Email personnel"
-            type="email"
-            {...register('personal_email')}
-            onBlur={handleEmailBlur}
-            error={errors.personal_email?.message}
-            placeholder="prenom.nom@email.com"
-          />
+          <div onContextMenu={(e) => handleFieldContextMenu(e, 'personal_email')}>
+            <Input
+              label="Email personnel"
+              type="email"
+              {...register('personal_email')}
+              onBlur={handleEmailBlur}
+              error={errors.personal_email?.message}
+              placeholder="prenom.nom@email.com"
+            />
+          </div>
           {suggestions.personal_email && (
             <SuggestionPill
               suggestion={suggestions.personal_email}
@@ -396,17 +424,19 @@ export function PersonForm({
         </div>
 
         <div className="space-y-2">
-          <Input
-            label="Mobile"
-            {...register('personal_phone', {
-              pattern: {
-                value: /^[\+]?[0-9][\s\-\.\(\)0-9]{7,18}$/,
-                message: 'Format de téléphone invalide',
-              },
-            })}
-            error={errors.personal_phone?.message}
-            placeholder="+33 6 12 34 56 78"
-          />
+          <div onContextMenu={(e) => handleFieldContextMenu(e, 'personal_phone')}>
+            <Input
+              label="Mobile"
+              {...register('personal_phone', {
+                pattern: {
+                  value: /^[\+]?[0-9][\s\-\.\(\)0-9]{7,18}$/,
+                  message: 'Format de téléphone invalide',
+                },
+              })}
+              error={errors.personal_phone?.message}
+              placeholder="+33 6 12 34 56 78"
+            />
+          </div>
           {suggestions.personal_phone && (
             <SuggestionPill
               suggestion={suggestions.personal_phone}
@@ -428,11 +458,13 @@ export function PersonForm({
             size="sm"
           />
         </div>
-        <Input
-          {...register('linkedin_url')}
-          error={errors.linkedin_url?.message}
-          placeholder="https://www.linkedin.com/in/..."
-        />
+        <div onContextMenu={(e) => handleFieldContextMenu(e, 'linkedin_url')}>
+          <Input
+            {...register('linkedin_url')}
+            error={errors.linkedin_url?.message}
+            placeholder="https://www.linkedin.com/in/..."
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -499,6 +531,19 @@ export function PersonForm({
         onSelectCandidate={handleSelectCandidate}
         onCreateNew={handleCreateNew}
       />
+
+      {/* Context Menu for AI Suggestions */}
+      {contextMenu.position && contextMenuField && (
+        <FieldContextMenu
+          position={contextMenu.position}
+          fieldName={contextMenuField}
+          onClose={() => {
+            contextMenu.hideMenu()
+            setContextMenuField(null)
+          }}
+          onSelect={handleContextMenuSelect}
+        />
+      )}
     </form>
   )
 }

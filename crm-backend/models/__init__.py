@@ -68,6 +68,7 @@ from models.email_message import EmailMessage
 from models.email_attachment import EmailAttachment
 from models.autofill_suggestion import AutofillSuggestion
 from models.ai_memory import AIMemory
+from models.email_thread import EmailThread
 from models.email_blacklist import EmailBlacklist
 from models.push_subscription import PushSubscription
 from models.webhook import Webhook
@@ -120,6 +121,7 @@ __all__ = [
     "AutofillSuggestion",
     "AIMemory",
     "EmailBlacklist",
+    "EmailThread",
     "PushSubscription",
     "Team",
     # Tasks

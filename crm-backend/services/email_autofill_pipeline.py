@@ -222,6 +222,50 @@ class EmailAutofillPipeline:
 
         return False
 
+    async def _enrich_organisation_data(self, data: Dict):
+        """
+        🌐 Enrichit les données d'organisation via web search
+        Ajoute website, address, phone, linkedin à data (in-place)
+        """
+        try:
+            # Check feature flag
+            if not os.getenv("AUTOFILL_USE_WEB_ENRICHMENT", "true").lower() == "true":
+                logger.debug("⏭️  Web enrichment disabled via feature flag")
+                return
+
+            company_name = data.get("company")
+            if not company_name:
+                return
+
+            # Call enrichment service
+            enrichment_service = get_enrichment_service()
+            result = enrichment_service.enrich_organisation(
+                name=company_name,
+                country="FR",  # TODO: detect country from email domain
+                force_refresh=False
+            )
+
+            # Merge enriched data (only if confidence > 0.3)
+            if result.get("confidence", 0) > 0.3:
+                # Ne pas écraser les données existantes de la signature
+                if not data.get("website") and result.get("website"):
+                    data["website"] = result["website"]
+                if not data.get("address") and result.get("address"):
+                    data["address"] = result["address"]
+                if not data.get("phone") and result.get("phone"):
+                    data["phone"] = result["phone"]
+                if not data.get("linkedin") and result.get("linkedin"):
+                    data["linkedin"] = result["linkedin"]
+
+                logger.info(f"🌐 Enriched '{company_name}' (confidence={result['confidence']:.2f})")
+                self.metrics["web_enriched"] += 1
+            else:
+                logger.debug(f"⚠️  Low confidence enrichment for '{company_name}' ({result.get('confidence'):.2f})")
+
+        except Exception as e:
+            logger.warning(f"⚠️  Web enrichment failed: {e}")
+            # Don't fail the whole pipeline for enrichment errors
+
     async def _parse_signature(self, email: EmailMessage, email_body: str, team_id: int):
         """Parse email signature and create/apply suggestions"""
 
@@ -458,6 +502,7 @@ class EmailAutofillPipeline:
 📧 Emails processed: {m['emails_processed']}
 ⛔ Blacklisted (skipped): {m['blacklisted']}
 ✍️  Signatures parsed: {m['signatures_parsed']} (+ {m['signatures_cached']} cached)
+🌐 Web enriched: {m['web_enriched']}
 🎯 Intents detected: {m['intents_detected']} (+ {m['intents_cached']} cached)
 💡 Suggestions created: {m['suggestions_created']}
 ✅ Auto-applied: {m['auto_applied']} (≥{int(self.auto_apply_threshold * 100)}% confidence)

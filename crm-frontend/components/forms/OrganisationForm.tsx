@@ -3,13 +3,15 @@
 
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Input, Button, Alert, Select } from '@/components/shared'
 import { Organisation, OrganisationCreate, OrganisationCategory } from '@/lib/types'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import { useToast } from '@/components/ui/Toast'
 import { HelpTooltip } from '@/components/help/HelpTooltip'
+import { useContextMenu } from '@/hooks/useContextMenu'
+import { FieldContextMenu } from '@/components/ui/FieldContextMenu'
 
 interface OrganisationFormProps {
   initialData?: Organisation
@@ -37,12 +39,15 @@ export function OrganisationForm({
   submitLabel = 'Créer',
 }: OrganisationFormProps) {
   const { showToast } = useToast()
-  const [showAdvanced, setShowAdvanced] = React.useState(false)
+  const [showAdvanced, setShowAdvanced] = useState(false)
+  const contextMenu = useContextMenu()
+  const [contextMenuField, setContextMenuField] = useState<string | null>(null)
   const {
     register,
     handleSubmit,
     formState: { errors },
     setFocus,
+    setValue,
   } = useForm<OrganisationCreate>({
     defaultValues: {
       ...initialData,
@@ -61,6 +66,25 @@ export function OrganisationForm({
       setFocus(firstErrorField)
     }
   }, [errors, setFocus])
+
+  // Handle context menu open
+  const handleFieldContextMenu = (e: React.MouseEvent, fieldName: string) => {
+    contextMenu.onContextMenu(e)
+    setContextMenuField(fieldName)
+  }
+
+  // Handle suggestion selection from context menu
+  const handleContextMenuSelect = (value: string) => {
+    if (!contextMenuField) return
+    setValue(contextMenuField as keyof OrganisationCreate, value as any)
+    contextMenu.hideMenu()
+    setContextMenuField(null)
+    showToast({
+      type: 'success',
+      title: 'Suggestion appliquée',
+      message: `Le champ "${contextMenuField}" a été rempli avec la suggestion.`,
+    })
+  }
 
   const handleFormSubmit = async (data: OrganisationCreate) => {
     try {
@@ -119,40 +143,48 @@ export function OrganisationForm({
         </Select>
       </div>
 
-      <Input
-        label="Email principal"
-        type="email"
-        {...register('email')}
-        error={errors.email?.message}
-        placeholder="contact@organisation.com"
-      />
+      <div onContextMenu={(e) => handleFieldContextMenu(e, 'email')}>
+        <Input
+          label="Email principal"
+          type="email"
+          {...register('email')}
+          error={errors.email?.message}
+          placeholder="contact@organisation.com"
+        />
+      </div>
 
-      <Input
-        label="Téléphone principal"
-        {...register('main_phone', {
-          pattern: {
-            value: /^[\+]?[0-9][\s\-\.\(\)0-9]{7,18}$/,
-            message: 'Format de téléphone invalide',
-          },
-        })}
-        error={errors.main_phone?.message}
-        placeholder="+33 1 23 45 67 89"
-      />
+      <div onContextMenu={(e) => handleFieldContextMenu(e, 'main_phone')}>
+        <Input
+          label="Téléphone principal"
+          {...register('main_phone', {
+            pattern: {
+              value: /^[\+]?[0-9][\s\-\.\(\)0-9]{7,18}$/,
+              message: 'Format de téléphone invalide',
+            },
+          })}
+          error={errors.main_phone?.message}
+          placeholder="+33 1 23 45 67 89"
+        />
+      </div>
 
-      <Input
-        label="Site web"
-        type="url"
-        {...register('website')}
-        error={errors.website?.message}
-        placeholder="https://www.organisation.com"
-      />
+      <div onContextMenu={(e) => handleFieldContextMenu(e, 'website')}>
+        <Input
+          label="Site web"
+          type="url"
+          {...register('website')}
+          error={errors.website?.message}
+          placeholder="https://www.organisation.com"
+        />
+      </div>
 
-      <Input
-        label="Adresse"
-        {...register('address')}
-        error={errors.address?.message}
-        placeholder="123 Rue de la Paix, 75001 Paris"
-      />
+      <div onContextMenu={(e) => handleFieldContextMenu(e, 'address')}>
+        <Input
+          label="Adresse"
+          {...register('address')}
+          error={errors.address?.message}
+          placeholder="123 Rue de la Paix, 75001 Paris"
+        />
+      </div>
 
       <Select
         label="Pays *"
@@ -287,6 +319,19 @@ export function OrganisationForm({
           {isLoading ? 'Enregistrement...' : submitLabel}
         </Button>
       </div>
+
+      {/* Context Menu for AI Suggestions */}
+      {contextMenu.position && contextMenuField && (
+        <FieldContextMenu
+          position={contextMenu.position}
+          fieldName={contextMenuField}
+          onClose={() => {
+            contextMenu.hideMenu()
+            setContextMenuField(null)
+          }}
+          onSelect={handleContextMenuSelect}
+        />
+      )}
     </form>
   )
 }
