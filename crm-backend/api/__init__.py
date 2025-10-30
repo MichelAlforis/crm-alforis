@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from api.routes import (
     ai_agent,
+    ai_autofill,
     ai_statistics,
     auth,
     autofill_hitl,
@@ -112,6 +113,9 @@ api_router.include_router(integrations.router)
 
 # 🧠 AI ROUTES (Phase 2 - Semantic Parsing + Command Suggestions)
 api_router.include_router(ai_routes.router)
+
+# ✨ AI AUTOFILL SUGGESTIONS (Phase 2B - Context Menu)
+api_router.include_router(ai_autofill.router)
 
 # ⚡ IMPORTS ROUTES (bulk operations)
 api_router.include_router(imports.router)

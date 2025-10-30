@@ -77,6 +77,7 @@ class EmailAutofillPipeline:
             "auto_applied": 0,
             "manual_review": 0,
             "blacklisted": 0,
+            "web_enriched": 0,
             "errors": 0,
             "processing_time_ms": 0
         }
@@ -257,6 +258,10 @@ class EmailAutofillPipeline:
 
             data = result.get("data", {})
             confidence = result.get("confidence", 0.0)
+
+            # 🌐 Web enrichment (Acte V) - Enrich organisation data if company found
+            if data.get("company"):
+                await self._enrich_organisation_data(data)
 
             # Define field categories
             PERSON_FIELDS = {'first_name', 'last_name', 'name', 'email', 'phone', 'mobile', 'job_title', 'linkedin'}
