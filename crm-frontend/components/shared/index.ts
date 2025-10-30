@@ -27,7 +27,9 @@ export { default as PaginationBar } from './PaginationBar'
 export { DataTable } from './DataTable'
 export type { Column, QuickAction, BulkAction, DataTableProps } from './DataTable/types'
 
-// Command Palette V2 - Intelligence Layer - ⌘K
+// Command Palette V3 - Apple Premium Design - ⌘K
+export { CommandPaletteV3, useCommandPaletteV3 } from './CommandPaletteV3'
+// V2 - Intelligence Layer
 export { CommandPaletteV2, useCommandPaletteV2 } from './CommandPaletteV2'
 // Legacy v1
 export { CommandPalette, useCommandPalette } from './CommandPalette'

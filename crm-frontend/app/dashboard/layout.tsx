@@ -14,7 +14,7 @@ import Navbar from '@/components/shared/Navbar'
 import Sidebar from '@/components/shared/Sidebar'
 import Footer from '@/components/shared/Footer'
 import NavigationProgress from '@/components/shared/NavigationProgress'
-import { CommandPaletteV2, useCommandPaletteV2 } from '@/components/shared/CommandPaletteV2'
+import { CommandPaletteV3, useCommandPaletteV3 } from '@/components/shared/CommandPaletteV3'
 import QueryProvider from '@/components/providers/QueryProvider'
 import OfflineIndicator from '@/components/pwa/OfflineIndicator'
 import { BannerManager } from '@/components/pwa/BannerManager'
@@ -29,7 +29,7 @@ export default function DashboardLayout({
 }) {
   const { isAuthenticated, isLoading } = useAuth()
   const router = useRouter()
-  const { open: commandPaletteOpen, setOpen: setCommandPaletteOpen } = useCommandPaletteV2()
+  const { open: commandPaletteOpen, setOpen: setCommandPaletteOpen } = useCommandPaletteV3()
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -70,8 +70,8 @@ export default function DashboardLayout({
           {/* Global Navigation Progress Bar */}
           <NavigationProgress />
 
-          {/* Command Palette V2 - Intelligence Layer - ⌘K/Ctrl+K */}
-          <CommandPaletteV2 open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
+          {/* Command Palette V3 - Apple Premium Design + Intelligence - ⌘K/Ctrl+K */}
+          <CommandPaletteV3 open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
 
           <div className="dashboard-layout flex h-screen overflow-hidden">
             {/* Sidebar Navigation - Fixed, always visible */}
