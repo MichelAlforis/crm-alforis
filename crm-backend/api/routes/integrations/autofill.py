@@ -15,6 +15,7 @@ from sqlalchemy.orm import Session
 
 from core import get_current_user, get_db
 from models.autofill_decision_log import AutofillDecisionLog
+from models.user import User
 from schemas.integrations import (
     AutofillApplyRequest,
     AutofillApplyResponse,
@@ -29,6 +30,7 @@ from services.autofill_apply_service import AutofillApplyService
 from services.autofill_service_v2 import AutofillServiceV2
 from services.interaction_suggestion_service import InteractionSuggestionService
 from services.matching_scorer import MatchingScorer
+from services.outlook_integration import OutlookIntegration
 
 router = APIRouter()
 
