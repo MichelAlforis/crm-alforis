@@ -4,6 +4,7 @@ Orchestrate batch email processing: sync → parse → detect intent → auto-ap
 """
 import asyncio
 import logging
+import os
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional
 from sqlalchemy.orm import Session
@@ -411,6 +412,11 @@ class EmailAutofillPipeline:
         """
 
         try:
+            # Check feature flag
+            if not os.getenv("AUTOFILL_USE_WEB_ENRICHMENT", "true").lower() == "true":
+                logger.debug("⏭️  Web enrichment disabled via feature flag")
+                return
+
             company_name = data.get("company")
 
             if not company_name:

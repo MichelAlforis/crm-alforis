@@ -32,7 +32,11 @@ class WebEnrichmentService:
     def __init__(self):
         self.serpapi_key = os.getenv("SERPAPI_API_KEY")
         self.redis_client = None
-        self.cache_ttl = 7 * 24 * 3600  # 7 jours
+
+        # Feature flags from .env
+        self.cache_ttl = int(os.getenv("AUTOFILL_CACHE_TTL", 7 * 24 * 3600))  # Default: 7 days
+        self.min_confidence = float(os.getenv("AUTOFILL_WEB_MIN_CONFIDENCE", 0.3))  # Default: 0.3
+        self.rate_limit = int(os.getenv("AUTOFILL_RATE_LIMIT", 10))  # Default: 10 req/min
 
         # Setup Redis cache
         try:
