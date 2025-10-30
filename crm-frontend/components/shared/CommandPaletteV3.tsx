@@ -175,18 +175,18 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
               playSound('close')
             }}
           >
-            {/* Gradient overlay with vignette */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/60" />
+            {/* Light gradient overlay - Apple style */}
+            <div className="absolute inset-0 bg-gradient-to-b from-slate-900/40 via-slate-800/30 to-slate-900/40 backdrop-blur-sm" />
 
-            {/* Ambient reflection - animated radial gradient */}
+            {/* Ambient warm glow - animated */}
             <motion.div
               className="absolute inset-0"
               animate={{
                 background: [
-                  'radial-gradient(circle at 50% 50%, rgba(227, 159, 112, 0.03) 0%, transparent 50%)',
-                  'radial-gradient(circle at 60% 40%, rgba(227, 159, 112, 0.05) 0%, transparent 50%)',
-                  'radial-gradient(circle at 40% 60%, rgba(227, 159, 112, 0.03) 0%, transparent 50%)',
-                  'radial-gradient(circle at 50% 50%, rgba(227, 159, 112, 0.03) 0%, transparent 50%)',
+                  'radial-gradient(circle at 50% 50%, rgba(227, 159, 112, 0.08) 0%, transparent 60%)',
+                  'radial-gradient(circle at 60% 40%, rgba(227, 159, 112, 0.12) 0%, transparent 60%)',
+                  'radial-gradient(circle at 40% 60%, rgba(227, 159, 112, 0.08) 0%, transparent 60%)',
+                  'radial-gradient(circle at 50% 50%, rgba(227, 159, 112, 0.08) 0%, transparent 60%)',
                 ],
               }}
               transition={{
@@ -232,40 +232,36 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
               <Command
                 className="relative rounded-[20px] overflow-hidden"
                 style={{
-                  backdropFilter: 'blur(24px)',
-                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  backdropFilter: 'blur(40px) saturate(180%)',
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.90) 100%)',
+                  border: '1px solid rgba(227, 159, 112, 0.15)',
                   boxShadow: `
-                    0 0 0 1px rgba(227, 159, 112, 0.1),
-                    0 2px 4px rgba(0, 0, 0, 0.1),
-                    0 4px 8px rgba(0, 0, 0, 0.1),
-                    0 8px 16px rgba(0, 0, 0, 0.1),
-                    0 16px 32px rgba(0, 0, 0, 0.15),
-                    0 24px 48px rgba(0, 0, 0, 0.2),
-                    0 32px 64px rgba(0, 0, 0, 0.25),
-                    0 40px 80px rgba(0, 0, 0, 0.3)
+                    0 0 0 1px rgba(255, 255, 255, 0.8),
+                    0 2px 8px rgba(0, 0, 0, 0.04),
+                    0 8px 24px rgba(0, 0, 0, 0.06),
+                    0 16px 48px rgba(0, 0, 0, 0.08),
+                    0 24px 72px rgba(227, 159, 112, 0.12)
                   `,
                 }}
                 shouldFilter={false}
               >
-                {/* Vignette overlay */}
+                {/* Subtle inner glow */}
                 <div
                   className="absolute inset-0 pointer-events-none"
                   style={{
-                    background: 'radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.2) 100%)',
-                    opacity: 0.3,
+                    background: 'radial-gradient(circle at 50% 0%, rgba(227, 159, 112, 0.03) 0%, transparent 50%)',
                   }}
                 />
 
                 {/* Search Input */}
-                <div className="relative flex items-center gap-3 px-6 py-4 border-b border-white/10">
+                <div className="relative flex items-center gap-3 px-6 py-4 border-b border-gray-200/50">
                   {mode === 'chainAction' ? (
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ type: 'spring', stiffness: 400 }}
                     >
-                      <ChevronRight className="w-6 h-6 text-orange-400 flex-shrink-0" />
+                      <ChevronRight className="w-6 h-6 text-orange-500 flex-shrink-0" />
                     </motion.div>
                   ) : (
                     <motion.div
@@ -273,7 +269,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                       animate={{ scale: 1 }}
                       transition={{ type: 'spring', stiffness: 400 }}
                     >
-                      <Search className="w-6 h-6 text-white/40 flex-shrink-0" />
+                      <Search className="w-6 h-6 text-gray-400 flex-shrink-0" />
                     </motion.div>
                   )}
                   <Command.Input
@@ -287,7 +283,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                           ? 'Historique récent...'
                           : 'Rechercher, calculer, ou créer...'
                     }
-                    className="flex-1 bg-transparent border-none outline-none text-white/90 placeholder:text-white/40 font-medium tracking-[0.02em] text-lg"
+                    className="flex-1 bg-transparent border-none outline-none text-gray-900 placeholder:text-gray-400 font-medium tracking-[0.02em] text-lg"
                     style={{ caretColor: '#E39F70' }}
                   />
                   <div className="flex items-center gap-2">
@@ -299,30 +295,30 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                         setFeedbackSettings(getFeedbackSettings())
                         haptic('light')
                       }}
-                      className="p-2 rounded-lg hover:bg-white/5 transition-colors"
+                      className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors"
                       title={feedbackSettings.soundEnabled ? 'Désactiver sons' : 'Activer sons'}
                     >
                       {feedbackSettings.soundEnabled ? (
-                        <Volume2 className="w-5 h-5 text-white/60" />
+                        <Volume2 className="w-5 h-5 text-gray-500" />
                       ) : (
-                        <VolumeX className="w-5 h-5 text-white/60" />
+                        <VolumeX className="w-5 h-5 text-gray-500" />
                       )}
                     </motion.button>
-                    <kbd className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-white/60 bg-white/5 rounded-lg border border-white/10">
+                    <kbd className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-500 bg-gray-100/80 rounded-lg border border-gray-200">
                       ESC
                     </kbd>
                   </div>
                 </div>
 
                 <Command.List className="max-h-[400px] overflow-y-auto p-3">
-                  <Command.Empty className="py-12 text-center text-sm text-white/60 font-normal">
+                  <Command.Empty className="py-12 text-center text-sm text-gray-500 font-normal">
                     {isSearching ? 'Recherche en cours...' : 'Aucun résultat trouvé.'}
                   </Command.Empty>
 
                   {/* Clipboard Suggestion */}
                   {!hasSearch && clipboardSuggestion && mode === 'command' && (
                     <Command.Group heading="📋 Presse-papiers" className="mb-2 px-2">
-                      <div className="text-xs font-medium text-white/40 tracking-[0.04em] uppercase mb-2 px-3">
+                      <div className="text-xs font-semibold text-gray-400 tracking-[0.04em] uppercase mb-2 px-3">
                         📋 Presse-papiers
                       </div>
                       <CommandItemV3
@@ -330,10 +326,10 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                         onSelect={() => runCommand(() => console.log('Clipboard action'), clipboardSuggestion.value)}
                       >
                         <div className="flex flex-col gap-0.5">
-                          <span className="font-medium tracking-[0.02em] text-white/90">
+                          <span className="font-medium tracking-[0.02em] text-gray-900">
                             {clipboardSuggestion.action.label}
                           </span>
-                          <span className="text-sm font-normal text-white/60 leading-snug">
+                          <span className="text-sm font-normal text-gray-500 leading-snug">
                             {clipboardSuggestion.action.description}
                           </span>
                         </div>
@@ -344,7 +340,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                   {/* Calculator Result */}
                   {showCalculator && (
                     <div className="mb-2 px-2">
-                      <div className="text-xs font-medium text-white/40 tracking-[0.04em] uppercase mb-2 px-3">
+                      <div className="text-xs font-semibold text-gray-400 tracking-[0.04em] uppercase mb-2 px-3">
                         🧮 Calcul
                       </div>
                       <CommandItemV3
@@ -358,10 +354,10 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                         }}
                       >
                         <div className="flex flex-col gap-0.5">
-                          <span className="font-mono text-2xl text-white/90 tracking-tight">
+                          <span className="font-mono text-2xl text-gray-900 tracking-tight">
                             {parsedCommand.entities.calculation?.toLocaleString('fr-FR')}
                           </span>
-                          <span className="text-sm font-normal text-white/60 leading-snug">
+                          <span className="text-sm font-normal text-gray-500 leading-snug">
                             Cliquer pour copier
                           </span>
                         </div>
@@ -372,7 +368,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                   {/* AI Suggestions */}
                   {aiSuggestions.length > 0 && !showCalculator && mode === 'command' && (
                     <div className="mb-2 px-2">
-                      <div className="text-xs font-medium text-white/40 tracking-[0.04em] uppercase mb-2 px-3">
+                      <div className="text-xs font-semibold text-gray-400 tracking-[0.04em] uppercase mb-2 px-3">
                         🤖 Suggestions IA
                       </div>
                       {aiSuggestions.slice(0, 5).map((suggestion, idx) => (
@@ -405,10 +401,10 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                           <div className="flex items-center gap-3">
                             <span className="text-xl">{suggestion.icon}</span>
                             <div className="flex flex-col gap-0.5">
-                              <span className="font-medium tracking-[0.02em] text-white/90">
+                              <span className="font-medium tracking-[0.02em] text-gray-900">
                                 {suggestion.label}
                               </span>
-                              <span className="text-sm font-normal text-white/60 leading-snug">
+                              <span className="text-sm font-normal text-gray-500 leading-snug">
                                 {suggestion.description}
                               </span>
                             </div>
@@ -421,7 +417,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                   {/* Recent Items */}
                   {mode === 'recent' && recentItems.length > 0 && (
                     <div className="mb-2 px-2">
-                      <div className="text-xs font-medium text-white/40 tracking-[0.04em] uppercase mb-2 px-3">
+                      <div className="text-xs font-medium text-gray-400 tracking-[0.04em] uppercase mb-2 px-3">
                         🕐 Récents
                       </div>
                       {recentItems.slice(0, 10).map((item) => (
@@ -433,7 +429,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                             setMode('command')
                           }}
                         >
-                          <span className="font-medium tracking-[0.02em] text-white/90">
+                          <span className="font-medium tracking-[0.02em] text-gray-900">
                             {item.query}
                           </span>
                         </CommandItemV3>
@@ -444,7 +440,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                   {/* Search Results */}
                   {hasSearch && hasResults && mode === 'command' && (
                     <div className="mb-2 px-2">
-                      <div className="text-xs font-medium text-white/40 tracking-[0.04em] uppercase mb-2 px-3">
+                      <div className="text-xs font-medium text-gray-400 tracking-[0.04em] uppercase mb-2 px-3">
                         🔍 Résultats
                       </div>
                       {results.map((result) => (
@@ -454,11 +450,11 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                           onSelect={() => handleSelect(result.data, result.type)}
                         >
                           <div className="flex flex-col gap-0.5">
-                            <span className="font-medium tracking-[0.02em] text-white/90">
+                            <span className="font-medium tracking-[0.02em] text-gray-900">
                               {result.title}
                             </span>
                             {result.subtitle && (
-                              <span className="text-sm font-normal text-white/60 leading-snug">
+                              <span className="text-sm font-normal text-gray-500 leading-snug">
                                 {result.subtitle}
                               </span>
                             )}
@@ -471,7 +467,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                   {/* Chain Actions */}
                   {mode === 'chainAction' && selectedEntity && (
                     <div className="mb-2 px-2">
-                      <div className="text-xs font-medium text-white/40 tracking-[0.04em] uppercase mb-2 px-3">
+                      <div className="text-xs font-medium text-gray-400 tracking-[0.04em] uppercase mb-2 px-3">
                         ⚡ Actions pour {selectedEntity.first_name || selectedEntity.name}
                       </div>
                       <CommandItemV3
@@ -498,7 +494,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                   {/* Quick Actions - Hide when searching */}
                   {!hasSearch && mode === 'command' && (
                     <div className="mb-2 px-2">
-                      <div className="text-xs font-medium text-white/40 tracking-[0.04em] uppercase mb-2 px-3">
+                      <div className="text-xs font-medium text-gray-400 tracking-[0.04em] uppercase mb-2 px-3">
                         ⚡ Actions rapides
                       </div>
                       <CommandItemV3
@@ -527,7 +523,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                   {/* Navigation */}
                   {!hasSearch && mode === 'command' && (
                     <div className="mb-2 px-2">
-                      <div className="text-xs font-medium text-white/40 tracking-[0.04em] uppercase mb-2 px-3">
+                      <div className="text-xs font-medium text-gray-400 tracking-[0.04em] uppercase mb-2 px-3">
                         🧭 Navigation
                       </div>
                       <CommandItemV3
@@ -572,24 +568,24 @@ function CommandItemV3({ children, icon: Icon, shortcut, onSelect }: CommandItem
   return (
     <Command.Item
       onSelect={onSelect}
-      className="group flex items-center gap-3 px-4 py-3 mb-1 rounded-[12px] cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-white/70 hover:text-white/90 hover:bg-white/5 hover:scale-[1.01] hover:shadow-[0_0_12px_rgba(227,159,112,0.2)] data-[selected=true]:bg-white/5 data-[selected=true]:text-white/90 data-[selected=true]:scale-[1.01] data-[selected=true]:translate-y-[-1px] data-[selected=true]:shadow-[0_0_16px_rgba(227,159,112,0.3),0_0_0_1px_rgba(227,159,112,0.2)]"
+      className="group flex items-center gap-3 px-4 py-3 mb-1 rounded-[12px] cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 hover:scale-[1.01] hover:shadow-[0_0_12px_rgba(227,159,112,0.15)] data-[selected=true]:bg-orange-50/50 data-[selected=true]:text-gray-900 data-[selected=true]:scale-[1.01] data-[selected=true]:translate-y-[-1px] data-[selected=true]:shadow-[0_0_16px_rgba(227,159,112,0.25),0_0_0_1px_rgba(227,159,112,0.3)]"
     >
       {Icon && (
         <motion.div
           whileHover={{ scale: 1.1, rotate: 5 }}
           transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-          className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-orange-400/20 to-orange-600/10 group-hover:shadow-[0_0_12px_rgba(227,159,112,0.4)] transition-shadow"
+          className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-orange-100 to-orange-50 group-hover:shadow-[0_0_12px_rgba(227,159,112,0.3)] transition-shadow"
         >
-          <Icon className="w-6 h-6 text-orange-400 flex-shrink-0" />
+          <Icon className="w-6 h-6 text-orange-500 flex-shrink-0" />
         </motion.div>
       )}
       <span className="flex-1 font-medium tracking-[0.02em]">{children}</span>
       {shortcut && (
-        <kbd className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-white/60 bg-white/5 rounded-lg border border-white/10 group-data-[selected=true]:text-orange-400 group-data-[selected=true]:border-orange-400/30">
+        <kbd className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-500 bg-gray-100/80 rounded-lg border border-gray-200 group-data-[selected=true]:text-orange-600 group-data-[selected=true]:border-orange-300 group-data-[selected=true]:bg-orange-50">
           {shortcut}
         </kbd>
       )}
-      <ArrowRight className="w-5 h-5 opacity-0 group-data-[selected=true]:opacity-100 transition-opacity text-orange-400" />
+      <ArrowRight className="w-5 h-5 opacity-0 group-data-[selected=true]:opacity-100 transition-opacity text-orange-500" />
     </Command.Item>
   )
 }
