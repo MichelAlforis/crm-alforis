@@ -16,7 +16,7 @@ from typing import Optional
 import logging
 
 from services.web_enrichment_service import get_enrichment_service
-from api.dependencies import get_current_user
+from core import get_current_user
 from models.user import User
 
 logger = logging.getLogger(__name__)
