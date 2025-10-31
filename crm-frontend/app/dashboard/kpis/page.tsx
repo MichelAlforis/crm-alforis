@@ -12,7 +12,12 @@ import { Card, Button, Modal, Alert } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { Trash2 } from 'lucide-react'
-import { KPIForm } from '@/components/forms'
+import React, { lazy, Suspense } from "react"
+
+// Lazy load KPI form (loaded only when modal opens)
+const KPIForm = lazy(() => import("@/components/forms").then(m => ({ default: m.KPIForm })))
+
+// OLD: import { KPIForm } from '@/components/forms'
 import { KPI, KPICreate } from '@/lib/types'
 import { storage, AUTH_STORAGE_KEYS } from '@/lib/constants'
 import { useUIStore } from '@/stores/ui'
@@ -309,11 +314,13 @@ export default function KPIsPage() {
             onClose={closeModal}
             title={`Ajouter un KPI pour ${selectedFournisseur.name}`}
           >
-            <KPIForm
-              onSubmit={handleAddKPI}
-              isLoading={kpisLoading}
-              error={kpisError}
-            />
+            <Suspense fallback={<div className="p-4">Chargement...</div>}>
+              <KPIForm
+                onSubmit={handleAddKPI}
+                isLoading={kpisLoading}
+                error={kpisError}
+              />
+            </Suspense>
           </Modal>
         </>
       )}

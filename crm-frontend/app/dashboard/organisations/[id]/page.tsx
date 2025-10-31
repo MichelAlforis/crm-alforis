@@ -3,7 +3,7 @@
 
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, lazy, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ROUTES, withQuery } from "@/lib/constants"
@@ -15,7 +15,6 @@ import {
 } from '@/hooks/useOrganisations'
 import { useMandatsByOrganisation } from '@/hooks/useMandats'
 import { Card, Button, Alert, Modal, ConfirmDialog } from '@/components/shared'
-import { OrganisationForm } from '@/components/forms'
 import { SkeletonCard } from '@/components/ui/Skeleton'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import type { OrganisationUpdate } from '@/lib/types'
@@ -25,6 +24,9 @@ import { useToast } from '@/hooks/useToast'
 import { CampaignSubscriptionManager } from '@/components/email/CampaignSubscriptionManager'
 import { ActivityTab } from '@/components/interactions/ActivityTab'
 import { useEntityDetail } from '@/hooks/useEntityDetail'
+
+// Lazy load heavy form component (loaded only when modal opens)
+const OrganisationForm = lazy(() => import('@/components/forms').then(m => ({ default: m.OrganisationForm })))
 
 type TabType = 'informations' | 'activite'
 
@@ -417,13 +419,15 @@ export default function OrganisationDetailPage() {
         onClose={() => setIsEditModalOpen(false)}
         title="Modifier l'organisation"
       >
-        <OrganisationForm
-          initialData={organisation}
-          onSubmit={handleUpdate}
-          isLoading={updateMutation.isPending}
-          error={updateMutation.error?.message}
-          submitLabel="Enregistrer"
-        />
+        <Suspense fallback={<div className="p-4">Chargement...</div>}>
+          <OrganisationForm
+            initialData={organisation}
+            onSubmit={handleUpdate}
+            isLoading={updateMutation.isPending}
+            error={updateMutation.error?.message}
+            submitLabel="Enregistrer"
+          />
+        </Suspense>
       </Modal>
 
       {/* Confirmation Dialogs */}
