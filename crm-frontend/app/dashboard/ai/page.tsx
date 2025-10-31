@@ -32,6 +32,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { ROUTES, withQuery } from '@/lib/constants'
 
 export default function AIDashboardPage() {
   const router = useRouter()
@@ -110,7 +111,7 @@ export default function AIDashboardPage() {
             icon={Clock}
             gradient="from-yellow-500 to-orange-500"
             subtitle="À valider"
-            onClick={() => router.push('/dashboard/ai/suggestions?status=pending')}
+            onClick={() => router.push(withQuery(ROUTES.AI.SUGGESTIONS, { status: 'pending' }))}
           />
 
           <AIStatCard
