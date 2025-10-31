@@ -29,10 +29,6 @@ export type { Column, QuickAction, BulkAction, DataTableProps } from './DataTabl
 
 // Command Palette V3 - Apple Premium Design - ⌘K
 export { CommandPaletteV3, useCommandPaletteV3 } from './CommandPaletteV3'
-// V2 - Intelligence Layer
-export { CommandPaletteV2, useCommandPaletteV2 } from './CommandPaletteV2'
-// Legacy v1
-export { CommandPalette, useCommandPalette } from './CommandPalette'
 
 // Types
 export type { SelectOption } from './SearchableSelect'
