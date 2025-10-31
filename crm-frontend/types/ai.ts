@@ -44,7 +44,7 @@ export interface AISuggestion {
   title: string
   description: string
   confidence_score: number
-  suggestion_data: any
+  suggestion_data: Record<string, unknown>
   created_at: string
   updated_at: string
   applied_at?: string
@@ -64,8 +64,8 @@ export interface AIExecution {
   failed_items: number
   estimated_cost_usd: number
   actual_cost_usd?: number
-  configuration_snapshot: any
-  error_details?: any
+  configuration_snapshot: Record<string, unknown>
+  error_details?: Record<string, unknown>
   logs: string[]
 }
 
@@ -111,12 +111,12 @@ export interface SuggestionPreview {
   suggestion_id: number
   entity_type: string
   entity_id: number
-  current_data: Record<string, any>
-  proposed_changes: Record<string, any>
+  current_data: Record<string, unknown>
+  proposed_changes: Record<string, unknown>
   changes_summary: Array<{
     field: string
-    from: any
-    to: any
+    from: unknown
+    to: unknown
     type: 'add' | 'update' | 'delete'
   }>
   impact_assessment?: string

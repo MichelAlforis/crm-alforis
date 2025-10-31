@@ -29,16 +29,19 @@ import type {
 // ============= HELPER FUNCTIONS =============
 
 // Helper pour normaliser les erreurs API (Pydantic validation errors)
-function normalizeErrorDetail(detail: any): string {
+function normalizeErrorDetail(detail: unknown): string {
   if (typeof detail === 'string') return detail
 
   // Si c'est un tableau d'erreurs de validation Pydantic
   if (Array.isArray(detail)) {
     return detail
       .map((err) => {
-        if (typeof err === 'object' && err.msg) {
-          const location = err.loc ? ` (${err.loc.join(' > ')})` : ''
-          return `${err.msg}${location}`
+        if (err && typeof err === 'object' && 'msg' in err) {
+          const message = (err as { msg?: unknown }).msg
+          const location = (err as { loc?: unknown }).loc
+          const locationLabel =
+            Array.isArray(location) && location.length > 0 ? ` (${location.join(' > ')})` : ''
+          return `${String(message)}${locationLabel}`
         }
         return String(err)
       })
@@ -46,8 +49,8 @@ function normalizeErrorDetail(detail: any): string {
   }
 
   if (typeof detail === 'object' && detail !== null) {
-    if (detail.msg) return String(detail.msg)
-    if (detail.message) return String(detail.message)
+    if ('msg' in detail && detail.msg) return String(detail.msg)
+    if ('message' in detail && detail.message) return String(detail.message)
     return JSON.stringify(detail)
   }
 

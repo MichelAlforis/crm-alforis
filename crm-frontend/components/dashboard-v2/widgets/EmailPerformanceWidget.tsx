@@ -56,10 +56,11 @@ export function EmailPerformanceWidget({
 
       if (!response.ok) throw new Error('Failed to fetch email performance')
 
-      const result = await response.json()
+      const result = (await response.json()) as EmailPerformanceData
       setData(result)
-    } catch (err: any) {
-      setError(err.message || 'Erreur lors du chargement des données')
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Erreur lors du chargement des données'
+      setError(message)
     } finally {
       setIsLoading(false)
     }

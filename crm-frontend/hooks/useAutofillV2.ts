@@ -21,7 +21,7 @@ export type TaskPriority = 'high' | 'medium' | 'low'
 
 export interface AutofillSuggestion {
   field: string
-  value: any
+  value: unknown
   confidence: number // 0-1
   source: AutofillSourceType
   evidence?: string
@@ -33,16 +33,16 @@ export interface AutofillTask {
   description?: string
   priority: TaskPriority
   due_date?: string
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 export interface AutofillV2Request {
   entity_type: 'person' | 'organisation'
-  draft: Record<string, any>
+  draft: Record<string, unknown>
   context?: {
     budget_mode?: BudgetMode
     outlook_enabled?: boolean
-    [key: string]: any
+    [key: string]: unknown
   }
 }
 
@@ -53,7 +53,7 @@ export interface AutofillV2Response {
     execution_time_ms: number
     sources_used: AutofillSourceType[]
     llm_used: boolean
-    [key: string]: any
+    [key: string]: unknown
   }
 }
 

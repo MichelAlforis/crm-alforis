@@ -12,7 +12,7 @@ export class SearchAPI extends BaseHttpClient {
     query: string,
     entityType: 'organisations' | 'people' | 'mandats' | 'tasks' = 'organisations',
     limit = 10
-  ): Promise<Array<{ id: number; name: string; type: string; [key: string]: any }>> {
+  ): Promise<Array<{ id: number; name: string; type: string; [key: string]: unknown }>> {
     return this.request('/search/autocomplete', {
       params: {
         q: query,

@@ -32,6 +32,14 @@ interface ProviderConfig {
   defaultPort?: number
 }
 
+type CreateAccountRequest = {
+  email: string
+  provider: Provider
+  password: string
+  protocol: 'imap' | 'ews'
+  server?: string
+}
+
 const PROVIDER_CONFIG: Record<Provider, ProviderConfig> = {
   ionos: {
     name: 'IONOS',
@@ -112,6 +120,9 @@ function ensureAuthToken(): string {
   return token
 }
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null
+
 function extractErrorMessage(payload: unknown, fallback: string): string {
   if (!payload) {
     return fallback
@@ -121,19 +132,19 @@ function extractErrorMessage(payload: unknown, fallback: string): string {
     return payload
   }
 
-  if (typeof payload === 'object') {
-    const detail = (payload as any).detail
+  if (isRecord(payload)) {
+    const { detail } = payload as { detail?: unknown }
     if (Array.isArray(detail)) {
       const messages = detail
         .map((item) => {
           if (typeof item === 'string') return item
-          if (item && typeof item === 'object') {
+          if (isRecord(item)) {
             const fieldPath = Array.isArray(item.loc)
               ? item.loc
-                  .filter((part: unknown) => typeof part === 'string')
+                  .filter((part: unknown): part is string => typeof part === 'string')
                   .join('.')
               : null
-            const baseMessage = item.msg || item.message || item.detail
+            const baseMessage = item.msg ?? item.message ?? item.detail
             if (fieldPath && baseMessage) {
               return `${fieldPath}: ${baseMessage}`
             }
@@ -145,12 +156,15 @@ function extractErrorMessage(payload: unknown, fallback: string): string {
       if (messages.length > 0) {
         return messages.join(' · ')
       }
-    } else if (detail) {
-      return String(detail)
+    } else if (typeof detail === 'string') {
+      return detail
     }
 
-    if ('message' in (payload as any) && (payload as any).message) {
-      return String((payload as any).message)
+    if ('message' in payload) {
+      const message = payload.message
+      if (typeof message === 'string') {
+        return message
+      }
     }
   }
 
@@ -158,19 +172,41 @@ function extractErrorMessage(payload: unknown, fallback: string): string {
 }
 
 function normalizeAccounts(data: unknown): EmailAccount[] {
-  const coerce = (account: any): EmailAccount => {
-    const provider = (account?.provider || account?.protocol || 'generic') as Provider | string
+  const coerce = (account: unknown): EmailAccount => {
+    if (!isRecord(account)) {
+      return {
+        id: 0,
+        email: '',
+        provider: 'generic',
+        server: null,
+        is_active: true,
+        is_primary: false,
+        created_at: new Date().toISOString(),
+        team_id: undefined,
+        user_id: undefined,
+        protocol: null,
+      }
+    }
+
+    const providerValue = account.provider ?? account.protocol ?? 'generic'
+    const provider = typeof providerValue === 'string' ? providerValue : 'generic'
+    const createdAt =
+      typeof account.created_at === 'string' ? account.created_at : new Date().toISOString()
+
     return {
-      id: Number(account?.id) || 0,
-      email: String(account?.email || ''),
+      id: typeof account.id === 'number' ? account.id : Number(account.id ?? 0) || 0,
+      email: typeof account.email === 'string' ? account.email : '',
       provider,
-      server: account?.server ?? null,
-      is_active: account?.is_active ?? true,
-      is_primary: account?.is_primary ?? false,
-      created_at: account?.created_at || new Date().toISOString(),
-      team_id: account?.team_id,
-      user_id: account?.user_id,
-      protocol: account?.protocol ?? null,
+      server: typeof account.server === 'string' ? account.server : null,
+      is_active: typeof account.is_active === 'boolean' ? account.is_active : true,
+      is_primary: typeof account.is_primary === 'boolean' ? account.is_primary : false,
+      created_at: createdAt,
+      team_id: typeof account.team_id === 'number' ? account.team_id : undefined,
+      user_id:
+        typeof account.user_id === 'number' || account.user_id === null
+          ? account.user_id
+          : undefined,
+      protocol: typeof account.protocol === 'string' ? account.protocol : null,
     }
   }
 
@@ -243,12 +279,13 @@ export default function EmailAccountsManager() {
         console.warn('[EmailAccountsManager] Unexpected response shape', payload)
       }
       setAccounts(normalized)
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Erreur lors du chargement des comptes'
+      setError(message)
       showToast({
         type: 'error',
         title: 'Erreur',
-        message: err.message,
+        message,
       })
     } finally {
       setIsLoading(false)
@@ -344,7 +381,7 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
     try {
       const token = ensureAuthToken()
 
-      const payload: any = {
+      const payload: CreateAccountRequest = {
         email: formData.email,
         provider: selectedProvider,
         password: formData.password,
@@ -394,11 +431,12 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
         title: 'Compte ajouté',
         message: `${config.name} configuré avec succès`,
       })
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Erreur lors de la création du compte'
       showToast({
         type: 'error',
         title: 'Erreur',
-        message: err.message,
+        message,
       })
     } finally {
       setIsSubmitting(false)
@@ -420,24 +458,30 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
         }),
       })
 
+      const payload = await response.json().catch(() => null)
+
       if (!response.ok) {
-        const data = await response.json()
-        throw new Error(data.detail || 'Erreur lors de la mise à jour')
+        throw new Error(extractErrorMessage(payload, 'Erreur lors de la mise à jour'))
       }
 
-      const updated = await response.json()
-      setAccounts((prev) => prev.map((a) => (a.id === account.id ? updated : a)))
+      const [updatedAccount] = normalizeAccounts(payload)
+      if (!updatedAccount) {
+        throw new Error('Réponse inattendue du serveur')
+      }
+
+      setAccounts((prev) => prev.map((a) => (a.id === account.id ? updatedAccount : a)))
 
       showToast({
         type: 'success',
-        title: updated.is_active ? 'Compte activé' : 'Compte désactivé',
+        title: updatedAccount.is_active ? 'Compte activé' : 'Compte désactivé',
         message: account.email,
       })
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Erreur lors de la mise à jour'
       showToast({
         type: 'error',
         title: 'Erreur',
-        message: err.message,
+        message,
       })
     }
   }
@@ -455,9 +499,10 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
         },
       })
 
+      const payload = await response.json().catch(() => null)
+
       if (!response.ok) {
-        const data = await response.json()
-        throw new Error(data.detail || 'Erreur lors de la suppression')
+        throw new Error(extractErrorMessage(payload, 'Erreur lors de la suppression'))
       }
 
       setAccounts((prev) => prev.filter((a) => a.id !== account.id))
@@ -467,11 +512,12 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
         title: 'Compte supprimé',
         message: account.email,
       })
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Erreur lors de la suppression'
       showToast({
         type: 'error',
         title: 'Erreur',
-        message: err.message,
+        message,
       })
     }
   }
@@ -487,23 +533,28 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
         },
       })
 
+      const payload = await response.json().catch(() => null)
+
       if (!response.ok) {
-        const data = await response.json()
-        throw new Error(data.detail || 'Test échoué')
+        throw new Error(extractErrorMessage(payload, 'Test échoué'))
       }
 
-      const result = await response.json()
+      const message =
+        payload && typeof payload === 'object' && 'message' in payload && typeof payload.message === 'string'
+          ? payload.message
+          : 'Le serveur IMAP répond correctement'
 
       showToast({
         type: 'success',
         title: 'Connexion réussie',
-        message: result.message || 'Le serveur IMAP répond correctement',
+        message,
       })
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Connexion échouée'
       showToast({
         type: 'error',
         title: 'Connexion échouée',
-        message: err.message,
+        message,
       })
     }
   }
@@ -527,25 +578,30 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
         }),
       })
 
+      const payload = await response.json().catch(() => null)
+
       if (!response.ok) {
-        const data = await response.json()
-        throw new Error(data.detail || 'Synchronisation échouée')
+        throw new Error(extractErrorMessage(payload, 'Synchronisation échouée'))
       }
 
-      const result = await response.json()
+      const created =
+        payload && typeof payload === 'object' && 'created' in payload ? Number(payload.created) : 0
+      const skipped =
+        payload && typeof payload === 'object' && 'skipped' in payload ? Number(payload.skipped) : 0
 
       showToast({
         type: 'success',
         title: 'Synchronisation terminée',
-        message: `${result.created} emails importés, ${result.skipped} ignorés`,
+        message: `${created} emails importés, ${skipped} ignorés`,
       })
 
       fetchAccounts()
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Erreur de synchronisation'
       showToast({
         type: 'error',
         title: 'Erreur de synchronisation',
-        message: err.message,
+        message,
       })
     } finally {
       setIsSyncing(null)

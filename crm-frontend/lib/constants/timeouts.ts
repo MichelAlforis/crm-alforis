@@ -136,7 +136,7 @@ export const timingHelpers = {
   /**
    * Create debounced function
    */
-  debounce<T extends (...args: any[]) => any>(
+  debounce<T extends (...args: unknown[]) => unknown>(
     func: T,
     delay: number = UI_DELAYS.DEBOUNCE_INPUT
   ): (...args: Parameters<T>) => void {
@@ -150,7 +150,7 @@ export const timingHelpers = {
   /**
    * Create throttled function
    */
-  throttle<T extends (...args: any[]) => any>(
+  throttle<T extends (...args: unknown[]) => unknown>(
     func: T,
     limit: number = UI_DELAYS.THROTTLE_SCROLL
   ): (...args: Parameters<T>) => void {

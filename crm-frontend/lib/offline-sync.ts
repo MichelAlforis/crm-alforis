@@ -14,7 +14,7 @@ type QueuedRequest = {
   id: string
   url: string
   method: string
-  body?: any
+  body?: unknown
   headers?: Record<string, string>
   timestamp: number
 }

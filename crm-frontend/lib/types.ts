@@ -197,7 +197,7 @@ export interface ApiError {
 export interface LoadingState {
   isLoading: boolean
   error?: string
-  data?: any
+  data?: unknown
 }
 
 export interface FormState {
@@ -996,7 +996,7 @@ export interface NotificationItem {
   archived_at?: string | null
   created_at?: string | null
   expires_at?: string | null
-  metadata?: any
+  metadata?: Record<string, unknown> | null
 }
 
 export interface NotificationPayload {

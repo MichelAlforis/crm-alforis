@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation'
 import { Command } from 'cmdk'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ROUTES } from '@/lib/constants'
+import { logger } from '@/lib/logger'
 import {
   Search,
   Plus,
@@ -41,12 +42,13 @@ import {
   Volume2,
   VolumeX,
 } from 'lucide-react'
-import { useGlobalSearch } from '@/hooks/useGlobalSearch'
+import { useGlobalSearch, type SearchResult } from '@/hooks/useGlobalSearch'
 import { useAiSuggestions } from '@/hooks/useAiSuggestions'
 import { parseCommand, formatCommandSummary } from '@/lib/commandParser'
 import { getHistory, addToHistory, type HistoryItem } from '@/lib/commandHistory'
 import { analyzeClipboard, type ClipboardSuggestion } from '@/lib/clipboardDetection'
 import { playSound, haptic, showConfetti, initFeedback, getFeedbackSettings, toggleSound, toggleHaptic } from '@/lib/feedback'
+import type { Person, Organisation } from '@/lib/types'
 
 interface CommandPaletteV3Props {
   open: boolean
@@ -57,7 +59,8 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
   const router = useRouter()
   const [search, setSearch] = useState('')
   const [mode, setMode] = useState<'command' | 'recent' | 'chainAction'>('command')
-  const [selectedEntity, setSelectedEntity] = useState<any>(null)
+  type SelectedEntity = (Person & { type: 'person' }) | (Organisation & { type: 'organisation' })
+  const [selectedEntity, setSelectedEntity] = useState<SelectedEntity | null>(null)
   const [clipboardSuggestion, setClipboardSuggestion] = useState<ClipboardSuggestion | null>(null)
   const [recentItems, setRecentItems] = useState<HistoryItem[]>([])
   const [feedbackSettings, setFeedbackSettings] = useState(getFeedbackSettings())
@@ -135,28 +138,60 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
     command()
   }, [onOpenChange])
 
-  const handleSelect = useCallback((item: any, type: 'person' | 'organisation') => {
+  const handleSelectEntity = useCallback((entity: Person | Organisation, type: 'person' | 'organisation') => {
     haptic('light')
     playSound('select')
 
+    const selected =
+      type === 'person'
+        ? ({ ...(entity as Person), type } as SelectedEntity)
+        : ({ ...(entity as Organisation), type } as SelectedEntity)
+
     // Store selected entity for chain actions
-    setSelectedEntity({ ...item, type })
+    setSelectedEntity(selected)
     setSearch('>')
+
+    const label =
+      type === 'person'
+        ? `${(entity as Person).first_name ?? ''} ${(entity as Person).last_name ?? ''}`.trim() ||
+          (entity as Person).personal_email ||
+          'Contact'
+        : (entity as Organisation).name
 
     // Add to history
     addToHistory({
-      query: type === 'person' ? `${item.first_name} ${item.last_name}` : item.name,
+      query: label,
       type: 'search',
       metadata: {
-        entityId: item.id,
+        entityId: entity.id,
         entityType: type,
       },
     })
   }, [])
 
+  const handleResultSelect = useCallback(
+    (result: SearchResult) => {
+      if (result.type === 'person' || result.type === 'organisation') {
+        handleSelectEntity(result.data as Person | Organisation, result.type)
+        return
+      }
+
+      runCommand(() => router.push(result.url), result.title, 'navigation')
+    },
+    [handleSelectEntity, runCommand, router]
+  )
+
   const hasSearch = search.length >= 2 && !search.startsWith('>')
   const hasResults = results.length > 0
   const showCalculator = parsedCommand.intent === 'calculate'
+  const getSelectedEntityLabel = useCallback((entity: SelectedEntity) => {
+    if (entity.type === 'person') {
+      const { first_name, last_name, personal_email } = entity
+      const label = `${first_name ?? ''} ${last_name ?? ''}`.trim()
+      return label || personal_email || 'Contact'
+    }
+    return entity.name || 'Organisation'
+  }, [])
 
   if (!open) return null
 
@@ -324,7 +359,15 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                       </div>
                       <CommandItemV3
                         icon={Copy}
-                        onSelect={() => runCommand(() => console.log('Clipboard action'), clipboardSuggestion.value)}
+                        onSelect={() =>
+                          runCommand(
+                            () =>
+                              logger.info('CommandPalette: clipboard action executed', {
+                                value: clipboardSuggestion.value,
+                              }),
+                            clipboardSuggestion.value
+                          )
+                        }
                       >
                         <div className="flex flex-col gap-0.5">
                           <span className="font-medium tracking-[0.02em] text-gray-900 dark:text-slate-100">
@@ -392,7 +435,9 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                               onOpenChange(false)
                             } else {
                               // Generic action
-                              console.log('AI Suggestion:', suggestion)
+                              logger.info('CommandPalette: fallback AI suggestion executed', {
+                                suggestion,
+                              })
                               onOpenChange(false)
                             }
 
@@ -448,7 +493,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                         <CommandItemV3
                           key={`${result.type}-${result.id}`}
                           icon={result.type === 'person' ? User : Building}
-                          onSelect={() => handleSelect(result.data, result.type)}
+                          onSelect={() => handleResultSelect(result)}
                         >
                           <div className="flex flex-col gap-0.5">
                             <span className="font-medium tracking-[0.02em] text-gray-900 dark:text-slate-100">
@@ -469,23 +514,38 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                   {mode === 'chainAction' && selectedEntity && (
                     <div className="mb-2 px-2">
                       <div className="text-xs font-medium text-gray-400 tracking-[0.04em] uppercase mb-2 px-3">
-                        ⚡ Actions pour {selectedEntity.first_name || selectedEntity.name}
+                        ⚡ Actions pour {getSelectedEntityLabel(selectedEntity)}
                       </div>
                       <CommandItemV3
                         icon={Mail}
-                        onSelect={() => runCommand(() => console.log('Email'), `Email ${selectedEntity.name}`)}
+                        onSelect={() =>
+                          runCommand(
+                            () => logger.info('CommandPalette: email action triggered', { entityId: selectedEntity.id, entityType: selectedEntity.type }),
+                            `Email ${getSelectedEntityLabel(selectedEntity)}`
+                          )
+                        }
                       >
                         Envoyer un email
                       </CommandItemV3>
                       <CommandItemV3
                         icon={Phone}
-                        onSelect={() => runCommand(() => console.log('Call'), `Appeler ${selectedEntity.name}`)}
+                        onSelect={() =>
+                          runCommand(
+                            () => logger.info('CommandPalette: call action triggered', { entityId: selectedEntity.id, entityType: selectedEntity.type }),
+                            `Appeler ${getSelectedEntityLabel(selectedEntity)}`
+                          )
+                        }
                       >
                         Créer tâche appel
                       </CommandItemV3>
                       <CommandItemV3
                         icon={Calendar}
-                        onSelect={() => runCommand(() => console.log('Interaction'), `Interaction ${selectedEntity.name}`)}
+                        onSelect={() =>
+                          runCommand(
+                            () => logger.info('CommandPalette: interaction action triggered', { entityId: selectedEntity.id, entityType: selectedEntity.type }),
+                            `Interaction ${getSelectedEntityLabel(selectedEntity)}`
+                          )
+                        }
                       >
                         Créer interaction
                       </CommandItemV3>

@@ -4,6 +4,8 @@
 
 import { BaseHttpClient } from '../core/client'
 
+type OutlookSignature = Record<string, unknown>
+
 export class IntegrationsAPI extends BaseHttpClient {
   // ============= OUTLOOK =============
 
@@ -33,8 +35,8 @@ export class IntegrationsAPI extends BaseHttpClient {
   /**
    * Sync Outlook messages
    */
-  async outlookSync(limit: number = 50): Promise<{ messages_count: number; signatures_count: number; signatures: any[] }> {
-    return this.request<{ messages_count: number; signatures_count: number; signatures: any[] }>(
+  async outlookSync(limit: number = 50): Promise<{ messages_count: number; signatures_count: number; signatures: OutlookSignature[] }> {
+    return this.request<{ messages_count: number; signatures_count: number; signatures: OutlookSignature[] }>(
       `/integrations/outlook/sync?limit=${limit}`
     )
   }
@@ -42,8 +44,8 @@ export class IntegrationsAPI extends BaseHttpClient {
   /**
    * Get Outlook signatures
    */
-  async outlookGetSignatures(): Promise<{ signatures: any[] }> {
-    return this.request<{ signatures: any[] }>(
+  async outlookGetSignatures(): Promise<{ signatures: OutlookSignature[] }> {
+    return this.request<{ signatures: OutlookSignature[] }>(
       '/integrations/outlook/signatures'
     )
   }

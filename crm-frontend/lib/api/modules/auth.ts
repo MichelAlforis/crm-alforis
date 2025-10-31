@@ -22,11 +22,14 @@ export class AuthAPI extends BaseHttpClient {
   async getCurrentUser(): Promise<UserInfo | null> {
     try {
       return await this.request<UserInfo>('/auth/me')
-    } catch (error: any) {
-      if (error?.status_code === 401) {
-        return null
+    } catch (error: unknown) {
+      if (typeof error === 'object' && error !== null && 'status_code' in error) {
+        const { status_code } = error as { status_code?: number }
+        if (status_code === 401) {
+          return null
+        }
       }
-      throw error
+      throw error instanceof Error ? error : new Error('Failed to fetch current user')
     }
   }
 

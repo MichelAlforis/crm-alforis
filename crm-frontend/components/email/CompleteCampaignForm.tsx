@@ -13,6 +13,29 @@ import { apiClient } from '@/lib/api'
 import { useConfirm } from '@/hooks/useConfirm'
 import { logger } from '@/lib/logger'
 
+const getErrorMessage = (error: unknown, fallback: string): string => {
+  if (
+    error &&
+    typeof error === 'object' &&
+    'response' in error &&
+    error.response &&
+    typeof error.response === 'object' &&
+    'data' in error.response &&
+    error.response.data &&
+    typeof error.response.data === 'object' &&
+    'detail' in error.response.data &&
+    typeof error.response.data.detail === 'string'
+  ) {
+    return error.response.data.detail
+  }
+
+  if (error instanceof Error && error.message) {
+    return error.message
+  }
+
+  return fallback
+}
+
 interface EmailTemplate {
   id: number
   name: string
@@ -134,7 +157,10 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
     }
   }, [formData.template_id, templates])
 
-  const handleFieldChange = (field: keyof CampaignFormData, value: any) => {
+  const handleFieldChange = <K extends keyof CampaignFormData>(
+    field: K,
+    value: CampaignFormData[K]
+  ) => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
@@ -169,11 +195,14 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
       setFormData(prev => ({ ...prev, template_id: createdTemplate.id }))
       setShowTemplateEditor(false)
       setNewTemplate({ name: '', subject: '', content: { html: '' } })
-    } catch (error: any) {
+    } catch (error: unknown) {
       logger.error('Failed to create template:', error)
       confirm({
         title: 'Erreur lors de la création',
-        message: error?.response?.data?.detail || 'Impossible de créer le template. Veuillez réessayer.',
+        message: getErrorMessage(
+          error,
+          'Impossible de créer le template. Veuillez réessayer.'
+        ),
         type: 'danger',
         confirmText: 'Compris',
         onConfirm: () => {},

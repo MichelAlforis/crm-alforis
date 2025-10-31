@@ -570,7 +570,7 @@ export default function Sidebar() {
                   {/* Submenu Items */}
                   {hasSubmenu && submenuOpen && !sidebar.collapsed && (
                     <div className="ml-6 mt-1 space-y-1 border-l-2 border-white/10 pl-3">
-                      {item.submenu.map((subItem: any) => {
+                      {item.submenu?.map((subItem: SidebarItem) => {
                         const SubIcon = subItem.icon
                         // ✅ Utiliser sidebar.isActive() au lieu de pathname direct
                         const subActive = sidebar.isActive(subItem.href)

@@ -37,7 +37,7 @@ export interface Activity {
   type: ActivityType
   title: string | null
   description: string | null
-  metadata: Record<string, any> | null
+  metadata: Record<string, unknown> | null
   created_by: number | null
   occurred_at: string
   created_at: string
@@ -55,7 +55,7 @@ export interface ActivityCreateInput {
   type: ActivityType
   title: string
   description?: string
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
   occurred_at?: string
 }
 
@@ -69,7 +69,7 @@ interface UseActivitiesOptions {
 interface UseActivitiesReturn {
   activities: Activity[]
   isLoading: boolean
-  error: any
+  error: unknown
   mutate: () => void
   createActivity: (data: ActivityCreateInput) => Promise<Activity | null>
   deleteActivity: (organisationId: number, activityId: number) => Promise<boolean>
@@ -151,9 +151,14 @@ export function useActivities(options: UseActivitiesOptions = {}): UseActivities
       mutate()
 
       return newActivity
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('Erreur création activité:', err)
-      toast.error(err.response?.data?.detail || 'Erreur lors de la création')
+      if (err && typeof err === 'object' && 'response' in err) {
+        const detail = (err as { response?: { data?: { detail?: unknown } } }).response?.data?.detail
+        toast.error(typeof detail === 'string' ? detail : 'Erreur lors de la création')
+      } else {
+        toast.error('Erreur lors de la création')
+      }
       return null
     } finally {
       setIsCreating(false)
@@ -171,9 +176,14 @@ export function useActivities(options: UseActivitiesOptions = {}): UseActivities
       mutate()
 
       return true
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('Erreur suppression activité:', err)
-      toast.error(err.response?.data?.detail || 'Erreur lors de la suppression')
+      if (err && typeof err === 'object' && 'response' in err) {
+        const detail = (err as { response?: { data?: { detail?: unknown } } }).response?.data?.detail
+        toast.error(typeof detail === 'string' ? detail : 'Erreur lors de la suppression')
+      } else {
+        toast.error('Erreur lors de la suppression')
+      }
       return false
     } finally {
       setIsDeleting(false)

@@ -33,14 +33,18 @@ const DialogTrigger = React.forwardRef<
   if (!context) throw new Error("DialogTrigger must be used within Dialog")
 
   if (asChild && React.isValidElement(children)) {
+    const handleChildClick: React.MouseEventHandler<HTMLElement> = (event) => {
+      props.onClick?.(event as React.MouseEvent<HTMLButtonElement>)
+      if (typeof children.props.onClick === 'function') {
+        children.props.onClick(event)
+      }
+      context.onOpenChange(true)
+    }
+
     return React.cloneElement(children, {
       ...props,
-      onClick: (e: any) => {
-        props.onClick?.(e)
-        children.props.onClick?.(e)
-        context.onOpenChange(true)
-      },
-    } as any)
+      onClick: handleChildClick,
+    })
   }
 
   return (

@@ -219,7 +219,7 @@ function CollapsedRow<T>({ row, rowIdx, columns, getCellValue }: CollapsedRowPro
 }
 
 // ============= TABLE V2 COMPONENT =============
-export function TableV2<T = any>({
+export function TableV2<T = unknown>({
   columns,
   data,
   isLoading = false,
@@ -255,11 +255,20 @@ export function TableV2<T = any>({
   const visibleColumns = columns.filter(col => !col.hidden)
 
   // Get cell value
-  const getCellValue = (row: T, accessor: string | ((row: T) => any)) => {
+  const getCellValue = (row: T, accessor: string | ((row: T) => unknown)) => {
     if (typeof accessor === 'function') {
       return accessor(row)
     }
-    return (row as any)[accessor]
+    if (typeof accessor === 'string') {
+      const keyParts = accessor.split('.')
+      return keyParts.reduce<unknown>((acc, key) => {
+        if (acc && typeof acc === 'object' && key in acc) {
+          return (acc as Record<string, unknown>)[key]
+        }
+        return undefined
+      }, row as Record<string, unknown>)
+    }
+    return undefined
   }
 
   // Get row key
@@ -268,7 +277,7 @@ export function TableV2<T = any>({
       return rowKey(row)
     }
     if (typeof rowKey === 'string') {
-      return (row as any)[rowKey]
+      return (row as Record<string, unknown>)[rowKey] as string | number
     }
     return idx
   }

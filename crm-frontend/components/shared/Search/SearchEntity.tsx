@@ -45,7 +45,7 @@ export function SearchEntity({
   const handleSearch = async (query: string): Promise<SearchSuggestion[]> => {
     try {
       const results = await apiClient.searchEntity(entityType, query)
-      return results.map((item: any) => ({
+      return (results as SearchEntityResult[]).map((item) => ({
         id: item.id,
         type: entityType,
         title: item.name || item.title || `${item.first_name} ${item.last_name}`,
@@ -228,4 +228,15 @@ export function SearchEntity({
       )}
     </div>
   )
+}
+type SearchEntityResult = {
+  id: string | number
+  name?: string
+  title?: string
+  first_name?: string
+  last_name?: string
+  description?: string
+  email?: string
+  phone?: string
+  [key: string]: unknown
 }

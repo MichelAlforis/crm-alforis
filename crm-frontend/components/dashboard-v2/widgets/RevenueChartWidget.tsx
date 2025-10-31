@@ -65,8 +65,9 @@ export function RevenueChartWidget({
 
       const result = await response.json()
       setData(result)
-    } catch (err: any) {
-      setError(err.message || 'Erreur lors du chargement des données')
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Erreur lors du chargement des données'
+      setError(message)
     } finally {
       setIsLoading(false)
     }

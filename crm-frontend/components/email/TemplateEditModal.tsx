@@ -88,9 +88,26 @@ export function TemplateEditModal({
       }
 
       onClose()
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('Failed to update template:', err)
-      setError(err?.response?.data?.detail || 'Impossible de mettre à jour le template')
+      let message = 'Impossible de mettre à jour le template'
+      if (
+        err &&
+        typeof err === 'object' &&
+        'response' in err &&
+        err.response &&
+        typeof err.response === 'object' &&
+        'data' in err.response &&
+        err.response.data &&
+        typeof err.response.data === 'object' &&
+        'detail' in err.response.data &&
+        typeof err.response.data.detail === 'string'
+      ) {
+        message = err.response.data.detail
+      } else if (err instanceof Error && err.message) {
+        message = err.message
+      }
+      setError(message)
     } finally {
       setIsSubmitting(false)
     }

@@ -2,8 +2,8 @@ declare module 'react-email-editor' {
   import { Component } from 'react'
 
   export interface Design {
-    body?: any
-    [key: string]: any
+    body?: Record<string, unknown>
+    [key: string]: unknown
   }
 
   export interface EditorRef {
@@ -20,11 +20,11 @@ declare module 'react-email-editor' {
     onLoad?: () => void
     minHeight?: string | number
     style?: React.CSSProperties
-    tools?: any
-    appearance?: any
+    tools?: Record<string, unknown>
+    appearance?: Record<string, unknown>
     projectId?: number
     locale?: string
-    options?: any
+    options?: Record<string, unknown>
   }
 
   export default class EmailEditor extends Component<EmailEditorProps> {}

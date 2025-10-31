@@ -16,6 +16,7 @@ import { DataTable, Column, QuickAction, BulkAction } from '@/components/shared/
 import { Person } from '@/lib/types'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import { personSlug } from '@/lib/utils'
+import { logger } from '@/lib/logger'
 
 const COUNTRY_LABELS = COUNTRY_OPTIONS.filter((option) => option.value).reduce(
   (acc, option) => {
@@ -192,7 +193,7 @@ export default function PeoplePageExample() {
       label: 'Exporter la sélection',
       icon: Download,
       onClick: (rows) => {
-        console.log('Exporting', rows.length, 'people:', rows)
+        logger.info('Exporting selected people (example)', { count: rows.length, rows })
         // TODO: Implement CSV export
         alert(`Export de ${rows.length} personnes (à implémenter)`)
       },
