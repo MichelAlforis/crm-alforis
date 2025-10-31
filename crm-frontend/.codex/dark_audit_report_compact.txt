@@ -1,0 +1,1664 @@
+**Audit Dark Mode**
+- **Total fichiers:** 212
+- **Dark mode complet:** 66 (31.1%)
+- **Dark mode partiel:** 19 (9.0%)
+- **Sans dark mode:** 127 (59.9%)
+---
+**🔴 P0 Critique** À faire en premier.
+**❌ app/dashboard/ai/autofill/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Ai / Autofill
+- L239: `bg-gray-50`→`dark:bg-slate-800`
+- L258: `bg-gray-50`→`dark:bg-slate-800`
+**❌ app/dashboard/ai/config/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Ai / Config
+- L28: `bg-white`→`dark:bg-slate-900`
+- L37: `text-gray-900`→`dark:text-slate-100`
+- L40: `text-gray-600`→`dark:text-slate-400`
+**✅ app/dashboard/ai/intelligence/page.tsx**
+Status: Dark mode complet; Impact: Page dashboard > Ai / Intelligence
+**❌ app/dashboard/ai/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Ai
+- L69: `text-gray-600`→`dark:text-slate-400`
+- L91,98: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `border-gray-300`→`dark:border-slate-600`
+- L143,218,234: `bg-white`→`dark:bg-slate-900`
+- L144: `text-gray-900`→`dark:text-slate-100`
+- L219: `text-gray-900`→`dark:text-slate-100`
+- L222: `bg-gray-50`→`dark:bg-slate-800`
+- L223: `text-gray-600`→`dark:text-slate-400`
+- L226: `text-gray-900`→`dark:text-slate-100`
+- L236: `text-gray-900`→`dark:text-slate-100`
+- L253: `bg-white`→`dark:bg-slate-900`
+- L255: `border-gray-200`→`dark:border-slate-700`
+- L261: `text-gray-900`→`dark:text-slate-100`
+- L262: `text-gray-600`→`dark:text-slate-400`
+- L271: `bg-gray-100`→`dark:bg-slate-800`; `hover:bg-gray-100`→`dark:hover:bg-slate-700`
+- L281: `text-gray-700`→`dark:text-slate-300`
+- L289: `border-gray-300`→`dark:border-slate-600`
+- L314: `border-gray-200`→`dark:border-slate-700`
+- L326: `text-gray-600`→`dark:text-slate-400`
+- L334: `bg-gray-50`→`dark:bg-slate-800`
+- L335: `text-gray-900`→`dark:text-slate-100`
+- L338: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L340: `text-gray-900`→`dark:text-slate-100`
+**❌ app/dashboard/ai/suggestions/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Ai / Suggestions
+- L112: `text-gray-600`→`dark:text-slate-400`
+- L119: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `border-gray-300`→`dark:border-slate-600`
+- L122: `text-gray-600`→`dark:text-slate-400`
+- L127: `bg-white`→`dark:bg-slate-900`
+- L137,156,174: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L186: `text-gray-600`→`dark:text-slate-400`
+- L219: `text-gray-900`→`dark:text-slate-100`; `text-gray-600`→`dark:text-slate-400`; `hover:text-gray-900`→`dark:hover:text-white`
+- L229: `text-gray-600`→`dark:text-slate-400`
+- L241: `bg-white`→`dark:bg-slate-900`
+**❌ app/dashboard/autofill-hitl/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Autofill Hitl
+- L235: `text-gray-900`→`dark:text-slate-100`
+- L239: `text-gray-600`→`dark:text-slate-400`
+- L273,280: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-300`→`dark:border-slate-600`
+- L289: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L292,309,327,346: `text-gray-700`→`dark:text-slate-300`
+- L298,318,340,352: `border-gray-300`→`dark:border-slate-600`
+- L365: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L367: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L377: `text-gray-700`→`dark:text-slate-300`
+- L378: `text-gray-700`→`dark:text-slate-300`
+- L379: `text-gray-700`→`dark:text-slate-300`
+- L380: `text-gray-700`→`dark:text-slate-300`
+- L381: `text-gray-700`→`dark:text-slate-300`
+- L399: `bg-gray-50`→`dark:bg-slate-800`
+- L420: `text-gray-900`→`dark:text-slate-100`
+- L471: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`
+- L508: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/campaigns/[id]/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Campaigns / Id
+- L15: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L167: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L171: `text-gray-600`→`dark:text-slate-400`
+- L237: `text-gray-600`→`dark:text-slate-400`
+- L247,259,271: `text-gray-600`→`dark:text-slate-400`
+- L281: `text-gray-600`→`dark:text-slate-400`
+- L287: `text-gray-600`→`dark:text-slate-400`
+- L294: `text-gray-600`→`dark:text-slate-400`
+- L301: `text-gray-600`→`dark:text-slate-400`
+- L307: `text-gray-600`→`dark:text-slate-400`
+- L313: `text-gray-600`→`dark:text-slate-400`
+- L325: `text-gray-600`→`dark:text-slate-400`
+- L329: `text-gray-600`→`dark:text-slate-400`
+- L333: `text-gray-600`→`dark:text-slate-400`
+- L337: `text-gray-600`→`dark:text-slate-400`
+- L341: `text-gray-600`→`dark:text-slate-400`
+- L345: `text-gray-600`→`dark:text-slate-400`
+- L349: `text-gray-600`→`dark:text-slate-400`
+- L353: `text-gray-600`→`dark:text-slate-400`
+- L354: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/campaigns/[id]/preview/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Campaigns / Id / Preview
+- L92: `text-gray-600`→`dark:text-slate-400`
+- L143: `text-gray-600`→`dark:text-slate-400`
+- L157: `text-gray-600`→`dark:text-slate-400`
+- L221: `bg-white`→`dark:bg-slate-900`
+**❌ app/dashboard/campaigns/new/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Campaigns / New
+- L79: `text-gray-900`→`dark:text-slate-100`
+- L83: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/campaigns/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Campaigns
+- L13: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L83: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L177: `text-gray-700`→`dark:text-slate-300`
+- L180: `bg-gray-100`→`dark:bg-slate-800`
+- L181: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/demo-container-queries/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Demo Container Queries
+- L28: `text-gray-900`→`dark:text-slate-100`
+- L33: `text-gray-600`→`dark:text-slate-400`
+- L39: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L40: `text-gray-600`→`dark:text-slate-400`
+- L49,60,71: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L85,143,182: `text-gray-900`→`dark:text-slate-100`
+- L89: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L104: `text-gray-900`→`dark:text-slate-100`
+- L107: `text-gray-600`→`dark:text-slate-400`
+- L113,117: `bg-gray-50`→`dark:bg-slate-800`
+- L115: `text-gray-700`→`dark:text-slate-300`
+- L119: `text-gray-700`→`dark:text-slate-300`
+- L121: `bg-gray-50`→`dark:bg-slate-800`
+- L123: `text-gray-700`→`dark:text-slate-300`
+- L133: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+- L147,186: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L153: `border-gray-200`→`dark:border-slate-700`
+- L159: `text-gray-900`→`dark:text-slate-100`
+- L162,199: `text-gray-600`→`dark:text-slate-400`
+- L197: `border-gray-200`→`dark:border-slate-700`
+**❌ app/dashboard/demo-fluid/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Demo Fluid
+- L20: `text-gray-900`→`dark:text-slate-100`
+- L25: `text-gray-600`→`dark:text-slate-400`
+- L32,36,40: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L34: `text-gray-600`→`dark:text-slate-400`
+- L38: `text-gray-600`→`dark:text-slate-400`
+- L42: `text-gray-600`→`dark:text-slate-400`
+- L49: `bg-white`→`dark:bg-slate-900`
+- L51,134: `text-gray-900`→`dark:text-slate-100`
+- L59: `text-gray-900`→`dark:text-slate-100`
+- L62,72,82,92,103,113: `text-gray-600`→`dark:text-slate-400`
+- L69: `text-gray-900`→`dark:text-slate-100`
+- L79: `text-gray-900`→`dark:text-slate-100`
+- L89: `text-gray-900`→`dark:text-slate-100`
+- L98,108,118: `border-gray-200`→`dark:border-slate-700`
+- L99: `text-gray-600`→`dark:text-slate-400`
+- L100: `text-gray-900`→`dark:text-slate-100`
+- L109: `text-gray-600`→`dark:text-slate-400`
+- L110: `text-gray-900`→`dark:text-slate-100`
+- L119: `text-gray-600`→`dark:text-slate-400`
+- L120: `text-gray-600`→`dark:text-slate-400`
+- L123: `text-gray-600`→`dark:text-slate-400`
+- L132: `bg-gray-50`→`dark:bg-slate-800`
+- L139: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L140: `text-gray-600`→`dark:text-slate-400`
+- L154: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L155: `text-gray-600`→`dark:text-slate-400`
+- L166: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L167: `text-gray-600`→`dark:text-slate-400`
+- L179: `bg-white`→`dark:bg-slate-900`
+- L181: `text-gray-900`→`dark:text-slate-100`
+- L184: `text-gray-600`→`dark:text-slate-400`
+- L192: `border-gray-200`→`dark:border-slate-700`
+- L197: `text-gray-900`→`dark:text-slate-100`
+- L200: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/demo-modern-units/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Demo Modern Units
+- L18: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L32: `text-gray-900`→`dark:text-slate-100`
+- L35: `text-gray-600`→`dark:text-slate-400`
+- L65,138,192: `text-gray-900`→`dark:text-slate-100`
+- L71: `bg-white`→`dark:bg-slate-900`
+- L94,126: `text-gray-600`→`dark:text-slate-400`
+- L103: `bg-white`→`dark:bg-slate-900`
+- L196: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L222: `bg-white`→`dark:bg-slate-900`
+- L223: `text-gray-700`→`dark:text-slate-300`
+- L352: `text-gray-900`→`dark:text-slate-100`
+- L361,376: `text-gray-700`→`dark:text-slate-300`
+- L367,382: `text-gray-600`→`dark:text-slate-400`
+- L393: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L402: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/demo-table-v2/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Demo Table V2
+- L113: `text-gray-900`→`dark:text-slate-100`
+- L141: `text-gray-900`→`dark:text-slate-100`; `text-gray-700`→`dark:text-slate-300`; `hover:text-gray-900`→`dark:hover:text-white`
+- L155: `text-gray-700`→`dark:text-slate-300`
+- L163: `text-gray-600`→`dark:text-slate-400`
+- L177: `bg-gray-100`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L214: `text-gray-600`→`dark:text-slate-400`
+- L285: `text-gray-900`→`dark:text-slate-100`
+- L288: `text-gray-600`→`dark:text-slate-400`
+- L297: `text-gray-900`→`dark:text-slate-100`
+- L298,306,314,322: `text-gray-600`→`dark:text-slate-400`
+- L305: `text-gray-900`→`dark:text-slate-100`
+- L313: `text-gray-900`→`dark:text-slate-100`
+- L321: `text-gray-900`→`dark:text-slate-100`
+- L330,375: `text-gray-900`→`dark:text-slate-100`
+- L333: `text-gray-700`→`dark:text-slate-300`
+- L374: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L380: `text-gray-900`→`dark:text-slate-100`
+- L381,391: `text-gray-700`→`dark:text-slate-300`
+- L390: `text-gray-900`→`dark:text-slate-100`
+**❌ app/dashboard/email-campaigns/[id]/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Email Campaigns / Id
+- L61: `bg-gray-50`→`dark:bg-slate-800`
+- L440: `bg-white`→`dark:bg-slate-900`
+**✅ app/dashboard/email-campaigns/new/page.tsx**
+Status: Dark mode complet; Impact: Page dashboard > Email Campaigns / New
+**❌ app/dashboard/email-campaigns/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Email Campaigns
+- L28: `bg-gray-50`→`dark:bg-slate-800`
+**❌ app/dashboard/email-templates/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Email Templates
+- L399: `bg-white`→`dark:bg-slate-900`
+**❌ app/dashboard/help/guide-demarrage/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Help / Guide Demarrage
+- L10: `text-gray-600`→`dark:text-slate-400`
+- L11: `text-gray-900`→`dark:text-slate-100`; `hover:text-gray-900`→`dark:hover:text-white`
+- L15: `text-gray-900`→`dark:text-slate-100`
+- L25: `text-gray-900`→`dark:text-slate-100`
+- L28: `text-gray-600`→`dark:text-slate-400`
+- L65: `text-gray-900`→`dark:text-slate-100`
+- L68,106: `text-gray-700`→`dark:text-slate-300`
+- L71: `text-gray-700`→`dark:text-slate-300`
+- L89: `bg-gray-50`→`dark:bg-slate-800`
+- L90: `text-gray-700`→`dark:text-slate-300`
+- L102,153,200,251: `text-gray-900`→`dark:text-slate-100`
+- L109,160,207,258: `text-gray-700`→`dark:text-slate-300`
+- L113: `bg-gray-100`→`dark:bg-slate-800`
+- L157,204,255: `text-gray-700`→`dark:text-slate-300`
+- L300: `text-gray-900`→`dark:text-slate-100`
+- L303: `text-gray-700`→`dark:text-slate-300`
+- L309,319,329: `bg-white`→`dark:bg-slate-900`
+- L311,321,331: `text-gray-900`→`dark:text-slate-100`
+- L315: `text-gray-600`→`dark:text-slate-400`
+- L325: `text-gray-600`→`dark:text-slate-400`
+- L335: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/help/guides/organisations/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Help / Guides / Organisations
+- L11: `text-gray-600`→`dark:text-slate-400`
+- L12: `text-gray-900`→`dark:text-slate-100`; `hover:text-gray-900`→`dark:hover:text-white`
+- L16: `text-gray-900`→`dark:text-slate-100`; `hover:text-gray-900`→`dark:hover:text-white`
+- L20: `text-gray-900`→`dark:text-slate-100`
+- L34: `text-gray-600`→`dark:text-slate-400`
+- L36: `text-gray-900`→`dark:text-slate-100`
+- L37: `text-gray-600`→`dark:text-slate-400`
+- L56,131,168,217,264: `text-gray-900`→`dark:text-slate-100`
+- L66: `text-gray-900`→`dark:text-slate-100`
+- L67,121,134,171,220: `text-gray-700`→`dark:text-slate-300`
+- L68: `bg-gray-100`→`dark:bg-slate-800`
+- L78: `text-gray-900`→`dark:text-slate-100`
+- L79: `text-gray-700`→`dark:text-slate-300`
+- L90: `text-gray-900`→`dark:text-slate-100`
+- L91: `bg-gray-50`→`dark:bg-slate-800`
+- L93: `text-gray-900`→`dark:text-slate-100`
+- L94: `text-gray-600`→`dark:text-slate-400`
+- L97: `text-gray-900`→`dark:text-slate-100`
+- L98: `text-gray-600`→`dark:text-slate-400`
+- L101: `text-gray-900`→`dark:text-slate-100`
+- L102,178,184,190,196,202,208,257: `text-gray-600`→`dark:text-slate-400`
+- L108: `text-gray-900`→`dark:text-slate-100`
+- L109: `text-gray-600`→`dark:text-slate-400`
+- L120: `text-gray-900`→`dark:text-slate-100`
+- L140,269: `text-gray-700`→`dark:text-slate-300`
+- L146,273: `text-gray-700`→`dark:text-slate-300`
+- L152,277: `text-gray-700`→`dark:text-slate-300`
+- L158,281: `text-gray-700`→`dark:text-slate-300`
+- L176,182,188,194,200,206: `border-gray-200`→`dark:border-slate-700`
+- L177: `text-gray-900`→`dark:text-slate-100`
+- L183: `text-gray-900`→`dark:text-slate-100`
+- L189: `text-gray-900`→`dark:text-slate-100`
+- L195: `text-gray-900`→`dark:text-slate-100`
+- L201: `text-gray-900`→`dark:text-slate-100`
+- L207: `text-gray-900`→`dark:text-slate-100`
+- L224: `bg-gray-50`→`dark:bg-slate-800`
+- L285: `text-gray-700`→`dark:text-slate-300`
+- L338: `text-gray-900`→`dark:text-slate-100`
+- L342,348,354,360: `border-gray-200`→`dark:border-slate-700`
+- L344: `text-gray-900`→`dark:text-slate-100`
+- L350: `text-gray-900`→`dark:text-slate-100`
+- L356: `text-gray-900`→`dark:text-slate-100`
+- L362: `text-gray-900`→`dark:text-slate-100`
+- L368: `bg-gray-50`→`dark:bg-slate-800`
+- L369: `text-gray-700`→`dark:text-slate-300`
+**❌ app/dashboard/help/guides/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Help / Guides
+- L161: `text-gray-600`→`dark:text-slate-400`
+- L162: `text-gray-900`→`dark:text-slate-100`; `hover:text-gray-900`→`dark:hover:text-white`
+- L166: `text-gray-900`→`dark:text-slate-100`
+- L171: `text-gray-900`→`dark:text-slate-100`
+- L172: `text-gray-600`→`dark:text-slate-400`
+- L186: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L227: `bg-white`→`dark:bg-slate-900`
+- L237: `text-gray-700`→`dark:text-slate-300`
+- L242: `text-gray-600`→`dark:text-slate-400`
+- L263: `text-gray-900`→`dark:text-slate-100`
+- L266: `text-gray-600`→`dark:text-slate-400`
+- L278: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+**❌ app/dashboard/help/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Help
+- L449: `text-gray-900`→`dark:text-slate-100`
+- L452: `text-gray-600`→`dark:text-slate-400`
+- L466: `bg-white`→`dark:bg-slate-900`; `text-gray-900`→`dark:text-slate-100`; `border-gray-200`→`dark:border-slate-700`
+- L473: `text-gray-900`→`dark:text-slate-100`
+- L486: `bg-white`→`dark:bg-slate-900`
+- L489: `text-gray-900`→`dark:text-slate-100`
+- L492: `text-gray-600`→`dark:text-slate-400`
+- L502: `text-gray-900`→`dark:text-slate-100`
+- L513: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L524: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L525: `text-gray-600`→`dark:text-slate-400`
+- L533: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L537: `bg-gray-50`→`dark:bg-slate-800`
+- L543: `text-gray-900`→`dark:text-slate-100`
+- L554: `text-gray-600`→`dark:text-slate-400`
+- L565: `border-gray-200`→`dark:border-slate-700`
+- L571: `text-gray-900`→`dark:text-slate-100`
+- L574: `text-gray-600`→`dark:text-slate-400`
+- L582,598,612: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L585: `text-gray-900`→`dark:text-slate-100`
+- L586: `text-gray-600`→`dark:text-slate-400`
+- L601: `text-gray-900`→`dark:text-slate-100`
+- L602: `text-gray-600`→`dark:text-slate-400`
+- L615: `text-gray-900`→`dark:text-slate-100`
+- L616: `text-gray-600`→`dark:text-slate-400`
+- L621: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/help/tutoriels/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Help / Tutoriels
+- L54: `text-gray-600`→`dark:text-slate-400`
+- L55: `text-gray-900`→`dark:text-slate-100`; `hover:text-gray-900`→`dark:hover:text-white`
+- L59: `text-gray-900`→`dark:text-slate-100`
+- L69: `text-gray-900`→`dark:text-slate-100`
+- L70: `text-gray-600`→`dark:text-slate-400`
+- L80: `text-gray-900`→`dark:text-slate-100`
+- L83: `text-gray-700`→`dark:text-slate-300`
+- L87,93,99,105: `bg-white`→`dark:bg-slate-900`
+- L89,95,101,107: `text-gray-600`→`dark:text-slate-400`
+- L116: `text-gray-900`→`dark:text-slate-100`
+- L123: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L139: `text-gray-900`→`dark:text-slate-100`
+- L140: `text-gray-600`→`dark:text-slate-400`
+- L149: `text-gray-900`→`dark:text-slate-100`
+- L152: `text-gray-700`→`dark:text-slate-300`
+- L166: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L167: `text-gray-900`→`dark:text-slate-100`
+- L170: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/imports/unified/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Imports / Unified
+- L33: `bg-white`→`dark:bg-slate-900`
+- L40,52: `bg-white`→`dark:bg-slate-900`
+- L65: `bg-white`→`dark:bg-slate-900`
+**❌ app/dashboard/inbox/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Inbox
+- L65: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`
+- L73: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L79: `text-gray-900`→`dark:text-slate-100`
+- L86: `text-gray-600`→`dark:text-slate-400`
+- L96: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`
+- L127: `text-gray-600`→`dark:text-slate-400`
+- L148,155,162: `bg-gray-50`→`dark:bg-slate-800`; `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-200`→`dark:border-slate-700`; `border-gray-300`→`dark:border-slate-600`; `hover:bg-gray-100`→`dark:hover:bg-slate-700`
+- L288: `text-gray-900`→`dark:text-slate-100`
+- L289: `text-gray-600`→`dark:text-slate-400`
+- L307,321: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L309,323: `bg-gray-100`→`dark:bg-slate-800`
+- L310,324: `text-gray-600`→`dark:text-slate-400`
+- L315: `text-gray-600`→`dark:text-slate-400`
+- L316: `text-gray-900`→`dark:text-slate-100`
+- L329: `text-gray-600`→`dark:text-slate-400`
+- L330: `text-gray-900`→`dark:text-slate-100`
+- L335: `bg-white`→`dark:bg-slate-900`
+- L343: `text-gray-600`→`dark:text-slate-400`
+- L349: `bg-white`→`dark:bg-slate-900`
+- L357: `text-gray-600`→`dark:text-slate-400`
+- L368,373: `bg-white`→`dark:bg-slate-900`
+- L370: `text-gray-600`→`dark:text-slate-400`
+- L374: `bg-gray-100`→`dark:bg-slate-800`
+**❌ app/dashboard/kpis/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Kpis
+- L212: `text-gray-700`→`dark:text-slate-300`
+- L218: `border-gray-300`→`dark:border-slate-600`
+- L254: `text-gray-600`→`dark:text-slate-400`
+- L258: `text-gray-600`→`dark:text-slate-400`
+- L262: `text-gray-600`→`dark:text-slate-400`
+- L266: `text-gray-600`→`dark:text-slate-400`
+- L270: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/layout.tsx**
+Status: Sans dark mode; Impact: Page dashboard principale
+- L50: `text-gray-900`→`dark:text-slate-100`
+- L88: `bg-gray-50`→`dark:bg-slate-800`
+- L91: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+**✅ app/dashboard/mailing-lists/page.tsx**
+Status: Dark mode complet; Impact: Page dashboard > Mailing Lists
+**❌ app/dashboard/mandats/[id]/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Mandats / Id
+- L192: `bg-gray-100`→`dark:bg-slate-800`
+- L239: `text-gray-600`→`dark:text-slate-400`
+- L271: `text-gray-600`→`dark:text-slate-400`
+- L277: `text-gray-600`→`dark:text-slate-400`
+- L285: `text-gray-600`→`dark:text-slate-400`
+- L289: `text-gray-600`→`dark:text-slate-400`
+- L314: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/mandats/new/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Mandats / New
+- L33: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/mandats/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Mandats
+- L239: `text-gray-600`→`dark:text-slate-400`
+- L248: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/marketing/campaigns/[id]/new/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Marketing / Campaigns / Id / New
+- L372,399: `bg-gray-50`→`dark:bg-slate-800`
+**❌ app/dashboard/marketing/campaigns/[id]/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Marketing / Campaigns / Id
+- L33: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L39: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L41: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+**❌ app/dashboard/marketing/campaigns/[id]/preview/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Marketing / Campaigns / Id / Preview
+- L92: `text-gray-600`→`dark:text-slate-400`
+- L143: `text-gray-600`→`dark:text-slate-400`
+- L157: `text-gray-600`→`dark:text-slate-400`
+- L221: `bg-white`→`dark:bg-slate-900`
+**❌ app/dashboard/marketing/campaigns/[id]/sends/[sendId]/page-old.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Marketing / Campaigns / Id / Sends / Send Id / Page Old
+- L46: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L55: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L268: `bg-white`→`dark:bg-slate-900`
+**❌ app/dashboard/marketing/campaigns/[id]/sends/[sendId]/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Marketing / Campaigns / Id / Sends / Send Id
+- L56: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L59: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L237: `bg-gray-100`→`dark:bg-slate-800`
+- L238: `text-gray-600`→`dark:text-slate-400`
+- L342: `bg-white`→`dark:bg-slate-900`
+**❌ app/dashboard/marketing/campaigns/new/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Marketing / Campaigns / New
+- L185: `text-gray-900`→`dark:text-slate-100`
+- L189: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/marketing/campaigns/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Marketing / Campaigns
+- L18: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L163: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L282: `text-gray-700`→`dark:text-slate-300`
+- L285: `bg-gray-100`→`dark:bg-slate-800`
+- L286: `text-gray-600`→`dark:text-slate-400`
+**✅ app/dashboard/marketing/mailing-lists/[id]/page.tsx**
+Status: Dark mode complet; Impact: Page dashboard > Marketing / Mailing Lists / Id
+**✅ app/dashboard/marketing/mailing-lists/new/page.tsx**
+Status: Dark mode complet; Impact: Page dashboard > Marketing / Mailing Lists / New
+**✅ app/dashboard/marketing/mailing-lists/page.tsx**
+Status: Dark mode complet; Impact: Page dashboard > Marketing / Mailing Lists
+**✅ app/dashboard/marketing/page.tsx**
+Status: Dark mode complet; Impact: Page dashboard > Marketing
+**✅ app/dashboard/marketing/templates/page.tsx**
+Status: Dark mode complet; Impact: Page dashboard > Marketing / Templates
+**❌ app/dashboard/monitoring/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Monitoring
+- L226: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`
+- L283: `text-gray-700`→`dark:text-slate-300`
+- L298: `text-gray-700`→`dark:text-slate-300`
+- L303: `text-gray-900`→`dark:text-slate-100`
+- L320: `text-gray-700`→`dark:text-slate-300`
+- L325: `text-gray-900`→`dark:text-slate-100`
+- L344: `text-gray-700`→`dark:text-slate-300`
+- L349: `text-gray-900`→`dark:text-slate-100`
+- L375: `text-gray-900`→`dark:text-slate-100`
+- L376: `text-gray-600`→`dark:text-slate-400`
+- L385: `text-gray-600`→`dark:text-slate-400`
+- L402,414,421,428,437,444,502,522,529,540,549: `bg-white`→`dark:bg-slate-900`
+- L403: `text-gray-600`→`dark:text-slate-400`
+- L415: `text-gray-600`→`dark:text-slate-400`
+- L422: `text-gray-600`→`dark:text-slate-400`
+- L429: `text-gray-600`→`dark:text-slate-400`
+- L430: `text-gray-900`→`dark:text-slate-100`
+- L438: `text-gray-600`→`dark:text-slate-400`
+- L445: `text-gray-600`→`dark:text-slate-400`
+- L451,496: `bg-white`→`dark:bg-slate-900`
+- L452: `text-gray-600`→`dark:text-slate-400`
+- L474: `text-gray-900`→`dark:text-slate-100`
+- L475: `text-gray-600`→`dark:text-slate-400`
+- L497: `text-gray-600`→`dark:text-slate-400`
+- L503: `text-gray-600`→`dark:text-slate-400`
+- L523: `text-gray-600`→`dark:text-slate-400`
+- L524: `text-gray-900`→`dark:text-slate-100`
+- L530: `text-gray-600`→`dark:text-slate-400`
+- L541: `text-gray-600`→`dark:text-slate-400`
+- L550: `text-gray-600`→`dark:text-slate-400`
+- L580: `text-gray-600`→`dark:text-slate-400`
+- L584: `text-gray-600`→`dark:text-slate-400`
+- L588: `text-gray-600`→`dark:text-slate-400`
+- L592: `text-gray-600`→`dark:text-slate-400`
+- L596: `text-gray-600`→`dark:text-slate-400`
+- L601: `text-gray-600`→`dark:text-slate-400`
+- L641: `bg-white`→`dark:bg-slate-900`
+- L644: `text-gray-900`→`dark:text-slate-100`
+- L645: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/organisations/[id]/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Organisations / Id
+- L173: `text-gray-900`→`dark:text-slate-100`; `text-gray-600`→`dark:text-slate-400`; `hover:text-gray-900`→`dark:hover:text-white`
+- L179: `text-gray-600`→`dark:text-slate-400`
+- L186: `text-gray-600`→`dark:text-slate-400`
+- L227: `border-gray-200`→`dark:border-slate-700`
+- L234,244: `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+- L260: `text-gray-600`→`dark:text-slate-400`
+- L264: `text-gray-600`→`dark:text-slate-400`
+- L268: `text-gray-600`→`dark:text-slate-400`
+- L285: `text-gray-600`→`dark:text-slate-400`
+- L302: `text-gray-600`→`dark:text-slate-400`
+- L306: `text-gray-600`→`dark:text-slate-400`
+- L310: `text-gray-600`→`dark:text-slate-400`
+- L326: `bg-gray-50`→`dark:bg-slate-800`; `bg-gray-100`→`dark:bg-slate-800`; `hover:bg-gray-100`→`dark:hover:bg-slate-700`
+- L342: `text-gray-600`→`dark:text-slate-400`
+- L367: `text-gray-600`→`dark:text-slate-400`
+- L368: `text-gray-900`→`dark:text-slate-100`
+- L379: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/organisations/import/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Organisations / Import
+- L30: `text-gray-900`→`dark:text-slate-100`
+- L42: `text-gray-900`→`dark:text-slate-100`
+- L43: `text-gray-600`→`dark:text-slate-400`
+- L49: `bg-gray-100`→`dark:bg-slate-800`
+- L52: `bg-gray-100`→`dark:bg-slate-800`
+- L55: `bg-gray-100`→`dark:bg-slate-800`
+- L58: `bg-gray-100`→`dark:bg-slate-800`
+- L61: `bg-gray-100`→`dark:bg-slate-800`
+- L64: `bg-gray-100`→`dark:bg-slate-800`
+- L67: `bg-gray-100`→`dark:bg-slate-800`
+- L70: `bg-gray-100`→`dark:bg-slate-800`
+- L73: `bg-gray-100`→`dark:bg-slate-800`
+- L79: `bg-gray-100`→`dark:bg-slate-800`
+**❌ app/dashboard/organisations/new/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Organisations / New
+- L28: `text-gray-600`→`dark:text-slate-400`
+**✅ app/dashboard/organisations/page.tsx**
+Status: Dark mode complet; Impact: Page dashboard > Organisations
+**❌ app/dashboard/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard principale
+- L102,217,272: `text-gray-600`→`dark:text-slate-400`
+- L110: `bg-white`→`dark:bg-slate-900`; `border-gray-300`→`dark:border-slate-600`
+- L339: `text-gray-700`→`dark:text-slate-300`
+- L340: `text-gray-600`→`dark:text-slate-400`
+- L354: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+**❌ app/dashboard/people/[id]/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > People / Id
+- L298: `border-gray-200`→`dark:border-slate-700`
+- L305,315: `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+- L329: `text-gray-600`→`dark:text-slate-400`
+- L333: `text-gray-600`→`dark:text-slate-400`
+- L337: `text-gray-600`→`dark:text-slate-400`
+- L354: `text-gray-600`→`dark:text-slate-400`
+- L358: `text-gray-600`→`dark:text-slate-400`
+- L362: `text-gray-600`→`dark:text-slate-400`
+- L377: `text-gray-600`→`dark:text-slate-400`
+- L487: `text-gray-700`→`dark:text-slate-300`
+- L490: `border-gray-300`→`dark:border-slate-600`
+**❌ app/dashboard/people/import/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > People / Import
+- L30: `text-gray-900`→`dark:text-slate-100`
+- L42: `text-gray-900`→`dark:text-slate-100`
+- L43: `text-gray-600`→`dark:text-slate-400`
+- L49: `bg-gray-100`→`dark:bg-slate-800`
+- L52: `bg-gray-100`→`dark:bg-slate-800`
+- L55: `bg-gray-100`→`dark:bg-slate-800`
+- L58: `bg-gray-100`→`dark:bg-slate-800`
+- L61: `bg-gray-100`→`dark:bg-slate-800`
+- L64: `bg-gray-100`→`dark:bg-slate-800`
+- L67: `bg-gray-100`→`dark:bg-slate-800`
+- L70: `bg-gray-100`→`dark:bg-slate-800`
+- L73: `bg-gray-100`→`dark:bg-slate-800`
+- L79: `bg-gray-100`→`dark:bg-slate-800`
+**✅ app/dashboard/people/new/page.tsx**
+Status: Dark mode complet; Impact: Page dashboard > People / New
+**✅ app/dashboard/people/page-example.tsx**
+Status: Dark mode complet; Impact: Page dashboard > People / Page Example
+**✅ app/dashboard/people/page.tsx**
+Status: Dark mode complet; Impact: Page dashboard > People
+**❌ app/dashboard/produits/[id]/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Produits / Id
+- L158: `text-gray-600`→`dark:text-slate-400`
+- L188: `text-gray-600`→`dark:text-slate-400`
+- L192: `text-gray-600`→`dark:text-slate-400`
+- L196: `text-gray-600`→`dark:text-slate-400`
+- L200: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/produits/new/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Produits / New
+- L28: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/produits/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Produits
+- L136: `bg-gray-100`→`dark:bg-slate-800`
+- L169: `text-gray-600`→`dark:text-slate-400`
+- L236: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/search/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Search
+- L115: `text-gray-700`→`dark:text-slate-300`
+- L119: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L140: `text-gray-900`→`dark:text-slate-100`
+- L143: `text-gray-600`→`dark:text-slate-400`
+- L145: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L167: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+- L216: `text-gray-900`→`dark:text-slate-100`
+- L217: `text-gray-600`→`dark:text-slate-400`
+- L223: `border-gray-300`→`dark:border-slate-600`
+- L227: `text-gray-900`→`dark:text-slate-100`
+- L228: `text-gray-700`→`dark:text-slate-300`
+- L231: `bg-white`→`dark:bg-slate-900`
+- L235: `bg-white`→`dark:bg-slate-900`
+- L239: `bg-white`→`dark:bg-slate-900`
+- L243: `bg-white`→`dark:bg-slate-900`
+- L289: `text-gray-900`→`dark:text-slate-100`
+- L296: `text-gray-600`→`dark:text-slate-400`
+- L332: `bg-gray-100`→`dark:bg-slate-800`
+- L335: `text-gray-900`→`dark:text-slate-100`
+- L336: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/settings/email-accounts/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Settings / Email Accounts
+- L86: `bg-gray-50`→`dark:bg-slate-800`
+- L87: `text-gray-700`→`dark:text-slate-300`
+- L232: `bg-white`→`dark:bg-slate-900`
+- L250: `bg-white`→`dark:bg-slate-900`
+- L349: `bg-white`→`dark:bg-slate-900`
+- L364: `bg-white`→`dark:bg-slate-900`
+- L383,410,421,434: `bg-white`→`dark:bg-slate-900`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L396: `bg-white`→`dark:bg-slate-900`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+**❌ app/dashboard/settings/email-apis/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Settings / Email Apis
+- L154: `text-gray-900`→`dark:text-slate-100`
+- L158,576: `text-gray-600`→`dark:text-slate-400`
+- L190: `text-gray-900`→`dark:text-slate-100`
+- L193: `text-gray-600`→`dark:text-slate-400`
+- L212: `text-gray-900`→`dark:text-slate-100`
+- L228: `text-gray-600`→`dark:text-slate-400`
+- L234: `text-gray-900`→`dark:text-slate-100`
+- L239: `text-gray-900`→`dark:text-slate-100`
+- L243: `text-gray-900`→`dark:text-slate-100`
+- L254: `text-gray-900`→`dark:text-slate-100`
+- L495,656,665: `border-gray-300`→`dark:border-slate-600`
+**❌ app/dashboard/settings/integrations/AIConfigSection.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Settings / Integrations / AI Config Section
+- L159: `border-gray-200`→`dark:border-slate-700`
+- L163: `text-gray-900`→`dark:text-slate-100`
+- L164: `text-gray-600`→`dark:text-slate-400`
+- L173,423,465,526,569: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L174,215: `text-gray-900`→`dark:text-slate-100`
+- L181,198,428,446,574,591: `text-gray-700`→`dark:text-slate-300`
+- L189,205,440,458,586,603: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L213: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L230,274,318,365: `text-gray-700`→`dark:text-slate-300`
+- L258,302,346: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L264,308,352: `text-gray-600`→`dark:text-slate-400`
+- L392: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L424: `text-gray-900`→`dark:text-slate-100`
+- L466: `text-gray-900`→`dark:text-slate-100`
+- L470,488,506,546: `text-gray-700`→`dark:text-slate-300`
+- L527: `text-gray-900`→`dark:text-slate-100`
+- L537,614: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L539: `text-gray-700`→`dark:text-slate-300`
+- L570: `text-gray-900`→`dark:text-slate-100`
+- L616: `text-gray-700`→`dark:text-slate-300`
+- L627: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-300`→`dark:border-slate-600`
+**❌ app/dashboard/settings/integrations/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Settings / Integrations
+- L221: `text-gray-900`→`dark:text-slate-100`; `text-gray-600`→`dark:text-slate-400`; `hover:text-gray-900`→`dark:hover:text-white`
+- L227: `text-gray-900`→`dark:text-slate-100`
+- L228: `text-gray-600`→`dark:text-slate-400`
+- L233: `border-gray-200`→`dark:border-slate-700`
+- L243: `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+- L256,378,670: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L260,489: `text-gray-900`→`dark:text-slate-100`
+- L269: `bg-gray-50`→`dark:bg-slate-800`
+- L275: `text-gray-900`→`dark:text-slate-100`
+- L279,341,504: `text-gray-600`→`dark:text-slate-400`
+- L290,430: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`
+- L322: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-200`→`dark:border-slate-700`
+- L350: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-200`→`dark:border-slate-700`
+- L371: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L383: `text-gray-900`→`dark:text-slate-100`
+- L410: `text-gray-600`→`dark:text-slate-400`; `border-gray-200`→`dark:border-slate-700`
+- L422: `text-gray-900`→`dark:text-slate-100`
+- L442: `text-gray-600`→`dark:text-slate-400`
+- L463: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-200`→`dark:border-slate-700`
+- L469: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-200`→`dark:border-slate-700`
+- L485,649: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L530,553,575,611: `text-gray-900`→`dark:text-slate-100`
+- L537: `bg-gray-50`→`dark:bg-slate-800`
+- L539: `text-gray-900`→`dark:text-slate-100`
+- L542,563: `text-gray-600`→`dark:text-slate-400`
+- L560: `bg-white`→`dark:bg-slate-900`
+- L562: `text-gray-900`→`dark:text-slate-100`
+- L578,614: `text-gray-600`→`dark:text-slate-400`
+- L585: `bg-gray-50`→`dark:bg-slate-800`
+- L588: `text-gray-900`→`dark:text-slate-100`
+- L589,628: `text-gray-900`→`dark:text-slate-100`
+- L616: `border-gray-200`→`dark:border-slate-700`
+- L623: `bg-white`→`dark:bg-slate-900`
+- L653: `text-gray-900`→`dark:text-slate-100`
+- L661: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`; `border-gray-200`→`dark:border-slate-700`
+- L674: `text-gray-900`→`dark:text-slate-100`
+- L681: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`; `border-gray-200`→`dark:border-slate-700`
+- L700: `bg-white`→`dark:bg-slate-900`
+- L702: `text-gray-900`→`dark:text-slate-100`
+**❌ app/dashboard/settings/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Settings
+- L252: `text-gray-900`→`dark:text-slate-100`
+- L253: `text-gray-600`→`dark:text-slate-400`
+- L259,449,526: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L262,334,453,530,602,666,800,868: `text-gray-900`→`dark:text-slate-100`
+- L273,285,346: `bg-gray-50`→`dark:bg-slate-800`
+- L277,289: `text-gray-900`→`dark:text-slate-100`
+- L330,598,662,864: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L368: `text-gray-600`→`dark:text-slate-400`
+- L427: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+- L510: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L516,580: `text-gray-900`→`dark:text-slate-100`
+- L574: `border-gray-300`→`dark:border-slate-600`
+- L625: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-900`→`dark:text-slate-100`; `border-gray-200`→`dark:border-slate-700`
+- L633: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`
+- L647: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-200`→`dark:border-slate-700`; `border-gray-300`→`dark:border-slate-600`
+- L687: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L704: `text-gray-900`→`dark:text-slate-100`
+- L735: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+- L787: `bg-white`→`dark:bg-slate-900`
+- L803,823,847: `text-gray-600`→`dark:text-slate-400`
+- L813: `bg-white`→`dark:bg-slate-900`
+- L822: `text-gray-900`→`dark:text-slate-100`
+- L834: `bg-white`→`dark:bg-slate-900`
+- L844: `text-gray-900`→`dark:text-slate-100`
+- L880: `bg-gray-50`→`dark:bg-slate-800`
+- L887: `bg-white`→`dark:bg-slate-900`
+- L890: `text-gray-900`→`dark:text-slate-100`
+- L893: `text-gray-600`→`dark:text-slate-400`
+- L908: `bg-white`→`dark:bg-slate-900`
+- L924: `bg-white`→`dark:bg-slate-900`
+- L925,1058: `text-gray-900`→`dark:text-slate-100`
+- L928,1061: `text-gray-600`→`dark:text-slate-400`
+- L935: `text-gray-700`→`dark:text-slate-300`
+- L945,974,990,1011: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-300`→`dark:border-slate-600`
+- L955: `border-gray-200`→`dark:border-slate-700`
+- L958: `bg-white`→`dark:bg-slate-900`
+- L964: `text-gray-700`→`dark:text-slate-300`
+- L980: `text-gray-700`→`dark:text-slate-300`
+- L996: `text-gray-700`→`dark:text-slate-300`
+- L1032,1091: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-200`→`dark:border-slate-700`; `border-gray-300`→`dark:border-slate-600`
+- L1057: `bg-white`→`dark:bg-slate-900`
+- L1068: `text-gray-700`→`dark:text-slate-300`
+- L1083: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-300`→`dark:border-slate-600`
+**❌ app/dashboard/settings/rgpd/access-logs/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Settings / Rgpd / Access Logs
+- L114: `text-gray-900`→`dark:text-slate-100`
+- L115: `text-gray-600`→`dark:text-slate-400`
+- L127: `text-gray-900`→`dark:text-slate-100`
+- L129: `text-gray-600`→`dark:text-slate-400`
+- L135: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L139: `text-gray-700`→`dark:text-slate-300`
+- L147: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L154: `text-gray-700`→`dark:text-slate-300`
+- L161,180: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L173: `text-gray-700`→`dark:text-slate-300`
+- L205,209,215,221: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L206: `text-gray-600`→`dark:text-slate-400`
+- L207: `text-gray-900`→`dark:text-slate-100`
+- L210: `text-gray-600`→`dark:text-slate-400`
+- L216: `text-gray-600`→`dark:text-slate-400`
+- L222: `text-gray-600`→`dark:text-slate-400`
+- L230: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L233: `bg-gray-50`→`dark:bg-slate-800`
+- L258: `bg-white`→`dark:bg-slate-900`
+- L273: `bg-gray-50`→`dark:bg-slate-800`
+- L274,289: `text-gray-900`→`dark:text-slate-100`
+- L280: `text-gray-600`→`dark:text-slate-400`
+- L297,300: `text-gray-600`→`dark:text-slate-400`
+- L303,306: `text-gray-600`→`dark:text-slate-400`
+**❌ app/dashboard/settings/rgpd/my-data/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Settings / Rgpd / My Data
+- L96: `text-gray-900`→`dark:text-slate-100`
+- L98: `text-gray-600`→`dark:text-slate-400`
+- L120: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L128,176: `text-gray-900`→`dark:text-slate-100`
+- L131,179: `text-gray-600`→`dark:text-slate-400`
+- L135: `bg-gray-50`→`dark:bg-slate-800`
+- L136: `text-gray-900`→`dark:text-slate-100`
+- L137: `text-gray-600`→`dark:text-slate-400`
+- L168: `bg-white`→`dark:bg-slate-900`
+- L217: `bg-white`→`dark:bg-slate-900`
+- L223: `text-gray-900`→`dark:text-slate-100`
+- L242,259: `text-gray-700`→`dark:text-slate-300`
+- L250: `border-gray-300`→`dark:border-slate-600`
+- L268: `border-gray-300`→`dark:border-slate-600`
+- L281: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+**❌ app/dashboard/settings/sidebar-analytics/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Settings / Sidebar Analytics
+- L102: `text-gray-900`→`dark:text-slate-100`; `text-gray-600`→`dark:text-slate-400`; `hover:text-gray-900`→`dark:hover:text-white`
+- L110: `text-gray-900`→`dark:text-slate-100`
+- L113: `text-gray-600`→`dark:text-slate-400`
+- L121: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+- L128: `bg-white`→`dark:bg-slate-900`
+- L139,152,167,244: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L146: `text-gray-900`→`dark:text-slate-100`
+- L159,174: `text-gray-900`→`dark:text-slate-100`
+- L190,248: `text-gray-900`→`dark:text-slate-100`
+- L193: `text-gray-600`→`dark:text-slate-400`
+- L210: `bg-white`→`dark:bg-slate-900`
+- L213: `text-gray-900`→`dark:text-slate-100`
+- L284: `text-gray-900`→`dark:text-slate-100`
+- L334: `bg-white`→`dark:bg-slate-900`
+- L337: `text-gray-900`→`dark:text-slate-100`
+- L340: `text-gray-600`→`dark:text-slate-400`
+- L347: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-200`→`dark:border-slate-700`
+**❌ app/dashboard/settings/team/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Settings / Team
+- L58: `text-gray-900`→`dark:text-slate-100`; `text-gray-600`→`dark:text-slate-400`; `hover:text-gray-900`→`dark:hover:text-white`
+- L64: `text-gray-900`→`dark:text-slate-100`
+- L65: `text-gray-600`→`dark:text-slate-400`
+- L71,158: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L76,162: `text-gray-900`→`dark:text-slate-100`
+- L91,101,124: `bg-gray-50`→`dark:bg-slate-800`
+- L95,105: `text-gray-900`→`dark:text-slate-100`
+- L128: `text-gray-900`→`dark:text-slate-100`
+- L136: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-200`→`dark:border-slate-700`; `border-gray-300`→`dark:border-slate-600`
+- L180: `text-gray-900`→`dark:text-slate-100`
+- L189: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`
+- L198: `bg-gray-50`→`dark:bg-slate-800`
+- L199: `text-gray-900`→`dark:text-slate-100`
+- L208: `bg-white`→`dark:bg-slate-900`
+- L215: `bg-white`→`dark:bg-slate-900`; `text-gray-700`→`dark:text-slate-300`
+- L243: `bg-white`→`dark:bg-slate-900`
+- L244: `text-gray-900`→`dark:text-slate-100`
+- L247: `text-gray-600`→`dark:text-slate-400`
+- L253: `text-gray-700`→`dark:text-slate-300`
+- L269: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-300`→`dark:border-slate-600`
+- L280: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-200`→`dark:border-slate-700`; `border-gray-300`→`dark:border-slate-600`
+**❌ app/dashboard/settings/webhooks/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Settings / Webhooks
+- L234: `text-gray-600`→`dark:text-slate-400`
+- L296: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`
+- L309: `text-gray-600`→`dark:text-slate-400`
+- L397: `text-gray-700`→`dark:text-slate-300`
+- L410: `border-gray-200`→`dark:border-slate-700`
+- L435: `border-gray-300`→`dark:border-slate-600`
+- L439: `text-gray-700`→`dark:text-slate-300`
+- L454: `text-gray-700`→`dark:text-slate-300`
+- L461: `border-gray-300`→`dark:border-slate-600`
+**❌ app/dashboard/tasks/kanban/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Tasks / Kanban
+- L32: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L35: `border-gray-200`→`dark:border-slate-700`
+- L39: `text-gray-900`→`dark:text-slate-100`
+- L43: `text-gray-600`→`dark:text-slate-400`
+- L119: `border-gray-200`→`dark:border-slate-700`
+- L120: `text-gray-900`→`dark:text-slate-100`
+- L123: `bg-white`→`dark:bg-slate-900`; `text-gray-700`→`dark:text-slate-300`; `border-gray-200`→`dark:border-slate-700`
+- L213: `text-gray-900`→`dark:text-slate-100`
+- L214: `text-gray-600`→`dark:text-slate-400`
+- L220: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L221: `text-gray-600`→`dark:text-slate-400`
+- L222: `text-gray-900`→`dark:text-slate-100`
+- L227: `bg-white`→`dark:bg-slate-900`; `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+- L245: `border-gray-200`→`dark:border-slate-700`
+- L273: `bg-white`→`dark:bg-slate-900`; `text-gray-700`→`dark:text-slate-300`; `border-gray-200`→`dark:border-slate-700`
+- L274: `border-gray-300`→`dark:border-slate-600`
+**❌ app/dashboard/tasks/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Tasks
+- L18: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`
+- L50: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L53: `text-gray-900`→`dark:text-slate-100`
+- L57: `text-gray-600`→`dark:text-slate-400`
+- L94: `text-gray-600`→`dark:text-slate-400`
+- L112,119: `bg-gray-50`→`dark:bg-slate-800`; `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-200`→`dark:border-slate-700`; `border-gray-300`→`dark:border-slate-600`; `hover:bg-gray-100`→`dark:hover:bg-slate-700`
+- L150: `text-gray-900`→`dark:text-slate-100`
+- L153: `text-gray-600`→`dark:text-slate-400`
+- L291: `text-gray-900`→`dark:text-slate-100`
+- L292: `text-gray-600`→`dark:text-slate-400`
+- L321,363: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L323,365: `bg-gray-100`→`dark:bg-slate-800`
+- L324,366: `text-gray-600`→`dark:text-slate-400`
+- L329: `text-gray-600`→`dark:text-slate-400`
+- L330: `text-gray-900`→`dark:text-slate-100`
+- L335: `bg-white`→`dark:bg-slate-900`
+- L343: `text-gray-600`→`dark:text-slate-400`
+- L349: `bg-white`→`dark:bg-slate-900`
+- L357: `text-gray-600`→`dark:text-slate-400`
+- L371: `text-gray-600`→`dark:text-slate-400`
+- L372: `text-gray-900`→`dark:text-slate-100`
+- L377: `bg-white`→`dark:bg-slate-900`
+- L385: `text-gray-600`→`dark:text-slate-400`
+- L391: `bg-white`→`dark:bg-slate-900`
+- L399: `text-gray-600`→`dark:text-slate-400`
+- L416: `bg-white`→`dark:bg-slate-900`
+- L426: `bg-white`→`dark:bg-slate-900`
+- L436: `bg-white`→`dark:bg-slate-900`
+- L443: `bg-white`→`dark:bg-slate-900`; `text-gray-700`→`dark:text-slate-300`; `border-gray-200`→`dark:border-slate-700`
+- L444: `border-gray-300`→`dark:border-slate-600`
+**❌ app/dashboard/users/page.tsx**
+Status: Sans dark mode; Impact: Page dashboard > Users
+- L99: `text-gray-600`→`dark:text-slate-400`
+- L108: `bg-white`→`dark:bg-slate-900`
+- L117: `border-gray-300`→`dark:border-slate-600`
+- L120: `text-gray-700`→`dark:text-slate-300`
+- L125: `border-gray-300`→`dark:border-slate-600`
+- L133: `bg-white`→`dark:bg-slate-900`
+- L140: `bg-gray-50`→`dark:bg-slate-800`
+- L162: `bg-white`→`dark:bg-slate-900`
+- L164: `bg-gray-50`→`dark:bg-slate-800`
+- L171: `text-gray-900`→`dark:text-slate-100`
+- L180: `text-gray-900`→`dark:text-slate-100`
+- L189: `bg-gray-100`→`dark:bg-slate-800`
+- L241: `text-gray-600`→`dark:text-slate-400`
+- L249: `bg-white`→`dark:bg-slate-900`
+- L250: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L256: `text-gray-600`→`dark:text-slate-400`
+**⚠️ app/dashboard/workflows/[id]/page.tsx**
+Status: Dark mode partiel; Impact: Page dashboard > Workflows / Id
+- L195: `text-gray-600`→`dark:text-slate-400`
+- L691: `bg-gray-100`→`dark:bg-slate-800`
+**⚠️ app/dashboard/workflows/new/page.tsx**
+Status: Dark mode partiel; Impact: Page dashboard > Workflows / New
+- L214: `bg-gray-100`→`dark:bg-slate-800`
+- L261: `bg-gray-50`→`dark:bg-slate-800`
+- L307: `bg-white`→`dark:bg-slate-900`
+- L444: `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L452: `bg-gray-50`→`dark:bg-slate-800`
+- L489,526: `bg-gray-50`→`dark:bg-slate-800`
+**⚠️ app/dashboard/workflows/page.tsx**
+Status: Dark mode partiel; Impact: Page dashboard > Workflows
+- L212: `text-gray-600`→`dark:text-slate-400`
+- L417: `bg-gray-100`→`dark:bg-slate-800`
+- L449: `bg-gray-100`→`dark:bg-slate-800`
+**✅ components/activities/CreateActivityModal.tsx**
+Status: Dark mode complet; Impact: Modal / Dialog
+**❌ components/ai/SuggestionPreviewModal.tsx**
+Status: Sans dark mode; Impact: Modal / Dialog
+- L59: `bg-white`→`dark:bg-slate-900`
+- L70: `bg-white`→`dark:bg-slate-900`
+- L98: `text-gray-900`→`dark:text-slate-100`
+- L112: `text-gray-900`→`dark:text-slate-100`
+- L115: `bg-white`→`dark:bg-slate-900`
+- L126,143: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L127: `text-gray-700`→`dark:text-slate-300`
+- L144: `text-gray-900`→`dark:text-slate-100`
+- L156: `bg-gray-50`→`dark:bg-slate-800`; `bg-gray-100`→`dark:bg-slate-800`; `hover:bg-gray-100`→`dark:hover:bg-slate-700`
+- L157: `text-gray-700`→`dark:text-slate-300`
+- L163,171: `text-gray-700`→`dark:text-slate-300`
+- L166: `bg-gray-50`→`dark:bg-slate-800`
+- L185: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L188: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+**✅ components/email/TemplateCreateModal.tsx**
+Status: Dark mode complet; Impact: Modal / Dialog
+**⚠️ components/email/TemplateEditModal.tsx**
+Status: Dark mode partiel; Impact: Modal / Dialog
+- L225: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`
+**✅ components/email/TemplatePreviewModal.tsx**
+Status: Dark mode complet; Impact: Modal / Dialog
+**❌ components/integrations/OutlookConsentModal.tsx**
+Status: Sans dark mode; Impact: Modal / Dialog
+- L41: `bg-white`→`dark:bg-slate-900`
+- L43: `border-gray-200`→`dark:border-slate-700`
+- L47: `text-gray-900`→`dark:text-slate-100`
+- L57: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`; `hover:bg-gray-100`→`dark:hover:bg-slate-700`
+- L78: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-200`→`dark:border-slate-700`
+- L94,118: `text-gray-900`→`dark:text-slate-100`
+- L97,121: `text-gray-600`→`dark:text-slate-400`
+- L142: `border-gray-200`→`dark:border-slate-700`
+- L143: `text-gray-900`→`dark:text-slate-100`
+- L152,164,176: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L154,166,178: `text-gray-900`→`dark:text-slate-100`; `text-gray-700`→`dark:text-slate-300`; `hover:text-gray-900`→`dark:hover:text-white`
+- L195: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L198: `bg-white`→`dark:bg-slate-900`; `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+**✅ components/interactions/InteractionCreateModal.tsx**
+Status: Dark mode complet; Impact: Modal / Dialog
+**✅ components/mandats/MandatProduitAssociationModal.tsx**
+Status: Dark mode complet; Impact: Modal / Dialog
+**❌ components/modals/MatchPreviewModal.tsx**
+Status: Sans dark mode; Impact: Modal / Dialog
+- L50: `bg-white`→`dark:bg-slate-900`
+- L52: `bg-white`→`dark:bg-slate-900`
+- L54: `text-gray-900`→`dark:text-slate-100`
+- L57: `text-gray-600`→`dark:text-slate-400`
+- L63: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`; `hover:bg-gray-100`→`dark:hover:bg-slate-700`
+- L82: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`; `border-gray-300`→`dark:border-slate-600`
+- L90: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`
+- L108: `text-gray-600`→`dark:text-slate-400`
+- L113: `text-gray-900`→`dark:text-slate-100`
+- L117: `text-gray-600`→`dark:text-slate-400`
+- L124,130,136,159,165,171: `text-gray-600`→`dark:text-slate-400`
+- L147: `text-gray-600`→`dark:text-slate-400`
+- L150: `text-gray-900`→`dark:text-slate-100`
+- L152: `text-gray-600`→`dark:text-slate-400`
+- L182: `border-gray-200`→`dark:border-slate-700`
+- L203: `bg-gray-50`→`dark:bg-slate-800`
+- L206: `text-gray-900`→`dark:text-slate-100`; `text-gray-700`→`dark:text-slate-300`; `hover:text-gray-900`→`dark:hover:text-white`
+- L215: `text-gray-700`→`dark:text-slate-300`
+**❌ components/shared/ConfirmDialog.tsx**
+Status: Sans dark mode; Impact: Modal / Dialog
+- L87: `bg-white`→`dark:bg-slate-900`
+- L101: `text-gray-900`→`dark:text-slate-100`
+- L112: `text-gray-600`→`dark:text-slate-400`
+- L119: `bg-gray-50`→`dark:bg-slate-800`
+- L123: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+- L136: `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+**❌ components/shared/Modal.tsx**
+Status: Sans dark mode; Impact: Modal / Dialog
+- L49: `text-gray-600`→`dark:text-slate-400`
+**⚠️ components/shared/Modal/ModalBase.tsx**
+Status: Dark mode partiel; Impact: Modal / Dialog
+- L97: `text-gray-600`→`dark:text-slate-400`
+**⚠️ components/shared/Modal/ModalForm.tsx**
+Status: Dark mode partiel; Impact: Modal / Dialog
+- L50: `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L59: `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+**⚠️ components/shared/Navbar.tsx**
+Status: Dark mode partiel; Impact: Navigation > Navbar
+- L84: `bg-white`→`dark:bg-slate-900`
+- L119: `border-gray-200`→`dark:border-slate-700`
+**✅ components/shared/NavigationProgress.tsx**
+Status: Dark mode complet; Impact: Navigation > Progress indicator
+**❌ components/shared/Sidebar.tsx**
+Status: Sans dark mode; Impact: Navigation > Sidebar
+- L184: `bg-white`→`dark:bg-slate-900`
+- L187: `bg-white`→`dark:bg-slate-900`
+- L194: `bg-white`→`dark:bg-slate-900`
+- L205: `bg-white`→`dark:bg-slate-900`
+- L210: `bg-white`→`dark:bg-slate-900`
+- L291: `bg-white`→`dark:bg-slate-900`
+- L374: `bg-white`→`dark:bg-slate-900`
+- L391: `bg-white`→`dark:bg-slate-900`
+- L392: `bg-white`→`dark:bg-slate-900`
+- L421,549,600: `bg-white`→`dark:bg-slate-900`
+- L446: `bg-white`→`dark:bg-slate-900`
+- L477: `bg-white`→`dark:bg-slate-900`
+- L497: `bg-white`→`dark:bg-slate-900`
+- L518: `bg-white`→`dark:bg-slate-900`
+- L525: `bg-white`→`dark:bg-slate-900`
+- L581: `bg-white`→`dark:bg-slate-900`
+- L582: `bg-white`→`dark:bg-slate-900`
+- L648: `bg-white`→`dark:bg-slate-900`
+**⚠️ components/shared/ThemeToggle.tsx**
+Status: Dark mode partiel; Impact: Header > Theme toggle
+- L58: `bg-white`→`dark:bg-slate-900`
+---
+**🟠 P1 Important** Couverture fréquente.
+**❌ components/activities/QuickInteractionButton.tsx**
+Status: Sans dark mode; Impact: Bouton Quick Interaction Button
+- L20: `bg-gray-50`→`dark:bg-slate-800`
+- L107: `bg-white`→`dark:bg-slate-900`
+- L109: `border-gray-200`→`dark:border-slate-700`
+- L117: `bg-gray-100`→`dark:bg-slate-800`; `hover:bg-gray-100`→`dark:hover:bg-slate-700`
+- L133: `text-gray-600`→`dark:text-slate-400`
+- L140: `border-gray-200`→`dark:border-slate-700`
+- L145: `text-gray-900`→`dark:text-slate-100`
+- L160: `bg-gray-50`→`dark:bg-slate-800`
+- L163: `text-gray-900`→`dark:text-slate-100`
+- L178,201,213,229: `text-gray-700`→`dark:text-slate-300`
+- L192,237: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L209,221: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L246: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L256: `text-gray-700`→`dark:text-slate-300`
+**❌ components/ai/AIExecutionsList.tsx**
+Status: Sans dark mode; Impact: Composant AI Executions List
+- L37: `text-gray-600`→`dark:text-slate-400`
+- L44: `bg-gray-50`→`dark:bg-slate-800`
+- L46: `text-gray-600`→`dark:text-slate-400`
+- L76: `bg-white`→`dark:bg-slate-900`
+- L87: `bg-gray-100`→`dark:bg-slate-800`
+- L94: `text-gray-900`→`dark:text-slate-100`
+- L98: `text-gray-600`→`dark:text-slate-400`
+- L152: `text-gray-600`→`dark:text-slate-400`
+- L173: `text-gray-900`→`dark:text-slate-100`
+**❌ components/ai/AIStatCard.tsx**
+Status: Sans dark mode; Impact: Card AI Stat Card
+- L35: `bg-white`→`dark:bg-slate-900`
+- L47: `text-gray-600`→`dark:text-slate-400`
+- L48: `text-gray-900`→`dark:text-slate-100`
+**❌ components/ai/OrganisationAISuggestions.tsx**
+Status: Sans dark mode; Impact: Composant Organisation AI Suggestions
+- L62: `text-gray-900`→`dark:text-slate-100`
+- L73: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L93: `bg-gray-50`→`dark:bg-slate-800`
+- L95: `text-gray-600`→`dark:text-slate-400`
+**❌ components/ai/SuggestionsTable.tsx**
+Status: Sans dark mode; Impact: Composant Suggestions Table
+- L128: `bg-gray-50`→`dark:bg-slate-800`
+- L130: `text-gray-600`→`dark:text-slate-400`
+- L139: `bg-white`→`dark:bg-slate-900`
+- L142: `bg-gray-50`→`dark:bg-slate-800`
+- L152,199: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L155,158,161,164,167,170: `text-gray-600`→`dark:text-slate-400`
+- L173: `text-gray-600`→`dark:text-slate-400`
+- L178: `bg-white`→`dark:bg-slate-900`
+- L190: `bg-gray-50`→`dark:bg-slate-800`
+- L206: `text-gray-900`→`dark:text-slate-100`
+- L214: `text-gray-900`→`dark:text-slate-100`
+- L225: `text-gray-900`→`dark:text-slate-100`
+**❌ components/autofill/SuggestionPill.tsx**
+Status: Sans dark mode; Impact: Composant Suggestion Pill
+- L42: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`; `border-gray-200`→`dark:border-slate-700`
+- L168,184: `bg-white`→`dark:bg-slate-900`
+**❌ components/dashboard-v2/widgets/AIInsightsWidget.tsx**
+Status: Sans dark mode; Impact: Composant AI Insights Widget
+- L63: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L120: `border-gray-200`→`dark:border-slate-700`
+- L124: `bg-gray-100`→`dark:bg-slate-800`
+- L212: `text-gray-700`→`dark:text-slate-300`
+**❌ components/dashboard-v2/widgets/EmailPerformanceWidget.tsx**
+Status: Sans dark mode; Impact: Composant Email Performance Widget
+- L119: `text-gray-600`→`dark:text-slate-400`
+- L130: `text-gray-600`→`dark:text-slate-400`
+- L138: `text-gray-600`→`dark:text-slate-400`
+- L146: `text-gray-600`→`dark:text-slate-400`
+- L165: `border-gray-200`→`dark:border-slate-700`
+- L169: `text-gray-600`→`dark:text-slate-400`
+- L175: `text-gray-600`→`dark:text-slate-400`
+- L181: `text-gray-600`→`dark:text-slate-400`
+**❌ components/dashboard-v2/widgets/KPICardWidget.tsx**
+Status: Sans dark mode; Impact: Card KPI Card Widget
+- L86: `text-gray-600`→`dark:text-slate-400`
+**✅ components/dashboard-v2/widgets/RevenueChartWidget.tsx**
+Status: Dark mode complet; Impact: Composant Revenue Chart Widget
+**❌ components/dashboard-v2/widgets/TopClientsWidget.tsx**
+Status: Sans dark mode; Impact: Composant Top Clients Widget
+- L88: `border-gray-200`→`dark:border-slate-700`
+- L92: `bg-gray-100`→`dark:bg-slate-800`
+- L138: `border-gray-200`→`dark:border-slate-700`
+- L157: `text-gray-600`→`dark:text-slate-400`
+**❌ components/dashboard/KPICards.tsx**
+Status: Sans dark mode; Impact: Card KPI Cards
+- L46: `text-gray-600`→`dark:text-slate-400`
+- L55: `text-gray-600`→`dark:text-slate-400`
+- L64: `text-gray-600`→`dark:text-slate-400`
+- L73: `text-gray-600`→`dark:text-slate-400`
+**❌ components/dashboard/widgets/ActivityWidget.tsx**
+Status: Sans dark mode; Impact: Composant Activity Widget
+- L59: `bg-gray-100`→`dark:bg-slate-800`
+- L104,108: `bg-gray-100`→`dark:bg-slate-800`
+**❌ components/dashboard/widgets/HotLeadsWidget.tsx**
+Status: Sans dark mode; Impact: Composant Hot Leads Widget
+- L29: `bg-gray-100`→`dark:bg-slate-800`
+- L75: `bg-gray-100`→`dark:bg-slate-800`
+- L127: `bg-gray-50`→`dark:bg-slate-800`
+- L134: `text-gray-900`→`dark:text-slate-100`
+**❌ components/dashboard/widgets/InboxWidget.tsx**
+Status: Sans dark mode; Impact: Composant Inbox Widget
+- L41: `bg-gray-100`→`dark:bg-slate-800`
+- L86: `bg-gray-100`→`dark:bg-slate-800`
+- L146: `bg-gray-50`→`dark:bg-slate-800`
+- L153: `text-gray-900`→`dark:text-slate-100`
+**✅ components/email/AudienceSelector.tsx**
+Status: Dark mode complet; Impact: Champ Audience Selector
+**✅ components/email/CampaignAnalytics.tsx**
+Status: Dark mode complet; Impact: Composant Campaign Analytics
+**✅ components/email/CampaignBuilder.tsx**
+Status: Dark mode complet; Impact: Composant Campaign Builder
+**✅ components/email/CampaignSubscriptionManager.tsx**
+Status: Dark mode complet; Impact: Composant Campaign Subscription Manager
+**✅ components/email/CampaignWizard.tsx**
+Status: Dark mode complet; Impact: Composant Campaign Wizard
+**❌ components/email/CompleteCampaignForm.tsx**
+Status: Sans dark mode; Impact: Composant Complete Campaign Form
+- L310: `bg-white`→`dark:bg-slate-900`
+**❌ components/email/EmailEditor.tsx**
+Status: Sans dark mode; Impact: Composant Email Editor
+- L292: `bg-white`→`dark:bg-slate-900`
+**✅ components/email/RecipientSelector.tsx**
+Status: Dark mode complet; Impact: Champ Recipient Selector
+**✅ components/email/RecipientSelectorTableV2.tsx**
+Status: Dark mode complet; Impact: Champ Recipient Selector Table V2
+**❌ components/email/RecipientTrackingList.tsx**
+Status: Sans dark mode; Impact: Composant Recipient Tracking List
+- L89: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-200`→`dark:border-slate-700`
+**❌ components/email/TemplateLibrary.tsx**
+Status: Sans dark mode; Impact: Composant Template Library
+- L181: `bg-white`→`dark:bg-slate-900`
+**✅ components/email/wizard/Step1BasicInfo.tsx**
+Status: Dark mode complet; Impact: Composant Step1 Basic Info
+**✅ components/email/wizard/Step2Recipients.tsx**
+Status: Dark mode complet; Impact: Composant Step2 Recipients
+**✅ components/email/wizard/Step3Configuration.tsx**
+Status: Dark mode complet; Impact: Composant Step3 Configuration
+**✅ components/email/wizard/Step4Summary.tsx**
+Status: Dark mode complet; Impact: Composant Step4 Summary
+**✅ components/forms/ImportForm.tsx**
+Status: Dark mode complet; Impact: Formulaire Import Form
+**❌ components/forms/ImportOrganisationsForm.tsx**
+Status: Sans dark mode; Impact: Formulaire Import Organisations Form
+- L117: `text-gray-700`→`dark:text-slate-300`
+- L132: `text-gray-700`→`dark:text-slate-300`
+- L133: `border-gray-300`→`dark:border-slate-600`
+- L143: `text-gray-600`→`dark:text-slate-400`
+- L168: `text-gray-700`→`dark:text-slate-300`
+- L170: `text-gray-600`→`dark:text-slate-400`
+**❌ components/forms/ImportPeopleForm.tsx**
+Status: Sans dark mode; Impact: Formulaire Import People Form
+- L116: `text-gray-700`→`dark:text-slate-300`
+- L117: `border-gray-300`→`dark:border-slate-600`
+- L127: `text-gray-600`→`dark:text-slate-400`
+- L152: `text-gray-700`→`dark:text-slate-300`
+- L154: `text-gray-600`→`dark:text-slate-400`
+**❌ components/forms/ImportUnifiedForm.tsx**
+Status: Sans dark mode; Impact: Formulaire Import Unified Form
+- L325,332: `bg-white`→`dark:bg-slate-900`
+- L365,414: `text-gray-900`→`dark:text-slate-100`
+- L376,425: `border-gray-300`→`dark:border-slate-600`
+- L399,448: `text-gray-600`→`dark:text-slate-400`
+- L508: `text-gray-700`→`dark:text-slate-300`
+- L559: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L560: `text-gray-900`→`dark:text-slate-100`
+- L565,576: `bg-white`→`dark:bg-slate-900`
+- L567,578: `text-gray-600`→`dark:text-slate-400`
+**❌ components/forms/InteractionForm.tsx**
+Status: Sans dark mode; Impact: Formulaire Interaction Form
+- L204: `text-gray-700`→`dark:text-slate-300`
+- L209: `border-gray-300`→`dark:border-slate-600`
+**❌ components/forms/KPIForm.tsx**
+Status: Sans dark mode; Impact: Formulaire KPI Form
+- L146: `text-gray-700`→`dark:text-slate-300`
+- L151: `border-gray-300`→`dark:border-slate-600`
+**✅ components/forms/LoginForm.tsx**
+Status: Dark mode complet; Impact: Formulaire Login Form
+**❌ components/forms/MandatForm.tsx**
+Status: Sans dark mode; Impact: Formulaire Mandat Form
+- L152,170: `text-gray-700`→`dark:text-slate-300`
+**❌ components/forms/OrganisationForm.tsx**
+Status: Sans dark mode; Impact: Formulaire Organisation Form
+- L104,229,262: `text-gray-700`→`dark:text-slate-300`
+- L200: `border-gray-300`→`dark:border-slate-600`
+- L202: `text-gray-700`→`dark:text-slate-300`
+- L208: `border-gray-200`→`dark:border-slate-700`
+- L226: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L275,290: `border-gray-300`→`dark:border-slate-600`
+- L283: `text-gray-700`→`dark:text-slate-300`
+**❌ components/forms/PersonForm.tsx**
+Status: Sans dark mode; Impact: Formulaire Person Form
+- L359,424: `text-gray-700`→`dark:text-slate-300`
+- L478: `text-gray-700`→`dark:text-slate-300`
+- L481: `border-gray-300`→`dark:border-slate-600`
+**❌ components/forms/ProduitForm.tsx**
+Status: Sans dark mode; Impact: Formulaire Produit Form
+- L85,110: `text-gray-700`→`dark:text-slate-300`
+- L147: `text-gray-700`→`dark:text-slate-300`
+- L151: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+**❌ components/forms/TaskForm.tsx**
+Status: Sans dark mode; Impact: Formulaire Task Form
+- L34: `text-gray-600`→`dark:text-slate-400`
+- L183: `bg-white`→`dark:bg-slate-900`
+- L185: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L187: `text-gray-900`→`dark:text-slate-100`
+- L190: `bg-gray-100`→`dark:bg-slate-800`; `hover:bg-gray-100`→`dark:hover:bg-slate-700`
+- L210,226,240,277,300: `text-gray-700`→`dark:text-slate-300`
+- L217: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L232: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L248: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L254,261,268: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L289,312: `bg-white`→`dark:bg-slate-900`; `border-gray-300`→`dark:border-slate-600`
+- L369: `border-gray-200`→`dark:border-slate-700`
+- L373: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+**❌ components/forms/UserForm.tsx**
+Status: Sans dark mode; Impact: Formulaire User Form
+- L164,185: `text-gray-700`→`dark:text-slate-300`
+- L169,190: `border-gray-300`→`dark:border-slate-600`
+- L209,221: `border-gray-300`→`dark:border-slate-600`
+- L212,224: `text-gray-700`→`dark:text-slate-300`
+**❌ components/integrations/EmailAccountsManager.tsx**
+Status: Sans dark mode; Impact: Composant Email Accounts Manager
+- L88,98: `bg-gray-50`→`dark:bg-slate-800`
+- L89,99: `text-gray-700`→`dark:text-slate-300`
+- L580: `text-gray-900`→`dark:text-slate-100`
+- L599: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L601,643: `text-gray-600`→`dark:text-slate-400`
+- L612: `border-gray-200`→`dark:border-slate-700`
+- L620: `text-gray-900`→`dark:text-slate-100`
+- L626: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`
+- L657,682: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-200`→`dark:border-slate-700`
+- L688: `bg-white`→`dark:bg-slate-900`
+- L702: `bg-white`→`dark:bg-slate-900`
+- L703: `border-gray-200`→`dark:border-slate-700`
+- L704: `text-gray-900`→`dark:text-slate-100`
+- L719: `border-gray-200`→`dark:border-slate-700`
+- L727: `text-gray-600`→`dark:text-slate-400`
+- L745,760,794: `text-gray-700`→`dark:text-slate-300`
+- L753,768,787,802: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L776: `text-gray-700`→`dark:text-slate-300`
+- L823: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+**❌ components/integrations/OutlookConnector.tsx**
+Status: Sans dark mode; Impact: Composant Outlook Connector
+- L265,275: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L279: `text-gray-900`→`dark:text-slate-100`
+- L286: `bg-gray-50`→`dark:bg-slate-800`
+- L290,380,386: `text-gray-900`→`dark:text-slate-100`
+- L295,301: `text-gray-700`→`dark:text-slate-300`
+- L297: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L306,312: `text-gray-600`→`dark:text-slate-400`
+- L320: `text-gray-600`→`dark:text-slate-400`
+- L330: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`
+- L375: `bg-white`→`dark:bg-slate-900`
+- L376: `text-gray-900`→`dark:text-slate-100`
+- L377: `text-gray-600`→`dark:text-slate-400`
+- L402: `bg-white`→`dark:bg-slate-900`
+- L415: `text-gray-700`→`dark:text-slate-300`
+- L421: `text-gray-700`→`dark:text-slate-300`
+- L427: `text-gray-700`→`dark:text-slate-300`
+- L449: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-200`→`dark:border-slate-700`
+- L460: `bg-white`→`dark:bg-slate-900`
+- L486: `bg-white`→`dark:bg-slate-900`
+**✅ components/interactions/ActivityTab.tsx**
+Status: Dark mode complet; Impact: Composant Activity Tab
+**❌ components/interactions/DashboardInteractionsWidget.tsx**
+Status: Sans dark mode; Impact: Composant Dashboard Interactions Widget
+- L31: `bg-gray-100`→`dark:bg-slate-800`
+- L102: `bg-gray-50`→`dark:bg-slate-800`
+- L110: `text-gray-900`→`dark:text-slate-100`
+- L132: `text-gray-600`→`dark:text-slate-400`
+**✅ components/interactions/InteractionCard.tsx**
+Status: Dark mode complet; Impact: Card Interaction Card
+**⚠️ components/interactions/InteractionComposerInline.tsx**
+Status: Dark mode partiel; Impact: Composant Interaction Composer Inline
+- L109: `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L118: `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+**❌ components/legal/DownloadPDFButton.tsx**
+Status: Sans dark mode; Impact: Bouton Download PDF Button
+- L60: `text-gray-900`→`dark:text-slate-100`
+- L61: `text-gray-600`→`dark:text-slate-400`
+**✅ components/mobile/MobileCard.tsx**
+Status: Dark mode complet; Impact: Card Mobile Card
+**✅ components/navigation/Breadcrumbs.tsx**
+Status: Dark mode complet; Impact: Composant Breadcrumbs
+**❌ components/organisations/OrganisationTimeline.tsx**
+Status: Sans dark mode; Impact: Composant Organisation Timeline
+- L77: `border-gray-300`→`dark:border-slate-600`
+- L103: `bg-gray-100`→`dark:bg-slate-800`
+- L148,152: `bg-gray-100`→`dark:bg-slate-800`
+**❌ components/search/AdvancedFilters.tsx**
+Status: Sans dark mode; Impact: Composant Advanced Filters
+- L68: `bg-white`→`dark:bg-slate-900`; `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L85,95: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L108: `bg-gray-50`→`dark:bg-slate-800`
+- L122: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L124: `text-gray-700`→`dark:text-slate-300`
+- L147,175: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+- L198: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L200: `border-gray-200`→`dark:border-slate-700`
+- L201: `text-gray-900`→`dark:text-slate-100`
+- L207: `bg-gray-100`→`dark:bg-slate-800`; `hover:bg-gray-100`→`dark:hover:bg-slate-700`
+- L218: `text-gray-700`→`dark:text-slate-300`
+- L233: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L238: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+**✅ components/shared/Button.tsx**
+Status: Dark mode complet; Impact: Bouton Button
+**✅ components/shared/Card.tsx**
+Status: Dark mode complet; Impact: Card Card
+**❌ components/shared/ColumnSelector.tsx**
+Status: Sans dark mode; Impact: Champ Column Selector
+- L52: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L56: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`
+- L63: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L64: `border-gray-200`→`dark:border-slate-700`
+- L66: `text-gray-900`→`dark:text-slate-100`
+- L72: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-900`→`dark:text-slate-100`; `text-gray-600`→`dark:text-slate-400`; `hover:bg-gray-100`→`dark:hover:bg-slate-700`; `hover:text-gray-900`→`dark:hover:text-white`
+- L92: `text-gray-900`→`dark:text-slate-100`
+- L93: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`; `hover:bg-gray-100`→`dark:hover:bg-slate-700`
+- L109: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`; `border-gray-200`→`dark:border-slate-700`
+**✅ components/shared/DataTable/DataTableBulkActions.tsx**
+Status: Dark mode complet; Impact: Table de données
+**✅ components/shared/DataTable/DataTableEmpty.tsx**
+Status: Dark mode complet; Impact: Table de données
+**✅ components/shared/DataTable/DataTableFilters.tsx**
+Status: Dark mode complet; Impact: Table de données
+**⚠️ components/shared/DataTable/DataTableHeader.tsx**
+Status: Dark mode partiel; Impact: Table de données
+- L38: `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L53: `bg-gray-100`→`dark:bg-slate-800`
+**⚠️ components/shared/DataTable/DataTablePagination.tsx**
+Status: Dark mode partiel; Impact: Table de données
+- L73,98: `bg-gray-50`→`dark:bg-slate-800`
+- L87: `bg-gray-50`→`dark:bg-slate-800`
+**⚠️ components/shared/DataTable/DataTableRow.tsx**
+Status: Dark mode partiel; Impact: Table de données
+- L53: `bg-gray-50`→`dark:bg-slate-800`
+- L68: `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L105: `bg-gray-100`→`dark:bg-slate-800`
+- L115: `bg-gray-100`→`dark:bg-slate-800`
+**✅ components/shared/DataTable/DataTableSkeleton.tsx**
+Status: Dark mode complet; Impact: Table de données
+**⚠️ components/shared/DataTable/index.tsx**
+Status: Dark mode partiel; Impact: Table de données
+- L187: `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+**❌ components/shared/EntityAutocompleteInput.tsx**
+Status: Sans dark mode; Impact: Champ Entity Autocomplete Input
+- L162: `text-gray-700`→`dark:text-slate-300`
+- L189: `bg-white`→`dark:bg-slate-900`; `bg-gray-100`→`dark:bg-slate-800`
+- L190: `border-gray-300`→`dark:border-slate-600`
+- L202: `bg-gray-100`→`dark:bg-slate-800`; `hover:bg-gray-100`→`dark:hover:bg-slate-700`
+- L212: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L221: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L232: `bg-gray-50`→`dark:bg-slate-800`
+- L236: `text-gray-900`→`dark:text-slate-100`
+- L243: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+**❌ components/shared/ExportButtons.tsx**
+Status: Sans dark mode; Impact: Bouton Export Buttons
+- L79: `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L81: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+**❌ components/shared/Input.tsx**
+Status: Sans dark mode; Impact: Champ Input
+- L19: `text-gray-700`→`dark:text-slate-300`
+- L35: `border-gray-300`→`dark:border-slate-600`
+**❌ components/shared/PaginationBar.tsx**
+Status: Sans dark mode; Impact: Composant Pagination Bar
+- L106: `bg-white`→`dark:bg-slate-900`; `text-gray-700`→`dark:text-slate-300`
+- L107: `bg-white`→`dark:bg-slate-900`
+- L125: `border-gray-200`→`dark:border-slate-700`
+- L172: `bg-gray-100`→`dark:bg-slate-800`
+- L224: `text-gray-600`→`dark:text-slate-400`
+- L247: `bg-white`→`dark:bg-slate-900`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+**❌ components/shared/SearchableMultiSelect.tsx**
+Status: Sans dark mode; Impact: Champ Searchable Multi Select
+- L100: `text-gray-700`→`dark:text-slate-300`
+- L109: `bg-white`→`dark:bg-slate-900`
+- L111: `bg-gray-100`→`dark:bg-slate-800`
+- L112: `border-gray-300`→`dark:border-slate-600`
+- L144: `text-gray-700`→`dark:text-slate-300`
+- L164: `bg-white`→`dark:bg-slate-900`; `border-gray-300`→`dark:border-slate-600`
+- L165: `border-gray-200`→`dark:border-slate-700`
+- L174: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L180: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`; `border-gray-200`→`dark:border-slate-700`
+- L213: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L216: `text-gray-900`→`dark:text-slate-100`
+- L225: `bg-gray-50`→`dark:bg-slate-800`
+**❌ components/shared/SearchableSelect.tsx**
+Status: Sans dark mode; Impact: Champ Searchable Select
+- L132: `text-gray-700`→`dark:text-slate-300`
+- L143: `bg-white`→`dark:bg-slate-900`
+- L146: `bg-gray-100`→`dark:bg-slate-800`
+- L147: `border-gray-300`→`dark:border-slate-600`
+- L151: `text-gray-900`→`dark:text-slate-100`
+- L176: `bg-white`→`dark:bg-slate-900`; `border-gray-300`→`dark:border-slate-600`
+- L177: `border-gray-200`→`dark:border-slate-700`
+- L187: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L211: `text-gray-900`→`dark:text-slate-100`
+- L218: `bg-gray-50`→`dark:bg-slate-800`
+**❌ components/shared/Select.tsx**
+Status: Sans dark mode; Impact: Champ Select
+- L17: `text-gray-700`→`dark:text-slate-300`
+- L26: `border-gray-300`→`dark:border-slate-600`
+**✅ components/shared/SkeletonCard.tsx**
+Status: Dark mode complet; Impact: Card Skeleton Card
+**✅ components/shared/StatsCard.tsx**
+Status: Dark mode complet; Impact: Card Stats Card
+**❌ components/shared/TableV2.tsx**
+Status: Sans dark mode; Impact: Composant Table V2
+- L163: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L174,209: `text-gray-900`→`dark:text-slate-100`
+- L249: `bg-gray-50`→`dark:bg-slate-800`
+- L250: `border-gray-200`→`dark:border-slate-700`
+- L280: `border-gray-200`→`dark:border-slate-700`
+- L287: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L309: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L313: `text-gray-900`→`dark:text-slate-100`; `hover:text-gray-900`→`dark:hover:text-white`
+- L357: `bg-gray-50`→`dark:bg-slate-800`
+- L377: `bg-white`→`dark:bg-slate-900`; `text-gray-900`→`dark:text-slate-100`
+- L419: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L427: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+**❌ components/ui/button.tsx**
+Status: Sans dark mode; Impact: Composant Button
+- L37: `text-gray-900`→`dark:text-slate-100`
+**✅ components/ui/card.tsx**
+Status: Dark mode complet; Impact: Composant Card
+**❌ components/ui/checkbox.tsx**
+Status: Sans dark mode; Impact: Composant Checkbox
+- L11: `border-gray-300`→`dark:border-slate-600`
+**✅ components/ui/dialog.tsx**
+Status: Dark mode complet; Impact: Composant Dialog
+**❌ components/ui/ErrorBoundary.tsx**
+Status: Sans dark mode; Impact: Composant Error Boundary
+- L79: `bg-white`→`dark:bg-slate-900`
+- L83: `bg-white`→`dark:bg-slate-900`
+- L116: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L117: `text-gray-900`→`dark:text-slate-100`; `text-gray-700`→`dark:text-slate-300`
+- L120: `bg-white`→`dark:bg-slate-900`; `text-gray-700`→`dark:text-slate-300`; `border-gray-200`→`dark:border-slate-700`
+- L138: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+- L146: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L167: `text-gray-600`→`dark:text-slate-400`
+**❌ components/ui/FieldContextMenu.tsx**
+Status: Sans dark mode; Impact: Composant Field Context Menu
+- L185: `text-gray-900`→`dark:text-slate-100`
+- L210: `bg-gray-100`→`dark:bg-slate-800`
+- L238: `text-gray-900`→`dark:text-slate-100`
+**✅ components/ui/input.tsx**
+Status: Dark mode complet; Impact: Composant Input
+**✅ components/ui/label.tsx**
+Status: Dark mode complet; Impact: Composant Label
+**❌ components/ui/select.tsx**
+Status: Sans dark mode; Impact: Composant Select
+- L68: `bg-white`→`dark:bg-slate-900`; `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L106: `bg-white`→`dark:bg-slate-900`; `border-gray-300`→`dark:border-slate-600`
+**❌ components/ui/Skeleton.tsx**
+Status: Sans dark mode; Impact: Composant Skeleton
+- L48,122: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L67: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L68: `border-gray-200`→`dark:border-slate-700`
+- L93: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L109: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+**✅ components/ui/slider.tsx**
+Status: Dark mode complet; Impact: Composant Slider
+**✅ components/ui/tabs.tsx**
+Status: Dark mode complet; Impact: Composant Tabs
+**✅ components/ui/textarea.tsx**
+Status: Dark mode complet; Impact: Composant Textarea
+**❌ components/ui/Toast.tsx**
+Status: Sans dark mode; Impact: Notification
+- L213: `text-gray-600`→`dark:text-slate-400`
+**✅ components/workflows/WorkflowBuilder.client.tsx**
+Status: Dark mode complet; Impact: Composant Workflow Builder.client
+**❌ components/workflows/WorkflowTemplateCard.tsx**
+Status: Sans dark mode; Impact: Card Workflow Template Card
+- L39: `bg-gray-100`→`dark:bg-slate-800`
+- L52: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L61: `text-gray-900`→`dark:text-slate-100`
+- L62: `text-gray-600`→`dark:text-slate-400`
+- L71: `text-gray-700`→`dark:text-slate-300`
+- L82: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L108: `bg-gray-50`→`dark:bg-slate-800`
+- L126: `bg-gray-50`→`dark:bg-slate-800`
+- L129: `bg-white`→`dark:bg-slate-900`; `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`; `border-gray-300`→`dark:border-slate-600`
+---
+**🟡 P2 Nice To Have** Finitions UI.
+**❌ components/activities/RecentActivities.tsx**
+Status: Sans dark mode; Impact: Composant Recent Activities
+- L35: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`
+- L36: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`
+- L124,143: `bg-white`→`dark:bg-slate-900`
+- L151: `bg-white`→`dark:bg-slate-900`
+- L153: `border-gray-200`→`dark:border-slate-700`
+- L179: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-600`→`dark:text-slate-400`
+- L207: `bg-gray-50`→`dark:bg-slate-800`
+- L216: `text-gray-900`→`dark:text-slate-100`
+**✅ components/examples/MobileOptimizedList.example.tsx**
+Status: Dark mode complet; Impact: Composant Mobile Optimized List.example
+**✅ components/feedback/Skeleton.tsx**
+Status: Dark mode complet; Impact: Composant Skeleton
+**❌ components/help/ArticleRating.tsx**
+Status: Sans dark mode; Impact: Composant Article Rating
+- L87: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L90: `text-gray-900`→`dark:text-slate-100`
+- L113: `text-gray-900`→`dark:text-slate-100`
+- L121: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L138: `text-gray-700`→`dark:text-slate-300`
+**❌ components/help/HelpTooltip.tsx**
+Status: Sans dark mode; Impact: Tooltip
+- L52: `text-gray-600`→`dark:text-slate-400`
+- L60: `text-gray-700`→`dark:text-slate-300`
+**✅ components/mobile/BottomSheet.tsx**
+Status: Dark mode complet; Impact: Composant Bottom Sheet
+**❌ components/onboarding/OnboardingTour.tsx**
+Status: Sans dark mode; Impact: Composant Onboarding Tour
+- L20: `text-gray-900`→`dark:text-slate-100`
+- L23,47,50,126,157: `text-gray-700`→`dark:text-slate-300`
+- L45: `text-gray-900`→`dark:text-slate-100`
+- L48: `text-gray-900`→`dark:text-slate-100`
+- L51: `text-gray-900`→`dark:text-slate-100`
+- L70: `text-gray-900`→`dark:text-slate-100`
+- L72: `text-gray-700`→`dark:text-slate-300`
+- L124: `text-gray-900`→`dark:text-slate-100`
+- L132: `text-gray-700`→`dark:text-slate-300`
+- L136: `text-gray-700`→`dark:text-slate-300`
+- L140: `text-gray-700`→`dark:text-slate-300`
+- L155: `text-gray-900`→`dark:text-slate-100`
+- L187: `bg-white`→`dark:bg-slate-900`
+- L274: `text-gray-900`→`dark:text-slate-100`; `text-gray-600`→`dark:text-slate-400`; `hover:text-gray-900`→`dark:hover:text-white`
+**✅ components/performance/WebVitalsReporter.tsx**
+Status: Dark mode complet; Impact: Composant Web Vitals Reporter
+**✅ components/providers/QueryProvider.tsx**
+Status: Dark mode complet; Impact: Composant Query Provider
+**⚠️ components/pwa/BannerManager.tsx**
+Status: Dark mode partiel; Impact: Composant Banner Manager
+- L224: `bg-gray-100`→`dark:bg-slate-800`
+- L263: `bg-gray-100`→`dark:bg-slate-800`
+**✅ components/pwa/InstallPrompt.tsx**
+Status: Dark mode complet; Impact: Composant Install Prompt
+**❌ components/pwa/OfflineIndicator.tsx**
+Status: Sans dark mode; Impact: Composant Offline Indicator
+- L35: `text-gray-900`→`dark:text-slate-100`
+**⚠️ components/pwa/PushNotificationManager.tsx**
+Status: Dark mode partiel; Impact: Notification
+- L96: `bg-gray-100`→`dark:bg-slate-800`
+**⚠️ components/pwa/PWAInstallPrompt.tsx**
+Status: Dark mode partiel; Impact: Composant PWA Install Prompt
+- L118,152: `text-gray-600`→`dark:text-slate-400`
+- L173: `bg-gray-100`→`dark:bg-slate-800`
+**❌ components/pwa/PWAManager.tsx**
+Status: Sans dark mode; Impact: Composant PWA Manager
+- L119: `bg-white`→`dark:bg-slate-900`
+**❌ components/shared/AdvancedFilters.tsx**
+Status: Sans dark mode; Impact: Composant Advanced Filters
+- L33: `border-gray-300`→`dark:border-slate-600`; `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L114: `text-gray-600`→`dark:text-slate-400`; `border-gray-200`→`dark:border-slate-700`; `border-gray-300`→`dark:border-slate-600`
+- L178: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+**✅ components/shared/Alert.tsx**
+Status: Dark mode complet; Impact: Alerte
+**✅ components/shared/AnimatedCounter.tsx**
+Status: Dark mode complet; Impact: Composant Animated Counter
+**❌ components/shared/CommandPaletteV3.tsx**
+Status: Sans dark mode; Impact: Composant Command Palette V3
+- L258: `border-gray-200`→`dark:border-slate-700`
+- L287: `text-gray-900`→`dark:text-slate-100`
+- L299: `bg-gray-100`→`dark:bg-slate-800`; `hover:bg-gray-100`→`dark:hover:bg-slate-700`
+- L308: `bg-gray-100`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L330,405,433,454: `text-gray-900`→`dark:text-slate-100`
+- L358: `text-gray-900`→`dark:text-slate-100`
+- L572: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-900`→`dark:text-slate-100`; `text-gray-700`→`dark:text-slate-300`; `hover:text-gray-900`→`dark:hover:text-white`
+- L585: `bg-gray-100`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+**❌ components/shared/FileUpload.tsx**
+Status: Sans dark mode; Impact: Composant File Upload
+- L143: `border-gray-300`→`dark:border-slate-600`
+- L162: `text-gray-600`→`dark:text-slate-400`
+- L176: `text-gray-700`→`dark:text-slate-300`
+- L182: `bg-gray-50`→`dark:bg-slate-800`; `border-gray-200`→`dark:border-slate-700`
+- L195: `text-gray-900`→`dark:text-slate-100`
+**✅ components/shared/Footer.tsx**
+Status: Dark mode complet; Impact: Composant Footer
+**⚠️ components/shared/NotificationBell.tsx**
+Status: Dark mode partiel; Impact: Notification
+- L126: `bg-white`→`dark:bg-slate-900`
+**❌ components/shared/OverflowMenu.tsx**
+Status: Sans dark mode; Impact: Composant Overflow Menu
+- L137: `bg-white`→`dark:bg-slate-900`; `border-gray-200`→`dark:border-slate-700`
+- L167: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-700`→`dark:text-slate-300`
+- L213: `bg-gray-100`→`dark:bg-slate-800`; `text-gray-900`→`dark:text-slate-100`
+- L214: `bg-gray-50`→`dark:bg-slate-800`; `text-gray-900`→`dark:text-slate-100`; `text-gray-600`→`dark:text-slate-400`; `hover:text-gray-900`→`dark:hover:text-white`
+**⚠️ components/shared/Search/SearchEntity.tsx**
+Status: Dark mode partiel; Impact: Composant Search Entity
+- L170: `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L178: `text-gray-600`→`dark:text-slate-400`
+- L206: `bg-gray-50`→`dark:bg-slate-800`
+**⚠️ components/shared/Search/SearchGlobal.tsx**
+Status: Dark mode partiel; Impact: Composant Search Global
+- L116: `focus:ring-blue-500`→`dark:focus:ring-blue-400`
+- L124: `text-gray-600`→`dark:text-slate-400`
+- L163: `bg-gray-50`→`dark:bg-slate-800`
+- L179: `bg-gray-50`→`dark:bg-slate-800`
+**✅ components/shared/Toast.tsx**
+Status: Dark mode complet; Impact: Notification
+**✅ components/skeletons/DashboardSkeletons.tsx**
+Status: Dark mode complet; Impact: Composant Dashboard Skeletons
+**✅ components/ui/alert.tsx**
+Status: Dark mode complet; Impact: Composant Alert
+**✅ components/ui/badge.tsx**
+Status: Dark mode complet; Impact: Composant Badge
+**✅ components/ui/tooltip.tsx**
+Status: Dark mode complet; Impact: Composant Tooltip
+---
+**Plan d'Action**
+- Sprint 1 (2h): app/dashboard/page.tsx, app/dashboard/layout.tsx, components/shared/Navbar.tsx, components/shared/Sidebar.tsx, components/shared/Modal/ModalBase.tsx, components/shared/Modal/ModalForm.tsx, components/shared/DataTable/index.tsx
+- Sprint 2 (3h): app/dashboard/people/page.tsx, app/dashboard/organisations/page.tsx, components/forms/PersonForm.tsx, components/forms/OrganisationForm.tsx, components/shared/Button.tsx, components/ui/button.tsx
+- Sprint 3 (1h): Tooltips/Badges/Alerts/Notifications (components/shared/Tooltip.tsx, Badge.tsx, Alert.tsx, NotificationBell.tsx, ui/tooltip.tsx, ui/badge.tsx, ui/alert.tsx, ui/toast.tsx)
+Total estimé: 6 heures
+**Classes Réutilisables**
+Card/Container: `className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg shadow-sm dark:shadow-slate-800/50"`
+Input/Textarea: `className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"`
+Button Primary: `className="px-4 py-2 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-md transition-colors"`
+Button Secondary: `className="px-4 py-2 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-200 rounded-md transition-colors"`
+Table Header: `className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider bg-gray-50 dark:bg-slate-800"`
+Table Row: `className="hover:bg-gray-50 dark:hover:bg-slate-800 border-b border-gray-200 dark:border-slate-700"`

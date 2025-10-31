@@ -27,6 +27,7 @@ from api.routes import (
     organisations,
     people,
     produits,
+    prometheus_metrics,
     public,
     push_notifications,
     tasks,
@@ -52,6 +53,9 @@ api_router.include_router(health.router, prefix="")
 
 # 📊 MONITORING (métriques système, DB, workers)
 api_router.include_router(monitoring.router)
+
+# 📈 PROMETHEUS METRICS (OpenMetrics format pour Grafana)
+api_router.include_router(prometheus_metrics.router, prefix="")
 
 # ⭐ AUTH ROUTES (sans authentification requise)
 api_router.include_router(auth.router)

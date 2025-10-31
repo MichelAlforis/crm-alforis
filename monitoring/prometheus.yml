@@ -1,0 +1,79 @@
+# ============================================
+# PROMETHEUS CONFIGURATION - CRM TPM FINANCE
+# ============================================
+# Scraping config pour collecter les métriques depuis:
+# - FastAPI backend (/metrics endpoint)
+# - PostgreSQL exporter (optionnel)
+# - Redis exporter (optionnel)
+# - Node exporter (optionnel - métriques système)
+
+global:
+  scrape_interval: 15s      # Scrape toutes les 15 secondes
+  evaluation_interval: 15s  # Évaluation des règles toutes les 15s
+  external_labels:
+    cluster: 'crm-tpm-finance'
+    environment: 'production'
+
+# Alertmanager configuration (optionnel - à configurer plus tard)
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets:
+#           - alertmanager:9093
+
+# Règles d'alerting
+rule_files:
+  - '/etc/prometheus/alerts.yml'
+
+# Scrape configurations
+scrape_configs:
+  # ========================================
+  # CRM BACKEND API (FastAPI /metrics)
+  # ========================================
+  - job_name: 'crm-api'
+    static_configs:
+      - targets: ['api:8000']
+        labels:
+          service: 'fastapi-backend'
+          app: 'crm-api'
+    metrics_path: '/api/v1/metrics'
+    scrape_interval: 10s
+    scrape_timeout: 5s
+
+  # ========================================
+  # PROMETHEUS SELF-MONITORING
+  # ========================================
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus'
+
+  # ========================================
+  # REDIS (optionnel - nécessite redis_exporter)
+  # ========================================
+  # - job_name: 'redis'
+  #   static_configs:
+  #     - targets: ['redis-exporter:9121']
+  #       labels:
+  #         service: 'redis'
+  #         app: 'cache'
+
+  # ========================================
+  # POSTGRESQL (optionnel - nécessite postgres_exporter)
+  # ========================================
+  # - job_name: 'postgres'
+  #   static_configs:
+  #     - targets: ['postgres-exporter:9187']
+  #       labels:
+  #         service: 'postgres'
+  #         app: 'database'
+
+  # ========================================
+  # NODE EXPORTER (optionnel - métriques système host)
+  # ========================================
+  # - job_name: 'node'
+  #   static_configs:
+  #     - targets: ['node-exporter:9100']
+  #       labels:
+  #         service: 'node-exporter'
