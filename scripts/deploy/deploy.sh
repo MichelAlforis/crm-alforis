@@ -30,9 +30,10 @@ Environment variables:
   TAIL_LINES    Number of log lines when running "logs" (default: 200)
 
 Commands:
-  deploy         Sync code from local machine (rsync) then rebuild containers
-  deploy-pull    Pull latest changes on remote git repo then rebuild containers
-  logs           Tail docker-compose logs
+  deploy          Sync code from local machine (rsync) then rebuild containers
+  deploy-pull     Pull latest changes on remote git repo then rebuild containers (PRODUCTION)
+  deploy-staging  Pull latest changes and deploy to STAGING environment
+  logs            Tail docker-compose logs
 EOF
 }
 
@@ -223,6 +224,38 @@ deploy_pull_action() {
   info "Deployment from remote git repository complete."
 }
 
+deploy_staging_action() {
+  ensure_prereqs
+  validate_tail_lines
+  ensure_ssh_ready
+  ensure_remote_dir
+  ensure_remote_repo
+
+  # Check staging env file
+  if ! ssh_run test -f "$REMOTE_DIR/.env.staging"; then
+    error "Missing remote .env.staging file at $REMOTE_DIR/.env.staging"
+    exit 6
+  fi
+
+  info "Deploying STAGING environment"
+  server_git_pull
+
+  local remote_dir compose_prod compose_staging
+  remote_dir=$(printf '%q' "$REMOTE_DIR")
+  compose_prod=$(printf '%q' "${REMOTE_DIR%/}/docker-compose.prod.yml")
+  compose_staging=$(printf '%q' "${REMOTE_DIR%/}/docker-compose.staging.yml")
+
+  # Build and restart staging services
+  info "Rebuilding and restarting STAGING services"
+  ssh_bash "docker compose --project-directory $remote_dir -f $compose_prod -f $compose_staging --env-file $remote_dir/.env.staging up -d --build api-staging frontend-staging worker-staging"
+
+  # Run migrations on staging DB
+  info "Applying database migrations on STAGING"
+  ssh_bash "docker compose --project-directory $remote_dir -f $compose_prod -f $compose_staging --env-file $remote_dir/.env.staging exec -T api-staging alembic upgrade head" || warn "Staging migrations failed"
+
+  info "✅ Staging deployment complete: https://staging.crm.alforis.fr (user: alforis, pass: alforis2025)"
+}
+
 logs_action() {
   validate_tail_lines
   local remote_dir compose_file
@@ -248,6 +281,7 @@ main() {
   case "$action" in
     deploy) deploy_action ;;
     deploy-pull) deploy_pull_action ;;
+    deploy-staging) deploy_staging_action ;;
     logs) logs_action ;;
     *)
       error "Unknown action: $action"

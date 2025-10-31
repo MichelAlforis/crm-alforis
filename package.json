@@ -7,7 +7,8 @@
     "rebuild": "bash ./scripts/dev.sh rebuild",
     "devc": "bash ./crm-frontend/scripts/dev-clean.sh",
     "deploy": "bash ./scripts/deploy/deploy.sh",
-    "deploy:pull": "bash ./scripts/deploy/deploy.sh deploy-pull"
+    "deploy:pull": "bash ./scripts/deploy/deploy.sh deploy-pull",
+    "deploy:staging": "bash ./scripts/deploy/deploy.sh deploy-staging"
   },
   "dependencies": {
     "puppeteer": "^24.25.0"

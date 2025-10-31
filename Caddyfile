@@ -65,14 +65,29 @@ crm.alforis.fr {
 }
 
 # ============================================================
-# STAGING - staging.crm.alforis.fr (optionnel)
+# STAGING - staging.crm.alforis.fr
 # ============================================================
+# Environnement de test avant déploiement production
+# - Services staging: frontend-staging:3011, api-staging:8001
+# - Base de données séparée: crm_staging
+# - Basic Auth pour protection
 
 staging.crm.alforis.fr {
-    reverse_proxy frontend:3010
+    # Frontend Next.js Staging (port 3011)
+    reverse_proxy frontend-staging:3011
 
+    # API Backend Staging (port 8001)
     handle /api/* {
-        reverse_proxy api:8000
+        reverse_proxy api-staging:8001 {
+            health_uri /api/v1/health
+            health_interval 30s
+            health_timeout 5s
+        }
+    }
+
+    # WebSocket pour notifications temps réel
+    handle /ws/* {
+        reverse_proxy api-staging:8001
     }
 
     # Basic Auth pour protéger staging
@@ -82,12 +97,25 @@ staging.crm.alforis.fr {
         # À CHANGER en production !
     }
 
+    # Headers staging
     header {
+        # Empêcher l'indexation par les moteurs de recherche
         X-Robots-Tag "noindex, nofollow"
+
+        # Security headers (même que prod)
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        X-Frame-Options "SAMEORIGIN"
+        X-Content-Type-Options "nosniff"
+        -Server
     }
 
+    # Compression
+    encode gzip zstd
+
+    # Logs séparés
     log {
         output file /var/log/caddy/staging-access.log
+        format json
     }
 }
 

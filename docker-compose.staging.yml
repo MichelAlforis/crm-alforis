@@ -1,0 +1,150 @@
+# ===========================================
+# DOCKER COMPOSE - STAGING
+# ===========================================
+# Environnement de staging sur le même serveur que la production
+# - Partage Redis et Postgres avec prod (mais DB séparées)
+# - Ports différents: API 8001, Frontend 3011
+# - Database: crm_staging, Redis: db 2
+# - Domain: staging.crm.alforis.fr
+
+# IMPORTANT: Utiliser .env.staging ou définir:
+# - POSTGRES_PASSWORD (même que prod)
+# - SECRET_KEY (différent de prod pour sécurité)
+# - STAGING=true
+
+# --- Services ---
+services:
+
+  # ========================================
+  # API (FastAPI) - STAGING
+  # ========================================
+  api-staging:
+    build:
+      context: ./crm-backend
+      dockerfile: Dockerfile
+      target: production
+    restart: always
+    container_name: crm-api-staging
+    # Partage les services prod postgres et redis
+    networks:
+      - crm-network
+    environment:
+      # Database staging (même Postgres, DB différente)
+      DATABASE_URL: postgresql://${POSTGRES_USER:-crm_user}:${POSTGRES_PASSWORD}@postgres:5432/crm_staging
+      # Redis staging (même Redis, DB différente)
+      REDIS_ENABLED: "True"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 2  # DB 2 pour staging (prod utilise DB 0)
+      # Sécurité
+      DEBUG: "False"
+      SECRET_KEY: ${STAGING_SECRET_KEY:?STAGING_SECRET_KEY doit être défini}
+      ALLOWED_ORIGINS: ${STAGING_ALLOWED_ORIGINS:-["https://staging.crm.alforis.fr"]}
+      # JWT
+      JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
+      JWT_EXPIRATION_HOURS: ${JWT_EXPIRATION_HOURS:-24}
+      # AI Agent - Encryption
+      ENCRYPTION_KEY: ${STAGING_ENCRYPTION_KEY:?STAGING_ENCRYPTION_KEY doit être défini}
+      # Environnement
+      ENVIRONMENT: staging
+      MAX_UPLOAD_SIZE_MB: ${MAX_UPLOAD_SIZE_MB:-10}
+      API_PORT: 8001
+    working_dir: /app
+    command: uvicorn main:app --host 0.0.0.0 --port 8001 --proxy-headers --reload
+    ports:
+      - "127.0.0.1:8001:8001"
+    volumes:
+      - api-uploads-staging:/app/uploads
+      - api-backups-staging:/app/backups
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import urllib.request;urllib.request.urlopen(\"http://localhost:8001/api/v1/health\")' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
+
+  # ========================================
+  # FRONTEND (Next.js) - STAGING
+  # ========================================
+  frontend-staging:
+    build:
+      context: ./crm-frontend
+      dockerfile: Dockerfile
+      target: production
+      args:
+        NEXT_PUBLIC_API_URL: https://staging.crm.alforis.fr/api/v1
+    restart: always
+    container_name: crm-frontend-staging
+    depends_on:
+      - api-staging
+    networks:
+      - crm-network
+    environment:
+      NEXT_PUBLIC_API_URL: https://staging.crm.alforis.fr/api/v1
+      NODE_ENV: production
+      PORT: 3011
+    working_dir: /app
+    command: npm start
+    ports:
+      - "127.0.0.1:3011:3011"
+    healthcheck:
+      test: ["CMD-SHELL", "node -e 'require(\"http\").get(\"http://localhost:3011\",r=>process.exit(r.statusCode>=200&&r.statusCode<500?0:1)).on(\"error\",()=>process.exit(1))'"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
+
+  # ========================================
+  # WORKER (Celery) - STAGING
+  # ========================================
+  worker-staging:
+    build:
+      context: ./crm-backend
+      dockerfile: Dockerfile
+      target: production
+    restart: always
+    container_name: crm-worker-staging
+    depends_on:
+      - api-staging
+    networks:
+      - crm-network
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-crm_user}:${POSTGRES_PASSWORD}@postgres:5432/crm_staging
+      REDIS_ENABLED: "True"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 2
+      SECRET_KEY: ${STAGING_SECRET_KEY}
+      ENCRYPTION_KEY: ${STAGING_ENCRYPTION_KEY}
+      ENVIRONMENT: staging
+    working_dir: /app
+    command: celery -A tasks.celery_app worker --loglevel=info --concurrency=2
+    volumes:
+      - api-uploads-staging:/app/uploads
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
+
+# --- Volumes ---
+volumes:
+  api-uploads-staging:
+    driver: local
+  api-backups-staging:
+    driver: local
+
+# --- Network (use prod network) ---
+networks:
+  crm-network:
+    external: true
