@@ -24,29 +24,23 @@ echo "✅ Ollama démarré"
 echo ""
 echo "3️⃣ Téléchargement modèle LÉGER..."
 echo ""
-echo "Choix disponibles (du plus petit au plus gros):"
-echo "  1) tinyllama:1.1b  (~637MB)   - Le plus rapide, qualité correcte"
-echo "  2) phi:2.7b        (~1.6GB)   - Bon compromis"
-echo "  3) mistral:7b      (~4.3GB)   - ⚠️ RISQUE CRASH sur CPX31"
+echo "Choix disponibles (CPX31: 8GB RAM, ~6.9GB libre):"
+echo "  1) mistral:7b      (~4.3GB)   - ✅ RECOMMANDÉ - Meilleure qualité"
+echo "  2) phi:2.7b        (~1.6GB)   - Plus rapide, bonne qualité"
+echo "  3) tinyllama:1.1b  (~637MB)   - Le plus rapide, qualité OK"
 echo ""
 read -p "Choisir (1/2/3) [1]: " choice
 choice=${choice:-1}
 
 case $choice in
     1)
-        MODEL="tinyllama:1.1b"
+        MODEL="mistral:7b"
         ;;
     2)
         MODEL="phi:2.7b"
         ;;
     3)
-        echo "⚠️  ATTENTION: mistral:7b peut saturer la RAM du CPX31"
-        read -p "Confirmer ? (oui/non) [non]: " confirm
-        if [ "$confirm" != "oui" ]; then
-            echo "❌ Annulé"
-            exit 1
-        fi
-        MODEL="mistral:7b"
+        MODEL="tinyllama:1.1b"
         ;;
     *)
         echo "❌ Choix invalide"

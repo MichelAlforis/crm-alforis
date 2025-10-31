@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { logger } from '@/lib/logger'
+import { storage } from '@/lib/constants'
 
 /**
  * Hook pour synchroniser l'état avec localStorage
@@ -20,19 +21,9 @@ export function useLocalStorage<T>(
   // État pour stocker la valeur
   // On passe une fonction à useState pour que l'initialisation ne se fasse qu'une fois
   const [storedValue, setStoredValue] = useState<T>(() => {
-    if (typeof window === 'undefined') {
-      return initialValue
-    }
-
-    try {
-      // Récupérer depuis localStorage
-      const item = window.localStorage.getItem(key)
-      // Parser le JSON stocké ou retourner initialValue
-      return item ? JSON.parse(item) : initialValue
-    } catch (error) {
-      logger.error(`Error reading localStorage key "${key}":`, error)
-      return initialValue
-    }
+    // Utiliser le helper storage qui gère déjà SSR et parsing
+    const value = storage.get<T>(key, initialValue)
+    return value ?? initialValue
   })
 
   // Retourner une version wrappée de la fonction set de useState
@@ -46,10 +37,8 @@ export function useLocalStorage<T>(
         // Sauvegarder l'état
         setStoredValue(valueToStore)
 
-        // Sauvegarder dans localStorage
-        if (typeof window !== 'undefined') {
-          window.localStorage.setItem(key, JSON.stringify(valueToStore))
-        }
+        // Sauvegarder dans localStorage via helper
+        storage.set(key, valueToStore)
       } catch (error) {
         logger.error(`Error setting localStorage key "${key}":`, error)
       }

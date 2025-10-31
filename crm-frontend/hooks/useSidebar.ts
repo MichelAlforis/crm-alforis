@@ -22,6 +22,7 @@ import { useEffect, useState, useCallback, useMemo } from 'react'
 import { usePathname } from 'next/navigation'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { logger } from '@/lib/logger'
+import { storage } from '@/lib/constants'
 
 export interface SidebarItem {
   label: string
@@ -47,19 +48,14 @@ export function useSidebar(sections: SidebarSection[] = []) {
 
   // État submenus avec persistance
   const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>(() => {
-    if (typeof window === 'undefined') return {}
-    try {
-      const saved = localStorage.getItem('sidebar-submenus-state')
-      return saved ? JSON.parse(saved) : {}
-    } catch {
-      return {}
-    }
+    const saved = storage.get<Record<string, boolean>>('sidebar-submenus-state', {})
+    return saved ?? {}
   })
 
   // État collapsed avec persistance
   const [collapsed, setCollapsed] = useState(() => {
-    if (typeof window === 'undefined') return false
-    return localStorage.getItem('sidebar-collapsed') === 'true'
+    const saved = storage.get<string>('sidebar-collapsed')
+    return saved === 'true'
   })
 
   // État mobile (pas persisté car contextuel)
@@ -71,34 +67,22 @@ export function useSidebar(sections: SidebarSection[] = []) {
 
   // ==================== PHASE 2: Favoris ====================
   const [favorites, setFavorites] = useState<string[]>(() => {
-    if (typeof window === 'undefined') return []
-    try {
-      const saved = localStorage.getItem('sidebar-favorites')
-      return saved ? JSON.parse(saved) : []
-    } catch {
-      return []
-    }
+    const saved = storage.get<string[]>('sidebar-favorites', [])
+    return saved ?? []
   })
 
   // ==================== PHASE 3: Préférences visibilité ====================
   const [hiddenSections, setHiddenSections] = useState<string[]>(() => {
-    if (typeof window === 'undefined') return []
-    try {
-      const saved = localStorage.getItem('sidebar-hidden-sections')
-      return saved ? JSON.parse(saved) : []
-    } catch {
-      return []
-    }
+    const saved = storage.get<string[]>('sidebar-hidden-sections', [])
+    return saved ?? []
   })
 
   // Sauvegarde auto submenus
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem('sidebar-submenus-state', JSON.stringify(openSubmenus))
-      } catch (error) {
-        logger.warn('Failed to save sidebar submenus state:', error)
-      }
+    try {
+      storage.set('sidebar-submenus-state', openSubmenus)
+    } catch (error) {
+      logger.warn('Failed to save sidebar submenus state:', error)
     }
   }, [openSubmenus])
 

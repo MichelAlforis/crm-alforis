@@ -8,24 +8,17 @@
  */
 
 import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react'
+import { storage } from '@/lib/constants'
 
 const TRUE_VALUE = 'true'
 
 function readFlag(key: string, fallback: boolean): boolean {
-  if (typeof window === 'undefined') {
+  // Utiliser le helper storage
+  const stored = storage.get<string>(key)
+  if (stored === null) {
     return fallback
   }
-
-  try {
-    const stored = window.localStorage.getItem(key)
-    if (stored === null) {
-      return fallback
-    }
-
-    return stored === TRUE_VALUE
-  } catch {
-    return fallback
-  }
+  return stored === TRUE_VALUE
 }
 
 export function usePersistentFlag(
@@ -47,16 +40,15 @@ export function usePersistentFlag(
 
         valueRef.current = resolved
 
-        if (typeof window !== 'undefined') {
-          try {
-            if (resolved) {
-              window.localStorage.setItem(key, TRUE_VALUE)
-            } else {
-              window.localStorage.removeItem(key)
-            }
-          } catch {
-            // Ignore storage quota or privacy mode failures – we still update local state
+        // Utiliser le helper storage
+        try {
+          if (resolved) {
+            storage.set(key, TRUE_VALUE)
+          } else {
+            storage.remove(key)
           }
+        } catch {
+          // Ignore storage quota or privacy mode failures – we still update local state
         }
 
         return resolved
