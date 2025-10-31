@@ -399,6 +399,52 @@ async def delete_organisation(
     return None
 
 
+@router.post("/bulk-delete", status_code=status.HTTP_200_OK)
+async def bulk_delete_organisations(
+    organisation_ids: List[int],
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Delete multiple organisations in bulk
+
+    Note: Cascade deletes all contacts, mandats and interactions
+
+    Args:
+        organisation_ids: List of organisation IDs to delete
+
+    Returns:
+        {"deleted": count, "failed": count}
+    """
+    service = OrganisationService(db)
+    deleted_count = 0
+    failed_count = 0
+
+    for org_id in organisation_ids:
+        try:
+            await service.delete(org_id)
+            deleted_count += 1
+
+            await emit_event(
+                EventType.ORGANISATION_DELETED,
+                data={"organisation_id": org_id},
+                user_id=_extract_user_id(current_user),
+            )
+        except Exception as e:
+            failed_count += 1
+            # Log error but continue with other deletions
+            print(f"Failed to delete organisation {org_id}: {e}")
+
+    # Invalidate cache once after all deletions
+    invalidate_organisation_cache()
+
+    return {
+        "deleted": deleted_count,
+        "failed": failed_count,
+        "total": len(organisation_ids)
+    }
+
+
 # ============= ACTIVITY ROUTES =============
 
 

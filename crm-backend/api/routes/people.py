@@ -264,3 +264,44 @@ async def delete_person(
         user_id=_extract_user_id(current_user),
     )
     return None
+
+
+@router.post("/bulk-delete", status_code=status.HTTP_200_OK)
+async def bulk_delete_people(
+    person_ids: List[int],
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Delete multiple people in bulk
+
+    Args:
+        person_ids: List of person IDs to delete
+
+    Returns:
+        {"deleted": count, "failed": count}
+    """
+    service = PersonService(db)
+    deleted_count = 0
+    failed_count = 0
+
+    for person_id in person_ids:
+        try:
+            await service.delete(person_id)
+            deleted_count += 1
+
+            await emit_event(
+                EventType.PERSON_DELETED,
+                data={"person_id": person_id},
+                user_id=_extract_user_id(current_user),
+            )
+        except Exception as e:
+            failed_count += 1
+            # Log error but continue with other deletions
+            print(f"Failed to delete person {person_id}: {e}")
+
+    return {
+        "deleted": deleted_count,
+        "failed": failed_count,
+        "total": len(person_ids)
+    }

@@ -50,6 +50,7 @@ export const ORGANISATION_ENDPOINTS = {
   RECENT_ACTIVITIES: (id: string | number) => `/api/v1/organisations/${id}/activities/recent`,
   CONTACTS: (id: string | number) => `/api/v1/organisations/${id}/contacts`,
   MANDATS: (id: string | number) => `/api/v1/organisations/${id}/mandats`,
+  BULK_DELETE: '/api/v1/organisations/bulk-delete',
 } as const;
 
 /**
@@ -59,6 +60,7 @@ export const PEOPLE_ENDPOINTS = {
   BASE: '/api/v1/people',
   DETAIL: (id: string | number) => `/api/v1/people/${id}`,
   ACTIVITIES: (id: string | number) => `/api/v1/people/${id}/activities`,
+  BULK_DELETE: '/api/v1/people/bulk-delete',
 } as const;
 
 /**

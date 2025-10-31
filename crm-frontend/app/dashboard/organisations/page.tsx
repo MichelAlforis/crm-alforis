@@ -228,24 +228,67 @@ export default function OrganisationsPage() {
         id: 'export',
         label: 'Exporter la sélection',
         icon: Download,
-        onClick: (rows) => {
-          console.log('Exporting', rows.length, 'organisations')
-          alert(`Export de ${rows.length} organisation(s) (à implémenter)`)
+        onClick: async (rows) => {
+          try {
+            const orgIds = rows.map(row => row.id).join(',')
+            const url = `${process.env.NEXT_PUBLIC_API_URL}/exports/organisations/csv?ids=${orgIds}`
+
+            // Open download in new tab
+            const link = document.createElement('a')
+            link.href = url
+            link.download = `organisations_export_${new Date().toISOString().split('T')[0]}.csv`
+            link.click()
+
+            alert(`Export de ${rows.length} organisation(s) lancé`)
+          } catch (error) {
+            console.error('Export error:', error)
+            alert('Erreur lors de l\'export')
+          }
         },
       },
       {
         id: 'delete',
         label: 'Supprimer la sélection',
         icon: Trash2,
-        onClick: (rows) => {
-          if (confirm(`Supprimer ${rows.length} organisation(s) ?`)) {
-            alert('Suppression en masse à implémenter')
+        onClick: async (rows) => {
+          if (!confirm(`Supprimer ${rows.length} organisation(s) ?\n\nCette action est irréversible et supprimera aussi tous les contacts, mandats et interactions associés.`)) {
+            return
+          }
+
+          try {
+            const orgIds = rows.map(row => row.id)
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/organisations/bulk-delete`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+              },
+              body: JSON.stringify(orgIds),
+            })
+
+            if (!response.ok) {
+              throw new Error('Erreur lors de la suppression')
+            }
+
+            const result = await response.json()
+
+            if (result.failed > 0) {
+              alert(`${result.deleted} organisation(s) supprimée(s)\n${result.failed} échec(s)`)
+            } else {
+              alert(`${result.deleted} organisation(s) supprimée(s) avec succès`)
+            }
+
+            // Trigger refresh by router reload
+            router.refresh()
+          } catch (error) {
+            console.error('Bulk delete error:', error)
+            alert('Erreur lors de la suppression en masse')
           }
         },
         variant: 'danger',
       },
     ],
-    []
+    [router]
   )
 
   return (

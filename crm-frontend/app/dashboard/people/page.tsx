@@ -192,24 +192,67 @@ export default function PeoplePage() {
         id: 'export',
         label: 'Exporter la sélection',
         icon: Download,
-        onClick: (rows) => {
-          console.log('Exporting', rows.length, 'people')
-          alert(`Export de ${rows.length} personne(s) (à implémenter)`)
+        onClick: async (rows) => {
+          try {
+            const personIds = rows.map(row => row.id).join(',')
+            const url = `${process.env.NEXT_PUBLIC_API_URL}/exports/people/csv?ids=${personIds}`
+
+            // Open download in new tab
+            const link = document.createElement('a')
+            link.href = url
+            link.download = `people_export_${new Date().toISOString().split('T')[0]}.csv`
+            link.click()
+
+            alert(`Export de ${rows.length} personne(s) lancé`)
+          } catch (error) {
+            console.error('Export error:', error)
+            alert('Erreur lors de l\'export')
+          }
         },
       },
       {
         id: 'delete',
         label: 'Supprimer la sélection',
         icon: Trash2,
-        onClick: (rows) => {
-          if (confirm(`Supprimer ${rows.length} personne(s) ?`)) {
-            alert('Suppression en masse à implémenter')
+        onClick: async (rows) => {
+          if (!confirm(`Supprimer ${rows.length} personne(s) ?\n\nCette action est irréversible.`)) {
+            return
+          }
+
+          try {
+            const personIds = rows.map(row => row.id)
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/people/bulk-delete`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+              },
+              body: JSON.stringify(personIds),
+            })
+
+            if (!response.ok) {
+              throw new Error('Erreur lors de la suppression')
+            }
+
+            const result = await response.json()
+
+            if (result.failed > 0) {
+              alert(`${result.deleted} personne(s) supprimée(s)\n${result.failed} échec(s)`)
+            } else {
+              alert(`${result.deleted} personne(s) supprimée(s) avec succès`)
+            }
+
+            // Refresh list
+            fetchPeople(0, 200)
+          } catch (error) {
+            console.error('Bulk delete error:', error)
+            alert('Erreur lors de la suppression en masse')
           }
         },
         variant: 'danger',
       },
     ],
-    []
+    [fetchPeople]
   )
 
   // Fetch people from API

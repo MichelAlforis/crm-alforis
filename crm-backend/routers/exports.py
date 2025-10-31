@@ -33,6 +33,7 @@ router = APIRouter(prefix="/exports", tags=["exports"])
 
 @router.get("/organisations/csv")
 async def export_organisations_csv(
+    ids: Optional[str] = Query(None, description="Liste d'IDs séparés par virgules (bulk export)"),
     category: Optional[str] = Query(None, description="Filtrer par catégorie"),
     type: Optional[str] = Query(None, description="Filtrer par type"),
     city: Optional[str] = Query(None, description="Filtrer par ville"),
@@ -53,6 +54,7 @@ async def export_organisations_csv(
     - `/exports/organisations/csv`
     - `/exports/organisations/csv?category=Institution&country_code=FR`
     - `/exports/organisations/csv?is_active=true&search=Bank`
+    - `/exports/organisations/csv?ids=1,2,3` (bulk export sélection)
 
     **Returns:** Fichier CSV téléchargeable
     """
@@ -73,7 +75,17 @@ async def export_organisations_csv(
 
     # Appliquer les mêmes filtres que le viewer
     query = db.query(Organisation)
-    query = apply_organisation_filters(query, params, current_user)
+
+    # Si IDs spécifiques fournis (bulk export), filtrer par IDs
+    if ids:
+        id_list = [int(i.strip()) for i in ids.split(',') if i.strip().isdigit()]
+        query = query.filter(Organisation.id.in_(id_list))
+        # Appliquer quand même les permissions
+        from core.permissions import filter_query_by_team
+        query = filter_query_by_team(query, current_user, Organisation)
+    else:
+        # Sinon, appliquer les filtres standards
+        query = apply_organisation_filters(query, params, current_user)
 
     # Pas de pagination pour export
     organisations = query.all()
@@ -371,6 +383,7 @@ async def export_mandats_pdf(
 
 @router.get("/people/csv")
 async def export_people_csv(
+    ids: Optional[str] = Query(None, description="Liste d'IDs séparés par virgules (bulk export)"),
     role: Optional[str] = Query(None, description="Filtrer par rôle"),
     country_code: Optional[str] = Query(None, description="Filtrer par pays"),
     language: Optional[str] = Query(None, description="Filtrer par langue"),
@@ -389,6 +402,7 @@ async def export_people_csv(
     - `/exports/people/csv`
     - `/exports/people/csv?role=Directeur&country_code=FR`
     - `/exports/people/csv?language=FR&search=Martin`
+    - `/exports/people/csv?ids=1,2,3` (bulk export sélection)
 
     **Returns:** Fichier CSV téléchargeable
     """
@@ -407,7 +421,17 @@ async def export_people_csv(
 
     # Appliquer les mêmes filtres que le viewer
     query = db.query(Person)
-    query = apply_people_filters(query, params, current_user)
+
+    # Si IDs spécifiques fournis (bulk export), filtrer par IDs
+    if ids:
+        id_list = [int(i.strip()) for i in ids.split(',') if i.strip().isdigit()]
+        query = query.filter(Person.id.in_(id_list))
+        # Appliquer quand même les permissions
+        from core.permissions import filter_query_by_team
+        query = filter_query_by_team(query, current_user, Person)
+    else:
+        # Sinon, appliquer les filtres standards
+        query = apply_people_filters(query, params, current_user)
 
     people = query.all()
 
