@@ -1,8 +1,8 @@
 # 🎯 CRM - Roadmap TODO Priorisée
 
-**Date:** 31 Octobre 2025 - 18:00
-**Version:** v8.12.0
-**Base:** Post-déploiement production + 39 Tests E2E activés + P2 86% completé
+**Date:** 31 Octobre 2025 - 18:30
+**Version:** v8.13.0
+**Base:** Post-déploiement production + 39 Tests E2E activés + P2 91% completé
 
 ## 🎉 RÉSUMÉ SESSION (31 Oct 2025)
 
@@ -12,23 +12,25 @@
 - ✅ **Staging Environment** - Infrastructure staging complète isolée
 - ✅ **Monitoring Uptime** - UptimeRobot + SSL monitoring 24/7
 - ✅ **P2 Features découverts** - 5 features déjà implémentées (Export, Bulk Actions, Dark Mode, Search, PWA)
+- ✅ **Infinite Scroll** - Implémenté avec react-intersection-observer + useInfiniteQuery ⭐
 
-**Commits créés aujourd'hui:**
+**Commits créés aujourd'hui (7):**
 1. `cc6630a9` - feat(ci): Integrate Playwright E2E tests in CI/CD pipeline
 2. `113481b5` - feat(e2e): Activate all 39 Playwright E2E tests with auth ⭐
 3. `c4df7c37` - docs(roadmap): Update roadmap v8.10.0
 4. `3d545438` - docs(roadmap): Update v8.11.0 - 39 E2E tests activated
-5. `73cd79c4` - docs(roadmap): Add session summary and update effort metrics
+5. `73cd79c4` - docs(roadmap): Add session summary
+6. `ca08dd48` - docs(roadmap): Update v8.12.0 - P2 82% completed
+7. `7374b15d` - feat(infinite-scroll): Implement infinite scroll for ActivityTab ⭐
 
 **Progrès:**
 - P0: 3/4 complétées ✅ (75%), 1 reportée ⏸️ (OAuth flemme!)
 - P1: 6/6 complétées ✅ (100%) 🎉
-- P2: 9/11 complétées ✅ (82%) 🚀
-- **Total: 18/21 (86%)** - Effort: 35h15 / 54h (65%)
+- P2: 10/11 complétées ✅ (91%) 🚀🚀
+- **Total: 19/21 (90%)** - Effort: 37h15 / 56h (66%)
 
 **P2 Restantes:**
-- ❌ Infinite Scroll (2h) - react-intersection-observer
-- ❌ Monitoring Grafana (4h) - Prometheus + dashboards
+- ❌ Monitoring Grafana (4h) - Prometheus + dashboards + alerting
 
 ---
 
@@ -240,21 +242,56 @@ SENTRY_ENVIRONMENT=production
 
 **Package:** `fuse.js@^7.1.0` (installé mais pas utilisé)
 
-### 15. Infinite Scroll (2h)
-**Status:** ❌ TODO - Utilise pagination
-**Impact:** UX grandes listes
+### ✅ 15. Infinite Scroll (2h)
+**Status:** ✅ COMPLETÉ - Implémenté (31 Oct 2025 - 18h30)
+**Impact:** UX grandes listes - Scroll fluide
 **Effort:** 2h
-**TODO:** [components/interactions/ActivityTab.tsx:51](crm-frontend/components/interactions/ActivityTab.tsx#L51) - "Infinite scroll (TODO)"
+**Commit:** `7374b15d` - feat(infinite-scroll): Implement infinite scroll for ActivityTab
 
-**Actuel:** Pagination traditionnelle (10, 20, 50, 100 items)
+**Fichiers modifiés:**
+- [hooks/useInteractions.ts](crm-frontend/hooks/useInteractions.ts) - Nouveaux hooks useInfiniteQuery
+- [components/interactions/ActivityTab.tsx:7](crm-frontend/components/interactions/ActivityTab.tsx#L7) - ✅ TODO résolu
+- [package.json](crm-frontend/package.json) - react-intersection-observer@^3.0.0
 
-**À implémenter:**
-```bash
-npm install react-intersection-observer
-```
+**Implementation:**
+- ✅ Package `react-intersection-observer` installé
+- ✅ Hook `useOrgInteractionsInfinite(orgId, limit)` créé
+- ✅ Hook `usePersonInteractionsInfinite(personId, limit)` créé
+- ✅ ActivityTab refactoré avec useInfiniteQuery
+- ✅ Intersection Observer pour trigger auto-load
+- ✅ Flatten pages into single array
+- ✅ Loading indicator pendant fetch
+- ✅ Message "Fin de la timeline"
+
+**Features:**
+- Charge 20 interactions par page
+- Auto-load quand scroll proche du bas
+- Cursor-based pagination du backend
+- React Query cache management
+- Dark mode support pour loading states
+- Grouped by day conservé
+
+**Technical:**
 ```typescript
-// react-intersection-observer pour infinite scroll
-import { useInView } from 'react-intersection-observer'
+// Hook infinite avec cursor pagination
+useInfiniteQuery({
+  queryKey: [...interactionKeys.byOrg(orgId), 'infinite', limit],
+  queryFn: async ({ pageParam }) => {
+    return apiClient.request('/interactions/by-organisation/{id}', {
+      params: { limit, cursor: pageParam }
+    })
+  },
+  initialPageParam: undefined,
+  getNextPageParam: (lastPage) => lastPage.next_cursor || undefined,
+})
+
+// Intersection observer trigger
+const { ref, inView } = useInView({ threshold: 0 })
+useEffect(() => {
+  if (inView && hasNextPage && !isFetchingNextPage) {
+    fetchNextPage()
+  }
+}, [inView, activeQuery])
 ```
 
 ### ✅ 16. CI/CD GitHub Actions (3h)
