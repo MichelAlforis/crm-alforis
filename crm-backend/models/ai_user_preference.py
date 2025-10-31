@@ -53,7 +53,7 @@ class AIUserPreference(Base):
     final_value = Column(Text, nullable=True)  # Valeur finale choisie par l'user (si accept ou manual)
 
     # Metadata additionnelle
-    metadata = Column(JSONB, nullable=True)  # JSON avec contexte additionnel
+    extra_metadata = Column(JSONB, nullable=True)  # JSON avec contexte additionnel (renamed from 'metadata' to avoid SQLAlchemy conflict)
 
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)

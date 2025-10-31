@@ -32,7 +32,7 @@ class TrackChoiceRequest(BaseModel):
     suggestion_confidence: Optional[float] = Field(None, description="Score de confiance")
     suggestion_rank: Optional[int] = Field(None, description="Position dans liste")
     entity_id: Optional[int] = Field(None, description="ID entité concernée")
-    metadata: Optional[dict] = Field(None, description="Metadata additionnelle")
+    extra_metadata: Optional[dict] = Field(None, description="Metadata additionnelle")
 
 
 class TrackChoiceResponse(BaseModel):
@@ -102,7 +102,7 @@ async def track_user_choice(
             suggestion_confidence=request.suggestion_confidence,
             suggestion_rank=request.suggestion_rank,
             entity_id=request.entity_id,
-            metadata=request.metadata,
+            extra_metadata=request.extra_metadata,
         )
 
         return TrackChoiceResponse(

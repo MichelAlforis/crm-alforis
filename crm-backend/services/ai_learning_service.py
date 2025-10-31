@@ -41,7 +41,7 @@ class AILearningService:
         suggestion_confidence: Optional[float] = None,
         suggestion_rank: Optional[int] = None,
         entity_id: Optional[int] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        extra_metadata: Optional[Dict[str, Any]] = None,
     ) -> AIUserPreference:
         """
         Enregistrer un choix utilisateur
@@ -58,7 +58,7 @@ class AILearningService:
             suggestion_confidence: Score de confiance initial
             suggestion_rank: Position dans la liste
             entity_id: ID de l'entité (si applicable)
-            metadata: Metadata additionnelle
+            extra_metadata: Metadata additionnelle
 
         Returns:
             AIUserPreference créée
@@ -76,7 +76,7 @@ class AILearningService:
                 suggestion_confidence=suggestion_confidence,
                 suggestion_rank=suggestion_rank,
                 entity_id=entity_id,
-                metadata=metadata,
+                extra_metadata=extra_metadata,
                 created_at=datetime.utcnow(),
                 expires_at=datetime.utcnow() + timedelta(days=90),  # RGPD 90 jours
             )

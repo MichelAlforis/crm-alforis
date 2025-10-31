@@ -42,7 +42,7 @@ def upgrade() -> None:
         sa.Column('final_value', sa.Text(), nullable=True),
 
         # Metadata
-        sa.Column('metadata', postgresql.JSONB(astext_type=sa.Text()), nullable=True),
+        sa.Column('extra_metadata', postgresql.JSONB(astext_type=sa.Text()), nullable=True),
 
         # Timestamps
         sa.Column('created_at', sa.DateTime(), nullable=False, server_default=sa.text('now()')),
