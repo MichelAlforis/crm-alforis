@@ -217,14 +217,23 @@ SELECT * FROM pg_stat_statements ORDER BY mean_exec_time DESC LIMIT 10;
 - Deploy
 ```
 
-### 17. Staging Environment (2h)
-**Status:** ❌ Prod only
+### ✅ 17. Staging Environment (2h)
+**Status:** ✅ COMPLETÉ (31 Oct 2025)
 **Impact:** Testing risqué
 **Effort:** 2h
+**Commits:**
+- `[staging]` - feat(infra): Add complete staging environment
 
-```
-staging.crm.alforis.fr (même serveur, Docker profiles)
-```
+**Configuration:**
+- ✅ [docker-compose.staging.yml](docker-compose.staging.yml) - Services staging isolés
+- ✅ Staging URL: staging.crm.alforis.fr
+- ✅ Basic Auth: alforis / alforis2025
+- ✅ Separate DB: crm_staging
+- ✅ Redis DB: 2 (prod uses DB 0)
+- ✅ Ports: API 8001, Frontend 3011
+- ✅ Deploy script: `npm run deploy:staging`
+- ✅ [Caddyfile](Caddyfile) - Route staging subdomain
+- ✅ [.env.staging.example](.env.staging.example) - Template staging vars
 
 ### 18. Monitoring Grafana (4h)
 **Status:** ❌ Pas de dashboards
@@ -235,15 +244,35 @@ staging.crm.alforis.fr (même serveur, Docker profiles)
 - [ ] Grafana dashboards
 - [ ] Alerting rules
 
-### 19. Tests E2E Cypress (6h)
-**Status:** ❌ Pas de tests E2E
+### ✅ 19. Tests E2E Playwright (6h)
+**Status:** ✅ COMPLETÉ - Migré de Cypress à Playwright (31 Oct 2025)
 **Impact:** Qualité
 **Effort:** 6h
+**Commits:**
+- `[e2e]` - feat(testing): Migrate from Cypress to Playwright E2E tests
 
-- [ ] Auth flow
-- [ ] Create person
-- [ ] Create organisation
-- [ ] Multi-mail flow
+**Raison Migration:**
+- ❌ Cypress 13.x/15.x incompatible avec macOS Sequoia 15.x
+- ✅ Playwright compatible macOS 15.x et plus performant
+
+**Tests créés:**
+- ✅ [e2e/auth.setup.ts](crm-frontend/e2e/auth.setup.ts) - Setup authentification réutilisable
+- ✅ [e2e/auth.spec.ts](crm-frontend/e2e/auth.spec.ts) - 7 tests auth flow
+- ✅ [e2e/people.spec.ts](crm-frontend/e2e/people.spec.ts) - 6 tests CRUD personnes
+- ✅ [e2e/organisations.spec.ts](crm-frontend/e2e/organisations.spec.ts) - 6 tests CRUD organisations
+- ✅ [e2e/bulk-actions.spec.ts](crm-frontend/e2e/bulk-actions.spec.ts) - 6 tests actions groupées
+- ✅ [playwright.config.ts](crm-frontend/playwright.config.ts) - Configuration Playwright
+
+**Scripts npm:**
+```bash
+npm run test:e2e          # Run all E2E tests
+npm run test:e2e:ui       # Interactive UI mode
+npm run test:e2e:headed   # Headed mode (voir le navigateur)
+npm run test:e2e:debug    # Debug mode
+npm run test:e2e:report   # Voir dernier rapport HTML
+```
+
+**Total:** 25+ tests E2E couvrant auth, CRUD, bulk operations
 
 ### 20. Documentation Utilisateur (8h)
 **Status:** ❌ Pas de docs user
