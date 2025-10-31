@@ -240,11 +240,17 @@ export default function CampaignsPage() {
       {/* Campagnes actives (en cours d'envoi) */}
       {stats.sending > 0 && (
         <Card className="border-orange-200 bg-orange-50">
-          <CardHeader
-            title={`${stats.sending} campagne(s) en cours d'envoi`}
-            subtitle="Envoi en temps réel"
-            icon={<Send className="w-5 h-5 text-orange-600" />}
-          />
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-text-primary">
+                  {`${stats.sending} campagne(s) en cours d'envoi`}
+                </h3>
+                <p className="mt-1 text-sm text-text-secondary">Envoi en temps réel</p>
+              </div>
+              <Send className="w-5 h-5 text-orange-600" />
+            </div>
+          </CardHeader>
           <CardBody>
             <div className="flex items-center gap-2 text-sm text-orange-800">
               <TrendingUp className="w-4 h-4" />
@@ -257,11 +263,17 @@ export default function CampaignsPage() {
       {/* Campagnes échouées */}
       {stats.failed > 0 && (
         <Card className="border-error/20 bg-error/5">
-          <CardHeader
-            title={`${stats.failed} campagne(s) échouée(s)`}
-            subtitle="Attention requise"
-            icon={<XCircle className="w-5 h-5 text-error" />}
-          />
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-text-primary">
+                  {`${stats.failed} campagne(s) échouée(s)`}
+                </h3>
+                <p className="mt-1 text-sm text-text-secondary">Attention requise</p>
+              </div>
+              <XCircle className="w-5 h-5 text-error" />
+            </div>
+          </CardHeader>
           <CardBody>
             <div className="flex items-center gap-2 text-sm text-error">
               <span>Veuillez vérifier les campagnes échouées et les relancer si nécessaire</span>
@@ -272,16 +284,26 @@ export default function CampaignsPage() {
 
       {/* Table des campagnes */}
       <Card>
-        <CardHeader
-          title={`Campagnes (${filteredCampaigns.length})`}
-          subtitle={statusFilter ? `Filtrées par statut: ${STATUS_LABELS[statusFilter as keyof typeof STATUS_LABELS]}` : 'Toutes vos campagnes email'}
-          icon={<Mail className="w-5 h-5 text-primary" />}
-        />
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold text-text-primary">
+                {`Campagnes (${filteredCampaigns.length})`}
+              </h3>
+              <p className="mt-1 text-sm text-text-secondary">
+                {statusFilter
+                  ? `Filtrées par statut: ${STATUS_LABELS[statusFilter as keyof typeof STATUS_LABELS]}`
+                  : 'Toutes vos campagnes email'}
+              </p>
+            </div>
+            <Mail className="w-5 h-5 text-primary" />
+          </div>
+        </CardHeader>
         <CardBody>
           <TableV2<EmailCampaign>
             columns={columns}
             data={filteredCampaigns}
-            getRowKey={(row) => row.id.toString()}
+            rowKey={(row) => row.id.toString()}
             size="md"
             variant="default"
             stickyHeader

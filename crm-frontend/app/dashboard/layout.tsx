@@ -9,7 +9,7 @@
 
 import React, { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { ROUTES, withQuery } from "@/lib/constants"
+import { ROUTES } from "@/lib/constants"
 import { useAuth } from '@/hooks/useAuth'
 import Navbar from '@/components/shared/Navbar'
 import Sidebar from '@/components/shared/Sidebar'

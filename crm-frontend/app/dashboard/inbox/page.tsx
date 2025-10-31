@@ -296,7 +296,7 @@ export default function InboxPage() {
           <div className="mt-6">
             <AdvancedFilters
               filters={advancedFilterDefinitions}
-              values={filters.values}
+              values={filters.values as unknown as Record<string, unknown>}
               onChange={filters.handleChange}
               onReset={filters.reset}
             />

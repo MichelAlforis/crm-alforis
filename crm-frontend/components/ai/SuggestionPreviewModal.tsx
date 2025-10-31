@@ -10,6 +10,7 @@ import { X, ArrowRight, Plus, Minus, Edit } from 'lucide-react'
 import clsx from 'clsx'
 
 interface SuggestionPreviewModalProps {
+  suggestionId?: number
   preview: SuggestionPreview | undefined
   isLoading?: boolean
   onClose: () => void
@@ -18,6 +19,7 @@ interface SuggestionPreviewModalProps {
 }
 
 export default function SuggestionPreviewModal({
+  suggestionId,
   preview,
   isLoading,
   onClose,
@@ -62,7 +64,7 @@ export default function SuggestionPreviewModal({
           <div>
             <h2 className="text-2xl font-bold text-white">Prévisualisation</h2>
             <p className="text-sm text-blue-100 mt-1">
-              {preview?.entity_type} #{preview?.entity_id}
+              {preview?.entity_type} #{preview?.entity_id || suggestionId}
             </p>
           </div>
           <button

@@ -201,10 +201,11 @@ function Tabs({
 export default async function Page({
   searchParams,
 }: {
-  searchParams: { q?: string; type?: SearchItem['type'] }
+  searchParams?: Promise<{ q?: string; type?: SearchItem['type'] }>
 }) {
-  const q = (searchParams.q || '').trim()
-  const filterType = (searchParams.type ?? '') as SearchItem['type'] | ''
+  const resolvedSearchParams = (await searchParams) ?? {}
+  const q = (resolvedSearchParams.q || '').trim()
+  const filterType = (resolvedSearchParams.type ?? '') as SearchItem['type'] | ''
 
   if (!q) {
     return (

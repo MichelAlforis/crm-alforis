@@ -297,7 +297,16 @@ export type EmailTemplateCategory =
   | 'custom'
 
 export type EmailProvider = 'sendgrid' | 'mailgun'
-export type EmailCampaignStatus = 'draft' | 'scheduled' | 'running' | 'paused' | 'completed' | 'cancelled'
+export type EmailCampaignStatus =
+  | 'draft'
+  | 'scheduled'
+  | 'running'
+  | 'paused'
+  | 'completed'
+  | 'cancelled'
+  | 'sending'
+  | 'sent'
+  | 'failed'
 export type EmailScheduleType = 'manual' | 'immediate' | 'scheduled' | 'recurring'
 export type EmailVariant = 'A' | 'B'
 export type EmailSendStatus =
@@ -643,6 +652,10 @@ export type MandatStatus =
   | "signé"
   | "actif"
   | "terminé"
+  | "ACTIF"    // Legacy uppercase
+  | "SIGNE"    // Legacy uppercase
+  | "EXPIRE"   // Legacy uppercase
+  | "RESILIE"  // Legacy uppercase
 
 export interface MandatDistribution {
   id: number
@@ -685,6 +698,10 @@ export interface MandatDistributionDetail extends MandatDistribution {
   organisation: Organisation
   produits: Produit[]
 }
+
+// Alias for compatibility
+export type Mandat = MandatDistribution
+export type MandatFilters = Record<string, unknown>
 
 // ============= PRODUIT =============
 

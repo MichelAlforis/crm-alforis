@@ -5,8 +5,7 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { ROUTES, withQuery } from "@/lib/constants"
+import { ROUTES } from "@/lib/constants"
 import { useMandat, useUpdateMandat, useDeleteMandat } from '@/hooks/useMandats'
 import { useProduitsByMandat, useDeleteMandatProduitAssociation } from '@/hooks/useProduits'
 import { useConfirm } from '@/hooks/useConfirm'
@@ -23,7 +22,6 @@ import type { MandatDistributionUpdate } from '@/lib/types'
 import { MANDAT_STATUS_LABELS, MANDAT_TYPE_LABELS } from "@/lib/enums/labels"
 
 export default function MandatDetailPage() {
-  const router = useRouter()
   const {
     entityId: mandatId,
     isEditModalOpen,
@@ -228,6 +226,15 @@ export default function MandatDetailPage() {
     },
   ]
 
+  const produitRows: ProduitRow[] = (produits ?? []).map((produit) => ({
+    id: produit.id,
+    name: produit.name,
+    type: produit.type,
+    isin_code: produit.isin_code ?? null,
+    status: produit.status,
+    mandat_produits: produit.mandat_produits,
+  }))
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -309,8 +316,8 @@ export default function MandatDetailPage() {
       <Card>
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-xl font-semibold">Produits associés ({produits?.length || 0})</h2>
-            {produits && produits.length > 0 && (
+            <h2 className="text-xl font-semibold">Produits associés ({produitRows.length})</h2>
+            {produitRows.length > 0 && (
               <p className="text-sm text-gray-600 dark:text-slate-400 mt-1">
                 Total allocation:{' '}
                 <span className={`font-semibold ${totalAllocation === 100 ? 'text-green-600' : 'text-orange-600'}`}>
@@ -341,13 +348,13 @@ export default function MandatDetailPage() {
           />
         )}
 
-        {produits && produits.length > 0 ? (
+        {produitRows.length > 0 ? (
           <TableV2<ProduitRow>
             columns={produitColumns}
-            data={produits}
+            data={produitRows}
             isLoading={false}
             isEmpty={false}
-            getRowKey={(row) => row.id.toString()}
+            rowKey={(row) => row.id.toString()}
             size="md"
             variant="default"
             stickyHeader

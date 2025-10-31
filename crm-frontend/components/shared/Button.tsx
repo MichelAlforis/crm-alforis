@@ -6,7 +6,7 @@ import clsx from 'clsx'
 import { Loader2 } from 'lucide-react'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'success'
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'success' | 'outline'
   size?: 'xs' | 'sm' | 'md' | 'lg'
   isLoading?: boolean
   leftIcon?: React.ReactNode
@@ -55,6 +55,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       success: [
         'bg-success text-white',
         'hover:bg-green-600 hover:shadow-md',
+        'active:scale-[0.98]',
+      ],
+      outline: [
+        'bg-transparent border-2 border-border text-text-primary',
+        'hover:bg-muted hover:border-primary',
         'active:scale-[0.98]',
       ],
     }

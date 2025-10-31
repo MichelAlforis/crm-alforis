@@ -18,7 +18,7 @@ import { ArrowLeft, Mail, Users, Send } from "lucide-react";
 import { useToast } from "@/hooks/useToast";
 import { Badge } from "@/components/ui/badge";
 import { logger } from '@/lib/logger'
-import { storage, AUTH_STORAGE_KEYS, EMAIL_ENDPOINTS, ROUTES } from '@/lib/constants'
+import { storage, AUTH_STORAGE_KEYS, EMAIL_ENDPOINTS } from '@/lib/constants'
 
 interface Template {
   id: number;
@@ -317,7 +317,7 @@ export default function NewEmailCampaignPage() {
 
             <div>
               <Label htmlFor="template">Template d'email *</Label>
-              <Select value={templateId?.toString()} onValueChange={(v) => setTemplateId(parseInt(v))}>
+              <Select value={templateId ? templateId.toString() : ''} onValueChange={(v) => setTemplateId(parseInt(v))}>
                 <SelectTrigger>
                   <SelectValue placeholder="Sélectionner un template" />
                 </SelectTrigger>

@@ -274,16 +274,22 @@ export default function MailingListsPage() {
 
       {/* Table */}
       <Card>
-        <CardHeader
-          title={`Listes (${lists.length})`}
-          subtitle="Toutes vos listes de diffusion"
-          icon={<List className="w-5 h-5 text-primary" />}
-        />
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold text-text-primary">
+                {`Listes (${lists.length})`}
+              </h3>
+              <p className="mt-1 text-sm text-text-secondary">Toutes vos listes de diffusion</p>
+            </div>
+            <List className="w-5 h-5 text-primary" />
+          </div>
+        </CardHeader>
         <CardBody>
           <TableV2<MailingList>
             columns={columns}
             data={lists}
-            getRowKey={(row) => row.id.toString()}
+            rowKey={(row) => row.id.toString()}
             size="md"
             variant="default"
             stickyHeader

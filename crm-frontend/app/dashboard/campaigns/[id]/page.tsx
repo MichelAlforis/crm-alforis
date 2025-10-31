@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { ROUTES, withQuery } from "@/lib/constants"
 import Link from 'next/link'
 import { ArrowLeft, Mail, Eye, MousePointerClick, Ban, Send, Loader2, PlayCircle, Pause } from 'lucide-react'
 import { Card, Alert, Button } from '@/components/shared'
@@ -26,10 +25,10 @@ export default function CampaignDetailPage() {
   const router = useRouter()
   const campaignId = params?.id ? parseInt(params.id, 10) : 0
 
-  const { data: campaign, isLoading, error, mutate } = useEmailCampaign(campaignId)
+  const { data: campaign, isLoading, error, refetch } = useEmailCampaign(campaignId)
   const { data: stats } = useEmailCampaignStats(campaignId)
   const { showToast } = useToast()
-  const confirm = useConfirm()
+  const { confirm: openConfirm, ConfirmDialogComponent } = useConfirm()
 
   const [isPreparing, setIsPreparing] = useState(false)
   const [isStarting, setIsStarting] = useState(false)
@@ -38,78 +37,87 @@ export default function CampaignDetailPage() {
   const [testEmail, setTestEmail] = useState('')
   const [isSendingTest, setIsSendingTest] = useState(false)
 
-  const handlePrepareCampaign = async () => {
-    const confirmed = await confirm({
+  const handlePrepareCampaign = () => {
+    openConfirm({
       title: 'Préparer la campagne',
       message: 'Cette action va générer tous les emails personnalisés. Continuer ?',
       confirmText: 'Préparer',
+      type: 'warning',
+      onConfirm: async () => {
+        setIsPreparing(true)
+        try {
+          const response = await apiClient.post<{ emails_prepared: number }>(
+            `/email/campaigns/campaigns/${campaignId}/prepare`
+          )
+          showToast({
+            type: 'success',
+            title: `${response.data.emails_prepared} emails préparés avec succès`,
+          })
+          await refetch()
+        } catch (err: any) {
+          showToast({
+            type: 'error',
+            title: err?.response?.data?.detail || 'Erreur lors de la préparation',
+          })
+        } finally {
+          setIsPreparing(false)
+        }
+      },
     })
-
-    if (!confirmed) return
-
-    setIsPreparing(true)
-    try {
-      const response = await apiClient.post(`/email/campaigns/campaigns/${campaignId}/prepare`)
-      showToast({
-        type: 'success',
-        title: `${response.data.emails_prepared} emails préparés avec succès`,
-      })
-      mutate()
-    } catch (err: any) {
-      showToast({
-        type: 'error',
-        title: err?.response?.data?.detail || 'Erreur lors de la préparation',
-      })
-    } finally {
-      setIsPreparing(false)
-    }
   }
 
-  const handleStartCampaign = async () => {
-    const confirmed = await confirm({
+  const handleStartCampaign = () => {
+    openConfirm({
       title: 'Démarrer la campagne',
       message: `Êtes-vous sûr de vouloir démarrer l'envoi de cette campagne ? Cette action ne peut pas être annulée.`,
-      confirmText: 'Démarrer l\'envoi',
-      isDangerous: true,
+      confirmText: "Démarrer l'envoi",
+      type: 'danger',
+      onConfirm: async () => {
+        setIsStarting(true)
+        try {
+          await apiClient.post(`/email/campaigns/campaigns/${campaignId}/start`)
+          showToast({
+            type: 'success',
+            title: 'Campagne démarrée avec succès',
+          })
+          await refetch()
+        } catch (err: any) {
+          showToast({
+            type: 'error',
+            title: err?.response?.data?.detail || 'Erreur lors du démarrage',
+          })
+        } finally {
+          setIsStarting(false)
+        }
+      },
     })
-
-    if (!confirmed) return
-
-    setIsStarting(true)
-    try {
-      await apiClient.post(`/email/campaigns/campaigns/${campaignId}/start`)
-      showToast({
-        type: 'success',
-        title: 'Campagne démarrée avec succès',
-      })
-      mutate()
-    } catch (err: any) {
-      showToast({
-        type: 'error',
-        title: err?.response?.data?.detail || 'Erreur lors du démarrage',
-      })
-    } finally {
-      setIsStarting(false)
-    }
   }
 
-  const handlePauseCampaign = async () => {
-    setIsPausing(true)
-    try {
-      await apiClient.post(`/email/campaigns/campaigns/${campaignId}/pause`)
-      showToast({
-        type: 'success',
-        title: 'Campagne mise en pause',
-      })
-      mutate()
-    } catch (err: any) {
-      showToast({
-        type: 'error',
-        title: err?.response?.data?.detail || 'Erreur lors de la mise en pause',
-      })
-    } finally {
-      setIsPausing(false)
-    }
+  const handlePauseCampaign = () => {
+    openConfirm({
+      title: 'Mettre la campagne en pause',
+      message: 'Les envois en cours seront suspendus immédiatement.',
+      confirmText: 'Mettre en pause',
+      type: 'warning',
+      onConfirm: async () => {
+        setIsPausing(true)
+        try {
+          await apiClient.post(`/email/campaigns/campaigns/${campaignId}/pause`)
+          showToast({
+            type: 'success',
+            title: 'Campagne mise en pause',
+          })
+          await refetch()
+        } catch (err: any) {
+          showToast({
+            type: 'error',
+            title: err?.response?.data?.detail || 'Erreur lors de la mise en pause',
+          })
+        } finally {
+          setIsPausing(false)
+        }
+      },
+    })
   }
 
   const handlePreviewCampaign = () => {
@@ -408,6 +416,8 @@ export default function CampaignDetailPage() {
           </Card>
         </div>
       )}
+
+      <ConfirmDialogComponent />
     </div>
   )
 }

@@ -284,7 +284,7 @@ export default function KPIsPage() {
               isLoading={kpisLoading}
               isEmpty={kpis.length === 0}
               emptyMessage="Aucun KPI enregistré pour ce fournisseur"
-              getRowKey={(row) => row.id?.toString() || `${row.year}-${row.month}`}
+              rowKey={(row) => row.id?.toString() || `${row.year}-${row.month}`}
               size="md"
               variant="default"
               stickyHeader

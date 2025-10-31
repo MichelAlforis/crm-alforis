@@ -5,8 +5,7 @@
 
 import React, { useState, useMemo } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { ROUTES, withQuery } from "@/lib/constants"
+import { ROUTES } from "@/lib/constants"
 import { ArrowLeft, Eye } from 'lucide-react'
 import { useMandats } from '@/hooks/useMandats'
 import { useFilters } from '@/hooks/useFilters'
@@ -276,7 +275,7 @@ export default function MandatsPage() {
           </div>
           <AdvancedFilters
             filters={advancedFilterDefinitions}
-            values={filters.values}
+            values={filters.values as Record<string, unknown>}
             onChange={filters.handleChange}
             onReset={filters.reset}
           />
@@ -288,8 +287,8 @@ export default function MandatsPage() {
       <Card>
         <TableV2<Mandat>
           columns={columns}
-          data={paginatedMandats}
-          getRowKey={(row) => row.id.toString()}
+          data={paginatedMandats as Mandat[]}
+          rowKey={(row) => row.id.toString()}
           sortConfig={sortConfig}
           onSort={handleSort}
           size="md"

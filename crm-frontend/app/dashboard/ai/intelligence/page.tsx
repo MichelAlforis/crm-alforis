@@ -65,11 +65,11 @@ export default function EmailIntelligencePage() {
     setLoading(true)
     try {
       const [metricsRes, intentsRes, modelsRes, sendersRes, timelineRes] = await Promise.all([
-        apiClient.get(`/email-intelligence/metrics?days=${timeWindow}`),
-        apiClient.get(`/email-intelligence/intents?days=${timeWindow}`),
-        apiClient.get(`/email-intelligence/models?days=${timeWindow}`),
-        apiClient.get(`/email-intelligence/top-senders?days=${timeWindow}&limit=10`),
-        apiClient.get(`/email-intelligence/timeline?days=${timeWindow}`)
+        apiClient.get<EmailIntelligenceMetrics>(`/email-intelligence/metrics?days=${timeWindow}`),
+        apiClient.get<IntentDistribution[]>(`/email-intelligence/intents?days=${timeWindow}`),
+        apiClient.get<ModelUsage[]>(`/email-intelligence/models?days=${timeWindow}`),
+        apiClient.get<TopSender[]>(`/email-intelligence/top-senders?days=${timeWindow}&limit=10`),
+        apiClient.get<TimelineDataPoint[]>(`/email-intelligence/timeline?days=${timeWindow}`)
       ])
 
       setMetrics(metricsRes.data)

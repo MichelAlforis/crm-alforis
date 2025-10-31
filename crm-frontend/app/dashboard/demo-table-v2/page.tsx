@@ -226,7 +226,7 @@ export default function DemoTableV2Page() {
       sticky: 'right', // ✨ Sticky column on the right
       priority: 'high', // 📱 Always visible on mobile
       minWidth: '120px',
-      render: (value: number, row: DemoContact) => {
+      render: (_value: number, row: DemoContact) => {
         const actions: OverflowAction[] = [
           {
             label: 'Voir',

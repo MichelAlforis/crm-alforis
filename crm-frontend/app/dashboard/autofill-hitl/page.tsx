@@ -14,7 +14,7 @@
  */
 
 import { useState, useEffect } from 'react'
-import { storage, AUTH_STORAGE_KEYS, PREFERENCES_STORAGE_KEYS } from "@/lib/constants"
+import { storage, AUTH_STORAGE_KEYS } from "@/lib/constants"
 import {
   CheckCircle,
   XCircle,
@@ -22,7 +22,6 @@ import {
   Filter,
   RefreshCw,
   History,
-  AlertCircle,
   Sparkles,
   Ban
 } from 'lucide-react'
