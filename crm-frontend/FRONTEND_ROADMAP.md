@@ -1,6 +1,6 @@
 # 🗺️ CRM Frontend - Roadmap Refactoring
 
-**Dernière mise à jour:** 31 Octobre 2025 - 23:30
+**Dernière mise à jour:** 31 Octobre 2025 - 16:30
 **Version:** Phase 2 en cours
 **Build Status:** ✅ Stable (71 routes)
 
@@ -12,12 +12,17 @@
 |-------|--------|----------|--------|
 | **Phase 1** - Quick Wins | ✅ Complété | 100% | ~1,565 lignes |
 | **Phase 1 Bonus** - localStorage Migration | ✅ Complété | 100% | ~1,270 lignes |
-| **Phase 2** - Migration & Cleanup | 🔄 En cours | 58% | ~12h / ~18h |
+| **Phase 2** - Migration & Cleanup | 🔄 En cours | 75% | ~15h / ~18h |
 | **Phase 3** - Optimizations | 📋 Planifié | 0% | ~20h |
 
-**Total Code Écrit:** ~2,835 lignes
-**Total Fichiers Migrés:** 56+ fichiers
+**Total Code Écrit:** ~3,190 lignes (+355 hooks/labels)
+**Total Code Économisé:** ~390 lignes (modals, forms, labels)
+**Total Fichiers Migrés:** 69+ fichiers
 **Breaking Changes:** 0
+
+**Commits cette session:**
+- `6fdfd806` - Modal migration (MandatProduitAssociationModal)
+- `c618d99e` - Label centralization (8 pages dashboard)
 
 ---
 
@@ -231,9 +236,16 @@ fb9f7ada refactor(frontend): Migrate localStorage to storage helper
 
 ---
 
-### 2.3 Consolidate Duplicate Components (🔄 EN COURS - 50%)
+### 2.3 Consolidate Duplicate Components (🔄 EN COURS - 70%)
 
-**Objectif:** Éliminer les composants dupliqués
+**Objectif:** Éliminer les composants dupliqués et centraliser les patterns communs
+
+**Progress:**
+- ✅ Modals: 4/4 migrés vers ModalForm (-122 lignes)
+- ✅ Forms: 4/13 migrés avec hooks réutilisables (-118 lignes)
+- ✅ Labels: Centralisés dans lib/enums/labels.ts (~150 lignes)
+- 🔄 Tables: Migration DataTable en cours
+- 🔄 Select Components: Consolidation planifiée
 
 **Duplications identifiées:**
 
@@ -288,6 +300,99 @@ components/shared/Search/
 - Code: 32KB → 15KB modulaire (-53%)
 - Duplication: Éliminée via hooks partagés
 - Maintenabilité: +++ (single source of truth)
+
+**Status:** ✅ COMPLETÉ!
+
+#### ✅ Modal System Consolidation (4 modals → ModalForm)
+
+**Objectif:** Migrer tous les modaux vers le système ModalForm unifié
+
+**Modaux migrés:**
+1. ✅ `InteractionCreateModal.tsx` (254 → 224L, -30L, -12%)
+2. ✅ `CreateActivityModal.tsx` (358 → 326L, -32L, -9%)
+3. ✅ `TemplateCreateModal.tsx` (173 → 154L, -19L, -11%)
+4. ✅ `MandatProduitAssociationModal.tsx` (239 → 199L, -40L, -17%)
+
+**Améliorations:**
+- Élimination de 60+ lignes de boilerplate par modal (backdrop, header, footer, buttons)
+- Error handling standardisé via `useFormToast`
+- Support dark mode ajouté partout
+- Validation form avec prop `submitDisabled`
+- Messages toast avec accord grammatical français (masculin/féminin)
+
+**Économies:** -122 lignes au total (-10.2% en moyenne)
+
+**Commit:** `6fdfd806` - refactor(modals): Migrate MandatProduitAssociationModal to ModalForm
+
+#### ✅ Form Hooks & Consolidation (4/13 formulaires)
+
+**Hooks créés:**
+1. ✅ `hooks/useOrganisationSelect.ts` (148L) - Logique autocomplete organisation réutilisable
+2. ✅ `hooks/useFormToast.ts` (163L) - Messages toast standardisés avec genre grammatical
+3. ✅ `hooks/useFormAutoFocus.ts` (44L) - Auto-focus sur premier champ avec erreur
+
+**Formulaires migrés:**
+1. ✅ `MandatForm.tsx` (248 → 223L, -25L, -10%)
+2. ✅ `TaskForm.tsx` (436 → 391L, -45L, -10%)
+3. ✅ `PersonForm.tsx` (549 → 521L, -28L, -5%)
+4. ✅ `OrganisationForm.tsx` (337 → 317L, -20L, -6%)
+
+**Patterns préservés:**
+- Hooks AI (useAutofillV2, useAutofillPreview) maintenus
+- Context menus AI suggestions préservés
+- Détection doublons intacte
+- Toute la logique métier conservée
+
+**Économies:** -118 lignes au total (-7.5% en moyenne)
+
+**Formulaires restants:** 9/13 (migration future quand patterns émergent)
+
+#### ✅ Label Mappings Centralization (8 pages dashboard)
+
+**Problème:** Labels dupliqués dans 21+ pages dashboard
+
+**Solution:** Créé `lib/enums/labels.ts` (126 lignes) - Single source of truth
+
+**Labels centralisés:**
+```typescript
+// Organisation
+ORGANISATION_CATEGORY_LABELS: Record<string, string>
+ORGANISATION_STATUS_LABELS: Record<string, string>
+
+// Produits
+PRODUIT_TYPE_LABELS: Record<string, string>
+PRODUIT_STATUS_LABELS: Record<string, string>
+
+// Mandats
+MANDAT_STATUS_LABELS: Record<string, string>
+MANDAT_TYPE_LABELS: Record<string, string>
+
+// AI & RGPD
+AI_INTENT_LABELS: Record<string, string>
+ENTITY_TYPE_LABELS: Record<string, string>
+
+// Helpers
+getLabel(value, labels): string
+getLabelOptions(labels): Array<{value, label}>
+```
+
+**Pages migrées:**
+1. ✅ `organisations/page.tsx` - CATEGORY_LABELS → ORGANISATION_CATEGORY_LABELS
+2. ✅ `organisations/[id]/page.tsx` - 2 labels → centralisés
+3. ✅ `produits/page.tsx` - TYPE_LABELS → PRODUIT_TYPE_LABELS
+4. ✅ `produits/[id]/page.tsx` - 3 labels → centralisés
+5. ✅ `mandats/page.tsx` - STATUS_LABELS → MANDAT_STATUS_LABELS
+6. ✅ `mandats/[id]/page.tsx` - 2 labels → centralisés
+7. ✅ `settings/rgpd/access-logs/page.tsx` - ENTITY_TYPE_LABELS centralisé
+8. ✅ `ai/intelligence/page.tsx` - INTENT_LABELS → AI_INTENT_LABELS
+
+**Impact:**
+- ~150 lignes de duplication éliminées
+- Maintenance simplifiée (1 seul endroit pour modifier les labels)
+- Convention de nommage cohérente
+- Aucun breaking change
+
+**Commit:** `c618d99e` - refactor(frontend): Centralize label mappings in lib/enums/labels.ts
 
 **Status:** ✅ COMPLETÉ!
 
