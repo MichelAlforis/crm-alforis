@@ -235,7 +235,7 @@ export default function MailingListsPage() {
           <TableV2<MailingList>
             columns={columns}
             data={paginatedLists}
-            getRowKey={(row) => row.id.toString()}
+            getRowKey={(row: any) => row.id.toString()}
             sortConfig={table.sortConfig}
             onSort={table.handleSort}
             size="md"

@@ -197,7 +197,7 @@ export default function ProduitsPage() {
         <TableV2<Produit>
           columns={columns}
           data={filteredData?.slice(pagination.skip, pagination.skip + pagination.limit) || []}
-          getRowKey={(row) => row.id.toString()}
+          getRowKey={(row: any) => row.id.toString()}
           size="md"
           variant="default"
           stickyHeader

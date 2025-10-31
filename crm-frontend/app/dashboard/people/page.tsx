@@ -50,7 +50,7 @@ export default function PeoplePage() {
         accessor: (row) => `${row.first_name} ${row.last_name}`,
         sortable: true,
         searchable: true,
-        render: (_: unknown, row) => (
+        render: (_: unknown, row: any) => (
           <Link
             href={`/dashboard/people/${personSlug(row.id, row.first_name, row.last_name)}`}
             className="font-medium text-gray-900 dark:text-slate-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
@@ -66,7 +66,7 @@ export default function PeoplePage() {
         accessor: 'role',
         sortable: true,
         searchable: true,
-        render: (value) =>
+        render: (value: any) =>
           value ? (
             <div className="flex items-center gap-1 text-gray-700 dark:text-slate-300">
               <Briefcase className="w-3.5 h-3.5 flex-shrink-0 text-gray-400 dark:text-slate-500" />
@@ -82,7 +82,7 @@ export default function PeoplePage() {
         accessor: 'personal_email',
         sortable: true,
         searchable: true,
-        render: (value) =>
+        render: (value: any) =>
           value ? (
             <a
               href={`mailto:${value}`}
@@ -101,7 +101,7 @@ export default function PeoplePage() {
         header: 'Téléphone',
         accessor: 'personal_phone',
         sortable: true,
-        render: (value) =>
+        render: (value: any) =>
           value ? (
             <a
               href={`tel:${value}`}
@@ -120,7 +120,7 @@ export default function PeoplePage() {
         header: 'Pays',
         accessor: 'country_code',
         sortable: true,
-        render: (value) =>
+        render: (value: any) =>
           value ? (
             <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-slate-300">
               <MapPin className="w-3.5 h-3.5 flex-shrink-0 text-gray-400 dark:text-slate-500" />
@@ -135,7 +135,7 @@ export default function PeoplePage() {
         header: 'Langue',
         accessor: 'language',
         sortable: true,
-        render: (value) =>
+        render: (value: any) =>
           value ? (
             <span className="text-sm text-gray-700 dark:text-slate-300">
               {LANGUAGE_LABELS[value] || value}

@@ -215,7 +215,7 @@ export default function ProduitDetailPage() {
             data={produit.mandats}
             isLoading={false}
             isEmpty={false}
-            getRowKey={(row) => row.id.toString()}
+            getRowKey={(row: any) => row.id.toString()}
             size="md"
             variant="default"
             stickyHeader

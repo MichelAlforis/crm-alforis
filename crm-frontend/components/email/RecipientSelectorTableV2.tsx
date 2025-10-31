@@ -786,7 +786,7 @@ export const RecipientSelectorTableV2: React.FC<RecipientSelectorTableProps> = (
                 total: totalRecipients,
                 skip,
                 limit,
-                onPageChange: (newSkip) => setSkip(newSkip),
+                onPageChange: (newSkip: any) => setSkip(newSkip),
               }}
             />
 

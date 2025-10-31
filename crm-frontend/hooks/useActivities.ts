@@ -105,7 +105,7 @@ export function useActivities(options: UseActivitiesOptions = {}): UseActivities
 
   const { data, error, mutate, isLoading } = useSWR<Activity[]>(
     url,
-    async (url) => {
+    async (url: any) => {
       const response = await api.get(url)
       return response.data.items || response.data || []
     },
@@ -120,7 +120,7 @@ export function useActivities(options: UseActivitiesOptions = {}): UseActivities
   // Statistiques
   const stats = useMemo(() => {
     const byType: Record<string, number> = {}
-    activities.forEach(activity => {
+    activities.forEach((activity: any) => {
       byType[activity.type] = (byType[activity.type] || 0) + 1
     })
 

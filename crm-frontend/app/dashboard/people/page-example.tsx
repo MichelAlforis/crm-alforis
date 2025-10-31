@@ -57,7 +57,7 @@ export default function PeoplePageExample() {
       accessor: (row) => `${row.first_name} ${row.last_name}`,
       sortable: true,
       searchable: true,
-      render: (_: unknown, row) => (
+      render: (_: unknown, row: any) => (
         <Link
           href={`/dashboard/people/${personSlug(row.id, row.first_name, row.last_name)}`}
           className="font-medium text-gray-900 dark:text-slate-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
@@ -72,7 +72,7 @@ export default function PeoplePageExample() {
       accessor: 'role',
       sortable: true,
       searchable: true,
-      render: (value) =>
+      render: (value: any) =>
         value ? (
           <span className="text-sm text-gray-700 dark:text-slate-300">{value}</span>
         ) : (
@@ -85,7 +85,7 @@ export default function PeoplePageExample() {
       accessor: 'personal_email',
       sortable: true,
       searchable: true,
-      render: (value) =>
+      render: (value: any) =>
         value ? (
           <a
             href={`mailto:${value}`}
@@ -104,7 +104,7 @@ export default function PeoplePageExample() {
       header: 'Téléphone',
       accessor: 'personal_phone',
       sortable: true,
-      render: (value) =>
+      render: (value: any) =>
         value ? (
           <a
             href={`tel:${value}`}
@@ -123,7 +123,7 @@ export default function PeoplePageExample() {
       header: 'Pays',
       accessor: 'country_code',
       sortable: true,
-      render: (value) =>
+      render: (value: any) =>
         value ? (
           <span className="text-sm text-gray-700 dark:text-slate-300">
             {COUNTRY_LABELS[value] || value}
@@ -137,7 +137,7 @@ export default function PeoplePageExample() {
       header: 'Langue',
       accessor: 'language',
       sortable: true,
-      render: (value) =>
+      render: (value: any) =>
         value ? (
           <span className="text-sm text-gray-700 dark:text-slate-300">
             {LANGUAGE_LABELS[value] || value}

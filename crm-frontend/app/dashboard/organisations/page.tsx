@@ -44,7 +44,7 @@ export default function OrganisationsPage() {
         accessor: 'name',
         sortable: true,
         searchable: true,
-        render: (value: unknown, row) => (
+        render: (value: unknown, row: any) => (
           <Link
             href={`/dashboard/organisations/${row.id}`}
             className="font-medium text-gray-900 dark:text-slate-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
@@ -75,7 +75,7 @@ export default function OrganisationsPage() {
         accessor: 'email',
         sortable: true,
         searchable: true,
-        render: (value) =>
+        render: (value: any) =>
           value ? (
             <a
               href={`mailto:${value}`}
@@ -94,7 +94,7 @@ export default function OrganisationsPage() {
         header: 'Téléphone',
         accessor: 'main_phone',
         sortable: true,
-        render: (value) =>
+        render: (value: any) =>
           value ? (
             <a
               href={`tel:${value}`}
@@ -113,7 +113,7 @@ export default function OrganisationsPage() {
         header: 'Pays',
         accessor: 'country_code',
         sortable: true,
-        render: (value) => {
+        render: (value: any) => {
           const label = getCountryLabel(value)
           return label ? (
             <span className="text-sm text-gray-700 dark:text-slate-300">{label}</span>
@@ -127,7 +127,7 @@ export default function OrganisationsPage() {
         header: 'Langue',
         accessor: 'language',
         sortable: true,
-        render: (value) => {
+        render: (value: any) => {
           const label = getLanguageLabel(value)
           return label ? (
             <span className="text-sm text-gray-700 dark:text-slate-300">{label}</span>
@@ -141,7 +141,7 @@ export default function OrganisationsPage() {
         header: 'Site web',
         accessor: 'website',
         sortable: true,
-        render: (value) =>
+        render: (value: any) =>
           value ? (
             <a
               href={value}

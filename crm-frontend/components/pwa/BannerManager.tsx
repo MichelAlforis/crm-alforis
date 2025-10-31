@@ -42,7 +42,7 @@ export function BannerManager() {
   const [queue, setQueue] = useState<Banner[]>([])
 
   // Hooks
-  const { permission, isSubscribed, subscribe, error: pushError } = usePushNotifications()
+  const { permission, isSubscribed, error: pushError } = usePushNotifications()
 
   // Onboarding callback (sera géré par OnboardingTour directement)
   // Onboarding callback removed

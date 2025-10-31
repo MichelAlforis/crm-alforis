@@ -87,13 +87,13 @@ export function SearchableSelect({
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault()
-        setHighlightedIndex((prev) =>
+        setHighlightedIndex((prev: any) =>
           prev < filteredOptions.length - 1 ? prev + 1 : prev
         )
         break
       case 'ArrowUp':
         e.preventDefault()
-        setHighlightedIndex((prev) => (prev > 0 ? prev - 1 : 0))
+        setHighlightedIndex((prev: any) => (prev > 0 ? prev - 1 : 0))
         break
       case 'Enter':
         e.preventDefault()

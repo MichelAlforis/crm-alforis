@@ -121,11 +121,11 @@ export function EntityAutocompleteInput({
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault()
-        setHighlightedIndex((prev) => (prev + 1) % options.length)
+        setHighlightedIndex((prev: any) => (prev + 1) % options.length)
         break
       case 'ArrowUp':
         e.preventDefault()
-        setHighlightedIndex((prev) => (prev - 1 + options.length) % options.length)
+        setHighlightedIndex((prev: any) => (prev - 1 + options.length) % options.length)
         break
       case 'Enter':
         e.preventDefault()
