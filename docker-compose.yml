@@ -109,6 +109,7 @@ services:
       POSTGRES_HOST: postgres
       # Encryption for API keys in DB
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      EMAIL_ENCRYPTION_KEY: ${EMAIL_ENCRYPTION_KEY:-dev_email_encryption_key}
       # Microsoft OAuth (Outlook)
       MICROSOFT_CLIENT_ID: ${MICROSOFT_CLIENT_ID}
       MICROSOFT_CLIENT_SECRET: ${MICROSOFT_CLIENT_SECRET}
@@ -236,6 +237,7 @@ services:
       REDIS_DB: ${REDIS_DB:-0}
       SECRET_KEY: ${SECRET_KEY:-dev_secret_key_change_in_production}
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      EMAIL_ENCRYPTION_KEY: ${EMAIL_ENCRYPTION_KEY:-dev_email_encryption_key}
       ENVIRONMENT: ${ENVIRONMENT:-development}
       POSTGRES_USER: ${POSTGRES_USER:-crm_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-crm_password}
@@ -285,6 +287,7 @@ services:
       REDIS_DB: ${REDIS_DB:-0}
       SECRET_KEY: ${SECRET_KEY:-dev_secret_key_change_in_production}
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      EMAIL_ENCRYPTION_KEY: ${EMAIL_ENCRYPTION_KEY:-dev_email_encryption_key}
       ENVIRONMENT: ${ENVIRONMENT:-development}
       POSTGRES_USER: ${POSTGRES_USER:-crm_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-crm_password}

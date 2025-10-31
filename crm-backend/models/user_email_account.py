@@ -68,7 +68,7 @@ class UserEmailAccount(Base):
     
     # Relations
     team = relationship("Team", backref="email_accounts")
-    user = relationship("User", backref="configured_email_accounts")
+    user = relationship("User", back_populates="email_accounts")
 
     def __repr__(self):
         return f"<UserEmailAccount(id={self.id}, team_id={self.team_id}, email='{self.email}', provider='{self.provider}')>"
