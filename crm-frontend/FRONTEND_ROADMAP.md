@@ -1,6 +1,6 @@
 # 🗺️ CRM Frontend - Roadmap Refactoring
 
-**Dernière mise à jour:** 31 Octobre 2025 - 22:30
+**Dernière mise à jour:** 31 Octobre 2025 - 23:30
 **Version:** Phase 2 en cours
 **Build Status:** ✅ Stable (71 routes)
 
@@ -12,7 +12,7 @@
 |-------|--------|----------|--------|
 | **Phase 1** - Quick Wins | ✅ Complété | 100% | ~1,565 lignes |
 | **Phase 1 Bonus** - localStorage Migration | ✅ Complété | 100% | ~1,270 lignes |
-| **Phase 2** - Migration & Cleanup | 🔄 En cours | 36% | ~4h / ~18h |
+| **Phase 2** - Migration & Cleanup | 🔄 En cours | 42% | ~5h / ~18h |
 | **Phase 3** - Optimizations | 📋 Planifié | 0% | ~20h |
 
 **Total Code Écrit:** ~2,835 lignes
@@ -192,32 +192,40 @@ fb9f7ada refactor(frontend): Migrate localStorage to storage helper
 
 ---
 
-### 2.2 Migration vers Constants (🔄 EN COURS - 80%)
+### 2.2 Migration vers Constants (✅ API COMPLET - Routes EN COURS - 85%)
 
 **Objectif:** Migrer tous les magic strings vers les constants centralisées
 
-**Déjà migré (20+ fichiers):**
+#### ✅ API Endpoints Migration (100%)
+
+**Migré (25+ fichiers):**
 1. ✅ `hooks/useAI.ts` - 20+ endpoints → `AI_ENDPOINTS`
 2. ✅ `lib/api.ts` - Auth tokens → `AUTH_STORAGE_KEYS`
-3. ✅ `components/shared/CommandPaletteV3.tsx` - 7 routes → `ROUTES`
-4. ✅ `app/dashboard/email-campaigns/*.tsx` - 3 pages → `EMAIL_ENDPOINTS`
-5. ✅ `app/dashboard/email-templates/page.tsx` - Templates endpoint
-6. ✅ `lib/feedback.ts` - Preferences → `PREFERENCES_STORAGE_KEYS`
+3. ✅ `app/dashboard/email-campaigns/*.tsx` - 3 pages → `EMAIL_ENDPOINTS`
+4. ✅ `app/dashboard/email-templates/page.tsx` - Templates endpoint
+5. ✅ `app/dashboard/settings/email-accounts/page.tsx` - EMAIL_ACCOUNTS
+6. ✅ `components/forms/ImportPeopleForm.tsx` - PEOPLE_BULK
+7. ✅ `components/forms/ImportUnifiedForm.tsx` - ORGANISATIONS_BULK + PEOPLE_BULK
+8. ✅ `lib/feedback.ts` - Preferences → `PREFERENCES_STORAGE_KEYS`
+
+**Résultat:**
+- ✅ **0 hardcoded '/api/v1/' endpoints** (100% migrated!)
+- ✅ Added EMAIL_ACCOUNTS + EMAIL_ACCOUNT_DETAIL to constants
+- ✅ Build passes (71 routes)
+
+#### 🔄 Routes Migration (EN COURS)
 
 **Restant à migrer:**
-- ⚠️ **5 endpoints API** hardcodés (à identifier)
-- ⚠️ **28 routes** hardcodées (router.push avec strings)
+- ⚠️ **~16 routes** hardcodées (router.push avec strings)
+- Patterns: /auth/login, /dashboard/organisations, /dashboard/workflows, etc.
 
 **Actions:**
 ```bash
-# Trouver endpoints restants
-grep -r "'/api/v1/" app/ components/ hooks/ | grep -v constants
-
 # Trouver routes restantes
-grep -rE "router.push\('/dashboard/" app/ components/
+grep -rE "router.push\(['\"]/" app/ components/ | grep -v "ROUTES"
 ```
 
-**Effort restant:** ~1h30
+**Effort restant:** ~1h
 
 ---
 
@@ -510,5 +518,5 @@ const config = {
 
 ---
 
-**Dernière mise à jour:** 31 Octobre 2025 - 22:30
+**Dernière mise à jour:** 31 Octobre 2025 - 23:30
 **Prochaine revue:** Après completion Phase 2.2
