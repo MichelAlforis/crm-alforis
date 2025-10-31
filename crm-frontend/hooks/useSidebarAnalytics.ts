@@ -18,6 +18,7 @@
 import { useEffect, useState, useCallback, useMemo } from 'react'
 import { usePathname } from 'next/navigation'
 import { logger } from '@/lib/logger'
+import { storage } from '@/lib/constants'
 
 // Types
 export interface ClickData {
@@ -60,7 +61,7 @@ function loadAnalytics(): AnalyticsData {
   }
 
   try {
-    const saved = localStorage.getItem(STORAGE_KEY)
+    const saved = storage.get<AnalyticsData>(STORAGE_KEY)
     if (!saved) return { clicks: [], timeSpent: [], lastVisit: {} }
 
     const data: AnalyticsData = JSON.parse(saved)
@@ -85,7 +86,7 @@ function saveAnalytics(data: AnalyticsData) {
   if (typeof window === 'undefined') return
 
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+    storage.set(STORAGE_KEY, data)
   } catch (error) {
     logger.warn('Failed to save sidebar analytics:', error)
   }

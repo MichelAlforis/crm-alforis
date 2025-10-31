@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
 import { useToast } from '@/components/ui/Toast'
 import { logger } from '@/lib/logger'
+import { storage, AUTH_STORAGE_KEYS } from '@/lib/constants'
 
 export type ExportFormat = 'csv' | 'excel' | 'pdf'
 
@@ -62,7 +63,7 @@ export function useExport({
         const url = `${apiUrl}/exports/${resource}/${format}${queryString ? `?${queryString}` : ''}`
 
         // Récupérer le token d'authentification
-        const token = localStorage.getItem('auth_token')
+        const token = storage.get(AUTH_STORAGE_KEYS.TOKEN)
         if (!token) {
           throw new Error('Non authentifié')
         }

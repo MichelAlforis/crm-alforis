@@ -1,13 +1,14 @@
 'use client'
 
 import { useState, useCallback } from 'react'
+import { storage, AUTH_STORAGE_KEYS } from '@/lib/constants'
 
 // API Base URL
 const API_BASE_URL = 'http://localhost:8000/api/v1'
 
 // Helper pour fetch avec auth
 const authFetch = async (url: string, options?: RequestInit) => {
-  const token = localStorage.getItem('access_token') || localStorage.getItem('auth_token')
+  const token = storage.get(AUTH_STORAGE_KEYS.TOKEN) || storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN)
   return fetch(url, {
     ...options,
     headers: {
