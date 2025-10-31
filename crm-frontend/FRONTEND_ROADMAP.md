@@ -12,7 +12,7 @@
 |-------|--------|----------|--------|
 | **Phase 1** - Quick Wins | ✅ Complété | 100% | ~1,565 lignes |
 | **Phase 1 Bonus** - localStorage Migration | ✅ Complété | 100% | ~1,270 lignes |
-| **Phase 2** - Migration & Cleanup (core) | ✅ Complété | 100% | ~16h / ~16h |
+| **Phase 2** - Migration & Cleanup | 🔄 En cours | 90% | ~16h / ~18h |
 | **Phase 3** - Optimizations | 📋 Planifié | 0% | ~20h |
 
 **Total Code Écrit:** ~3,820 lignes (+985 hooks/labels)
@@ -190,10 +190,10 @@ fb9f7ada refactor(frontend): Migrate localStorage to storage helper
 
 ---
 
-## ✅ Phase 2 - Migration & Cleanup (COMPLÉTÉ - 100%)
+## 🔄 Phase 2 - Migration & Cleanup (EN COURS - 90%)
 
 **Durée estimée:** 2-3 jours
-**Status:** ✅ **COMPLÉTÉ**
+**Status:** 🔄 **90% COMPLÉTÉ**
 
 ### 2.1 Migration localStorage (✅ COMPLÉTÉ - 100%)
 
@@ -240,13 +240,13 @@ fb9f7ada refactor(frontend): Migrate localStorage to storage helper
 
 ---
 
-### 2.3 Consolidate Duplicate Components (✅ COMPLÉTÉ - 100%)
+### 2.3 Consolidate Duplicate Components (🔄 EN COURS - 85%)
 
 **Objectif:** Éliminer les composants dupliqués et centraliser les patterns communs
 
 **Progress:**
 - ✅ Modals: 4/4 migrés vers ModalForm (-122 lignes)
-- ✅ Forms: 4/13 migrés avec hooks réutilisables (-118 lignes)
+- ✅ Forms: 6/13 migrés (-140 lignes) - MandatForm, TaskForm, PersonForm, OrganisationForm, ProduitForm, KPIForm
 - ✅ Labels: Centralisés dans lib/enums/labels.ts (~150 lignes)
 - ✅ Select Components: 3/3 migrés vers useSearchableDropdown (-170 lignes)
 - ✅ Tables: Table.tsx V1 supprimé (-409 lignes)
