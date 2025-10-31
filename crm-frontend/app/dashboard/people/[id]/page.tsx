@@ -12,6 +12,7 @@ import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { Trash2 } from 'lucide-react'
 import { PersonForm } from '@/components/forms'
+import PersonOrgLinkForm from '@/components/forms/PersonOrgLinkForm'
 import { usePeople } from '@/hooks/usePeople'
 import { useConfirm } from '@/hooks/useConfirm'
 import { useEntityDetail } from '@/hooks/useEntityDetail'
@@ -51,13 +52,6 @@ export default function PersonDetailPage() {
 
   const { single, fetchPerson, updatePerson, deletePerson, update, remove, linkPersonToOrganization, updatePersonOrganizationLink, deletePersonOrganizationLink } = usePeople()
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
-  const [linkPayload, setLinkPayload] = useState<PersonOrganizationLinkInput>({
-    person_id: personId ?? 0,
-    organization_id: 0,  // ✅ MIGRATION: organization_type supprimé
-    is_primary: false,
-  })
-  const [linkError, setLinkError] = useState<string>()
-  const [isLinkSubmitting, setIsLinkSubmitting] = useState(false)
 
   useEffect(() => {
     if (personId === null) {
@@ -67,12 +61,6 @@ export default function PersonDetailPage() {
     fetchPerson(personId)
   }, [personId, fetchPerson, router])
 
-  useEffect(() => {
-    setLinkPayload((prev) => ({
-      ...prev,
-      person_id: personId ?? 0,
-    }))
-  }, [personId])
 
   const person = single.data
   const countryValue = person?.country_code || ''
@@ -139,32 +127,6 @@ export default function PersonDetailPage() {
     })
   }
 
-  const handleCreateLink = async () => {
-    if (personId === null) {
-      setLinkError('Personne introuvable')
-      return
-    }
-    if (!linkPayload.organization_id || linkPayload.organization_id <= 0) {
-      setLinkError('Identifiant organisation invalide')
-      return
-    }
-    setIsLinkSubmitting(true)
-    setLinkError(undefined)
-    try {
-      await linkPersonToOrganization(linkPayload)
-      setIsLinkModalOpen(false)
-      setLinkPayload({
-        person_id: personId,
-        organization_id: 0,  // ✅ MIGRATION: organization_type supprimé
-        is_primary: false,
-      })
-      await refresh()
-    } catch (error: any) {
-      setLinkError(error?.detail || 'Erreur lors de la création du rattachement')
-    } finally {
-      setIsLinkSubmitting(false)
-    }
-  }
 
   const handleDeleteLinkClick = (linkId: number) => {
     confirm({
@@ -432,80 +394,14 @@ export default function PersonDetailPage() {
         />
       </Modal>
 
-      {/* Link Modal */}
-      <Modal
+      {/* Link Modal - AI Autofill enabled */}
+      <PersonOrgLinkForm
         isOpen={isLinkModalOpen}
         onClose={() => setIsLinkModalOpen(false)}
-        title="Associer à une organisation"
-      >
-        <div className="space-y-4">
-          {linkError && <Alert type="error" message={linkError} />}
-
-          {/* ✅ MIGRATION 2025-10-20: Type d'organisation supprimé */}
-          {/* Le type est maintenant stocké dans Organisation.category */}
-
-          <Input
-            label="Identifiant organisation"
-            type="number"
-            value={linkPayload.organization_id ? String(linkPayload.organization_id) : ''}
-            onChange={(e) =>
-              setLinkPayload((prev) => ({
-                ...prev,
-                organization_id: Number(e.target.value),
-              }))
-            }
-            placeholder="Ex: 12"
-          />
-
-          <Input
-            label="Rôle / fonction"
-            value={linkPayload.job_title || ''}
-            onChange={(e) =>
-              setLinkPayload((prev) => ({ ...prev, job_title: e.target.value || undefined }))
-            }
-            placeholder="ex: Responsable Distribution"
-          />
-
-          <Input
-            label="Email professionnel"
-            value={linkPayload.work_email || ''}
-            onChange={(e) =>
-              setLinkPayload((prev) => ({ ...prev, work_email: e.target.value || undefined }))
-            }
-            placeholder="prenom.nom@entreprise.com"
-          />
-
-          <Input
-            label="Téléphone professionnel"
-            value={linkPayload.work_phone || ''}
-            onChange={(e) =>
-              setLinkPayload((prev) => ({ ...prev, work_phone: e.target.value || undefined }))
-            }
-            placeholder="+33 ..."
-          />
-
-          <label className="flex items-center gap-3 text-sm text-gray-700 dark:text-slate-300">
-            <input
-              type="checkbox"
-              className="h-4 w-4 rounded border-gray-300 dark:border-slate-600"
-              checked={linkPayload.is_primary ?? false}
-              onChange={(e) =>
-                setLinkPayload((prev) => ({ ...prev, is_primary: e.target.checked }))
-              }
-            />
-            Marquer comme contact principal
-          </label>
-
-          <Button
-            variant="primary"
-            className="w-full"
-            isLoading={isLinkSubmitting}
-            onClick={handleCreateLink}
-          >
-            Enregistrer le rattachement
-          </Button>
-        </div>
-      </Modal>
+        personId={personId ?? 0}
+        personName={person ? `${person.first_name} ${person.last_name}` : ''}
+        onSuccess={refresh}
+      />
 
       {/* Confirmation Dialogs */}
       <ConfirmDialogComponent />

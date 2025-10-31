@@ -3,11 +3,13 @@
 
 'use client'
 
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Phone, Mail, Users, Coffee, FileText, Calendar } from 'lucide-react'
 import { Input } from '@/components/shared/Input'
 import { ModalForm } from '@/components/shared/Modal'
 import { storage, AUTH_STORAGE_KEYS } from '@/lib/constants'
+import { useAIAutofill } from '@/hooks/useAIAutofill'
+import { FieldContextMenu } from '@/components/ui/FieldContextMenu'
 
 interface InteractionCreateModalProps {
   isOpen: boolean
@@ -51,6 +53,36 @@ export default function InteractionCreateModal({
   const [participantName, setParticipantName] = useState('')
   const [participantEmail, setParticipantEmail] = useState('')
   const [participantRole, setParticipantRole] = useState('')
+
+  const formData = useMemo(
+    () => ({
+      organisation_id: selectedOrgId || undefined,
+      type,
+      title,
+      description,
+      occurred_at: occurredAt,
+      participant_name: participantName || undefined,
+      participant_email: participantEmail || undefined,
+      participant_role: participantRole || undefined,
+    }),
+    [description, occurredAt, participantEmail, participantName, participantRole, selectedOrgId, title, type]
+  )
+
+  // ✅ Autofill hook
+  const {
+    handleFieldRightClick,
+    showContextMenu,
+    menuPosition,
+    activeField,
+    handleAutofillSuggest,
+  } = useAIAutofill({
+    entityType: 'interaction',
+    formData,
+    onFieldUpdate: (fieldName, value) => {
+      if (fieldName === 'title' && typeof value === 'string') setTitle(value)
+      if (fieldName === 'description' && typeof value === 'string') setDescription(value)
+    },
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -152,15 +184,21 @@ export default function InteractionCreateModal({
           </div>
         </div>
 
-        {/* Titre */}
-        <Input
-          label="Titre *"
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-          placeholder="Ex: Call découverte produit, Email proposition..."
-        />
+        {/* Titre with Autofill */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Titre *
+          </label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            onContextMenu={(e) => handleFieldRightClick(e, 'title')}
+            required
+            placeholder="Ex: Call découverte produit (clic-droit IA)"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+          />
+        </div>
 
         {/* Date/Heure */}
         <div>
@@ -175,7 +213,7 @@ export default function InteractionCreateModal({
           />
         </div>
 
-        {/* Description */}
+        {/* Description with Autofill */}
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Description / Notes
@@ -183,8 +221,9 @@ export default function InteractionCreateModal({
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            onContextMenu={(e) => handleFieldRightClick(e, 'description')}
             rows={3}
-            placeholder="Détails de l'interaction, résultats, next steps..."
+            placeholder="Détails de l'interaction, résultats, next steps... (clic-droit IA)"
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
           />
         </div>
@@ -219,6 +258,15 @@ export default function InteractionCreateModal({
           />
         </div>
       </div>
+
+      {/* AI Autofill Context Menu */}
+      <FieldContextMenu
+        show={showContextMenu}
+        position={menuPosition}
+        fieldName={activeField}
+        onAutofill={handleAutofillSuggest}
+        onClose={() => {}}
+      />
     </ModalForm>
   )
 }
