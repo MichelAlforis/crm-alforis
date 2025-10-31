@@ -863,7 +863,7 @@ spacy==3.7.2
 **Objectif:**
 Renforcer la sécurité, monitoring et résilience du CRM pour la production.
 
-**Livrables (11h45 accomplies):**
+**Livrables (13h45 accomplies):**
 
 **🚨 P0 - CRITIQUE (2h45):**
 
@@ -919,6 +919,29 @@ Renforcer la sécurité, monitoring et résilience du CRM pour la production.
    - Analyse complète colonnes fréquemment filtrées
    - Migration préparée (team_id, created_at, status, email, FK)
 
+**🎯 Quick Wins (2h):**
+
+10. ✅ **Uptime Monitoring** (30min)
+    - UptimeRobot API Key: `u3159160-3f0c5991ccd43d96137f9b1a`
+    - 4 Monitors créés: API Health, API Detailed, Frontend, Database
+    - Alert contact: infra@alforis.fr
+    - Interval: 5 minutes
+    - Commit: `55d3045e`
+
+11. ✅ **Custom Error Pages** (30min)
+    - [not-found.tsx](crm-frontend/app/not-found.tsx) - Page 404 custom
+    - [error.tsx](crm-frontend/app/error.tsx) - Error boundary avec retry
+    - [global-error.tsx](crm-frontend/app/global-error.tsx) - Fallback global
+    - Commit: `55d3045e`
+
+12. ✅ **SSL Expiration Monitoring** (1h)
+    - Script custom: [scripts/check-ssl-expiry.sh](scripts/check-ssl-expiry.sh)
+    - Vérification quotidienne via cron
+    - Alertes: ⚠️ < 10 jours, 🚨 < 3 jours
+    - Compatible macOS + Linux
+    - Status actuel: 89 jours (expire: 28 Jan 2026)
+    - Commit: `e18b91e2`
+
 **Tests Production:**
 ```bash
 # Health check
@@ -942,14 +965,32 @@ Renforcer la sécurité, monitoring et résilience du CRM pour la production.
 - `84197a54` - Health checks detailed
 - `d4e3f787` - Rate limiting Redis
 - `e0f5c552` - Automated DB backups
+- `55d3045e` - Uptime monitoring + Error pages
+- `e18b91e2` - SSL expiration check script
+- `bf590c7b` - Monitoring checklist update
 
 **Documentation:**
 - [ROADMAP_TODO.md](ROADMAP_TODO.md) - Détail P0/P1 tasks
+- [UPTIME_MONITORING.md](UPTIME_MONITORING.md) - Configuration monitoring (45% complété)
+
+**Métriques:**
+- 🎯 Uptime target: 99.9% (43min downtime/mois max)
+- ⚡ Response time target: < 500ms
+- 📊 4 Monitors actifs (check: 5 minutes)
+- 🔒 SSL expires: 89 jours (28 Jan 2026)
+
+**Tâches restantes monitoring (6/11):**
+- [ ] Status page publique
+- [ ] Slack webhook (optionnel)
+- [ ] Test alertes
+- [ ] Cron SSL check sur serveur
+- [ ] Runbook documentation
+- [ ] Status page URL in README
 
 ---
 
-**Dernière mise à jour:** 31 Octobre 2025 - 11:30
-**Prochaine review:** OAuth Apps configuration (Google + Azure)
+**Dernière mise à jour:** 31 Octobre 2025 - 17:00
+**Prochaine review:** Status Page (15min) OU OAuth Apps configuration (Google + Azure)
 
 ---
 

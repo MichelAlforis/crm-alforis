@@ -299,9 +299,47 @@ Selon feedback users et priorités business
 3. ✅ CSRF OAuth (30min)
 4. ✅ Uptime monitoring (30min) - uptimerobot.com gratuit
 5. ✅ Error pages custom (30min)
+6. ✅ SSL expiration monitoring (1h) - Script custom + cron
 
-**Total Quick Wins:** 2h15 → Gros impact sécurité/UX
+**Total Quick Wins:** 3h15 → Gros impact sécurité/UX
 
 ---
 
-**Prochaine action recommandée:** OAuth Apps (1h) pour débloquer Multi-Mail
+## 📊 **MONITORING OPÉRATIONNEL** (31 Oct 2025)
+
+### ✅ Uptime Monitoring Setup (2h)
+**Status:** ✅ COMPLETÉ (5/11 tâches - 45%)
+**Commits:**
+- `55d3045e` - feat(monitoring): Add uptime monitoring setup + custom error pages
+- `e18b91e2` - feat(monitoring): Add SSL expiration check script
+- `bf590c7b` - docs(monitoring): Update checklist - 4 monitors created
+
+**Configuration:**
+- ✅ UptimeRobot API Key: `u3159160-3f0c5991ccd43d96137f9b1a`
+- ✅ 4 Monitors créés:
+  1. API Health Check (https://crm.alforis.fr/api/v1/health)
+  2. API Health Detailed (keyword: "healthy")
+  3. Frontend (https://crm.alforis.fr)
+  4. Database (keyword check on health/detailed)
+- ✅ Alert contact: infra@alforis.fr
+- ✅ SSL script: [scripts/check-ssl-expiry.sh](scripts/check-ssl-expiry.sh)
+- ✅ SSL status: 89 days remaining (expire: 28 Jan 2026)
+
+**Frontend Error Pages:**
+- ✅ [not-found.tsx](crm-frontend/app/not-found.tsx) - Page 404 custom
+- ✅ [error.tsx](crm-frontend/app/error.tsx) - Error boundary avec retry
+- ✅ [global-error.tsx](crm-frontend/app/global-error.tsx) - Fallback global
+
+**Tâches restantes (6/11):**
+- [ ] (Optionnel) Configurer Slack webhook
+- [ ] Créer status page publique
+- [ ] Tester alertes (pause 1 monitor)
+- [ ] Configurer cron pour SSL check quotidien (sur serveur)
+- [ ] Documenter runbook
+- [ ] Ajouter status page URL dans README
+
+**Documentation:** [UPTIME_MONITORING.md](UPTIME_MONITORING.md)
+
+---
+
+**Prochaine action recommandée:** Status Page publique (15min) OU OAuth Apps (1h) pour débloquer Multi-Mail
