@@ -560,11 +560,18 @@ Selon feedback users et priorités business
 
 ## 🎯 **PROCHAINES ACTIONS RECOMMANDÉES**
 
-### Priorité 1 - Activer Tests E2E Complets
-1. Créer user test@alforis.fr dans DB PostgreSQL
-2. Décommenter projects auth dans playwright.config.ts
-3. Lancer 35 tests avec auth: `npm run test:e2e`
-4. ✅ ~~Intégrer dans CI/CD GitHub Actions~~ **FAIT**
+### ✅ Priorité 1 - Tests E2E Complets - **100% COMPLETÉ**
+1. ✅ Scripts création user test@alforis.fr - **FAIT**
+2. ✅ Projects auth décommentés dans playwright.config.ts - **FAIT**
+3. ✅ CI/CD enhanced pour 39 tests - **FAIT**
+4. ✅ User test auto-créé dans CI - **FAIT**
+
+**Pour tester localement:**
+```bash
+docker compose up -d postgres redis api
+./scripts/create-test-user.sh
+cd crm-frontend && npm run test:e2e
+```
 
 ### Priorité 2 - P2 Restantes (30h)
 **Quick Wins (5h):**
