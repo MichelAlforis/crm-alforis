@@ -103,6 +103,7 @@ export type PersonOrganizationLinkUpdateInput = Partial<
 
 export interface PersonDetail extends Person {
   organizations: PersonOrganizationLink[]
+  email_unsubscribed?: boolean // Legacy email marketing field
 }
 
 // ============= KPI =============
@@ -276,7 +277,7 @@ export interface TaskStats {
   by_priority: Record<TaskPriority, number>
 }
 
-export interface TaskFilters {
+export interface TaskFilters extends Record<string, unknown> {
   status?: TaskStatus
   priority?: TaskPriority
   category?: TaskCategory

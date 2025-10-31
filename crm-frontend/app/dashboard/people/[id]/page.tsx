@@ -20,6 +20,7 @@ import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import { useToast } from '@/components/ui/Toast'
 import { CampaignSubscriptionManager } from '@/components/email/CampaignSubscriptionManager'
 import { ActivityTab } from '@/components/interactions/ActivityTab'
+import type { PersonOrganizationLinkInput } from '@/lib/types'
 
 // ✅ MIGRATION 2025-10-20: ORGANIZATION_OPTIONS supprimé
 // Le type d'organisation est maintenant stocké dans Organisation.category
@@ -66,7 +67,7 @@ export default function PersonDetailPage() {
   }, [personId, fetchPerson, router])
 
   useEffect(() => {
-    setLinkPayload((prev) => ({
+    setLinkPayload((prev: PersonOrganizationLinkInput) => ({
       ...prev,
       person_id: personId ?? 0,
     }))
@@ -404,7 +405,7 @@ export default function PersonDetailPage() {
           isLoading={single.isLoading}
           isEmpty={organizationRows.length === 0}
           emptyMessage="Aucun rattachement à une organisation"
-          getRowKey={(row) => row.id.toString()}
+          rowKey={(row: OrganizationLinkRow) => row.id.toString()}
           size="md"
           variant="default"
           stickyHeader

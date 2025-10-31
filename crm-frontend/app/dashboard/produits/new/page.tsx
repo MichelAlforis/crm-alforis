@@ -3,12 +3,14 @@
 
 'use client'
 
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card } from '@/components/shared'
-import { ProduitForm } from '@/components/forms'
 import { useCreateProduit } from '@/hooks/useProduits'
 import type { ProduitCreate } from '@/lib/types'
+
+// Lazy load ProduitForm (only loads when page is accessed)
+const ProduitForm = lazy(() => import('@/components/forms').then(m => ({ default: m.ProduitForm })))
 
 export default function NewProduitPage() {
   const router = useRouter()
@@ -30,12 +32,14 @@ export default function NewProduitPage() {
       </div>
 
       <Card>
-        <ProduitForm
-          onSubmit={handleSubmit}
-          isLoading={createMutation.isPending}
-          error={createMutation.error?.message}
-          submitLabel="Créer le produit"
-        />
+        <Suspense fallback={<div className="p-8 text-center">Chargement du formulaire...</div>}>
+          <ProduitForm
+            onSubmit={handleSubmit}
+            isLoading={createMutation.isPending}
+            error={createMutation.error?.message}
+            submitLabel="Créer le produit"
+          />
+        </Suspense>
       </Card>
     </div>
   )

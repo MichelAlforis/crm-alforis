@@ -3,13 +3,15 @@
 // app/dashboard/people/new/page.tsx
 // ============= CREATE PERSON PAGE =============
 
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Card, Button } from '@/components/shared'
-import { PersonForm } from '@/components/forms'
 import { usePeople } from '@/hooks/usePeople'
 import type { PersonInput } from '@/lib/types'
+
+// Lazy load PersonForm (only loads when page is accessed)
+const PersonForm = lazy(() => import('@/components/forms').then(m => ({ default: m.PersonForm })))
 
 export default function NewPersonPage() {
   const router = useRouter()
@@ -35,12 +37,14 @@ export default function NewPersonPage() {
       </div>
 
       <Card>
-        <PersonForm
-          onSubmit={handleSubmit}
-          isLoading={create.isLoading}
-          error={create.error}
-          submitLabel="Créer la fiche"
-        />
+        <Suspense fallback={<div className="p-8 text-center">Chargement du formulaire...</div>}>
+          <PersonForm
+            onSubmit={handleSubmit}
+            isLoading={create.isLoading}
+            error={create.error}
+            submitLabel="Créer la fiche"
+          />
+        </Suspense>
       </Card>
     </div>
   )

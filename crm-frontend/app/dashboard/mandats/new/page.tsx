@@ -3,12 +3,14 @@
 
 'use client'
 
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Card } from '@/components/shared'
-import { MandatForm } from '@/components/forms'
 import { useCreateMandat } from '@/hooks/useMandats'
 import type { MandatDistributionCreate } from '@/lib/types'
+
+// Lazy load MandatForm (only loads when page is accessed)
+const MandatForm = lazy(() => import('@/components/forms').then(m => ({ default: m.MandatForm })))
 
 export default function NewMandatPage() {
   const router = useRouter()
@@ -35,13 +37,15 @@ export default function NewMandatPage() {
       </div>
 
       <Card>
-        <MandatForm
-          organisationId={organisationId}
-          onSubmit={handleSubmit}
-          isLoading={createMutation.isPending}
-          error={createMutation.error?.message}
-          submitLabel="Créer le mandat"
-        />
+        <Suspense fallback={<div className="p-8 text-center">Chargement du formulaire...</div>}>
+          <MandatForm
+            organisationId={organisationId}
+            onSubmit={handleSubmit}
+            isLoading={createMutation.isPending}
+            error={createMutation.error?.message}
+            submitLabel="Créer le mandat"
+          />
+        </Suspense>
       </Card>
     </div>
   )
