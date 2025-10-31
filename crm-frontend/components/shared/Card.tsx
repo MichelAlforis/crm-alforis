@@ -101,12 +101,13 @@ Card.displayName = 'Card'
 interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string
   subtitle?: string
+  icon?: React.ReactNode
   action?: React.ReactNode
   children?: React.ReactNode
 }
 
 export const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
-  ({ title, subtitle, action, children, className, ...props }, ref) => {
+  ({ title, subtitle, icon, action, children, className, ...props }, ref) => {
     if (children) {
       return (
         <div
@@ -128,17 +129,24 @@ export const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
         )}
         {...props}
       >
-        <div>
-          {title && (
-            <h3 className="text-lg font-semibold text-text-primary">
-              {title}
-            </h3>
+        <div className="flex items-center gap-3">
+          {icon && (
+            <div className="flex-shrink-0 text-primary">
+              {icon}
+            </div>
           )}
-          {subtitle && (
-            <p className="mt-1 text-sm text-text-secondary">
-              {subtitle}
-            </p>
-          )}
+          <div>
+            {title && (
+              <h3 className="text-lg font-semibold text-text-primary">
+                {title}
+              </h3>
+            )}
+            {subtitle && (
+              <p className="mt-1 text-sm text-text-secondary">
+                {subtitle}
+              </p>
+            )}
+          </div>
         </div>
         {action && (
           <div className="flex-shrink-0 ml-spacing-md">

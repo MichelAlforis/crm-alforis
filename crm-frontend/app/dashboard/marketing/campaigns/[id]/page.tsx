@@ -98,33 +98,32 @@ export default function CampaignDetailPage() {
     router.push(`/dashboard/marketing/campaigns/${campaignId}/edit`)
   }
 
-  const handleDeleteCampaign = async () => {
+  const handleDeleteCampaign = () => {
     if (!campaign) return
 
-    const confirmed = await confirm({
+    confirm({
       title: 'Supprimer la campagne ?',
       message: `Êtes-vous sûr de vouloir supprimer "${campaign.name}" ? Cette action supprimera également tous les envois associés.`,
       type: 'danger',
       confirmText: 'Supprimer',
       cancelText: 'Annuler',
+      onConfirm: async () => {
+        try {
+          await apiClient.delete(`/email/campaigns/${campaign.id}`)
+          showToast({
+            type: 'success',
+            title: 'Campagne supprimée',
+          })
+          router.push(ROUTES.MARKETING.CAMPAIGNS)
+        } catch (error: any) {
+          showToast({
+            type: 'error',
+            title: 'Erreur',
+            message: error?.response?.data?.detail || 'Impossible de supprimer la campagne',
+          })
+        }
+      },
     })
-
-    if (confirmed) {
-      try {
-        await apiClient.delete(`/email/campaigns/${campaign.id}`)
-        showToast({
-          type: 'success',
-          title: 'Campagne supprimée',
-        })
-        router.push(ROUTES.MARKETING.CAMPAIGNS)
-      } catch (error: any) {
-        showToast({
-          type: 'error',
-          title: 'Erreur',
-          message: error?.response?.data?.detail || 'Impossible de supprimer la campagne',
-        })
-      }
-    }
   }
 
   if (isLoading) return <div className="p-6">Chargement...</div>

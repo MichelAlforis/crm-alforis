@@ -10,9 +10,10 @@ interface AlertProps {
   icon?: ReactNode
   children?: ReactNode
   onClose?: () => void
+  className?: string
 }
 
-export function Alert({ type, title, message, icon, children, onClose }: AlertProps) {
+export function Alert({ type, title, message, icon, children, onClose, className }: AlertProps) {
   const typeClasses = {
     success: 'bg-green-50 text-vert border-vert',
     error: 'bg-red-50 text-rouge border-rouge',
@@ -25,7 +26,8 @@ export function Alert({ type, title, message, icon, children, onClose }: AlertPr
       className={clsx(
         'rounded-radius-md border p-spacing-sm text-sm',
         'flex items-start gap-3',
-        typeClasses[type]
+        typeClasses[type],
+        className
       )}
     >
       {icon && <div className="mt-0.5 flex-shrink-0">{icon}</div>}
