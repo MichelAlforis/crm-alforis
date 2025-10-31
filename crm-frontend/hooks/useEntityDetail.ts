@@ -3,13 +3,15 @@
  *
  * Ce hook centralise toute la logique commune des pages detail:
  * - Extraction de l'ID depuis les params de route
- * - Gestion des états de modal (edit, confirm dialogs)
- * - Gestion des tabs (informations, activité, etc.)
+ * - Gestion des états de modal (edit, confirm dialogs) via Zustand
+ * - Gestion des tabs via URL state (shareable)
  * - Handlers pour les opérations CRUD
  */
 
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import { useUIStore } from '@/stores/ui'
+import { useUrlState } from '@/hooks/useUrlState'
 
 export type ConfirmDialogType = 'delete' | 'deactivate' | 'reactivate' | 'archive' | 'unarchive'
 
@@ -100,26 +102,39 @@ export function useEntityDetail<T extends string = string>(
 
   const isValidId = entityId !== null && entityId > 0
 
-  // Modal states
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [confirmDialog, setConfirmDialog] = useState<ConfirmDialogState>({
-    isOpen: false,
-    type: 'delete',
-  })
+  // Modal states - Zustand (global, no prop drilling)
+  const activeModal = useUIStore((state) => state.activeModal)
+  const modalData = useUIStore((state) => state.modalData)
+  const openModal = useUIStore((state) => state.openModal)
+  const closeModal = useUIStore((state) => state.closeModal)
 
-  // Tab management (generic type for flexibility)
-  const [activeTab, setActiveTab] = useState<T>('informations' as T)
+  // Derive modal states from Zustand
+  const isEditModalOpen = activeModal === `edit-entity-${entityId}`
+  const confirmDialog: ConfirmDialogState =
+    activeModal?.startsWith(`confirm-${entityId}`)
+      ? { isOpen: true, type: (modalData?.type || 'delete') as ConfirmDialogType }
+      : { isOpen: false, type: 'delete' }
+
+  // Tab management - URL state (shareable, bookmarkable)
+  const [activeTab, setActiveTab] = useUrlState<T>('tab', 'informations' as T)
 
   // Helper functions
-  const openEditModal = () => setIsEditModalOpen(true)
-  const closeEditModal = () => setIsEditModalOpen(false)
+  const openEditModal = () => openModal(`edit-entity-${entityId}`)
+  const closeEditModal = () => closeModal()
+  const setIsEditModalOpen = (open: boolean) => open ? openEditModal() : closeEditModal()
 
   const openConfirmDialog = (type: ConfirmDialogType) => {
-    setConfirmDialog({ isOpen: true, type })
+    openModal(`confirm-${entityId}-${type}`, { type })
   }
 
-  const closeConfirmDialog = () => {
-    setConfirmDialog({ isOpen: false, type: confirmDialog.type })
+  const closeConfirmDialog = () => closeModal()
+
+  const setConfirmDialog = (state: ConfirmDialogState) => {
+    if (state.isOpen) {
+      openConfirmDialog(state.type)
+    } else {
+      closeConfirmDialog()
+    }
   }
 
   /**
@@ -139,19 +154,19 @@ export function useEntityDetail<T extends string = string>(
     entityId,
     isValidId,
 
-    // Edit modal
+    // Edit modal (now powered by Zustand)
     isEditModalOpen,
     setIsEditModalOpen,
     openEditModal,
     closeEditModal,
 
-    // Confirm dialog
+    // Confirm dialog (now powered by Zustand)
     confirmDialog,
     setConfirmDialog,
     openConfirmDialog,
     closeConfirmDialog,
 
-    // Tabs
+    // Tabs (now powered by URL state)
     activeTab,
     setActiveTab,
 

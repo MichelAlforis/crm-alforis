@@ -15,15 +15,27 @@ import { Trash2 } from 'lucide-react'
 import { KPIForm } from '@/components/forms'
 import { KPI, KPICreate } from '@/lib/types'
 import { storage, AUTH_STORAGE_KEYS } from '@/lib/constants'
+import { useUIStore } from '@/stores/ui'
+import { useUrlState } from '@/hooks/useUrlState'
 
 export default function KPIsPage() {
   const { data: organisations } = useOrganisations({ limit: 200 })
   const { confirm, ConfirmDialogComponent } = useConfirm()
-  const [selectedFournisseurId, setSelectedFournisseurId] = useState<number | null>(null)
+
+  // URL state for fournisseur (shareable, bookmarkable)
+  const [selectedFournisseurIdParam, setSelectedFournisseurIdParam] = useUrlState('fournisseur', '')
+  const selectedFournisseurId = selectedFournisseurIdParam ? Number(selectedFournisseurIdParam) : null
+  const setSelectedFournisseurId = (id: number | null) => setSelectedFournisseurIdParam(id ? String(id) : '')
+
   const [kpis, setKpis] = useState<KPI[]>([])
   const [kpisLoading, setKpisLoading] = useState(false)
   const [kpisError, setKpisError] = useState<string>()
-  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  // Zustand for modal state (global)
+  const activeModal = useUIStore((state) => state.activeModal)
+  const openModal = useUIStore((state) => state.openModal)
+  const closeModal = useUIStore((state) => state.closeModal)
+  const isModalOpen = activeModal === 'create-kpi'
 
   // Filter for fournisseur type organisations only
   const fournisseurs = useMemo(() => {
@@ -74,7 +86,7 @@ export default function KPIsPage() {
       })
       if (!response.ok) throw new Error('Failed to create KPI')
       await fetchKPIs()
-      setIsModalOpen(false)
+      closeModal()
     } catch (err: any) {
       logger.error('Error creating KPI:', err)
     }
@@ -242,7 +254,7 @@ export default function KPIsPage() {
                 Voir détail de l'organisation →
               </Link>
             </div>
-            <Button variant="primary" onClick={() => setIsModalOpen(true)}>
+            <Button variant="primary" onClick={() => openModal('create-kpi')}>
               + Ajouter KPI
             </Button>
           </div>
@@ -294,7 +306,7 @@ export default function KPIsPage() {
           {/* Modal formulaire */}
           <Modal
             isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
+            onClose={closeModal}
             title={`Ajouter un KPI pour ${selectedFournisseur.name}`}
           >
             <KPIForm
