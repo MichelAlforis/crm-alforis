@@ -415,7 +415,50 @@ getLabelOptions(labels): Array<{value, label}>
 
 ---
 
-### 2.4 Refactor API Client (❌ À FAIRE - 0%)
+#### ✅ useEntityDetail Hook (Ready for use)
+
+**Hook créé:** `hooks/useEntityDetail.ts` (167 lignes)
+
+**Objectif:** Consolider logique commune des pages detail
+
+**Fonctionnalités:**
+- Extraction et validation ID depuis params
+- Gestion états modals (edit, confirm dialogs)
+- Gestion tabs (informations, activité)
+- Helper delete avec redirection automatique
+
+**Testé sur:** organisations/[id]/page.tsx (471 → 467L)
+
+**Potentiel:** ~150 lignes économisables sur 8+ pages detail
+
+**Commit:** `97c3658f` - feat(hooks): Add useEntityDetail
+
+#### ✅ useSearchableDropdown Hook (Ready for use)
+
+**Hook créé:** `hooks/useSearchableDropdown.ts` (230 lignes)
+
+**Objectif:** Consolider logique des 3 variants Select (925L total)
+
+**Fonctionnalités:**
+- Dropdown state management
+- Search avec filtrage local/remote
+- Click outside detection
+- Keyboard navigation
+- Infinite scroll
+- Focus management
+
+**Composants cibles:**
+- SearchableSelect.tsx (308L)
+- SearchableMultiSelect.tsx (302L)
+- EntityAutocompleteInput.tsx (315L)
+
+**Potentiel:** ~240 lignes économisables quand appliqué
+
+**Commit:** `d17a01cd` - feat(hooks): Add useSearchableDropdown
+
+---
+
+### 2.4 Refactor API Client (📋 FUTURE - Hors scope Phase 2)
 
 **Objectif:** Splitter `lib/api.ts` monolithique (1,140 lignes)
 
