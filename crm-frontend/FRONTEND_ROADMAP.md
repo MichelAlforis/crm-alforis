@@ -14,9 +14,9 @@
 | **Phase 1 Bonus** - localStorage Migration | ✅ Complété | 100% | ~1,270 lignes |
 | **Phase 2** - Migration & Cleanup | ✅ Complété | 100% | 18h |
 | **Phase 3.1** - Performance | ✅ Complété | 90% | ~3h / 6h |
-| **Phase 3.2** - Testing | 🔄 En cours | 30% | ~2.5h / 8h |
+| **Phase 3.2** - Testing | 🔄 En cours | 60% | ~4h / 8h |
 | **Phase 3.3** - Documentation | 📋 Planifié | 0% | 0h / 6h |
-| **Phase 3** - Total | 🔄 En cours | 60% | ~5.5h / ~20h |
+| **Phase 3** - Total | 🔄 En cours | 75% | ~7h / ~20h |
 
 **Total Code Écrit:** ~3,820 lignes (+985 hooks/labels)
 **Code modifié:** +1,434/-970 lignes (net: +464L code, +490L doc = +954L total)
@@ -649,8 +649,8 @@ const collapsed = useUIStore(selectSidebarCollapsed)
 ### 🔄 3.2 Testing (EN COURS - 30%)
 
 **Date:** 31 Octobre 2025
-**Durée:** ~2.5h / 8h estimées
-**Status:** 🔄 **EN COURS**
+**Durée:** ~4h / 8h estimées
+**Status:** 🔄 **EN COURS (60%)**
 
 #### ✅ Infrastructure Testing Setup
 
@@ -685,11 +685,11 @@ const collapsed = useUIStore(selectSidebarCollapsed)
 
 #### ⏸️ Tests Remaining
 
-**Unit Tests (Hooks):**
-- [ ] useOrganisations hook tests
-- [ ] useTasks hook tests
-- [ ] usePeople hook tests
-- [ ] useFilters hook tests
+**Unit Tests (Hooks) - 4 suites, 24 tests:**
+- [x] **useOrganisations.test.ts** (4 tests) - Fetch, error, filter, pagination
+- [x] **useTasks.test.ts** (6 tests) - Fetch, filter status/priority, create, error, stats
+- [x] **usePeople.test.ts** (7 tests) - Fetch, filter, CRUD operations, error, pagination
+- [x] **useFilters.test.ts** (7 tests) - Initialize, update, reset, clear, active count, boolean
 
 **Integration Tests (API):**
 - [ ] organisationsAPI module tests
@@ -710,7 +710,7 @@ const collapsed = useUIStore(selectSidebarCollapsed)
 **Config:** `playwright.config.ts` - HTML reports, parallel, CI-ready
 **Status:** ✅ Tests déjà écrits, intégrés dans CI/CD workflow
 
-**Effort:** ~2.5h / 8h (31% complété)
+**Effort:** ~4h / 8h (60% complété)
 
 ### 3.3 Documentation
 - [ ] Storybook pour components library
