@@ -15,30 +15,7 @@ import { Eye } from 'lucide-react'
 import { ProduitForm } from '@/components/forms'
 import { SkeletonCard } from '@/components/ui/Skeleton'
 import type { ProduitUpdate } from '@/lib/types'
-
-const TYPE_LABELS: Record<string, string> = {
-  OPCVM: 'OPCVM (Fonds)',
-  ETF: 'ETF (Trackers)',
-  SCPI: 'SCPI (Immobilier)',
-  ASSURANCE_VIE: 'Assurance Vie',
-  PER: 'PER',
-  AUTRE: 'Autre',
-}
-
-const STATUS_LABELS: Record<string, string> = {
-  ACTIF: 'Actif',
-  INACTIF: 'Inactif',
-  ARCHIVE: 'Archivé',
-}
-
-const MANDAT_STATUS_LABELS: Record<string, string> = {
-  BROUILLON: 'Brouillon',
-  EN_NEGOCIATION: 'En négociation',
-  SIGNE: 'Signé',
-  ACTIF: 'Actif',
-  EXPIRE: 'Expiré',
-  RESILIE: 'Résilié',
-}
+import { PRODUIT_TYPE_LABELS, PRODUIT_STATUS_LABELS, MANDAT_STATUS_LABELS } from "@/lib/enums/labels"
 
 export default function ProduitDetailPage() {
   const params = useParams<{ id?: string }>()
@@ -178,7 +155,7 @@ export default function ProduitDetailPage() {
         <div>
           <h1 className="text-3xl font-bold text-ardoise">{produit.name}</h1>
           <p className="text-gray-600 mt-1">
-            {TYPE_LABELS[produit.type]} •{' '}
+            {PRODUIT_TYPE_LABELS[produit.type]} •{' '}
             <span
               className={
                 produit.status === 'ACTIF'
@@ -188,7 +165,7 @@ export default function ProduitDetailPage() {
                     : 'text-yellow-600'
               }
             >
-              {STATUS_LABELS[produit.status]}
+              {PRODUIT_STATUS_LABELS[produit.status]}
             </span>
           </p>
         </div>
@@ -208,7 +185,7 @@ export default function ProduitDetailPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <p className="text-sm text-gray-600">Type de produit</p>
-            <p className="font-medium">{TYPE_LABELS[produit.type]}</p>
+            <p className="font-medium">{PRODUIT_TYPE_LABELS[produit.type]}</p>
           </div>
           <div>
             <p className="text-sm text-gray-600">Code ISIN</p>
@@ -216,7 +193,7 @@ export default function ProduitDetailPage() {
           </div>
           <div>
             <p className="text-sm text-gray-600">Statut</p>
-            <p className="font-medium">{STATUS_LABELS[produit.status]}</p>
+            <p className="font-medium">{PRODUIT_STATUS_LABELS[produit.status]}</p>
           </div>
           <div className="col-span-2">
             <p className="text-sm text-gray-600">Description</p>

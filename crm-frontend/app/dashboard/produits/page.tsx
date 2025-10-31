@@ -13,6 +13,7 @@ import { Card, Button, Input, Alert, AdvancedFilters } from '@/components/shared
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { ProduitType, ProduitStatus } from '@/lib/types'
+import { PRODUIT_TYPE_LABELS } from "@/lib/enums/labels"
 
 interface Produit {
   id: number
@@ -20,19 +21,6 @@ interface Produit {
   type: ProduitType
   isin_code: string | null
   status: ProduitStatus
-}
-
-const TYPE_LABELS: Record<string, string> = {
-  OPCVM: 'OPCVM (Fonds)',
-  ETF: 'ETF (Trackers)',
-  SCPI: 'SCPI (Immobilier)',
-  ASSURANCE_VIE: 'Assurance Vie',
-  PER: 'PER',
-  AUTRE: 'Autre',
-  FCP: 'FCP',
-  SICAV: 'SICAV',
-  'Fonds Alternatif': 'Fonds Alternatif',
-  Autre: 'Autre',
 }
 
 interface ProduitFilters {
@@ -121,7 +109,7 @@ export default function ProduitsPage() {
       minWidth: '140px',
       render: (value: ProduitType) => (
         <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded">
-          {TYPE_LABELS[value]}
+          {PRODUIT_TYPE_LABELS[value]}
         </span>
       ),
     },

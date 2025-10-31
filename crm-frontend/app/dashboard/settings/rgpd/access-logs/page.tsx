@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { ENTITY_TYPE_LABELS } from "@/lib/enums/labels"
 import { Shield, Search, Download, Filter, Eye, Trash2, Lock } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { useToast } from '@/components/ui/Toast'
@@ -33,15 +34,6 @@ const ACCESS_TYPE_LABELS: Record<string, { label: string; icon: JSX.Element; col
     icon: <Lock className="w-4 h-4" />,
     color: 'text-orange-600',
   },
-}
-
-const ENTITY_TYPE_LABELS: Record<string, string> = {
-  person: 'Personne',
-  organisation: 'Organisation',
-  user: 'Utilisateur',
-  email_message: 'Email',
-  interaction: 'Interaction',
-  task: 'Tâche',
 }
 
 export default function AccessLogsPage() {

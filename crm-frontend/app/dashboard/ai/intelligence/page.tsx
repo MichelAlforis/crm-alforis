@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { AI_INTENT_LABELS } from "@/lib/enums/labels"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -48,19 +49,6 @@ interface TimelineDataPoint {
   signatures: number
   intents: number
   auto_applied: number
-}
-
-const INTENT_LABELS: Record<string, string> = {
-  meeting_request: '🗓️ Rendez-vous',
-  info_request: '❓ Demande d\'info',
-  follow_up: '🔄 Relance',
-  introduction: '👋 Présentation',
-  quotation_request: '💰 Devis',
-  closing: '✅ Conclusion',
-  complaint: '⚠️ Réclamation',
-  thank_you: '🙏 Remerciement',
-  unsubscribe: '🚫 Désabonnement',
-  other: '📝 Autre'
 }
 
 export default function EmailIntelligencePage() {
@@ -230,7 +218,7 @@ export default function EmailIntelligencePage() {
                   <div key={intent.intent}>
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-sm font-medium">
-                        {INTENT_LABELS[intent.intent] || intent.intent}
+                        {AI_INTENT_LABELS[intent.intent] || intent.intent}
                       </span>
                       <span className="text-sm text-muted-foreground">
                         {intent.count} ({intent.percentage.toFixed(1)}%)

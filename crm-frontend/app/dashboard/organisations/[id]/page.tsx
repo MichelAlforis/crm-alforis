@@ -19,29 +19,11 @@ import { OrganisationForm } from '@/components/forms'
 import { SkeletonCard } from '@/components/ui/Skeleton'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import type { OrganisationUpdate } from '@/lib/types'
+import { ORGANISATION_CATEGORY_LABELS, ORGANISATION_STATUS_LABELS } from "@/lib/enums/labels"
 import { OrganisationTimeline } from '@/components/organisations/OrganisationTimeline'
 import { useToast } from '@/hooks/useToast'
 import { CampaignSubscriptionManager } from '@/components/email/CampaignSubscriptionManager'
 import { ActivityTab } from '@/components/interactions/ActivityTab'
-
-const CATEGORY_LABELS: Record<string, string> = {
-  Institution: 'Institution',
-  Wholesale: 'Wholesale',
-  SDG: 'SDG',
-  CGPI: 'CGPI',
-  Startup: 'Startup',
-  Corporation: 'Corporation',
-  Autres: 'Autres',
-}
-
-const STATUS_LABELS: Record<string, string> = {
-  BROUILLON: 'Brouillon',
-  EN_NEGOCIATION: 'En négociation',
-  SIGNE: 'Signé',
-  ACTIF: 'Actif',
-  EXPIRE: 'Expiré',
-  RESILIE: 'Résilié',
-}
 
 type TabType = 'informations' | 'activite'
 
@@ -206,7 +188,7 @@ export default function OrganisationDetailPage() {
         <div>
           <h1 className="text-3xl font-bold text-ardoise">{organisation.name}</h1>
           <p className="text-gray-600 mt-1">
-            {CATEGORY_LABELS[organisation.category]} •{' '}
+            {ORGANISATION_CATEGORY_LABELS[organisation.category]} •{' '}
             {organisation.is_active ? (
               <span className="text-green-600 font-medium">Active</span>
             ) : (
@@ -408,7 +390,7 @@ export default function OrganisationDetailPage() {
                       : 'bg-yellow-100 text-yellow-800'
                 }`}
               >
-                {STATUS_LABELS[mandats[0].status] || mandats[0].status}
+                {ORGANISATION_STATUS_LABELS[mandats[0].status] || mandats[0].status}
               </span>
             </div>
           </div>

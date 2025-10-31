@@ -19,24 +19,7 @@ import { SkeletonCard } from '@/components/ui/Skeleton'
 import MandatProduitAssociationModal from '@/components/mandats/MandatProduitAssociationModal'
 import { useToast } from '@/components/ui/Toast'
 import type { MandatDistributionUpdate } from '@/lib/types'
-
-const STATUS_LABELS: Record<string, string> = {
-  BROUILLON: 'Brouillon',
-  EN_NEGOCIATION: 'En négociation',
-  SIGNE: 'Signé',
-  ACTIF: 'Actif',
-  EXPIRE: 'Expiré',
-  RESILIE: 'Résilié',
-}
-
-const TYPE_LABELS: Record<string, string> = {
-  OPCVM: 'OPCVM (Fonds)',
-  ETF: 'ETF (Trackers)',
-  SCPI: 'SCPI (Immobilier)',
-  ASSURANCE_VIE: 'Assurance Vie',
-  PER: 'PER',
-  AUTRE: 'Autre',
-}
+import { MANDAT_STATUS_LABELS, MANDAT_TYPE_LABELS } from "@/lib/enums/labels"
 
 export default function MandatDetailPage() {
   const params = useParams<{ id?: string }>()
@@ -178,7 +161,7 @@ export default function MandatDetailPage() {
       accessor: 'type',
       priority: 'high',
       minWidth: '140px',
-      render: (value: string) => TYPE_LABELS[value] || value,
+      render: (value: string) => MANDAT_TYPE_LABELS[value] || value,
     },
     {
       header: 'Code ISIN',
@@ -275,7 +258,7 @@ export default function MandatDetailPage() {
                 isActif ? 'text-green-600 font-semibold' : 'text-gray-500'
               }
             >
-              {STATUS_LABELS[mandat.status]}
+              {MANDAT_STATUS_LABELS[mandat.status]}
             </span>
           </p>
         </div>
@@ -309,7 +292,7 @@ export default function MandatDetailPage() {
           </div>
           <div>
             <p className="text-sm text-gray-600">Statut</p>
-            <p className="font-medium">{STATUS_LABELS[mandat.status]}</p>
+            <p className="font-medium">{MANDAT_STATUS_LABELS[mandat.status]}</p>
           </div>
           <div>
             <p className="text-sm text-gray-600">Mandat actif</p>

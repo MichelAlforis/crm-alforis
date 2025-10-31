@@ -13,16 +13,7 @@ import { Card, Button, Alert } from '@/components/shared'
 import { DataTable, Column, QuickAction, BulkAction } from '@/components/shared/DataTable'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import { OrganisationCategory, Organisation } from '@/lib/types'
-
-const CATEGORY_LABELS: Record<string, string> = {
-  Institution: 'Institution',
-  Wholesale: 'Wholesale',
-  SDG: 'SDG',
-  CGPI: 'CGPI',
-  Startup: 'Startup',
-  Corporation: 'Corporation',
-  Autres: 'Autres',
-}
+import { ORGANISATION_CATEGORY_LABELS } from '@/lib/enums/labels'
 
 export default function OrganisationsPage() {
   const router = useRouter()
@@ -72,7 +63,7 @@ export default function OrganisationsPage() {
         render: (value: OrganisationCategory | null) =>
           value ? (
             <span className="px-2 py-1 bg-blue-100 dark:bg-blue-500/20 text-blue-800 dark:text-blue-300 text-xs rounded-full font-medium">
-              {CATEGORY_LABELS[value] || value}
+              {ORGANISATION_CATEGORY_LABELS[value] || value}
             </span>
           ) : (
             <span className="text-gray-400 dark:text-slate-500">-</span>

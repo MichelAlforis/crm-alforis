@@ -16,6 +16,7 @@ import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { SearchEntity } from '@/components/shared/Search'
 import { MandatStatus } from '@/lib/types'
+import { MANDAT_STATUS_LABELS } from "@/lib/enums/labels"
 
 interface Mandat {
   id: number
@@ -27,13 +28,6 @@ interface Mandat {
   status: MandatStatus
   date_debut: string
   date_fin: string | null
-}
-
-const STATUS_LABELS: Record<string, string> = {
-  proposé: 'Proposé',
-  signé: 'Signé',
-  actif: 'Actif',
-  terminé: 'Terminé',
 }
 
 interface MandatFilters {
@@ -140,7 +134,7 @@ export default function MandatsPage() {
                   : 'bg-yellow-100 text-yellow-800'
             }`}
           >
-            {STATUS_LABELS[value]}
+            {MANDAT_STATUS_LABELS[value]}
           </span>
         ),
       },
