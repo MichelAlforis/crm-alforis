@@ -12,7 +12,7 @@
 |-------|--------|----------|--------|
 | **Phase 1** - Quick Wins | ✅ Complété | 100% | ~1,565 lignes |
 | **Phase 1 Bonus** - localStorage Migration | ✅ Complété | 100% | ~1,270 lignes |
-| **Phase 2** - Migration & Cleanup | 🔄 En cours | 53% | ~10.5h / ~18h |
+| **Phase 2** - Migration & Cleanup | 🔄 En cours | 58% | ~12h / ~18h |
 | **Phase 3** - Optimizations | 📋 Planifié | 0% | ~20h |
 
 **Total Code Écrit:** ~2,835 lignes
@@ -231,7 +231,7 @@ fb9f7ada refactor(frontend): Migrate localStorage to storage helper
 
 ---
 
-### 2.3 Consolidate Duplicate Components (🔄 EN COURS - 15%)
+### 2.3 Consolidate Duplicate Components (🔄 EN COURS - 50%)
 
 **Objectif:** Éliminer les composants dupliqués
 
@@ -263,20 +263,33 @@ fb9f7ada refactor(frontend): Migrate localStorage to storage helper
 
 **Effort:** ~3-4h
 
-#### 🟡 Search Components (4 implémentations)
-- `components/shared/GlobalSearchInput.tsx` (3.4KB) - **0 usages** → À supprimer
-- `components/shared/GlobalSearchInputAdvanced.tsx` (12KB) - **1 usage** → Garder
-- `components/search/SearchBar.tsx` (10KB) - **1 usage** → Garder
-- `components/search/AdvancedFilters.tsx` (8.4KB) - Composant support
+#### ✅ Search Components (4 → 2 variants modulaires)
+- ~~`GlobalSearchInput.tsx`~~ (supprimé - 0 usages)
+- ~~`GlobalSearchInputAdvanced.tsx`~~ (supprimé - remplacé)
+- ~~`SearchBar.tsx`~~ (supprimé - remplacé)
+- `components/search/AdvancedFilters.tsx` - Composant support (keep)
 
-**Analyse:**
-- GlobalSearchInput inutilisé → supprimer
-- GlobalSearchInputAdvanced et SearchBar servent des besoins différents
-- Peu d'usages = faible priorité de consolidation
+**Nouveau système modulaire:**
+```
+components/shared/Search/
+├── SearchGlobal.tsx       - Global search (Cmd+K + history)
+├── SearchEntity.tsx       - Entity search (keyboard nav)
+├── useSearchCore.ts       - Hook partagé (debounce, abort)
+├── useSearchHistory.ts    - Persistance storage
+├── types.ts               - Types partagés
+└── index.ts               - Exports
+```
 
-**Décision:** Garder les 2 composants actifs (usages différents)
+**Migrations:**
+- ✅ Navbar → SearchGlobal (Cmd+K, historique, multi-types)
+- ✅ Mandats page → SearchEntity (mode contrôlé, callbacks)
 
-**Effort:** ~30min (supprimer GlobalSearchInput seulement)
+**Résultats:**
+- Code: 32KB → 15KB modulaire (-53%)
+- Duplication: Éliminée via hooks partagés
+- Maintenabilité: +++ (single source of truth)
+
+**Status:** ✅ COMPLETÉ!
 
 #### ✅ CommandPalette (3 versions → 1)
 - ~~CommandPalette.tsx~~ (supprimé)
