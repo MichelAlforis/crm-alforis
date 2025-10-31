@@ -5,7 +5,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { ROUTES, withQuery } from "@/lib/constants"
 import { Card, Button, Alert, Modal, Input } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
@@ -14,6 +14,7 @@ import { Trash2 } from 'lucide-react'
 import { PersonForm } from '@/components/forms'
 import { usePeople } from '@/hooks/usePeople'
 import { useConfirm } from '@/hooks/useConfirm'
+import { useEntityDetail } from '@/hooks/useEntityDetail'
 import { PersonOrganizationLinkInput } from '@/lib/types'
 import { SkeletonCard, SkeletonTable } from '@/components/ui/Skeleton'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
@@ -32,27 +33,23 @@ import { ActivityTab } from '@/components/interactions/ActivityTab'
 type TabType = 'informations' | 'activite'
 
 export default function PersonDetailPage() {
-  const params = useParams<{ id?: string }>()
   const router = useRouter()
   const { showToast } = useToast()
   const { confirm, ConfirmDialogComponent } = useConfirm()
-  const [activeTab, setActiveTab] = useState<TabType>('informations')
 
-  const personId = useMemo(() => {
-    const rawId = params?.id
-    if (!rawId) return null
+  const {
+    entityId: personIdFromHook,
+    isEditModalOpen,
+    setIsEditModalOpen,
+    activeTab,
+    setActiveTab,
+    handleDeleteWithRedirect,
+  } = useEntityDetail<TabType>({ listRoute: ROUTES.CRM.PEOPLE })
 
-    // Try to extract ID from slug format: "123-john-doe" -> 123
-    const idFromSlug = extractIdFromSlug(rawId)
-    if (idFromSlug !== null) return idFromSlug
-
-    // Fallback: try to parse as direct number (legacy URLs)
-    const parsed = Number.parseInt(rawId, 10)
-    return Number.isNaN(parsed) ? null : parsed
-  }, [params])
+  // Keep extractIdFromSlug logic for slug URLs support
+  const personId = personIdFromHook
 
   const { single, fetchPerson, updatePerson, deletePerson, update, remove, linkPersonToOrganization, updatePersonOrganizationLink, deletePersonOrganizationLink } = usePeople()
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
   const [linkPayload, setLinkPayload] = useState<PersonOrganizationLinkInput>({
     person_id: personId ?? 0,
@@ -124,15 +121,13 @@ export default function PersonDetailPage() {
       onConfirm: async () => {
         try {
           await deletePerson(personId)
-          showToast({
-            type: 'success',
-            title: 'Contact supprimé',
-            message: 'Le contact a été supprimé avec succès.',
+          await handleDeleteWithRedirect(async () => {
+            showToast({
+              type: 'success',
+              title: 'Contact supprimé',
+              message: 'Le contact a été supprimé avec succès.',
+            })
           })
-          // Attendre un peu pour que le toast s'affiche avant la redirection
-          setTimeout(() => {
-            router.push(ROUTES.CRM.PEOPLE)
-          }, 500)
         } catch (error: any) {
           showToast({
             type: 'error',

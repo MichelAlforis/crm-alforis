@@ -3,11 +3,12 @@
 
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { ROUTES, withQuery } from "@/lib/constants"
 import { useProduit, useUpdateProduit, useDeleteProduit } from '@/hooks/useProduits'
+import { useEntityDetail } from '@/hooks/useEntityDetail'
 import { Card, Button, Alert, Modal } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
@@ -18,19 +19,18 @@ import type { ProduitUpdate } from '@/lib/types'
 import { PRODUIT_TYPE_LABELS, PRODUIT_STATUS_LABELS, MANDAT_STATUS_LABELS } from "@/lib/enums/labels"
 
 export default function ProduitDetailPage() {
-  const params = useParams<{ id?: string }>()
   const router = useRouter()
-  const produitId = React.useMemo(() => {
-    const rawId = params?.id
-    const parsed = rawId ? Number.parseInt(rawId, 10) : NaN
-    return Number.isNaN(parsed) ? null : parsed
-  }, [params])
+  const {
+    entityId: produitId,
+    isValidId,
+    isEditModalOpen,
+    setIsEditModalOpen,
+    handleDeleteWithRedirect,
+  } = useEntityDetail({ listRoute: ROUTES.CRM.PRODUITS })
 
   const { data: produit, isLoading, error } = useProduit(produitId ?? 0)
   const updateMutation = useUpdateProduit()
   const deleteMutation = useDeleteProduit()
-
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
   const handleUpdate = async (data: ProduitUpdate) => {
     if (!produitId) return
@@ -45,12 +45,13 @@ export default function ProduitDetailPage() {
         "Êtes-vous sûr de vouloir supprimer ce produit ? Cette action est irréversible et supprimera toutes les associations avec les mandats."
       )
     ) {
-      await deleteMutation.mutateAsync(produitId)
-      router.push(ROUTES.CRM.PRODUITS)
+      await handleDeleteWithRedirect(async () => {
+        await deleteMutation.mutateAsync(produitId)
+      })
     }
   }
 
-  if (produitId === null) {
+  if (!isValidId) {
     return <div className="text-center p-6">Produit introuvable</div>
   }
 

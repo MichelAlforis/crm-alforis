@@ -5,11 +5,12 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { ROUTES, withQuery } from "@/lib/constants"
 import { useMandat, useUpdateMandat, useDeleteMandat } from '@/hooks/useMandats'
 import { useProduitsByMandat, useDeleteMandatProduitAssociation } from '@/hooks/useProduits'
 import { useConfirm } from '@/hooks/useConfirm'
+import { useEntityDetail } from '@/hooks/useEntityDetail'
 import { Card, Button, Alert, Modal } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
@@ -22,13 +23,13 @@ import type { MandatDistributionUpdate } from '@/lib/types'
 import { MANDAT_STATUS_LABELS, MANDAT_TYPE_LABELS } from "@/lib/enums/labels"
 
 export default function MandatDetailPage() {
-  const params = useParams<{ id?: string }>()
   const router = useRouter()
-  const mandatId = React.useMemo(() => {
-    const rawId = params?.id
-    const parsed = rawId ? Number.parseInt(rawId, 10) : NaN
-    return Number.isNaN(parsed) ? null : parsed
-  }, [params])
+  const {
+    entityId: mandatId,
+    isEditModalOpen,
+    setIsEditModalOpen,
+    handleDeleteWithRedirect,
+  } = useEntityDetail({ listRoute: ROUTES.CRM.MANDATS })
 
   const { data: mandat, isLoading, error, refetch } = useMandat(mandatId ?? 0)
   const { data: produits, refetch: refetchProduits } = useProduitsByMandat(mandatId ?? 0)
@@ -38,7 +39,6 @@ export default function MandatDetailPage() {
   const { showToast } = useToast()
   const { confirm, ConfirmDialogComponent } = useConfirm()
 
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isAssociationModalOpen, setIsAssociationModalOpen] = useState(false)
 
   const handleUpdate = async (data: MandatDistributionUpdate) => {
@@ -56,22 +56,13 @@ export default function MandatDetailPage() {
       type: 'danger',
       confirmText: 'Supprimer',
       onConfirm: async () => {
-        try {
+        await handleDeleteWithRedirect(async () => {
           await deleteMutation.mutateAsync(mandatId)
           showToast({
             type: 'success',
             title: 'Mandat supprimé',
           })
-          setTimeout(() => {
-            router.push(ROUTES.CRM.MANDATS)
-          }, 500)
-        } catch (error: any) {
-          showToast({
-            type: 'error',
-            title: 'Erreur',
-            message: error?.detail || 'Impossible de supprimer le mandat.',
-          })
-        }
+        })
       },
     })
   }

@@ -1,8 +1,8 @@
 # 🎯 CRM - Roadmap TODO Priorisée
 
-**Date:** 31 Octobre 2025 - 17:00
-**Version:** v8.10.0
-**Base:** Post-déploiement production + Tests E2E Playwright + CI/CD E2E Integration
+**Date:** 31 Octobre 2025 - 17:30
+**Version:** v8.11.0
+**Base:** Post-déploiement production + 39 Tests E2E activés + CI/CD complet
 
 ---
 
@@ -296,27 +296,31 @@ lint-frontend ───┼─→ test-backend ───┐
 - [ ] Grafana dashboards
 - [ ] Alerting rules
 
-### ✅ 19. Tests E2E Playwright (6h)
-**Status:** ✅ COMPLETÉ - Migré de Cypress à Playwright (31 Oct 2025 - 16h00)
-**Impact:** Qualité + CI/CD Ready
-**Effort:** 6h
+### ✅ 19. Tests E2E Playwright (6h) + Activation (1h)
+**Status:** ✅ COMPLETÉ + 39/39 TESTS ACTIVÉS (31 Oct 2025 - 17h30)
+**Impact:** Qualité + CI/CD Ready + Full Coverage
+**Effort:** 7h (6h migration + 1h activation)
 **Commits:**
 - `c9513c22` - feat(testing): Migrate from Cypress to Playwright E2E tests
   * +1,240 lignes ajoutées
   * -2,346 lignes supprimées (nettoyage Cypress)
   * 14 fichiers modifiés
+- `113481b5` - feat(e2e): Activate all 39 Playwright E2E tests with auth ⭐
+  * Scripts création user test (create-test-user.sh, .sql)
+  * Projects auth décommentés dans playwright.config.ts
+  * CI/CD enhanced: PostgreSQL + Redis + API + migrations + 39 tests
 
 **Raison Migration:**
 - ❌ Cypress 13.x/15.x incompatible avec macOS Sequoia 15.x (erreur: bad option --no-sandbox)
 - ✅ Playwright 1.56.1 compatible macOS 15.x et 2x plus rapide
 
-**Tests E2E Créés (39 tests):**
+**Tests E2E - 39/39 ACTIVÉS (100%):**
 
-📝 **Tests Actifs (4/39 - sans auth):** ✅ 100% PASS
+📝 **Tests Publics (4/39 - no auth required):** ✅ ACTIFS
 - ✅ [e2e/simple.spec.ts](crm-frontend/e2e/simple.spec.ts) - Validation Playwright (1 test)
 - ✅ [e2e/login-page.spec.ts](crm-frontend/e2e/login-page.spec.ts) - Page login & redirections (3 tests)
 
-📝 **Tests Prêts (35/39 - require user test@alforis.fr):**
+📝 **Tests Authentifiés (35/39 - with auth):** ✅ ACTIVÉS
 - ✅ [e2e/auth.setup.ts](crm-frontend/e2e/auth.setup.ts) - Setup auth réutilisable
 - ✅ [e2e/complete-workflow.spec.ts](crm-frontend/e2e/complete-workflow.spec.ts) - Workflow CRM complet (10 tests)
   * Création personne complète avec tous les champs
@@ -373,17 +377,31 @@ npm run test:e2e:report   # Rapport HTML interactif
 **Documentation:**
 - ✅ [PLAYWRIGHT_TESTING_REPORT.md](crm-frontend/PLAYWRIGHT_TESTING_REPORT.md) - Guide complet (306 lignes)
 
-**Résultats:**
-- ✅ 4/4 tests actifs passés (100%)
-- ⏱️ Durée: 21.4s (vs ~45s avec Cypress)
-- 🔄 Parallel: 4 workers
-- 📊 Coverage: Login, Auth, CRUD, IA, Autofill, Campagnes, Export
+**Activation Complète (commit 113481b5):**
+1. ✅ Scripts création user test@alforis.fr
+   - [scripts/create-test-user.sh](scripts/create-test-user.sh) - Script automatique
+   - [scripts/create-test-user.sql](scripts/create-test-user.sql) - SQL manuel
+   - Credentials: test@alforis.fr / test123
 
-**Prochaines étapes:**
-1. Créer user test@alforis.fr dans DB
-2. Décommenter projects auth dans playwright.config.ts
-3. Activer 35 tests avec authentification
-4. Intégrer dans CI/CD GitHub Actions
+2. ✅ Projects auth activés dans [playwright.config.ts](crm-frontend/playwright.config.ts)
+   - Project 'setup' pour authentification
+   - Project 'chromium-authenticated' pour 35 tests
+
+3. ✅ CI/CD enhanced pour TOUS les tests
+   - Services: PostgreSQL 15 + Redis 7
+   - Backend API started (uvicorn)
+   - Alembic migrations exécutées
+   - User test auto-créé dans CI
+   - **Exécute 39/39 tests** (plus seulement 4)
+   - Timeout: 15min → 20min
+
+**Résultats:**
+- ✅ Tests activés: 39/39 (100%) - 4 public + 35 auth
+- ⏱️ Durée locale: 21.4s (4 tests) → ~2-3min (39 tests avec 4 workers)
+- 🔄 Parallel: 4 workers
+- 📊 Coverage: Login, Auth, CRUD Complet, IA, Autofill, Campagnes, Export, Navigation
+
+**CI/CD:** TOUS les 39 tests s'exécutent automatiquement sur push/PR ✅
 
 ### 20. Documentation Utilisateur (8h)
 **Status:** ❌ Pas de docs user
@@ -523,6 +541,20 @@ Selon feedback users et priorités business
 - ✅ CI/CD pipeline complet avec E2E testing
 - ⏱️ +2min au pipeline total (~10min)
 - 📊 Coverage E2E: 10% (4/39 tests actifs)
+
+### ✅ Activation 39 Tests E2E avec Auth (1h) ⭐ NOUVEAU
+- Scripts création user test@alforis.fr ([create-test-user.sh](scripts/create-test-user.sh), [.sql](scripts/create-test-user.sql))
+- Projects auth activés dans [playwright.config.ts](crm-frontend/playwright.config.ts)
+- CI/CD enhanced: PostgreSQL 15 + Redis 7 + Backend API + migrations
+- **Exécute maintenant TOUS les 39 tests** (plus seulement 4)
+- User test@alforis.fr auto-créé dans CI/CD
+- Timeout: 15min → 20min
+- Commit: 113481b5 (+207 lignes, 4 fichiers)
+
+**Impact:**
+- ✅ Coverage E2E: 10% → 100% (4 tests → 39 tests)
+- ✅ Tests complets: Auth, CRUD, IA, Autofill, Campagnes, Export
+- ⏱️ Durée: ~2-3min (39 tests avec 4 workers)
 
 ---
 
