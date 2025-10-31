@@ -1,4 +1,6 @@
 import { logger } from '@/lib/logger'
+import { storage } from '@/lib/constants'
+
 /**
  * Offline Sync Service
  *
@@ -53,12 +55,10 @@ export class OfflineSyncService {
   }
 
   private loadQueue() {
-    if (typeof window === 'undefined') return
-
     try {
-      const stored = localStorage.getItem(QUEUE_KEY)
+      const stored = storage.get<QueuedRequest[]>(QUEUE_KEY)
       if (stored) {
-        this.queue = JSON.parse(stored)
+        this.queue = stored
         logger.log(`[OfflineSync] Loaded ${this.queue.length} queued requests`)
       }
     } catch (error) {
@@ -68,10 +68,8 @@ export class OfflineSyncService {
   }
 
   private saveQueue() {
-    if (typeof window === 'undefined') return
-
     try {
-      localStorage.setItem(QUEUE_KEY, JSON.stringify(this.queue))
+      storage.set(QUEUE_KEY, this.queue)
     } catch (error) {
       logger.error('[OfflineSync] Failed to save queue:', error)
     }

@@ -1,0 +1,55 @@
+# ===========================================
+# DOCKER COMPOSE - CPX42 OPTIMIZED CONFIG
+# ===========================================
+# CPX42 Specs: 8 vCPU, 16GB RAM, 240GB NVMe
+# Use: docker compose -f docker-compose.yml -f docker-compose.cpx42.yml up -d
+#
+# Cette config OVERRIDE docker-compose.yml pour CPX42
+# - Double les ressources Ollama (12GB au lieu de 5GB)
+# - Active 2 modèles en parallèle
+# - 4 requêtes parallèles (au lieu de 2)
+
+services:
+
+  # ========================================
+  # OLLAMA - CPX42 OPTIMIZED
+  # ========================================
+  ollama:
+    environment:
+      # Config optimisée pour CPX42 (16GB RAM)
+      OLLAMA_MAX_LOADED_MODELS: 2           # 2 modèles en mémoire
+      OLLAMA_NUM_PARALLEL: 4                # 4 requêtes parallèles
+      OLLAMA_MAX_QUEUE: 10                  # Queue jusqu'à 10 requêtes
+      OLLAMA_KEEP_ALIVE: 10m                # Garde modèles 10min en RAM
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'      # 4 CPU sur 8 (50%)
+          memory: 12G      # 12GB max (reste 4GB pour système + services)
+        reservations:
+          cpus: '2.0'      # Démarre avec 2 CPU
+          memory: 4G       # Démarre avec 4GB
+
+  # ========================================
+  # POSTGRES - CPX42 OPTIMIZED
+  # ========================================
+  postgres:
+    command:
+      - "postgres"
+      - "-c"
+      - "shared_buffers=512MB"              # 256MB → 512MB
+      - "-c"
+      - "work_mem=8MB"                      # 4MB → 8MB
+      - "-c"
+      - "maintenance_work_mem=128MB"        # 64MB → 128MB
+      - "-c"
+      - "effective_cache_size=2GB"          # 512MB → 2GB
+      - "-c"
+      - "max_connections=100"               # 50 → 100
+
+  # ========================================
+  # CELERY WORKER - CPX42 OPTIMIZED
+  # ========================================
+  celery-worker:
+    command: celery -A celery_app worker --loglevel=info --concurrency=4 --max-tasks-per-child=100
+    # Concurrency: 2 → 4 (double les workers)

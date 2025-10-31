@@ -1,10 +1,8 @@
 # 🗺️ CRM ALFORIS - ROADMAP MASTER
 
-**Dernière mise à jour:** 31 Octobre 2025 - 21:30
+**Dernière mise à jour:** 31 Octobre 2025 - 20:00
 **Version actuelle:** v8.7.0
 **Environnement:** Production (crm.alforis.fr) + Local Dev
-
-**📚 Documentation IA consolidée:** [AI_FEATURES.md](documentation/AI_FEATURES.md)
 
 ---
 
@@ -559,83 +557,61 @@ Menu contextuel (clic droit) sur les champs de formulaire avec suggestions IA ba
 
 ---
 
-#### **♻️ Frontend Phase 1 - Quick Wins Refactoring** (✅ 100%)
-**Date:** 31 Octobre 2025
-**Status:** ✅ COMPLÉTÉ - Refactor ~2000 lignes, centralisation constants
+#### **🧠 Phase 3 - AI Memory & Learning System** (❌ 0%)
+**Estimation:** 5-6h
 
 **Objectif:**
-Nettoyer la tech debt Frontend, centraliser les constants éparpillées, améliorer maintenabilité.
+Système de mémoire persistante pour apprendre des préférences utilisateur et améliorer les suggestions au fil du temps.
 
 **Livrables:**
-1. ✅ **Centralisation Constants** (3h)
-   - `lib/constants/storage.ts` - localStorage keys (11 constants)
-   - `lib/constants/auth.ts` - JWT, cookies (6 constants)
-   - `lib/constants/api.ts` - Endpoints cache (4 constants)
-   - Migration de 30+ fichiers vers constants centralisées
+1. **AI Memory Storage** (2h)
+   - Table `ai_memory` (user_id, context, data, usage_count)
+   - CRUD API `/api/v1/ai/memory`
+   - Retention policy (90 jours)
 
-2. ✅ **Storage Helper** (1h)
-   - `lib/helpers/storage.ts` - Abstraction localStorage/cookies
-   - Type-safe getters/setters
-   - Error handling graceful
+2. **Learning Engine** (2h)
+   - Tracking user choices (accept/reject)
+   - Pattern detection (ex: toujours mettre "M." avant nom)
+   - Auto-amélioration prompts basé sur feedback
 
-3. ✅ **Documentation** (30min)
-   - README Phase 1 avec visual summary
-   - Reference card pour devs
-   - Migration guide
+3. **Observability** (1h)
+   - Dashboard learning metrics
+   - Precision/Recall par champ
+   - User satisfaction score
 
-**Fichiers refactorés:**
-- Components: FieldContextMenu, Email pages, Campaigns
-- Pages: Dashboard, Auth, Settings
-- Hooks: useAuth, useContextMenu
-- Utils: apiClient, auth helpers
-
-**Commits:**
-- `4f5d4aba`: Phase 1 Quick Wins (~2000 lines)
-- `92a646c5`: Documentation + reference card
-- `d58f33b0`: Migrate to centralized constants
-- `87d9df47`: Email campaigns migration
-- `53b5f185`: Email pages migration
-- `389c36b1`: FieldContextMenu migration
-
-**Total refactoré:** ~2000 lignes
-**Gain maintenabilité:** Constants uniques, pas de magic strings
+4. **RGPD Compliance** (1h)
+   - Right to be forgotten (DELETE /ai/memory)
+   - Data export (GET /ai/memory/export)
+   - Audit trail transparent
 
 ---
 
 ## 📊 MÉTRIQUES GLOBALES
 
-### Code Stats v8.7.0 (Production)
+### Code Stats (Production)
 ```
-Backend IA:
-- ai_ollama_service.py: 420 lignes (LiteLLM + Redis)
-- ai_learning_service.py: 460 lignes (Patterns + RGPD)
-- llm_router.py: 586 lignes (Multi-provider fallback)
-- autofill_service_v2.py: ~800 lignes (Pipeline 4 sources)
-- ai_agent.py: 700 lignes (Duplicates + Enrichment)
-- Routes IA: ~1,500 lignes (Ollama, Learning, Autofill, Agent)
-- Models IA: ~400 lignes (AIUserPreference, AutofillLog, etc.)
-
-Backend Core:
-- Services RGPD: ~450 lignes
-- Middleware: ~180 lignes (RGPD logging)
-- Migrations: ~1,100 lignes (email_threads, AI tables, RGPD)
-- Celery Tasks: ~960 lignes (email sync, RGPD cleanup)
+Backend:
+- Services IA: ~3200 lignes (+700 ACTE VI)
+- Services RGPD: ~450 lignes (NOUVEAU)
+- Routes API: ~2600 lignes (+800 ACTE VI + Phase 2B + 300 RGPD)
+- Models: ~1180 lignes (+300 email_threads + 80 data_access_log)
+- Middleware: ~180 lignes (NOUVEAU - RGPD logging)
+- Migrations: ~900 lignes (+150 ACTE VI + 80 RGPD)
+- Celery Tasks: ~960 lignes (+310 RGPD tasks)
 
 Frontend:
-- Dashboards IA: ~2,200 lignes (AI Agent + Autofill Stats)
-- Components: ~1,800 lignes (Context Menu, Tables, Charts)
-- Hooks: ~600 lignes (useAI, useAutofill, useContextMenu)
+- Dashboards: ~1800 lignes
+- Components: ~1500 lignes (+300 FieldContextMenu)
+- Hooks: ~400 lignes (+160 useContextMenu)
 
 Tests:
-- Backend: ~1,200 lignes (AI services, APIs)
-- Frontend: ~500 lignes (Components, Hooks)
-- E2E: ~400 lignes (Cypress flows)
+- Unit tests: ~800 lignes
+- Coverage: 95%+
 
 Documentation:
-- AI_FEATURES.md: 450 lignes (Documentation IA consolidée)
-- RGPD Compliance: ~350 lignes
+- RGPD Compliance: ~350 lignes (NOUVEAU)
 
-TOTAL: ~13,500 lignes production-ready
+TOTAL: ~13500 lignes production-ready (+4300 depuis v8.5.0)
 ```
 
 ### Performance (Hetzner CPX31)
@@ -665,40 +641,24 @@ TOTAL: ~13,500 lignes production-ready
 4. ✅ **10 commits** poussés vers production
 5. ✅ **Docker healthy** - Tous services opérationnels
 
-### 🔄 **EN COURS** (ChatGPT debug)
-1. ✅ **Déploiement Production** - TERMINÉ
-   - ✅ Script `./deploy.sh` fonctionnel
-   - ✅ Environnement serveur validé
-   - ✅ Services déployés et healthy
+### 🚨 **P0 - Urgent** (Prochaine session)
+1. **Configurer OAuth Apps** (Google Cloud + Azure)
+   - Créer app Google Cloud Console
+   - Créer app Azure Portal
+   - Configurer redirect URIs
+   - Tester flow complet Gmail + Outlook
 
-### 🚨 **P0 - BLOQUANT Multi-Mail** (À faire maintenant)
-1. **Configurer OAuth Apps** (1h) - BLOQUE Gmail + Outlook
-   - [ ] Google Cloud Console - Créer app OAuth Gmail
-     - Redirect URI: `https://crm.alforis.fr/api/v1/oauth/google/callback`
-     - Scopes: Gmail.Read, Gmail.Send
-     - Copier `GOOGLE_CLIENT_ID` + `GOOGLE_CLIENT_SECRET` dans .env
-
-   - [ ] Azure Portal - Créer app OAuth Outlook
-     - Redirect URI: `https://crm.alforis.fr/api/v1/oauth/microsoft/callback`
-     - Scopes: Mail.Read, Mail.Send
-     - Copier `MICROSOFT_CLIENT_ID` + `MICROSOFT_CLIENT_SECRET` dans .env
-
-   - [ ] Redéployer avec nouvelles variables .env
-   - [ ] Tester connexion Gmail via UI
-   - [ ] Tester connexion Outlook via UI
-
-2. **Valider Multi-Mail Stack** (30min)
+2. **Tester Multi-Mail en conditions réelles**
    - Sync automatique toutes 10 min
    - NLP extraction entités
    - Thread detection conversations
    - Vérifier Flower monitoring
 
-### ⭐ **P1 - Important** (Après OAuth)
-1. ✅ **Celery déployé en production** - OPÉRATIONNEL
-   - ✅ Worker + Beat + Flower fonctionnels
-   - ⚠️ **TODO:** Config FLOWER_AUTH basic auth (sécurité)
-   - ⚠️ **TODO:** Nginx reverse proxy pour Flower
-   - ✅ Resources CPX31 validées
+### ⭐ **P1 - Important** (Semaine prochaine)
+1. **Deployer Celery en production Hetzner**
+   - Config FLOWER_AUTH basic auth
+   - Nginx reverse proxy pour Flower
+   - Vérifier resources CPX31 (concurrency=2)
 
 ### 📌 **P2 - Nice to have** (Semaine prochaine)
 1. **Documentation utilisateur** OAuth setup

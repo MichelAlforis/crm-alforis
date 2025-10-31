@@ -3,6 +3,8 @@
  * Stores in localStorage for persistence
  */
 
+import { storage } from '@/lib/constants'
+
 export interface HistoryItem {
   id: string
   query: string
@@ -22,13 +24,10 @@ const MAX_HISTORY = 20
  * Get command history from localStorage
  */
 export function getHistory(): HistoryItem[] {
-  if (typeof window === 'undefined') return []
-
   try {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (!stored) return []
+    const history = storage.get<HistoryItem[]>(STORAGE_KEY)
+    if (!history) return []
 
-    const history: HistoryItem[] = JSON.parse(stored)
     return history.sort((a, b) => b.timestamp - a.timestamp).slice(0, MAX_HISTORY)
   } catch (error) {
     console.error('Failed to load history:', error)
@@ -40,8 +39,6 @@ export function getHistory(): HistoryItem[] {
  * Add item to history
  */
 export function addToHistory(item: Omit<HistoryItem, 'id' | 'timestamp'>): void {
-  if (typeof window === 'undefined') return
-
   try {
     const history = getHistory()
 
@@ -67,7 +64,7 @@ export function addToHistory(item: Omit<HistoryItem, 'id' | 'timestamp'>): void 
     // Keep only MAX_HISTORY items
     const trimmed = history.slice(0, MAX_HISTORY)
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed))
+    storage.set(STORAGE_KEY, trimmed)
   } catch (error) {
     console.error('Failed to save history:', error)
   }
@@ -77,20 +74,17 @@ export function addToHistory(item: Omit<HistoryItem, 'id' | 'timestamp'>): void 
  * Clear all history
  */
 export function clearHistory(): void {
-  if (typeof window === 'undefined') return
-  localStorage.removeItem(STORAGE_KEY)
+  storage.remove(STORAGE_KEY)
 }
 
 /**
  * Remove specific item from history
  */
 export function removeFromHistory(id: string): void {
-  if (typeof window === 'undefined') return
-
   try {
     const history = getHistory()
     const filtered = history.filter((item) => item.id !== id)
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered))
+    storage.set(STORAGE_KEY, filtered)
   } catch (error) {
     console.error('Failed to remove from history:', error)
   }
