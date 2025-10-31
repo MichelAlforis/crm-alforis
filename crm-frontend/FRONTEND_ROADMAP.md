@@ -240,7 +240,7 @@ fb9f7ada refactor(frontend): Migrate localStorage to storage helper
 
 ---
 
-### 2.3 Consolidate Duplicate Components (🔄 EN COURS - 70%)
+### 2.3 Consolidate Duplicate Components (🔄 EN COURS - 85%)
 
 **Objectif:** Éliminer les composants dupliqués et centraliser les patterns communs
 
@@ -248,8 +248,9 @@ fb9f7ada refactor(frontend): Migrate localStorage to storage helper
 - ✅ Modals: 4/4 migrés vers ModalForm (-122 lignes)
 - ✅ Forms: 4/13 migrés avec hooks réutilisables (-118 lignes)
 - ✅ Labels: Centralisés dans lib/enums/labels.ts (~150 lignes)
-- 🔄 Tables: Migration DataTable en cours
-- 🔄 Select Components: Consolidation planifiée
+- ✅ Select Components: 3/3 migrés vers useSearchableDropdown (-170 lignes)
+- ✅ Tables: Table.tsx V1 supprimé (-409 lignes)
+- 🔄 Hooks: useEntityDetail créé, 1/6 pages migrées
 
 **Duplications identifiées:**
 
@@ -272,12 +273,12 @@ fb9f7ada refactor(frontend): Migrate localStorage to storage helper
 
 **Migration Plan:**
 1. ✅ Analyse complétée - DataTable = référence
-2. ⏳ Supprimer Table.tsx + migrer RecipientSelectorTableV2
+2. ✅ Supprimé Table.tsx + migré RecipientSelectorTableV2 (-409L)
 3. ⏳ Documenter migration TableV2 → DataTable
 4. ⏳ Migrer progressivement les 11 usages TableV2
 5. ⏳ Supprimer TableV2 quand migration 100%
 
-**Effort:** ~3-4h
+**Effort:** ~2-3h restant
 
 #### ✅ Search Components (4 → 2 variants modulaires)
 - ~~`GlobalSearchInput.tsx`~~ (supprimé - 0 usages)
@@ -334,6 +335,8 @@ components/shared/Search/
 1. ✅ `hooks/useOrganisationSelect.ts` (148L) - Logique autocomplete organisation réutilisable
 2. ✅ `hooks/useFormToast.ts` (163L) - Messages toast standardisés avec genre grammatical
 3. ✅ `hooks/useFormAutoFocus.ts` (44L) - Auto-focus sur premier champ avec erreur
+4. ✅ `hooks/useEntityDetail.ts` (167L) - Logique commune pages détail (ID, modals, tabs, delete)
+5. ✅ `hooks/useSearchableDropdown.ts` (230L) - État dropdown (search, keyboard nav, infinite scroll)
 
 **Formulaires migrés:**
 1. ✅ `MandatForm.tsx` (248 → 223L, -25L, -10%)
@@ -348,6 +351,13 @@ components/shared/Search/
 - Toute la logique métier conservée
 
 **Économies:** -118 lignes au total (-7.5% en moyenne)
+
+**Select Components migrés:** 3/3 vers useSearchableDropdown
+1. ✅ `SearchableSelect.tsx` (308 → 237L, -71L)
+2. ✅ `SearchableMultiSelect.tsx` (302 → 245L, -57L)
+3. ✅ `EntityAutocompleteInput.tsx` (315 → 273L, -42L)
+
+**Économies:** -170 lignes au total (-18% en moyenne)
 
 **Formulaires restants:** 9/13 (migration future quand patterns émergent)
 
@@ -433,7 +443,7 @@ getLabelOptions(labels): Array<{value, label}>
 
 **Commit:** `97c3658f` - feat(hooks): Add useEntityDetail
 
-#### ✅ useSearchableDropdown Hook (Ready for use)
+#### ✅ useSearchableDropdown Hook (Applied to all Select variants)
 
 **Hook créé:** `hooks/useSearchableDropdown.ts` (230 lignes)
 
@@ -447,14 +457,16 @@ getLabelOptions(labels): Array<{value, label}>
 - Infinite scroll
 - Focus management
 
-**Composants cibles:**
-- SearchableSelect.tsx (308L)
-- SearchableMultiSelect.tsx (302L)
-- EntityAutocompleteInput.tsx (315L)
+**Appliqué à:**
+1. ✅ SearchableSelect.tsx (308 → 237L, -71L)
+2. ✅ SearchableMultiSelect.tsx (302 → 245L, -57L)
+3. ✅ EntityAutocompleteInput.tsx (315 → 273L, -42L)
 
-**Potentiel:** ~240 lignes économisables quand appliqué
+**Économies réalisées:** -170 lignes (-18%)
 
-**Commit:** `d17a01cd` - feat(hooks): Add useSearchableDropdown
+**Commits:**
+- `d17a01cd` - feat(hooks): Add useSearchableDropdown
+- `81775848` - refactor(select): Migrate 3 Select variants to useSearchableDropdown hook
 
 ---
 
