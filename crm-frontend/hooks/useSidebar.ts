@@ -1,139 +1,112 @@
 /**
- * useSidebar - Hook centralisé pour gestion complète de la sidebar
+ * useSidebar - Hook centralisé pour gestion complète de la sidebar (piloté par Zustand)
  *
  * Features:
- * - Persistance localStorage (submenus + collapsed)
- * - Auto-ouverture route active (générique)
+ * - Persistance via Zustand (submenus, collapse, favoris, visibilité)
+ * - Auto-ouverture route active
  * - Gestion mobile/desktop
- * - Détection pathname active
- * - Recherche avec filtre (Phase 2)
- * - Favoris utilisateur (Phase 2)
- * - Raccourcis clavier Cmd+K (Phase 2)
- * - Préférences visibilité sections (Phase 3)
+ * - Recherche, favoris, visibilité
  *
  * @example
  * const sidebar = useSidebar(SIDEBAR_SECTIONS)
- * <button onClick={sidebar.toggleSubmenu('/dashboard/marketing')}>
+ * <button onClick={() => sidebar.toggleSubmenu('/dashboard/marketing')}>
  *   Marketing {sidebar.isSubmenuOpen('/dashboard/marketing') ? '▼' : '▶'}
  * </button>
  */
 
-import { useEffect, useState, useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { usePathname } from 'next/navigation'
+import { useShallow } from 'zustand/react/shallow'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
-import { logger } from '@/lib/logger'
-import { storage } from '@/lib/constants'
+import {
+  SidebarSection,
+  useSidebarStore,
+} from '@/stores/sidebar'
 
-export interface SidebarItem {
-  label: string
-  href: string
-  icon: React.ComponentType<{ className?: string }>
-  description?: string
-}
-
-export interface SidebarSection {
-  label: string
-  href: string
-  icon: React.ComponentType<{ className?: string }>
-  description?: string
-  badge?: string | number | null
-  gradient?: string
-  submenu?: SidebarItem[]
-}
+export type { SidebarItem, SidebarSection } from '@/stores/sidebar'
 
 export function useSidebar(sections: SidebarSection[] = []) {
   const pathname = usePathname()
-  // Utiliser 1024px pour correspondre au breakpoint lg: de Tailwind
   const isMobile = useMediaQuery('(max-width: 1023px)')
 
-  // État submenus avec persistance
-  const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>(() => {
-    const saved = storage.get<Record<string, boolean>>('sidebar-submenus-state', {})
-    return saved ?? {}
-  })
+  const {
+    openSubmenus,
+    collapsed,
+    mobileOpen,
+    toggleSubmenu,
+    setSubmenuOpen,
+    toggleCollapsed,
+    toggleMobile,
+    closeMobile,
+    setMobileOpen,
+    searchQuery,
+    setSearchQuery,
+    searchOpen,
+    setSearchOpen,
+    favorites,
+    toggleFavorite,
+    isFavorite,
+    hiddenSections,
+    toggleSectionVisibility,
+    isSectionHidden,
+  } = useSidebarStore(
+    useShallow((state) => ({
+      openSubmenus: state.openSubmenus,
+      collapsed: state.collapsed,
+      mobileOpen: state.mobileOpen,
+      toggleSubmenu: state.toggleSubmenu,
+      setSubmenuOpen: state.setSubmenuOpen,
+      toggleCollapsed: state.toggleCollapsed,
+      toggleMobile: state.toggleMobile,
+      closeMobile: state.closeMobile,
+      setMobileOpen: state.setMobileOpen,
+      searchQuery: state.searchQuery,
+      setSearchQuery: state.setSearchQuery,
+      searchOpen: state.searchOpen,
+      setSearchOpen: state.setSearchOpen,
+      favorites: state.favorites,
+      toggleFavorite: state.toggleFavorite,
+      isFavorite: state.isFavorite,
+      hiddenSections: state.hiddenSections,
+      toggleSectionVisibility: state.toggleSectionVisibility,
+      isSectionHidden: state.isSectionHidden,
+    }))
+  )
 
-  // État collapsed avec persistance
-  const [collapsed, setCollapsed] = useState(() => {
-    const saved = storage.get<string>('sidebar-collapsed')
-    return saved === 'true'
-  })
-
-  // État mobile (pas persisté car contextuel)
-  const [mobileOpen, setMobileOpen] = useState(false)
-
-  // ==================== PHASE 2: Recherche ====================
-  const [searchQuery, setSearchQuery] = useState('')
-  const [searchOpen, setSearchOpen] = useState(false)
-
-  // ==================== PHASE 2: Favoris ====================
-  const [favorites, setFavorites] = useState<string[]>(() => {
-    const saved = storage.get<string[]>('sidebar-favorites', [])
-    return saved ?? []
-  })
-
-  // ==================== PHASE 3: Préférences visibilité ====================
-  const [hiddenSections, setHiddenSections] = useState<string[]>(() => {
-    const saved = storage.get<string[]>('sidebar-hidden-sections', [])
-    return saved ?? []
-  })
-
-  // Sauvegarde auto submenus
+  // Auto-ouverture basée sur route active
   useEffect(() => {
-    try {
-      storage.set('sidebar-submenus-state', openSubmenus)
-    } catch (error) {
-      logger.warn('Failed to save sidebar submenus state:', error)
-    }
-  }, [openSubmenus])
+    if (!pathname) return
 
-  // Sauvegarde auto collapsed
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        storage.set('sidebar-collapsed', String(collapsed))
-      } catch (error) {
-        logger.warn('Failed to save sidebar collapsed state:', error)
+    sections.forEach((section) => {
+      if (section.submenu && section.submenu.length > 0) {
+        const shouldOpen = section.submenu.some((item) => pathname.startsWith(item.href))
+        if (shouldOpen) {
+          setSubmenuOpen(section.href, true)
+        }
       }
-    }
-  }, [collapsed])
+    })
+  }, [pathname, sections, setSubmenuOpen])
 
-  // Sauvegarde auto favorites
+  // Fermer la sidebar mobile lors de la navigation
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        storage.set('sidebar-favorites', favorites)
-      } catch (error) {
-        logger.warn('Failed to save sidebar favorites:', error)
-      }
+    if (isMobile) {
+      setMobileOpen(false)
     }
-  }, [favorites])
+  }, [pathname, isMobile, setMobileOpen])
 
-  // Sauvegarde auto hidden sections
+  // Raccourcis clavier Cmd/Ctrl + K pour la recherche
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        storage.set('sidebar-hidden-sections', hiddenSections)
-      } catch (error) {
-        logger.warn('Failed to save sidebar hidden sections:', error)
-      }
-    }
-  }, [hiddenSections])
-
-  // ==================== PHASE 2: Raccourcis clavier Cmd+K ====================
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Cmd+K (Mac) ou Ctrl+K (Windows/Linux) pour ouvrir la recherche
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault()
-        setSearchOpen((prev) => !prev)
-        // Focus automatique sur l'input de recherche
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
+        event.preventDefault()
+        setSearchOpen(!searchOpen)
         setTimeout(() => {
           const searchInput = document.getElementById('sidebar-search-input')
           searchInput?.focus()
         }, 100)
       }
-      // Escape pour fermer la recherche
-      if (e.key === 'Escape' && searchOpen) {
+
+      if (event.key === 'Escape' && searchOpen) {
         setSearchOpen(false)
         setSearchQuery('')
       }
@@ -141,30 +114,7 @@ export function useSidebar(sections: SidebarSection[] = []) {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [searchOpen])
-
-  // Auto-ouverture basée sur route active (générique)
-  useEffect(() => {
-    if (!pathname) return
-
-    sections.forEach((section) => {
-      if (section.submenu && section.submenu.length > 0) {
-        const shouldOpen = section.submenu.some((item) =>
-          pathname.startsWith(item.href)
-        )
-        if (shouldOpen && !openSubmenus[section.href]) {
-          setOpenSubmenus((prev) => ({ ...prev, [section.href]: true }))
-        }
-      }
-    })
-  }, [pathname, sections, openSubmenus])
-
-  // Fermer sidebar mobile lors de navigation
-  useEffect(() => {
-    if (isMobile) {
-      setMobileOpen(false)
-    }
-  }, [pathname, isMobile])
+  }, [searchOpen, setSearchOpen, setSearchQuery])
 
   // Détection route active
   const isActive = useCallback(
@@ -178,70 +128,11 @@ export function useSidebar(sections: SidebarSection[] = []) {
     [pathname]
   )
 
-  // Toggle submenu
-  const toggleSubmenu = useCallback((itemHref: string) => {
-    setOpenSubmenus((prev) => ({
-      ...prev,
-      [itemHref]: !prev[itemHref],
-    }))
-  }, [])
-
-  // Check if submenu is open
   const isSubmenuOpen = useCallback(
     (itemHref: string): boolean => {
-      return openSubmenus[itemHref] || false
+      return openSubmenus[itemHref] ?? false
     },
     [openSubmenus]
-  )
-
-  // Toggle collapsed
-  const toggleCollapsed = useCallback(() => {
-    setCollapsed((prev) => !prev)
-  }, [])
-
-  // Mobile controls
-  const toggleMobile = useCallback(() => {
-    setMobileOpen((prev) => !prev)
-  }, [])
-
-  const closeMobile = useCallback(() => {
-    setMobileOpen(false)
-  }, [])
-
-  // ==================== PHASE 2: Gestion Favoris ====================
-  const toggleFavorite = useCallback((href: string) => {
-    setFavorites((prev) => {
-      if (prev.includes(href)) {
-        return prev.filter((f) => f !== href)
-      } else {
-        return [...prev, href]
-      }
-    })
-  }, [])
-
-  const isFavorite = useCallback(
-    (href: string): boolean => {
-      return favorites.includes(href)
-    },
-    [favorites]
-  )
-
-  // ==================== PHASE 3: Gestion Visibilité ====================
-  const toggleSectionVisibility = useCallback((href: string) => {
-    setHiddenSections((prev) => {
-      if (prev.includes(href)) {
-        return prev.filter((h) => h !== href)
-      } else {
-        return [...prev, href]
-      }
-    })
-  }, [])
-
-  const isSectionHidden = useCallback(
-    (href: string): boolean => {
-      return hiddenSections.includes(href)
-    },
-    [hiddenSections]
   )
 
   // ==================== PHASE 2: Filtrage par recherche ====================
@@ -252,19 +143,16 @@ export function useSidebar(sections: SidebarSection[] = []) {
 
     return sections
       .map((section) => {
-        // Chercher dans le label et description de la section
         const sectionMatches =
           section.label.toLowerCase().includes(query) ||
           section.description?.toLowerCase().includes(query)
 
-        // Chercher dans les sous-items
         const filteredSubmenu = section.submenu?.filter(
           (item) =>
             item.label.toLowerCase().includes(query) ||
             item.description?.toLowerCase().includes(query)
         )
 
-        // Si la section match OU si des sous-items matchent
         if (sectionMatches || (filteredSubmenu && filteredSubmenu.length > 0)) {
           return {
             ...section,
@@ -277,27 +165,22 @@ export function useSidebar(sections: SidebarSection[] = []) {
       .filter((section): section is SidebarSection => section !== null)
   }, [sections, searchQuery])
 
-  // Sections visibles (après filtrage visibilité + recherche)
   const visibleSections = useMemo(() => {
     return filteredSections.filter((section) => !hiddenSections.includes(section.href))
   }, [filteredSections, hiddenSections])
 
-  // Sections favorites (triées en premier)
   const favoriteSections = useMemo(() => {
     return sections.filter((section) => favorites.includes(section.href))
   }, [sections, favorites])
 
-  // Tous les items favoris (sections + sous-items individuels)
   const favoriteItems = useMemo(() => {
     const items: Array<{ type: 'section' | 'subitem'; data: any }> = []
 
     sections.forEach((section) => {
-      // Ajouter la section si elle est favorite
       if (favorites.includes(section.href)) {
         items.push({ type: 'section', data: section })
       }
 
-      // Ajouter les sous-items favoris
       if (section.submenu) {
         section.submenu.forEach((subItem) => {
           if (favorites.includes(subItem.href)) {
@@ -314,41 +197,33 @@ export function useSidebar(sections: SidebarSection[] = []) {
   }, [sections, favorites])
 
   return {
-    // État
     openSubmenus,
     collapsed,
     mobileOpen,
 
-    // Actions submenus
     toggleSubmenu,
     isSubmenuOpen,
 
-    // Actions collapsed
     toggleCollapsed,
 
-    // Actions mobile
     toggleMobile,
     closeMobile,
 
-    // Utilitaires
     isActive,
     isMobile,
 
-    // ==================== PHASE 2: Recherche ====================
     searchQuery,
     setSearchQuery,
     searchOpen,
     setSearchOpen,
     filteredSections,
 
-    // ==================== PHASE 2: Favoris ====================
     favorites,
     toggleFavorite,
     isFavorite,
     favoriteSections,
     favoriteItems,
 
-    // ==================== PHASE 3: Visibilité ====================
     hiddenSections,
     toggleSectionVisibility,
     isSectionHidden,

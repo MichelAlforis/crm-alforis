@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ROUTES, withQuery } from "@/lib/constants"
+import { ROUTES } from "@/lib/constants"
 import { ImportPeopleForm } from '@/components/forms/ImportPeopleForm'
 import { Card, Button } from '@/components/shared'
 

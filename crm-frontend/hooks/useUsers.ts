@@ -75,7 +75,7 @@ export function useUsers(options: UseUsersOptions = {}) {
       if (team_id) params.append('team_id', team_id.toString())
       if (include_inactive) params.append('include_inactive', 'true')
 
-      const response = await apiClient.get(`/users?${params.toString()}`)
+      const response = await apiClient.get<UserListResponse>(`/users?${params.toString()}`)
       return response.data
     },
   })
@@ -88,7 +88,7 @@ export function useUser(userId: number | undefined) {
   return useQuery<User>({
     queryKey: ['user', userId],
     queryFn: async () => {
-      const response = await apiClient.get(`/users/${userId}`)
+      const response = await apiClient.get<User>(`/users/${userId}`)
       return response.data
     },
     enabled: !!userId,

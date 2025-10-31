@@ -8,7 +8,7 @@
 import React, { useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ROUTES, withQuery } from "@/lib/constants"
+import { ROUTES } from "@/lib/constants"
 import { ArrowLeft, Eye, Edit, Trash2, Mail, Phone, Download, UserPlus, Upload } from 'lucide-react'
 import { usePeople } from '@/hooks/usePeople'
 import { Card, Button, Alert } from '@/components/shared'
@@ -176,7 +176,7 @@ export default function PeoplePageExample() {
           try {
             await deletePerson(row.id)
             fetchPeople(0, 200) // Refresh list
-          } catch (error) {
+          } catch (_error) {
             alert('Erreur lors de la suppression')
           }
         }
@@ -206,7 +206,7 @@ export default function PeoplePageExample() {
           try {
             await Promise.all(rows.map((row) => deletePerson(row.id)))
             fetchPeople(0, 200) // Refresh list
-          } catch (error) {
+          } catch (_error) {
             alert('Erreur lors de la suppression')
           }
         }

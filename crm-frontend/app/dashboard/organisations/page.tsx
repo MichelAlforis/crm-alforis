@@ -6,7 +6,7 @@
 import React, { useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ROUTES, withQuery } from "@/lib/constants"
+import { ROUTES } from "@/lib/constants"
 import { ArrowLeft, Eye, Edit, Trash2, Mail, Phone, Globe, Download, Building } from 'lucide-react'
 import { useOrganisations } from '@/hooks/useOrganisations'
 import { Card, Button, Alert } from '@/components/shared'

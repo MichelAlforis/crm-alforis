@@ -10,14 +10,14 @@ import React from 'react'
 import { ClipboardList, Menu, Search, User } from 'lucide-react'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
-import { useSidebarContext } from '@/contexts/SidebarContext'
+import { useSidebar } from '@/hooks/useSidebar'
 import { SearchGlobal } from '@/components/shared/Search'
 import { useTaskViews } from '@/hooks/useTasks'
 import NotificationBell from '@/components/shared/NotificationBell'
 import ThemeToggle from '@/components/shared/ThemeToggle'
 
 export default function Navbar() {
-  const sidebar = useSidebarContext()
+  const sidebar = useSidebar()
   const { logout, user } = useAuth()
   const [showUserMenu, setShowUserMenu] = React.useState(false)
   const [showTasksTooltip, setShowTasksTooltip] = React.useState(false)

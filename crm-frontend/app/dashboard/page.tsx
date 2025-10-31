@@ -4,7 +4,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { storage, AUTH_STORAGE_KEYS, PREFERENCES_STORAGE_KEYS } from "@/lib/constants"
+import { storage, AUTH_STORAGE_KEYS } from "@/lib/constants"
 import { Card, Button } from '@/components/shared'
 import { Alert } from '@/components/shared/Alert'
 import {

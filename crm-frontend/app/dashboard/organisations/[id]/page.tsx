@@ -5,8 +5,7 @@
 
 import React, { useState, lazy, Suspense } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { ROUTES, withQuery } from "@/lib/constants"
+import { ROUTES } from "@/lib/constants"
 import { ArrowLeft, Power, PowerOff } from 'lucide-react'
 import {
   useOrganisation,
@@ -31,7 +30,6 @@ const OrganisationForm = lazy(() => import('@/components/forms').then(m => ({ de
 type TabType = 'informations' | 'activite'
 
 export default function OrganisationDetailPage() {
-  const router = useRouter()
   const { showToast } = useToast()
 
   const {

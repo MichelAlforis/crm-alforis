@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useToast } from '@/hooks/useToast'
+import { logger } from '@/lib/logger'
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
@@ -45,6 +46,7 @@ export default function ForgotPasswordPage() {
         throw new Error('Erreur lors de la demande')
       }
     } catch (error) {
+      logger.error('Forgot password request failed', error)
       showToast({
         type: 'error',
         title: 'Erreur',

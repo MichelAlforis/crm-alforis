@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import { ROUTES, withQuery } from "@/lib/constants"
+import { ROUTES } from "@/lib/constants"
 import Link from 'next/link'
 import { ArrowLeft, Mail } from 'lucide-react'
 import { Button } from '@/components/shared'

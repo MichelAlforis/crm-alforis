@@ -6,7 +6,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ROUTES, withQuery } from "@/lib/constants"
+import { ROUTES } from "@/lib/constants"
 import { Card, Button, Modal } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
@@ -15,11 +15,9 @@ import { PersonForm, PersonOrgLinkForm } from '@/components/forms'
 import { usePeople } from '@/hooks/usePeople'
 import { useConfirm } from '@/hooks/useConfirm'
 import { useEntityDetail } from '@/hooks/useEntityDetail'
-import { PersonOrganizationLinkInput } from '@/lib/types'
 import { SkeletonCard, SkeletonTable } from '@/components/ui/Skeleton'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import { useToast } from '@/components/ui/Toast'
-import { extractIdFromSlug } from '@/lib/utils'
 import { CampaignSubscriptionManager } from '@/components/email/CampaignSubscriptionManager'
 import { ActivityTab } from '@/components/interactions/ActivityTab'
 
@@ -46,10 +44,10 @@ export default function PersonDetailPage() {
     handleDeleteWithRedirect,
   } = useEntityDetail<TabType>({ listRoute: ROUTES.CRM.PEOPLE })
 
-  // Keep extractIdFromSlug logic for slug URLs support
+  // ID est fourni par useEntityDetail (support slug conservé côté hook)
   const personId = personIdFromHook
 
-  const { single, fetchPerson, updatePerson, deletePerson, update, remove, linkPersonToOrganization, updatePersonOrganizationLink, deletePersonOrganizationLink } = usePeople()
+  const { single, fetchPerson, updatePerson, deletePerson, update, remove, updatePersonOrganizationLink, deletePersonOrganizationLink } = usePeople()
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
 
   useEffect(() => {

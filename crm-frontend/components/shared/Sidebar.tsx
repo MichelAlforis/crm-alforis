@@ -19,7 +19,7 @@ import {
 import { useTaskViews } from '@/hooks/useTasks'
 import { useAuth } from '@/hooks/useAuth'
 import { usePendingSuggestionsCount } from '@/hooks/useAI'
-import { useSidebarContext } from '@/contexts/SidebarContext'
+import { useSidebar } from '@/hooks/useSidebar'
 import { useSidebarAnalytics } from '@/hooks/useSidebarAnalytics'
 import { SIDEBAR_SECTIONS } from '@/config/sidebar.config'
 import ThemeToggle from '@/components/shared/ThemeToggle'
@@ -29,19 +29,22 @@ import ThemeToggle from '@/components/shared/ThemeToggle'
 const MENU_ITEMS = SIDEBAR_SECTIONS
 
 // Composant Popover pour les sous-menus en mode collapsed
+type SidebarHook = ReturnType<typeof useSidebar>
+
 function SubmenuPopover({
   item,
   triggerRef,
   onMouseEnter,
-  onMouseLeave
+  onMouseLeave,
+  sidebar,
 }: {
   item: any
   triggerRef: React.RefObject<HTMLDivElement>
   onMouseEnter: () => void
   onMouseLeave: () => void
+  sidebar: SidebarHook
 }) {
   const [position, setPosition] = useState({ top: 0, left: 0 })
-  const sidebar = useSidebarContext()
 
   useEffect(() => {
     if (triggerRef.current) {
@@ -102,8 +105,8 @@ export default function Sidebar() {
   const itemRefs = useRef<{ [key: string]: React.RefObject<HTMLDivElement> }>({})
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  // ✅ État partagé via SidebarContext
-  const sidebar = useSidebarContext()
+  // ✅ État partagé via Zustand
+  const sidebar = useSidebar(SIDEBAR_SECTIONS)
 
   // 📊 Phase 4: Analytics & tracking
   const analytics = useSidebarAnalytics()
@@ -457,6 +460,7 @@ export default function Sidebar() {
                           triggerRef={itemRef}
                           onMouseEnter={() => handleMouseEnter(item.href)}
                           onMouseLeave={handleMouseLeave}
+                          sidebar={sidebar}
                         />
                       )}
                     </div>

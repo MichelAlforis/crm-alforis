@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ROUTES } from "@/lib/constants"
 import { useToast } from '@/hooks/useToast'
+import { logger } from '@/lib/logger'
 
 function ResetPasswordForm() {
   const [newPassword, setNewPassword] = useState('')
@@ -95,6 +96,7 @@ function ResetPasswordForm() {
         })
       }
     } catch (error) {
+      logger.error('Reset password request failed', error)
       showToast({
         type: 'error',
         title: 'Erreur',

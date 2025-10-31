@@ -19,11 +19,11 @@ export function runWhenIdle(callback: () => void, options?: { timeout?: number }
   if ('requestIdleCallback' in window) {
     return window.requestIdleCallback(callback, {
       timeout: options?.timeout || 2000,
-    }) as unknown as number
+    }) as any
   }
 
   // Fallback for browsers without requestIdleCallback (Safari < 16)
-  return window.setTimeout(callback, 1) as unknown as number
+  return window.setTimeout(callback, 1) as any
 }
 
 /**

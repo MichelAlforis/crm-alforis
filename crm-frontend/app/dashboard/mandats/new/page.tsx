@@ -5,7 +5,6 @@
 
 import React from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ROUTES } from "@/lib/constants"
 import { Card } from '@/components/shared'
 import { MandatForm } from '@/components/forms'
 import { useCreateMandat } from '@/hooks/useMandats'

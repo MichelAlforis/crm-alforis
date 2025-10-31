@@ -616,6 +616,8 @@ export interface OrganisationContact {
 export interface OrganisationDetail extends Organisation {
   mandats: MandatDistribution[]
   contacts: OrganisationContact[]
+  people_links?: PersonOrganizationLink[] // Legacy field
+  email_unsubscribed?: boolean // Legacy email marketing field
 }
 
 export type OrganisationActivityType =

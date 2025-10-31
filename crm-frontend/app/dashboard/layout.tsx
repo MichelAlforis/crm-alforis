@@ -20,7 +20,6 @@ import QueryProvider from '@/components/providers/QueryProvider'
 import OfflineIndicator from '@/components/pwa/OfflineIndicator'
 import { BannerManager } from '@/components/pwa/BannerManager'
 import { OnboardingTour } from '@/components/onboarding/OnboardingTour'
-import { SidebarProvider } from '@/contexts/SidebarContext'
 import { Breadcrumbs } from '@/components/navigation'
 import { Loader2 } from 'lucide-react'
 
@@ -67,46 +66,44 @@ export default function DashboardLayout({
   // Main dashboard layout
   return (
     <QueryProvider>
-      <SidebarProvider>
-        <OnboardingTour>
-          {/* Global Navigation Progress Bar */}
-          <NavigationProgress />
+      <OnboardingTour>
+        {/* Global Navigation Progress Bar */}
+        <NavigationProgress />
 
-          {/* Command Palette V3 - Apple Premium Design + Intelligence - ⌘K/Ctrl+K */}
-          <CommandPaletteV3 open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
+        {/* Command Palette V3 - Apple Premium Design + Intelligence - ⌘K/Ctrl+K */}
+        <CommandPaletteV3 open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
 
-          <div className="dashboard-layout flex h-screen overflow-hidden">
-            {/* Sidebar Navigation - Fixed, always visible */}
-            <Sidebar />
+        <div className="dashboard-layout flex h-screen overflow-hidden">
+          {/* Sidebar Navigation - Fixed, always visible */}
+          <Sidebar />
 
-            {/* Main Content Area - Scrollable */}
-            <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-              {/* Top Navbar - Fixed at top */}
-              <Navbar />
+          {/* Main Content Area - Scrollable */}
+          <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+            {/* Top Navbar - Fixed at top */}
+            <Navbar />
 
-              {/* Page Content - Scrollable */}
-              <main className="flex-1 bg-gray-50 dark:bg-slate-800 overflow-y-auto">
-                <div className="dashboard-content animate-fadeIn">
-                  {/* Breadcrumb Navigation */}
-                  <div className="px-6 py-3 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700">
-                    <Breadcrumbs showHome />
-                  </div>
-
-                  {/* Page Content */}
-                  {children}
+            {/* Page Content - Scrollable */}
+            <main className="flex-1 bg-gray-50 dark:bg-slate-800 overflow-y-auto">
+              <div className="dashboard-content animate-fadeIn">
+                {/* Breadcrumb Navigation */}
+                <div className="px-6 py-3 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700">
+                  <Breadcrumbs showHome />
                 </div>
-              </main>
 
-              {/* Footer - Scrolls with content */}
-              <Footer />
-            </div>
+                {/* Page Content */}
+                {children}
+              </div>
+            </main>
 
-            {/* PWA Components */}
-            <OfflineIndicator />
-            <BannerManager />
+            {/* Footer - Scrolls with content */}
+            <Footer />
           </div>
-        </OnboardingTour>
-      </SidebarProvider>
+
+          {/* PWA Components */}
+          <OfflineIndicator />
+          <BannerManager />
+        </div>
+      </OnboardingTour>
     </QueryProvider>
   )
 }
