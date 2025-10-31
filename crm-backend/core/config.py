@@ -191,6 +191,9 @@ class Settings(BaseSettings):
     # Encryption (Fernet AES-256 pour tokens OAuth)
     encryption_key: str = ""
 
+    # Celery Flower (Monitoring)
+    flower_basic_auth: str = ""  # Format: "user:password" (empty = no auth)
+
     model_config = SettingsConfigDict(
         env_file=".env",
         case_sensitive=False,
