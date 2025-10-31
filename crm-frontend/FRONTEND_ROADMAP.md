@@ -697,11 +697,18 @@ const collapsed = useUIStore(selectSidebarCollapsed)
 - [ ] tasksAPI module tests
 - [ ] emailAPI module tests
 
-**E2E Tests (Playwright):**
-- [ ] Login flow
-- [ ] Organisation CRUD flow
-- [ ] Task creation flow
-- [ ] Email campaign flow
+**E2E Tests (Playwright) - 7 suites existantes:**
+- [x] **auth.spec.ts** - Login success/failure, logout
+- [x] **login-page.spec.ts** - Page login rendering
+- [x] **organisations.spec.ts** - Create organisation flow
+- [x] **users.spec.ts** - User management flows
+- [x] **ai-features.spec.ts** - AI autofill & suggestions
+- [x] **complete-workflow.spec.ts** - Full CRM workflow (person → org → campaign)
+- [x] **simple.spec.ts** - Smoke test
+
+**Fichiers:** `e2e/*.spec.ts` (7 fichiers, ~30 KB de tests)
+**Config:** `playwright.config.ts` - HTML reports, parallel, CI-ready
+**Status:** ✅ Tests déjà écrits, intégrés dans CI/CD workflow
 
 **Effort:** ~2.5h / 8h (31% complété)
 
