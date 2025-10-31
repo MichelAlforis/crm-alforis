@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { ROUTES, withQuery } from "@/lib/constants"
 import { Mail, List, FileText, TrendingUp, Send, Users, Clock } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -163,7 +164,7 @@ export default function MarketingDashboard() {
           </p>
         </div>
         <Button
-          onClick={() => router.push('/dashboard/marketing/campaigns/new')}
+          onClick={() => router.push(ROUTES.MARKETING.CAMPAIGN_NEW)}
           className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
         >
           <Mail className="mr-2 h-4 w-4" />
@@ -239,7 +240,7 @@ export default function MarketingDashboard() {
         {/* Campagnes */}
         <Card
           className="p-6 cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02] bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/10 dark:to-cyan-900/10 border-blue-200 dark:border-blue-800"
-          onClick={() => router.push('/dashboard/marketing/campaigns')}
+          onClick={() => router.push(ROUTES.MARKETING.CAMPAIGNS)}
         >
           <div className="flex items-center gap-4 mb-4">
             <div className="p-3 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl">
@@ -270,7 +271,7 @@ export default function MarketingDashboard() {
           <Button
             onClick={(e) => {
               e.stopPropagation()
-              router.push('/dashboard/marketing/campaigns/new')
+              router.push(ROUTES.MARKETING.CAMPAIGN_NEW)
             }}
             className="w-full mt-4 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600"
           >
@@ -281,7 +282,7 @@ export default function MarketingDashboard() {
         {/* Listes de Diffusion */}
         <Card
           className="p-6 cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02] bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/10 dark:to-indigo-900/10 border-purple-200 dark:border-purple-800"
-          onClick={() => router.push('/dashboard/marketing/mailing-lists')}
+          onClick={() => router.push(ROUTES.MARKETING.MAILING_LISTS)}
         >
           <div className="flex items-center gap-4 mb-4">
             <div className="p-3 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl">
@@ -310,7 +311,7 @@ export default function MarketingDashboard() {
           <Button
             onClick={(e) => {
               e.stopPropagation()
-              router.push('/dashboard/marketing/mailing-lists')
+              router.push(ROUTES.MARKETING.MAILING_LISTS)
             }}
             className="w-full mt-4 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600"
           >
@@ -321,7 +322,7 @@ export default function MarketingDashboard() {
         {/* Templates */}
         <Card
           className="p-6 cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02] bg-gradient-to-br from-pink-50 to-rose-50 dark:from-pink-900/10 dark:to-rose-900/10 border-pink-200 dark:border-pink-800"
-          onClick={() => router.push('/dashboard/marketing/templates')}
+          onClick={() => router.push(ROUTES.MARKETING.TEMPLATES)}
         >
           <div className="flex items-center gap-4 mb-4">
             <div className="p-3 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl">
@@ -343,7 +344,7 @@ export default function MarketingDashboard() {
           <Button
             onClick={(e) => {
               e.stopPropagation()
-              router.push('/dashboard/marketing/templates')
+              router.push(ROUTES.MARKETING.TEMPLATES)
             }}
             className="w-full mt-4 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600"
           >

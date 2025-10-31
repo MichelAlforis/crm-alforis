@@ -8,7 +8,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Search, Sparkles, Clock, X, Loader2, TrendingUp } from 'lucide-react'
 import { useDebounce } from '@/hooks/useDebounce'
-import { storage } from '@/lib/constants'
+import { storage , ROUTES, withQuery} from '@/lib/constants'
 
 interface Props {
   placeholder?: string

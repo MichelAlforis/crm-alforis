@@ -6,6 +6,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
+import { ROUTES, withQuery } from "@/lib/constants"
 import { useProduit, useUpdateProduit, useDeleteProduit } from '@/hooks/useProduits'
 import { Card, Button, Alert, Modal } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
@@ -68,7 +69,7 @@ export default function ProduitDetailPage() {
       )
     ) {
       await deleteMutation.mutateAsync(produitId)
-      router.push('/dashboard/produits')
+      router.push(ROUTES.CRM.PRODUITS)
     }
   }
 

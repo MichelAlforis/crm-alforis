@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { useRouter } from 'next/navigation'
+import { ROUTES, withQuery } from "@/lib/constants"
 import Link from 'next/link'
 import { ArrowLeft, Mail } from 'lucide-react'
 import { Button } from '@/components/shared'
@@ -104,7 +105,7 @@ export default function NewCampaignPage() {
       })
 
       // Rediriger vers la liste des campagnes
-      router.push('/dashboard/marketing/campaigns')
+      router.push(ROUTES.MARKETING.CAMPAIGNS)
     } catch (err: any) {
       logger.error('Failed to create campaign:', err)
       showToast({

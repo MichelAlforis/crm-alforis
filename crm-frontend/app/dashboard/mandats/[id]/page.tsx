@@ -6,6 +6,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
+import { ROUTES, withQuery } from "@/lib/constants"
 import { useMandat, useUpdateMandat, useDeleteMandat } from '@/hooks/useMandats'
 import { useProduitsByMandat, useDeleteMandatProduitAssociation } from '@/hooks/useProduits'
 import { useConfirm } from '@/hooks/useConfirm'
@@ -79,7 +80,7 @@ export default function MandatDetailPage() {
             title: 'Mandat supprimé',
           })
           setTimeout(() => {
-            router.push('/dashboard/mandats')
+            router.push(ROUTES.CRM.MANDATS)
           }, 500)
         } catch (error: any) {
           showToast({

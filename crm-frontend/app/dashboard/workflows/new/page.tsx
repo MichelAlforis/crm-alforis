@@ -14,7 +14,7 @@ import {
   Code,
 } from 'lucide-react'
 import { HelpTooltip } from '@/components/help/HelpTooltip'
-import { storage, AUTH_STORAGE_KEYS } from '@/lib/constants'
+import { storage, AUTH_STORAGE_KEYS , ROUTES, withQuery} from '@/lib/constants'
 
 // Builder visuel avec @xyflow/react (chargement dynamique)
 const WorkflowBuilderClient = dynamic(
@@ -210,7 +210,7 @@ export default function NewWorkflowPage() {
             {/* Left: Back + Title */}
             <div className="flex items-center gap-4">
               <button
-                onClick={() => router.push('/dashboard/workflows')}
+                onClick={() => router.push(ROUTES.WORKFLOWS.BASE)}
                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
               >
                 <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />

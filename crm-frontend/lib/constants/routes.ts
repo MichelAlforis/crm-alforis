@@ -102,14 +102,19 @@ export const ROUTES = {
     SIDEBAR_ANALYTICS: '/dashboard/settings/sidebar-analytics',
     RGPD: '/dashboard/settings/rgpd',
     PREFERENCES: '/dashboard/settings/preferences',
+    EMAIL_APIS: '/dashboard/settings/email-apis',
+    WEBHOOKS: '/dashboard/settings/webhooks',
+    EMAIL_ACCOUNTS: '/dashboard/settings/email-accounts',
   },
 
   // Authentication
   AUTH: {
-    LOGIN: '/login',
+    LOGIN: '/auth/login',
+    LOGIN_LEGACY: '/login',
     LOGOUT: '/logout',
     REGISTER: '/register',
     FORGOT_PASSWORD: '/forgot-password',
+    RESET_PASSWORD: '/auth/reset-password',
   },
 } as const;
 

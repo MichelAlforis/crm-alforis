@@ -12,7 +12,7 @@
 |-------|--------|----------|--------|
 | **Phase 1** - Quick Wins | ✅ Complété | 100% | ~1,565 lignes |
 | **Phase 1 Bonus** - localStorage Migration | ✅ Complété | 100% | ~1,270 lignes |
-| **Phase 2** - Migration & Cleanup | 🔄 En cours | 42% | ~5h / ~18h |
+| **Phase 2** - Migration & Cleanup | 🔄 En cours | 50% | ~9h / ~18h |
 | **Phase 3** - Optimizations | 📋 Planifié | 0% | ~20h |
 
 **Total Code Écrit:** ~2,835 lignes
@@ -192,7 +192,7 @@ fb9f7ada refactor(frontend): Migrate localStorage to storage helper
 
 ---
 
-### 2.2 Migration vers Constants (✅ API COMPLET - Routes EN COURS - 85%)
+### 2.2 Migration vers Constants (✅ COMPLET - 100%)
 
 **Objectif:** Migrer tous les magic strings vers les constants centralisées
 
@@ -213,19 +213,21 @@ fb9f7ada refactor(frontend): Migrate localStorage to storage helper
 - ✅ Added EMAIL_ACCOUNTS + EMAIL_ACCOUNT_DETAIL to constants
 - ✅ Build passes (71 routes)
 
-#### 🔄 Routes Migration (EN COURS)
+#### ✅ Routes Migration (100%)
 
-**Restant à migrer:**
-- ⚠️ **~16 routes** hardcodées (router.push avec strings)
-- Patterns: /auth/login, /dashboard/organisations, /dashboard/workflows, etc.
+**Migré (30+ fichiers):**
+- ✅ Auth routes: `/auth/login` → `ROUTES.AUTH.LOGIN`
+- ✅ CRM routes: `/dashboard/organisations`, `/dashboard/people`, `/dashboard/mandats`, `/dashboard/produits`
+- ✅ Workflows: `/dashboard/workflows` → `ROUTES.WORKFLOWS.BASE`
+- ✅ Marketing: campaigns, mailing-lists, templates → `ROUTES.MARKETING.*`
+- ✅ Settings: email-apis, webhooks, integrations → `ROUTES.SETTINGS.*`
+- ✅ Query params: utilisé `withQuery()` helper pour routes avec paramètres
 
-**Actions:**
-```bash
-# Trouver routes restantes
-grep -rE "router.push\(['\"]/" app/ components/ | grep -v "ROUTES"
-```
-
-**Effort restant:** ~1h
+**Résultat:**
+- ✅ **0 hardcoded route strings** (31 → 0!)
+- ✅ Added EMAIL_APIS, WEBHOOKS, EMAIL_ACCOUNTS to SETTINGS
+- ✅ Added LOGIN, RESET_PASSWORD to AUTH
+- ✅ Build passes (71 routes)
 
 ---
 

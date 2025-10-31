@@ -3,6 +3,7 @@ import { logger } from '@/lib/logger'
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import { ROUTES, withQuery } from "@/lib/constants"
 import { useWorkflows } from '@/hooks/useWorkflows'
 import { useConfirm } from '@/hooks/useConfirm'
 import {
@@ -81,7 +82,7 @@ export default function WorkflowDetailPage() {
       onConfirm: async () => {
         try {
           await deleteWorkflow(workflowId)
-          router.push('/workflows')
+          router.push(ROUTES.WORKFLOWS.BASE)
         } catch (error) {
           logger.error('Erreur suppression:', error)
         }

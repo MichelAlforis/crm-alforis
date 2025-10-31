@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
+import { ROUTES, withQuery } from "@/lib/constants"
 import { ArrowLeft, Save, Loader2, ChevronDown, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { Card, CardHeader, CardBody, Button, Alert } from '@/components/shared'
@@ -100,7 +101,7 @@ export default function EditMailingListPage() {
         recipient_count: recipientCount,
       })
 
-      router.push('/dashboard/marketing/mailing-lists')
+      router.push(ROUTES.MARKETING.MAILING_LISTS)
     } catch (error: any) {
       setErrors({ global: error?.message || 'Erreur lors de la mise à jour de la liste' })
     }

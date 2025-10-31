@@ -6,6 +6,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
+import { ROUTES, withQuery } from "@/lib/constants"
 import { ArrowLeft, Power, PowerOff } from 'lucide-react'
 import {
   useOrganisation,
@@ -142,7 +143,7 @@ export default function OrganisationDetailPage() {
       })
       setConfirmDialog({ isOpen: false, type: 'delete' })
       setTimeout(() => {
-        router.push('/dashboard/organisations')
+        router.push(ROUTES.CRM.ORGANISATIONS)
       }, 500)
     } catch (_error) {
       showToast({

@@ -9,6 +9,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Settings, ArrowRight } from 'lucide-react'
+import { ROUTES, withQuery } from '@/lib/constants'
 
 export default function AIConfigRedirectPage() {
   const router = useRouter()
@@ -16,7 +17,7 @@ export default function AIConfigRedirectPage() {
   useEffect(() => {
     // Redirection automatique après 2 secondes
     const timer = setTimeout(() => {
-      router.push('/dashboard/settings/integrations?tab=ai')
+      router.push(withQuery(ROUTES.SETTINGS.INTEGRATIONS, { tab: 'ai' }))
     }, 2000)
 
     return () => clearTimeout(timer)
@@ -43,7 +44,7 @@ export default function AIConfigRedirectPage() {
 
         <div className="pt-4">
           <button
-            onClick={() => router.push('/dashboard/settings/integrations?tab=ai')}
+            onClick={() => router.push(withQuery(ROUTES.SETTINGS.INTEGRATIONS, { tab: 'ai' }))}
             className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl"
           >
             Aller à Intégrations

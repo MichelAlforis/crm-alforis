@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import { ROUTES, withQuery } from "@/lib/constants"
 import Link from 'next/link'
 import { ArrowLeft, Mail, Eye, MousePointerClick, Ban, Edit, Trash2, Plus, Clock, ChevronLeft, ChevronRight, TrendingUp } from 'lucide-react'
 import { Card, Alert, Button } from '@/components/shared'
@@ -115,7 +116,7 @@ export default function CampaignDetailPage() {
           type: 'success',
           title: 'Campagne supprimée',
         })
-        router.push('/dashboard/marketing/campaigns')
+        router.push(ROUTES.MARKETING.CAMPAIGNS)
       } catch (error: any) {
         showToast({
           type: 'error',

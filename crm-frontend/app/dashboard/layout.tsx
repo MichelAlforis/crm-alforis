@@ -9,6 +9,7 @@
 
 import React, { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { ROUTES, withQuery } from "@/lib/constants"
 import { useAuth } from '@/hooks/useAuth'
 import Navbar from '@/components/shared/Navbar'
 import Sidebar from '@/components/shared/Sidebar'
@@ -35,7 +36,7 @@ export default function DashboardLayout({
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.push('/auth/login')
+      router.push(ROUTES.AUTH.LOGIN)
     }
   }, [isAuthenticated, isLoading, router])
 

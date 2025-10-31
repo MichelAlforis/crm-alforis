@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { ROUTES, withQuery } from "@/lib/constants"
 import {
   AlertCircle,
   ArrowLeft,
@@ -345,7 +346,7 @@ export default function IntegrationsSettingsPage() {
 
                 <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
                   <button
-                    onClick={() => router.push('/dashboard/settings/email-apis')}
+                    onClick={() => router.push(ROUTES.SETTINGS.EMAIL_APIS)}
                     className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-1.5 font-medium text-gray-700 hover:bg-gray-50 transition"
                   >
                     Ouvrir la gestion complète
@@ -386,7 +387,7 @@ export default function IntegrationsSettingsPage() {
                 </div>
               </div>
               <button
-                onClick={() => router.push('/dashboard/settings/webhooks')}
+                onClick={() => router.push(ROUTES.SETTINGS.WEBHOOKS)}
                 className="px-4 py-2 rounded-lg bg-purple-600 text-white text-sm font-semibold hover:bg-purple-700 transition"
               >
                 Gérer les webhooks

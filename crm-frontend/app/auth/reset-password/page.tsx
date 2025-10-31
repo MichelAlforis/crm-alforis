@@ -4,6 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { ROUTES, withQuery } from "@/lib/constants"
 import { useToast } from '@/hooks/useToast'
 
 function ResetPasswordForm() {
@@ -24,7 +25,7 @@ function ResetPasswordForm() {
         title: 'Token manquant',
         message: 'Lien de réinitialisation invalide',
       })
-      router.push('/auth/login')
+      router.push(ROUTES.AUTH.LOGIN)
     } else {
       setToken(tokenParam)
     }
@@ -84,7 +85,7 @@ function ResetPasswordForm() {
           message: 'Votre mot de passe a été réinitialisé',
         })
         setTimeout(() => {
-          router.push('/auth/login')
+          router.push(ROUTES.AUTH.LOGIN)
         }, 2000)
       } else {
         showToast({

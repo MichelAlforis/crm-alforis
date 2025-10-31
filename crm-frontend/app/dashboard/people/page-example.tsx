@@ -8,6 +8,7 @@
 import React, { useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { ROUTES, withQuery } from "@/lib/constants"
 import { ArrowLeft, Eye, Edit, Trash2, Mail, Phone, Download, UserPlus, Upload } from 'lucide-react'
 import { usePeople } from '@/hooks/usePeople'
 import { Card, Button, Alert } from '@/components/shared'
@@ -277,7 +278,7 @@ export default function PeoplePageExample() {
             description: 'Commencez par ajouter votre première personne.',
             action: {
               label: 'Nouvelle personne',
-              onClick: () => router.push('/dashboard/people/new'),
+              onClick: () => router.push(ROUTES.CRM.PERSON_NEW),
             },
           }}
           pagination={{

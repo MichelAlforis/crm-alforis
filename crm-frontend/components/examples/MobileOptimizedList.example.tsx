@@ -10,6 +10,7 @@
 
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { ROUTES, withQuery } from "@/lib/constants"
 import { Filter, Plus } from 'lucide-react'
 import { useIsMobile } from '@/hooks/useMediaQuery'
 import MobileCard from '@/components/mobile/MobileCard'
@@ -90,7 +91,7 @@ export default function MobileOptimizedListExample() {
             </button>
 
             <button
-              onClick={() => router.push('/dashboard/organisations/new')}
+              onClick={() => router.push(ROUTES.CRM.ORGANISATION_NEW)}
               className="p-3 min-h-[44px] min-w-[44px] rounded-radius-md bg-primary text-white hover:bg-primary-hover transition-colors"
             >
               <Plus className="w-5 h-5" />
@@ -212,7 +213,7 @@ export default function MobileOptimizedListExample() {
             Filtres
           </Button>
 
-          <Button onClick={() => router.push('/dashboard/organisations/new')}>
+          <Button onClick={() => router.push(ROUTES.CRM.ORGANISATION_NEW)}>
             <Plus className="w-4 h-4 mr-2" />
             Nouvelle organisation
           </Button>

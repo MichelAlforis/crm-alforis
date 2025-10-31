@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { ROUTES, withQuery } from "@/lib/constants"
 import { ArrowLeft, Save, ChevronDown, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { Card, CardHeader, CardBody, Button, Alert } from '@/components/shared'
@@ -72,7 +73,7 @@ export default function NewMailingListPage() {
         recipient_count: recipientCount,
       })
 
-      router.push('/dashboard/marketing/mailing-lists')
+      router.push(ROUTES.MARKETING.MAILING_LISTS)
     } catch (error: any) {
       setErrors({ global: error?.message || 'Erreur lors de la création de la liste' })
     }

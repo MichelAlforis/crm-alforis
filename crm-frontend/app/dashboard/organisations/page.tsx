@@ -6,6 +6,7 @@
 import React, { useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { ROUTES, withQuery } from "@/lib/constants"
 import { ArrowLeft, Eye, Edit, Trash2, Mail, Phone, Globe, Download, Building } from 'lucide-react'
 import { useOrganisations } from '@/hooks/useOrganisations'
 import { Card, Button, Alert } from '@/components/shared'
@@ -304,7 +305,7 @@ export default function OrganisationsPage() {
             description: 'Commencez par ajouter votre première organisation.',
             action: {
               label: 'Nouvelle organisation',
-              onClick: () => router.push('/dashboard/organisations/new'),
+              onClick: () => router.push(ROUTES.CRM.ORGANISATION_NEW),
             },
           }}
           pagination={{

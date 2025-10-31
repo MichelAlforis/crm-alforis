@@ -3,6 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { ROUTES, withQuery } from "@/lib/constants"
 import { ImportOrganisationsForm } from '@/components/forms/ImportOrganisationsForm'
 import { Card, Button } from '@/components/shared'
 
@@ -29,7 +30,7 @@ export default function ImportOrganisationsPage() {
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Ajouter des organisations</h2>
             <ImportOrganisationsForm
               onSuccess={() => {
-                setTimeout(() => router.push('/dashboard/organisations'), 1000)
+                setTimeout(() => router.push(ROUTES.CRM.ORGANISATIONS), 1000)
               }}
             />
           </div>

@@ -6,6 +6,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
+import { ROUTES, withQuery } from "@/lib/constants"
 import { Card, Button, Alert, Modal, Input } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
@@ -130,7 +131,7 @@ export default function PersonDetailPage() {
           })
           // Attendre un peu pour que le toast s'affiche avant la redirection
           setTimeout(() => {
-            router.push('/dashboard/people')
+            router.push(ROUTES.CRM.PEOPLE)
           }, 500)
         } catch (error: any) {
           showToast({

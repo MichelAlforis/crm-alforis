@@ -3,6 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { ROUTES, withQuery } from "@/lib/constants"
 import { ImportPeopleForm } from '@/components/forms/ImportPeopleForm'
 import { Card, Button } from '@/components/shared'
 
@@ -29,7 +30,7 @@ export default function ImportPeoplePage() {
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Ajouter des personnes</h2>
             <ImportPeopleForm
               onSuccess={() => {
-                setTimeout(() => router.push('/dashboard/people'), 1000)
+                setTimeout(() => router.push(ROUTES.CRM.PEOPLE), 1000)
               }}
             />
           </div>
