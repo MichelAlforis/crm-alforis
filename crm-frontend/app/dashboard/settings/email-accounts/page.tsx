@@ -20,7 +20,6 @@ import {
   Zap,
   AlertCircle,
 } from 'lucide-react'
-import { storage, AUTH_STORAGE_KEYS } from '@/lib/constants'
 
 type Provider = 'ionos' | 'gmail' | 'outlook' | 'exchange' | 'ovh' | 'generic'
 
@@ -112,7 +111,7 @@ export default function EmailAccountsPage() {
       setLoading(true)
       const res = await fetch('/api/v1/email-accounts', {
         headers: {
-          Authorization: `Bearer ${storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN)}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       })
       if (res.ok) {
@@ -131,7 +130,7 @@ export default function EmailAccountsPage() {
       const res = await fetch('/api/v1/email-accounts', {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN)}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -155,7 +154,7 @@ export default function EmailAccountsPage() {
       await fetch(`/api/v1/email-accounts/${id}`, {
         method: 'PATCH',
         headers: {
-          Authorization: `Bearer ${storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN)}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ is_active: !isActive }),
@@ -173,7 +172,7 @@ export default function EmailAccountsPage() {
       await fetch(`/api/v1/email-accounts/${id}`, {
         method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN)}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       })
       fetchAccounts()
@@ -187,7 +186,7 @@ export default function EmailAccountsPage() {
       const res = await fetch(`/api/v1/email-accounts/${id}/test`, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN)}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       })
       const result = await res.json()
