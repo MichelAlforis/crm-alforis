@@ -13,7 +13,10 @@
 | **Phase 1** - Quick Wins | ✅ Complété | 100% | ~1,565 lignes |
 | **Phase 1 Bonus** - localStorage Migration | ✅ Complété | 100% | ~1,270 lignes |
 | **Phase 2** - Migration & Cleanup | ✅ Complété | 100% | 18h |
-| **Phase 3** - Optimizations | 🔄 En cours | 35% | ~7h / ~20h |
+| **Phase 3.1** - Performance | ✅ Complété | 90% | ~3h / 6h |
+| **Phase 3.2** - Testing | 🔄 En cours | 30% | ~2.5h / 8h |
+| **Phase 3.3** - Documentation | 📋 Planifié | 0% | 0h / 6h |
+| **Phase 3** - Total | 🔄 En cours | 60% | ~5.5h / ~20h |
 
 **Total Code Écrit:** ~3,820 lignes (+985 hooks/labels)
 **Code modifié:** +1,434/-970 lignes (net: +464L code, +490L doc = +954L total)
@@ -643,13 +646,64 @@ const collapsed = useUIStore(selectSidebarCollapsed)
 
 **Effort:** ~3h (6h estimées)
 
-### 3.2 Testing
-- [ ] Unit tests (Vitest) pour hooks critiques
-- [ ] Integration tests pour API client
-- [ ] E2E tests (Playwright) pour flows critiques
-- [ ] Visual regression tests (Chromatic?)
+### 🔄 3.2 Testing (EN COURS - 30%)
 
-**Effort:** ~8h
+**Date:** 31 Octobre 2025
+**Durée:** ~2.5h / 8h estimées
+**Status:** 🔄 **EN COURS**
+
+#### ✅ Infrastructure Testing Setup
+
+**Vitest Configuration:**
+- [x] Installation: vitest, @vitest/ui, @vitest/coverage-v8, @testing-library/react
+- [x] Fichier `vitest.config.ts` - Config avec jsdom, coverage V8
+- [x] Fichier `vitest.setup.ts` - Mocks Next.js (router, matchMedia)
+- [x] Scripts NPM: test, test:ui, test:run, test:coverage, test:watch
+
+**CI/CD Pipeline (GitHub Actions):**
+- [x] `.github/workflows/ci.yml` créé avec 4 jobs parallèles:
+  - **test** - Unit tests + coverage (Codecov integration)
+  - **lint** - ESLint + TypeScript type check
+  - **build** - Build Next.js + upload artifacts
+  - **e2e** - Playwright E2E tests
+- [x] Build artifacts upload (7 days retention)
+- [x] Playwright report upload (30 days retention)
+
+#### ✅ Unit Tests Created (2 suites, 8 tests)
+
+**`__tests__/hooks/useAuth.test.ts`** (5 tests):
+- [x] Initialize with loading state
+- [x] Set authenticated when token exists and user fetched
+- [x] Handle login successfully
+- [x] Handle login error
+- [x] Handle logout
+
+**`__tests__/lib/api/auth.test.ts`** (3 tests):
+- [x] Login successfully and return user data
+- [x] Throw error on failed login
+- [x] Fetch current user profile
+
+#### ⏸️ Tests Remaining
+
+**Unit Tests (Hooks):**
+- [ ] useOrganisations hook tests
+- [ ] useTasks hook tests
+- [ ] usePeople hook tests
+- [ ] useFilters hook tests
+
+**Integration Tests (API):**
+- [ ] organisationsAPI module tests
+- [ ] peopleAPI module tests
+- [ ] tasksAPI module tests
+- [ ] emailAPI module tests
+
+**E2E Tests (Playwright):**
+- [ ] Login flow
+- [ ] Organisation CRUD flow
+- [ ] Task creation flow
+- [ ] Email campaign flow
+
+**Effort:** ~2.5h / 8h (31% complété)
 
 ### 3.3 Documentation
 - [ ] Storybook pour components library
