@@ -3,14 +3,14 @@
 
 'use client'
 
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Input, Button, Alert, Select, EntityAutocompleteInput } from '@/components/shared'
 import { MandatDistribution, MandatDistributionCreate, MandatStatus, Organisation } from '@/lib/types'
-import { usePaginatedOptions, type PaginatedFetcherParams } from '@/hooks/usePaginatedOptions'
 import { useEntityPreload } from '@/hooks/useEntityPreload'
-import { apiClient } from '@/lib/api'
-import { useToast } from '@/components/ui/Toast'
+import { useOrganisationSelect } from '@/hooks/useOrganisationSelect'
+import { useFormToast } from '@/hooks/useFormToast'
+import { useFormAutoFocus } from '@/hooks/useFormAutoFocus'
 import { HelpTooltip } from '@/components/help/HelpTooltip'
 
 interface MandatFormProps {
@@ -37,35 +37,13 @@ export function MandatForm({
   error,
   submitLabel = 'Créer',
 }: MandatFormProps) {
-  const { showToast } = useToast()
+  const toast = useFormToast({ entityName: 'Mandat', gender: 'm' })
   const [selectedOrganisationId, setSelectedOrganisationId] = useState<number | null>(
     initialData?.organisation_id ?? organisationId ?? null
   )
   const [selectedOrganisationLabel, setSelectedOrganisationLabel] = useState<string>('')
 
-  const fetchOrganisationOptions = useCallback(
-    ({ query, skip, limit }: PaginatedFetcherParams) => {
-      if (query) {
-        return apiClient.searchOrganisations(query, skip, limit)
-      }
-      return apiClient.getOrganisations({
-        skip,
-        limit,
-        is_active: true,
-      })
-    },
-    []
-  )
-
-  const mapOrganisationToOption = useCallback(
-    (organisation: Organisation) => ({
-      id: organisation.id,
-      label: organisation.name,
-      sublabel: organisation.category || undefined,
-    }),
-    []
-  )
-
+  // Hook réutilisable pour autocomplete d'organisations
   const {
     options: organisationOptions,
     isLoading: isLoadingOrganisations,
@@ -74,16 +52,16 @@ export function MandatForm({
     search: searchOrganisations,
     loadMore: loadMoreOrganisations,
     upsertOption: upsertOrganisationOption,
-  } = usePaginatedOptions<Organisation>({
-    fetcher: fetchOrganisationOptions,
-    mapItem: mapOrganisationToOption,
-    limit: 25,
+  } = useOrganisationSelect({
+    preloadId: initialData?.organisation_id ?? organisationId,
+    activeOnly: true,
   })
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setFocus,
   } = useForm<MandatDistributionCreate>({
     defaultValues: {
       ...initialData,
@@ -93,11 +71,21 @@ export function MandatForm({
     mode: 'onBlur',
   })
 
-  // Pré-charger l'organisation sélectionnée si fournie (avec useEntityPreload)
+  // Auto-focus sur premier champ en erreur
+  useFormAutoFocus(errors, setFocus)
+
+  // Pré-charger l'organisation sélectionnée si fournie
   useEntityPreload<Organisation>({
     entityId: initialData?.organisation_id ?? organisationId,
-    fetchEntity: (id) => apiClient.getOrganisation(id),
-    mapToOption: mapOrganisationToOption,
+    fetchEntity: async (id) => {
+      const { getOrganisation } = await import('@/lib/api').then(m => m.apiClient)
+      return getOrganisation(id)
+    },
+    mapToOption: (org) => ({
+      id: org.id,
+      label: org.name,
+      sublabel: org.category || undefined,
+    }),
     upsertOption: upsertOrganisationOption,
     onLoaded: (organisation) => {
       setSelectedOrganisationId(organisation.id)
@@ -107,11 +95,7 @@ export function MandatForm({
 
   const handleFormSubmit = async (data: MandatDistributionCreate) => {
     if (!selectedOrganisationId) {
-      showToast({
-        type: 'warning',
-        title: 'Organisation manquante',
-        message: 'Veuillez sélectionner une organisation.',
-      })
+      toast.warning('Organisation manquante', 'Veuillez sélectionner une organisation.')
       return
     }
 
@@ -125,21 +109,12 @@ export function MandatForm({
       }
 
       await onSubmit(payload)
-      showToast({
-        type: 'success',
-        title: initialData ? 'Mandat mis à jour' : 'Mandat créé',
-        message: initialData
-          ? 'Les informations du mandat ont été enregistrées.'
-          : 'Le nouveau mandat a été ajouté avec succès.',
-      })
+
+      // Toast de succès standardisé
+      initialData ? toast.successUpdate() : toast.successCreate()
     } catch (err: any) {
-      const message =
-        err?.detail || err?.message || "Impossible d'enregistrer le mandat."
-      showToast({
-        type: 'error',
-        title: 'Erreur',
-        message,
-      })
+      // Toast d'erreur avec extraction intelligente du message
+      toast.error(err)
       throw err
     }
   }
