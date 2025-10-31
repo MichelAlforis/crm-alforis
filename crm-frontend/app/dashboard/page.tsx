@@ -3,17 +3,10 @@
 
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, lazy, Suspense } from 'react'
 import { storage, AUTH_STORAGE_KEYS } from "@/lib/constants"
 import { Card, Button } from '@/components/shared'
 import { Alert } from '@/components/shared/Alert'
-import {
-  KPICardWidget,
-  RevenueChartWidget,
-  AIInsightsWidget,
-  TopClientsWidget,
-  EmailPerformanceWidget,
-} from '@/components/dashboard-v2/widgets'
 import {
   Settings,
   Layout as LayoutIcon,
@@ -23,9 +16,16 @@ import {
   Briefcase,
 } from 'lucide-react'
 import Link from 'next/link'
-import { ActivityWidget } from '@/components/dashboard/widgets/ActivityWidget'
-import { DashboardInteractionsWidget } from '@/components/interactions/DashboardInteractionsWidget'
 import { logger } from '@/lib/logger'
+
+// Lazy load tous les widgets (ne chargent que lorsque la vue est affichée)
+const KPICardWidget = lazy(() => import('@/components/dashboard-v2/widgets').then(m => ({ default: m.KPICardWidget })))
+const RevenueChartWidget = lazy(() => import('@/components/dashboard-v2/widgets').then(m => ({ default: m.RevenueChartWidget })))
+const AIInsightsWidget = lazy(() => import('@/components/dashboard-v2/widgets').then(m => ({ default: m.AIInsightsWidget })))
+const TopClientsWidget = lazy(() => import('@/components/dashboard-v2/widgets').then(m => ({ default: m.TopClientsWidget })))
+const EmailPerformanceWidget = lazy(() => import('@/components/dashboard-v2/widgets').then(m => ({ default: m.EmailPerformanceWidget })))
+const ActivityWidget = lazy(() => import('@/components/dashboard/widgets/ActivityWidget').then(m => ({ default: m.ActivityWidget })))
+const DashboardInteractionsWidget = lazy(() => import('@/components/interactions/DashboardInteractionsWidget').then(m => ({ default: m.DashboardInteractionsWidget })))
 
 type DashboardView = 'executive' | 'commercial' | 'manager' | 'custom'
 
@@ -365,9 +365,20 @@ export default function DashboardV2Page() {
       </Card>
 
       {/* Render selected view */}
-      {selectedView === 'executive' && renderExecutiveView()}
-      {selectedView === 'commercial' && renderCommercialView()}
-      {selectedView === 'manager' && renderManagerView()}
+      <Suspense fallback={
+        <div className="space-y-6 animate-pulse">
+          <div className="h-32 bg-gray-200 dark:bg-gray-800 rounded-lg" />
+          <div className="h-64 bg-gray-200 dark:bg-gray-800 rounded-lg" />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="h-48 bg-gray-200 dark:bg-gray-800 rounded-lg" />
+            <div className="h-48 bg-gray-200 dark:bg-gray-800 rounded-lg" />
+          </div>
+        </div>
+      }>
+        {selectedView === 'executive' && renderExecutiveView()}
+        {selectedView === 'commercial' && renderCommercialView()}
+        {selectedView === 'manager' && renderManagerView()}
+      </Suspense>
     </div>
   )
 }

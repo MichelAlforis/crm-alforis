@@ -16,8 +16,8 @@ interface UIState {
 
   // Modals
   activeModal: string | null
-  modalData: any
-  openModal: (modalId: string, data?: any) => void
+  modalData: unknown
+  openModal: (modalId: string, data?: unknown) => void
   closeModal: () => void
 
   // Toasts (transient - not persisted)
@@ -46,9 +46,9 @@ interface UIState {
 
   // Wizard/Stepper State
   wizardStep: number
-  wizardData: any
+  wizardData: Record<string, unknown>
   setWizardStep: (step: number) => void
-  setWizardData: (data: any) => void
+  setWizardData: (data: Record<string, unknown>) => void
   resetWizard: () => void
 }
 

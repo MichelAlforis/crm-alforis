@@ -12,11 +12,36 @@ import { Save, Eye, EyeOff, Zap, Key, ExternalLink, CheckCircle, AlertCircle, Br
 import clsx from 'clsx'
 import { apiClient } from '@/lib/api'
 
+type AIConfigFormData = {
+  provider: AIProvider
+  model_name: string
+  api_key: string
+  temperature: number
+  max_tokens: number
+  duplicate_threshold: number
+  enrichment_threshold: number
+  quality_threshold: number
+  auto_apply_enabled: boolean
+  auto_apply_threshold: number
+  daily_budget_usd: number
+  cache_enabled: boolean
+  cache_ttl_hours: number
+}
+
+type AIConfigUpdatePayload = Omit<AIConfigFormData, 'api_key'> & { api_key?: string }
+
+type ApiKeysPayload = Partial<{
+  anthropic_key: string
+  openai_key: string
+  mistral_key: string
+  ollama_url: string
+}>
+
 export default function AIConfigSection() {
   const { data: config, isLoading } = useAIConfig()
   const updateConfig = useUpdateAIConfig()
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<AIConfigFormData>({
     provider: AIProvider.ANTHROPIC,
     model_name: 'claude-3-5-sonnet-20241022',
     api_key: '',
@@ -101,7 +126,7 @@ export default function AIConfigSection() {
     e.preventDefault()
 
     // Only send API key if it was modified
-    const payload: any = { ...formData }
+    const payload: AIConfigUpdatePayload = { ...formData }
     if (!formData.api_key) {
       delete payload.api_key
     }
@@ -113,7 +138,7 @@ export default function AIConfigSection() {
   const handleSaveApiKeys = async () => {
     setIsSavingKeys(true)
     try {
-      const payload: any = {}
+      const payload: ApiKeysPayload = {}
       if (apiKeys.anthropic) payload.anthropic_key = apiKeys.anthropic
       if (apiKeys.openai) payload.openai_key = apiKeys.openai
       if (apiKeys.mistral) payload.mistral_key = apiKeys.mistral

@@ -25,6 +25,10 @@ import {
 
 export type { SidebarItem, SidebarSection } from '@/stores/sidebar'
 
+export type FavoriteSidebarItem =
+  | { type: 'section'; data: SidebarSection }
+  | { type: 'subitem'; data: SidebarItem & { parentLabel: string } }
+
 export function useSidebar(sections: SidebarSection[] = []) {
   const pathname = usePathname()
   const isMobile = useMediaQuery('(max-width: 1023px)')
@@ -173,8 +177,8 @@ export function useSidebar(sections: SidebarSection[] = []) {
     return sections.filter((section) => favorites.includes(section.href))
   }, [sections, favorites])
 
-  const favoriteItems = useMemo(() => {
-    const items: Array<{ type: 'section' | 'subitem'; data: any }> = []
+  const favoriteItems = useMemo<FavoriteSidebarItem[]>(() => {
+    const items: FavoriteSidebarItem[] = []
 
     sections.forEach((section) => {
       if (favorites.includes(section.href)) {

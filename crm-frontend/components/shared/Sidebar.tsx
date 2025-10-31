@@ -20,6 +20,7 @@ import { useTaskViews } from '@/hooks/useTasks'
 import { useAuth } from '@/hooks/useAuth'
 import { usePendingSuggestionsCount } from '@/hooks/useAI'
 import { useSidebar } from '@/hooks/useSidebar'
+import type { FavoriteSidebarItem, SidebarSection, SidebarItem } from '@/hooks/useSidebar'
 import { useSidebarAnalytics } from '@/hooks/useSidebarAnalytics'
 import { SIDEBAR_SECTIONS } from '@/config/sidebar.config'
 import ThemeToggle from '@/components/shared/ThemeToggle'
@@ -38,13 +39,14 @@ function SubmenuPopover({
   onMouseLeave,
   sidebar,
 }: {
-  item: any
+  item: SidebarSection
   triggerRef: React.RefObject<HTMLDivElement>
   onMouseEnter: () => void
   onMouseLeave: () => void
   sidebar: SidebarHook
 }) {
   const [position, setPosition] = useState({ top: 0, left: 0 })
+  const submenuItems = item.submenu ?? []
 
   useEffect(() => {
     if (triggerRef.current) {
@@ -73,7 +75,7 @@ function SubmenuPopover({
         </div>
         {/* Submenu Items */}
         <div className="space-y-1">
-          {item.submenu.map((subItem: any) => {
+          {submenuItems.map((subItem) => {
             const SubIcon = subItem.icon
             const subActive = sidebar.isActive(subItem.href)
             return (
@@ -267,7 +269,7 @@ export default function Sidebar() {
                   </span>
                 </div>
                 <div className="space-y-1">
-                  {sidebar.favoriteItems.map((item: any) => {
+                  {sidebar.favoriteItems.map((item: FavoriteSidebarItem) => {
                     const Icon = item.data.icon
                     const active = sidebar.isActive(item.data.href)
                     const isSubitem = item.type === 'subitem'
@@ -321,13 +323,13 @@ export default function Sidebar() {
             )}
 
             {/* TOUTES LES SECTIONS */}
-            {MENU_ITEMS.filter((item: any) => {
+            {MENU_ITEMS.filter((item) => {
               // Filtrer "Utilisateurs" si pas admin
               if (item.href === '/dashboard/users' && !isAdmin) {
                 return false
               }
               return true
-            }).map((item: any) => {
+            }).map((item) => {
               const Icon = item.icon
               const active = sidebar.isActive(item.href)
               const isHovered = hoveredItem === item.href
