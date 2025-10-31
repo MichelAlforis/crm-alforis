@@ -381,6 +381,7 @@ url = url.rstrip('/')                  # Remove trailing /
 ```bash
 # 1. Configure SERPAPI_API_KEY
 ssh root@159.69.108.234
+ssh -i ~/.ssh/id_rsa_hetzner root@159.69.108.234
 nano /srv/crm-alforis/.env
 # Ajouter: SERPAPI_API_KEY=xxx (obtenir sur serpapi.com)
 
