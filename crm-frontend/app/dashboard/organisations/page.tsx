@@ -25,13 +25,13 @@ export default function OrganisationsPage() {
 
   const getCountryLabel = (code?: string | null) => {
     if (!code) return null
-    const country = COUNTRY_OPTIONS.find((option) => option.code === code)
+    const country = COUNTRY_OPTIONS.find((option: any) => option.code === code)
     return country ? `${country.flag} ${country.name}` : code
   }
 
   const getLanguageLabel = (code?: string | null) => {
     if (!code) return null
-    const lang = LANGUAGE_OPTIONS.find((option) => option.code === code)
+    const lang = LANGUAGE_OPTIONS.find((option: any) => option.code === code)
     return lang ? `${lang.flag} ${lang.name}` : code
   }
 
@@ -44,7 +44,7 @@ export default function OrganisationsPage() {
         accessor: 'name',
         sortable: true,
         searchable: true,
-        render: (value, row) => (
+        render: (value: unknown, row) => (
           <Link
             href={`/dashboard/organisations/${row.id}`}
             className="font-medium text-gray-900 dark:text-slate-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"

@@ -57,7 +57,7 @@ export default function PeoplePageExample() {
       accessor: (row) => `${row.first_name} ${row.last_name}`,
       sortable: true,
       searchable: true,
-      render: (_, row) => (
+      render: (_: unknown, row) => (
         <Link
           href={`/dashboard/people/${personSlug(row.id, row.first_name, row.last_name)}`}
           className="font-medium text-gray-900 dark:text-slate-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"

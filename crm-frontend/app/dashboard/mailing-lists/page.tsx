@@ -139,7 +139,7 @@ export default function MailingListsPage() {
       accessor: 'target_type',
       priority: 'high',
       minWidth: '120px',
-      render: (value: unknown, row) (
+      render: (value: unknown, row) => (
         <span className="text-sm capitalize">
           {value === 'contacts' ? 'Contacts' : 'Organisations'}
         </span>
@@ -150,7 +150,7 @@ export default function MailingListsPage() {
       accessor: 'recipient_count',
       priority: 'high',
       minWidth: '140px',
-      render: (value: unknown, row) (
+      render: (value: unknown, row) => (
         <div className="flex items-center gap-2">
           <Users className="w-4 h-4 text-text-tertiary" />
           <span className="font-semibold text-primary">{value}</span>
@@ -170,7 +170,7 @@ export default function MailingListsPage() {
       accessor: 'created_at',
       priority: 'low',
       minWidth: '120px',
-      render: (value: unknown, row) new Date(value).toLocaleDateString('fr-FR'),
+      render: (value: unknown, row) => new Date(value).toLocaleDateString('fr-FR'),
     },
     {
       header: 'Actions',
