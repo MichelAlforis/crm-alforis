@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { apiClient } from '@/lib/api'
 import { WebSocketClient, toWebSocketUrl } from '@/lib/websocket'
 import type { NotificationItem, NotificationPayload, NotificationsSnapshot } from '@/lib/types'
+import { storage } from '@/lib/constants'
 
 const STORAGE_KEY = 'crm.notifications.snapshot.v1'
 const MAX_NOTIFICATIONS = 50
@@ -50,11 +51,8 @@ function computeUnreadCount(items: NotificationItem[]): number {
 }
 
 function loadSnapshot(): NotificationsSnapshot | null {
-  if (typeof window === 'undefined') return null
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY)
-    if (!raw) return null
-    const snapshot = JSON.parse(raw) as NotificationsSnapshot
+    const snapshot = storage.get<NotificationsSnapshot>(STORAGE_KEY)
     if (!snapshot?.notifications) return null
     const notifications = snapshot.notifications.map(normalizeNotification)
     return {
@@ -69,14 +67,13 @@ function loadSnapshot(): NotificationsSnapshot | null {
 }
 
 function persistSnapshot(items: NotificationItem[]): void {
-  if (typeof window === 'undefined') return
   try {
     const payload: NotificationsSnapshot = {
       notifications: items,
       unreadCount: computeUnreadCount(items),
       lastSyncedAt: new Date().toISOString(),
     }
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload))
+    storage.set(STORAGE_KEY, payload)
   } catch (error) {
     logger.warn('[useNotifications] Failed to persist snapshot', error)
   }

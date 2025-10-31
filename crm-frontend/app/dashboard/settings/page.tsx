@@ -1,5 +1,6 @@
 'use client'
 import { logger } from '@/lib/logger'
+import { storage, AUTH_STORAGE_KEYS, PREFERENCES_STORAGE_KEYS } from "@/lib/constants"
 
 import { useState } from 'react'
 import clsx from 'clsx'
@@ -115,7 +116,7 @@ export default function SettingsPage() {
 
   const handleResetTheme = () => {
     setPreferredTheme('system')
-    localStorage.removeItem('preferred_theme')
+    storage.remove(PREFERENCES_STORAGE_KEYS.THEME)
     showToast({
       type: 'success',
       title: 'Thème réinitialisé',
@@ -124,7 +125,7 @@ export default function SettingsPage() {
   }
 
   const handleSaveTheme = () => {
-    localStorage.setItem('preferred_theme', preferredTheme)
+    storage.set(PREFERENCES_STORAGE_KEYS.THEME, preferredTheme)
     showToast({
       type: 'success',
       title: 'Préférences enregistrées',

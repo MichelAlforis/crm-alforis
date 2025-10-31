@@ -147,7 +147,7 @@ export function showConfetti() {
 export function toggleSound(): boolean {
   soundEnabled = !soundEnabled
   if (typeof window !== 'undefined') {
-    localStorage.setItem('command-palette-sound', soundEnabled.toString())
+    storage.set(PREFERENCES_STORAGE_KEYS.COMMAND_PALETTE_SOUND, soundEnabled.toString())
   }
   return soundEnabled
 }
@@ -158,7 +158,7 @@ export function toggleSound(): boolean {
 export function toggleHaptic(): boolean {
   hapticEnabled = !hapticEnabled
   if (typeof window !== 'undefined') {
-    localStorage.setItem('command-palette-haptic', hapticEnabled.toString())
+    storage.set(PREFERENCES_STORAGE_KEYS.COMMAND_PALETTE_HAPTIC, hapticEnabled.toString())
   }
   return hapticEnabled
 }

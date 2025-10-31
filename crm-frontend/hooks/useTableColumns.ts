@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { logger } from '@/lib/logger'
+import { storage } from '@/lib/constants'
 
 export interface ColumnConfig<T = any> {
   key: string
@@ -34,7 +35,7 @@ export function useTableColumns<T = any>({
 
   // Load columns from localStorage on mount
   useEffect(() => {
-    const savedConfig = localStorage.getItem(storageKey)
+    const savedConfig = storage.get<Record<string, boolean>>(storageKey)
     if (savedConfig) {
       try {
         const savedVisibility = JSON.parse(savedConfig) as Record<string, boolean>
@@ -60,7 +61,7 @@ export function useTableColumns<T = any>({
         },
         {} as Record<string, boolean>
       )
-      localStorage.setItem(storageKey, JSON.stringify(visibility))
+      storage.set(storageKey, visibility)
     },
     [storageKey]
   )

@@ -90,7 +90,7 @@ export function useSidebar(sections: SidebarSection[] = []) {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
-        localStorage.setItem('sidebar-collapsed', String(collapsed))
+        storage.set('sidebar-collapsed', String(collapsed))
       } catch (error) {
         logger.warn('Failed to save sidebar collapsed state:', error)
       }
@@ -101,7 +101,7 @@ export function useSidebar(sections: SidebarSection[] = []) {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
-        localStorage.setItem('sidebar-favorites', JSON.stringify(favorites))
+        storage.set('sidebar-favorites', favorites)
       } catch (error) {
         logger.warn('Failed to save sidebar favorites:', error)
       }
@@ -112,7 +112,7 @@ export function useSidebar(sections: SidebarSection[] = []) {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
-        localStorage.setItem('sidebar-hidden-sections', JSON.stringify(hiddenSections))
+        storage.set('sidebar-hidden-sections', hiddenSections)
       } catch (error) {
         logger.warn('Failed to save sidebar hidden sections:', error)
       }

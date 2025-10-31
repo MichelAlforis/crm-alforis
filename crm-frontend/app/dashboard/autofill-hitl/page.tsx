@@ -14,6 +14,7 @@
  */
 
 import { useState, useEffect } from 'react'
+import { storage, AUTH_STORAGE_KEYS, PREFERENCES_STORAGE_KEYS } from "@/lib/constants"
 import {
   CheckCircle,
   XCircle,
@@ -72,7 +73,7 @@ export default function AutofillHITLPage() {
 
       const res = await fetch(`${API_BASE}/autofill-hitl/suggestions?${params}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN)}`
         }
       })
 
@@ -99,7 +100,7 @@ export default function AutofillHITLPage() {
       const res = await fetch(`${API_BASE}/autofill-hitl/bulk-approve`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN)}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -126,7 +127,7 @@ export default function AutofillHITLPage() {
       const res = await fetch(`${API_BASE}/autofill-hitl/bulk-reject`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN)}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -169,7 +170,7 @@ export default function AutofillHITLPage() {
       const res = await fetch(`${API_BASE}/autofill-hitl/blacklist-sender`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN)}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
