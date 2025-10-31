@@ -14,9 +14,9 @@
 | **Phase 1 Bonus** - localStorage Migration | ✅ Complété | 100% | ~1,270 lignes |
 | **Phase 2** - Migration & Cleanup | ✅ Complété | 100% | 18h |
 | **Phase 3.1** - Performance | ✅ Complété | 90% | ~3h / 6h |
-| **Phase 3.2** - Testing | 🔄 En cours | 60% | ~4h / 8h |
+| **Phase 3.2** - Testing | 🔄 En cours | 75% | ~6h / 8h |
 | **Phase 3.3** - Documentation | 📋 Planifié | 0% | 0h / 6h |
-| **Phase 3** - Total | 🔄 En cours | 75% | ~7h / ~20h |
+| **Phase 3** - Total | 🔄 En cours | 80% | ~9h / ~20h |
 
 **Total Code Écrit:** ~3,820 lignes (+985 hooks/labels)
 **Code modifié:** +1,434/-970 lignes (net: +464L code, +490L doc = +954L total)
@@ -646,11 +646,11 @@ const collapsed = useUIStore(selectSidebarCollapsed)
 
 **Effort:** ~3h (6h estimées)
 
-### 🔄 3.2 Testing (EN COURS - 30%)
+### 🔄 3.2 Testing (EN COURS - 75%)
 
 **Date:** 31 Octobre 2025
-**Durée:** ~4h / 8h estimées
-**Status:** 🔄 **EN COURS (60%)**
+**Durée:** ~6h / 8h estimées
+**Status:** 🔄 **EN COURS (75%)**
 
 #### ✅ Infrastructure Testing Setup
 
@@ -669,7 +669,7 @@ const collapsed = useUIStore(selectSidebarCollapsed)
 - [x] Build artifacts upload (7 days retention)
 - [x] Playwright report upload (30 days retention)
 
-#### ✅ Unit Tests Created (2 suites, 8 tests)
+#### ✅ Unit Tests Created (6 suites, 32 tests)
 
 **`__tests__/hooks/useAuth.test.ts`** (5 tests):
 - [x] Initialize with loading state
@@ -683,19 +683,113 @@ const collapsed = useUIStore(selectSidebarCollapsed)
 - [x] Throw error on failed login
 - [x] Fetch current user profile
 
-#### ⏸️ Tests Remaining
+**`__tests__/hooks/useOrganisations.test.ts`** (4 tests):
+- [x] Fetch organisations list successfully
+- [x] Handle fetch error
+- [x] Filter by search term
+- [x] Paginate correctly
 
-**Unit Tests (Hooks) - 4 suites, 24 tests:**
-- [x] **useOrganisations.test.ts** (4 tests) - Fetch, error, filter, pagination
-- [x] **useTasks.test.ts** (6 tests) - Fetch, filter status/priority, create, error, stats
-- [x] **usePeople.test.ts** (7 tests) - Fetch, filter, CRUD operations, error, pagination
-- [x] **useFilters.test.ts** (7 tests) - Initialize, update, reset, clear, active count, boolean
+**`__tests__/hooks/useTasks.test.ts`** (6 tests):
+- [x] Fetch tasks list
+- [x] Filter by status
+- [x] Filter by priority
+- [x] Handle create task
+- [x] Handle error
+- [x] Fetch stats
 
-**Integration Tests (API):**
-- [ ] organisationsAPI module tests
-- [ ] peopleAPI module tests
-- [ ] tasksAPI module tests
-- [ ] emailAPI module tests
+**`__tests__/hooks/usePeople.test.ts`** (7 tests):
+- [x] Fetch people list
+- [x] Filter by search
+- [x] Create person
+- [x] Update person
+- [x] Delete person
+- [x] Handle error
+- [x] Paginate correctly
+
+**`__tests__/hooks/useFilters.test.ts`** (7 tests):
+- [x] Initialize with defaults
+- [x] Update single filter
+- [x] Update multiple filters
+- [x] Reset all filters
+- [x] Clear single filter
+- [x] Handle active filters count
+- [x] Handle boolean filters
+
+#### ✅ Integration Tests (API) - 4 modules, 56 tests
+
+**`__tests__/lib/api/organisations.test.ts`** (14 tests):
+- [x] Fetch organisations list successfully
+- [x] Filter by category
+- [x] Filter by active status
+- [x] Paginate correctly
+- [x] Fetch single organisation by ID
+- [x] Create organisation successfully
+- [x] Update organisation successfully
+- [x] Delete organisation successfully
+- [x] Search organisations by query
+- [x] Handle empty search results
+- [x] Fetch organisation activity feed
+- [x] Filter activity by types
+- [x] Fetch organisations by language
+- [x] Fetch organisation statistics
+
+**`__tests__/lib/api/people.test.ts`** (11 tests):
+- [x] Fetch people list successfully
+- [x] Search people by query
+- [x] Filter by organization ID
+- [x] Paginate correctly
+- [x] Fetch single person by ID
+- [x] Create person successfully
+- [x] Update person successfully
+- [x] Delete person successfully
+- [x] Create person-organization link
+- [x] Update person-organization link
+- [x] Delete person-organization link
+- [x] Handle fetch error gracefully
+- [x] Handle create error gracefully
+
+**`__tests__/lib/api/tasks.test.ts`** (14 tests):
+- [x] Fetch tasks list successfully
+- [x] Filter by status
+- [x] Filter by priority
+- [x] Filter by view (today/overdue/next7)
+- [x] Filter by organisation_id
+- [x] Paginate correctly
+- [x] Fetch single task with relations
+- [x] Fetch task statistics
+- [x] Create task successfully
+- [x] Update task successfully
+- [x] Mark task as complete
+- [x] Delete task successfully
+- [x] Snooze task for N days
+- [x] Quick actions (snooze_1d, mark_done)
+- [x] Handle fetch error gracefully
+- [x] Handle create error gracefully
+
+**`__tests__/lib/api/email.test.ts`** (17 tests):
+- [x] Fetch email templates successfully
+- [x] Fetch all templates including inactive
+- [x] Create email template
+- [x] Update email template
+- [x] Fetch email campaigns successfully
+- [x] Filter campaigns by status
+- [x] Filter campaigns by provider
+- [x] Fetch single campaign by ID
+- [x] Create email campaign
+- [x] Update email campaign
+- [x] Schedule email campaign
+- [x] Fetch campaign statistics
+- [x] Fetch campaign sends
+- [x] Filter sends by status
+- [x] Fetch newsletters successfully
+- [x] Filter newsletters by type
+- [x] Create newsletter
+- [x] Send newsletter
+- [x] Delete newsletter
+- [x] Handle fetch templates error
+- [x] Handle create campaign error
+
+**Total Tests:** 88 tests (32 unit + 56 integration)
 
 **E2E Tests (Playwright) - 7 suites existantes:**
 - [x] **auth.spec.ts** - Login success/failure, logout
@@ -710,7 +804,14 @@ const collapsed = useUIStore(selectSidebarCollapsed)
 **Config:** `playwright.config.ts` - HTML reports, parallel, CI-ready
 **Status:** ✅ Tests déjà écrits, intégrés dans CI/CD workflow
 
-**Effort:** ~4h / 8h (60% complété)
+#### ⏸️ Tests Remaining (~2h)
+
+**Component Tests (optionnel):**
+- [ ] Form components (OrganisationForm, PersonForm, TaskForm)
+- [ ] Table components (DataTable, KanbanBoard)
+- [ ] UI components (Modal, Toast, SearchBar)
+
+**Effort:** ~6h / 8h (75% complété)
 
 ### 3.3 Documentation
 - [ ] Storybook pour components library
