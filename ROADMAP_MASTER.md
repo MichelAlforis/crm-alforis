@@ -559,32 +559,46 @@ Menu contextuel (clic droit) sur les champs de formulaire avec suggestions IA ba
 
 ---
 
-#### **🧠 Phase 3 - AI Memory & Learning System** (❌ 0%)
-**Estimation:** 5-6h
+#### **♻️ Frontend Phase 1 - Quick Wins Refactoring** (✅ 100%)
+**Date:** 31 Octobre 2025
+**Status:** ✅ COMPLÉTÉ - Refactor ~2000 lignes, centralisation constants
 
 **Objectif:**
-Système de mémoire persistante pour apprendre des préférences utilisateur et améliorer les suggestions au fil du temps.
+Nettoyer la tech debt Frontend, centraliser les constants éparpillées, améliorer maintenabilité.
 
 **Livrables:**
-1. **AI Memory Storage** (2h)
-   - Table `ai_memory` (user_id, context, data, usage_count)
-   - CRUD API `/api/v1/ai/memory`
-   - Retention policy (90 jours)
+1. ✅ **Centralisation Constants** (3h)
+   - `lib/constants/storage.ts` - localStorage keys (11 constants)
+   - `lib/constants/auth.ts` - JWT, cookies (6 constants)
+   - `lib/constants/api.ts` - Endpoints cache (4 constants)
+   - Migration de 30+ fichiers vers constants centralisées
 
-2. **Learning Engine** (2h)
-   - Tracking user choices (accept/reject)
-   - Pattern detection (ex: toujours mettre "M." avant nom)
-   - Auto-amélioration prompts basé sur feedback
+2. ✅ **Storage Helper** (1h)
+   - `lib/helpers/storage.ts` - Abstraction localStorage/cookies
+   - Type-safe getters/setters
+   - Error handling graceful
 
-3. **Observability** (1h)
-   - Dashboard learning metrics
-   - Precision/Recall par champ
-   - User satisfaction score
+3. ✅ **Documentation** (30min)
+   - README Phase 1 avec visual summary
+   - Reference card pour devs
+   - Migration guide
 
-4. **RGPD Compliance** (1h)
-   - Right to be forgotten (DELETE /ai/memory)
-   - Data export (GET /ai/memory/export)
-   - Audit trail transparent
+**Fichiers refactorés:**
+- Components: FieldContextMenu, Email pages, Campaigns
+- Pages: Dashboard, Auth, Settings
+- Hooks: useAuth, useContextMenu
+- Utils: apiClient, auth helpers
+
+**Commits:**
+- `4f5d4aba`: Phase 1 Quick Wins (~2000 lines)
+- `92a646c5`: Documentation + reference card
+- `d58f33b0`: Migrate to centralized constants
+- `87d9df47`: Email campaigns migration
+- `53b5f185`: Email pages migration
+- `389c36b1`: FieldContextMenu migration
+
+**Total refactoré:** ~2000 lignes
+**Gain maintenabilité:** Constants uniques, pas de magic strings
 
 ---
 
@@ -651,10 +665,16 @@ TOTAL: ~13,500 lignes production-ready
 4. ✅ **10 commits** poussés vers production
 5. ✅ **Docker healthy** - Tous services opérationnels
 
-### 🚨 **P0 - Urgent** (Prochaine session)
-1. **Configurer OAuth Apps** (Google Cloud + Azure)
-   - Créer app Google Cloud Console
-   - Créer app Azure Portal
+### 🔄 **EN COURS** (ChatGPT debug)
+1. **Déploiement Production** (ChatGPT travaille dessus)
+   - Debug script `./deploy.sh`
+   - Validation environnement serveur
+   - Tests post-déploiement
+
+### 🚨 **P0 - Urgent** (Après déploiement)
+1. **Configurer OAuth Apps Multi-Mail** (Google Cloud + Azure)
+   - Créer app Google Cloud Console (Gmail OAuth)
+   - Créer app Azure Portal (Outlook OAuth)
    - Configurer redirect URIs
    - Tester flow complet Gmail + Outlook
 
