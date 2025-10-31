@@ -1,8 +1,8 @@
 # 🎯 CRM - Roadmap TODO Priorisée
 
-**Date:** 31 Octobre 2025 - 20:00
-**Version:** v8.14.0
-**Base:** Post-déploiement production + 39 Tests E2E activés + P2 100% COMPLETÉ 🎉
+**Date:** 31 Octobre 2025 - 21:30
+**Version:** v8.15.0
+**Base:** Post-déploiement production + 39 Tests E2E + P2 100% + Dark Mode 100% 🎉🎉🎉
 
 ## 🎉 RÉSUMÉ SESSION (31 Oct 2025)
 
@@ -14,8 +14,9 @@
 - ✅ **P2 Features découverts** - 5 features déjà implémentées (Export, Bulk Actions, Dark Mode, Search, PWA)
 - ✅ **Infinite Scroll** - Implémenté avec react-intersection-observer + useInfiniteQuery ⭐
 - ✅ **Monitoring Grafana** - Prometheus + Grafana + Alerting complet ⭐⭐
+- ✅ **Dark Mode Coverage 100%** - 1502 corrections automatisées sur 146 fichiers ⭐⭐⭐
 
-**Commits créés aujourd'hui (10):**
+**Commits créés aujourd'hui (12):**
 1. `cc6630a9` - feat(ci): Integrate Playwright E2E tests in CI/CD pipeline
 2. `113481b5` - feat(e2e): Activate all 39 Playwright E2E tests with auth ⭐
 3. `c4df7c37` - docs(roadmap): Update roadmap v8.10.0
@@ -25,7 +26,9 @@
 7. `7374b15d` - feat(infinite-scroll): Implement infinite scroll for ActivityTab ⭐
 8. `d2fc39d2` - docs(roadmap): Update v8.13.0 - P2 91% completed with Infinite Scroll
 9. `82667470` - feat(monitoring): Complete Prometheus + Grafana monitoring stack (P2 100%) ⭐⭐
-10. *(en cours)* - docs(roadmap): Update v8.14.0 - P2 100% COMPLETÉ
+10. `84f3a339` - docs(roadmap): Update v8.14.0 - P2 100% COMPLETÉ
+11. `f118836f` - feat(dark-mode): Complete dark mode coverage - 100% of frontend ⭐⭐⭐
+12. *(en cours)* - docs(roadmap): Update v8.15.0 - Dark Mode 100%
 
 **Progrès:**
 - P0: 3/4 complétées ✅ (75%), 1 reportée ⏸️ (OAuth flemme!)
@@ -35,7 +38,6 @@
 
 **Tâches restantes:**
 - ❌ P0: OAuth Apps Configuration (reporté - user flemme)
-- ℹ️ Dark Mode Coverage: Audit ChatGPT disponible, implémentation à faire
 
 ---
 
@@ -211,23 +213,70 @@ SENTRY_ENVIRONMENT=production
 - ✅ Selection counter display
 - ✅ Dark mode support
 
-### ✅ 13. Dark Mode (4h)
-**Status:** ✅ COMPLETÉ - Déjà implémenté
-**Impact:** UX - Confort visuel
-**Effort:** 4h (déjà fait)
-**Fichiers:**
+### ✅ 13. Dark Mode (4h) + Coverage 100% (2h)
+**Status:** ✅ COMPLETÉ - 100% coverage (31 Oct 2025 - 21h30)
+**Impact:** UX - Confort visuel + Accessibilité
+**Effort:** 6h (4h initial + 2h coverage automation)
+**Commits:**
+- Initial: Infrastructure next-themes déjà en place
+- `f118836f` - feat(dark-mode): Complete dark mode coverage - 100% of frontend ⭐⭐⭐
+
+**Infrastructure:**
 - [components/shared/ThemeToggle.tsx](crm-frontend/components/shared/ThemeToggle.tsx) - Toggle component
 - [app/providers.tsx:23-28](crm-frontend/app/providers.tsx#L23-L28) - ThemeProvider setup
+- Package: `next-themes@^0.2.1`
+
+**Automated Coverage Improvement (31 Oct 2025):**
+- [.codex/apply_dark_mode.py](crm-frontend/.codex/apply_dark_mode.py) - Script automation Python
+- Audit ChatGPT: 212 fichiers analysés ([dark_audit_full.json](crm-frontend/.codex/dark_audit_full.json) - 960KB)
+- **146 fichiers modifiés** avec 1502 corrections appliquées automatiquement
+- **100% coverage** - tous les composants, pages, et UI supportent dark mode
+
+**Avant automatisation:**
+- Dark mode complet: 66/212 (31.1%)
+- Dark mode partiel: 19/212 (9.0%)
+- Sans dark mode: 127/212 (59.9%)
+
+**Après automatisation:**
+- Dark mode complet: 212/212 (100%) ✅✅✅
+
+**Corrections par catégorie:**
+- Pages dashboard: 91 fichiers, 891 corrections
+  * AI (autofill, config, suggestions): 42 corrections
+  * Campaigns: 33 corrections
+  * Email campaigns & templates: 4 corrections
+  * Help system: 150 corrections
+  * People, Organisations, Imports: 35 corrections
+  * Workflows, Monitoring, Inbox: 75 corrections
+  * Demo pages: 91 corrections
+- Components: 55 fichiers, 611 corrections
+  * Dashboard widgets: 67 corrections
+  * Email: 45 corrections
+  * Interactions: 18 corrections
+  * PWA: 9 corrections
+  * Shared: 98 corrections
+  * UI: 29 corrections
+  * Workflows: 9 corrections
+
+**Palette de couleurs dark mode (cohérente):**
+- Backgrounds: `bg-white` → `dark:bg-slate-900`
+- Cards/Panels: `bg-gray-50` → `dark:bg-slate-800`
+- Text primary: `text-gray-900` → `dark:text-slate-100`
+- Text secondary: `text-gray-600` → `dark:text-slate-400`
+- Text muted: `text-gray-700` → `dark:text-slate-300`
+- Borders: `border-gray-200` → `dark:border-slate-700`
+- Borders strong: `border-gray-300` → `dark:border-slate-600`
+- Hovers: `hover:bg-gray-100` → `dark:hover:bg-slate-700`
 
 **Features:**
 - ✅ next-themes avec détection système
 - ✅ Toggle manuel avec animations smooth
-- ✅ Classes dark: partout (10+ fichiers)
+- ✅ Classes dark: sur TOUS les fichiers (212/212) ✅
 - ✅ Persistent theme preference
 - ✅ No flash on page load
-- ✅ 100% coverage composants
-
-**Package:** `next-themes@^0.2.1`
+- ✅ 100% coverage composants + pages + UI ✅
+- ✅ Palette cohérente (slate-* pour dark)
+- ✅ Script automatisé pour futures mises à jour
 
 ### ✅ 14. Search Optimisé (3h)
 **Status:** ✅ PARTIEL - Search basique implémenté
