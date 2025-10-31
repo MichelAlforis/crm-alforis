@@ -1,9 +1,10 @@
 'use client'
 
 import React, { useState, useCallback } from 'react'
-import { Modal, Button, Alert, Input } from '@/components/shared'
+import { Alert, Input } from '@/components/shared'
+import { ModalForm } from '@/components/shared/Modal'
 import { SearchableSelect } from '@/components/shared'
-import { useToast } from '@/components/ui/Toast'
+import { useFormToast } from '@/hooks/useFormToast'
 import { usePaginatedOptions, type PaginatedFetcherParams } from '@/hooks/usePaginatedOptions'
 import { useAssociateProduitToMandat } from '@/hooks/useProduits'
 import { apiClient } from '@/lib/api'
@@ -26,7 +27,7 @@ export default function MandatProduitAssociationModal({
   mandatStatus,
   onSuccess,
 }: MandatProduitAssociationModalProps) {
-  const { showToast } = useToast()
+  const toast = useFormToast({ entityName: 'Association', gender: 'f' })
   const associateMutation = useAssociateProduitToMandat()
 
   const [selectedProduitId, setSelectedProduitId] = useState<number | null>(null)
@@ -74,17 +75,6 @@ export default function MandatProduitAssociationModal({
     limit: 25,
   })
 
-  const handleReset = () => {
-    setSelectedProduitId(null)
-    setAllocationPourcentage('')
-    setError(null)
-  }
-
-  const handleClose = () => {
-    handleReset()
-    onClose()
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
@@ -92,22 +82,14 @@ export default function MandatProduitAssociationModal({
     // Validation: Mandat must be active
     if (!isMandatActif) {
       setError('Le mandat doit être signé ou actif pour associer des produits.')
-      showToast({
-        type: 'error',
-        title: 'Mandat non actif',
-        message: 'Changez le statut du mandat à "Signé" ou "Actif" avant d\'associer des produits.',
-      })
+      toast.error('Changez le statut du mandat à "Signé" ou "Actif" avant d\'associer des produits.')
       return
     }
 
     // Validation: Produit must be selected
     if (!selectedProduitId) {
       setError('Veuillez sélectionner un produit.')
-      showToast({
-        type: 'warning',
-        title: 'Produit requis',
-        message: 'Sélectionnez un produit à associer au mandat.',
-      })
+      toast.warning('Produit requis', 'Sélectionnez un produit à associer au mandat.')
       return
     }
 
@@ -117,11 +99,7 @@ export default function MandatProduitAssociationModal({
       const parsed = parseFloat(allocationPourcentage)
       if (isNaN(parsed) || parsed < 0 || parsed > 100) {
         setError('L\'allocation doit être un nombre entre 0 et 100.')
-        showToast({
-          type: 'warning',
-          title: 'Allocation invalide',
-          message: 'Entrez un pourcentage entre 0 et 100.',
-        })
+        toast.warning('Allocation invalide', 'Entrez un pourcentage entre 0 et 100.')
         return
       }
       allocation = parsed
@@ -134,52 +112,34 @@ export default function MandatProduitAssociationModal({
         allocation_pourcentage: allocation,
       })
 
-      showToast({
-        type: 'success',
-        title: 'Produit associé',
-        message: 'Le produit a été ajouté au mandat avec succès.',
-      })
+      toast.success('Produit associé', 'Le produit a été ajouté au mandat avec succès.')
 
-      handleReset()
+      setSelectedProduitId(null)
+      setAllocationPourcentage('')
+      setError(null)
       onSuccess()
       onClose()
     } catch (err: any) {
       const errorMessage =
         err?.detail || err?.message || 'Impossible d\'associer le produit au mandat.'
       setError(errorMessage)
-      showToast({
-        type: 'error',
-        title: 'Erreur',
-        message: errorMessage,
-      })
+      toast.error(err)
     }
   }
 
   return (
-    <Modal
+    <ModalForm
       isOpen={isOpen}
-      onClose={handleClose}
+      onClose={onClose}
       title="Associer un produit au mandat"
-      footer={
-        <>
-          <Button variant="ghost" onClick={handleClose} disabled={associateMutation.isPending}>
-            Annuler
-          </Button>
-          <Button
-            onClick={handleSubmit}
-            isLoading={associateMutation.isPending}
-            disabled={!isMandatActif}
-          >
-            Associer
-          </Button>
-        </>
-      }
+      onSubmit={handleSubmit}
+      submitLabel="Associer"
+      isLoading={associateMutation.isPending}
+      submitDisabled={!isMandatActif || !selectedProduitId}
+      error={error}
+      size="md"
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {error && (
-          <Alert type="error" message={error} onClose={() => setError(null)} />
-        )}
-
+      <div className="space-y-4">
         {!isMandatActif && (
           <Alert
             type="warning"
@@ -188,7 +148,7 @@ export default function MandatProduitAssociationModal({
         )}
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Produit <span className="text-red-500">*</span>
           </label>
           <SearchableSelect
@@ -203,7 +163,7 @@ export default function MandatProduitAssociationModal({
             isLoadingMore={isLoadingMoreProduits}
             disabled={!isMandatActif}
           />
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
             Seuls les produits actifs sont affichés
           </p>
         </div>
@@ -220,12 +180,12 @@ export default function MandatProduitAssociationModal({
             placeholder="ex: 25.5"
             disabled={!isMandatActif}
           />
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
             Optionnel - Pourcentage d'allocation du produit dans le mandat (0-100%)
           </p>
         </div>
 
-        <div className="pt-2 px-4 bg-blue-50 border border-blue-200 rounded text-sm text-blue-700">
+        <div className="pt-2 px-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded text-sm text-blue-700 dark:text-blue-300">
           <p className="font-semibold">ℹ️ Information</p>
           <ul className="mt-1 ml-4 list-disc space-y-1">
             <li>L'association permet de lier des produits à un mandat de distribution</li>
@@ -233,7 +193,7 @@ export default function MandatProduitAssociationModal({
             <li>La somme des allocations devrait idéalement faire 100%</li>
           </ul>
         </div>
-      </form>
-    </Modal>
+      </div>
+    </ModalForm>
   )
 }
