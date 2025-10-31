@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Mail, Plus, Send, Users, TrendingUp, Clock } from "lucide-react";
 import { useToast } from "@/hooks/useToast";
 import { logger } from '@/lib/logger'
+import { storage, AUTH_STORAGE_KEYS, EMAIL_ENDPOINTS, ROUTES } from '@/lib/constants'
 
 interface Campaign {
   id: number;
@@ -53,8 +54,8 @@ export default function EmailCampaignsPage() {
 
   const fetchCampaigns = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch("/api/v1/email/campaigns", {
+      const token = storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN);
+      const response = await fetch(EMAIL_ENDPOINTS.CAMPAIGNS, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -96,7 +97,7 @@ export default function EmailCampaignsPage() {
             Gérez vos campagnes d'emailing et suivez leurs performances
           </p>
         </div>
-        <Button onClick={() => router.push("/dashboard/email-campaigns/new")}>
+        <Button onClick={() => router.push(ROUTES.EMAIL.CAMPAIGN_NEW)}>
           <Plus className="h-4 w-4 mr-2" />
           Nouvelle Campagne
         </Button>
@@ -183,7 +184,7 @@ export default function EmailCampaignsPage() {
               <Button
                 variant="outline"
                 className="mt-4"
-                onClick={() => router.push("/dashboard/email-campaigns/new")}
+                onClick={() => router.push(ROUTES.EMAIL.CAMPAIGN_NEW)}
               >
                 Créer votre première campagne
               </Button>

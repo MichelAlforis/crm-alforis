@@ -18,6 +18,7 @@ import { ArrowLeft, Mail, Users, Send } from "lucide-react";
 import { useToast } from "@/hooks/useToast";
 import { Badge } from "@/components/ui/badge";
 import { logger } from '@/lib/logger'
+import { storage, AUTH_STORAGE_KEYS, EMAIL_ENDPOINTS, ROUTES } from '@/lib/constants'
 
 interface Template {
   id: number;
@@ -102,8 +103,8 @@ export default function NewEmailCampaignPage() {
 
   const fetchTemplates = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch("/api/v1/email/templates", {
+      const token = storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN);
+      const response = await fetch(EMAIL_ENDPOINTS.TEMPLATES, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -121,7 +122,7 @@ export default function NewEmailCampaignPage() {
   const fetchRecipientCount = async () => {
     setLoadingCount(true);
     try {
-      const token = localStorage.getItem("token");
+      const token = storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN);
 
       const filters: RecipientFilters = {
         target_type: targetType,
@@ -163,7 +164,7 @@ export default function NewEmailCampaignPage() {
     }
 
     try {
-      const token = localStorage.getItem("token");
+      const token = storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN);
 
       const campaignData = {
         name,
@@ -181,7 +182,7 @@ export default function NewEmailCampaignPage() {
         delay_between_batches: delayBetweenBatches,
       };
 
-      const response = await fetch("/api/v1/email/campaigns", {
+      const response = await fetch(EMAIL_ENDPOINTS.CAMPAIGNS, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
