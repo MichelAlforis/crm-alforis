@@ -219,7 +219,7 @@ export default function KPIsPage() {
       accessor: 'revenue',
       priority: 'high',
       minWidth: '100px',
-      render: (value: number) => `${value || 0}€`,
+      render: (value: unknown, row) `${value || 0}€`,
     },
     {
       header: 'Comm. %',

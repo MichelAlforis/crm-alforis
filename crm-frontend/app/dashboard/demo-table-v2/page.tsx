@@ -105,7 +105,7 @@ export default function DemoTableV2Page() {
       sticky: 'left', // ✨ Sticky column on the left
       priority: 'high', // 📱 Always visible on mobile
       minWidth: '200px',
-      render: (value: string) => (
+      render: (value: unknown, row) (
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
             {value.charAt(0)}
@@ -120,7 +120,7 @@ export default function DemoTableV2Page() {
       sortable: true,
       priority: 'high', // 📱 Always visible on mobile
       maxWidth: '280px', // Force column width with table-fixed
-      render: (value: string) => (
+      render: (value: unknown, row) (
         <a
           href={`mailto:${value}`}
           className="flex items-center gap-1 min-w-0 text-blue-600 hover:text-blue-700 hover:underline"
@@ -135,7 +135,7 @@ export default function DemoTableV2Page() {
       header: 'Téléphone',
       accessor: 'phone',
       priority: 'medium', // 📱 Collapsed by default on mobile
-      render: (value: string) => (
+      render: (value: unknown, row) (
         <a
           href={`tel:${value}`}
           className="text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white dark:text-slate-100 flex items-center gap-1"
@@ -151,7 +151,7 @@ export default function DemoTableV2Page() {
       sortable: true,
       priority: 'medium', // 📱 Collapsed by default on mobile
       className: 'max-w-[180px]',
-      render: (value: string) => (
+      render: (value: unknown, row) (
         <span className="text-gray-700 dark:text-slate-300 truncate block" title={value}>{value}</span>
       )
     },
@@ -159,7 +159,7 @@ export default function DemoTableV2Page() {
       header: 'Localisation',
       accessor: 'location',
       priority: 'low', // 📱 Collapsed by default on mobile
-      render: (value: string) => (
+      render: (value: unknown, row) (
         <div className="flex items-center gap-1 text-gray-600 dark:text-slate-400 text-xs">
           <MapPin className="w-3.5 h-3.5" />
           <span>{value}</span>
@@ -195,7 +195,7 @@ export default function DemoTableV2Page() {
       accessor: 'revenue',
       sortable: true,
       priority: 'medium', // 📱 Collapsed by default on mobile
-      render: (value: number) => (
+      render: (value: unknown, row) (
         <span className="font-semibold text-green-700">
           {new Intl.NumberFormat('fr-FR', {
             style: 'currency',
@@ -210,7 +210,7 @@ export default function DemoTableV2Page() {
       accessor: 'lastContact',
       sortable: true,
       priority: 'low', // 📱 Collapsed by default on mobile
-      render: (value: string) => (
+      render: (value: unknown, row) (
         <span className="text-gray-600 dark:text-slate-400 text-sm">
           {new Date(value).toLocaleDateString('fr-FR', {
             day: '2-digit',
@@ -226,7 +226,7 @@ export default function DemoTableV2Page() {
       sticky: 'right', // ✨ Sticky column on the right
       priority: 'high', // 📱 Always visible on mobile
       minWidth: '120px',
-      render: (_value: number, row: DemoContact) => {
+      render: (value: unknown, row: DemoContact) => {
         const actions: OverflowAction[] = [
           {
             label: 'Voir',

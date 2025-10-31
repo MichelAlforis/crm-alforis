@@ -155,17 +155,6 @@ export default function OrganisationDetailPage() {
     )
   }
 
-  const getCountryLabel = (code?: string | null) => {
-    if (!code) return '-'
-    const country = COUNTRY_OPTIONS.find((option) => option.code === code)
-    return country ? `${country.flag} ${country.name}` : code
-  }
-
-  const getLanguageLabel = (code?: string | null) => {
-    if (!code) return '-'
-    const lang = LANGUAGE_OPTIONS.find((option) => option.code === code)
-    return lang ? `${lang.flag} ${lang.name}` : code
-  }
 
   return (
     <div className="space-y-6">

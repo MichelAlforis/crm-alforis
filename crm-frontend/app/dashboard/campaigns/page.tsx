@@ -79,7 +79,7 @@ export default function CampaignsPage() {
       accessor: 'status',
       priority: 'high',
       minWidth: '120px',
-      render: (value: string) => (
+      render: (value: unknown, row) (
         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[value as keyof typeof STATUS_COLORS] || 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300'}`}>
           {STATUS_LABELS[value as keyof typeof STATUS_LABELS] || value}
         </span>
@@ -90,7 +90,7 @@ export default function CampaignsPage() {
       accessor: 'provider',
       priority: 'medium',
       minWidth: '120px',
-      render: (value: string) => (
+      render: (value: unknown, row) (
         <span className="text-sm capitalize">{value || '-'}</span>
       ),
     },
@@ -99,7 +99,7 @@ export default function CampaignsPage() {
       accessor: 'created_at',
       priority: 'medium',
       minWidth: '120px',
-      render: (value: string) => new Date(value).toLocaleDateString('fr-FR'),
+      render: (value: unknown, row) new Date(value).toLocaleDateString('fr-FR'),
     },
     {
       header: 'Programmée pour',
@@ -115,7 +115,7 @@ export default function CampaignsPage() {
       sticky: 'right',
       priority: 'high',
       minWidth: '120px',
-      render: (id: number) => {
+      render: (value: unknown, row) {
         const actions: OverflowAction[] = [
           {
             label: 'Voir',
