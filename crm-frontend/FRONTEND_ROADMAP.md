@@ -587,19 +587,61 @@ const collapsed = useUIStore(selectSidebarCollapsed)
 
 ---
 
-## 📋 Phase 3 - Optimizations (PLANIFIÉ - 0%)
+## 🔄 Phase 3 - Optimizations (EN COURS - 45%)
 
 **Durée estimée:** 1 semaine
-**Status:** 📋 **PLANIFIÉ**
+**Status:** 🔄 **EN COURS**
 
-### 3.1 Performance Optimizations
-- [ ] Code splitting (React.lazy, dynamic imports)
-- [ ] Image optimization (Next.js Image)
-- [ ] Bundle analysis (webpack-bundle-analyzer)
-- [ ] Tree shaking improvements
-- [ ] Memo/useMemo strategic usage
+### ✅ 3.1 Performance Optimizations (COMPLÉTÉ - 90%)
 
-**Effort:** ~6h
+**Date:** 31 Octobre 2025
+**Durée:** ~3h (50% plus rapide grâce aux optimisations déjà en place)
+**Status:** ✅ **COMPLÉTÉ**
+
+#### ✅ Code Splitting (React.lazy, dynamic imports)
+- [x] **14 composants** lazy loaded avec React.lazy() + Suspense
+- [x] **5 formulaires** dans modals: PersonForm, MandatForm, ProduitForm, KPIForm, OrganisationForm
+- [x] **2 TaskForm** dans pages tasks (list + kanban)
+- [x] **7 widgets dashboard**: KPICardWidget, RevenueChartWidget, AIInsightsWidget, TopClientsWidget, EmailPerformanceWidget, ActivityWidget, DashboardInteractionsWidget
+
+**Résultats:**
+- `/dashboard/people/new`: 2.03 kB → **1.35 kB** (-34%) 🚀
+- `/dashboard/produits/new`: 2.43 kB → **1.76 kB** (-28%) 🚀
+- `/dashboard/mandats/new`: **1.75 kB** (optimisé) ✅
+- Widgets dashboard: chargés à la demande uniquement
+- Formulaires: chargés uniquement quand modals ouverts
+
+**Commits:**
+- `2175c2df` - perf: Implement code splitting with React.lazy for heavy forms
+- `cb790285` - perf: Lazy load PersonForm, MandatForm, and ProduitForm
+- `0673ed49` - perf: Lazy load tous les widgets du dashboard
+- `315ed21b` - perf: Lazy load TaskForm dans les pages tasks
+- `913b6e9f` - feat(perf): Complete Phase 3.1 - Performance Optimizations
+
+#### ✅ Bundle Analysis (webpack-bundle-analyzer)
+- [x] Package `@next/bundle-analyzer` installé
+- [x] Configuration dans `next.config.js`
+- [x] Script `npm run build:analyze` créé et fonctionnel
+
+**Usage:** `npm run build:analyze` pour visualiser la taille des bundles
+
+#### ✅ Image Optimization (Next.js Image)
+- [x] **Audit complet** - Aucune balise `<img>` trouvée dans le code
+- [x] Seule vidéo background déjà optimisée (WebM 705KB)
+- **Status:** N/A - Déjà optimal ✅
+
+#### ✅ Tree Shaking Improvements
+- [x] **Audit lucide-react** - 142 fichiers vérifiés
+- [x] Tous utilisent **named imports** → Tree shaking automatique par Next.js
+- [x] Aucun `import * as` détecté
+- **Status:** Déjà optimal ✅
+
+#### ⏸️ Memo/useMemo Strategic Usage
+- **Status:** Optionnel - Faible priorité
+- **Raison:** TableV2 déjà en place, pas de re-renders excessifs détectés
+- **Recommandation:** À faire uniquement si problèmes de performance détectés en production
+
+**Effort:** ~3h (6h estimées)
 
 ### 3.2 Testing
 - [ ] Unit tests (Vitest) pour hooks critiques
