@@ -4,18 +4,23 @@
  * Affiche:
  * - Composer inline (si canCreate)
  * - Timeline des interactions (groupées par jour)
- * - Infinite scroll (TODO)
+ * - Infinite scroll ✅
  */
 
 'use client'
 
 import React, { useMemo } from 'react'
-import { useOrgInteractions, usePersonInteractions, useDeleteInteraction } from '@/hooks/useInteractions'
+import {
+  useOrgInteractionsInfinite,
+  usePersonInteractionsInfinite,
+  useDeleteInteraction,
+} from '@/hooks/useInteractions'
 import InteractionCard from './InteractionCard'
 import InteractionComposerInline from './InteractionComposerInline'
 import { Loader2 } from 'lucide-react'
 import { format, isToday, isYesterday, parseISO } from 'date-fns'
 import { fr } from 'date-fns/locale'
+import { useInView } from 'react-intersection-observer'
 
 export interface ActivityTabProps {
   orgId?: number
@@ -24,20 +29,38 @@ export interface ActivityTabProps {
 }
 
 export function ActivityTab({ orgId, personId, canCreate = true }: ActivityTabProps) {
-  // Hooks (always call both unconditionally)
-  const orgQuery = useOrgInteractions(orgId || 0)
-  const personQuery = usePersonInteractions(personId || 0)
+  // Hooks infinite scroll
+  const orgQuery = useOrgInteractionsInfinite(orgId || 0, 20)
+  const personQuery = usePersonInteractionsInfinite(personId || 0, 20)
 
   const activeQuery = orgId ? orgQuery : personQuery
   const deleteMutation = useDeleteInteraction()
 
+  // Intersection observer pour charger plus
+  const { ref, inView } = useInView({
+    threshold: 0,
+  })
+
+  // Auto-charger quand visible
+  React.useEffect(() => {
+    if (inView && activeQuery.hasNextPage && !activeQuery.isFetchingNextPage) {
+      activeQuery.fetchNextPage()
+    }
+  }, [inView, activeQuery])
+
+  // Flatten all pages into single array
+  const allInteractions = useMemo(() => {
+    if (!activeQuery.data?.pages) return []
+    return activeQuery.data.pages.flatMap((page) => page.items || [])
+  }, [activeQuery.data])
+
   // Grouper par jour
   const groupedByDay = useMemo(() => {
-    if (!activeQuery?.data?.items) return []
+    if (!allInteractions.length) return []
 
-    const groups = new Map<string, typeof activeQuery.data.items>()
+    const groups = new Map<string, typeof allInteractions>()
 
-    activeQuery.data.items.forEach((interaction) => {
+    allInteractions.forEach((interaction) => {
       const date = parseISO(interaction.created_at)
       let dayLabel: string
 
@@ -56,7 +79,7 @@ export function ActivityTab({ orgId, personId, canCreate = true }: ActivityTabPr
     })
 
     return Array.from(groups.entries())
-  }, [activeQuery?.data?.items])
+  }, [allInteractions])
 
   if (activeQuery?.isLoading) {
     return (
@@ -124,6 +147,24 @@ export function ActivityTab({ orgId, personId, canCreate = true }: ActivityTabPr
               </div>
             </div>
           ))}
+
+          {/* Infinite scroll trigger + loading indicator */}
+          <div ref={ref} className="flex justify-center py-8">
+            {activeQuery.isFetchingNextPage ? (
+              <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+                <Loader2 className="animate-spin" size={20} />
+                <span className="text-sm">Chargement...</span>
+              </div>
+            ) : activeQuery.hasNextPage ? (
+              <div className="text-sm text-gray-400 dark:text-gray-500">
+                Scroll pour charger plus
+              </div>
+            ) : allInteractions.length > 0 ? (
+              <div className="text-sm text-gray-400 dark:text-gray-500">
+                Fin de la timeline
+              </div>
+            ) : null}
+          </div>
         </div>
       )}
     </div>

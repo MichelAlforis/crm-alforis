@@ -14,7 +14,7 @@
  * - DELETE /interactions/{id}
  */
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api'
 import type {
   Interaction,
@@ -133,6 +133,50 @@ export function useInbox(filters: InboxFilters = {}) {
         params,
       })
     },
+  })
+}
+
+// ============================================
+// Infinite Scroll Queries
+// ============================================
+
+/**
+ * Hook pour infinite scroll des interactions d'une organisation
+ */
+export function useOrgInteractionsInfinite(orgId: number, limit = 20) {
+  return useInfiniteQuery({
+    queryKey: [...interactionKeys.byOrg(orgId), 'infinite', limit],
+    queryFn: async ({ pageParam }) => {
+      return apiClient.request<InteractionListResponse>(
+        `/interactions/by-organisation/${orgId}`,
+        {
+          params: { limit, cursor: pageParam },
+        }
+      )
+    },
+    enabled: !!orgId,
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage) => lastPage.next_cursor || undefined,
+  })
+}
+
+/**
+ * Hook pour infinite scroll des interactions d'une personne
+ */
+export function usePersonInteractionsInfinite(personId: number, limit = 20) {
+  return useInfiniteQuery({
+    queryKey: [...interactionKeys.byPerson(personId), 'infinite', limit],
+    queryFn: async ({ pageParam }) => {
+      return apiClient.request<InteractionListResponse>(
+        `/interactions/by-person/${personId}`,
+        {
+          params: { limit, cursor: pageParam },
+        }
+      )
+    },
+    enabled: !!personId,
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage) => lastPage.next_cursor || undefined,
   })
 }
 
