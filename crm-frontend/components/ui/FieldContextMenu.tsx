@@ -11,6 +11,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { storage, AUTH_STORAGE_KEYS } from '@/lib/constants';
 
 interface FieldSuggestion {
   value: string;
@@ -49,7 +50,7 @@ export function FieldContextMenu({
         setLoading(true);
         setError(null);
 
-        const token = localStorage.getItem('access_token');
+        const token = storage.get(AUTH_STORAGE_KEYS.TOKEN);
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/ai/autofill/suggestions?field_name=${fieldName}&limit=5`,
           {
@@ -83,7 +84,7 @@ export function FieldContextMenu({
     finalValue: string | null
   ) => {
     try {
-      const token = localStorage.getItem('access_token');
+      const token = storage.get(AUTH_STORAGE_KEYS.TOKEN);
 
       const suggestion = suggestionIndex !== null ? suggestions[suggestionIndex] : null;
 
