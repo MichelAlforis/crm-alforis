@@ -7,7 +7,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Input, Button, Alert, Select } from '@/components/shared'
 import { Produit, ProduitCreate, ProduitType, ProduitStatus } from '@/lib/types'
-import { useToast } from '@/components/ui/Toast'
+import { useFormToast } from '@/hooks/useFormToast'
 import { HelpTooltip } from '@/components/help/HelpTooltip'
 
 interface ProduitFormProps {
@@ -40,7 +40,7 @@ export function ProduitForm({
   error,
   submitLabel = 'Créer',
 }: ProduitFormProps) {
-  const { showToast } = useToast()
+  const toast = useFormToast({ entityName: 'Produit', gender: 'm' })
   const {
     register,
     handleSubmit,
@@ -60,21 +60,9 @@ export function ProduitForm({
   const handleFormSubmit = async (data: ProduitCreate) => {
     try {
       await onSubmit(data)
-      showToast({
-        type: 'success',
-        title: initialData ? 'Produit mis à jour' : 'Produit créé',
-        message: initialData
-          ? 'Les informations du produit ont été enregistrées.'
-          : 'Le nouveau produit a été ajouté avec succès.',
-      })
+      toast.success(!!initialData)
     } catch (err: any) {
-      const message =
-        err?.detail || err?.message || "Impossible d'enregistrer le produit."
-      showToast({
-        type: 'error',
-        title: 'Erreur',
-        message,
-      })
+      toast.error(err)
       throw err
     }
   }
