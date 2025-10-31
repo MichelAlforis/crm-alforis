@@ -20,6 +20,7 @@ import { Plus, Mail, Edit, Trash2, Eye } from "lucide-react";
 import { useToast } from "@/hooks/useToast";
 import { useConfirm } from "@/hooks/useConfirm";
 import { logger } from '@/lib/logger'
+import { storage, AUTH_STORAGE_KEYS, EMAIL_ENDPOINTS } from '@/lib/constants'
 
 interface Template {
   id: number;
@@ -54,8 +55,8 @@ export default function EmailTemplatesPage() {
 
   const fetchTemplates = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch("/api/v1/email/templates", {
+      const token = storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN);
+      const response = await fetch(EMAIL_ENDPOINTS.TEMPLATES, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -88,8 +89,8 @@ export default function EmailTemplatesPage() {
     }
 
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch("/api/v1/email/templates", {
+      const token = storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN);
+      const response = await fetch(EMAIL_ENDPOINTS.TEMPLATES, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -138,7 +139,7 @@ export default function EmailTemplatesPage() {
       cancelText: "Annuler",
       onConfirm: async () => {
         try {
-          const token = localStorage.getItem("token");
+          const token = storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN);
           const response = await fetch(`/email/campaigns/templates/${id}`, {
             method: "DELETE",
             headers: {
