@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 
 from core.config import settings
 from core.database import get_db
+from core.rate_limit import limiter
 from core.security import create_access_token, decode_token, get_password_hash, verify_password
 from models.role import Role, UserRole
 from models.user import User
@@ -20,44 +21,8 @@ from services.transactional_email_service import TransactionalEmailService
 router = APIRouter(prefix="/auth", tags=["authentication"])
 security = HTTPBearer()
 
-# ============= RATE LIMITING =============
-# Rate limiting simple en mémoire (pour prod: utiliser Redis)
-
-
-class RateLimiter:
-    """Rate limiter simple pour protéger /login contre le brute-force"""
-
-    def __init__(self, max_attempts: int = 5, window_seconds: int = 300):
-        self.max_attempts = max_attempts
-        self.window_seconds = window_seconds  # 5 minutes par défaut
-        self.attempts: Dict[str, list] = defaultdict(list)
-
-    def is_allowed(self, identifier: str) -> bool:
-        """Vérifie si une nouvelle tentative est autorisée"""
-        now = datetime.now()
-        # Nettoyer les anciennes tentatives
-        self.attempts[identifier] = [
-            attempt
-            for attempt in self.attempts[identifier]
-            if (now - attempt).total_seconds() < self.window_seconds
-        ]
-
-        # Vérifier le nombre de tentatives
-        if len(self.attempts[identifier]) >= self.max_attempts:
-            return False
-
-        # Enregistrer la nouvelle tentative
-        self.attempts[identifier].append(now)
-        return True
-
-    def reset(self, identifier: str):
-        """Réinitialiser le compteur après un succès"""
-        if identifier in self.attempts:
-            del self.attempts[identifier]
-
-
-# Singleton rate limiter (5 tentatives par IP sur 5 minutes)
-login_rate_limiter = RateLimiter(max_attempts=5, window_seconds=300)
+# Rate limiting: using slowapi with Redis backend (see core/rate_limit.py)
+# Login endpoints have strict limits to prevent brute-force attacks
 
 # ============= SCHEMAS =============
 
@@ -149,9 +114,10 @@ TEST_USERS = {
 
 
 @router.post("/login", response_model=TokenResponse)
+@limiter.limit("5/minute")  # Strict: 5 attempts per minute to prevent brute-force
 async def login(
-    credentials: LoginRequest,
     request: Request,
+    credentials: LoginRequest,
     db: Session = Depends(get_db)
 ):
     """
@@ -186,13 +152,8 @@ async def login(
     ```
     """
 
-    # Rate limiting par IP
-    client_ip = request.client.host if request.client else "unknown"
-    if not login_rate_limiter.is_allowed(client_ip):
-        raise HTTPException(
-            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-            detail="Trop de tentatives de connexion. Veuillez réessayer dans 5 minutes.",
-        )
+    # Note: Rate limiting handled by @limiter.limit decorator above
+    # Old custom rate limiter removed in favor of slowapi with Redis backend
 
     # FastAPI a déjà parsé le JSON et validé avec Pydantic via le paramètre credentials
 
@@ -272,8 +233,7 @@ async def login(
         expires_delta=timedelta(hours=settings.jwt_expiration_hours),
     )
 
-    # Login réussi: réinitialiser le rate limiter
-    login_rate_limiter.reset(client_ip)
+    # Note: slowapi automatically resets rate limits after the time window
 
     return TokenResponse(
         access_token=access_token,

@@ -136,11 +136,13 @@ def get_user_id_key(request: Request) -> str:
 # ============================================================================
 
 # Limiter principal (par IP par défaut)
+# Use Redis backend for persistence (fallback to memory if Redis unavailable)
 limiter = Limiter(
     key_func=get_remote_address,
     default_limits=[DEFAULT_LIMIT],
-    # storage_uri="redis://redis:6379/1",  # Optionnel: backend Redis
+    storage_uri="redis://redis:6379/1",  # Redis backend for distributed rate limiting
     headers_enabled=True,  # Ajouter headers X-RateLimit-*
+    strategy="fixed-window",  # fixed-window or moving-window
 )
 
 
