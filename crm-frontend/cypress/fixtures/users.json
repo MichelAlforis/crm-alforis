@@ -1,0 +1,14 @@
+{
+  "testUser": {
+    "email": "test@alforis.fr",
+    "password": "Test1234!",
+    "firstName": "Test",
+    "lastName": "User"
+  },
+  "adminUser": {
+    "email": "admin@alforis.fr",
+    "password": "Admin1234!",
+    "firstName": "Admin",
+    "lastName": "User"
+  }
+}
