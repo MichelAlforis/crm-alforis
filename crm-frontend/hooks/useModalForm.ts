@@ -50,7 +50,7 @@ export interface UseModalFormOptions<T> {
   closeOnSuccess?: boolean
 }
 
-export interface UseModalFormReturn<T> {
+export interface UseModalFormReturn<T extends Record<string, unknown>> {
   /** Current form values */
   values: T
   /** Whether modal is open */
@@ -70,7 +70,7 @@ export interface UseModalFormReturn<T> {
   /** Handle input change for a specific field */
   handleChange: (field: keyof T) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void
   /** Set a specific field value */
-  setFieldValue: (field: keyof T, value: any) => void
+  setFieldValue: <K extends keyof T>(field: K, value: T[K]) => void
   /** Handle form submission */
   handleSubmit: (e: React.FormEvent) => Promise<void>
   /** Reset form to initial values */
@@ -79,7 +79,7 @@ export interface UseModalFormReturn<T> {
   clearError: () => void
 }
 
-export function useModalForm<T extends Record<string, any>>({
+export function useModalForm<T extends Record<string, unknown>>({
   initialValues,
   onSubmit,
   onSuccess,
@@ -124,7 +124,7 @@ export function useModalForm<T extends Record<string, any>>({
 
       setValues((prev) => ({
         ...prev,
-        [field]: value,
+        [field]: value as T[typeof field],
       }))
 
       // Clear validation error for this field
@@ -138,7 +138,7 @@ export function useModalForm<T extends Record<string, any>>({
     }
   }, [validationErrors])
 
-  const setFieldValue = useCallback((field: keyof T, value: any) => {
+  const setFieldValue = useCallback(<K extends keyof T>(field: K, value: T[K]) => {
     setValues((prev) => ({
       ...prev,
       [field]: value,
@@ -184,12 +184,17 @@ export function useModalForm<T extends Record<string, any>>({
       if (closeOnSuccess) {
         close()
       }
-    } catch (err: any) {
-      const errorMessage = err?.detail || err?.message || 'Une erreur est survenue'
+    } catch (err: unknown) {
+      const errorMessage =
+        (typeof err === 'object' && err !== null && 'detail' in err && typeof err.detail === 'string'
+          ? err.detail
+          : err instanceof Error
+            ? err.message
+            : 'Une erreur est survenue')
       setError(errorMessage)
 
       if (onError) {
-        onError(err)
+        onError(err instanceof Error ? err : new Error(errorMessage))
       }
     } finally {
       setIsSubmitting(false)

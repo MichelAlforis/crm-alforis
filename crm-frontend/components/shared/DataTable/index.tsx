@@ -25,34 +25,34 @@ import { DataTableSkeleton } from './DataTableSkeleton'
 import { DataTablePagination } from './DataTablePagination'
 import { DataTableBulkActions } from './DataTableBulkActions'
 
-export interface Column<T = any> {
+export interface Column<T = unknown> {
   id: string
   header: string
   accessorKey?: keyof T
-  accessor?: (row: T) => any
-  cell?: (value: any, row: T) => React.ReactNode
+  accessor?: (row: T) => unknown
+  cell?: (value: unknown, row: T) => React.ReactNode
   sortable?: boolean
   filterable?: boolean
   width?: string
   minWidth?: string
 }
 
-export interface BulkAction<T = any> {
+export interface BulkAction<T = unknown> {
   id: string
   label: string
-  icon?: React.ComponentType<any>
+  icon?: React.ComponentType<unknown>
   onClick: (selectedRows: T[]) => void | Promise<void>
   variant?: 'default' | 'danger'
 }
 
-export interface QuickAction<T = any> {
+export interface QuickAction<T = unknown> {
   id: string
   label: string
-  icon?: React.ComponentType<any>
+  icon?: React.ComponentType<unknown>
   onClick: (row: T) => void
 }
 
-export interface DataTableProps<T = any> {
+export interface DataTableProps<T = unknown> {
   data: T[]
   columns: Column<T>[]
   keyExtractor: (row: T) => string | number
@@ -85,7 +85,7 @@ export interface DataTableProps<T = any> {
   className?: string
 }
 
-export function DataTable<T = any>({
+export function DataTable<T = unknown>({
   data,
   columns,
   keyExtractor,

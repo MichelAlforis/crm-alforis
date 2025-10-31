@@ -1,10 +1,12 @@
 'use client'
 import { logger } from '@/lib/logger'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import { useTasks } from '@/hooks/useTasks'
-import TaskForm from '@/components/forms/TaskForm'
 import type { Task, TaskStatus, TaskPriority } from '@/lib/types'
+
+// Lazy load TaskForm (only loads when modal opens)
+const TaskForm = lazy(() => import('@/components/forms/TaskForm'))
 
 // ============= PRIORITY BADGE =============
 
@@ -287,7 +289,11 @@ export default function KanbanPage() {
         </div>
 
         {/* Task Form Modal */}
-        <TaskForm isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} />
+        {isFormOpen && (
+          <Suspense fallback={<div>Chargement...</div>}>
+            <TaskForm isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} />
+          </Suspense>
+        )}
       </div>
     </div>
   )

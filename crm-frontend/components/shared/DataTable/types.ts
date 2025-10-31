@@ -7,18 +7,18 @@ import { LucideIcon } from 'lucide-react'
 
 // ============= COLUMN =============
 
-export interface Column<T = any> {
+export interface Column<T = unknown> {
   id: string
   header: string
-  accessor: keyof T | ((row: T) => any)
+  accessor: keyof T | ((row: T) => unknown)
   sortable?: boolean
   searchable?: boolean
-  render?: (value: any, row: T) => React.ReactNode
+  render?: (value: unknown, row: T) => React.ReactNode
 }
 
 // ============= ACTIONS =============
 
-export interface QuickAction<T = any> {
+export interface QuickAction<T = unknown> {
   id: string
   label: string
   icon?: LucideIcon
@@ -26,7 +26,7 @@ export interface QuickAction<T = any> {
   variant?: 'default' | 'danger'
 }
 
-export interface BulkAction<T = any> {
+export interface BulkAction<T = unknown> {
   id: string
   label: string
   icon?: LucideIcon
@@ -36,7 +36,7 @@ export interface BulkAction<T = any> {
 
 // ============= DATA TABLE PROPS =============
 
-export interface DataTableProps<T = any> {
+export interface DataTableProps<T = unknown> {
   // Required
   data: T[]
   columns: Column<T>[]

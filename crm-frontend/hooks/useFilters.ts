@@ -40,7 +40,7 @@ export interface UseFiltersOptions<T> {
   onReset?: () => void
 }
 
-export interface UseFiltersReturn<T> {
+export interface UseFiltersReturn<T extends Record<string, unknown>> {
   /** Current filter values */
   values: T
   /** Set all filter values at once */
@@ -48,7 +48,7 @@ export interface UseFiltersReturn<T> {
   /** Handle filter change (compatible with AdvancedFilters component) */
   handleChange: (key: string, value: unknown) => void
   /** Set a specific filter value */
-  setFilter: (key: keyof T, value: any) => void
+  setFilter: <K extends keyof T>(key: K, value: T[K]) => void
   /** Reset all filters to initial values */
   reset: () => void
   /** Whether any filters are active (different from initial values) */
@@ -59,7 +59,7 @@ export interface UseFiltersReturn<T> {
   activeCount: number
 }
 
-export function useFilters<T extends Record<string, any>>({
+export function useFilters<T extends Record<string, unknown>>({
   initialValues,
   onChange,
   onReset,
@@ -74,7 +74,7 @@ export function useFilters<T extends Record<string, any>>({
       const newValues = {
         ...prev,
         [key]: value,
-      }
+      } as T
 
       if (onChange) {
         onChange(newValues)
@@ -84,12 +84,12 @@ export function useFilters<T extends Record<string, any>>({
     })
   }, [onChange])
 
-  const setFilter = useCallback((key: keyof T, value: any) => {
+  const setFilter = useCallback(<K extends keyof T>(key: K, value: T[K]) => {
     setValues((prev) => {
       const newValues = {
         ...prev,
         [key]: value,
-      }
+      } as T
 
       if (onChange) {
         onChange(newValues)

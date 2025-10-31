@@ -9,7 +9,7 @@ interface MailingList {
   name: string
   description?: string
   target_type: string
-  filters: any
+  filters: Record<string, unknown>
   recipient_count: number
   is_active: boolean
   last_used_at?: string
@@ -21,7 +21,7 @@ interface MailingListInput {
   name: string
   description?: string
   target_type: string
-  filters?: any
+  filters?: Record<string, unknown>
   recipient_count?: number
   is_active?: boolean
 }
@@ -43,6 +43,23 @@ interface PaginatedResponse<T> {
 interface UseMailingListsOptions {
   filters?: MailingListFilters
   autoRefetch?: boolean
+}
+
+const extractErrorMessage = (error: unknown, fallback: string): string => {
+  if (error && typeof error === 'object' && 'response' in error) {
+    const maybeResponse = (error as { response?: unknown }).response
+    if (maybeResponse && typeof maybeResponse === 'object' && 'data' in maybeResponse) {
+      const maybeData = (maybeResponse as { data?: unknown }).data
+      if (maybeData && typeof maybeData === 'object' && 'detail' in maybeData) {
+        const detail = (maybeData as { detail?: unknown }).detail
+        if (typeof detail === 'string') {
+          return detail
+        }
+      }
+    }
+  }
+
+  return fallback
 }
 
 /**
@@ -107,11 +124,11 @@ export function useMailingLists(options?: UseMailingListsOptions) {
         message: `La liste "${data.name}" a été créée avec succès`,
       })
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       showToast({
         type: 'error',
         title: 'Erreur',
-        message: error.response?.data?.detail || 'Impossible de créer la liste',
+        message: extractErrorMessage(error, 'Impossible de créer la liste'),
       })
     },
   })
@@ -131,11 +148,11 @@ export function useMailingLists(options?: UseMailingListsOptions) {
         message: `La liste "${data.name}" a été mise à jour`,
       })
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       showToast({
         type: 'error',
         title: 'Erreur',
-        message: error.response?.data?.detail || 'Impossible de mettre à jour la liste',
+        message: extractErrorMessage(error, 'Impossible de mettre à jour la liste'),
       })
     },
   })
@@ -154,11 +171,11 @@ export function useMailingLists(options?: UseMailingListsOptions) {
         message: 'La liste a été supprimée avec succès',
       })
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       showToast({
         type: 'error',
         title: 'Erreur',
-        message: error.response?.data?.detail || 'Impossible de supprimer la liste',
+        message: extractErrorMessage(error, 'Impossible de supprimer la liste'),
       })
     },
   })
@@ -176,11 +193,11 @@ export function useMailingLists(options?: UseMailingListsOptions) {
         title: data.is_active ? 'Liste activée' : 'Liste désactivée',
       })
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       showToast({
         type: 'error',
         title: 'Erreur',
-        message: error.response?.data?.detail || "Impossible de modifier l'état de la liste",
+        message: extractErrorMessage(error, "Impossible de modifier l'état de la liste"),
       })
     },
   })

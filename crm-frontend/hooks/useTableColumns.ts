@@ -5,14 +5,14 @@ import { useState, useEffect, useCallback } from 'react'
 import { logger } from '@/lib/logger'
 import { storage } from '@/lib/constants'
 
-export interface ColumnConfig<T = any> {
+export interface ColumnConfig<T = unknown> {
   key: string
   header: string
-  accessor: string | ((row: T) => any)
+  accessor: string | ((row: T) => unknown)
   visible: boolean
   sortable?: boolean
   width?: string
-  render?: (value: any, row: T, index: number) => React.ReactNode
+  render?: (value: unknown, row: T, index: number) => React.ReactNode
   className?: string
 }
 
@@ -27,7 +27,7 @@ interface UseTableColumnsOptions<T> {
  * - Provides functions to show/hide columns
  * - Returns only visible columns for the Table component
  */
-export function useTableColumns<T = any>({
+export function useTableColumns<T = unknown>({
   storageKey,
   defaultColumns,
 }: UseTableColumnsOptions<T>) {

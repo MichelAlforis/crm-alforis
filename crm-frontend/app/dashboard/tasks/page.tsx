@@ -1,12 +1,14 @@
 'use client'
 import { logger } from '@/lib/logger'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import { useTaskViews, useTasks } from '@/hooks/useTasks'
 import { useFilters } from '@/hooks/useFilters'
-import TaskForm from '@/components/forms/TaskForm'
 import { AdvancedFilters } from '@/components/shared'
 import type { Task, TaskPriority } from '@/lib/types'
+
+// Lazy load TaskForm (only loads when modal opens)
+const TaskForm = lazy(() => import('@/components/forms/TaskForm'))
 
 // ============= PRIORITY BADGE =============
 
@@ -457,7 +459,11 @@ export default function TaskdeskPage() {
         </div>
 
         {/* Task Form Modal */}
-        <TaskForm isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} />
+        {isFormOpen && (
+          <Suspense fallback={<div>Chargement...</div>}>
+            <TaskForm isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} />
+          </Suspense>
+        )}
       </div>
     </div>
   )
