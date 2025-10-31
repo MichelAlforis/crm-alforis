@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { ROUTES, withQuery } from "@/lib/constants"
 import { ArrowLeft, Power, PowerOff } from 'lucide-react'
 import {
@@ -24,33 +24,31 @@ import { OrganisationTimeline } from '@/components/organisations/OrganisationTim
 import { useToast } from '@/hooks/useToast'
 import { CampaignSubscriptionManager } from '@/components/email/CampaignSubscriptionManager'
 import { ActivityTab } from '@/components/interactions/ActivityTab'
+import { useEntityDetail } from '@/hooks/useEntityDetail'
 
 type TabType = 'informations' | 'activite'
 
 export default function OrganisationDetailPage() {
-  const params = useParams<{ id?: string }>()
   const router = useRouter()
   const { showToast } = useToast()
 
-  const [activeTab, setActiveTab] = useState<TabType>('informations')
-
-  const organisationId = React.useMemo(() => {
-    const rawId = params?.id
-    const parsed = rawId ? Number.parseInt(rawId, 10) : NaN
-    return Number.isNaN(parsed) ? null : parsed
-  }, [params])
+  const {
+    entityId: organisationId,
+    isEditModalOpen,
+    setIsEditModalOpen,
+    confirmDialog,
+    setConfirmDialog,
+    activeTab,
+    setActiveTab,
+    handleDeleteWithRedirect,
+  } = useEntityDetail<TabType>({ listRoute: ROUTES.CRM.ORGANISATIONS })
 
   const { data: organisation, isLoading, error } = useOrganisation(organisationId ?? 0)
   const { data: mandats } = useMandatsByOrganisation(organisationId ?? 0)
   const updateMutation = useUpdateOrganisation()
   const deleteMutation = useDeleteOrganisation()
 
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isInactivating, setIsInactivating] = useState(false)
-  const [confirmDialog, setConfirmDialog] = useState<{
-    isOpen: boolean
-    type: 'deactivate' | 'reactivate' | 'delete'
-  }>({ isOpen: false, type: 'deactivate' })
 
   const handleUpdate = async (data: OrganisationUpdate) => {
     if (!organisationId) return
@@ -118,15 +116,13 @@ export default function OrganisationDetailPage() {
     if (!organisationId || !organisation) return
 
     try {
-      await deleteMutation.mutateAsync(organisationId)
-      showToast({
-        type: 'success',
-        title: 'Organisation supprimée avec succès',
+      await handleDeleteWithRedirect(async () => {
+        await deleteMutation.mutateAsync(organisationId)
+        showToast({
+          type: 'success',
+          title: 'Organisation supprimée avec succès',
+        })
       })
-      setConfirmDialog({ isOpen: false, type: 'delete' })
-      setTimeout(() => {
-        router.push(ROUTES.CRM.ORGANISATIONS)
-      }, 500)
     } catch (_error) {
       showToast({
         type: 'error',
