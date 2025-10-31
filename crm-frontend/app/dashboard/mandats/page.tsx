@@ -14,7 +14,7 @@ import { usePagination } from '@/hooks/usePagination'
 import { Card, Button, Alert, AdvancedFilters, ExportButtons } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
-import SearchBar from '@/components/search/SearchBar'
+import { SearchEntity } from '@/components/shared/Search'
 import { MandatStatus } from '@/lib/types'
 
 interface Mandat {
@@ -263,7 +263,7 @@ export default function MandatsPage() {
       <Card>
         <div className="space-y-4">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <SearchBar
+            <SearchEntity
               placeholder="Rechercher un mandat…"
               entityType="mandats"
               onQueryChange={setSearchQuery}
