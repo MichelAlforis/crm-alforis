@@ -14,8 +14,7 @@ from sqlalchemy import func, desc
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
-from database import get_db
-from auth.jwt import get_current_user
+from core import get_db, get_current_user
 from models.user import User
 from models.person import Person
 from models.organisation import Organisation

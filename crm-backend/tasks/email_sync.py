@@ -260,7 +260,7 @@ def cleanup_old_emails_task(self, days_to_keep: int = 365) -> Dict[str, Any]:
         db.close()
 
 
-@app.task(name="tasks.email_sync.test_celery_task")
+@celery_app.task(name="tasks.email_sync.test_celery_task")
 def test_celery_task(message: str = "Hello from Celery!") -> Dict[str, Any]:
     """
     Tâche de test pour vérifier que Celery fonctionne correctement.

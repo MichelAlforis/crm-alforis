@@ -4,6 +4,7 @@ from api.routes import (
     ai_agent,
     ai_autofill,
     ai_learning,
+    ai_ollama,
     ai_statistics,
     auth,
     autofill_hitl,
@@ -120,6 +121,9 @@ api_router.include_router(ai_autofill.router)
 
 # 🧠 AI LEARNING & PATTERNS (Phase 3 - AI Memory System)
 api_router.include_router(ai_learning.router)
+
+# 🚀 AI OLLAMA (LiteLLM + Redis Cache)
+api_router.include_router(ai_ollama.router)
 
 # ⚡ IMPORTS ROUTES (bulk operations)
 api_router.include_router(imports.router)

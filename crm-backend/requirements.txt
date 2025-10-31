@@ -38,6 +38,7 @@ flower==2.0.1  # Celery monitoring UI
 # AI Agent
 anthropic==0.39.0  # Anthropic Claude API
 openai==1.54.0  # OpenAI GPT API
+litellm==1.51.0  # Unified LLM API with caching (Ollama, OpenAI, Anthropic)
 cryptography==42.0.0  # Chiffrement AES-256 (Fernet) pour API keys
 phonenumbers==8.13.27  # Phone number parsing & E.164 normalization
 beautifulsoup4==4.12.3  # HTML parsing pour signatures Outlook

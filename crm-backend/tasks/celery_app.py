@@ -73,7 +73,7 @@ celery_app = Celery(
     include=[
         "tasks.workflow_tasks",
         "tasks.email_tasks",
-        "tasks.reminder_tasks",
+        "tasks.email_sync",
         "tasks.rgpd_tasks",
     ],
 )
@@ -115,11 +115,6 @@ celery_app.conf.update(
             "schedule": crontab(hour=9, minute=0, day_of_week=1),
             "kwargs": {"frequency": "weekly"},
         },
-        # Rappels de tâches (tous les jours à 8h)
-        "send-task-reminders": {
-            "task": "tasks.reminder_tasks.send_task_reminders",
-            "schedule": crontab(hour=8, minute=0),
-        },
         # Nettoyage anciennes exécutions (tous les dimanches à 3h)
         "cleanup-old-executions": {
             "task": "tasks.workflow_tasks.cleanup_old_executions",
@@ -151,6 +146,18 @@ celery_app.conf.update(
         "cleanup-ai-preferences": {
             "task": "tasks.email_tasks.cleanup_ai_preferences_task",
             "schedule": crontab(hour=4, minute=0, day_of_week=0),
+        },
+        # Synchronisation emails multi-comptes (toutes les 10 minutes)
+        "sync-all-email-accounts": {
+            "task": "tasks.email_sync.sync_all_active_accounts_task",
+            "schedule": crontab(minute="*/10"),
+            "options": {"expires": 600},
+        },
+        # Nettoyage des anciennes interactions email (quotidien 3h)
+        "cleanup-old-emails": {
+            "task": "tasks.email_sync.cleanup_old_emails_task",
+            "schedule": crontab(hour=3, minute=0),
+            "options": {"expires": 3600},
         },
     },
 )

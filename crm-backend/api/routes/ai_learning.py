@@ -9,11 +9,13 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field
 
-from core.database import get_db
-from core.dependencies import get_current_user
+import logging
+
+from core import get_db, get_current_user
 from models.user import User
 from services.ai_learning_service import AILearningService
-from core.logger import logger
+
+logger = logging.getLogger(__name__)
 
 
 router = APIRouter(prefix="/ai/learning", tags=["AI Learning"])

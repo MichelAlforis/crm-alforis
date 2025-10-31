@@ -5,13 +5,15 @@ Apprentissage des préférences utilisateur depuis le Context Menu.
 Améliore les suggestions au fil du temps basé sur les choix users.
 """
 
+import logging
 from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import func, and_, desc
 
 from models.ai_user_preference import AIUserPreference
-from core.logger import logger
+
+logger = logging.getLogger(__name__)
 
 
 class AILearningService:
