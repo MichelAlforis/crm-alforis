@@ -1,0 +1,52 @@
+# ===========================================
+# Docker Compose Override - DB Backup Service
+# ===========================================
+#
+# Usage:
+#   # Run backup manually:
+#   docker compose -f docker-compose.yml -f docker-compose.backup.yml run --rm db-backup
+#
+#   # Schedule with cron (daily at 2 AM):
+#   0 2 * * * cd /path/to/crm && docker compose -f docker-compose.yml -f docker-compose.backup.yml run --rm db-backup >> /var/log/crm-backup.log 2>&1
+#
+
+services:
+  # ========================================
+  # DB BACKUP (Automatic Daily Backups)
+  # ========================================
+  db-backup:
+    image: postgres:16-alpine
+    restart: "no"  # Run on-demand
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB:-crm_db}
+      POSTGRES_USER: ${POSTGRES_USER:-crm_user}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-crm_password}
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-10}
+    volumes:
+      - ./backups:/backups
+    networks:
+      - crm-network
+    command: >
+      sh -c "
+      echo '🗄️  Starting PostgreSQL backup...';
+      TIMESTAMP=$$(date +'%Y%m%d_%H%M%S');
+      BACKUP_FILE=\"/backups/crm_backup_$${TIMESTAMP}.sql.gz\";
+      pg_dump -h postgres -p 5432 -U $${POSTGRES_USER} -d $${POSTGRES_DB} --clean --if-exists | gzip > $${BACKUP_FILE};
+      if [ -f $${BACKUP_FILE} ]; then
+        echo \"✅ Backup created: $${BACKUP_FILE} (size: $$(du -h $${BACKUP_FILE} | cut -f1))\";
+        find /backups -name 'crm_backup_*.sql.gz' -type f -mtime +$${BACKUP_RETENTION_DAYS} -delete;
+        BACKUP_COUNT=$$(find /backups -name 'crm_backup_*.sql.gz' -type f | wc -l);
+        echo \"✅ Cleanup complete (retention: $${BACKUP_RETENTION_DAYS} days, $${BACKUP_COUNT} backups kept)\";
+      else
+        echo '❌ Backup failed!';
+        exit 1;
+      fi
+      "
+    logging:
+      driver: "json-file"
+      options: { max-size: "5m", max-file: "2" }
