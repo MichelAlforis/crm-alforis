@@ -12,7 +12,7 @@
 |-------|--------|----------|--------|
 | **Phase 1** - Quick Wins | ✅ Complété | 100% | ~1,565 lignes |
 | **Phase 1 Bonus** - localStorage Migration | ✅ Complété | 100% | ~1,270 lignes |
-| **Phase 2** - Migration & Cleanup | 🔄 En cours | 50% | ~9h / ~18h |
+| **Phase 2** - Migration & Cleanup | 🔄 En cours | 52% | ~10h / ~18h |
 | **Phase 3** - Optimizations | 📋 Planifié | 0% | ~20h |
 
 **Total Code Écrit:** ~2,835 lignes
@@ -231,24 +231,37 @@ fb9f7ada refactor(frontend): Migrate localStorage to storage helper
 
 ---
 
-### 2.3 Consolidate Duplicate Components (❌ À FAIRE - 0%)
+### 2.3 Consolidate Duplicate Components (🔄 EN COURS - 10%)
 
 **Objectif:** Éliminer les composants dupliqués
 
 **Duplications identifiées:**
 
 #### 🔴 Tables (3 implémentations)
-- `components/shared/TableV2.tsx` (moderne, type-safe)
-- `components/shared/DataTable/` (système complet avec sorting/filters)
-- Tables custom dans pages (email-campaigns, etc.)
+- `components/shared/Table.tsx` (basique, ~13KB) - ⚠️ **1 usage** → À supprimer
+- `components/shared/TableV2.tsx` (moderne, ~15KB) - **11 usages** → Legacy support
+- `components/shared/DataTable/` (ultra-premium, ~30KB) - **3 usages** → ✅ **RÉFÉRENCE**
 
-**Plan:**
-1. Analyser les 3 implémentations
-2. Choisir la meilleure (probablement DataTable)
-3. Créer `components/shared/Table/` unifié
-4. Migrer tous les usages (~15 fichiers)
+**Analyse complétée:**
+- ✅ DataTable est le système le plus complet:
+  - Multi-sélection + bulk actions
+  - Tri, recherche, pagination
+  - Quick actions au survol
+  - Dark mode, skeletons, états vides
+  - README complet avec exemples
+- ⚠️ TableV2 largement utilisé (11 fichiers) → migration risquée
+- ✅ Table.tsx peu utilisé (1 fichier) → supprimer d'abord
 
-**Effort:** ~3h
+**Décision:** DataTable devient la référence pour les nouvelles features
+
+**Migration Plan:**
+1. ✅ Analyse complétée - DataTable = référence
+2. ⏳ Supprimer Table.tsx + migrer RecipientSelectorTableV2
+3. ⏳ Documenter migration TableV2 → DataTable
+4. ⏳ Migrer progressivement les 11 usages TableV2
+5. ⏳ Supprimer TableV2 quand migration 100%
+
+**Effort:** ~3-4h
 
 #### 🟡 Search Components (2+ implémentations)
 - `components/shared/GlobalSearchInputAdvanced.tsx`
