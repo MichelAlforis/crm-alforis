@@ -66,7 +66,8 @@ class DetectDuplicatesRequest(BaseModel):
     entity_type: str = Field(default="organisation", description="Type d'entité à analyser")
     limit: Optional[int] = Field(None, ge=1, le=1000, description="Nombre max d'entités à analyser")
 
-    model_config = ConfigDict(json_schema_extra={"example": {"entity_type": "organisation", "limit": 100}}
+    class Config:
+        json_schema_extra = {"example": {"entity_type": "organisation", "limit": 100}}
 
 
 class EnrichOrganisationsRequest(BaseModel):
@@ -74,25 +75,29 @@ class EnrichOrganisationsRequest(BaseModel):
         None, description="IDs spécifiques à enrichir (vide = toutes)"
     )
 
-    model_config = ConfigDict(json_schema_extra={"example": {"organisation_ids": [1, 2, 3, 10]}}
+    class Config:
+        json_schema_extra = {"example": {"organisation_ids": [1, 2, 3, 10]}}
 
 
 class CheckDataQualityRequest(BaseModel):
     organisation_ids: Optional[List[int]] = Field(None, description="IDs à vérifier")
 
-    model_config = ConfigDict(json_schema_extra={"example": {"organisation_ids": None}}
+    class Config:
+        json_schema_extra = {"example": {"organisation_ids": None}}
 
 
 class ApproveSuggestionRequest(BaseModel):
     notes: Optional[str] = Field(None, max_length=1000, description="Notes de validation")
 
-    model_config = ConfigDict(json_schema_extra={"example": {"notes": "Vérifié manuellement, fusion approuvée"}}
+    class Config:
+        json_schema_extra = {"example": {"notes": "Vérifié manuellement, fusion approuvée"}}
 
 
 class RejectSuggestionRequest(BaseModel):
     notes: Optional[str] = Field(None, max_length=1000, description="Raison du rejet")
 
-    model_config = ConfigDict(json_schema_extra={
+    class Config:
+        json_schema_extra = {
             "example": {"notes": "Ce ne sont pas des doublons, entreprises différentes"}
         }
 
@@ -101,7 +106,8 @@ class BatchApproveSuggestionsRequest(BaseModel):
     suggestion_ids: List[int] = Field(..., min_length=1, description="Liste des IDs à approuver")
     notes: Optional[str] = Field(None, max_length=1000, description="Notes communes")
 
-    model_config = ConfigDict(json_schema_extra={
+    class Config:
+        json_schema_extra = {
             "example": {
                 "suggestion_ids": [1, 2, 3, 4, 5],
                 "notes": "Vérifié en masse, tous corrects",
@@ -113,7 +119,8 @@ class BatchRejectSuggestionsRequest(BaseModel):
     suggestion_ids: List[int] = Field(..., min_length=1, description="Liste des IDs à rejeter")
     notes: Optional[str] = Field(None, max_length=1000, description="Raison commune du rejet")
 
-    model_config = ConfigDict(json_schema_extra={
+    class Config:
+        json_schema_extra = {
             "example": {"suggestion_ids": [10, 11, 12], "notes": "Faux positifs détectés"}
         }
 
@@ -129,7 +136,8 @@ class UpdateAIConfigurationRequest(BaseModel):
     daily_budget_usd: Optional[float] = Field(None, ge=0.0)
     monthly_budget_usd: Optional[float] = Field(None, ge=0.0)
 
-    model_config = ConfigDict(json_schema_extra={
+    class Config:
+        json_schema_extra = {
             "example": {
                 "auto_apply_enabled": True,
                 "auto_apply_confidence_threshold": 0.95,
@@ -164,7 +172,8 @@ class AISuggestionResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
 
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        from_attributes = True
 
 
 class AIExecutionResponse(BaseModel):
@@ -187,7 +196,8 @@ class AIExecutionResponse(BaseModel):
     triggered_by: Optional[int] = None
     created_at: datetime
 
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        from_attributes = True
 
 
 class AIConfigurationResponse(BaseModel):
@@ -215,7 +225,8 @@ class AIConfigurationResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
 
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        from_attributes = True
 
 
 class AIStatisticsResponse(BaseModel):
@@ -235,7 +246,8 @@ class AIStatisticsResponse(BaseModel):
     cost_by_provider: Dict[str, float]
     config: Dict[str, Any]
 
-    model_config = ConfigDict(json_schema_extra={
+    class Config:
+        json_schema_extra = {
             "example": {
                 "total_suggestions": 247,
                 "pending_suggestions": 12,
@@ -271,7 +283,8 @@ class AITaskStatusResponse(BaseModel):
     estimated_time_remaining_seconds: Optional[int] = None
     current_step: Optional[str] = None
 
-    model_config = ConfigDict(json_schema_extra={
+    class Config:
+        json_schema_extra = {
             "example": {
                 "task_id": 123,
                 "task_type": "duplicate_scan",
@@ -293,7 +306,8 @@ class BatchOperationResponse(BaseModel):
     skipped: int
     results: List[Dict[str, Any]]
 
-    model_config = ConfigDict(json_schema_extra={
+    class Config:
+        json_schema_extra = {
             "example": {
                 "total_requested": 5,
                 "successful": 4,
@@ -317,7 +331,8 @@ class SuggestionPreviewResponse(BaseModel):
     changes_summary: List[Dict[str, Any]]
     impact_assessment: Optional[str] = None
 
-    model_config = ConfigDict(json_schema_extra={
+    class Config:
+        json_schema_extra = {
             "example": {
                 "suggestion_id": 123,
                 "entity_type": "organisation",
