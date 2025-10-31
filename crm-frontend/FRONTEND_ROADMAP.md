@@ -527,50 +527,63 @@ await organisationsAPI.getOrganisations()
 
 ---
 
-### 2.5 Standardize State Management (📋 FUTURE - Décision stratégique requise)
+### 2.5 Standardize State Management ✅ (TERMINÉ)
 
-**Objectif:** Architecture state unifiée
+**Objectif:** Architecture state unifiée → **Option B** (React Query + Zustand + URL-first)
 
-**Note:** Nécessite une décision architecturale stratégique avant implémentation.
-
-**Situation actuelle:**
-- Mix `useState` local
-- React Query pour API calls (bon ✅)
-- Custom hooks pour complex state
-- Context API pour auth/theme (limité)
-- Pas de state global management
-
-**Options à évaluer:**
-
-#### Option A: React Query + Context (Minimal)
-```typescript
-// API state: React Query (déjà en place) ✅
-// Global state: Context API (auth, theme, sidebar)
-// Local state: useState
+**Architecture implémentée:**
 ```
-**Pros:** Simple, pas de deps
-**Cons:** Context peut être verbose
-
-#### Option B: React Query + Zustand (Moderne)
-```typescript
-// API state: React Query ✅
-// Global state: Zustand (lightweight, simple)
-// Local state: useState
+SERVER STATE       → React Query (TanStack v5) ✅
+URL STATE          → useUrlState + Next.js searchParams
+GLOBAL UI STATE    → Zustand (stores/ui.ts)
+LOCAL UI STATE     → useState / useReducer
+COMPLEX WORKFLOWS  → XState (cas ciblés uniquement)
 ```
-**Pros:** Zustand super simple, performant
-**Cons:** +1 dépendance
 
-#### Option C: Tout-en-un avec TanStack Query + Router
-```typescript
-// API state + cache: TanStack Query v5
-// Router state: TanStack Router (avec search params)
+**Fichiers créés:**
+- `stores/ui.ts` (191L) - Store Zustand global avec persistence
+- `hooks/useUrlState.ts` (266L) - URL state management (useUrlState, useUrlParams)
+- `docs/STATE_MANAGEMENT.md` - Architecture doc + philosophy + decision tree
+- `docs/STATE_MIGRATION_EXAMPLES.md` - 7 exemples before/after + checklist
+
+**Features implémentées:**
+
+**Zustand Store (`stores/ui.ts`):**
+- Sidebar state (collapsed, toggle, persisted)
+- Modals (activeModal, modalData, open/close)
+- Toasts (add, remove, auto-dismiss 5s)
+- Bulk selections (selectedItems Set, toggle, selectAll, clear)
+- Display prefs (viewMode, density, feature flags - persisted)
+- Wizard state (step, data, reset)
+- Selectors pour performance
+
+**URL State Hook (`useUrlState`):**
+- `useUrlState(key, default)` - single param with type inference
+- `useUrlParams(defaults)` - multiple params + bulk update
+- Shallow routing par défaut (no full page reload)
+- SSR-compatible (parseUrlParams helper)
+- Type-safe serialization (boolean, number, string[], string)
+- Clean URLs (default values omitted)
+
+**Bénéfices:**
+- ✅ URLs shareable/bookmarkable (filters, tabs, pagination)
+- ✅ Persistence automatique (Zustand → localStorage)
+- ✅ Zero prop drilling
+- ✅ Performance optimisée (selectors)
+- ✅ SSR-friendly (Next.js App Router compatible)
+- ✅ Type-safe
+- ✅ Migration progressive (no breaking changes)
+
+**Usage:**
+```tsx
+// URL State
+const [page, setPage] = useUrlState('page', 1)
+const [filters, setFilters] = useUrlParams({ search: '', status: 'active' })
+
+// Zustand
+const openModal = useUIStore((state) => state.openModal)
+const collapsed = useUIStore(selectSidebarCollapsed)
 ```
-**Pros:** Écosystème cohérent, type-safe
-**Cons:** Migration plus lourde
-
-**Décision à prendre:** Quelle architecture choisir ?
-
-**Effort:** ~4h (selon choix)
 
 ---
 
