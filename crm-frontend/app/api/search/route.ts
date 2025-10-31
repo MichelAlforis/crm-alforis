@@ -16,7 +16,7 @@ export async function GET(req: Request) {
   const API = process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1$/, '').replace(/\/$/, '') || 'http://localhost:8000'
 
   // Récupérer le token d'authentification
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const token = cookieStore.get('auth_token')?.value || cookieStore.get('token')?.value
 
   const resources = [

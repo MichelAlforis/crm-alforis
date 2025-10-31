@@ -3,12 +3,13 @@
 
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Input, Button, Alert, Select } from '@/components/shared'
 import { Organisation, OrganisationCreate, OrganisationCategory } from '@/lib/types'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
-import { useToast } from '@/components/ui/Toast'
+import { useFormToast } from '@/hooks/useFormToast'
+import { useFormAutoFocus } from '@/hooks/useFormAutoFocus'
 import { HelpTooltip } from '@/components/help/HelpTooltip'
 import { useContextMenu } from '@/hooks/useContextMenu'
 import { FieldContextMenu } from '@/components/ui/FieldContextMenu'
@@ -38,7 +39,7 @@ export function OrganisationForm({
   error,
   submitLabel = 'Créer',
 }: OrganisationFormProps) {
-  const { showToast } = useToast()
+  const toast = useFormToast({ entityName: 'Organisation', gender: 'f' })
   const [showAdvanced, setShowAdvanced] = useState(false)
   const contextMenu = useContextMenu()
   const [contextMenuField, setContextMenuField] = useState<string | null>(null)
@@ -60,12 +61,7 @@ export function OrganisationForm({
   })
 
   // Focus automatique sur le premier champ en erreur
-  useEffect(() => {
-    const firstErrorField = Object.keys(errors)[0] as keyof OrganisationCreate
-    if (firstErrorField) {
-      setFocus(firstErrorField)
-    }
-  }, [errors, setFocus])
+  useFormAutoFocus(errors, setFocus)
 
   // Handle context menu open
   const handleFieldContextMenu = (e: React.MouseEvent, fieldName: string) => {
@@ -79,31 +75,15 @@ export function OrganisationForm({
     setValue(contextMenuField as keyof OrganisationCreate, value as any)
     contextMenu.hideMenu()
     setContextMenuField(null)
-    showToast({
-      type: 'success',
-      title: 'Suggestion appliquée',
-      message: `Le champ "${contextMenuField}" a été rempli avec la suggestion.`,
-    })
+    toast.success('Suggestion appliquée', `Le champ "${contextMenuField}" a été rempli avec la suggestion.`)
   }
 
   const handleFormSubmit = async (data: OrganisationCreate) => {
     try {
       await onSubmit(data)
-      showToast({
-        type: 'success',
-        title: initialData ? 'Organisation mise à jour' : 'Organisation créée',
-        message: initialData
-          ? "Les informations de l'organisation ont été enregistrées."
-          : "La nouvelle organisation a été ajoutée avec succès.",
-      })
+      initialData ? toast.successUpdate() : toast.successCreate()
     } catch (err: any) {
-      const message =
-        err?.detail || err?.message || "Impossible d'enregistrer l'organisation."
-      showToast({
-        type: 'error',
-        title: 'Erreur',
-        message,
-      })
+      toast.error(err)
       throw err
     }
   }

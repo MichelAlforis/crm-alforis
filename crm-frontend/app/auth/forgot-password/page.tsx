@@ -3,14 +3,12 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { useToast } from '@/hooks/useToast'
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
-  const router = useRouter()
   const { showToast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {

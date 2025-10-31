@@ -836,6 +836,13 @@ export interface WebhookEventOption {
   label: string
 }
 
+export interface AutofillOverviewStats {
+  total_suggestions: number
+  status_breakdown: Record<string, number>
+  avg_confidence: number
+  recent_24h: number
+}
+
 // ============= AUTOFILL STATS =============
 
 export interface AutofillStats {
@@ -902,6 +909,25 @@ export interface AutofillLeaderboardResponse {
     days: number
   }
   leaderboard: AutofillLeaderboardEntry[]
+}
+
+export interface AutofillJobMetrics {
+  emails_processed: number
+  signatures_parsed: number
+  signatures_cached: number
+  intents_detected: number
+  intents_cached: number
+  suggestions_created: number
+  auto_applied: number
+  manual_review: number
+  errors: number
+  processing_time_ms: number
+}
+
+export interface AutofillJobResult {
+  success: boolean
+  metrics: AutofillJobMetrics
+  summary: string
 }
 
 // ============= NOTIFICATIONS =============

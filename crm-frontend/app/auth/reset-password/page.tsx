@@ -4,7 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ROUTES, withQuery } from "@/lib/constants"
+import { ROUTES } from "@/lib/constants"
 import { useToast } from '@/hooks/useToast'
 
 function ResetPasswordForm() {

@@ -10,20 +10,21 @@ import { Play, Loader2, CheckCircle, XCircle, Clock, Zap, TrendingUp } from 'luc
 import { apiClient } from '@/lib/api'
 import { useToast } from '@/hooks/use-toast'
 import { useQuery } from '@tanstack/react-query'
+import type { AutofillJobResult, AutofillOverviewStats } from '@/lib/types'
 
 export default function AutofillJobsPage() {
   const [daysBack, setDaysBack] = useState(7)
   const [maxEmails, setMaxEmails] = useState(100)
   const [threshold, setThreshold] = useState(0.92)
   const [isRunning, setIsRunning] = useState(false)
-  const [result, setResult] = useState<any>(null)
+  const [result, setResult] = useState<AutofillJobResult | null>(null)
   const { toast } = useToast()
 
   // Fetch stats
-  const { data: stats, refetch: refetchStats } = useQuery({
+  const { data: stats, refetch: refetchStats } = useQuery<AutofillOverviewStats>({
     queryKey: ['autofill-stats'],
     queryFn: async () => {
-      const response = await apiClient.get('/autofill-jobs/stats')
+      const response = await apiClient.get<AutofillOverviewStats>('/autofill-jobs/stats')
       return response.data
     }
   })
@@ -33,7 +34,7 @@ export default function AutofillJobsPage() {
     setResult(null)
 
     try {
-      const response = await apiClient.post('/autofill-jobs/run-now', {
+      const response = await apiClient.post<AutofillJobResult>('/autofill-jobs/run-now', {
         days_back: daysBack,
         max_emails: maxEmails,
         auto_apply_threshold: threshold
@@ -194,7 +195,7 @@ export default function AutofillJobsPage() {
                 {stats.status_breakdown && (
                   <div className="space-y-2 pt-4 border-t">
                     <div className="text-sm font-medium">Répartition par statut</div>
-                    {Object.entries(stats.status_breakdown).map(([status, count]: [string, any]) => (
+                    {Object.entries(stats.status_breakdown).map(([status, count]) => (
                       <div key={status} className="flex justify-between text-sm">
                         <span className="text-muted-foreground capitalize">{status}</span>
                         <span className="font-medium">{count}</span>
