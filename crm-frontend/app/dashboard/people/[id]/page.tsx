@@ -7,12 +7,11 @@ import React, { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ROUTES, withQuery } from "@/lib/constants"
-import { Card, Button, Alert, Modal, Input } from '@/components/shared'
+import { Card, Button, Modal } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { Trash2 } from 'lucide-react'
-import { PersonForm } from '@/components/forms'
-import PersonOrgLinkForm from '@/components/forms/PersonOrgLinkForm'
+import { PersonForm, PersonOrgLinkForm } from '@/components/forms'
 import { usePeople } from '@/hooks/usePeople'
 import { useConfirm } from '@/hooks/useConfirm'
 import { useEntityDetail } from '@/hooks/useEntityDetail'
@@ -63,6 +62,7 @@ export default function PersonDetailPage() {
 
 
   const person = single.data
+  const personName = person ? `${person.first_name ?? ''} ${person.last_name ?? ''}`.trim() : ''
   const countryValue = person?.country_code || ''
   const countryLabel =
     countryValue
@@ -394,14 +394,21 @@ export default function PersonDetailPage() {
         />
       </Modal>
 
-      {/* Link Modal - AI Autofill enabled */}
-      <PersonOrgLinkForm
+      {/* Link Modal */}
+      <Modal
         isOpen={isLinkModalOpen}
         onClose={() => setIsLinkModalOpen(false)}
-        personId={personId ?? 0}
-        personName={person ? `${person.first_name} ${person.last_name}` : ''}
-        onSuccess={refresh}
-      />
+        title="Associer à une organisation"
+      >
+        <PersonOrgLinkForm
+          value={linkPayload}
+          onChange={setLinkPayload}
+          onSubmit={handleCreateLink}
+          isSubmitting={isLinkSubmitting}
+          error={linkError}
+          personName={personName}
+        />
+      </Modal>
 
       {/* Confirmation Dialogs */}
       <ConfirmDialogComponent />

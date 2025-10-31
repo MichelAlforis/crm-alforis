@@ -10,6 +10,7 @@ export { InteractionForm } from './InteractionForm'
 export { KPIForm } from './KPIForm'
 export { UserForm } from './UserForm'
 export { default as TaskForm } from './TaskForm'
+export { PersonOrgLinkForm } from './PersonOrgLinkForm'
 
 // NEW: Import forms (split by module)
 export { ImportOrganisationsForm } from './ImportOrganisationsForm'

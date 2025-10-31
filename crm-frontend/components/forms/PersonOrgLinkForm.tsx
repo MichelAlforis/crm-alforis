@@ -1,44 +1,84 @@
-// components/forms/PersonOrgLinkForm.tsx
-// Form to create Person <--> Organisation link with AI autofill
-
 'use client'
 
-import React, { useState } from 'react'
-import { Input } from '@/components/shared/Input'
-import { ModalForm } from '@/components/shared/Modal'
-import { storage, AUTH_STORAGE_KEYS } from '@/lib/constants'
-import { useAIAutofill } from '@/hooks/useAIAutofill'
+import { useEffect, useMemo, useState } from 'react'
+import type { OrganisationDetail, PersonOrganizationLinkInput } from '@/lib/types'
+import { Alert, Button, Input } from '@/components/shared'
 import { FieldContextMenu } from '@/components/ui/FieldContextMenu'
+import { useAIAutofill } from '@/hooks/useAIAutofill'
+import { apiClient } from '@/lib/api'
 
 interface PersonOrgLinkFormProps {
-  isOpen: boolean
-  onClose: () => void
-  personId: number
-  personName: string
-  onSuccess?: () => void
+  value: PersonOrganizationLinkInput
+  onChange: React.Dispatch<React.SetStateAction<PersonOrganizationLinkInput>>
+  onSubmit: () => void
+  isSubmitting: boolean
+  error?: string
+  personName?: string
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'
-
-export default function PersonOrgLinkForm({
-  isOpen,
-  onClose,
-  personId,
+export function PersonOrgLinkForm({
+  value,
+  onChange,
+  onSubmit,
+  isSubmitting,
+  error,
   personName,
-  onSuccess,
 }: PersonOrgLinkFormProps) {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [selectedOrganisation, setSelectedOrganisation] = useState<OrganisationDetail | null>(null)
 
-  const [organisationId, setOrganisationId] = useState('')
-  const [organisationName, setOrganisationName] = useState('')
-  const [jobTitle, setJobTitle] = useState('')
-  const [workEmail, setWorkEmail] = useState('')
-  const [workPhone, setWorkPhone] = useState('')
-  const [isPrimary, setIsPrimary] = useState(false)
-  const [notes, setNotes] = useState('')
+  useEffect(() => {
+    let cancelled = false
 
-  // AI Autofill hook with enriched context
+    const loadOrganisation = async () => {
+      const organisationId = value.organization_id
+
+      if (!organisationId || organisationId <= 0) {
+        setSelectedOrganisation(null)
+        return
+      }
+
+      try {
+        const organisation = await apiClient.getOrganisation(organisationId)
+        if (!cancelled) {
+          setSelectedOrganisation(organisation)
+        }
+      } catch {
+        if (!cancelled) {
+          setSelectedOrganisation(null)
+        }
+      }
+    }
+
+    loadOrganisation()
+
+    return () => {
+      cancelled = true
+    }
+  }, [value.organization_id])
+
+  const enrichedFormData = useMemo(
+    () => ({
+      organization_id: value.organization_id,
+      job_title: value.job_title,
+      work_email: value.work_email,
+      work_phone: value.work_phone,
+      is_primary: value.is_primary,
+      person_id: value.person_id,
+      person_name: personName,
+      organisation_name: selectedOrganisation?.name,
+    }),
+    [
+      personName,
+      selectedOrganisation?.name,
+      value.is_primary,
+      value.job_title,
+      value.organization_id,
+      value.person_id,
+      value.work_email,
+      value.work_phone,
+    ]
+  )
+
   const {
     handleFieldRightClick,
     showContextMenu,
@@ -47,189 +87,93 @@ export default function PersonOrgLinkForm({
     handleAutofillSuggest,
   } = useAIAutofill({
     entityType: 'person_org_link',
-    formData: {
-      job_title: jobTitle,
-      work_email: workEmail,
-      work_phone: workPhone,
-      notes,
-      person_name: personName,
-      organisation_name: organisationName,
-    },
-    onFieldUpdate: (fieldName, value) => {
-      if (fieldName === 'job_title') setJobTitle(value)
-      if (fieldName === 'work_email') setWorkEmail(value)
-      if (fieldName === 'work_phone') setWorkPhone(value)
-      if (fieldName === 'notes') setNotes(value)
+    formData: enrichedFormData,
+    onFieldUpdate: (fieldName, fieldValue) => {
+      if (typeof fieldValue !== 'string') return
+
+      const valueOrUndefined = fieldValue.trim() || undefined
+
+      if (fieldName === 'job_title') {
+        onChange((prev) => ({ ...prev, job_title: valueOrUndefined }))
+      }
+
+      if (fieldName === 'work_email') {
+        onChange((prev) => ({ ...prev, work_email: valueOrUndefined }))
+      }
+
+      if (fieldName === 'work_phone') {
+        onChange((prev) => ({ ...prev, work_phone: valueOrUndefined }))
+      }
     },
   })
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
-
-    try {
-      const token = storage.get(AUTH_STORAGE_KEYS.TOKEN) || storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN)
-
-      const linkData = {
-        person_id: personId,
-        organisation_id: parseInt(organisationId, 10),
-        job_title: jobTitle || undefined,
-        work_email: workEmail || undefined,
-        work_phone: workPhone || undefined,
-        is_primary: isPrimary,
-        notes: notes || undefined,
-      }
-
-      const response = await fetch(`${API_BASE}/org-links`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: token ? `Bearer ${token}` : '',
-        },
-        body: JSON.stringify(linkData),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.detail || 'Failed to create link')
-      }
-
-      // Success
-      if (onSuccess) onSuccess()
-      onClose()
-
-      // Reset form
-      setOrganisationId('')
-      setOrganisationName('')
-      setJobTitle('')
-      setWorkEmail('')
-      setWorkPhone('')
-      setIsPrimary(false)
-      setNotes('')
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error')
-    } finally {
-      setLoading(false)
-    }
-  }
-
   return (
-    <ModalForm
-      isOpen={isOpen}
-      onClose={onClose}
-      title={`Associer ${personName} à une organisation`}
-      onSubmit={handleSubmit}
-      submitLabel="Créer le lien"
-      isLoading={loading}
-      error={error}
-      size="md"
-      submitDisabled={!organisationId}
-    >
+    <>
       <div className="space-y-4">
-        {/* Organisation selector - simplified, in production use a proper autocomplete */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Organisation *
-          </label>
-          <input
-            type="number"
-            value={organisationId}
-            onChange={(e) => setOrganisationId(e.target.value)}
-            required
-            placeholder="ID de l'organisation"
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-          />
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-            TODO: Remplacer par un autocomplete avec recherche
-          </p>
-        </div>
+        {error && <Alert type="error" message={error} />}
 
-        {/* Organisation name (for AI context enrichment) */}
+        {/* ✅ MIGRATION 2025-10-20: Type d'organisation supprimé */}
         <Input
-          label="Nom de l'organisation (pour contexte IA)"
-          type="text"
-          value={organisationName}
-          onChange={(e) => setOrganisationName(e.target.value)}
-          placeholder="Ex: Banque Populaire, ALFORIS, etc."
+          label="Identifiant organisation"
+          type="number"
+          value={value.organization_id ? String(value.organization_id) : ''}
+          onChange={(e) => {
+            const nextValue = Number(e.target.value)
+            onChange((prev) => ({
+              ...prev,
+              organization_id: Number.isNaN(nextValue) ? 0 : nextValue,
+            }))
+          }}
+          placeholder="Ex: 12"
         />
 
-        {/* Job title with Autofill */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Fonction / Poste
-          </label>
-          <input
-            type="text"
-            value={jobTitle}
-            onChange={(e) => setJobTitle(e.target.value)}
-            onContextMenu={(e) => handleFieldRightClick(e, 'job_title')}
-            placeholder="Ex: Directeur d'Agence (clic-droit IA)"
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-          />
-        </div>
+        <Input
+          label="Rôle / fonction"
+          value={value.job_title || ''}
+          onChange={(e) =>
+            onChange((prev) => ({ ...prev, job_title: e.target.value || undefined }))
+          }
+          onContextMenu={(e) => handleFieldRightClick(e, 'job_title')}
+          placeholder="ex: Responsable Distribution (clic-droit IA)"
+        />
 
-        {/* Work email with Autofill */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Email professionnel
-          </label>
-          <input
-            type="email"
-            value={workEmail}
-            onChange={(e) => setWorkEmail(e.target.value)}
-            onContextMenu={(e) => handleFieldRightClick(e, 'work_email')}
-            placeholder="Ex: prenom.nom@organisation.fr (clic-droit IA)"
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-          />
-        </div>
+        <Input
+          label="Email professionnel"
+          value={value.work_email || ''}
+          onChange={(e) =>
+            onChange((prev) => ({ ...prev, work_email: e.target.value || undefined }))
+          }
+          onContextMenu={(e) => handleFieldRightClick(e, 'work_email')}
+          placeholder="prenom.nom@entreprise.com (clic-droit IA)"
+        />
 
-        {/* Work phone with Autofill */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Téléphone professionnel
-          </label>
-          <input
-            type="tel"
-            value={workPhone}
-            onChange={(e) => setWorkPhone(e.target.value)}
-            onContextMenu={(e) => handleFieldRightClick(e, 'work_phone')}
-            placeholder="Ex: +33 1 23 45 67 89 (clic-droit IA)"
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-          />
-        </div>
+        <Input
+          label="Téléphone professionnel"
+          value={value.work_phone || ''}
+          onChange={(e) =>
+            onChange((prev) => ({ ...prev, work_phone: e.target.value || undefined }))
+          }
+          onContextMenu={(e) => handleFieldRightClick(e, 'work_phone')}
+          placeholder="+33 ..."
+        />
 
-        {/* Is primary checkbox */}
-        <div className="flex items-center">
+        <label className="flex items-center gap-3 text-sm text-gray-700 dark:text-slate-300">
           <input
             type="checkbox"
-            id="isPrimary"
-            checked={isPrimary}
-            onChange={(e) => setIsPrimary(e.target.checked)}
-            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-700 rounded"
+            className="h-4 w-4 rounded border-gray-300 dark:border-slate-600"
+            checked={value.is_primary ?? false}
+            onChange={(e) =>
+              onChange((prev) => ({ ...prev, is_primary: e.target.checked }))
+            }
           />
-          <label htmlFor="isPrimary" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-            Contact principal dans cette organisation
-          </label>
-        </div>
+          Marquer comme contact principal
+        </label>
 
-        {/* Notes with Autofill */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Notes
-          </label>
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            onContextMenu={(e) => handleFieldRightClick(e, 'notes')}
-            rows={3}
-            placeholder="Notes sur ce lien... (clic-droit IA)"
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-          />
-        </div>
+        <Button variant="primary" className="w-full" isLoading={isSubmitting} onClick={onSubmit}>
+          Enregistrer le rattachement
+        </Button>
       </div>
 
-      {/* AI Autofill Context Menu */}
       <FieldContextMenu
         show={showContextMenu}
         position={menuPosition}
@@ -237,6 +181,7 @@ export default function PersonOrgLinkForm({
         onAutofill={handleAutofillSuggest}
         onClose={() => {}}
       />
-    </ModalForm>
+    </>
   )
 }
+
