@@ -3,6 +3,7 @@
 // Singleton pattern - Toutes les requêtes HTTP passent ici
 // Avantages: Gestion tokens, erreurs, retry logic centralisée
 
+import { storage, AUTH_STORAGE_KEYS } from '@/lib/constants'
 import {
   LoginRequest,
   TokenResponse,
@@ -104,7 +105,7 @@ class ApiClient {
    */
   private initToken(): void {
     if (typeof window !== 'undefined') {
-      this.token = localStorage.getItem('auth_token') || this.getCookie('auth_token')
+      this.token = storage.get(AUTH_STORAGE_KEYS.TOKEN) || this.getCookie('auth_token')
     }
   }
 
@@ -114,10 +115,10 @@ class ApiClient {
   private initCsrfToken(): void {
     if (typeof window !== 'undefined') {
       // Récupérer ou générer un CSRF token
-      let csrf = localStorage.getItem('csrf_token')
+      let csrf = storage.get(AUTH_STORAGE_KEYS.CSRF_TOKEN)
       if (!csrf) {
         csrf = this.generateCsrfToken()
-        localStorage.setItem('csrf_token', csrf)
+        storage.set(AUTH_STORAGE_KEYS.CSRF_TOKEN, csrf)
       }
       this.csrfToken = csrf
     }
@@ -138,7 +139,7 @@ class ApiClient {
   public setToken(token: string): void {
     this.token = token
     if (typeof window !== 'undefined') {
-      localStorage.setItem('auth_token', token)
+      storage.set(AUTH_STORAGE_KEYS.TOKEN, token)
       // Stocker aussi dans les cookies pour le middleware
       this.setCookie('auth_token', token, 1) // 1 jour
     }
@@ -154,7 +155,7 @@ class ApiClient {
 
     if (typeof window !== 'undefined') {
       const fromStorage =
-        localStorage.getItem('auth_token') || this.getCookie('auth_token')
+        storage.get(AUTH_STORAGE_KEYS.TOKEN) || this.getCookie('auth_token')
       if (fromStorage) {
         this.token = fromStorage
         return fromStorage
@@ -170,11 +171,11 @@ class ApiClient {
   public clearToken(): void {
     this.token = null
     if (typeof window !== 'undefined') {
-      localStorage.removeItem('auth_token')
+      storage.remove(AUTH_STORAGE_KEYS.TOKEN)
       this.deleteCookie('auth_token')
       // Générer un nouveau CSRF token après logout
       const newCsrf = this.generateCsrfToken()
-      localStorage.setItem('csrf_token', newCsrf)
+      storage.set(AUTH_STORAGE_KEYS.CSRF_TOKEN, newCsrf)
       this.csrfToken = newCsrf
     }
   }

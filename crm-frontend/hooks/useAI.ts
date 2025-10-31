@@ -6,6 +6,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useToast } from './useToast'
 import { apiClient } from '@/lib/api'
+import { AI_ENDPOINTS, POLLING_INTERVALS } from '@/lib/constants'
 import type {
   AISuggestion,
   AIExecution,
@@ -95,7 +96,7 @@ export const useAISuggestions = (filters?: SuggestionsFilters) => {
       if (filters?.limit) params.append('limit', filters.limit.toString())
       if (filters?.offset) params.append('offset', filters.offset.toString())
 
-      return fetchAPI<AISuggestion[]>(`/api/v1/ai/suggestions?${params}`)
+      return fetchAPI<AISuggestion[]>(`${AI_ENDPOINTS.SUGGESTIONS}?${params}`)
     },
   })
 }
@@ -106,7 +107,7 @@ export const useAISuggestions = (filters?: SuggestionsFilters) => {
 export const useAISuggestion = (id: number | null) => {
   return useQuery({
     queryKey: ['ai', 'suggestions', id],
-    queryFn: () => fetchAPI<AISuggestion>(`/api/v1/ai/suggestions/${id}`),
+    queryFn: () => fetchAPI<AISuggestion>(`${AI_ENDPOINTS.SUGGESTIONS}/${id}`),
     enabled: !!id,
   })
 }
@@ -126,7 +127,7 @@ export const useEntitySuggestions = (
       if (filters?.status) params.append('status', filters.status)
 
       return fetchAPI<AISuggestion[]>(
-        `/api/v1/ai/suggestions/${entityType}/${entityId}?${params}`
+        `${AI_ENDPOINTS.SUGGESTIONS}/${entityType}/${entityId}?${params}`
       )
     },
     enabled: !!entityType && !!entityId,
@@ -139,7 +140,7 @@ export const useEntitySuggestions = (
 export const usePreviewSuggestion = (suggestionId: number | null) => {
   return useQuery({
     queryKey: ['ai', 'suggestions', suggestionId, 'preview'],
-    queryFn: () => fetchAPI<SuggestionPreview>(`/api/v1/ai/suggestions/${suggestionId}/preview`),
+    queryFn: () => fetchAPI<SuggestionPreview>(`${AI_ENDPOINTS.SUGGESTIONS}/${suggestionId}/preview`),
     enabled: !!suggestionId,
   })
 }
@@ -150,8 +151,8 @@ export const usePreviewSuggestion = (suggestionId: number | null) => {
 export const useAIStatistics = () => {
   return useQuery({
     queryKey: ['ai', 'statistics'],
-    queryFn: () => fetchAPI<AIStatistics>('/api/v1/ai/statistics'),
-    refetchInterval: 30000, // Refresh toutes les 30s
+    queryFn: () => fetchAPI<AIStatistics>(AI_ENDPOINTS.STATISTICS),
+    refetchInterval: POLLING_INTERVALS.SLOW,
   })
 }
 
@@ -168,7 +169,7 @@ export const useAIExecutions = (filters?: ExecutionsFilters) => {
       if (filters?.limit) params.append('limit', filters.limit.toString())
       if (filters?.offset) params.append('offset', filters.offset.toString())
 
-      return fetchAPI<AIExecution[]>(`/api/v1/ai/executions?${params}`)
+      return fetchAPI<AIExecution[]>(`${AI_ENDPOINTS.EXECUTIONS}?${params}`)
     },
   })
 }
@@ -179,7 +180,7 @@ export const useAIExecutions = (filters?: ExecutionsFilters) => {
 export const useAIExecution = (id: number | null) => {
   return useQuery({
     queryKey: ['ai', 'executions', id],
-    queryFn: () => fetchAPI<AIExecution>(`/api/v1/ai/executions/${id}`),
+    queryFn: () => fetchAPI<AIExecution>(`${AI_ENDPOINTS.EXECUTION_DETAIL(id!)}`),
     enabled: !!id,
   })
 }
@@ -190,7 +191,7 @@ export const useAIExecution = (id: number | null) => {
 export const useAIConfig = () => {
   return useQuery({
     queryKey: ['ai', 'config'],
-    queryFn: () => fetchAPI<AIConfiguration>('/api/v1/ai/config'),
+    queryFn: () => fetchAPI<AIConfiguration>(AI_ENDPOINTS.CONFIG),
   })
 }
 
@@ -205,7 +206,7 @@ export const useDetectDuplicates = () => {
 
   return useMutation({
     mutationFn: (params: DetectDuplicatesRequest) =>
-      fetchAPI<AIExecution>('/api/v1/ai/duplicates/detect', {
+      fetchAPI<AIExecution>(AI_ENDPOINTS.DUPLICATES_DETECT, {
         method: 'POST',
         body: JSON.stringify(params),
       }),
@@ -237,7 +238,7 @@ export const useEnrichOrganisations = () => {
 
   return useMutation({
     mutationFn: (params: EnrichOrganisationsRequest) =>
-      fetchAPI<AIExecution>('/api/v1/ai/enrich/organisations', {
+      fetchAPI<AIExecution>(AI_ENDPOINTS.ENRICH_ORGANISATIONS, {
         method: 'POST',
         body: JSON.stringify(params),
       }),
@@ -269,7 +270,7 @@ export const useCheckQuality = () => {
 
   return useMutation({
     mutationFn: (params: CheckQualityRequest) =>
-      fetchAPI<AIExecution>('/api/v1/ai/quality/check', {
+      fetchAPI<AIExecution>(AI_ENDPOINTS.QUALITY_CHECK, {
         method: 'POST',
         body: JSON.stringify(params),
       }),
@@ -303,7 +304,7 @@ export const useApproveSuggestion = () => {
 
   return useMutation({
     mutationFn: ({ id, notes }: { id: number } & ApproveSuggestionRequest) =>
-      fetchAPI<AISuggestion>(`/api/v1/ai/suggestions/${id}/approve`, {
+      fetchAPI<AISuggestion>(AI_ENDPOINTS.SUGGESTION_APPROVE(id), {
         method: 'POST',
         body: JSON.stringify({ notes }),
       }),
@@ -335,7 +336,7 @@ export const useRejectSuggestion = () => {
 
   return useMutation({
     mutationFn: ({ id, reason }: { id: number } & RejectSuggestionRequest) =>
-      fetchAPI<AISuggestion>(`/api/v1/ai/suggestions/${id}/reject`, {
+      fetchAPI<AISuggestion>(AI_ENDPOINTS.SUGGESTION_REJECT(id), {
         method: 'POST',
         body: JSON.stringify({ reason }),
       }),
@@ -369,7 +370,7 @@ export const useBatchApproveSuggestions = () => {
 
   return useMutation({
     mutationFn: (params: BatchApproveSuggestionsRequest) =>
-      fetchAPI<BatchOperationResponse>('/api/v1/ai/suggestions/batch/approve', {
+      fetchAPI<BatchOperationResponse>(AI_ENDPOINTS.SUGGESTIONS_BATCH_APPROVE, {
         method: 'POST',
         body: JSON.stringify(params),
       }),
@@ -401,7 +402,7 @@ export const useBatchRejectSuggestions = () => {
 
   return useMutation({
     mutationFn: (params: BatchRejectSuggestionsRequest) =>
-      fetchAPI<BatchOperationResponse>('/api/v1/ai/suggestions/batch/reject', {
+      fetchAPI<BatchOperationResponse>(AI_ENDPOINTS.SUGGESTIONS_BATCH_REJECT, {
         method: 'POST',
         body: JSON.stringify(params),
       }),
@@ -435,7 +436,7 @@ export const useUpdateAIConfig = () => {
 
   return useMutation({
     mutationFn: (params: UpdateAIConfigRequest) =>
-      fetchAPI<AIConfiguration>('/api/v1/ai/config', {
+      fetchAPI<AIConfiguration>(AI_ENDPOINTS.CONFIG, {
         method: 'PATCH',
         body: JSON.stringify(params),
       }),
