@@ -391,7 +391,7 @@ export const RecipientSelectorTableV2: React.FC<RecipientSelectorTableProps> = (
       ),
       accessor: 'id',
       width: '50px',
-      render: (value: any, row: Recipient) => (
+      render: (_: any, row: Recipient) => (
         <input
           type="checkbox"
           checked={selectedIds.includes(row.id)}
@@ -423,7 +423,7 @@ export const RecipientSelectorTableV2: React.FC<RecipientSelectorTableProps> = (
       header: 'Pays',
       accessor: 'country',
       sortable: true,
-      render: (value: any, row: Recipient) => {
+      render: (_: any, row: Recipient) => {
         if (!row) return '-'
         const country = COUNTRY_OPTIONS.find(c => c.code === row.country)
         return country ? `${country.flag} ${country.name}` : row.country || '-'
@@ -433,7 +433,7 @@ export const RecipientSelectorTableV2: React.FC<RecipientSelectorTableProps> = (
       header: 'Langue',
       accessor: 'language',
       sortable: true,
-      render: (value: any, row: Recipient) => {
+      render: (_: any, row: Recipient) => {
         if (!row) return '-'
         const lang = LANGUAGE_OPTIONS.find(l => l.code === row.language)
         return lang ? `${lang.flag} ${lang.name}` : row.language || '-'

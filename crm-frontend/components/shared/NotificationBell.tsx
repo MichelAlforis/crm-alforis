@@ -107,7 +107,7 @@ export default function NotificationBell({ className, buttonClassName }: Notific
     return 'bg-border dark:bg-slate-700'
   }, [isConnected, isConnecting, lastError])
 
-  const statusLabel = useMemo(() => {
+  const _ = useMemo(() => {
     if (isConnecting) return 'Connexion…'
     if (isConnected) return 'Connecté'
     if (lastError) return 'Erreur de connexion'

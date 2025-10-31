@@ -72,7 +72,7 @@ export function useImport({ resource, updateExisting = false, onSuccess, onError
       setImportResult(result)
 
       // Toast de succès avec détails
-      const { created, updated, errors } = result.results
+      const { errors } = result.results
       const hasErrors = errors.length > 0
 
       showToast({

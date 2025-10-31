@@ -25,7 +25,7 @@
  */
 
 import { useState, useCallback } from 'react'
-import { logger } from '@/lib/logger'
+
 
 export interface UseAsyncActionOptions<TArgs extends any[], TResult> {
   /**

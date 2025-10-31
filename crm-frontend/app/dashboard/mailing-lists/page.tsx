@@ -125,7 +125,7 @@ export default function MailingListsPage() {
       sticky: 'left',
       priority: 'high',
       minWidth: '200px',
-      render: (value: string, row: MailingList) => (
+      render: (value: unknown, row: MailingList, _index: number) => (
         <div>
           <p className="font-medium text-text-primary">{value}</p>
           {row.description && (
@@ -162,7 +162,7 @@ export default function MailingListsPage() {
       accessor: 'last_used_at',
       priority: 'medium',
       minWidth: '150px',
-      render: (value: string | undefined) =>
+      render: (value: unknown, _row, _index: number) =>
         value ? new Date(value).toLocaleDateString('fr-FR') : 'Jamais utilisée',
     },
     {
@@ -178,7 +178,7 @@ export default function MailingListsPage() {
       sticky: 'right',
       priority: 'high',
       minWidth: '120px',
-      render: (id: number, row: MailingList) => {
+      render: (id: unknown, row: MailingList, _index: number) => {
         const actions: OverflowAction[] = [
           {
             label: 'Modifier',

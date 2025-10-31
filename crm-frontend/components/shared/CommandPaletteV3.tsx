@@ -44,10 +44,10 @@ import {
 } from 'lucide-react'
 import { useGlobalSearch, type SearchResult } from '@/hooks/useGlobalSearch'
 import { useAiSuggestions } from '@/hooks/useAiSuggestions'
-import { parseCommand, formatCommandSummary } from '@/lib/commandParser'
+import { parseCommand } from '@/lib/commandParser'
 import { getHistory, addToHistory, type HistoryItem } from '@/lib/commandHistory'
 import { analyzeClipboard, type ClipboardSuggestion } from '@/lib/clipboardDetection'
-import { playSound, haptic, showConfetti, initFeedback, getFeedbackSettings, toggleSound, toggleHaptic } from '@/lib/feedback'
+import { playSound, haptic, initFeedback, getFeedbackSettings, toggleSound } from '@/lib/feedback'
 import type { Person, Organisation } from '@/lib/types'
 
 interface CommandPaletteV3Props {
@@ -67,7 +67,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
   const inputRef = useRef<HTMLInputElement>(null)
 
   const { results, isSearching } = useGlobalSearch(search)
-  const { suggestions: aiSuggestions, isLoading: aiLoading, intent, entities } = useAiSuggestions({
+  const { suggestions: aiSuggestions, isLoading: aiLoading } = useAiSuggestions({
     query: search,
     enabled: open && search.length >= 2,
     debounceMs: 300,

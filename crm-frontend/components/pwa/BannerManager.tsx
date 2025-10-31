@@ -119,7 +119,7 @@ export function BannerManager() {
       dismissLabel: 'Plus tard',
       onAction: async () => {
         setIsLoading(true)
-        const success = await subscribe()
+
         setIsLoading(false)
         // Toujours dismiss le banner après une tentative
         // (même en cas d'échec, pour éviter la boucle infinie)

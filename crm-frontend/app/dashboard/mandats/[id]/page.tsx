@@ -150,21 +150,21 @@ export default function MandatDetailPage() {
       accessor: 'type',
       priority: 'high',
       minWidth: '140px',
-      render: (value: string) => MANDAT_TYPE_LABELS[value] || value,
+      render: (value: unknown, _row, _index: number) => MANDAT_TYPE_LABELS[value] || value,
     },
     {
       header: 'Code ISIN',
       accessor: 'isin_code',
       priority: 'medium',
       minWidth: '140px',
-      render: (value: string | null) => value || '-',
+      render: (value: unknown, _row, _index: number) => value || '-',
     },
     {
       header: 'Allocation',
       accessor: 'mandat_produits',
       priority: 'high',
       minWidth: '110px',
-      render: (_: unknown, row: ProduitRow) => {
+      render: (_: unknown, row: ProduitRow, _index: number) => {
         const association = row.mandat_produits?.find(
           (mp: any) => mp.mandat_id === mandatId
         )
@@ -181,7 +181,7 @@ export default function MandatDetailPage() {
       accessor: 'status',
       priority: 'medium',
       minWidth: '100px',
-      render: (value: string) => (
+      render: (value: unknown, _row, _index: number) => (
         <span
           className={`px-2 py-1 text-xs rounded ${
             value === 'ACTIF'
@@ -201,7 +201,7 @@ export default function MandatDetailPage() {
       sticky: 'right',
       priority: 'high',
       minWidth: '120px',
-      render: (id: number, row: ProduitRow) => {
+      render: (id: unknown, row: ProduitRow, _index: number) => {
         const association = row.mandat_produits?.find(
           (mp: any) => mp.mandat_id === mandatId
         )

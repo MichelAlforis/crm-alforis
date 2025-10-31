@@ -10,7 +10,7 @@
  */
 
 import { evaluate } from 'mathjs'
-import { parse, format, addDays, addWeeks, addMonths } from 'date-fns'
+import { format, addDays, addWeeks, addMonths } from 'date-fns'
 import { fr } from 'date-fns/locale'
 
 export type CommandIntent =

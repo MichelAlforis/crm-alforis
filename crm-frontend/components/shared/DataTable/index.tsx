@@ -15,7 +15,7 @@
 'use client'
 
 import React, { useState, useMemo, useCallback } from 'react'
-import { Search, Filter, MoreVertical, ChevronDown, Check, X } from 'lucide-react'
+import { Search, Filter } from 'lucide-react'
 import clsx from 'clsx'
 import { DataTableRow } from './DataTableRow'
 import { DataTableHeader } from './DataTableHeader'
@@ -241,7 +241,7 @@ export function DataTable<T = unknown>({
               onSort={handleSort}
             />
             <tbody className="divide-y divide-gray-100 dark:divide-slate-700">
-              {data.map((row, index) => {
+              {data.map((row, _) => {
                 const key = keyExtractor(row)
                 const isSelected = selectedRows.has(key)
 

@@ -1,7 +1,7 @@
 // hooks/useLocalStorage.ts
 // Hook pour synchroniser l'état avec localStorage
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { logger } from '@/lib/logger'
 import { storage } from '@/lib/constants'
 

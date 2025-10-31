@@ -19,7 +19,7 @@ interface MenuPosition {
   fieldName: string
 }
 
-export function useAIAutofill(options: UseAIAutofillOptions) {
+export function useAIAutofill(_: UseAIAutofillOptions) {
   const [menuPosition, setMenuPosition] = useState<MenuPosition | null>(null)
   const [activeField, setActiveField] = useState<string | null>(null)
 

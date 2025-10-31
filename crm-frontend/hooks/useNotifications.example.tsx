@@ -84,7 +84,7 @@ export function useNotifications({
   const wsUrl = `${wsBaseUrl}/ws/notifications${token ? `?token=${token}` : ''}`
 
   // Option pour désactiver WebSocket en dev (si besoin)
-  const isDev = process.env.NODE_ENV === 'development'
+
   const shouldConnect = enabled && !!token
   // const shouldConnect = enabled && !!token && !isDev // Décommenter pour désactiver en dev
 

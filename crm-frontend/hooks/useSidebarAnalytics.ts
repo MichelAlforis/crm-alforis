@@ -15,7 +15,7 @@
  * const suggestions = analytics.getSuggestedFavorites() // ['/dashboard/ai']
  */
 
-import { useEffect, useState, useCallback, useMemo } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { usePathname } from 'next/navigation'
 import { logger } from '@/lib/logger'
 import { storage } from '@/lib/constants'

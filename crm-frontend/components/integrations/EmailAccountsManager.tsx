@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Mail, Plus, Trash2, CheckCircle2, XCircle, Loader2, AlertCircle, RefreshCw } from 'lucide-react'
+import { Mail, Plus, Trash2, Loader2, AlertCircle, RefreshCw } from 'lucide-react'
 import clsx from 'clsx'
 import { useToast } from '@/components/ui/Toast'
 import { apiClient } from '@/lib/api'

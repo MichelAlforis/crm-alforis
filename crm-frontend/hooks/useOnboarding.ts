@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useLocalStorage } from './useLocalStorage'
-import { logger } from '@/lib/logger'
+
 
 export interface OnboardingStep {
   target: string

@@ -181,7 +181,7 @@ export function useCampaignSubscriptions(campaignId: number, only_active: boolea
  * ```
  */
 export function usePersonSubscriptions(personId: number, only_active: boolean = true) {
-  const queryClient = useQueryClient()
+
 
   const {
     data: subscriptions = [],
@@ -217,7 +217,7 @@ export function usePersonSubscriptions(personId: number, only_active: boolean = 
  * ```
  */
 export function useOrganisationSubscriptions(organisationId: number, only_active: boolean = true) {
-  const queryClient = useQueryClient()
+
 
   const {
     data: subscriptions = [],

@@ -147,7 +147,7 @@ export default function ProduitsPage() {
       sticky: 'right',
       priority: 'high',
       minWidth: '120px',
-      render: (value: unknown) => {
+      render: (_: unknown) => {
         const actions: OverflowAction[] = [
           {
             label: 'Voir',

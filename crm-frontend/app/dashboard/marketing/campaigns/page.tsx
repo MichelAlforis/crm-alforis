@@ -71,7 +71,7 @@ export default function CampaignsPage() {
       sticky: 'left',
       priority: 'high',
       minWidth: '200px',
-      render: (value: string, row: EmailCampaign) => (
+      render: (value: unknown, row: EmailCampaign, _index: number) => (
         <div>
           <Link href={`/dashboard/marketing/campaigns/${row.id}`} className="font-medium text-bleu hover:underline">
             {value}
@@ -87,7 +87,7 @@ export default function CampaignsPage() {
       accessor: 'status',
       priority: 'high',
       minWidth: '120px',
-      render: (value: string) => (
+      render: (value: unknown, _row, _index: number) => (
         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[value as keyof typeof STATUS_COLORS] || 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300'}`}>
           {STATUS_LABELS[value as keyof typeof STATUS_LABELS] || value}
         </span>
@@ -98,7 +98,7 @@ export default function CampaignsPage() {
       accessor: 'provider',
       priority: 'medium',
       minWidth: '120px',
-      render: (value: string) => (
+      render: (value: unknown, _row, _index: number) => (
         <span className="text-sm capitalize">{value || '-'}</span>
       ),
     },
@@ -107,14 +107,14 @@ export default function CampaignsPage() {
       accessor: 'created_at',
       priority: 'medium',
       minWidth: '120px',
-      render: (value: string) => new Date(value).toLocaleDateString('fr-FR'),
+      render: (value: unknown, _row, _index: number) => new Date(value).toLocaleDateString('fr-FR'),
     },
     {
       header: 'Programmée pour',
       accessor: 'scheduled_at',
       priority: 'low',
       minWidth: '140px',
-      render: (value: string | undefined) =>
+      render: (value: unknown, _row, _index: number) =>
         value ? new Date(value).toLocaleString('fr-FR') : '-',
     },
     {
@@ -123,7 +123,7 @@ export default function CampaignsPage() {
       sticky: 'right',
       priority: 'high',
       minWidth: '120px',
-      render: (id: number, row: EmailCampaign) => {
+      render: (id: unknown, row: EmailCampaign, _index: number) => {
         const actions: OverflowAction[] = []
 
         if (row.status === 'draft') {

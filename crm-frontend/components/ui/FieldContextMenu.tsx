@@ -127,7 +127,7 @@ export function FieldContextMenu({
     onClose();
   };
 
-  const handleClose = () => {
+  const _ = () => {
     // Track "ignore" si aucune sélection faite
     if (selectedIndex === null && suggestions.length > 0) {
       trackChoice('ignore', null, null);

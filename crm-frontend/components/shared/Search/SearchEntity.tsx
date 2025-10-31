@@ -9,7 +9,7 @@ import React, { useRef, useEffect, useState } from 'react'
 import { Search, X, Loader2 } from 'lucide-react'
 import { apiClient } from '@/lib/api'
 import { useSearchCore } from './useSearchCore'
-import { TYPE_LABELS } from './types'
+
 import type { SearchSuggestion, EntityType } from './types'
 
 interface SearchEntityProps {

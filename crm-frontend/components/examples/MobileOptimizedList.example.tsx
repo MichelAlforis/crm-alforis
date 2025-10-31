@@ -10,7 +10,7 @@
 
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ROUTES, withQuery } from "@/lib/constants"
+import { ROUTES } from "@/lib/constants"
 import { Filter, Plus } from 'lucide-react'
 import { useIsMobile } from '@/hooks/useMediaQuery'
 import MobileCard from '@/components/mobile/MobileCard'

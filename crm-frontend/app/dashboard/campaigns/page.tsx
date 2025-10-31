@@ -63,7 +63,7 @@ export default function CampaignsPage() {
       sticky: 'left',
       priority: 'high',
       minWidth: '200px',
-      render: (value: string, row: EmailCampaign) => (
+      render: (value: unknown, row: EmailCampaign, _index: number) => (
         <div>
           <Link href={`/dashboard/campaigns/${row.id}`} className="font-medium text-bleu hover:underline">
             {value}
@@ -106,7 +106,7 @@ export default function CampaignsPage() {
       accessor: 'scheduled_at',
       priority: 'low',
       minWidth: '140px',
-      render: (value: string | undefined) =>
+      render: (value: unknown, _row, _index: number) =>
         value ? new Date(value).toLocaleString('fr-FR') : '-',
     },
     {
@@ -115,7 +115,7 @@ export default function CampaignsPage() {
       sticky: 'right',
       priority: 'high',
       minWidth: '120px',
-      render: (value: unknown) => {
+      render: (_: unknown) => {
         const actions: OverflowAction[] = [
           {
             label: 'Voir',

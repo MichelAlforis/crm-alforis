@@ -226,7 +226,7 @@ export default function KPIsPage() {
       accessor: 'commission_rate',
       priority: 'medium',
       minWidth: '90px',
-      render: (value: number | null) => (value != null ? `${value}%` : '—'),
+      render: (value: unknown, _row, _index: number) => (value != null ? `${value}%` : '—'),
     },
     {
       header: 'Source',
