@@ -9,7 +9,8 @@ import { useForm } from 'react-hook-form'
 import { Input, Button, Alert, Select } from '@/components/shared'
 import { Person, PersonInput } from '@/lib/types'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
-import { useToast } from '@/components/ui/Toast'
+import { useFormToast } from '@/hooks/useFormToast'
+import { useFormAutoFocus } from '@/hooks/useFormAutoFocus'
 import { HelpTooltip } from '@/components/help/HelpTooltip'
 import { useAutofillV2, type AutofillSuggestion } from '@/hooks/useAutofillV2'
 import { useAutofillPreview, type MatchCandidate } from '@/hooks/useAutofillPreview'
@@ -71,7 +72,7 @@ export function PersonForm({
   error,
   submitLabel = 'Créer',
 }: PersonFormProps) {
-  const { showToast } = useToast()
+  const toast = useFormToast({ entityName: 'Contact', gender: 'm' })
   const { autofill, isLoading: isAutofilling } = useAutofillV2()
   const { preview, isLoading: isPreviewing } = useAutofillPreview()
   const [suggestions, setSuggestions] = useState<Record<string, AutofillSuggestion>>({})
@@ -102,12 +103,7 @@ export function PersonForm({
   const DBG = process.env.NEXT_PUBLIC_DEBUG_AUTOFILL === '1'
 
   // Focus automatique sur le premier champ en erreur
-  useEffect(() => {
-    const firstErrorField = Object.keys(errors)[0] as keyof PersonInput
-    if (firstErrorField) {
-      setFocus(firstErrorField)
-    }
-  }, [errors, setFocus])
+  useFormAutoFocus(errors, setFocus)
 
   // V1.5 Smart Resolver: Preview + Autofill
   const handleEmailBlur = async () => {
@@ -151,11 +147,7 @@ export function PersonForm({
           }
         })
 
-        showToast({
-          type: 'success',
-          title: 'Contact trouvé',
-          message: 'Les informations ont été enrichies automatiquement.',
-        })
+        toast.success('Contact trouvé', 'Les informations ont été enrichies automatiquement.')
       } else if (previewResult.recommendation === 'preview' && previewResult.matches.length > 0) {
         // Show validation modal
         setMatchCandidates(previewResult.matches)
@@ -229,11 +221,7 @@ export function PersonForm({
       setValue(targetField, value as PersonInput[typeof targetField])
     })
 
-    showToast({
-      type: 'success',
-      title: 'Contact sélectionné',
-      message: 'Les informations ont été remplies avec les données existantes.',
-    })
+    toast.success('Contact sélectionné', 'Les informations ont été remplies avec les données existantes.')
   }
 
   // Handle creating new (continue with autofill)
@@ -301,31 +289,15 @@ export function PersonForm({
     setValue(contextMenuField as keyof PersonInput, value as any)
     contextMenu.hideMenu()
     setContextMenuField(null)
-    showToast({
-      type: 'success',
-      title: 'Suggestion appliquée',
-      message: `Le champ "${contextMenuField}" a été rempli avec la suggestion.`,
-    })
+    toast.success('Suggestion appliquée', `Le champ "${contextMenuField}" a été rempli avec la suggestion.`)
   }
 
   const handleFormSubmit = async (data: PersonInput) => {
     try {
       await onSubmit(data)
-      showToast({
-        type: 'success',
-        title: initialData ? 'Contact mis à jour' : 'Contact créé',
-        message: initialData
-          ? 'Le contact a été mis à jour avec succès.'
-          : 'Le contact a été ajouté à votre CRM.',
-      })
+      initialData ? toast.successUpdate() : toast.successCreate()
     } catch (err: any) {
-      const message =
-        err?.detail || err?.message || "Impossible d'enregistrer le contact."
-      showToast({
-        type: 'error',
-        title: 'Erreur',
-        message,
-      })
+      toast.error(err)
       throw err
     }
   }
