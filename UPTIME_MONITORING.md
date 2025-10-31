@@ -8,12 +8,16 @@
 
 ## 🎯 Configuration UptimeRobot (Gratuit)
 
+### **Compte configuré:**
+- ✅ API Key: `u3159160-3f0c5991ccd43d96137f9b1a`
+- ✅ Dashboard: https://uptimerobot.com/dashboard
+
 ### **Plan Gratuit inclut:**
 - ✅ 50 monitors
 - ✅ Check interval: 5 minutes
 - ✅ Alertes: Email, SMS, Slack, Webhook
 - ✅ Status page publique
-- ✅ SSL monitoring
+- ✅ SSL monitoring (via script custom - voir ci-dessous)
 - ✅ 90 jours d'historique
 
 ---
@@ -48,10 +52,12 @@
 - **Expected:** keyword `"database":{"status":"healthy"`
 - **Alert:** Email immédiat
 
-### **5. SSL Certificate**
-- **URL:** `https://crm.alforis.fr`
-- **Type:** SSL
-- **Alert:** Email 7 jours avant expiration
+### **5. SSL Certificate (Custom Script)**
+- **Script:** `scripts/check-ssl-expiry.sh`
+- **Domain:** `crm.alforis.fr`
+- **Check:** Quotidien à 9h (cron)
+- **Alert:** Email si < 10 jours, critique si < 3 jours
+- **Note:** UptimeRobot gratuit ne supporte pas SSL monitoring direct, utiliser script custom
 
 ---
 
@@ -60,7 +66,7 @@
 ### **Alert Contacts (à créer):**
 
 1. **Email Admin**
-   - Email: `admin@alforis.fr`
+   - Email: `infra@alforis.fr`
    - Type: Email
    - Alert when: Down
 
@@ -165,14 +171,34 @@ Keyword: "database":{"status":"healthy"
 Alert Contacts: Email Admin (immediate)
 ```
 
-#### **Monitor 5: SSL Certificate**
+#### **Monitor 5: SSL Certificate (Custom Script)**
+
+**Note:** UptimeRobot Free ne supporte pas SSL expiration monitoring.
+Solution: Script custom `scripts/check-ssl-expiry.sh`
+
+**Setup Cron:**
+```bash
+# 1. Rendre le script exécutable
+chmod +x scripts/check-ssl-expiry.sh
+
+# 2. Tester
+./scripts/check-ssl-expiry.sh
+
+# 3. Ajouter au cron (quotidien à 9h)
+crontab -e
+# Ajouter:
+0 9 * * * cd /path/to/crm && ./scripts/check-ssl-expiry.sh >> /var/log/ssl-check.log 2>&1
+
+# 4. Configurer email
+export SSL_ALERT_EMAIL=infra@alforis.fr
 ```
-Monitor Type: Port
-Friendly Name: CRM SSL Certificate
-URL: crm.alforis.fr
-Port: 443
-Monitoring Interval: 1 day
-Alert Contacts: Email Admin (7 days before expiry)
+
+**Script vérifie:**
+- ✅ Date d'expiration via OpenSSL
+- ✅ Compatible macOS + Linux
+- ⚠️  Alert si < 10 jours
+- 🚨 Critical si < 3 jours
+- ✅ Email automatique
 ```
 
 ### **Étape 3: Configurer Slack Webhook (optionnel)**
@@ -306,12 +332,14 @@ Raison: "Database maintenance" ou "Server upgrade"
 
 ## ✅ Checklist Setup
 
-- [ ] Créer compte UptimeRobot
-- [ ] Ajouter 5 monitors (API, Frontend, DB, SSL)
-- [ ] Configurer alert contacts (Email)
+- [x] Créer compte UptimeRobot (API Key: u3159160-...)
+- [ ] Ajouter 4 monitors (API, API detailed, Frontend, Database)
+- [ ] Configurer alert contacts (Email: infra@alforis.fr)
 - [ ] (Optionnel) Configurer Slack webhook
 - [ ] Créer status page publique
 - [ ] Tester alertes (pause 1 monitor)
+- [x] Setup SSL check script (scripts/check-ssl-expiry.sh)
+- [ ] Configurer cron pour SSL check quotidien
 - [ ] Documenter runbook
 - [ ] Ajouter status page URL dans README
 - [ ] Configurer maintenance windows

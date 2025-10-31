@@ -231,7 +231,7 @@ fb9f7ada refactor(frontend): Migrate localStorage to storage helper
 
 ---
 
-### 2.3 Consolidate Duplicate Components (🔄 EN COURS - 10%)
+### 2.3 Consolidate Duplicate Components (🔄 EN COURS - 15%)
 
 **Objectif:** Éliminer les composants dupliqués
 
@@ -263,17 +263,20 @@ fb9f7ada refactor(frontend): Migrate localStorage to storage helper
 
 **Effort:** ~3-4h
 
-#### 🟡 Search Components (2+ implémentations)
-- `components/shared/GlobalSearchInputAdvanced.tsx`
-- `components/shared/SearchInput.tsx`
-- Searches custom dans certaines pages
+#### 🟡 Search Components (4 implémentations)
+- `components/shared/GlobalSearchInput.tsx` (3.4KB) - **0 usages** → À supprimer
+- `components/shared/GlobalSearchInputAdvanced.tsx` (12KB) - **1 usage** → Garder
+- `components/search/SearchBar.tsx` (10KB) - **1 usage** → Garder
+- `components/search/AdvancedFilters.tsx` (8.4KB) - Composant support
 
-**Plan:**
-1. Unifier vers `components/shared/Search/`
-2. Variants: basic, advanced, with-filters
-3. Migrer usages
+**Analyse:**
+- GlobalSearchInput inutilisé → supprimer
+- GlobalSearchInputAdvanced et SearchBar servent des besoins différents
+- Peu d'usages = faible priorité de consolidation
 
-**Effort:** ~2h
+**Décision:** Garder les 2 composants actifs (usages différents)
+
+**Effort:** ~30min (supprimer GlobalSearchInput seulement)
 
 #### ✅ CommandPalette (3 versions → 1)
 - ~~CommandPalette.tsx~~ (supprimé)
