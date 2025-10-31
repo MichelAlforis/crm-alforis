@@ -1,18 +1,18 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useTasks } from '@/hooks/useTasks'
-import { usePaginatedOptions, type PaginatedFetcherParams } from '@/hooks/usePaginatedOptions'
 import { useEntityPreload } from '@/hooks/useEntityPreload'
+import { useOrganisationSelect } from '@/hooks/useOrganisationSelect'
+import { useFormToast } from '@/hooks/useFormToast'
+import { usePaginatedOptions, type PaginatedFetcherParams } from '@/hooks/usePaginatedOptions'
 import { apiClient } from '@/lib/api'
 import type {
   TaskInput,
   TaskPriority,
   TaskCategory,
-  Organisation,
   Person,
 } from '@/lib/types'
-import { useToast } from '@/components/ui/Toast'
 import { SearchableSelect } from '@/components/shared'
 
 interface TaskFormProps {
@@ -47,31 +47,9 @@ const CATEGORIES: { value: TaskCategory; label: string }[] = [
 
 export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps) {
   const { createTask, isCreating } = useTasks()
-  const { showToast } = useToast()
+  const toast = useFormToast({ entityName: 'Tâche', gender: 'f' })
 
-  const fetchOrganisationOptions = useCallback(
-    ({ query, skip, limit }: PaginatedFetcherParams) => {
-      if (query) {
-        return apiClient.searchOrganisations(query, skip, limit)
-      }
-      return apiClient.getOrganisations({
-        skip,
-        limit,
-        is_active: true,
-      })
-    },
-    []
-  )
-
-  const mapOrganisationToOption = useCallback(
-    (organisation: Organisation) => ({
-      id: organisation.id,
-      label: organisation.name,
-      sublabel: organisation.category || undefined,
-    }),
-    []
-  )
-
+  // Hook réutilisable pour autocomplete d'organisations
   const {
     options: organisationOptions,
     isLoading: isLoadingOrganisations,
@@ -80,10 +58,9 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
     search: searchOrganisations,
     loadMore: loadMoreOrganisations,
     upsertOption: upsertOrganisationOption,
-  } = usePaginatedOptions<Organisation>({
-    fetcher: fetchOrganisationOptions,
-    mapItem: mapOrganisationToOption,
-    limit: 25,
+  } = useOrganisationSelect({
+    preloadId: initialData?.organisation_id,
+    activeOnly: true,
   })
 
   const fetchPeopleOptions = useCallback(
@@ -127,13 +104,7 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
 
   const [error, setError] = useState<string | null>(null)
 
-  // Pré-charger l'organisation sélectionnée (avec useEntityPreload)
-  useEntityPreload<Organisation>({
-    entityId: initialData?.organisation_id,
-    fetchEntity: (id) => apiClient.getOrganisation(id),
-    mapToOption: mapOrganisationToOption,
-    upsertOption: upsertOrganisationOption,
-  })
+  // Pré-charger l'organisation sélectionnée (via useOrganisationSelect preloadId)
 
   // Pré-charger la personne sélectionnée (avec useEntityPreload)
   useEntityPreload<Person>({
@@ -161,22 +132,14 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
 
     if (!formData.title.trim()) {
       setError('Le titre est requis')
-      showToast({
-        type: 'warning',
-        title: 'Titre requis',
-        message: 'Ajoutez un titre pour enregistrer la tâche.',
-      })
+      toast.warning('Titre requis', 'Ajoutez un titre pour enregistrer la tâche.')
       return
     }
 
     // Validation: Au moins une organisation OU une personne doit être sélectionnée
     if (!formData.organisation_id && !formData.person_id) {
       setError('Vous devez lier la tâche à une organisation ou une personne')
-      showToast({
-        type: 'warning',
-        title: 'Liaison requise',
-        message: 'Sélectionnez une organisation ou une personne pour cette tâche.',
-      })
+      toast.warning('Liaison requise', 'Sélectionnez une organisation ou une personne pour cette tâche.')
       return
     }
 
@@ -192,18 +155,10 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
         category: 'relance',
         organisation_id: undefined,
       })
-      showToast({
-        type: 'success',
-        title: 'Tâche créée',
-        message: 'La tâche a été ajoutée à votre agenda.',
-      })
+      toast.successCreate()
     } catch (err: any) {
       setError(err.message || 'Erreur lors de la création')
-      showToast({
-        type: 'error',
-        title: 'Création impossible',
-        message: err?.message || 'Réessayez dans quelques instants.',
-      })
+      toast.error(err)
     }
   }
 
