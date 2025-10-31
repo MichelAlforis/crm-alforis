@@ -232,12 +232,63 @@ jobs:
           fail_ci_if_error: false
 
   # ============================================================================
+  # 🎭 TESTS E2E - Playwright
+  # ============================================================================
+  test-e2e:
+    name: 🎭 Tests E2E Playwright
+    runs-on: ubuntu-latest
+    needs: [lint-frontend]
+    timeout-minutes: 15
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: crm-frontend/package-lock.json
+
+      - name: 📥 Install dependencies
+        run: |
+          cd crm-frontend
+          npm ci
+
+      - name: 🎭 Install Playwright browsers
+        run: |
+          cd crm-frontend
+          npx playwright install chromium --with-deps
+
+      - name: 🧪 Run E2E tests (public only - no auth)
+        run: |
+          cd crm-frontend
+          npx playwright test --project=chromium-public --reporter=github,html,json
+
+      - name: 📊 Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: crm-frontend/playwright-report/
+          retention-days: 30
+
+      - name: 📊 Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: crm-frontend/test-results/
+          retention-days: 7
+
+  # ============================================================================
   # 📊 SONARQUBE ANALYSIS
   # ============================================================================
   sonarqube:
     name: 📊 SonarQube Analysis
     runs-on: ubuntu-latest
-    needs: [test-backend, test-frontend]
+    needs: [test-backend, test-frontend, test-e2e]
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
 
     steps:
@@ -302,7 +353,7 @@ jobs:
   build:
     name: 🐳 Build Docker Images
     runs-on: ubuntu-latest
-    needs: [test-backend, test-frontend, sonarqube]
+    needs: [test-backend, test-frontend, test-e2e, sonarqube]
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
 
     strategy:
@@ -453,7 +504,7 @@ jobs:
   summary:
     name: 📋 Pipeline Summary
     runs-on: ubuntu-latest
-    needs: [lint-backend, lint-frontend, test-backend, test-frontend, sonarqube, security]
+    needs: [lint-backend, lint-frontend, test-backend, test-frontend, test-e2e, sonarqube, security]
     if: always()
 
     steps:
@@ -467,6 +518,7 @@ jobs:
           echo "| Lint Frontend | ${{ needs.lint-frontend.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Test Backend | ${{ needs.test-backend.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Test Frontend | ${{ needs.test-frontend.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Test E2E (Playwright) | ${{ needs.test-e2e.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| SonarQube | ${{ needs.sonarqube.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Security | ${{ needs.security.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
