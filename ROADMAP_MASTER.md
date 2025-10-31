@@ -1,8 +1,10 @@
 # 🗺️ CRM ALFORIS - ROADMAP MASTER
 
-**Dernière mise à jour:** 31 Octobre 2025 - 20:00
+**Dernière mise à jour:** 31 Octobre 2025 - 21:30
 **Version actuelle:** v8.7.0
 **Environnement:** Production (crm.alforis.fr) + Local Dev
+
+**📚 Documentation IA consolidée:** [AI_FEATURES.md](documentation/AI_FEATURES.md)
 
 ---
 
@@ -588,30 +590,38 @@ Système de mémoire persistante pour apprendre des préférences utilisateur et
 
 ## 📊 MÉTRIQUES GLOBALES
 
-### Code Stats (Production)
+### Code Stats v8.7.0 (Production)
 ```
-Backend:
-- Services IA: ~3200 lignes (+700 ACTE VI)
-- Services RGPD: ~450 lignes (NOUVEAU)
-- Routes API: ~2600 lignes (+800 ACTE VI + Phase 2B + 300 RGPD)
-- Models: ~1180 lignes (+300 email_threads + 80 data_access_log)
-- Middleware: ~180 lignes (NOUVEAU - RGPD logging)
-- Migrations: ~900 lignes (+150 ACTE VI + 80 RGPD)
-- Celery Tasks: ~960 lignes (+310 RGPD tasks)
+Backend IA:
+- ai_ollama_service.py: 420 lignes (LiteLLM + Redis)
+- ai_learning_service.py: 460 lignes (Patterns + RGPD)
+- llm_router.py: 586 lignes (Multi-provider fallback)
+- autofill_service_v2.py: ~800 lignes (Pipeline 4 sources)
+- ai_agent.py: 700 lignes (Duplicates + Enrichment)
+- Routes IA: ~1,500 lignes (Ollama, Learning, Autofill, Agent)
+- Models IA: ~400 lignes (AIUserPreference, AutofillLog, etc.)
+
+Backend Core:
+- Services RGPD: ~450 lignes
+- Middleware: ~180 lignes (RGPD logging)
+- Migrations: ~1,100 lignes (email_threads, AI tables, RGPD)
+- Celery Tasks: ~960 lignes (email sync, RGPD cleanup)
 
 Frontend:
-- Dashboards: ~1800 lignes
-- Components: ~1500 lignes (+300 FieldContextMenu)
-- Hooks: ~400 lignes (+160 useContextMenu)
+- Dashboards IA: ~2,200 lignes (AI Agent + Autofill Stats)
+- Components: ~1,800 lignes (Context Menu, Tables, Charts)
+- Hooks: ~600 lignes (useAI, useAutofill, useContextMenu)
 
 Tests:
-- Unit tests: ~800 lignes
-- Coverage: 95%+
+- Backend: ~1,200 lignes (AI services, APIs)
+- Frontend: ~500 lignes (Components, Hooks)
+- E2E: ~400 lignes (Cypress flows)
 
 Documentation:
-- RGPD Compliance: ~350 lignes (NOUVEAU)
+- AI_FEATURES.md: 450 lignes (Documentation IA consolidée)
+- RGPD Compliance: ~350 lignes
 
-TOTAL: ~13500 lignes production-ready (+4300 depuis v8.5.0)
+TOTAL: ~13,500 lignes production-ready
 ```
 
 ### Performance (Hetzner CPX31)
