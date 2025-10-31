@@ -5,8 +5,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { ROUTES, withQuery } from "@/lib/constants"
+import { ROUTES } from "@/lib/constants"
 import { useProduit, useUpdateProduit, useDeleteProduit } from '@/hooks/useProduits'
 import { useEntityDetail } from '@/hooks/useEntityDetail'
 import { Card, Button, Alert, Modal } from '@/components/shared'
@@ -19,7 +18,6 @@ import type { ProduitUpdate } from '@/lib/types'
 import { PRODUIT_TYPE_LABELS, PRODUIT_STATUS_LABELS, MANDAT_STATUS_LABELS } from "@/lib/enums/labels"
 
 export default function ProduitDetailPage() {
-  const router = useRouter()
   const {
     entityId: produitId,
     isValidId,

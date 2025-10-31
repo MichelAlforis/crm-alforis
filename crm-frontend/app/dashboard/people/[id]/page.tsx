@@ -47,8 +47,15 @@ export default function PersonDetailPage() {
   // ID est fourni par useEntityDetail (support slug conservé côté hook)
   const personId = personIdFromHook
 
-  const { single, fetchPerson, updatePerson, deletePerson, update, remove, updatePersonOrganizationLink, deletePersonOrganizationLink } = usePeople()
+  const { single, fetchPerson, updatePerson, deletePerson, update, remove, linkPersonToOrganization, updatePersonOrganizationLink, deletePersonOrganizationLink } = usePeople()
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
+  const [linkPayload, setLinkPayload] = useState<PersonOrganizationLinkInput>({
+    person_id: personId ?? 0,
+    organization_id: 0,
+    is_primary: false,
+  })
+  const [linkError, setLinkError] = useState<string>()
+  const [isLinkSubmitting, setIsLinkSubmitting] = useState(false)
 
   useEffect(() => {
     if (personId === null) {
@@ -57,6 +64,13 @@ export default function PersonDetailPage() {
     }
     fetchPerson(personId)
   }, [personId, fetchPerson, router])
+
+  useEffect(() => {
+    setLinkPayload((prev) => ({
+      ...prev,
+      person_id: personId ?? 0,
+    }))
+  }, [personId])
 
 
   const person = single.data
@@ -123,6 +137,40 @@ export default function PersonDetailPage() {
         }
       },
     })
+  }
+
+  const handleCreateLink = async () => {
+    if (personId === null) {
+      setLinkError('Personne introuvable')
+      return
+    }
+    if (!linkPayload.organization_id || linkPayload.organization_id <= 0) {
+      setLinkError('Identifiant organisation invalide')
+      return
+    }
+
+    setIsLinkSubmitting(true)
+    setLinkError(undefined)
+
+    try {
+      await linkPersonToOrganization(linkPayload)
+      setIsLinkModalOpen(false)
+      setLinkPayload({
+        person_id: personId,
+        organization_id: 0,
+        is_primary: false,
+      })
+      await refresh()
+      showToast({
+        type: 'success',
+        title: 'Lien créé',
+        message: 'La personne a été associée à l\'organisation.',
+      })
+    } catch (error: any) {
+      setLinkError(error?.detail || 'Erreur lors de la création du rattachement')
+    } finally {
+      setIsLinkSubmitting(false)
+    }
   }
 
 

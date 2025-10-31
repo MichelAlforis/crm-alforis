@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect } from 'react'
-import { storage, AUTH_STORAGE_KEYS, PREFERENCES_STORAGE_KEYS } from "@/lib/constants"
+import { storage, AUTH_STORAGE_KEYS } from "@/lib/constants"
 import { EMAIL_ENDPOINTS } from "@/lib/constants"
 import {
   Mail,

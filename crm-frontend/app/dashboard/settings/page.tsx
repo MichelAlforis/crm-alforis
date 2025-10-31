@@ -1,6 +1,6 @@
 'use client'
 import { logger } from '@/lib/logger'
-import { storage, AUTH_STORAGE_KEYS, PREFERENCES_STORAGE_KEYS } from "@/lib/constants"
+import { storage, PREFERENCES_STORAGE_KEYS } from "@/lib/constants"
 
 import { useState } from 'react'
 import clsx from 'clsx'

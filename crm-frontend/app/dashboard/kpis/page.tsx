@@ -4,7 +4,7 @@
 'use client'
 import { logger } from '@/lib/logger'
 
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, lazy, Suspense } from 'react'
 import Link from 'next/link'
 import { useOrganisations } from '@/hooks/useOrganisations'
 import { useConfirm } from '@/hooks/useConfirm'
@@ -12,7 +12,6 @@ import { Card, Button, Modal, Alert } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { Trash2 } from 'lucide-react'
-import React, { lazy, Suspense } from "react"
 
 // Lazy load KPI form (loaded only when modal opens)
 const KPIForm = lazy(() => import("@/components/forms").then(m => ({ default: m.KPIForm })))

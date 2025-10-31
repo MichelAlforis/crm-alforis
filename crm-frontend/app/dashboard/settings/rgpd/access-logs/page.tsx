@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { ENTITY_TYPE_LABELS } from "@/lib/enums/labels"
-import { Shield, Search, Download, Filter, Eye, Trash2, Lock } from 'lucide-react'
+import { Shield, Search, Download, Eye, Trash2, Lock } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { useToast } from '@/components/ui/Toast'
 import { apiClient } from '@/lib/api'

@@ -14,7 +14,7 @@ import {
   Code,
 } from 'lucide-react'
 import { HelpTooltip } from '@/components/help/HelpTooltip'
-import { storage, AUTH_STORAGE_KEYS , ROUTES, withQuery} from '@/lib/constants'
+import { storage, AUTH_STORAGE_KEYS, ROUTES } from '@/lib/constants'
 
 // Builder visuel avec @xyflow/react (chargement dynamique)
 const WorkflowBuilderClient = dynamic(

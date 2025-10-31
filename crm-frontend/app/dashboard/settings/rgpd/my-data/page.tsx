@@ -6,7 +6,6 @@ import {
   Trash2,
   AlertTriangle,
   Shield,
-  CheckCircle2,
   Loader2,
   FileJson,
   Lock,
@@ -15,7 +14,6 @@ import { useAuth } from '@/hooks/useAuth'
 import { useToast } from '@/components/ui/Toast'
 import { apiClient } from '@/lib/api'
 import { format } from 'date-fns'
-import { fr } from 'date-fns/locale'
 
 export default function MyDataPage() {
   const { user, logout } = useAuth()
