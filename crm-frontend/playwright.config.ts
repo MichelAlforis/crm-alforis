@@ -79,18 +79,13 @@ export default defineConfig({
       testMatch: [/login-page\.spec\.ts/, /site-navigation\.spec\.ts/, /simple\.spec\.ts/],
     },
 
-    /* Setup authentification (à activer quand user test existe) */
-    /* Décommenter ces 2 projects quand user test@alforis.fr existe */
-    /*
+    /* Setup authentification */
     {
       name: 'setup',
       testMatch: /.*\.setup\.ts/,
     },
-    */
 
     /* Tests avec authentification complète */
-    /* Décommenter pour tester People, Organisations, Bulk Actions */
-    /*
     {
       name: 'chromium-authenticated',
       use: {
@@ -101,7 +96,6 @@ export default defineConfig({
       testMatch: /.*\.spec\.ts/,
       testIgnore: [/login-page\.spec\.ts/, /simple\.spec\.ts/],
     },
-    */
   ],
 
   webServer: {
