@@ -4,15 +4,9 @@
 
 'use client'
 
-import {
-  useState,
-  useEffect,
-  useRef,
-  useMemo,
-  useCallback,
-} from 'react'
 import { Search, X, ChevronDown } from 'lucide-react'
 import type { SelectOption } from './SearchableSelect'
+import { useSearchableDropdown } from '@/hooks/useSearchableDropdown'
 
 interface SearchableMultiSelectProps {
   options: SelectOption[]
@@ -51,56 +45,27 @@ export function SearchableMultiSelect({
   emptyMessage = 'Aucune option disponible',
   noResultsMessage = 'Aucun résultat trouvé',
 }: SearchableMultiSelectProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
-  const containerRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const listRef = useRef<HTMLDivElement>(null)
-  const hasTriggeredInitialSearchRef = useRef(false)
-
-  const filteredOptions = useMemo(() => {
-    if (!searchQuery) return options
-    const query = searchQuery.toLowerCase()
-    return options.filter(
-      (option) =>
-        option.label.toLowerCase().includes(query) ||
-        option.sublabel?.toLowerCase().includes(query)
-    )
-  }, [options, searchQuery])
+  const {
+    isOpen,
+    searchQuery,
+    setSearchQuery,
+    filteredOptions,
+    containerRef,
+    inputRef,
+    listRef,
+    handleScroll,
+    toggleDropdown,
+  } = useSearchableDropdown({
+    options,
+    onSearch,
+    onLoadMore,
+    hasMore,
+    isLoadingMore,
+    enableLocalFilter: true,
+    triggerSearchOnMount: true,
+  })
 
   const selectedOptions = options.filter((opt) => value.includes(opt.id))
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false)
-        setSearchQuery('')
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-      return () => document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isOpen])
-
-  useEffect(() => {
-    if (!onSearch) return
-    const timer = setTimeout(() => {
-      onSearch(searchQuery.trim())
-    }, 300)
-    return () => clearTimeout(timer)
-  }, [onSearch, searchQuery])
-
-  useEffect(() => {
-    if (isOpen && onSearch && !hasTriggeredInitialSearchRef.current) {
-      onSearch('')
-      hasTriggeredInitialSearchRef.current = true
-    }
-  }, [isOpen, onSearch])
 
   const handleToggle = (optionId: number) => {
     if (value.includes(optionId)) {
@@ -121,35 +86,13 @@ export function SearchableMultiSelect({
     onChange([])
   }
 
-  const toggleDropdown = () => {
+  const handleDropdownToggle = () => {
     if (disabled) return
-    setIsOpen((prev) => !prev)
+    toggleDropdown()
     if (!isOpen) {
       setTimeout(() => inputRef.current?.focus(), 50)
     }
   }
-
-  const handleScroll = useCallback(() => {
-    if (!hasMore || isLoadingMore || !onLoadMore) {
-      return
-    }
-    const element = listRef.current
-    if (!element) return
-    const threshold = 48
-    if (
-      element.scrollTop + element.clientHeight >=
-      element.scrollHeight - threshold
-    ) {
-      onLoadMore()
-    }
-  }, [hasMore, isLoadingMore, onLoadMore])
-
-  useEffect(() => {
-    const element = listRef.current
-    if (!element || !onLoadMore) return
-    element.addEventListener('scroll', handleScroll)
-    return () => element.removeEventListener('scroll', handleScroll)
-  }, [handleScroll, onLoadMore])
 
   return (
     <div ref={containerRef} className="relative">
@@ -161,7 +104,7 @@ export function SearchableMultiSelect({
       )}
 
       <div
-        onClick={toggleDropdown}
+        onClick={handleDropdownToggle}
         className={`
           w-full min-h-[44px] px-3 py-2 border rounded-lg bg-white
           cursor-pointer transition-colors
@@ -239,7 +182,7 @@ export function SearchableMultiSelect({
             </div>
           )}
 
-          <div ref={listRef} className="max-h-64 overflow-y-auto">
+          <div ref={listRef} className="max-h-64 overflow-y-auto" onScroll={handleScroll}>
             {isLoading && filteredOptions.length === 0 ? (
               <div className="p-4 text-center text-sm text-gray-500">
                 Chargement...

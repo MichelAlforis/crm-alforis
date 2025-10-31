@@ -5,9 +5,10 @@
 
 'use client'
 
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Search, X, Loader2, Building2, User } from 'lucide-react'
 import { useDebounce } from '@/hooks/useDebounce'
+import { useSearchableDropdown } from '@/hooks/useSearchableDropdown'
 
 export interface EntityOption {
   id: number
@@ -56,14 +57,24 @@ export function EntityAutocompleteInput({
   icon = 'search',
   minSearchLength = 2,
 }: EntityAutocompleteInputProps) {
-  const [searchQuery, setSearchQuery] = useState(selectedLabel || '')
   const [isFocused, setIsFocused] = useState(false)
-  const [showDropdown, setShowDropdown] = useState(false)
-  const [highlightedIndex, setHighlightedIndex] = useState(0)
 
-  const inputRef = useRef<HTMLInputElement>(null)
-  const dropdownRef = useRef<HTMLDivElement>(null)
-  const listRef = useRef<HTMLDivElement>(null)
+  const {
+    searchQuery,
+    setSearchQuery,
+    highlightedIndex,
+    setHighlightedIndex,
+    inputRef,
+    listRef,
+    handleScroll,
+  } = useSearchableDropdown({
+    options,
+    onLoadMore,
+    hasMore,
+    isLoadingMore,
+    enableLocalFilter: false, // Pas de filtrage local, on utilise la recherche distante
+    triggerSearchOnMount: false,
+  })
 
   const debouncedQuery = useDebounce(searchQuery, 300)
 
@@ -74,55 +85,16 @@ export function EntityAutocompleteInput({
     }
   }, [debouncedQuery, onSearch, minSearchLength])
 
-  // Fermer le dropdown en cliquant à l'extérieur
+  // Sync search query avec selectedLabel
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node) &&
-        !inputRef.current?.contains(e.target as Node)
-      ) {
-        setShowDropdown(false)
-      }
+    if (selectedLabel && searchQuery !== selectedLabel) {
+      setSearchQuery(selectedLabel)
     }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
-
-  // Réinitialiser l'index lors du changement d'options
-  useEffect(() => {
-    if (options.length === 0) {
-      setHighlightedIndex(0)
-      return
-    }
-    if (highlightedIndex >= options.length) {
-      setHighlightedIndex(options.length - 1)
-    }
-  }, [options.length, highlightedIndex])
-
-  // Infinite scroll
-  const handleScroll = useCallback(() => {
-    if (!hasMore || isLoadingMore || !onLoadMore) return
-    const element = listRef.current
-    if (!element) return
-
-    const threshold = 50
-    if (element.scrollTop + element.clientHeight >= element.scrollHeight - threshold) {
-      onLoadMore()
-    }
-  }, [hasMore, isLoadingMore, onLoadMore])
-
-  useEffect(() => {
-    const element = listRef.current
-    if (!element || !onLoadMore) return
-    element.addEventListener('scroll', handleScroll)
-    return () => element.removeEventListener('scroll', handleScroll)
-  }, [handleScroll, onLoadMore])
+  }, [selectedLabel])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value
     setSearchQuery(newValue)
-    setShowDropdown(true)
 
     // Si on efface la recherche, on désélectionne
     if (!newValue.trim()) {
@@ -133,7 +105,6 @@ export function EntityAutocompleteInput({
   const handleSelect = (option: EntityOption) => {
     setSearchQuery(option.label)
     onChange(option.id, option.label)
-    setShowDropdown(false)
     setHighlightedIndex(0)
     inputRef.current?.blur()
   }
@@ -141,16 +112,10 @@ export function EntityAutocompleteInput({
   const handleClear = () => {
     setSearchQuery('')
     onChange(null)
-    setShowDropdown(false)
     inputRef.current?.focus()
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!showDropdown && ['ArrowDown', 'ArrowUp'].includes(e.key)) {
-      setShowDropdown(true)
-      return
-    }
-
     if (!options.length) return
 
     switch (e.key) {
@@ -170,7 +135,6 @@ export function EntityAutocompleteInput({
         break
       case 'Escape':
         e.preventDefault()
-        setShowDropdown(false)
         inputRef.current?.blur()
         break
     }
@@ -190,7 +154,7 @@ export function EntityAutocompleteInput({
     }
   }
 
-  const shouldShowDropdown = showDropdown && isFocused && searchQuery.trim().length >= minSearchLength
+  const shouldShowDropdown = isFocused && searchQuery.trim().length >= minSearchLength
 
   return (
     <div className="relative">
@@ -212,10 +176,7 @@ export function EntityAutocompleteInput({
             type="text"
             value={searchQuery}
             onChange={handleInputChange}
-            onFocus={() => {
-              setIsFocused(true)
-              setShowDropdown(true)
-            }}
+            onFocus={() => setIsFocused(true)}
             onBlur={() => {
               setTimeout(() => setIsFocused(false), 200)
             }}
@@ -248,11 +209,8 @@ export function EntityAutocompleteInput({
       </div>
 
       {shouldShowDropdown && (
-        <div
-          ref={dropdownRef}
-          className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200"
-        >
-          <div ref={listRef} className="max-h-80 overflow-y-auto">
+        <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200">
+          <div ref={listRef} className="max-h-80 overflow-y-auto" onScroll={handleScroll}>
             {isLoading && options.length === 0 ? (
               <div className="p-6 text-center text-sm text-gray-500">
                 <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-blue-500" />

@@ -4,14 +4,8 @@
 
 'use client'
 
-import {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useMemo,
-} from 'react'
 import { Search, X, ChevronDown } from 'lucide-react'
+import { useSearchableDropdown } from '@/hooks/useSearchableDropdown'
 
 export interface SelectOption {
   id: number
@@ -54,77 +48,38 @@ export function SearchableSelect({
   emptyMessage = 'Aucune option disponible',
   noResultsMessage = 'Aucun résultat trouvé',
 }: SearchableSelectProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [highlightedIndex, setHighlightedIndex] = useState(0)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const listRef = useRef<HTMLDivElement>(null)
-  const hasTriggeredInitialSearchRef = useRef(false)
-
-  const filteredOptions = useMemo(() => {
-    if (!searchQuery) return options
-    const query = searchQuery.toLowerCase()
-    return options.filter(
-      (option) =>
-        option.label.toLowerCase().includes(query) ||
-        option.sublabel?.toLowerCase().includes(query)
-    )
-  }, [options, searchQuery])
+  const {
+    isOpen,
+    searchQuery,
+    setSearchQuery,
+    filteredOptions,
+    highlightedIndex,
+    setHighlightedIndex,
+    containerRef,
+    inputRef,
+    listRef,
+    handleScroll,
+    toggleDropdown,
+    closeDropdown,
+    clearSearch,
+  } = useSearchableDropdown({
+    options,
+    onSearch,
+    onLoadMore,
+    hasMore,
+    isLoadingMore,
+    enableLocalFilter: true,
+    triggerSearchOnMount: true,
+  })
 
   const selectedOption = value ? options.find((opt) => opt.id === value) : null
-
-  // Fermer en cliquant à l'extérieur
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false)
-        setSearchQuery('')
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-      return () => document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isOpen])
-
-  // Déclenche la recherche (débouce)
-  useEffect(() => {
-    if (!onSearch) return
-    const timer = setTimeout(() => {
-      onSearch(searchQuery.trim())
-    }, 300)
-    return () => clearTimeout(timer)
-  }, [onSearch, searchQuery])
-
-  // Charger les options au premier affichage
-  useEffect(() => {
-    if (isOpen && onSearch && !hasTriggeredInitialSearchRef.current) {
-      onSearch('')
-      hasTriggeredInitialSearchRef.current = true
-    }
-  }, [isOpen, onSearch])
-
-  useEffect(() => {
-    if (filteredOptions.length === 0) {
-      setHighlightedIndex(0)
-      return
-    }
-    if (highlightedIndex >= filteredOptions.length) {
-      setHighlightedIndex(filteredOptions.length - 1)
-    }
-  }, [filteredOptions.length, highlightedIndex])
 
   // Navigation clavier
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!isOpen) {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault()
-        setIsOpen(true)
+        toggleDropdown()
       }
       return
     }
@@ -148,54 +103,28 @@ export function SearchableSelect({
         break
       case 'Escape':
         e.preventDefault()
-        setIsOpen(false)
-        setSearchQuery('')
+        closeDropdown()
         break
     }
   }
 
   const handleSelect = (optionId: number) => {
     onChange(optionId)
-    setIsOpen(false)
-    setSearchQuery('')
-    setHighlightedIndex(0)
+    closeDropdown()
   }
 
   const handleClear = () => {
     onChange(null)
-    setSearchQuery('')
+    clearSearch()
   }
 
   const handleToggle = () => {
     if (disabled) return
-    setIsOpen((prev) => !prev)
+    toggleDropdown()
     if (!isOpen) {
       setTimeout(() => inputRef.current?.focus(), 50)
     }
   }
-
-  const handleScroll = useCallback(() => {
-    if (!hasMore || isLoadingMore || !onLoadMore) {
-      return
-    }
-    const element = listRef.current
-    if (!element) return
-
-    const threshold = 48 // px avant la fin
-    if (
-      element.scrollTop + element.clientHeight >=
-      element.scrollHeight - threshold
-    ) {
-      onLoadMore()
-    }
-  }, [hasMore, isLoadingMore, onLoadMore])
-
-  useEffect(() => {
-    const element = listRef.current
-    if (!element || !onLoadMore) return
-    element.addEventListener('scroll', handleScroll)
-    return () => element.removeEventListener('scroll', handleScroll)
-  }, [handleScroll, onLoadMore])
 
   return (
     <div ref={containerRef} className="relative">
@@ -260,7 +189,7 @@ export function SearchableSelect({
             </div>
           </div>
 
-          <div ref={listRef} className="max-h-64 overflow-y-auto">
+          <div ref={listRef} className="max-h-64 overflow-y-auto" onScroll={handleScroll}>
             {isLoading && filteredOptions.length === 0 ? (
               <div className="p-4 text-center text-sm text-gray-500">
                 Chargement...
