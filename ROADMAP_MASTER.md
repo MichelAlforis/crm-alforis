@@ -632,14 +632,88 @@ TOTAL: ~13500 lignes production-ready (+4300 depuis v8.5.0)
 
 ---
 
-## 🎯 PRIORITÉS IMMÉDIATES
+## 🎯 ROADMAP TODO (Post-Déploiement)
 
-### ✅ **COMPLÉTÉ (31 Oct 2025 - Session complète)**
-1. ✅ **Phase 3 AI Learning** - 910 lignes (tracking + patterns)
-2. ✅ **Ollama Integration** - 640 lignes (LiteLLM + Redis cache)
-3. ✅ **Multi-Mail Tests** - NLP (spaCy) + Threads validés
-4. ✅ **10 commits** poussés vers production
-5. ✅ **Docker healthy** - Tous services opérationnels
+### 🚨 **P0 - CRITIQUE** (2h45) - À faire maintenant
+**Impact:** Sécurité + Bloquants
+
+1. **OAuth Apps Configuration** (1h) - ❌ BLOQUANT Multi-Mail
+   - Google Cloud Console (Gmail)
+   - Azure Portal (Outlook)
+   - Test connexions
+
+2. **FLOWER_AUTH Sécurité** (15min) - ⚠️ Celery monitoring exposé
+   - Add basic auth
+   - Nginx reverse proxy
+
+3. **Fix Pydantic Errors** (30min) - ⚠️ Logs API pollués
+   - autofill_hitl.py: merge model_config
+   - Clean reload warnings
+
+4. **CSRF Protection OAuth** (30min) - ⚠️ Security flaw
+   - Validate state parameter
+   - Multiple TODOs identified
+
+### ⭐ **P1 - IMPORTANT** (9h) - Cette semaine
+**Impact:** Performance + Monitoring
+
+5. **Backup Automatique DB** (1h)
+   - Cron quotidien 3h
+   - Retention 7 jours
+
+6. **Rate Limiting API** (1h)
+   - slowapi 100/min
+   - Protect endpoints
+
+7. **Health Checks Améliorés** (1h)
+   - DB/Redis/Celery checks
+   - Disk space monitoring
+
+8. **Error Tracking (Sentry)** (2h)
+   - sentry-sdk integration
+   - Frontend + Backend
+
+9. **Logs Centralisés** (2h)
+   - Loki/Papertrail/CloudWatch
+   - Unified logging
+
+10. **Index DB Manquants** (1h)
+    - Analyze slow queries
+    - Add missing indexes
+
+### 📌 **P2 - NICE TO HAVE** (41h) - Prochains sprints
+**Impact:** UX + Features
+
+11. Export CSV amélioré (2h)
+12. Bulk Actions frontend (3h)
+13. Dark Mode (4h)
+14. Search optimisé (3h)
+15. Infinite Scroll (2h)
+16. CI/CD GitHub Actions (3h)
+17. Staging Environment (2h)
+18. Monitoring Grafana (4h)
+19. Tests E2E Cypress (6h)
+20. Documentation Utilisateur (8h)
+
+**🔥 Quick Wins (<1h each, 2h15 total):**
+- FLOWER_AUTH (15min)
+- Fix Pydantic (30min)
+- CSRF OAuth (30min)
+- Uptime monitoring (30min)
+- Error pages custom (30min)
+
+**Détails complets:** [ROADMAP_TODO.md](ROADMAP_TODO.md)
+
+---
+
+## ✅ COMPLÉTÉ (31 Oct 2025)
+
+1. ✅ Phase 3 AI Learning (910 lignes)
+2. ✅ Ollama Integration CPX31 (5GB) + CPX42 ready (12GB)
+3. ✅ Multi-Mail Stack (NLP + Threads + Celery)
+4. ✅ Déploiement Production
+5. ✅ Frontend Refactoring Phase 1 (~2000 lignes)
+6. ✅ Documentation IA consolidée
 
 ### 🚨 **P0 - Urgent** (Prochaine session)
 1. **Configurer OAuth Apps** (Google Cloud + Azure)
