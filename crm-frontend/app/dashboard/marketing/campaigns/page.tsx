@@ -51,7 +51,9 @@ export default function CampaignsPage() {
 
   // Actions via hook
   const { handleDelete, handleDuplicate } = useCampaignActions({
-    onDelete: deleteCampaign,
+    onDelete: async (id: number) => {
+      await deleteCampaign(id)
+    },
     onRefetch: refetch,
   })
 

@@ -9,14 +9,14 @@ import clsx from 'clsx'
 import { ChevronUp, ChevronDown, ChevronsUpDown, ChevronRight } from 'lucide-react'
 
 // ============= TYPES =============
-export interface ColumnV2<T = any> {
+export interface ColumnV2<T = unknown> {
   header: string
-  accessor: string | ((row: T) => any)
+  accessor: string | ((row: T) => unknown)
   sortable?: boolean
   width?: string
   minWidth?: string
   maxWidth?: string
-  render?: (value: any, row: T, index: number) => React.ReactNode
+  render?: (value: unknown, row: T, index: number) => React.ReactNode
   className?: string
   // V2 features
   sticky?: 'left' | 'right' | false
@@ -24,7 +24,7 @@ export interface ColumnV2<T = any> {
   hidden?: boolean
 }
 
-export interface TableV2Props<T = any> {
+export interface TableV2Props<T = unknown> {
   columns: ColumnV2<T>[]
   data: T[]
   isLoading?: boolean
@@ -61,7 +61,7 @@ function usePointerType() {
 }
 
 // ============= UTILITY FUNCTIONS =============
-function getColumnStickySide(columns: ColumnV2<any>[]): Record<number, 'left' | 'right'> {
+function getColumnStickySide<T>(columns: ColumnV2<T>[]): Record<number, 'left' | 'right'> {
   const stickySides: Record<number, 'left' | 'right'> = {}
 
   columns.forEach((col, idx) => {
@@ -73,7 +73,7 @@ function getColumnStickySide(columns: ColumnV2<any>[]): Record<number, 'left' | 
   return stickySides
 }
 
-function calculateStickyOffset(columns: ColumnV2<any>[], index: number, side: 'left' | 'right'): string {
+function calculateStickyOffset<T>(columns: ColumnV2<T>[], index: number, side: 'left' | 'right'): string {
   let offset = 0
 
   if (side === 'left') {
@@ -145,7 +145,7 @@ interface CollapsedRowProps<T> {
   row: T
   rowIdx: number
   columns: ColumnV2<T>[]
-  getCellValue: (row: T, accessor: string | ((row: T) => any)) => any
+  getCellValue: (row: T, accessor: string | ((row: T) => unknown)) => unknown
 }
 
 function CollapsedRow<T>({ row, rowIdx, columns, getCellValue }: CollapsedRowProps<T>) {
