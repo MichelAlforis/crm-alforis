@@ -4,8 +4,9 @@
 'use client'
 
 import React, { useState } from 'react'
-import { X, Phone, Mail, Users, Coffee, FileText, Calendar } from 'lucide-react'
+import { Phone, Mail, Users, Coffee, FileText, Calendar } from 'lucide-react'
 import { Input } from '@/components/shared/Input'
+import { ModalForm } from '@/components/shared/Modal'
 import { storage, AUTH_STORAGE_KEYS } from '@/lib/constants'
 
 interface InteractionCreateModalProps {
@@ -111,143 +112,113 @@ export default function InteractionCreateModal({
     }
   }
 
-  if (!isOpen) return null
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Nouvelle Interaction</h2>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <X className="h-5 w-5 text-gray-500" />
-          </button>
+    <ModalForm
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Nouvelle Interaction"
+      onSubmit={handleSubmit}
+      submitLabel="Créer l'interaction"
+      isLoading={loading}
+      error={error}
+      size="lg"
+      submitDisabled={!title || selectedOrgId === 0}
+    >
+      <div className="space-y-4">
+        {/* Type d'interaction */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Type d'interaction *
+          </label>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+            {activityTypes.map((actType) => {
+              const Icon = actType.icon
+              return (
+                <button
+                  key={actType.value}
+                  type="button"
+                  onClick={() => setType(actType.value)}
+                  className={`p-3 rounded-lg border-2 transition-all flex items-center gap-2 ${
+                    type === actType.value
+                      ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
+                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 text-gray-700 dark:text-gray-300'
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span className="text-sm font-medium">{actType.label}</span>
+                </button>
+              )
+            })}
+          </div>
         </div>
 
-        {/* Body */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto">
-          <div className="p-6 space-y-4">
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-                {error}
-              </div>
-            )}
+        {/* Titre */}
+        <Input
+          label="Titre *"
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+          placeholder="Ex: Call découverte produit, Email proposition..."
+        />
 
-            {/* Type d'interaction */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Type d'interaction *
-              </label>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                {activityTypes.map((actType) => {
-                  const Icon = actType.icon
-                  return (
-                    <button
-                      key={actType.value}
-                      type="button"
-                      onClick={() => setType(actType.value)}
-                      className={`p-3 rounded-lg border-2 transition-all flex items-center gap-2 ${
-                        type === actType.value
-                          ? 'border-bleu bg-blue-50 text-bleu'
-                          : 'border-gray-200 hover:border-gray-300 text-gray-700'
-                      }`}
-                    >
-                      <Icon className="h-4 w-4" />
-                      <span className="text-sm font-medium">{actType.label}</span>
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
+        {/* Date/Heure */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Date et heure *
+          </label>
+          <input
+            type="datetime-local"
+            value={occurredAt}
+            onChange={(e) => setOccurredAt(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+          />
+        </div>
 
-            {/* Titre */}
+        {/* Description */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Description / Notes
+          </label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={3}
+            placeholder="Détails de l'interaction, résultats, next steps..."
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+          />
+        </div>
+
+        {/* Participant (simplifié) */}
+        <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+            Contact principal (optionnel)
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <Input
-              label="Titre *"
+              label="Nom"
               type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-              placeholder="Ex: Call découverte produit, Email proposition..."
+              value={participantName}
+              onChange={(e) => setParticipantName(e.target.value)}
+              placeholder="John Doe"
             />
-
-            {/* Date/Heure */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Date et heure *
-              </label>
-              <input
-                type="datetime-local"
-                value={occurredAt}
-                onChange={(e) => setOccurredAt(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bleu focus:outline-none"
-              />
-            </div>
-
-            {/* Description */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Description / Notes
-              </label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={3}
-                placeholder="Détails de l'interaction, résultats, next steps..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bleu focus:outline-none"
-              />
-            </div>
-
-            {/* Participant (simplifié) */}
-            <div className="border-t pt-4">
-              <h3 className="text-sm font-medium text-gray-700 mb-3">Contact principal (optionnel)</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <Input
-                  label="Nom"
-                  type="text"
-                  value={participantName}
-                  onChange={(e) => setParticipantName(e.target.value)}
-                  placeholder="John Doe"
-                />
-                <Input
-                  label="Email"
-                  type="email"
-                  value={participantEmail}
-                  onChange={(e) => setParticipantEmail(e.target.value)}
-                  placeholder="john@example.com"
-                />
-              </div>
-              <Input
-                label="Fonction"
-                type="text"
-                value={participantRole}
-                onChange={(e) => setParticipantRole(e.target.value)}
-                placeholder="CEO, CFO, etc."
-              />
-            </div>
+            <Input
+              label="Email"
+              type="email"
+              value={participantEmail}
+              onChange={(e) => setParticipantEmail(e.target.value)}
+              placeholder="john@example.com"
+            />
           </div>
-
-          {/* Footer */}
-          <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-end gap-3 bg-gray-50">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-gray-700 hover:bg-gray-200 rounded-lg transition-colors"
-            >
-              Annuler
-            </button>
-            <button
-              type="submit"
-              disabled={loading || !title || selectedOrgId === 0}
-              className="px-4 py-2 bg-bleu text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {loading ? 'Création...' : 'Créer l\'interaction'}
-            </button>
-          </div>
-        </form>
+          <Input
+            label="Fonction"
+            type="text"
+            value={participantRole}
+            onChange={(e) => setParticipantRole(e.target.value)}
+            placeholder="CEO, CFO, etc."
+          />
+        </div>
       </div>
-    </div>
+    </ModalForm>
   )
 }

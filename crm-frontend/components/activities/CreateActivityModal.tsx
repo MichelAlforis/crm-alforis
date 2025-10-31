@@ -4,8 +4,9 @@
 'use client'
 
 import React, { useState } from 'react'
-import { storage, AUTH_STORAGE_KEYS } from "@/lib/constants"
-import { X, Plus, Trash2, Users, Phone, Mail, Coffee, FileText } from 'lucide-react'
+import { storage, AUTH_STORAGE_KEYS } from '@/lib/constants'
+import { ModalForm } from '@/components/shared/Modal'
+import { Plus, Trash2, Users, Phone, Mail, Coffee, FileText } from 'lucide-react'
 import type { ActivityParticipant, CreateActivityWithParticipants } from '@/types/activity'
 
 interface CreateActivityModalProps {
@@ -156,202 +157,170 @@ export default function CreateActivityModal({
     }
   }
 
-  if (!isOpen) return null
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Nouvelle interaction</h2>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <X className="h-5 w-5 text-gray-500" />
-          </button>
+    <ModalForm
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Nouvelle interaction"
+      onSubmit={handleSubmit}
+      submitLabel="Créer l'interaction"
+      isLoading={loading}
+      submitDisabled={!title}
+      error={error}
+      size="lg"
+    >
+      <div className="space-y-6">
+        {/* Type d'activité */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Type d'interaction
+          </label>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {activityTypes.map((actType) => {
+              const Icon = actType.icon
+              return (
+                <button
+                  key={actType.value}
+                  type="button"
+                  onClick={() => setType(actType.value)}
+                  className={`p-3 rounded-lg border-2 transition-all flex items-center gap-2 ${
+                    type === actType.value
+                      ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
+                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 text-gray-700 dark:text-gray-300'
+                  }`}
+                >
+                  <Icon className="h-5 w-5" />
+                  <span className="text-sm font-medium">{actType.label}</span>
+                </button>
+              )
+            })}
+          </div>
         </div>
 
-        {/* Body */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto">
-          <div className="p-6 space-y-6">
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-                {error}
-              </div>
-            )}
+        {/* Titre */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Titre *
+          </label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+            placeholder="Ex: Réunion de suivi Q4, Call découverte..."
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+          />
+        </div>
 
-            {/* Type d'activité */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Type d'interaction
-              </label>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {activityTypes.map((actType) => {
-                  const Icon = actType.icon
-                  return (
-                    <button
-                      key={actType.value}
-                      type="button"
-                      onClick={() => setType(actType.value)}
-                      className={`p-3 rounded-lg border-2 transition-all flex items-center gap-2 ${
-                        type === actType.value
-                          ? 'border-blue-500 bg-blue-50 text-blue-700'
-                          : 'border-gray-200 hover:border-gray-300 text-gray-700'
-                      }`}
-                    >
-                      <Icon className="h-5 w-5" />
-                      <span className="text-sm font-medium">{actType.label}</span>
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
+        {/* Date/Heure */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Date et heure
+          </label>
+          <input
+            type="datetime-local"
+            value={occurredAt}
+            onChange={(e) => setOccurredAt(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+          />
+        </div>
 
-            {/* Titre */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Titre *
-              </label>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-                placeholder="Ex: Réunion de suivi Q4, Call découverte..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
+        {/* Description */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Description
+          </label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={3}
+            placeholder="Détails de l'interaction..."
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+          />
+        </div>
 
-            {/* Date/Heure */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Date et heure
-              </label>
-              <input
-                type="datetime-local"
-                value={occurredAt}
-                onChange={(e) => setOccurredAt(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-
-            {/* Description */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description
-              </label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={3}
-                placeholder="Détails de l'interaction..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-
-            {/* Participants */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <label className="block text-sm font-medium text-gray-700">
-                  Participants ({participants.length})
-                </label>
-                <button
-                  type="button"
-                  onClick={addParticipant}
-                  className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1"
-                >
-                  <Plus className="h-4 w-4" />
-                  Ajouter participant
-                </button>
-              </div>
-
-              <div className="space-y-3">
-                {participants.map((participant, index) => (
-                  <div
-                    key={index}
-                    className="p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-3"
-                  >
-                    <div className="flex items-start justify-between">
-                      <h4 className="text-sm font-medium text-gray-700">
-                        Participant {index + 1}
-                      </h4>
-                      {participants.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeParticipant(index)}
-                          className="p-1 hover:bg-gray-200 rounded transition-colors"
-                        >
-                          <Trash2 className="h-4 w-4 text-red-500" />
-                        </button>
-                      )}
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <input
-                        type="text"
-                        value={participant.external_name || ''}
-                        onChange={(e) =>
-                          updateParticipant(index, 'external_name', e.target.value)
-                        }
-                        placeholder="Nom complet *"
-                        className="px-3 py-2 border border-gray-300 rounded bg-white text-sm"
-                      />
-                      <input
-                        type="email"
-                        value={participant.external_email || ''}
-                        onChange={(e) =>
-                          updateParticipant(index, 'external_email', e.target.value)
-                        }
-                        placeholder="Email"
-                        className="px-3 py-2 border border-gray-300 rounded bg-white text-sm"
-                      />
-                      <input
-                        type="text"
-                        value={participant.external_role || ''}
-                        onChange={(e) =>
-                          updateParticipant(index, 'external_role', e.target.value)
-                        }
-                        placeholder="Fonction (ex: CEO, CFO)"
-                        className="px-3 py-2 border border-gray-300 rounded bg-white text-sm"
-                      />
-                      <label className="flex items-center gap-2 text-sm text-gray-700">
-                        <input
-                          type="checkbox"
-                          checked={participant.is_organizer}
-                          onChange={(e) =>
-                            updateParticipant(index, 'is_organizer', e.target.checked)
-                          }
-                          className="rounded border-gray-300"
-                        />
-                        Organisateur
-                      </label>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-end gap-3 bg-gray-50">
+        {/* Participants */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Participants ({participants.length})
+            </label>
             <button
               type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-gray-700 hover:bg-gray-200 rounded-lg transition-colors"
+              onClick={addParticipant}
+              className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-1"
             >
-              Annuler
-            </button>
-            <button
-              type="submit"
-              disabled={loading || !title}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {loading ? 'Création...' : 'Créer l\'interaction'}
+              <Plus className="h-4 w-4" />
+              Ajouter participant
             </button>
           </div>
-        </form>
+
+          <div className="space-y-3">
+            {participants.map((participant, index) => (
+              <div
+                key={index}
+                className="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700 space-y-3"
+              >
+                <div className="flex items-start justify-between">
+                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Participant {index + 1}
+                  </h4>
+                  {participants.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeParticipant(index)}
+                      className="p-1 hover:bg-gray-200 dark:hover:bg-gray-800 rounded transition-colors"
+                    >
+                      <Trash2 className="h-4 w-4 text-red-500 dark:text-red-400" />
+                    </button>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <input
+                    type="text"
+                    value={participant.external_name || ''}
+                    onChange={(e) =>
+                      updateParticipant(index, 'external_name', e.target.value)
+                    }
+                    placeholder="Nom complet *"
+                    className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white"
+                  />
+                  <input
+                    type="email"
+                    value={participant.external_email || ''}
+                    onChange={(e) =>
+                      updateParticipant(index, 'external_email', e.target.value)
+                    }
+                    placeholder="Email"
+                    className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white"
+                  />
+                  <input
+                    type="text"
+                    value={participant.external_role || ''}
+                    onChange={(e) =>
+                      updateParticipant(index, 'external_role', e.target.value)
+                    }
+                    placeholder="Fonction (ex: CEO, CFO)"
+                    className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white"
+                  />
+                  <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                    <input
+                      type="checkbox"
+                      checked={participant.is_organizer}
+                      onChange={(e) =>
+                        updateParticipant(index, 'is_organizer', e.target.checked)
+                      }
+                      className="rounded border-gray-300 dark:border-gray-600"
+                    />
+                    Organisateur
+                  </label>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
+    </ModalForm>
   )
 }
