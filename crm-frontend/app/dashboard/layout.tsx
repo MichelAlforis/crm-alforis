@@ -20,6 +20,7 @@ import OfflineIndicator from '@/components/pwa/OfflineIndicator'
 import { BannerManager } from '@/components/pwa/BannerManager'
 import { OnboardingTour } from '@/components/onboarding/OnboardingTour'
 import { SidebarProvider } from '@/contexts/SidebarContext'
+import { Breadcrumbs } from '@/components/navigation'
 import { Loader2 } from 'lucide-react'
 
 export default function DashboardLayout({
@@ -85,6 +86,12 @@ export default function DashboardLayout({
               {/* Page Content - Scrollable */}
               <main className="flex-1 bg-gray-50 overflow-y-auto">
                 <div className="dashboard-content animate-fadeIn">
+                  {/* Breadcrumb Navigation */}
+                  <div className="px-6 py-3 bg-white border-b border-gray-200">
+                    <Breadcrumbs showHome />
+                  </div>
+
+                  {/* Page Content */}
                   {children}
                 </div>
               </main>
