@@ -40,6 +40,7 @@ export function FieldContextMenu({
   const [suggestions, setSuggestions] = useState<FieldSuggestion[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   // Fetch suggestions depuis l'API
   useEffect(() => {
@@ -75,14 +76,61 @@ export function FieldContextMenu({
     fetchSuggestions();
   }, [fieldName]);
 
+  // Track user choice (Phase 3 - AI Learning)
+  const trackChoice = async (
+    action: 'accept' | 'reject' | 'ignore',
+    suggestionIndex: number | null,
+    finalValue: string | null
+  ) => {
+    try {
+      const token = localStorage.getItem('access_token');
+
+      const suggestion = suggestionIndex !== null ? suggestions[suggestionIndex] : null;
+
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ai/learning/track`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          field_name: fieldName,
+          context_type: 'person', // TODO: Detect from parent form
+          action,
+          suggested_value: suggestion?.value || null,
+          final_value: finalValue,
+          suggestion_source: suggestion?.source || null,
+          suggestion_confidence: suggestion?.score || null,
+          suggestion_rank: suggestionIndex !== null ? suggestionIndex + 1 : null,
+        }),
+      });
+
+      // Silent fail - tracking ne doit pas bloquer l'UX
+    } catch (err) {
+      console.error('[AILearning] Error tracking choice:', err);
+    }
+  };
+
   // Ajuster la position pour ne pas dépasser de l'écran
   const adjustedPosition = {
     x: Math.min(position.x, window.innerWidth - 300),
     y: Math.min(position.y, window.innerHeight - 400),
   };
 
-  const handleSelect = (value: string) => {
+  const handleSelect = (value: string, index: number) => {
+    // Track "accept" (Phase 3 - AI Learning)
+    trackChoice('accept', index, value);
+
+    // Apply suggestion
     onSelect(value);
+    onClose();
+  };
+
+  const handleClose = () => {
+    // Track "ignore" si aucune sélection faite
+    if (selectedIndex === null && suggestions.length > 0) {
+      trackChoice('ignore', null, null);
+    }
     onClose();
   };
 
@@ -176,7 +224,7 @@ export function FieldContextMenu({
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    onClick={() => handleSelect(suggestion.value)}
+                    onClick={() => handleSelect(suggestion.value, index)}
                     className="
                       w-full px-3 py-2.5 rounded-md text-left
                       transition-colors duration-150

@@ -147,6 +147,11 @@ celery_app.conf.update(
             "task": "tasks.rgpd_tasks.generate_compliance_report",
             "schedule": crontab(hour=3, minute=0, day_of_month=1),
         },
+        # RGPD: Cleanup AI user preferences expirées (tous les dimanches à 4h)
+        "cleanup-ai-preferences": {
+            "task": "tasks.email_tasks.cleanup_ai_preferences_task",
+            "schedule": crontab(hour=4, minute=0, day_of_week=0),
+        },
     },
 )
 

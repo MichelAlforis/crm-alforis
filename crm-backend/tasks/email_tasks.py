@@ -13,6 +13,7 @@ from core.database import SessionLocal
 from core.exceptions import ValidationError
 from models.email import EmailCampaign, EmailCampaignStatus, EmailSend, EmailSendStatus
 from services.email_service import EmailDeliveryService
+from services.ai_learning_service import AILearningService
 from .celery_app import celery_app
 
 logger = logging.getLogger(__name__)
@@ -129,6 +130,36 @@ def process_pending_sends() -> dict:
     except Exception as exc:
         db.rollback()
         logger.exception("email_process_pending_failed")
+        raise exc
+    finally:
+        db.close()
+
+
+@celery_app.task(name="tasks.email_tasks.cleanup_ai_preferences_task", bind=True)
+def cleanup_ai_preferences_task(self):
+    """
+    RGPD Compliance: Cleanup expired AI user preferences (90 days retention)
+
+    Scheduled: Weekly (Sunday 3am)
+    Celery Beat: 0 3 * * 0
+    """
+    db = SessionLocal()
+    try:
+        logger.info("[AILearning CRON] Starting weekly RGPD cleanup...")
+
+        service = AILearningService(db)
+        deleted_count = service.cleanup_expired_preferences()
+
+        logger.info(f"[AILearning CRON] Cleanup complete: deleted {deleted_count} expired preferences")
+
+        return {
+            "status": "success",
+            "deleted_count": deleted_count,
+            "timestamp": datetime.utcnow().isoformat(),
+        }
+
+    except Exception as exc:
+        logger.exception("[AILearning CRON] Cleanup failed")
         raise exc
     finally:
         db.close()
