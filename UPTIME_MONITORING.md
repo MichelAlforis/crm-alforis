@@ -333,16 +333,18 @@ Raison: "Database maintenance" ou "Server upgrade"
 ## ✅ Checklist Setup
 
 - [x] Créer compte UptimeRobot (API Key: u3159160-...)
-- [ ] Ajouter 4 monitors (API, API detailed, Frontend, Database)
-- [ ] Configurer alert contacts (Email: infra@alforis.fr)
+- [x] Ajouter 4 monitors (API, API detailed, Frontend, Database)
+- [x] Configurer alert contacts (Email: infra@alforis.fr)
 - [ ] (Optionnel) Configurer Slack webhook
 - [ ] Créer status page publique
 - [ ] Tester alertes (pause 1 monitor)
 - [x] Setup SSL check script (scripts/check-ssl-expiry.sh)
-- [ ] Configurer cron pour SSL check quotidien
+- [ ] Configurer cron pour SSL check quotidien (sur serveur)
 - [ ] Documenter runbook
 - [ ] Ajouter status page URL dans README
 - [ ] Configurer maintenance windows
+
+**Status:** 5/11 complétés (45%) - Monitoring opérationnel! 🎉
 
 ---
 

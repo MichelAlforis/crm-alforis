@@ -12,7 +12,7 @@
 |-------|--------|----------|--------|
 | **Phase 1** - Quick Wins | ✅ Complété | 100% | ~1,565 lignes |
 | **Phase 1 Bonus** - localStorage Migration | ✅ Complété | 100% | ~1,270 lignes |
-| **Phase 2** - Migration & Cleanup | 🔄 En cours | 52% | ~10h / ~18h |
+| **Phase 2** - Migration & Cleanup | 🔄 En cours | 53% | ~10.5h / ~18h |
 | **Phase 3** - Optimizations | 📋 Planifié | 0% | ~20h |
 
 **Total Code Écrit:** ~2,835 lignes
