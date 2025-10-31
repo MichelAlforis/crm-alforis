@@ -45,7 +45,7 @@ class SuggestionFilter(BaseModel):
 
 
 class SuggestionResponse(BaseModel):
-    model_config = ConfigDict(protected_namespaces=())
+    model_config = ConfigDict(protected_namespaces=(), from_attributes=True)
 
     id: int
     source_email_id: Optional[int]
@@ -61,9 +61,6 @@ class SuggestionResponse(BaseModel):
     enriched_at: Optional[datetime]
     created_at: datetime
     updated_at: Optional[datetime]
-
-    class Config:
-        from_attributes = True
 
 
 class BulkActionRequest(BaseModel):

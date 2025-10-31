@@ -12,8 +12,7 @@ from fastapi import APIRouter, Request, Depends, HTTPException, Query
 from fastapi.responses import RedirectResponse, HTMLResponse
 from sqlalchemy.orm import Session
 
-from database import get_db
-from auth.jwt import get_current_user
+from core import get_db, get_current_user
 from models.user import User
 from services.oauth_gmail import GmailOAuthService
 from services.oauth_outlook import OutlookOAuthService
