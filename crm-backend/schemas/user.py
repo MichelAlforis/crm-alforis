@@ -83,9 +83,6 @@ class UserResponse(UserBase, TimestampedSchema):
     cgu_accepted_at: Optional[datetime] = Field(None, description="Date acceptation CGU")
     cgu_version: Optional[str] = Field(None, description="Version CGU acceptée")
 
-    class Config:
-        from_attributes = True
-
 
 class UserListResponse(BaseSchema):
     """Liste paginée d'utilisateurs."""

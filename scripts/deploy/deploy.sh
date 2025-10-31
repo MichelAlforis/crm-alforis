@@ -74,10 +74,12 @@ ssh_run() {
 
 ssh_bash() {
   local script="$1"
+  local escaped_script=${script//\'/\'\"\'\"\'} # wrap single quotes for bash -lc
+  local remote_cmd="bash -lc '$escaped_script'"
   if (( VERBOSE )); then
     printf "[REMOTE] %s\n" "$script"
   fi
-  ssh_run bash -lc "$script"
+  ssh_run "$remote_cmd"
 }
 
 ensure_prereqs() {

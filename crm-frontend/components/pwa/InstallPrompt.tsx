@@ -3,6 +3,7 @@ import { logger } from '@/lib/logger'
 
 import { useEffect, useState } from 'react'
 import { X, Download, Smartphone } from 'lucide-react'
+import { storage } from '@/lib/constants'
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[]
@@ -35,7 +36,7 @@ export default function InstallPrompt() {
       setDeferredPrompt(promptEvent)
 
       // Vérifier si l'utilisateur a déjà refusé
-      const dismissed = localStorage.getItem('pwa-install-dismissed')
+      const dismissed = storage.get('pwa-install-dismissed')
       if (!dismissed) {
         // Afficher après 30 secondes
         setTimeout(() => {
@@ -73,7 +74,7 @@ export default function InstallPrompt() {
 
   const handleDismiss = () => {
     setShowPrompt(false)
-    localStorage.setItem('pwa-install-dismissed', 'true')
+    storage.set('pwa-install-dismissed', 'true')
   }
 
   // Ne pas afficher si déjà installé

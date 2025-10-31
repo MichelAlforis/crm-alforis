@@ -80,20 +80,6 @@ class InteractionCreate(BaseModel):
         if not self.org_id and not self.person_id:
             raise ValueError("Au moins org_id ou person_id est requis")
 
-    class Config:
-        json_schema_extra = {
-            "example": {
-                "org_id": 42,
-                "person_id": None,
-                "type": "call",
-                "title": "Appel découverte produit",
-                "body": "Discussion sur leurs besoins en CRM, très intéressés",
-                "attachments": [
-                    {"name": "compte-rendu.pdf", "url": "https://example.com/files/cr.pdf"}
-                ],
-            }
-        }
-
 
 class InteractionUpdate(BaseModel):
     """Schéma de mise à jour d'une interaction"""
@@ -111,14 +97,6 @@ class InteractionUpdate(BaseModel):
     status: Optional[InteractionStatus] = None
     assignee_id: Optional[int] = Field(None, gt=0)
     next_action_at: Optional[datetime] = None
-
-    class Config:
-        json_schema_extra = {
-            "example": {
-                "title": "Appel découverte produit (suivi)",
-                "body": "Décision positive, signature prévue mardi prochain",
-            }
-        }
 
 
 class InteractionOut(BaseModel):
@@ -160,23 +138,6 @@ class InteractionOut(BaseModel):
             return v.value  # InteractionStatus.DONE → 'done'
         return v
 
-    class Config:
-        from_attributes = True  # Permet de créer depuis un modèle SQLAlchemy
-        json_schema_extra = {
-            "example": {
-                "id": 123,
-                "org_id": 42,
-                "person_id": None,
-                "type": "call",
-                "title": "Appel découverte produit",
-                "body": "Discussion sur leurs besoins en CRM",
-                "created_by": 1,
-                "created_at": "2025-10-24T14:30:00Z",
-                "updated_at": None,
-                "attachments": [],
-            }
-        }
-
 
 class InteractionListResponse(BaseModel):
     """Réponse paginée d'interactions"""
@@ -185,9 +146,6 @@ class InteractionListResponse(BaseModel):
     total: int
     limit: int
     cursor: Optional[str] = None  # Cursor pour pagination (peut être l'ID du dernier élément)
-
-    class Config:
-        json_schema_extra = {"example": {"items": [], "total": 45, "limit": 50, "cursor": "123"}}
 
 
 # ===== V2: Schemas pour actions Inbox =====

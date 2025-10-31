@@ -4,6 +4,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { storage, AUTH_STORAGE_KEYS } from "@/lib/constants"
 import { Mail, Phone, FileText, Plus, X } from 'lucide-react'
 
 interface QuickInteractionButtonProps {
@@ -41,7 +42,7 @@ export default function QuickInteractionButton({
     setError(null)
 
     try {
-      const token = localStorage.getItem('access_token')
+      const token = storage.get(AUTH_STORAGE_KEYS.TOKEN)
 
       const payload: any = {
         organisation_id: organisationId,

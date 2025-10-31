@@ -4,6 +4,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { storage, AUTH_STORAGE_KEYS } from "@/lib/constants"
 import { X, Plus, Trash2, Users, Phone, Mail, Coffee, FileText } from 'lucide-react'
 import type { ActivityParticipant, CreateActivityWithParticipants } from '@/types/activity'
 
@@ -95,7 +96,7 @@ export default function CreateActivityModal({
     setError(null)
 
     try {
-      const token = localStorage.getItem('access_token')
+      const token = storage.get(AUTH_STORAGE_KEYS.TOKEN)
 
       // Filtrer les participants vides
       const validParticipants = participants.filter(

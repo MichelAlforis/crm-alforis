@@ -68,9 +68,6 @@ class PersonResponse(PersonBase, TimestampedSchema):
 
     id: int
 
-    class Config:
-        from_attributes = True
-
 
 class PersonOrganizationLinkBase(BaseSchema):
     """Données communes pour un lien Personne <-> Organisation."""
@@ -126,9 +123,6 @@ class PersonOrganizationLinkResponse(TimestampedSchema, PersonOrganizationLinkBa
     person_id: int
     organisation_name: Optional[str] = None
     person: Optional[PersonResponse] = None
-
-    class Config:
-        from_attributes = True
 
 
 class PersonDetailResponse(PersonResponse):

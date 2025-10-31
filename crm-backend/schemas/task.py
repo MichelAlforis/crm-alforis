@@ -81,9 +81,6 @@ class TaskResponse(TimestampedSchema):
     is_next_7_days: bool = False
     days_until_due: int = 0
 
-    class Config:
-        from_attributes = True
-
 
 class TaskWithRelations(TaskResponse):
     """Réponse tâche avec informations des entités liées"""

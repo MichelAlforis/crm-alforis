@@ -27,9 +27,6 @@ class PaginationParams(BaseSchema):
     skip: int = 0
     limit: int = 100
 
-    class Config:
-        ge = 0  # greater or equal
-
 
 class PaginatedResponse(BaseSchema, Generic[T]):
     """Réponse paginée générique"""

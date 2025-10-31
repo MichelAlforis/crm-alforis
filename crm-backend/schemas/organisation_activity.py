@@ -36,6 +36,3 @@ class OrganisationActivityResponse(OrganisationActivityBase, TimestampedSchema):
     """Schéma de réponse via API."""
 
     id: int
-
-    class Config:
-        from_attributes = True

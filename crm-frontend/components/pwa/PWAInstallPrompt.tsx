@@ -16,6 +16,7 @@ import { logger } from '@/lib/logger'
 
 import React, { useEffect, useState } from 'react'
 import { X, Download, Share } from 'lucide-react'
+import { storage } from '@/lib/constants'
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>
@@ -43,7 +44,7 @@ export function PWAInstallPrompt() {
     setIsIOS(iOS)
 
     // Check if user already dismissed the prompt (localStorage)
-    const hasBeenDismissed = localStorage.getItem('pwa-install-dismissed') === 'true'
+    const hasBeenDismissed = storage.get('pwa-install-dismissed') === 'true'
     setDismissed(hasBeenDismissed)
 
     // Listen for beforeinstallprompt (Android Chrome, Edge, etc.)
@@ -95,7 +96,7 @@ export function PWAInstallPrompt() {
   const handleDismiss = () => {
     setShowPrompt(false)
     setDismissed(true)
-    localStorage.setItem('pwa-install-dismissed', 'true')
+    storage.set('pwa-install-dismissed', 'true')
   }
   // Don't show if already installed or dismissed
   if (isStandalone || dismissed || !showPrompt) {

@@ -116,9 +116,6 @@ class OrganisationResponse(OrganisationBase, TimestampedSchema):
 
     id: int
 
-    class Config:
-        from_attributes = True
-
     @field_validator("strategies", "tags", mode="before")
     @classmethod
     def _coerce_lists(cls, value):
@@ -139,9 +136,6 @@ class OrganisationDetailResponse(OrganisationResponse):
 
     people_links: List[PersonOrganizationLinkResponse] = Field(default_factory=list)
     activities: List[OrganisationActivityResponse] = Field(default_factory=list)
-
-    class Config:
-        from_attributes = True
 
 
 # =======================
@@ -191,9 +185,6 @@ class OrganisationContactResponse(OrganisationContactBase, TimestampedSchema):
 
     id: int
 
-    class Config:
-        from_attributes = True
-
 
 # =======================
 # Mandat Distribution Schemas
@@ -241,18 +232,12 @@ class MandatDistributionResponse(MandatDistributionBase, TimestampedSchema):
     id: int
     is_actif: bool = Field(description="True si le mandat est signé ou actif")
 
-    class Config:
-        from_attributes = True
-
 
 class MandatDistributionDetailResponse(MandatDistributionResponse):
     """Schéma de réponse détaillée pour un mandat avec les produits associés"""
 
     organisation: OrganisationResponse
     produits: List["ProduitResponse"] = []
-
-    class Config:
-        from_attributes = True
 
 
 # =======================
@@ -307,17 +292,11 @@ class ProduitResponse(ProduitBase, TimestampedSchema):
 
     id: int
 
-    class Config:
-        from_attributes = True
-
 
 class ProduitDetailResponse(ProduitResponse):
     """Schéma de réponse détaillée pour un produit avec les mandats associés"""
 
     mandats: List["MandatProduitResponse"] = []
-
-    class Config:
-        from_attributes = True
 
 
 # =======================
@@ -353,9 +332,6 @@ class MandatProduitResponse(MandatProduitBase, TimestampedSchema):
     id: int
     mandat: MandatDistributionResponse
     produit: ProduitResponse
-
-    class Config:
-        from_attributes = True
 
 
 # =======================
@@ -425,9 +401,6 @@ class InteractionResponse(InteractionBase, TimestampedSchema):
 
     id: int
 
-    class Config:
-        from_attributes = True
-
 
 class InteractionDetailResponse(InteractionResponse):
     """Schéma de réponse détaillée pour une interaction avec relations"""
@@ -435,9 +408,6 @@ class InteractionDetailResponse(InteractionResponse):
     organisation: OrganisationResponse
     personne: Optional["PersonResponse"] = None
     produit: Optional[ProduitResponse] = None
-
-    class Config:
-        from_attributes = True
 
 
 # Résoudre les références circulaires

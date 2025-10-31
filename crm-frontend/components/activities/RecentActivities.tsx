@@ -4,6 +4,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import { storage, AUTH_STORAGE_KEYS } from "@/lib/constants"
 import Link from 'next/link'
 import { Clock, Phone, Mail, Users, Coffee, FileText, ChevronRight, Filter } from 'lucide-react'
 import type { ActivityWithParticipants } from '@/types/activity'
@@ -51,7 +52,7 @@ export default function RecentActivities({
     setError(null)
 
     try {
-      const token = localStorage.getItem('access_token')
+      const token = storage.get(AUTH_STORAGE_KEYS.TOKEN)
 
       let url = ''
       if (organisationId) {

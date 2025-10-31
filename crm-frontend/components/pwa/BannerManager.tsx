@@ -14,6 +14,7 @@ import React, { useEffect, useState } from 'react'
 import { Bell, Download, X, Sparkles } from 'lucide-react'
 import { usePushNotifications } from '@/hooks/usePushNotifications'
 import { usePersistentFlag } from '@/hooks/usePersistentFlag'
+import { storage } from '@/lib/constants'
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>
@@ -162,7 +163,7 @@ export function BannerManager() {
       shouldShow: () => {
         const hasCompletedOnboarding =
           typeof window !== 'undefined' &&
-          localStorage.getItem('onboarding-completed') === 'true'
+          storage.get('onboarding-completed') === 'true'
         return !hasCompletedOnboarding && !onboardingDismissedRef.current
       },
     },
