@@ -74,6 +74,7 @@ celery_app = Celery(
         "tasks.workflow_tasks",
         "tasks.email_tasks",
         "tasks.reminder_tasks",
+        "tasks.rgpd_tasks",
     ],
 )
 
@@ -128,6 +129,23 @@ celery_app.conf.update(
         "dispatch-email-campaigns": {
             "task": "tasks.email_tasks.process_pending_sends",
             "schedule": 60.0,
+        },
+        # RGPD: Anonymisation auto des comptes inactifs (tous les lundis à 1h)
+        "anonymize-inactive-users": {
+            "task": "tasks.rgpd_tasks.anonymize_inactive_users",
+            "schedule": crontab(hour=1, minute=0, day_of_week=1),
+            "kwargs": {"inactive_days": 730},  # 2 years
+        },
+        # RGPD: Nettoyage des logs d'accès anciens (1er de chaque mois à 2h)
+        "cleanup-access-logs": {
+            "task": "tasks.rgpd_tasks.cleanup_old_access_logs",
+            "schedule": crontab(hour=2, minute=0, day_of_month=1),
+            "kwargs": {"retention_days": 1095},  # 3 years
+        },
+        # RGPD: Rapport de conformité mensuel (1er de chaque mois à 3h)
+        "generate-compliance-report": {
+            "task": "tasks.rgpd_tasks.generate_compliance_report",
+            "schedule": crontab(hour=3, minute=0, day_of_month=1),
         },
     },
 )

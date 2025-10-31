@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from api.routes import (
     ai_agent,
     ai_autofill,
+    ai_learning,
     ai_statistics,
     auth,
     autofill_hitl,
@@ -34,7 +35,7 @@ from api.routes import (
     workflows,
 )
 from api.routes import ai as ai_routes
-from routers import dashboard, email_config, email_marketing, exports, help, interactions, search, webhooks
+from routers import dashboard, email_config, email_marketing, exports, help, interactions, rgpd, search, webhooks
 from webhooks import sendgrid as inbound_sendgrid
 
 # ❌ SUPPRIMÉ (20 oct 2024): kpis
@@ -117,6 +118,9 @@ api_router.include_router(ai_routes.router)
 # ✨ AI AUTOFILL SUGGESTIONS (Phase 2B - Context Menu)
 api_router.include_router(ai_autofill.router)
 
+# 🧠 AI LEARNING & PATTERNS (Phase 3 - AI Memory System)
+api_router.include_router(ai_learning.router)
+
 # ⚡ IMPORTS ROUTES (bulk operations)
 api_router.include_router(imports.router)
 
@@ -143,5 +147,8 @@ api_router.include_router(totp.router)
 
 # 🎁 TRIAL MANAGEMENT (Free Trial System)
 api_router.include_router(trials.router)
+
+# 🔒 RGPD COMPLIANCE (Data Export & Deletion)
+api_router.include_router(rgpd.router)
 
 __all__ = ["api_router"]

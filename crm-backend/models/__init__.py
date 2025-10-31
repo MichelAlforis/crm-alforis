@@ -68,6 +68,7 @@ from models.email_message import EmailMessage
 from models.email_attachment import EmailAttachment
 from models.autofill_suggestion import AutofillSuggestion
 from models.ai_memory import AIMemory
+from models.ai_user_preference import AIUserPreference
 from models.email_thread import EmailThread
 from models.email_blacklist import EmailBlacklist
 from models.push_subscription import PushSubscription
@@ -80,6 +81,7 @@ from models.workflow import (
     WorkflowStatus,
     WorkflowTriggerType,
 )
+from models.data_access_log import DataAccessLog
 
 __all__ = [
     # Base
@@ -120,6 +122,7 @@ __all__ = [
     "EmailAttachment",
     "AutofillSuggestion",
     "AIMemory",
+    "AIUserPreference",
     "EmailBlacklist",
     "EmailThread",
     "PushSubscription",
@@ -183,6 +186,8 @@ __all__ = [
     "KnownCompany",
     # Autofill logs
     "AutofillLog",
+    # RGPD Compliance
+    "DataAccessLog",
 ]
 
 # Backwards compatibility aliases (legacy spelling)

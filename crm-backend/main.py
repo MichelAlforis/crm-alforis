@@ -149,6 +149,17 @@ logger.info(f"CORS middleware enabled for origins: {ALLOWED_ORIGINS}")
 # --- GZip (utile pour grosses réponses JSON) ---
 app.add_middleware(GZipMiddleware, minimum_size=1024)
 
+# --- RGPD Data Access Logging ---
+try:
+    from middleware.rgpd_logging import RGPDLoggingMiddleware
+
+    app.add_middleware(RGPDLoggingMiddleware)
+    logger.info("RGPD logging middleware enabled (CNIL compliance)")
+except ImportError as e:
+    logger.warning(f"RGPD logging middleware not available: {e}")
+except Exception as e:
+    logger.warning(f"RGPD logging middleware setup failed: {e}")
+
 # --- Rate Limiting ---
 try:
     from slowapi.errors import RateLimitExceeded
