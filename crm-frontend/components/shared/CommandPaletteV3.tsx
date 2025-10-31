@@ -17,6 +17,7 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { Command } from 'cmdk'
 import { motion, AnimatePresence } from 'framer-motion'
+import { ROUTES } from '@/lib/constants'
 import {
   Search,
   Plus,
@@ -500,20 +501,20 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                       <CommandItemV3
                         icon={Plus}
                         shortcut="⌘N"
-                        onSelect={() => runCommand(() => router.push('/dashboard/people/new'), 'Nouvelle personne')}
+                        onSelect={() => runCommand(() => router.push(ROUTES.CRM.PERSON_NEW), 'Nouvelle personne')}
                       >
                         Nouvelle personne
                       </CommandItemV3>
                       <CommandItemV3
                         icon={Building}
-                        onSelect={() => runCommand(() => router.push('/dashboard/organisations/new'), 'Nouvelle organisation')}
+                        onSelect={() => runCommand(() => router.push(ROUTES.CRM.ORGANISATION_NEW), 'Nouvelle organisation')}
                       >
                         Nouvelle organisation
                       </CommandItemV3>
                       <CommandItemV3
                         icon={CheckSquare}
                         shortcut="⌘T"
-                        onSelect={() => runCommand(() => router.push('/dashboard/tasks'), 'Nouvelle tâche')}
+                        onSelect={() => runCommand(() => router.push(ROUTES.TASKS.BASE), 'Nouvelle tâche')}
                       >
                         Nouvelle tâche
                       </CommandItemV3>
@@ -528,19 +529,19 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                       </div>
                       <CommandItemV3
                         icon={BarChart3}
-                        onSelect={() => runCommand(() => router.push('/dashboard'), 'Dashboard', 'navigation')}
+                        onSelect={() => runCommand(() => router.push(ROUTES.DASHBOARD), 'Dashboard', 'navigation')}
                       >
                         Dashboard
                       </CommandItemV3>
                       <CommandItemV3
                         icon={Users}
-                        onSelect={() => runCommand(() => router.push('/dashboard/people'), 'Personnes', 'navigation')}
+                        onSelect={() => runCommand(() => router.push(ROUTES.CRM.PEOPLE), 'Personnes', 'navigation')}
                       >
                         Personnes
                       </CommandItemV3>
                       <CommandItemV3
                         icon={Building}
-                        onSelect={() => runCommand(() => router.push('/dashboard/organisations'), 'Organisations', 'navigation')}
+                        onSelect={() => runCommand(() => router.push(ROUTES.CRM.ORGANISATIONS), 'Organisations', 'navigation')}
                       >
                         Organisations
                       </CommandItemV3>

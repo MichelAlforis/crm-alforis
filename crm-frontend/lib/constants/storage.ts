@@ -28,6 +28,8 @@ export const PREFERENCES_STORAGE_KEYS = {
   SIDEBAR_COLLAPSED: 'sidebar_collapsed',
   TABLE_DENSITY: 'table_density',
   NOTIFICATIONS_ENABLED: 'notifications_enabled',
+  COMMAND_PALETTE_SOUND: 'command-palette-sound',
+  COMMAND_PALETTE_HAPTIC: 'command-palette-haptic',
 } as const;
 
 /**

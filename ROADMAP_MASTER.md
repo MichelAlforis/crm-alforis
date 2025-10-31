@@ -666,29 +666,39 @@ TOTAL: ~13,500 lignes production-ready
 5. ✅ **Docker healthy** - Tous services opérationnels
 
 ### 🔄 **EN COURS** (ChatGPT debug)
-1. **Déploiement Production** (ChatGPT travaille dessus)
-   - Debug script `./deploy.sh`
-   - Validation environnement serveur
-   - Tests post-déploiement
+1. ✅ **Déploiement Production** - TERMINÉ
+   - ✅ Script `./deploy.sh` fonctionnel
+   - ✅ Environnement serveur validé
+   - ✅ Services déployés et healthy
 
-### 🚨 **P0 - Urgent** (Après déploiement)
-1. **Configurer OAuth Apps Multi-Mail** (Google Cloud + Azure)
-   - Créer app Google Cloud Console (Gmail OAuth)
-   - Créer app Azure Portal (Outlook OAuth)
-   - Configurer redirect URIs
-   - Tester flow complet Gmail + Outlook
+### 🚨 **P0 - BLOQUANT Multi-Mail** (À faire maintenant)
+1. **Configurer OAuth Apps** (1h) - BLOQUE Gmail + Outlook
+   - [ ] Google Cloud Console - Créer app OAuth Gmail
+     - Redirect URI: `https://crm.alforis.fr/api/v1/oauth/google/callback`
+     - Scopes: Gmail.Read, Gmail.Send
+     - Copier `GOOGLE_CLIENT_ID` + `GOOGLE_CLIENT_SECRET` dans .env
 
-2. **Tester Multi-Mail en conditions réelles**
+   - [ ] Azure Portal - Créer app OAuth Outlook
+     - Redirect URI: `https://crm.alforis.fr/api/v1/oauth/microsoft/callback`
+     - Scopes: Mail.Read, Mail.Send
+     - Copier `MICROSOFT_CLIENT_ID` + `MICROSOFT_CLIENT_SECRET` dans .env
+
+   - [ ] Redéployer avec nouvelles variables .env
+   - [ ] Tester connexion Gmail via UI
+   - [ ] Tester connexion Outlook via UI
+
+2. **Valider Multi-Mail Stack** (30min)
    - Sync automatique toutes 10 min
    - NLP extraction entités
    - Thread detection conversations
    - Vérifier Flower monitoring
 
-### ⭐ **P1 - Important** (Semaine prochaine)
-1. **Deployer Celery en production Hetzner**
-   - Config FLOWER_AUTH basic auth
-   - Nginx reverse proxy pour Flower
-   - Vérifier resources CPX31 (concurrency=2)
+### ⭐ **P1 - Important** (Après OAuth)
+1. ✅ **Celery déployé en production** - OPÉRATIONNEL
+   - ✅ Worker + Beat + Flower fonctionnels
+   - ⚠️ **TODO:** Config FLOWER_AUTH basic auth (sécurité)
+   - ⚠️ **TODO:** Nginx reverse proxy pour Flower
+   - ✅ Resources CPX31 validées
 
 ### 📌 **P2 - Nice to have** (Semaine prochaine)
 1. **Documentation utilisateur** OAuth setup

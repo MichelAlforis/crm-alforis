@@ -4,6 +4,7 @@
  */
 
 import confetti from 'canvas-confetti'
+import { storage, PREFERENCES_STORAGE_KEYS } from '@/lib/constants'
 
 // Sound effects (base64 encoded) - lazy loaded to avoid SSR issues
 const SOUND_DATA = {
@@ -40,8 +41,8 @@ export function initFeedback() {
   if (typeof window === 'undefined') return
 
   // Load preferences
-  const storedSound = localStorage.getItem('command-palette-sound')
-  const storedHaptic = localStorage.getItem('command-palette-haptic')
+  const storedSound = storage.get(PREFERENCES_STORAGE_KEYS.COMMAND_PALETTE_SOUND)
+  const storedHaptic = storage.get(PREFERENCES_STORAGE_KEYS.COMMAND_PALETTE_HAPTIC)
 
   soundEnabled = storedSound !== 'false'
   hapticEnabled = storedHaptic !== 'false'

@@ -5,7 +5,9 @@
     "logs": "bash ./scripts/dev.sh logs",
     "docker": "bash ./scripts/dev.sh docker",
     "rebuild": "bash ./scripts/dev.sh rebuild",
-    "devc": "bash ./crm-frontend/scripts/dev-clean.sh"
+    "devc": "bash ./crm-frontend/scripts/dev-clean.sh",
+    "deploy": "bash ./scripts/deploy/deploy.sh",
+    "deploy:pull": "bash ./scripts/deploy/deploy.sh deploy-pull"
   },
   "dependencies": {
     "puppeteer": "^24.25.0"

@@ -14,7 +14,7 @@ warn() { printf "[WARN] %s\n" "$*" >&2; }
 error() { printf "[ERROR] %s\n" "$*" >&2; }
 
 usage() { cat <<'EOF'
-Usage: ./deploy.sh [OPTIONS] [deploy|logs]
+Usage: ./deploy.sh [OPTIONS] <command>
 
 Deploys the CRM stack via Docker Compose and optionally streams logs.
 
@@ -28,6 +28,11 @@ Environment variables:
   REMOTE_DIR    Remote project directory (default: /srv/crm-alforis)
   COMPOSE_FILE  Compose file to use (default: docker-compose.prod.yml)
   TAIL_LINES    Number of log lines when running "logs" (default: 200)
+
+Commands:
+  deploy         Sync code from local machine (rsync) then rebuild containers
+  deploy-pull    Pull latest changes on remote git repo then rebuild containers
+  logs           Tail docker-compose logs
 EOF
 }
 
@@ -80,6 +85,10 @@ ensure_prereqs() {
   require_cmd rsync
   require_file "$SSH_KEY"
   require_file ".env"
+  if [[ -z "$REMOTE_DIR" ]]; then
+    error "REMOTE_DIR is empty; provide a valid remote directory path."
+    exit 8
+  fi
 }
 
 ensure_ssh_ready() {
@@ -91,17 +100,24 @@ ensure_ssh_ready() {
 }
 
 ensure_remote_dir() {
-  local remote_dir
-  remote_dir=$(printf '%q' "$REMOTE_DIR")
-  ssh_bash "mkdir -p $remote_dir"
+  info "Ensuring remote directory exists at $REMOTE_DIR"
+  if ! ssh_run mkdir -p "$REMOTE_DIR"; then
+    error "Unable to create remote directory $REMOTE_DIR"
+    exit 9
+  fi
 }
 
 ensure_remote_env() {
-  local remote_env
-  remote_env=$(printf '%q' "$REMOTE_DIR/.env")
-  if ! ssh_bash "test -f $remote_env"; then
+  if ! ssh_run test -f "$REMOTE_DIR/.env"; then
     error "Missing remote .env file at $REMOTE_DIR/.env"
     exit 6
+  fi
+}
+
+ensure_remote_repo() {
+  if ! ssh_run test -d "$REMOTE_DIR/.git"; then
+    error "No git repository found at $REMOTE_DIR (.git missing)."
+    exit 10
   fi
 }
 
@@ -110,7 +126,13 @@ rsync_project() {
 
   local -a rsync_opts=(-az --delete)
   if (( VERBOSE )); then
-    rsync_opts+=(-v --info=progress2)
+    rsync_opts+=(-v)
+    if rsync --help 2>&1 | grep -q 'progress2'; then
+      rsync_opts+=(--info=progress2)
+    else
+      warn "Local rsync lacks --info=progress2; using --progress instead."
+      rsync_opts+=(--progress)
+    fi
   fi
 
   local -a excludes=(
@@ -118,6 +140,7 @@ rsync_project() {
     "--exclude=node_modules"
     "--exclude=.next"
     "--exclude=.venv*"
+    "--exclude=venv"
     "--exclude=__pycache__"
     "--exclude=*.pyc"
     "--exclude=.env"
@@ -142,22 +165,34 @@ rsync_project() {
 }
 
 build_and_restart() {
-  local remote_dir compose_file
+  local remote_dir compose_file compose_path
   remote_dir=$(printf '%q' "$REMOTE_DIR")
   compose_file=$(printf '%q' "$COMPOSE_FILE")
+  compose_path=$(printf '%q' "${REMOTE_DIR%/}/$COMPOSE_FILE")
 
   info "Rebuilding and restarting Docker services"
-  ssh_bash "cd $remote_dir && docker compose -f $compose_file up -d --build"
+  ssh_bash "docker compose --project-directory $remote_dir -f $compose_path up -d --build"
 }
 
 run_migrations() {
-  local remote_dir compose_file
+  local remote_dir compose_path
   remote_dir=$(printf '%q' "$REMOTE_DIR")
-  compose_file=$(printf '%q' "$COMPOSE_FILE")
+  compose_path=$(printf '%q' "${REMOTE_DIR%/}/$COMPOSE_FILE")
 
   info "Applying database migrations"
-  if ! ssh_bash "cd $remote_dir && docker compose -f $compose_file exec -T api alembic upgrade head"; then
+  if ! ssh_bash "docker compose --project-directory $remote_dir -f $compose_path exec -T api alembic upgrade head"; then
     warn "Migrations failed; services are running but database may be outdated."
+  fi
+}
+
+server_git_pull() {
+  local remote_dir
+  remote_dir=$(printf '%q' "$REMOTE_DIR")
+
+  info "Pulling latest git changes on server"
+  if ! ssh_bash "cd $remote_dir && git pull --ff-only"; then
+    error "Git pull failed on server"
+    exit 11
   fi
 }
 
@@ -171,6 +206,19 @@ deploy_action() {
   build_and_restart
   run_migrations
   info "Deployment complete."
+}
+
+deploy_pull_action() {
+  ensure_prereqs
+  validate_tail_lines
+  ensure_ssh_ready
+  ensure_remote_dir
+  ensure_remote_env
+  ensure_remote_repo
+  server_git_pull
+  build_and_restart
+  run_migrations
+  info "Deployment from remote git repository complete."
 }
 
 logs_action() {
@@ -197,6 +245,7 @@ main() {
 
   case "$action" in
     deploy) deploy_action ;;
+    deploy-pull) deploy_pull_action ;;
     logs) logs_action ;;
     *)
       error "Unknown action: $action"
