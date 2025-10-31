@@ -1,6 +1,6 @@
 # 🗺️ CRM Frontend - Roadmap Refactoring
 
-**Dernière mise à jour:** 31 Octobre 2025 - 16:30
+**Dernière mise à jour:** 31 Octobre 2025 - 18:00
 **Version:** Phase 2 en cours
 **Build Status:** ✅ Stable (71 routes)
 
@@ -12,17 +12,21 @@
 |-------|--------|----------|--------|
 | **Phase 1** - Quick Wins | ✅ Complété | 100% | ~1,565 lignes |
 | **Phase 1 Bonus** - localStorage Migration | ✅ Complété | 100% | ~1,270 lignes |
-| **Phase 2** - Migration & Cleanup | 🔄 En cours | 75% | ~15h / ~18h |
+| **Phase 2** - Migration & Cleanup | 🔄 En cours | 80% | ~16h / ~18h |
 | **Phase 3** - Optimizations | 📋 Planifié | 0% | ~20h |
 
-**Total Code Écrit:** ~3,190 lignes (+355 hooks/labels)
-**Total Code Économisé:** ~390 lignes (modals, forms, labels)
-**Total Fichiers Migrés:** 69+ fichiers
+**Total Code Écrit:** ~3,820 lignes (+985 hooks/labels)
+**Total Code Économisé:** ~1,199 lignes (modals, forms, labels, tables)
+**Total Fichiers Migrés:** 71+ fichiers
 **Breaking Changes:** 0
 
-**Commits cette session:**
+**Commits cette session (6):**
 - `6fdfd806` - Modal migration (MandatProduitAssociationModal)
 - `c618d99e` - Label centralization (8 pages dashboard)
+- `2ea48c63` - Roadmap update Phase 2.3 progress 75%
+- `97c3658f` - Hook useEntityDetail for detail pages
+- `47d52b0f` - Remove Table.tsx V1 (-409L)
+- `d17a01cd` - Hook useSearchableDropdown for select components
 
 ---
 
