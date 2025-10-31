@@ -49,7 +49,7 @@ export function HelpTooltip({
         <TooltipTrigger asChild>
           <button
             type="button"
-            className="inline-flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+            className="inline-flex items-center text-gray-400 hover:text-gray-600 dark:text-slate-400 transition-colors"
             aria-label="Aide"
           >
             <Info className={iconSizes[size]} />
@@ -57,7 +57,7 @@ export function HelpTooltip({
         </TooltipTrigger>
         <TooltipContent side={side} className="max-w-xs">
           <div className="space-y-2">
-            <p className="text-sm text-gray-700">{content}</p>
+            <p className="text-sm text-gray-700 dark:text-slate-300">{content}</p>
             {learnMoreLink && (
               <Link
                 href={learnMoreLink}

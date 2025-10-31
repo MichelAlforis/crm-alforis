@@ -109,22 +109,22 @@ export default function SuggestionsPage() {
               <Sparkles className="h-10 w-10 text-purple-600" />
               Suggestions IA
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-600 dark:text-slate-400 mt-2">
               Gérez les suggestions générées par l'Agent IA
             </p>
           </div>
 
           <button
             onClick={() => refetch()}
-            className="p-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            className="p-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:bg-slate-800 transition-colors"
             title="Actualiser"
           >
-            <RefreshCw className="h-5 w-5 text-gray-600" />
+            <RefreshCw className="h-5 w-5 text-gray-600 dark:text-slate-400" />
           </button>
         </div>
 
         {/* Filters & Batch Actions */}
-        <div className="bg-white rounded-2xl shadow-lg p-6">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg p-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             {/* Filters */}
             <div className="flex items-center gap-3">
@@ -134,7 +134,7 @@ export default function SuggestionsPage() {
               <select
                 value={filters.status}
                 onChange={(e) => setFilters({ ...filters, status: e.target.value as AISuggestionStatus })}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
               >
                 <option value="">Tous les statuts</option>
                 <option value={AISuggestionStatus.PENDING}>En attente</option>
@@ -153,7 +153,7 @@ export default function SuggestionsPage() {
                     type: e.target.value ? (e.target.value as AISuggestionType) : undefined,
                   })
                 }
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
               >
                 <option value="">Tous les types</option>
                 <option value={AISuggestionType.DUPLICATE_DETECTION}>Doublons</option>
@@ -171,7 +171,7 @@ export default function SuggestionsPage() {
                     min_confidence: e.target.value ? parseFloat(e.target.value) : undefined,
                   })
                 }
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
               >
                 <option value="">Toutes confidences</option>
                 <option value="0.9">≥ 90%</option>
@@ -183,7 +183,7 @@ export default function SuggestionsPage() {
             {/* Batch Actions */}
             {selectedIds.length > 0 && (
               <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-gray-600">
+                <span className="text-sm font-medium text-gray-600 dark:text-slate-400">
                   {selectedIds.length} sélectionnée{selectedIds.length > 1 ? 's' : ''}
                 </span>
 
@@ -216,7 +216,7 @@ export default function SuggestionsPage() {
 
                 <button
                   onClick={() => setSelectedIds([])}
-                  className="text-sm text-gray-600 hover:text-gray-900"
+                  className="text-sm text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white dark:text-slate-100"
                 >
                   Annuler
                 </button>
@@ -226,7 +226,7 @@ export default function SuggestionsPage() {
         </div>
 
         {/* Results count */}
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-gray-600 dark:text-slate-400">
           {isLoading ? (
             'Chargement...'
           ) : (
@@ -238,7 +238,7 @@ export default function SuggestionsPage() {
 
         {/* Table */}
         {isLoading ? (
-          <div className="flex items-center justify-center py-12 bg-white rounded-2xl shadow-lg">
+          <div className="flex items-center justify-center py-12 bg-white dark:bg-slate-900 rounded-2xl shadow-lg">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent" />
           </div>
         ) : (

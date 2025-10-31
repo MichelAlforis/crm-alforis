@@ -56,7 +56,7 @@ export default function SuggestionPreviewModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-      <div className="relative w-full max-w-4xl max-h-[90vh] overflow-hidden bg-white rounded-2xl shadow-2xl">
+      <div className="relative w-full max-w-4xl max-h-[90vh] overflow-hidden bg-white dark:bg-slate-900 rounded-2xl shadow-2xl">
         {/* Header */}
         <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600">
           <div>
@@ -67,7 +67,7 @@ export default function SuggestionPreviewModal({
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-white hover:bg-white/20 rounded-lg transition-colors"
+            className="p-2 text-white hover:bg-white dark:bg-slate-900/20 rounded-lg transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
@@ -95,7 +95,7 @@ export default function SuggestionPreviewModal({
 
               {/* Changes Summary */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-900">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">
                   Modifications proposées ({preview.changes_summary.length})
                 </h3>
 
@@ -109,10 +109,10 @@ export default function SuggestionPreviewModal({
                   >
                     <div className="flex items-center gap-2 mb-3">
                       {getChangeIcon(change.type)}
-                      <span className="font-semibold text-gray-900 capitalize">
+                      <span className="font-semibold text-gray-900 dark:text-slate-100 capitalize">
                         {change.field}
                       </span>
-                      <span className="text-xs px-2 py-1 bg-white/60 rounded-full">
+                      <span className="text-xs px-2 py-1 bg-white dark:bg-slate-900/60 rounded-full">
                         {change.type === 'add' && 'Ajout'}
                         {change.type === 'update' && 'Modification'}
                         {change.type === 'delete' && 'Suppression'}
@@ -123,8 +123,8 @@ export default function SuggestionPreviewModal({
                       {/* From */}
                       <div>
                         <p className="text-xs font-medium text-gray-500 mb-2">Valeur actuelle</p>
-                        <div className="p-3 bg-white rounded border border-gray-200">
-                          <code className="text-sm text-gray-700 break-all">
+                        <div className="p-3 bg-white dark:bg-slate-900 rounded border border-gray-200 dark:border-slate-700">
+                          <code className="text-sm text-gray-700 dark:text-slate-300 break-all">
                             {formatValue(change.from)}
                           </code>
                         </div>
@@ -140,8 +140,8 @@ export default function SuggestionPreviewModal({
                         <p className="text-xs font-medium text-gray-500 mb-2">
                           Nouvelle valeur
                         </p>
-                        <div className="p-3 bg-white rounded border border-gray-200">
-                          <code className="text-sm font-semibold text-gray-900 break-all">
+                        <div className="p-3 bg-white dark:bg-slate-900 rounded border border-gray-200 dark:border-slate-700">
+                          <code className="text-sm font-semibold text-gray-900 dark:text-slate-100 break-all">
                             {formatValue(change.to)}
                           </code>
                         </div>
@@ -153,22 +153,22 @@ export default function SuggestionPreviewModal({
 
               {/* Full data comparison (collapsible) */}
               <details className="group">
-                <summary className="cursor-pointer p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <span className="font-semibold text-gray-700">
+                <summary className="cursor-pointer p-4 bg-gray-50 dark:bg-slate-800 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+                  <span className="font-semibold text-gray-700 dark:text-slate-300">
                     Voir les données complètes
                   </span>
                 </summary>
                 <div className="mt-4 grid grid-cols-2 gap-4">
                   <div>
-                    <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                    <h4 className="text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">
                       Données actuelles
                     </h4>
-                    <pre className="p-4 bg-gray-50 rounded-lg text-xs overflow-auto max-h-96">
+                    <pre className="p-4 bg-gray-50 dark:bg-slate-800 rounded-lg text-xs overflow-auto max-h-96">
                       {JSON.stringify(preview.current_data, null, 2)}
                     </pre>
                   </div>
                   <div>
-                    <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                    <h4 className="text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">
                       Données proposées
                     </h4>
                     <pre className="p-4 bg-blue-50 rounded-lg text-xs overflow-auto max-h-96">
@@ -182,10 +182,10 @@ export default function SuggestionPreviewModal({
         )}
 
         {/* Footer Actions */}
-        <div className="sticky bottom-0 flex items-center justify-end gap-3 px-6 py-4 bg-gray-50 border-t border-gray-200">
+        <div className="sticky bottom-0 flex items-center justify-end gap-3 px-6 py-4 bg-gray-50 dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            className="px-4 py-2 text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:bg-slate-800 transition-colors"
           >
             Fermer
           </button>

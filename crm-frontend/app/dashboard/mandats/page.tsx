@@ -236,7 +236,7 @@ export default function MandatsPage() {
       {/* Breadcrumb */}
       <Link
         href="/dashboard"
-        className="inline-flex items-center gap-2 text-gray-600 hover:text-bleu transition-colors mb-2"
+        className="inline-flex items-center gap-2 text-gray-600 dark:text-slate-400 hover:text-bleu transition-colors mb-2"
       >
         <ArrowLeft className="w-5 h-5" />
         <span className="font-medium">Retour à l'annuaire</span>
@@ -245,7 +245,7 @@ export default function MandatsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-ardoise">Mandats de distribution</h1>
-          <p className="text-gray-600 mt-1">
+          <p className="text-gray-600 dark:text-slate-400 mt-1">
             Gérez les mandats de distribution de vos organisations
           </p>
         </div>

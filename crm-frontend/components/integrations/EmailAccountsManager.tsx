@@ -85,8 +85,8 @@ const PROVIDER_CONFIG: Record<Provider, ProviderConfig> = {
     name: 'Autre IMAP',
     icon: '⚙️',
     color: 'from-gray-500 to-gray-600',
-    bgColor: 'bg-gray-50',
-    textColor: 'text-gray-700',
+    bgColor: 'bg-gray-50 dark:bg-slate-800',
+    textColor: 'text-gray-700 dark:text-slate-300',
     type: 'imap',
   },
 }
@@ -95,8 +95,8 @@ const FALLBACK_PROVIDER_CONFIG: ProviderConfig = {
   name: 'Email',
   icon: '📧',
   color: 'from-gray-500 to-gray-600',
-  bgColor: 'bg-gray-50',
-  textColor: 'text-gray-700',
+  bgColor: 'bg-gray-50 dark:bg-slate-800',
+  textColor: 'text-gray-700 dark:text-slate-300',
   type: 'imap',
 }
 
@@ -577,7 +577,7 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
       {/* Header with Add Button */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Comptes email (Multi-Mail)</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">Comptes email (Multi-Mail)</h3>
           <p className="text-sm text-gray-500">
             Connectez plusieurs boîtes mail IMAP pour la synchronisation
           </p>
@@ -596,9 +596,9 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
 
       {/* Accounts List */}
       {accountList.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50/50 p-6 text-center">
+        <div className="rounded-xl border border-dashed border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/50 p-6 text-center">
           <Mail className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-slate-400">
             Aucun compte configuré. Ajoutez votre premier compte email pour synchroniser vos mails.
           </p>
         </div>
@@ -609,7 +609,7 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
             return (
               <div
                 key={account.id}
-                className="flex items-start justify-between p-4 rounded-xl border border-gray-200 hover:border-blue-200 hover:bg-blue-50/30 transition"
+                className="flex items-start justify-between p-4 rounded-xl border border-gray-200 dark:border-slate-700 hover:border-blue-200 hover:bg-blue-50/30 transition"
               >
                 <div className="flex items-start gap-3 flex-1">
                   <div className={clsx('p-2 rounded-lg', config.bgColor)}>
@@ -617,13 +617,13 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <h4 className="font-semibold text-gray-900">{account.email}</h4>
+                      <h4 className="font-semibold text-gray-900 dark:text-slate-100">{account.email}</h4>
                       <span
                         className={clsx(
                           'inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold',
                           account.is_active
                             ? 'bg-emerald-50 text-emerald-600'
-                            : 'bg-gray-100 text-gray-600',
+                            : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400',
                         )}
                       >
                         <span
@@ -640,7 +640,7 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 dark:text-slate-400">
                       {config.name} {config.type === 'imap' && account.server && `· ${account.server}`}
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
@@ -654,7 +654,7 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
                     <>
                       <button
                         onClick={() => handleTestConnection(account)}
-                        className="px-3 py-1.5 rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 transition"
+                        className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:bg-slate-800 transition"
                       >
                         Tester
                       </button>
@@ -679,13 +679,13 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
                   )}
                   <button
                     onClick={() => handleToggleActive(account)}
-                    className="px-3 py-1.5 rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 transition"
+                    className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:bg-slate-800 transition"
                   >
                     {account.is_active ? 'Désactiver' : 'Activer'}
                   </button>
                   <button
                     onClick={() => handleDelete(account)}
-                    className="p-1.5 rounded-lg border border-red-200 bg-white text-red-600 hover:bg-red-50 transition"
+                    className="p-1.5 rounded-lg border border-red-200 bg-white dark:bg-slate-900 text-red-600 hover:bg-red-50 transition"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -699,9 +699,9 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
       {/* Modal for adding account */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
-              <h3 className="text-xl font-bold text-gray-900">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200 dark:border-slate-700">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100">
                 {selectedProvider ? `Ajouter ${PROVIDER_CONFIG[selectedProvider].name}` : 'Choisir un fournisseur'}
               </h3>
             </div>
@@ -716,7 +716,7 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
                         key={provider}
                         onClick={() => handleProviderSelect(provider)}
                         className={clsx(
-                          'p-6 rounded-xl border-2 border-gray-200 hover:border-blue-400 transition text-left group',
+                          'p-6 rounded-xl border-2 border-gray-200 dark:border-slate-700 hover:border-blue-400 transition text-left group',
                           config.bgColor,
                         )}
                       >
@@ -724,7 +724,7 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
                           <span className="text-3xl">{config.icon}</span>
                           <h4 className={clsx('font-bold text-lg', config.textColor)}>{config.name}</h4>
                         </div>
-                        <p className="text-xs text-gray-600">
+                        <p className="text-xs text-gray-600 dark:text-slate-400">
                           {config.type === 'imap' && 'Connexion IMAP'}
                           {config.type === 'oauth' && 'OAuth (bientôt)'}
                           {config.type === 'ews' && 'Exchange Web Services'}
@@ -742,7 +742,7 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
                   className="space-y-4"
                 >
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                       Adresse email *
                     </label>
                     <input
@@ -750,14 +750,14 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="contact@exemple.com"
-                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                       required
                     />
                   </div>
 
                   {requiresServer && (
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                         {currentProviderConfig?.type === 'ews' ? 'URL du serveur Exchange *' : 'Serveur IMAP *'}
                       </label>
                       <input
@@ -765,7 +765,7 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
                         value={formData.server}
                         onChange={(e) => setFormData({ ...formData, server: e.target.value })}
                         placeholder={currentProviderConfig?.type === 'ews' ? 'https://outlook.office365.com/EWS/Exchange.asmx' : 'imap.exemple.com'}
-                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                         required={requiresServer}
                       />
                     </div>
@@ -773,7 +773,7 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
 
                   {requiresPort && (
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Port</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Port</label>
                       <input
                         type="number"
                         value={formData.port}
@@ -784,14 +784,14 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
                             port: Number.isFinite(parsed) ? parsed : 993,
                           })
                         }}
-                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                         required={requiresPort}
                       />
                     </div>
                   )}
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                       {passwordLabel}
                     </label>
                     <input
@@ -799,7 +799,7 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                       placeholder={currentProviderConfig?.type === 'oauth' ? 'Mot de passe d’application / token' : '••••••••'}
-                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                       required
                     />
                     <p className="text-xs text-gray-500 mt-1">{passwordHelp}</p>
@@ -820,7 +820,7 @@ function resolveProtocol(config: ProviderConfig | null): 'imap' | 'ews' {
                         setShowModal(false)
                         setSelectedProvider(null)
                       }}
-                      className="flex-1 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition"
+                      className="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 font-medium hover:bg-gray-50 dark:bg-slate-800 transition"
                     >
                       Annuler
                     </button>

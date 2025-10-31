@@ -211,7 +211,7 @@ export default function NewWorkflowPage() {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => router.push(ROUTES.WORKFLOWS.BASE)}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
+                className="p-2 hover:bg-gray-100 dark:bg-slate-800 dark:hover:bg-gray-700 rounded-lg transition"
               >
                 <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
               </button>
@@ -258,7 +258,7 @@ export default function NewWorkflowPage() {
                   <button
                     onClick={() => handleSave(true)}
                     disabled={saving}
-                    className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition disabled:opacity-50"
+                    className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:bg-slate-800 dark:hover:bg-gray-700 transition disabled:opacity-50"
                   >
                     <Save className="w-4 h-4" />
                     Brouillon
@@ -304,7 +304,7 @@ export default function NewWorkflowPage() {
                   }
                 }}
               >
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white/20 font-bold">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white dark:bg-slate-900/20 font-bold">
                   {idx + 1}
                 </div>
                 <span className="font-medium capitalize">{s === 'info' ? 'Informations' : s === 'trigger' ? 'Déclencheur' : 'Actions'}</span>
@@ -441,7 +441,7 @@ export default function NewWorkflowPage() {
                     onChange={(e) => setTriggerConfig(e.target.value)}
                     rows={3}
                     placeholder='{"schedule": "daily", "time": "09:00"}'
-                    className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-blue-300 dark:border-blue-600 rounded-md text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-blue-300 dark:border-blue-600 rounded-md text-sm font-mono focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:outline-none"
                   />
                 </div>
               )}
@@ -449,7 +449,7 @@ export default function NewWorkflowPage() {
               <div className="flex gap-3">
                 <button
                   onClick={() => setStep('info')}
-                  className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                  className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:bg-slate-800 dark:hover:bg-gray-700 transition"
                 >
                   ← Retour
                 </button>
@@ -486,7 +486,7 @@ export default function NewWorkflowPage() {
                 <div className="mt-4 flex gap-3">
                   <button
                     onClick={() => setStep('trigger')}
-                    className="px-6 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                    className="px-6 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:bg-slate-800 dark:hover:bg-gray-700 transition"
                   >
                     ← Retour
                   </button>
@@ -523,7 +523,7 @@ export default function NewWorkflowPage() {
                 <div className="mt-4 flex gap-3">
                   <button
                     onClick={() => setStep('trigger')}
-                    className="px-6 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                    className="px-6 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:bg-slate-800 dark:hover:bg-gray-700 transition"
                   >
                     ← Retour
                   </button>

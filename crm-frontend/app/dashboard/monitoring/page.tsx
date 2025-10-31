@@ -223,7 +223,7 @@ export default function MonitoringPage() {
       case 'critical':
         return 'text-red-600 bg-red-50'
       default:
-        return 'text-gray-600 bg-gray-50'
+        return 'text-gray-600 dark:text-slate-400 bg-gray-50 dark:bg-slate-800'
     }
   }
 
@@ -280,7 +280,7 @@ export default function MonitoringPage() {
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               autoRefresh
                 ? 'bg-blue-600 text-white hover:bg-blue-700'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                : 'bg-gray-200 text-gray-700 dark:text-slate-300 hover:bg-gray-300'
             }`}
           >
             {autoRefresh ? '🔄 Auto-refresh ON' : '⏸ Auto-refresh OFF'}
@@ -295,12 +295,12 @@ export default function MonitoringPage() {
         <Card>
           <div className="p-4">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-gray-700">CPU</h3>
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-slate-300">CPU</h3>
               <span className={`text-xs px-2 py-1 rounded ${getStatusColor(data.system.cpu.status)}`}>
                 {data.system.cpu.status}
               </span>
             </div>
-            <p className="text-3xl font-bold text-gray-900">{data.system.cpu.percent}%</p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-slate-100">{data.system.cpu.percent}%</p>
             <div className="mt-2 bg-gray-200 rounded-full h-2">
               <div
                 className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(
@@ -317,12 +317,12 @@ export default function MonitoringPage() {
         <Card>
           <div className="p-4">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-gray-700">Memory</h3>
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-slate-300">Memory</h3>
               <span className={`text-xs px-2 py-1 rounded ${getStatusColor(data.system.memory.status)}`}>
                 {data.system.memory.status}
               </span>
             </div>
-            <p className="text-3xl font-bold text-gray-900">{data.system.memory.percent}%</p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-slate-100">{data.system.memory.percent}%</p>
             <div className="mt-2 bg-gray-200 rounded-full h-2">
               <div
                 className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(
@@ -341,12 +341,12 @@ export default function MonitoringPage() {
         <Card>
           <div className="p-4">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-gray-700">Disk</h3>
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-slate-300">Disk</h3>
               <span className={`text-xs px-2 py-1 rounded ${getStatusColor(data.system.disk.status)}`}>
                 {data.system.disk.status}
               </span>
             </div>
-            <p className="text-3xl font-bold text-gray-900">{data.system.disk.percent}%</p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-slate-100">{data.system.disk.percent}%</p>
             <div className="mt-2 bg-gray-200 rounded-full h-2">
               <div
                 className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(
@@ -372,8 +372,8 @@ export default function MonitoringPage() {
                   <span className="text-white text-xl">⚡</span>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">Redis Cache</h3>
-                  <p className="text-xs text-gray-600">Performance & Hit Rate</p>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">Redis Cache</h3>
+                  <p className="text-xs text-gray-600 dark:text-slate-400">Performance & Hit Rate</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -382,7 +382,7 @@ export default function MonitoringPage() {
                     ✓ ONLINE
                   </span>
                 ) : (
-                  <span className="px-3 py-1 bg-gray-200 text-gray-600 rounded-full text-xs font-semibold">
+                  <span className="px-3 py-1 bg-gray-200 text-gray-600 dark:text-slate-400 rounded-full text-xs font-semibold">
                     ✗ OFFLINE
                   </span>
                 )}
@@ -399,8 +399,8 @@ export default function MonitoringPage() {
             {cacheStats.available ? (
               <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
                 {/* Hit Rate */}
-                <div className="bg-white rounded-lg p-3 shadow-sm">
-                  <p className="text-xs text-gray-600 mb-1">Hit Rate</p>
+                <div className="bg-white dark:bg-slate-900 rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Hit Rate</p>
                   <p className="text-2xl font-bold text-blue-600">{cacheStats.hit_rate?.toFixed(1)}%</p>
                   <div className="mt-2 bg-gray-200 rounded-full h-1.5">
                     <div
@@ -411,45 +411,45 @@ export default function MonitoringPage() {
                 </div>
 
                 {/* Hits */}
-                <div className="bg-white rounded-lg p-3 shadow-sm">
-                  <p className="text-xs text-gray-600 mb-1">Hits</p>
+                <div className="bg-white dark:bg-slate-900 rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Hits</p>
                   <p className="text-2xl font-bold text-green-600">{cacheStats.hits?.toLocaleString()}</p>
                   <p className="text-xs text-gray-500 mt-1">Requests</p>
                 </div>
 
                 {/* Misses */}
-                <div className="bg-white rounded-lg p-3 shadow-sm">
-                  <p className="text-xs text-gray-600 mb-1">Misses</p>
+                <div className="bg-white dark:bg-slate-900 rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Misses</p>
                   <p className="text-2xl font-bold text-orange-600">{cacheStats.misses?.toLocaleString()}</p>
                   <p className="text-xs text-gray-500 mt-1">Requests</p>
                 </div>
 
                 {/* Total */}
-                <div className="bg-white rounded-lg p-3 shadow-sm">
-                  <p className="text-xs text-gray-600 mb-1">Total</p>
-                  <p className="text-2xl font-bold text-gray-900">
+                <div className="bg-white dark:bg-slate-900 rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Total</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-slate-100">
                     {cacheStats.total_requests?.toLocaleString()}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">Requests</p>
                 </div>
 
                 {/* Keys */}
-                <div className="bg-white rounded-lg p-3 shadow-sm">
-                  <p className="text-xs text-gray-600 mb-1">Keys</p>
+                <div className="bg-white dark:bg-slate-900 rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Keys</p>
                   <p className="text-2xl font-bold text-purple-600">{cacheStats.keys_count?.toLocaleString()}</p>
                   <p className="text-xs text-gray-500 mt-1">Stored</p>
                 </div>
 
                 {/* Memory */}
-                <div className="bg-white rounded-lg p-3 shadow-sm">
-                  <p className="text-xs text-gray-600 mb-1">Memory</p>
+                <div className="bg-white dark:bg-slate-900 rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Memory</p>
                   <p className="text-2xl font-bold text-indigo-600">{cacheStats.memory_used || 'N/A'}</p>
                   <p className="text-xs text-gray-500 mt-1">Used</p>
                 </div>
               </div>
             ) : (
-              <div className="bg-white rounded-lg p-4 text-center">
-                <p className="text-gray-600 text-sm">
+              <div className="bg-white dark:bg-slate-900 rounded-lg p-4 text-center">
+                <p className="text-gray-600 dark:text-slate-400 text-sm">
                   {cacheStats.error || 'Redis cache non disponible'}
                 </p>
                 <p className="text-xs text-gray-500 mt-2">
@@ -471,8 +471,8 @@ export default function MonitoringPage() {
                   <span className="text-white text-xl">🔒</span>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">RGPD Compliance</h3>
-                  <p className="text-xs text-gray-600">Conformité données personnelles</p>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">RGPD Compliance</h3>
+                  <p className="text-xs text-gray-600 dark:text-slate-400">Conformité données personnelles</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -493,14 +493,14 @@ export default function MonitoringPage() {
             </div>
 
             {gdprStats.error ? (
-              <div className="bg-white rounded-lg p-4 text-center">
-                <p className="text-gray-600 text-sm">{gdprStats.error}</p>
+              <div className="bg-white dark:bg-slate-900 rounded-lg p-4 text-center">
+                <p className="text-gray-600 dark:text-slate-400 text-sm">{gdprStats.error}</p>
               </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 {/* Compliance Rate */}
-                <div className="bg-white rounded-lg p-3 shadow-sm">
-                  <p className="text-xs text-gray-600 mb-1">Taux Conformité</p>
+                <div className="bg-white dark:bg-slate-900 rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Taux Conformité</p>
                   <p className="text-2xl font-bold text-purple-600">
                     {gdprStats.people.compliance_rate.toFixed(1)}%
                   </p>
@@ -519,15 +519,15 @@ export default function MonitoringPage() {
                 </div>
 
                 {/* Total Contacts */}
-                <div className="bg-white rounded-lg p-3 shadow-sm">
-                  <p className="text-xs text-gray-600 mb-1">Total Contacts</p>
-                  <p className="text-2xl font-bold text-gray-900">{gdprStats.people.total.toLocaleString()}</p>
+                <div className="bg-white dark:bg-slate-900 rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Total Contacts</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-slate-100">{gdprStats.people.total.toLocaleString()}</p>
                   <p className="text-xs text-gray-500 mt-1">Personnes</p>
                 </div>
 
                 {/* With Consent */}
-                <div className="bg-white rounded-lg p-3 shadow-sm">
-                  <p className="text-xs text-gray-600 mb-1">Avec Consentement</p>
+                <div className="bg-white dark:bg-slate-900 rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Avec Consentement</p>
                   <p className="text-2xl font-bold text-green-600">
                     {gdprStats.people.with_consent.toLocaleString()}
                   </p>
@@ -537,8 +537,8 @@ export default function MonitoringPage() {
                 </div>
 
                 {/* Anonymized */}
-                <div className="bg-white rounded-lg p-3 shadow-sm">
-                  <p className="text-xs text-gray-600 mb-1">Anonymisés</p>
+                <div className="bg-white dark:bg-slate-900 rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Anonymisés</p>
                   <p className="text-2xl font-bold text-blue-600">
                     {gdprStats.people.anonymized.toLocaleString()}
                   </p>
@@ -546,8 +546,8 @@ export default function MonitoringPage() {
                 </div>
 
                 {/* Inactive 18m */}
-                <div className="bg-white rounded-lg p-3 shadow-sm">
-                  <p className="text-xs text-gray-600 mb-1">Inactifs 18M+</p>
+                <div className="bg-white dark:bg-slate-900 rounded-lg p-3 shadow-sm">
+                  <p className="text-xs text-gray-600 dark:text-slate-400 mb-1">Inactifs 18M+</p>
                   <p className="text-2xl font-bold text-orange-600">
                     {gdprStats.people.inactive_18m.toLocaleString()}
                   </p>
@@ -577,28 +577,28 @@ export default function MonitoringPage() {
             <h3 className="text-lg font-semibold mb-4">Database (24h)</h3>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Total tasks</span>
+                <span className="text-sm text-gray-600 dark:text-slate-400">Total tasks</span>
                 <span className="font-semibold">{data.database.tasks_24h.total}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Completed</span>
+                <span className="text-sm text-gray-600 dark:text-slate-400">Completed</span>
                 <span className="font-semibold text-green-600">{data.database.tasks_24h.completed}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Failed</span>
+                <span className="text-sm text-gray-600 dark:text-slate-400">Failed</span>
                 <span className="font-semibold text-red-600">{data.database.tasks_24h.failed}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Success rate</span>
+                <span className="text-sm text-gray-600 dark:text-slate-400">Success rate</span>
                 <span className="font-semibold">{data.database.tasks_24h.success_rate}%</span>
               </div>
               <div className="flex justify-between items-center pt-2 border-t">
-                <span className="text-sm text-gray-600">Unread notifications</span>
+                <span className="text-sm text-gray-600 dark:text-slate-400">Unread notifications</span>
                 <span className="font-semibold">{data.database.notifications.unread}</span>
               </div>
               {data.database.connections.active !== undefined && (
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Active connections</span>
+                  <span className="text-sm text-gray-600 dark:text-slate-400">Active connections</span>
                   <span className="font-semibold">{data.database.connections.active}</span>
                 </div>
               )}
@@ -638,11 +638,11 @@ export default function MonitoringPage() {
             <h3 className="text-lg font-semibold mb-4 text-red-800">Recent Errors</h3>
             <div className="space-y-2">
               {data.errors.map((error, index) => (
-                <div key={index} className="bg-white p-3 rounded border border-red-200">
+                <div key={index} className="bg-white dark:bg-slate-900 p-3 rounded border border-red-200">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="font-medium text-sm text-gray-900">{error.title || error.type}</p>
-                      {error.description && <p className="text-xs text-gray-600 mt-1">{error.description}</p>}
+                      <p className="font-medium text-sm text-gray-900 dark:text-slate-100">{error.title || error.type}</p>
+                      {error.description && <p className="text-xs text-gray-600 dark:text-slate-400 mt-1">{error.description}</p>}
                     </div>
                     {error.timestamp && (
                       <span className="text-xs text-gray-500">

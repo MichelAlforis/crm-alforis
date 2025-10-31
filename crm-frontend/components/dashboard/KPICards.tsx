@@ -43,7 +43,7 @@ export function KPICards() {
         ) : (
           <div className="text-3xl font-bold text-bleu">{organisationsCount}</div>
         )}
-        <p className="text-gray-600 text-sm mt-1">Organisations</p>
+        <p className="text-gray-600 dark:text-slate-400 text-sm mt-1">Organisations</p>
       </Card>
 
       <Card className="text-center">
@@ -52,7 +52,7 @@ export function KPICards() {
         ) : (
           <div className="text-3xl font-bold text-vert">{mandatsCount}</div>
         )}
-        <p className="text-gray-600 text-sm mt-1">Mandats</p>
+        <p className="text-gray-600 dark:text-slate-400 text-sm mt-1">Mandats</p>
       </Card>
 
       <Card className="text-center">
@@ -61,7 +61,7 @@ export function KPICards() {
         ) : (
           <div className="text-3xl font-bold text-orange-500">{tasksCount}</div>
         )}
-        <p className="text-gray-600 text-sm mt-1">Tâches</p>
+        <p className="text-gray-600 dark:text-slate-400 text-sm mt-1">Tâches</p>
       </Card>
 
       <Card className="text-center">
@@ -70,7 +70,7 @@ export function KPICards() {
         ) : (
           <div className="text-3xl font-bold text-purple-500">{peopleCount}</div>
         )}
-        <p className="text-gray-600 text-sm mt-1">Contacts</p>
+        <p className="text-gray-600 dark:text-slate-400 text-sm mt-1">Contacts</p>
       </Card>
     </div>
   )

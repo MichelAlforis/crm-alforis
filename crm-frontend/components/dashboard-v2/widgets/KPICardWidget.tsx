@@ -83,7 +83,7 @@ export function KPICardWidget({
     <Card padding="none" className="h-full transition-shadow hover:shadow-lg">
       <div className="flex h-full flex-col gap-fluid-2 p-fluid-4 @md:p-fluid-5">
         <div className="flex items-start justify-between gap-fluid-2">
-          <p className="text-fluid-sm font-medium text-gray-600">{title}</p>
+          <p className="text-fluid-sm font-medium text-gray-600 dark:text-slate-400">{title}</p>
           {getTrendIcon()}
         </div>
 

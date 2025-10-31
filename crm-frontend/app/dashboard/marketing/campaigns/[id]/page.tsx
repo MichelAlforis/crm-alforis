@@ -30,15 +30,15 @@ interface EmailSend {
 
 const getStatusBadge = (status: string) => {
   const statusMap: Record<string, { label: string; className: string }> = {
-    queued: { label: 'En file', className: 'bg-gray-100 text-gray-700' },
+    queued: { label: 'En file', className: 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300' },
     scheduled: { label: 'Programmé', className: 'bg-blue-100 text-blue-700' },
     sending: { label: 'En cours', className: 'bg-yellow-100 text-yellow-700' },
     sent: { label: 'Envoyé', className: 'bg-green-100 text-green-700' },
     completed: { label: 'Terminé', className: 'bg-success/20 text-success' },
     failed: { label: 'Échec', className: 'bg-red-100 text-red-700' },
-    cancelled: { label: 'Annulé', className: 'bg-gray-100 text-gray-700' },
+    cancelled: { label: 'Annulé', className: 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300' },
   }
-  const config = statusMap[status] || { label: status, className: 'bg-gray-100 text-gray-700' }
+  const config = statusMap[status] || { label: status, className: 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300' }
   return (
     <span className={`px-2 py-1 rounded text-xs font-medium ${config.className}`}>
       {config.label}

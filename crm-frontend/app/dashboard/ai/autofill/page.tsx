@@ -236,7 +236,7 @@ export default function AutofillJobsPage() {
               <div className="space-y-4">
                 {/* Metrics Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="text-center p-3 bg-gray-50 rounded-lg">
+                  <div className="text-center p-3 bg-gray-50 dark:bg-slate-800 rounded-lg">
                     <div className="text-2xl font-bold">{result.metrics.emails_processed}</div>
                     <div className="text-sm text-muted-foreground">Emails traités</div>
                   </div>
@@ -255,7 +255,7 @@ export default function AutofillJobsPage() {
                 </div>
 
                 {/* Summary */}
-                <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="bg-gray-50 dark:bg-slate-800 p-4 rounded-lg">
                   <pre className="text-sm whitespace-pre-wrap font-mono">
                     {result.summary}
                   </pre>

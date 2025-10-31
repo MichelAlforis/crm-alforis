@@ -30,14 +30,14 @@ export default function ImportUnifiedPage() {
         </div>
 
         {/* Main Card */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+        <div className="bg-white dark:bg-slate-900 rounded-lg shadow-lg p-8 mb-8">
           <ImportUnifiedForm />
         </div>
 
         {/* Info Sections */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Avantages */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white dark:bg-slate-900 rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold mb-4">✨ Avantages</h2>
             <ul className="space-y-2 text-sm text-slate-700">
               <li>✓ Import en une seule requête</li>
@@ -49,7 +49,7 @@ export default function ImportUnifiedPage() {
           </div>
 
           {/* Processus */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white dark:bg-slate-900 rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold mb-4">🔄 Processus</h2>
             <ol className="space-y-2 text-sm text-slate-700">
               <li>1️⃣ Télécharger CSV organisations</li>
@@ -62,7 +62,7 @@ export default function ImportUnifiedPage() {
         </div>
 
         {/* Documentation */}
-        <div className="mt-8 bg-white rounded-lg shadow p-6">
+        <div className="mt-8 bg-white dark:bg-slate-900 rounded-lg shadow p-6">
           <h2 className="text-lg font-semibold mb-4">📚 Documentation</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

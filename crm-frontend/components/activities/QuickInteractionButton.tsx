@@ -104,9 +104,9 @@ export default function QuickInteractionButton({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-lg w-full max-h-[90vh] overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-lg shadow-xl max-w-lg w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
           <h3 className="text-lg font-semibold">Créer une interaction rapide</h3>
           <button
             onClick={() => {
@@ -114,7 +114,7 @@ export default function QuickInteractionButton({
               setSelectedType(null)
               setError(null)
             }}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 dark:bg-slate-800 rounded-lg transition-colors"
           >
             <X className="h-5 w-5 text-gray-500" />
           </button>
@@ -130,19 +130,19 @@ export default function QuickInteractionButton({
           {/* Type selection */}
           {!selectedType ? (
             <div className="space-y-3">
-              <p className="text-sm text-gray-600">Quel type d'interaction ?</p>
+              <p className="text-sm text-gray-600 dark:text-slate-400">Quel type d'interaction ?</p>
               {quickTypes.map((type) => {
                 const Icon = type.icon
                 return (
                   <button
                     key={type.value}
                     onClick={() => setSelectedType(type.value)}
-                    className="w-full p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all flex items-center gap-3 text-left"
+                    className="w-full p-4 border-2 border-gray-200 dark:border-slate-700 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all flex items-center gap-3 text-left"
                   >
                     <div className={`w-10 h-10 ${type.color} rounded-lg flex items-center justify-center`}>
                       <Icon className="h-5 w-5 text-white" />
                     </div>
-                    <span className="font-medium text-gray-900">{type.label}</span>
+                    <span className="font-medium text-gray-900 dark:text-slate-100">{type.label}</span>
                   </button>
                 )
               })}
@@ -160,7 +160,7 @@ export default function QuickInteractionButton({
                         <div className={`w-8 h-8 ${type?.color || 'bg-gray-500'} rounded-lg flex items-center justify-center`}>
                           <Icon className="h-4 w-4 text-white" />
                         </div>
-                        <span className="font-medium text-gray-900">{type?.label}</span>
+                        <span className="font-medium text-gray-900 dark:text-slate-100">{type?.label}</span>
                       </>
                     )
                   })()}
@@ -175,7 +175,7 @@ export default function QuickInteractionButton({
 
               {/* Title */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                   Titre *
                 </label>
                 <input
@@ -189,7 +189,7 @@ export default function QuickInteractionButton({
                       ? 'Ex: Call découverte produit'
                       : 'Ex: Décision de partenariat validée'
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
                   autoFocus
                 />
               </div>
@@ -198,7 +198,7 @@ export default function QuickInteractionButton({
               {(selectedType === 'email' || selectedType === 'appel') && (
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                       Destinataire
                     </label>
                     <input
@@ -206,11 +206,11 @@ export default function QuickInteractionButton({
                       value={recipientName}
                       onChange={(e) => setRecipientName(e.target.value)}
                       placeholder="Nom"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                       Email
                     </label>
                     <input
@@ -218,7 +218,7 @@ export default function QuickInteractionButton({
                       value={recipientEmail}
                       onChange={(e) => setRecipientEmail(e.target.value)}
                       placeholder="email@example.com"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -226,7 +226,7 @@ export default function QuickInteractionButton({
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                   Description (optionnel)
                 </label>
                 <textarea
@@ -234,7 +234,7 @@ export default function QuickInteractionButton({
                   onChange={(e) => setDescription(e.target.value)}
                   rows={3}
                   placeholder="Détails supplémentaires..."
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
                 />
               </div>
             </div>
@@ -243,7 +243,7 @@ export default function QuickInteractionButton({
 
         {/* Footer */}
         {selectedType && (
-          <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-end gap-3 bg-gray-50">
+          <div className="px-6 py-4 border-t border-gray-200 dark:border-slate-700 flex items-center justify-end gap-3 bg-gray-50 dark:bg-slate-800">
             <button
               onClick={() => {
                 setIsOpen(false)
@@ -253,7 +253,7 @@ export default function QuickInteractionButton({
                 setRecipientEmail('')
                 setRecipientName('')
               }}
-              className="px-4 py-2 text-gray-700 hover:bg-gray-200 rounded-lg transition-colors"
+              className="px-4 py-2 text-gray-700 dark:text-slate-300 hover:bg-gray-200 rounded-lg transition-colors"
             >
               Annuler
             </button>

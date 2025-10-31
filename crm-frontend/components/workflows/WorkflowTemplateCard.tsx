@@ -36,7 +36,7 @@ const CATEGORY_COLORS = {
   reunions: 'bg-purple-100 text-purple-800',
   mailing: 'bg-pink-100 text-pink-800',
   relations: 'bg-indigo-100 text-indigo-800',
-  reporting: 'bg-gray-100 text-gray-800',
+  reporting: 'bg-gray-100 dark:bg-slate-800 text-gray-800',
   prospection: 'bg-teal-100 text-teal-800',
 }
 
@@ -49,7 +49,7 @@ export const WorkflowTemplateCard = ({
   const { metadata } = template
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-200 overflow-hidden group">
+    <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg hover:shadow-lg transition-all duration-200 overflow-hidden group">
       {/* Header avec icône et catégorie */}
       <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
         <div className="flex items-start justify-between mb-2">
@@ -58,8 +58,8 @@ export const WorkflowTemplateCard = ({
             {metadata.category}
           </span>
         </div>
-        <h3 className="font-semibold text-gray-900 text-lg mb-1">{template.name}</h3>
-        <p className="text-sm text-gray-600 line-clamp-2">{template.description}</p>
+        <h3 className="font-semibold text-gray-900 dark:text-slate-100 text-lg mb-1">{template.name}</h3>
+        <p className="text-sm text-gray-600 dark:text-slate-400 line-clamp-2">{template.description}</p>
       </div>
 
       {/* Body - Use cases */}
@@ -68,7 +68,7 @@ export const WorkflowTemplateCard = ({
           <h4 className="text-xs font-medium text-gray-500 uppercase mb-2">Cas d'usage</h4>
           <ul className="space-y-1">
             {metadata.useCases.slice(0, 2).map((uc, idx) => (
-              <li key={idx} className="text-sm text-gray-700 flex items-start">
+              <li key={idx} className="text-sm text-gray-700 dark:text-slate-300 flex items-start">
                 <span className="text-blue-500 mr-2">→</span>
                 <span className="line-clamp-1">{uc}</span>
               </li>
@@ -79,7 +79,7 @@ export const WorkflowTemplateCard = ({
         {/* Tags */}
         <div className="flex flex-wrap gap-1">
           {metadata.tags.slice(0, 3).map(tag => (
-            <span key={tag} className="inline-flex items-center px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded">
+            <span key={tag} className="inline-flex items-center px-2 py-1 text-xs bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 rounded">
               <Tag size={10} className="mr-1" />
               {tag}
             </span>
@@ -105,7 +105,7 @@ export const WorkflowTemplateCard = ({
           </div>
 
           {/* Trigger type */}
-          <span className="flex items-center text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded">
+          <span className="flex items-center text-xs text-gray-500 bg-gray-50 dark:bg-slate-800 px-2 py-1 rounded">
             <Zap size={12} className="mr-1" />
             {template.trigger_type.replace(/_/g, ' ')}
           </span>
@@ -123,10 +123,10 @@ export const WorkflowTemplateCard = ({
       </div>
 
       {/* Footer - Actions */}
-      <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 flex gap-2">
+      <div className="px-4 py-3 bg-gray-50 dark:bg-slate-800 border-t border-gray-100 flex gap-2">
         <button
           onClick={() => onPreview(template.id)}
-          className="flex-1 px-3 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors"
+          className="flex-1 px-3 py-2 text-sm text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded hover:bg-gray-50 dark:bg-slate-800 transition-colors"
           disabled={isLoading}
         >
           Prévisualiser

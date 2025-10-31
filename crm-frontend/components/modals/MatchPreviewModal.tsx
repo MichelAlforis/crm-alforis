@@ -47,20 +47,20 @@ export default function MatchPreviewModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="relative w-full max-w-3xl max-h-[80vh] overflow-y-auto bg-white rounded-lg shadow-xl">
+      <div className="relative w-full max-w-3xl max-h-[80vh] overflow-y-auto bg-white dark:bg-slate-900 rounded-lg shadow-xl">
         {/* Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 bg-white border-b">
+        <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 bg-white dark:bg-slate-900 border-b">
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
               {entityType === 'person' ? 'Contacts similaires trouvés' : 'Organisations similaires trouvées'}
             </h2>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-slate-400">
               {matches.length} {matches.length > 1 ? 'candidats trouvés' : 'candidat trouvé'}. Sélectionnez un contact existant ou créez-en un nouveau.
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100"
+            className="p-2 text-gray-400 hover:text-gray-600 dark:text-slate-400 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 dark:bg-slate-800"
           >
             <X className="w-5 h-5" />
           </button>
@@ -79,7 +79,7 @@ export default function MatchPreviewModal({
                 onClick={() => setSelectedId(match.candidate.id)}
                 className={`
                   relative p-4 border-2 rounded-lg cursor-pointer transition-all
-                  ${isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'}
+                  ${isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 dark:border-slate-700 hover:border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:bg-slate-800'}
                 `}
               >
                 {/* Score Badge */}
@@ -87,7 +87,7 @@ export default function MatchPreviewModal({
                   <span
                     className={`
                       px-3 py-1 rounded-full text-sm font-medium
-                      ${match.score >= 100 ? 'bg-green-100 text-green-800' : match.score >= 60 ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-600'}
+                      ${match.score >= 100 ? 'bg-green-100 text-green-800' : match.score >= 60 ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400'}
                     `}
                   >
                     Score: {match.score}
@@ -105,35 +105,35 @@ export default function MatchPreviewModal({
                     <>
                       <div className="flex items-center gap-2 mb-2">
                         <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                          <span className="text-lg font-medium text-gray-600">
+                          <span className="text-lg font-medium text-gray-600 dark:text-slate-400">
                             {candidate.first_name?.[0]}{candidate.last_name?.[0]}
                           </span>
                         </div>
                         <div>
-                          <h3 className="font-semibold text-gray-900">
+                          <h3 className="font-semibold text-gray-900 dark:text-slate-100">
                             {candidate.first_name} {candidate.last_name}
                           </h3>
                           {candidate.job_title && (
-                            <p className="text-sm text-gray-600">{candidate.job_title}</p>
+                            <p className="text-sm text-gray-600 dark:text-slate-400">{candidate.job_title}</p>
                           )}
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 gap-2 mt-3 text-sm">
                         {candidate.personal_email && (
-                          <div className="flex items-center gap-2 text-gray-600">
+                          <div className="flex items-center gap-2 text-gray-600 dark:text-slate-400">
                             <Mail className="w-4 h-4" />
                             <span className="truncate">{candidate.personal_email}</span>
                           </div>
                         )}
                         {candidate.phone && (
-                          <div className="flex items-center gap-2 text-gray-600">
+                          <div className="flex items-center gap-2 text-gray-600 dark:text-slate-400">
                             <Phone className="w-4 h-4" />
                             <span>{candidate.phone}</span>
                           </div>
                         )}
                         {candidate.company_name && (
-                          <div className="flex items-center gap-2 text-gray-600">
+                          <div className="flex items-center gap-2 text-gray-600 dark:text-slate-400">
                             <Building2 className="w-4 h-4" />
                             <span>{candidate.company_name}</span>
                           </div>
@@ -144,31 +144,31 @@ export default function MatchPreviewModal({
                     <>
                       <div className="flex items-center gap-2 mb-2">
                         <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                          <Building2 className="w-5 h-5 text-gray-600" />
+                          <Building2 className="w-5 h-5 text-gray-600 dark:text-slate-400" />
                         </div>
                         <div>
-                          <h3 className="font-semibold text-gray-900">{candidate.name || candidate.nom}</h3>
+                          <h3 className="font-semibold text-gray-900 dark:text-slate-100">{candidate.name || candidate.nom}</h3>
                           {candidate.category && (
-                            <p className="text-sm text-gray-600">{candidate.category}</p>
+                            <p className="text-sm text-gray-600 dark:text-slate-400">{candidate.category}</p>
                           )}
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 gap-2 mt-3 text-sm">
                         {candidate.email && (
-                          <div className="flex items-center gap-2 text-gray-600">
+                          <div className="flex items-center gap-2 text-gray-600 dark:text-slate-400">
                             <Mail className="w-4 h-4" />
                             <span className="truncate">{candidate.email}</span>
                           </div>
                         )}
                         {candidate.phone && (
-                          <div className="flex items-center gap-2 text-gray-600">
+                          <div className="flex items-center gap-2 text-gray-600 dark:text-slate-400">
                             <Phone className="w-4 h-4" />
                             <span>{candidate.phone}</span>
                           </div>
                         )}
                         {candidate.website && (
-                          <div className="flex items-center gap-2 text-gray-600">
+                          <div className="flex items-center gap-2 text-gray-600 dark:text-slate-400">
                             <Briefcase className="w-4 h-4" />
                             <span className="truncate">{candidate.website}</span>
                           </div>
@@ -179,7 +179,7 @@ export default function MatchPreviewModal({
 
                   {/* Match Details */}
                   {Object.keys(match.details).length > 0 && (
-                    <div className="mt-3 pt-3 border-t border-gray-200">
+                    <div className="mt-3 pt-3 border-t border-gray-200 dark:border-slate-700">
                       <p className="text-xs text-gray-500 mb-1">Critères de matching:</p>
                       <div className="flex flex-wrap gap-1">
                         {Object.entries(match.details).map(([criterion, points]) => (
@@ -200,10 +200,10 @@ export default function MatchPreviewModal({
         </div>
 
         {/* Footer Actions */}
-        <div className="sticky bottom-0 flex items-center justify-between px-6 py-4 bg-gray-50 border-t">
+        <div className="sticky bottom-0 flex items-center justify-between px-6 py-4 bg-gray-50 dark:bg-slate-800 border-t">
           <button
             onClick={handleCreateNew}
-            className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-200 rounded-lg transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white dark:text-slate-100 hover:bg-gray-200 rounded-lg transition-colors"
           >
             <UserPlus className="w-4 h-4" />
             Créer un nouveau contact
@@ -212,7 +212,7 @@ export default function MatchPreviewModal({
           <div className="flex gap-3">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 hover:bg-gray-200 rounded-lg transition-colors"
+              className="px-4 py-2 text-gray-700 dark:text-slate-300 hover:bg-gray-200 rounded-lg transition-colors"
             >
               Annuler
             </button>

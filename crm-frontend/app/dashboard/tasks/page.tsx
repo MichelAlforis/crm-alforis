@@ -15,7 +15,7 @@ const PRIORITY_COLORS: Record<TaskPriority, string> = {
   haute: 'bg-orange-100 text-orange-800',
   moyenne: 'bg-yellow-100 text-yellow-800',
   basse: 'bg-blue-100 text-blue-800',
-  non_prioritaire: 'bg-gray-100 text-gray-600',
+  non_prioritaire: 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400',
 }
 
 const PRIORITY_EMOJI: Record<TaskPriority, string> = {
@@ -47,14 +47,14 @@ function PriorityBadge({ priority }: { priority: TaskPriority }) {
 
 function TaskCard({ task, onQuickAction }: { task: Task; onQuickAction: (id: number, action: string) => void }) {
   return (
-    <div className="group bg-white border border-gray-200 rounded-xl p-4 hover:shadow-lg hover:border-blue-200 transition-all duration-300 hover:-translate-y-0.5">
+    <div className="group bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl p-4 hover:shadow-lg hover:border-blue-200 transition-all duration-300 hover:-translate-y-0.5">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-gray-900 mb-1.5 line-clamp-1 group-hover:text-blue-600 transition-colors">
+          <h3 className="font-semibold text-gray-900 dark:text-slate-100 mb-1.5 line-clamp-1 group-hover:text-blue-600 transition-colors">
             {task.title}
           </h3>
           {task.description && (
-            <p className="text-sm text-gray-600 mt-1 line-clamp-2 leading-relaxed">{task.description}</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">{task.description}</p>
           )}
 
           <div className="flex flex-wrap items-center gap-2 mt-3">
@@ -91,7 +91,7 @@ function TaskCard({ task, onQuickAction }: { task: Task; onQuickAction: (id: num
               <svg className="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
               </svg>
-              <p className="text-xs text-gray-600">{task.linked_entity_display}</p>
+              <p className="text-xs text-gray-600 dark:text-slate-400">{task.linked_entity_display}</p>
             </div>
           )}
         </div>
@@ -109,14 +109,14 @@ function TaskCard({ task, onQuickAction }: { task: Task; onQuickAction: (id: num
           </button>
           <button
             onClick={() => onQuickAction(task.id, 'snooze_1d')}
-            className="px-3 py-1.5 text-xs font-medium bg-gray-50 text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow"
+            className="px-3 py-1.5 text-xs font-medium bg-gray-50 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-all duration-200 border border-gray-200 dark:border-slate-700 hover:border-gray-300 dark:border-slate-600 shadow-sm hover:shadow"
             title="Reporter d'1 jour"
           >
             +1 jour
           </button>
           <button
             onClick={() => onQuickAction(task.id, 'snooze_1w')}
-            className="px-3 py-1.5 text-xs font-medium bg-gray-50 text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow"
+            className="px-3 py-1.5 text-xs font-medium bg-gray-50 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-all duration-200 border border-gray-200 dark:border-slate-700 hover:border-gray-300 dark:border-slate-600 shadow-sm hover:shadow"
             title="Reporter d'1 semaine"
           >
             +1 sem
@@ -147,10 +147,10 @@ function TaskSection({
   return (
     <div className={`${bgColor} rounded-lg p-6`}>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
           <span>{emoji}</span>
           {title}
-          <span className="text-lg font-normal text-gray-600">({count})</span>
+          <span className="text-lg font-normal text-gray-600 dark:text-slate-400">({count})</span>
         </h2>
       </div>
 
@@ -288,8 +288,8 @@ export default function TaskdeskPage() {
                   </svg>
                 </div>
                 <div>
-                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Taskdesk</h1>
-                  <p className="text-sm text-gray-600 mt-0.5">Gérez vos tâches et priorités efficacement</p>
+                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-slate-100">Taskdesk</h1>
+                  <p className="text-sm text-gray-600 dark:text-slate-400 mt-0.5">Gérez vos tâches et priorités efficacement</p>
                 </div>
               </div>
             </div>
@@ -318,21 +318,21 @@ export default function TaskdeskPage() {
           {/* Stats Cards */}
           {stats && (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mt-6">
-              <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
+              <div className="bg-white dark:bg-slate-900/80 backdrop-blur-sm border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-                    <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-8 h-8 bg-gray-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
+                    <svg className="w-4 h-4 text-gray-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-600">Total</p>
-                    <p className="text-lg font-bold text-gray-900">{stats.total}</p>
+                    <p className="text-xs text-gray-600 dark:text-slate-400">Total</p>
+                    <p className="text-lg font-bold text-gray-900 dark:text-slate-100">{stats.total}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white/80 backdrop-blur-sm border border-red-200 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
+              <div className="bg-white dark:bg-slate-900/80 backdrop-blur-sm border border-red-200 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
                     <svg className="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
@@ -340,13 +340,13 @@ export default function TaskdeskPage() {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-600">Retard</p>
+                    <p className="text-xs text-gray-600 dark:text-slate-400">Retard</p>
                     <p className="text-lg font-bold text-red-600">{overdueCount}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white/80 backdrop-blur-sm border border-orange-200 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
+              <div className="bg-white dark:bg-slate-900/80 backdrop-blur-sm border border-orange-200 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
                     <svg className="w-4 h-4 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
@@ -354,27 +354,27 @@ export default function TaskdeskPage() {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-600">Aujourd'hui</p>
+                    <p className="text-xs text-gray-600 dark:text-slate-400">Aujourd'hui</p>
                     <p className="text-lg font-bold text-orange-600">{todayCount}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
+              <div className="bg-white dark:bg-slate-900/80 backdrop-blur-sm border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-                    <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-8 h-8 bg-gray-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
+                    <svg className="w-4 h-4 text-gray-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-600">À faire</p>
-                    <p className="text-lg font-bold text-gray-900">{stats.by_status.todo || 0}</p>
+                    <p className="text-xs text-gray-600 dark:text-slate-400">À faire</p>
+                    <p className="text-lg font-bold text-gray-900 dark:text-slate-100">{stats.by_status.todo || 0}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white/80 backdrop-blur-sm border border-blue-200 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
+              <div className="bg-white dark:bg-slate-900/80 backdrop-blur-sm border border-blue-200 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                     <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -382,13 +382,13 @@ export default function TaskdeskPage() {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-600">En cours</p>
+                    <p className="text-xs text-gray-600 dark:text-slate-400">En cours</p>
                     <p className="text-lg font-bold text-blue-600">{stats.by_status.doing || 0}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white/80 backdrop-blur-sm border border-green-200 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
+              <div className="bg-white dark:bg-slate-900/80 backdrop-blur-sm border border-green-200 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                     <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -396,7 +396,7 @@ export default function TaskdeskPage() {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-600">Terminées</p>
+                    <p className="text-xs text-gray-600 dark:text-slate-400">Terminées</p>
                     <p className="text-lg font-bold text-green-600">{stats.by_status.done || 0}</p>
                   </div>
                 </div>
@@ -413,7 +413,7 @@ export default function TaskdeskPage() {
             count={filteredOverdue.length}
             emoji="🔴"
             tasks={filteredOverdue}
-            bgColor="bg-white/80 backdrop-blur-sm border-2 border-red-200 shadow-lg"
+            bgColor="bg-white dark:bg-slate-900/80 backdrop-blur-sm border-2 border-red-200 shadow-lg"
             onQuickAction={handleQuickAction}
           />
 
@@ -423,7 +423,7 @@ export default function TaskdeskPage() {
             count={filteredToday.length}
             emoji="⚡"
             tasks={filteredToday}
-            bgColor="bg-white/80 backdrop-blur-sm border-2 border-orange-200 shadow-lg"
+            bgColor="bg-white dark:bg-slate-900/80 backdrop-blur-sm border-2 border-orange-200 shadow-lg"
             onQuickAction={handleQuickAction}
           />
 
@@ -433,15 +433,15 @@ export default function TaskdeskPage() {
             count={filteredNext7.length}
             emoji="📅"
             tasks={filteredNext7}
-            bgColor="bg-white/80 backdrop-blur-sm border-2 border-blue-200 shadow-lg"
+            bgColor="bg-white dark:bg-slate-900/80 backdrop-blur-sm border-2 border-blue-200 shadow-lg"
             onQuickAction={handleQuickAction}
           />
         </div>
 
         {/* Quick Add Button */}
         <div className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 flex flex-col gap-3 items-end z-50">
-          <div className="hidden sm:flex bg-white/95 backdrop-blur-sm rounded-xl shadow-xl px-4 py-2.5 text-sm text-gray-700 border border-gray-200 animate-bounce">
-            <kbd className="px-2 py-1 bg-gradient-to-br from-gray-100 to-gray-200 rounded-md text-xs font-mono font-semibold border border-gray-300 shadow-sm">⌘K</kbd>
+          <div className="hidden sm:flex bg-white dark:bg-slate-900/95 backdrop-blur-sm rounded-xl shadow-xl px-4 py-2.5 text-sm text-gray-700 dark:text-slate-300 border border-gray-200 dark:border-slate-700 animate-bounce">
+            <kbd className="px-2 py-1 bg-gradient-to-br from-gray-100 to-gray-200 rounded-md text-xs font-mono font-semibold border border-gray-300 dark:border-slate-600 shadow-sm">⌘K</kbd>
             <span className="ml-2">pour ajouter</span>
           </div>
           <button

@@ -295,14 +295,14 @@ export default function PersonDetailPage() {
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200">
+      <div className="border-b border-gray-200 dark:border-slate-700">
         <nav className="flex gap-8">
           <button
             onClick={() => setActiveTab('informations')}
             className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${
               activeTab === 'informations'
                 ? 'border-bleu text-bleu'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-slate-300 hover:border-gray-300 dark:border-slate-600'
             }`}
           >
             Informations
@@ -312,7 +312,7 @@ export default function PersonDetailPage() {
             className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${
               activeTab === 'activite'
                 ? 'border-bleu text-bleu'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-slate-300 hover:border-gray-300 dark:border-slate-600'
             }`}
           >
             Activité
@@ -326,15 +326,15 @@ export default function PersonDetailPage() {
           <Card padding="lg">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <p className="text-sm text-gray-600">Email personnel</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Email personnel</p>
             <p className="font-medium text-sm">{person.personal_email || '-'}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Mobile</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Mobile</p>
             <p className="font-medium text-sm">{person.personal_phone || '-'}</p>
           </div>
           <div className="md:col-span-2">
-            <p className="text-sm text-gray-600 mb-2">Statut emails marketing</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400 mb-2">Statut emails marketing</p>
             {person.email_unsubscribed ? (
               <div className="flex items-center gap-2">
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
@@ -351,15 +351,15 @@ export default function PersonDetailPage() {
             )}
           </div>
           <div>
-            <p className="text-sm text-gray-600">Pays</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Pays</p>
             <p className="font-medium text-sm">{countryLabel}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Langue préférée</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Langue préférée</p>
             <p className="font-medium text-sm">{languageLabel}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">LinkedIn</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">LinkedIn</p>
             {person.linkedin_url ? (
               <a
                 href={person.linkedin_url}
@@ -374,7 +374,7 @@ export default function PersonDetailPage() {
             )}
           </div>
           <div>
-            <p className="text-sm text-gray-600">Notes</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Notes</p>
             <p className="text-sm text-gray-800 whitespace-pre-line">
               {person.notes || '-'}
             </p>
@@ -484,10 +484,10 @@ export default function PersonDetailPage() {
             placeholder="+33 ..."
           />
 
-          <label className="flex items-center gap-3 text-sm text-gray-700">
+          <label className="flex items-center gap-3 text-sm text-gray-700 dark:text-slate-300">
             <input
               type="checkbox"
-              className="h-4 w-4 rounded border-gray-300"
+              className="h-4 w-4 rounded border-gray-300 dark:border-slate-600"
               checked={linkPayload.is_primary ?? false}
               onChange={(e) =>
                 setLinkPayload((prev) => ({ ...prev, is_primary: e.target.checked }))

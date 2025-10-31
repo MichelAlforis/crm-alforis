@@ -66,7 +66,7 @@ export default function AIDashboardPage() {
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Agent IA
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-600 dark:text-slate-400 mt-2">
               Détection intelligente, enrichissement automatique et contrôle qualité
             </p>
           </div>
@@ -88,14 +88,14 @@ export default function AIDashboardPage() {
             </Link>
             <Link
               href="/dashboard/ai/suggestions"
-              className="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+              className="px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:bg-slate-800 transition-colors flex items-center gap-2"
             >
               <List className="h-4 w-4" />
               Suggestions
             </Link>
             <Link
               href="/dashboard/ai/config"
-              className="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+              className="px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:bg-slate-800 transition-colors flex items-center gap-2"
             >
               <Settings className="h-4 w-4" />
               Configuration
@@ -140,8 +140,8 @@ export default function AIDashboardPage() {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-white rounded-2xl shadow-lg p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Actions rapides</h2>
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg p-6">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-4">Actions rapides</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Detect Duplicates */}
             <button
@@ -215,15 +215,15 @@ export default function AIDashboardPage() {
 
         {/* Suggestions by Type */}
         {stats && stats.suggestions_by_type && Object.keys(stats.suggestions_by_type).length > 0 && (
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Répartition par type</h2>
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg p-6">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-4">Répartition par type</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {Object.entries(stats.suggestions_by_type).map(([type, count]) => (
-                <div key={type} className="p-4 bg-gray-50 rounded-lg">
-                  <p className="text-sm text-gray-600 capitalize">
+                <div key={type} className="p-4 bg-gray-50 dark:bg-slate-800 rounded-lg">
+                  <p className="text-sm text-gray-600 dark:text-slate-400 capitalize">
                     {type.replace(/_/g, ' ')}
                   </p>
-                  <p className="text-2xl font-bold text-gray-900 mt-1">{count}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-slate-100 mt-1">{count}</p>
                 </div>
               ))}
             </div>
@@ -231,9 +231,9 @@ export default function AIDashboardPage() {
         )}
 
         {/* Recent Executions */}
-        <div className="bg-white rounded-2xl shadow-lg p-6">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-900">Exécutions récentes</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">Exécutions récentes</h2>
             <Zap className="h-5 w-5 text-gray-400" />
           </div>
 
@@ -250,16 +250,16 @@ export default function AIDashboardPage() {
       {/* Parse Signature Modal */}
       {showParseModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-slate-700">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg">
                   <Mail className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Parser Signature Email</h2>
-                  <p className="text-sm text-gray-600">Extraction automatique des coordonnées</p>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100">Parser Signature Email</h2>
+                  <p className="text-sm text-gray-600 dark:text-slate-400">Extraction automatique des coordonnées</p>
                 </div>
               </div>
               <button
@@ -268,7 +268,7 @@ export default function AIDashboardPage() {
                   setParseResult(null)
                   setEmailBody('')
                 }}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 dark:bg-slate-800 rounded-lg transition-colors"
               >
                 <X className="h-5 w-5 text-gray-500" />
               </button>
@@ -278,7 +278,7 @@ export default function AIDashboardPage() {
             <div className="p-6 space-y-6">
               {/* Input */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                   Corps de l'email (avec signature)
                 </label>
                 <textarea
@@ -286,7 +286,7 @@ export default function AIDashboardPage() {
                   onChange={(e) => setEmailBody(e.target.value)}
                   placeholder="Collez le corps complet de l'email ici...&#10;&#10;Exemple:&#10;Bonjour,&#10;&#10;Merci pour votre retour.&#10;&#10;Cordialement,&#10;Jean Dupont&#10;Directeur Commercial&#10;ACME Corp&#10;Tel: +33 1 23 45 67 89&#10;jean.dupont@acme.fr&#10;www.acme.fr"
                   rows={10}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent font-mono text-sm"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent font-mono text-sm"
                 />
               </div>
 
@@ -311,7 +311,7 @@ export default function AIDashboardPage() {
 
               {/* Results */}
               {parseResult && (
-                <div className="border-t border-gray-200 pt-6">
+                <div className="border-t border-gray-200 dark:border-slate-700 pt-6">
                   {parseResult.success ? (
                     <div className="space-y-4">
                       {/* Success Header */}
@@ -323,7 +323,7 @@ export default function AIDashboardPage() {
                       </div>
 
                       {/* Metadata */}
-                      <div className="flex gap-4 text-sm text-gray-600">
+                      <div className="flex gap-4 text-sm text-gray-600 dark:text-slate-400">
                         <span>🤖 {parseResult.model_used || 'IA'}</span>
                         <span>⏱️ {parseResult.processing_time_ms || 0}ms</span>
                         {parseResult.from_cache && <span>💾 Cached</span>}
@@ -331,13 +331,13 @@ export default function AIDashboardPage() {
 
                       {/* Extracted Data */}
                       {parseResult.data && Object.keys(parseResult.data).length > 0 ? (
-                        <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-                          <h3 className="font-semibold text-gray-900 mb-3">Données extraites:</h3>
+                        <div className="bg-gray-50 dark:bg-slate-800 rounded-lg p-4 space-y-2">
+                          <h3 className="font-semibold text-gray-900 dark:text-slate-100 mb-3">Données extraites:</h3>
                           <div className="grid grid-cols-2 gap-3">
                             {Object.entries(parseResult.data).map(([key, value]) => (
-                              <div key={key} className="bg-white rounded p-3 border border-gray-200">
+                              <div key={key} className="bg-white dark:bg-slate-900 rounded p-3 border border-gray-200 dark:border-slate-700">
                                 <p className="text-xs text-gray-500 uppercase tracking-wide">{key.replace(/_/g, ' ')}</p>
-                                <p className="font-medium text-gray-900 mt-1">{String(value)}</p>
+                                <p className="font-medium text-gray-900 dark:text-slate-100 mt-1">{String(value)}</p>
                               </div>
                             ))}
                           </div>

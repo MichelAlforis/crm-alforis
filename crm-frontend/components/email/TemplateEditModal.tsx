@@ -222,7 +222,7 @@ export function TemplateEditModal({
                     (variable) => (
                       <code
                         key={variable}
-                        className="text-[10px] md:text-xs bg-white px-1.5 md:px-2 py-0.5 md:py-1 rounded border border-border text-primary cursor-pointer hover:bg-gray-50 transition-colors"
+                        className="text-[10px] md:text-xs bg-white dark:bg-slate-900 px-1.5 md:px-2 py-0.5 md:py-1 rounded border border-border text-primary cursor-pointer hover:bg-gray-50 dark:bg-slate-800 transition-colors"
                         onClick={() => {
                           const variable_text = `{{${variable}}}`
                           setFormData({ ...formData, html_content: formData.html_content + variable_text })

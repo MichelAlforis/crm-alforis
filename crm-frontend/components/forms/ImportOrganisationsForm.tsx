@@ -114,7 +114,7 @@ export function ImportOrganisationsForm({ onSuccess }: ImportOrganisationsFormPr
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Type d'organisation</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Type d'organisation</label>
         <Select
           value={orgType}
           onChange={(e) => setOrgType(e.target.value)}
@@ -129,8 +129,8 @@ export function ImportOrganisationsForm({ onSuccess }: ImportOrganisationsFormPr
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Fichier CSV</label>
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+        <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Fichier CSV</label>
+        <div className="border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
           <input
             type="file"
             accept=".csv"
@@ -140,7 +140,7 @@ export function ImportOrganisationsForm({ onSuccess }: ImportOrganisationsFormPr
             id="csv-input"
           />
           <label htmlFor="csv-input" className="cursor-pointer">
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-gray-600 dark:text-slate-400">
               {csvContent ? (
                 <span className="text-green-600 font-medium">✓ Fichier sélectionné</span>
               ) : (
@@ -165,9 +165,9 @@ export function ImportOrganisationsForm({ onSuccess }: ImportOrganisationsFormPr
         >
           {result.errors.length > 0 && (
             <div className="mt-3 max-h-48 overflow-y-auto">
-              <div className="text-xs font-medium text-gray-700 mb-2">Erreurs:</div>
+              <div className="text-xs font-medium text-gray-700 dark:text-slate-300 mb-2">Erreurs:</div>
               {result.errors.map((err, i) => (
-                <div key={i} className="text-xs text-gray-600 mb-1">
+                <div key={i} className="text-xs text-gray-600 dark:text-slate-400 mb-1">
                   Ligne {err.row}: {err.error}
                 </div>
               ))}

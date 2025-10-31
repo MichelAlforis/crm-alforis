@@ -158,18 +158,18 @@ export default function GuidesPage() {
   return (
     <div className="max-w-7xl mx-auto p-6 lg:p-8 space-y-8">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-gray-600">
-        <Link href="/dashboard/help" className="hover:text-gray-900 transition">
+      <nav className="flex items-center gap-2 text-sm text-gray-600 dark:text-slate-400">
+        <Link href="/dashboard/help" className="hover:text-gray-900 dark:hover:text-white dark:text-slate-100 transition">
           Aide
         </Link>
         <span>/</span>
-        <span className="text-gray-900 font-medium">Guides</span>
+        <span className="text-gray-900 dark:text-slate-100 font-medium">Guides</span>
       </nav>
 
       {/* Header */}
       <header className="text-center space-y-4">
-        <h1 className="text-4xl font-bold text-gray-900">Guides par Fonctionnalité</h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-slate-100">Guides par Fonctionnalité</h1>
+        <p className="text-lg text-gray-600 dark:text-slate-400 max-w-2xl mx-auto">
           Maîtrisez chaque module du CRM avec nos guides détaillés étape par étape
         </p>
       </header>
@@ -183,7 +183,7 @@ export default function GuidesPage() {
             className={`px-4 py-2 rounded-lg font-medium transition ${
               selectedCategory === category
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200'
             }`}
           >
             {category}
@@ -224,7 +224,7 @@ export default function GuidesPage() {
               className={`group rounded-xl border-2 ${colors.border} ${colors.bg} p-6 transition hover:shadow-lg hover:scale-105`}
             >
               {/* Icon */}
-              <div className={`inline-flex rounded-lg ${colors.icon} p-3 bg-white/80 mb-4`}>
+              <div className={`inline-flex rounded-lg ${colors.icon} p-3 bg-white dark:bg-slate-900/80 mb-4`}>
                 <Icon className="h-6 w-6" />
               </div>
 
@@ -234,12 +234,12 @@ export default function GuidesPage() {
               </h3>
 
               {/* Description */}
-              <p className="text-gray-700 text-sm mb-4">{guide.description}</p>
+              <p className="text-gray-700 dark:text-slate-300 text-sm mb-4">{guide.description}</p>
 
               {/* Meta */}
               <div className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-4">
-                  <span className="flex items-center gap-1 text-gray-600">
+                  <span className="flex items-center gap-1 text-gray-600 dark:text-slate-400">
                     <Clock className="h-3 w-3" />
                     {guide.readTime} min
                   </span>
@@ -260,10 +260,10 @@ export default function GuidesPage() {
       {/* Call to Action */}
       <section className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 text-center border border-blue-200">
         <TrendingUp className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-2">
           Vous ne trouvez pas ce que vous cherchez ?
         </h2>
-        <p className="text-gray-600 mb-6 max-w-xl mx-auto">
+        <p className="text-gray-600 dark:text-slate-400 mb-6 max-w-xl mx-auto">
           Consultez notre FAQ complète ou contactez notre équipe support
         </p>
         <div className="flex flex-wrap justify-center gap-3">
@@ -275,7 +275,7 @@ export default function GuidesPage() {
           </Link>
           <Link
             href="/dashboard/help#support"
-            className="px-6 py-3 border border-gray-300 bg-white text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition"
+            className="px-6 py-3 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 rounded-lg font-semibold hover:bg-gray-50 dark:bg-slate-800 transition"
           >
             Contacter le support
           </Link>

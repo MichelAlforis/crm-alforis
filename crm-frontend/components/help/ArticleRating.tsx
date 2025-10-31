@@ -84,10 +84,10 @@ export function ArticleRating({ articleId }: ArticleRatingProps) {
   }
 
   return (
-    <div className="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
+    <div className="mt-8 p-6 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700">
       {!showFeedback ? (
         <>
-          <p className="text-sm font-medium text-gray-900 mb-4">
+          <p className="text-sm font-medium text-gray-900 dark:text-slate-100 mb-4">
             Cet article vous a-t-il aidé ?
           </p>
           <div className="flex gap-3">
@@ -110,7 +110,7 @@ export function ArticleRating({ articleId }: ArticleRatingProps) {
       ) : (
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-900 mb-2">
+            <label className="block text-sm font-medium text-gray-900 dark:text-slate-100 mb-2">
               Comment pouvons-nous améliorer cet article ?
               <span className="text-gray-500 font-normal ml-1">(optionnel)</span>
             </label>
@@ -118,7 +118,7 @@ export function ArticleRating({ articleId }: ArticleRatingProps) {
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-none"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent text-sm resize-none"
               placeholder="Ex: L'article manque d'exemples concrets, les captures d'écran ne sont pas à jour..."
             />
           </div>
@@ -135,7 +135,7 @@ export function ArticleRating({ articleId }: ArticleRatingProps) {
                 setShowFeedback(false)
                 setRating(null)
               }}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium text-sm"
+              className="px-4 py-2 bg-gray-200 text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-300 transition font-medium text-sm"
             >
               Annuler
             </button>

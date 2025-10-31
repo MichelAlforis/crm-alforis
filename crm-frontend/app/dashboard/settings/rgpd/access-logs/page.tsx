@@ -111,8 +111,8 @@ export default function AccessLogsPage() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <Shield className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Accès restreint</h2>
-          <p className="text-gray-600">Cette page est réservée aux administrateurs.</p>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100 mb-2">Accès restreint</h2>
+          <p className="text-gray-600 dark:text-slate-400">Cette page est réservée aux administrateurs.</p>
         </div>
       </div>
     )
@@ -124,19 +124,19 @@ export default function AccessLogsPage() {
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
           <Shield className="w-8 h-8 text-blue-600" />
-          <h1 className="text-3xl font-bold text-gray-900">Logs d'accès RGPD</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Logs d'accès RGPD</h1>
         </div>
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-slate-400">
           Traçabilité des accès aux données personnelles (conformité CNIL)
         </p>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+      <div className="bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {/* Search */}
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Recherche</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Recherche</label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
@@ -144,21 +144,21 @@ export default function AccessLogsPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Endpoint, IP, purpose..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500"
               />
             </div>
           </div>
 
           {/* Access Type Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Type d'accès</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Type d'accès</label>
             <select
               value={filterAccessType}
               onChange={(e) => {
                 setFilterAccessType(e.target.value)
                 setTimeout(fetchAccessLogs, 100)
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500"
             >
               <option value="all">Tous</option>
               <option value="read">Lecture</option>
@@ -170,14 +170,14 @@ export default function AccessLogsPage() {
 
           {/* Entity Type Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Type d'entité</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Type d'entité</label>
             <select
               value={filterEntityType}
               onChange={(e) => {
                 setFilterEntityType(e.target.value)
                 setTimeout(fetchAccessLogs, 100)
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500"
             >
               <option value="all">Tous</option>
               <option value="person">Personnes</option>
@@ -202,24 +202,24 @@ export default function AccessLogsPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <div className="text-sm text-gray-600 mb-1">Total</div>
-          <div className="text-2xl font-bold text-gray-900">{filteredLogs.length}</div>
+        <div className="bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-4">
+          <div className="text-sm text-gray-600 dark:text-slate-400 mb-1">Total</div>
+          <div className="text-2xl font-bold text-gray-900 dark:text-slate-100">{filteredLogs.length}</div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <div className="text-sm text-gray-600 mb-1">Lectures</div>
+        <div className="bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-4">
+          <div className="text-sm text-gray-600 dark:text-slate-400 mb-1">Lectures</div>
           <div className="text-2xl font-bold text-blue-600">
             {filteredLogs.filter((l) => l.access_type === 'read').length}
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <div className="text-sm text-gray-600 mb-1">Exports</div>
+        <div className="bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-4">
+          <div className="text-sm text-gray-600 dark:text-slate-400 mb-1">Exports</div>
           <div className="text-2xl font-bold text-purple-600">
             {filteredLogs.filter((l) => l.access_type === 'export').length}
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <div className="text-sm text-gray-600 mb-1">Suppressions</div>
+        <div className="bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-4">
+          <div className="text-sm text-gray-600 dark:text-slate-400 mb-1">Suppressions</div>
           <div className="text-2xl font-bold text-red-600">
             {filteredLogs.filter((l) => l.access_type === 'delete').length}
           </div>
@@ -227,10 +227,10 @@ export default function AccessLogsPage() {
       </div>
 
       {/* Logs Table */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 dark:bg-slate-800">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Date
@@ -255,7 +255,7 @@ export default function AccessLogsPage() {
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white dark:bg-slate-900 divide-y divide-gray-200">
               {isLoading ? (
                 <tr>
                   <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
@@ -270,14 +270,14 @@ export default function AccessLogsPage() {
                 </tr>
               ) : (
                 filteredLogs.map((log) => (
-                  <tr key={log.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <tr key={log.id} className="hover:bg-gray-50 dark:bg-slate-800">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-slate-100">
                       {format(new Date(log.accessed_at), 'dd/MM/yyyy HH:mm', { locale: fr })}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div
                         className={`flex items-center gap-2 ${
-                          ACCESS_TYPE_LABELS[log.access_type]?.color || 'text-gray-600'
+                          ACCESS_TYPE_LABELS[log.access_type]?.color || 'text-gray-600 dark:text-slate-400'
                         }`}
                       >
                         {ACCESS_TYPE_LABELS[log.access_type]?.icon}
@@ -286,7 +286,7 @@ export default function AccessLogsPage() {
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-slate-100">
                       <div className="flex flex-col">
                         <span className="font-medium">
                           {ENTITY_TYPE_LABELS[log.entity_type] || log.entity_type}
@@ -294,16 +294,16 @@ export default function AccessLogsPage() {
                         <span className="text-xs text-gray-500">ID: {log.entity_id}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-400 max-w-xs truncate">
                       {log.endpoint || '-'}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-400 max-w-xs truncate">
                       {log.purpose || '-'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-slate-400">
                       {log.ip_address || '-'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-slate-400">
                       {log.user_id || '-'}
                     </td>
                   </tr>

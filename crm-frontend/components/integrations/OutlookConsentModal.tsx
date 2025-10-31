@@ -38,13 +38,13 @@ export default function OutlookConsentModal({ isOpen, onClose, onConfirm }: Outl
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="relative w-full max-w-2xl max-h-[90vh] flex flex-col rounded-2xl bg-white shadow-xl">
+      <div className="relative w-full max-w-2xl max-h-[90vh] flex flex-col rounded-2xl bg-white dark:bg-slate-900 shadow-xl">
         {/* Header */}
-        <div className="flex items-start justify-between border-b border-gray-200 p-6 flex-shrink-0">
+        <div className="flex items-start justify-between border-b border-gray-200 dark:border-slate-700 p-6 flex-shrink-0">
           <div className="flex items-center gap-3">
             <Shield className="h-6 w-6 text-blue-600" />
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
                 Consentement RGPD – Intégration Outlook
               </h2>
               <p className="text-sm text-gray-500 mt-1">
@@ -54,7 +54,7 @@ export default function OutlookConsentModal({ isOpen, onClose, onConfirm }: Outl
           </div>
           <button
             onClick={handleClose}
-            className="rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition"
+            className="rounded-lg p-2 text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 dark:bg-slate-800 hover:text-gray-600 dark:text-slate-400 transition"
           >
             <X className="h-5 w-5" />
           </button>
@@ -75,7 +75,7 @@ export default function OutlookConsentModal({ isOpen, onClose, onConfirm }: Outl
           </div>
 
           {/* Texte RGPD officiel */}
-          <div className="rounded-lg border border-gray-200 bg-gray-50 p-5 text-sm text-gray-700 leading-relaxed">
+          <div className="rounded-lg border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-5 text-sm text-gray-700 dark:text-slate-300 leading-relaxed">
             <p className="mb-3">
               En connectant Outlook, vous autorisez l'analyse de vos signatures d'emails afin d'enrichir
               automatiquement les fiches contacts professionnelles dans le CRM.
@@ -91,10 +91,10 @@ export default function OutlookConsentModal({ isOpen, onClose, onConfirm }: Outl
 
           {/* Ce qui est collecté */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 mb-2">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-slate-100 mb-2">
               📌 Données collectées (signatures uniquement)
             </h3>
-            <ul className="space-y-1 text-sm text-gray-600">
+            <ul className="space-y-1 text-sm text-gray-600 dark:text-slate-400">
               <li className="flex items-start gap-2">
                 <span className="text-green-600">✓</span>
                 <span>Email professionnel (ex: alice@acme.com)</span>
@@ -115,10 +115,10 @@ export default function OutlookConsentModal({ isOpen, onClose, onConfirm }: Outl
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 mb-2">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-slate-100 mb-2">
               🚫 Ce qui n'est PAS collecté
             </h3>
-            <ul className="space-y-1 text-sm text-gray-600">
+            <ul className="space-y-1 text-sm text-gray-600 dark:text-slate-400">
               <li className="flex items-start gap-2">
                 <span className="text-red-600">✗</span>
                 <span>Contenu des messages</span>
@@ -139,8 +139,8 @@ export default function OutlookConsentModal({ isOpen, onClose, onConfirm }: Outl
           </div>
 
           {/* Checklist de consentement */}
-          <div className="space-y-3 border-t border-gray-200 pt-6">
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">
+          <div className="space-y-3 border-t border-gray-200 dark:border-slate-700 pt-6">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-slate-100 mb-3">
               Consentement requis (cochez les 3 cases)
             </h3>
 
@@ -149,9 +149,9 @@ export default function OutlookConsentModal({ isOpen, onClose, onConfirm }: Outl
                 type="checkbox"
                 checked={consent1}
                 onChange={(e) => setConsent1(e.target.checked)}
-                className="mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="mt-1 h-4 w-4 rounded border-gray-300 dark:border-slate-600 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-400"
               />
-              <span className="text-sm text-gray-700 group-hover:text-gray-900">
+              <span className="text-sm text-gray-700 dark:text-slate-300 group-hover:text-gray-900 dark:hover:text-white dark:text-slate-100">
                 J'accepte que mes signatures professionnelles soient analysées pour enrichir les contacts du CRM
               </span>
             </label>
@@ -161,9 +161,9 @@ export default function OutlookConsentModal({ isOpen, onClose, onConfirm }: Outl
                 type="checkbox"
                 checked={consent2}
                 onChange={(e) => setConsent2(e.target.checked)}
-                className="mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="mt-1 h-4 w-4 rounded border-gray-300 dark:border-slate-600 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-400"
               />
-              <span className="text-sm text-gray-700 group-hover:text-gray-900">
+              <span className="text-sm text-gray-700 dark:text-slate-300 group-hover:text-gray-900 dark:hover:text-white dark:text-slate-100">
                 Je comprends que seules les informations strictement professionnelles (email, téléphone, fonction, entreprise) sont traitées
               </span>
             </label>
@@ -173,9 +173,9 @@ export default function OutlookConsentModal({ isOpen, onClose, onConfirm }: Outl
                 type="checkbox"
                 checked={consent3}
                 onChange={(e) => setConsent3(e.target.checked)}
-                className="mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="mt-1 h-4 w-4 rounded border-gray-300 dark:border-slate-600 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-400"
               />
-              <span className="text-sm text-gray-700 group-hover:text-gray-900">
+              <span className="text-sm text-gray-700 dark:text-slate-300 group-hover:text-gray-900 dark:hover:text-white dark:text-slate-100">
                 Je suis autorisé(e) à synchroniser les contacts professionnels de mon organisation
               </span>
             </label>
@@ -192,10 +192,10 @@ export default function OutlookConsentModal({ isOpen, onClose, onConfirm }: Outl
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between border-t border-gray-200 p-6 bg-gray-50 flex-shrink-0">
+        <div className="flex items-center justify-between border-t border-gray-200 dark:border-slate-700 p-6 bg-gray-50 dark:bg-slate-800 flex-shrink-0">
           <button
             onClick={handleClose}
-            className="px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-white transition"
+            className="px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 text-sm font-medium text-gray-700 dark:text-slate-300 hover:bg-white dark:bg-slate-900 transition"
           >
             Annuler
           </button>

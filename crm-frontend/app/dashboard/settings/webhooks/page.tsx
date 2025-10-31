@@ -231,7 +231,7 @@ export default function WebhookSettingsPage() {
           Retour aux paramètres
         </Link>
         <h1 className="text-3xl font-bold text-ardoise">Webhooks & Integrations</h1>
-        <p className="text-gray-600 max-w-2xl">
+        <p className="text-gray-600 dark:text-slate-400 max-w-2xl">
           Automatisez vos intégrations externes en recevant des notifications HTTP lorsqu’un évènement clé se produit dans le CRM.
         </p>
       </div>
@@ -293,7 +293,7 @@ export default function WebhookSettingsPage() {
                     className={`inline-flex items-center gap-2 px-2 py-1 rounded-full text-xs font-medium ${
                       value
                         ? 'bg-emerald-100 text-emerald-700'
-                        : 'bg-gray-100 text-gray-600'
+                        : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400'
                     }`}
                   >
                     <ShieldCheck className="w-3 h-3" />
@@ -306,7 +306,7 @@ export default function WebhookSettingsPage() {
                 accessor: 'secret',
                 render: (value: string) => (
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-sm text-gray-600">{maskSecret(value)}</span>
+                    <span className="font-mono text-sm text-gray-600 dark:text-slate-400">{maskSecret(value)}</span>
                     <Button
                       variant="ghost"
                       size="sm"
@@ -394,7 +394,7 @@ export default function WebhookSettingsPage() {
           />
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
               Évènements surveillés
             </label>
             {eventsLoading ? (
@@ -407,7 +407,7 @@ export default function WebhookSettingsPage() {
                     <label
                       key={evt.value}
                       className={`flex items-start gap-3 p-3 border rounded-lg cursor-pointer transition-colors ${
-                        checked ? 'border-bleu bg-blue-50' : 'border-gray-200 hover:border-bleu'
+                        checked ? 'border-bleu bg-blue-50' : 'border-gray-200 dark:border-slate-700 hover:border-bleu'
                       }`}
                     >
                       <input
@@ -432,11 +432,11 @@ export default function WebhookSettingsPage() {
       <input
         id="webhook-active"
         type="checkbox"
-        className="h-4 w-4 text-bleu border-gray-300 rounded"
+        className="h-4 w-4 text-bleu border-gray-300 dark:border-slate-600 rounded"
         checked={modal.values.is_active}
         onChange={modal.handleChange('is_active')}
       />
-      <label htmlFor="webhook-active" className="text-sm text-gray-700">
+      <label htmlFor="webhook-active" className="text-sm text-gray-700 dark:text-slate-300">
         Activer immédiatement
       </label>
     </div>
@@ -451,14 +451,14 @@ export default function WebhookSettingsPage() {
   </div>
 
   <div>
-    <label className="block text-sm font-medium text-gray-700 mb-1">
+    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
       Description (optionnel)
     </label>
     <textarea
       value={modal.values.description}
       onChange={modal.handleChange('description')}
       rows={3}
-      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-bleu"
+      className="w-full border border-gray-300 dark:border-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-bleu"
       placeholder="Ex: Synchronisation avec l'outil marketing"
     />
   </div>

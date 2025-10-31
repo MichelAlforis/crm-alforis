@@ -12,7 +12,7 @@ import { apiClient } from '@/lib/api'
 import { useConfirm } from '@/hooks/useConfirm'
 
 const STATUS_COLORS = {
-  draft: 'bg-gray-100 text-gray-700',
+  draft: 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300',
   scheduled: 'bg-blue-100 text-blue-700',
   sending: 'bg-orange-100 text-orange-700',
   sent: 'bg-green-100 text-green-700',
@@ -164,11 +164,11 @@ export default function CampaignDetailPage() {
           <div>
             <h1 className="text-3xl font-bold text-ardoise">{campaign.name}</h1>
             <div className="flex items-center gap-3 mt-2">
-              <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${STATUS_COLORS[campaign.status as keyof typeof STATUS_COLORS] || 'bg-gray-100 text-gray-700'}`}>
+              <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${STATUS_COLORS[campaign.status as keyof typeof STATUS_COLORS] || 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300'}`}>
                 {campaign.status}
               </span>
               {campaign.scheduled_at && (
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-gray-600 dark:text-slate-400">
                   Programmée pour: {new Date(campaign.scheduled_at).toLocaleString('fr-FR')}
                 </span>
               )}
@@ -234,7 +234,7 @@ export default function CampaignDetailPage() {
             <Mail className="w-6 h-6 text-blue-600" />
           </div>
           <div className="text-3xl font-bold text-bleu">{stats?.total_sent || 0}</div>
-          <p className="text-gray-600 text-sm mt-1">Envoyés</p>
+          <p className="text-gray-600 dark:text-slate-400 text-sm mt-1">Envoyés</p>
         </Card>
 
         <Card className="text-center">
@@ -244,7 +244,7 @@ export default function CampaignDetailPage() {
           <div className="text-3xl font-bold text-green-600">
             {stats?.opens || 0}
           </div>
-          <p className="text-gray-600 text-sm mt-1">
+          <p className="text-gray-600 dark:text-slate-400 text-sm mt-1">
             Ouvertures ({stats?.open_rate ? (stats.open_rate * 100).toFixed(1) : '0'}%)
           </p>
         </Card>
@@ -256,7 +256,7 @@ export default function CampaignDetailPage() {
           <div className="text-3xl font-bold text-purple-600">
             {stats?.clicks || 0}
           </div>
-          <p className="text-gray-600 text-sm mt-1">
+          <p className="text-gray-600 dark:text-slate-400 text-sm mt-1">
             Clics ({stats?.click_rate ? (stats.click_rate * 100).toFixed(1) : '0'}%)
           </p>
         </Card>
@@ -268,7 +268,7 @@ export default function CampaignDetailPage() {
           <div className="text-3xl font-bold text-red-600">
             {stats?.bounces || 0}
           </div>
-          <p className="text-gray-600 text-sm mt-1">
+          <p className="text-gray-600 dark:text-slate-400 text-sm mt-1">
             Rebonds ({stats?.bounce_rate ? (stats.bounce_rate * 100).toFixed(1) : '0'}%)
           </p>
         </Card>
@@ -278,39 +278,39 @@ export default function CampaignDetailPage() {
         <h2 className="text-xl font-semibold mb-4">Détails de la campagne</h2>
         <div className="space-y-4">
           <div>
-            <p className="text-sm text-gray-600">Nom</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Nom</p>
             <p className="font-medium">{campaign.name}</p>
           </div>
 
           {campaign.subject && (
             <div>
-              <p className="text-sm text-gray-600">Objet</p>
+              <p className="text-sm text-gray-600 dark:text-slate-400">Objet</p>
               <p className="font-medium">{campaign.subject}</p>
             </div>
           )}
 
           {campaign.default_template_id && (
             <div>
-              <p className="text-sm text-gray-600">Template</p>
+              <p className="text-sm text-gray-600 dark:text-slate-400">Template</p>
               <p className="font-medium">Template #{campaign.default_template_id}</p>
             </div>
           )}
 
           {campaign.provider && (
             <div>
-              <p className="text-sm text-gray-600">Fournisseur</p>
+              <p className="text-sm text-gray-600 dark:text-slate-400">Fournisseur</p>
               <p className="font-medium">{campaign.provider}</p>
             </div>
           )}
 
           <div>
-            <p className="text-sm text-gray-600">Créée le</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Créée le</p>
             <p className="font-medium">{new Date(campaign.created_at).toLocaleString('fr-FR')}</p>
           </div>
 
           {campaign.last_sent_at && (
             <div>
-              <p className="text-sm text-gray-600">Dernier envoi le</p>
+              <p className="text-sm text-gray-600 dark:text-slate-400">Dernier envoi le</p>
               <p className="font-medium">{new Date(campaign.last_sent_at).toLocaleString('fr-FR')}</p>
             </div>
           )}
@@ -322,36 +322,36 @@ export default function CampaignDetailPage() {
           <h2 className="text-xl font-semibold mb-4">Statistiques détaillées</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <div>
-              <p className="text-sm text-gray-600">Total envoyés</p>
+              <p className="text-sm text-gray-600 dark:text-slate-400">Total envoyés</p>
               <p className="text-2xl font-bold text-bleu">{stats.total_sent}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Total ouvertures</p>
+              <p className="text-sm text-gray-600 dark:text-slate-400">Total ouvertures</p>
               <p className="text-2xl font-bold text-green-600">{stats.opens}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Ouvertures uniques</p>
+              <p className="text-sm text-gray-600 dark:text-slate-400">Ouvertures uniques</p>
               <p className="text-2xl font-bold text-green-600">{stats.unique_opens}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Total clics</p>
+              <p className="text-sm text-gray-600 dark:text-slate-400">Total clics</p>
               <p className="text-2xl font-bold text-purple-600">{stats.clicks}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Clics uniques</p>
+              <p className="text-sm text-gray-600 dark:text-slate-400">Clics uniques</p>
               <p className="text-2xl font-bold text-purple-600">{stats.unique_clicks}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Total rebonds</p>
+              <p className="text-sm text-gray-600 dark:text-slate-400">Total rebonds</p>
               <p className="text-2xl font-bold text-red-600">{stats.bounces}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Total désinscriptions</p>
+              <p className="text-sm text-gray-600 dark:text-slate-400">Total désinscriptions</p>
               <p className="text-2xl font-bold text-orange-600">{stats.unsubscribes}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Plaintes spam</p>
-              <p className="text-2xl font-bold text-gray-600">{stats.complaints}</p>
+              <p className="text-sm text-gray-600 dark:text-slate-400">Plaintes spam</p>
+              <p className="text-2xl font-bold text-gray-600 dark:text-slate-400">{stats.complaints}</p>
             </div>
           </div>
         </Card>

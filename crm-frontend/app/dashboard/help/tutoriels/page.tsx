@@ -51,12 +51,12 @@ export default function TutorielsPage() {
   return (
     <div className="max-w-6xl mx-auto p-6 lg:p-8 space-y-8">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-gray-600">
-        <Link href="/dashboard/help" className="hover:text-gray-900 transition">
+      <nav className="flex items-center gap-2 text-sm text-gray-600 dark:text-slate-400">
+        <Link href="/dashboard/help" className="hover:text-gray-900 dark:hover:text-white dark:text-slate-100 transition">
           Aide
         </Link>
         <span>/</span>
-        <span className="text-gray-900 font-medium">Tutoriels vidéo</span>
+        <span className="text-gray-900 dark:text-slate-100 font-medium">Tutoriels vidéo</span>
       </nav>
 
       {/* Header */}
@@ -66,8 +66,8 @@ export default function TutorielsPage() {
             <Video className="h-12 w-12 text-purple-600" />
           </div>
         </div>
-        <h1 className="text-4xl font-bold text-gray-900">Tutoriels Vidéo</h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-slate-100">Tutoriels Vidéo</h1>
+        <p className="text-lg text-gray-600 dark:text-slate-400 max-w-2xl mx-auto">
           Regardez nos démonstrations pas à pas pour maîtriser rapidement le CRM
         </p>
       </header>
@@ -77,34 +77,34 @@ export default function TutorielsPage() {
         <div className="inline-flex items-center justify-center w-20 h-20 bg-purple-100 rounded-full mb-6">
           <Video className="h-10 w-10 text-purple-600" />
         </div>
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-slate-100 mb-4">
           Bientôt disponible !
         </h2>
-        <p className="text-lg text-gray-700 mb-6 max-w-xl mx-auto">
+        <p className="text-lg text-gray-700 dark:text-slate-300 mb-6 max-w-xl mx-auto">
           Nous préparons une bibliothèque complète de tutoriels vidéo pour vous accompagner dans l&apos;utilisation du CRM.
         </p>
         <div className="grid gap-4 sm:grid-cols-2 max-w-2xl mx-auto text-left">
-          <div className="bg-white rounded-lg p-4 border border-purple-200">
+          <div className="bg-white dark:bg-slate-900 rounded-lg p-4 border border-purple-200">
             <div className="font-semibold text-purple-900 mb-2">📹 Vidéos de démonstration</div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-slate-400">
               Tutoriels complets sur chaque fonctionnalité du CRM
             </p>
           </div>
-          <div className="bg-white rounded-lg p-4 border border-purple-200">
+          <div className="bg-white dark:bg-slate-900 rounded-lg p-4 border border-purple-200">
             <div className="font-semibold text-purple-900 mb-2">🎯 Cas d&apos;usage réels</div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-slate-400">
               Exemples concrets d&apos;utilisation par nos clients
             </p>
           </div>
-          <div className="bg-white rounded-lg p-4 border border-purple-200">
+          <div className="bg-white dark:bg-slate-900 rounded-lg p-4 border border-purple-200">
             <div className="font-semibold text-purple-900 mb-2">⚡ Astuces et raccourcis</div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-slate-400">
               Optimisez votre productivité avec nos conseils d&apos;experts
             </p>
           </div>
-          <div className="bg-white rounded-lg p-4 border border-purple-200">
+          <div className="bg-white dark:bg-slate-900 rounded-lg p-4 border border-purple-200">
             <div className="font-semibold text-purple-900 mb-2">🆕 Nouvelles fonctionnalités</div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-slate-400">
               Restez à jour avec les dernières évolutions du CRM
             </p>
           </div>
@@ -113,14 +113,14 @@ export default function TutorielsPage() {
 
       {/* Tutoriels à venir (preview) */}
       <section>
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-6">
           Tutoriels en préparation
         </h2>
         <div className="grid gap-6 md:grid-cols-2">
           {tutorials.map((tutorial, index) => (
             <div
               key={index}
-              className="group rounded-xl border border-gray-200 bg-gray-50 overflow-hidden opacity-60"
+              className="group rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 overflow-hidden opacity-60"
             >
               {/* Thumbnail placeholder */}
               <div className="relative aspect-video bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
@@ -136,8 +136,8 @@ export default function TutorielsPage() {
 
               {/* Content */}
               <div className="p-4">
-                <h3 className="font-semibold text-gray-900 mb-2">{tutorial.title}</h3>
-                <p className="text-sm text-gray-600">{tutorial.description}</p>
+                <h3 className="font-semibold text-gray-900 dark:text-slate-100 mb-2">{tutorial.title}</h3>
+                <p className="text-sm text-gray-600 dark:text-slate-400">{tutorial.description}</p>
               </div>
             </div>
           ))}
@@ -146,10 +146,10 @@ export default function TutorielsPage() {
 
       {/* Alternative : Guides écrits */}
       <section className="bg-blue-50 border border-blue-200 rounded-2xl p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-4 text-center">
           En attendant, consultez nos guides écrits
         </h2>
-        <p className="text-gray-700 mb-6 text-center max-w-xl mx-auto">
+        <p className="text-gray-700 dark:text-slate-300 mb-6 text-center max-w-xl mx-auto">
           Toutes les fonctionnalités sont documentées dans nos guides détaillés avec captures d&apos;écran
         </p>
         <div className="flex justify-center">
@@ -163,11 +163,11 @@ export default function TutorielsPage() {
       </section>
 
       {/* Notification */}
-      <section className="bg-gray-50 border border-gray-200 rounded-xl p-6">
-        <h3 className="font-semibold text-gray-900 mb-2">
+      <section className="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-6">
+        <h3 className="font-semibold text-gray-900 dark:text-slate-100 mb-2">
           🔔 Soyez notifié de la sortie des tutoriels vidéo
         </h3>
-        <p className="text-sm text-gray-600 mb-4">
+        <p className="text-sm text-gray-600 dark:text-slate-400 mb-4">
           Contactez le support à <a href="mailto:support@alforis.fr" className="text-blue-600 hover:underline">support@alforis.fr</a> pour être informé dès la mise en ligne des premières vidéos.
         </p>
       </section>

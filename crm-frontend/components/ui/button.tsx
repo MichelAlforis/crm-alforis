@@ -34,7 +34,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       outline:
         'border-2 border-input bg-background hover:bg-accent hover:text-accent-foreground',
       secondary:
-        'bg-gray-200 text-gray-900 hover:bg-gray-300 active:bg-gray-400',
+        'bg-gray-200 text-gray-900 dark:text-slate-100 hover:bg-gray-300 active:bg-gray-400',
       ghost: 'hover:bg-accent hover:text-accent-foreground',
       link: 'text-blue-600 underline-offset-4 hover:underline',
     }

@@ -155,7 +155,7 @@ export default function ProduitDetailPage() {
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-3xl font-bold text-ardoise">{produit.name}</h1>
-          <p className="text-gray-600 mt-1">
+          <p className="text-gray-600 dark:text-slate-400 mt-1">
             {PRODUIT_TYPE_LABELS[produit.type]} •{' '}
             <span
               className={
@@ -185,19 +185,19 @@ export default function ProduitDetailPage() {
         <h2 className="text-xl font-semibold mb-4">Informations générales</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <p className="text-sm text-gray-600">Type de produit</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Type de produit</p>
             <p className="font-medium">{PRODUIT_TYPE_LABELS[produit.type]}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Code ISIN</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Code ISIN</p>
             <p className="font-medium font-mono">{produit.isin_code || '-'}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Statut</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Statut</p>
             <p className="font-medium">{PRODUIT_STATUS_LABELS[produit.status]}</p>
           </div>
           <div className="col-span-2">
-            <p className="text-sm text-gray-600">Description</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Description</p>
             <p className="font-medium">{produit.description || '-'}</p>
           </div>
         </div>

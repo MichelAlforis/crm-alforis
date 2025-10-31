@@ -149,7 +149,7 @@ export function MandatForm({
 
       <div>
         <div className="flex items-center gap-2 mb-2">
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
             Numéro de mandat
           </label>
           <HelpTooltip
@@ -167,7 +167,7 @@ export function MandatForm({
 
       <div>
         <div className="flex items-center gap-2 mb-2">
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
             Statut *
           </label>
           <HelpTooltip

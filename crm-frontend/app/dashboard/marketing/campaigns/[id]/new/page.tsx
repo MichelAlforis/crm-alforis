@@ -369,7 +369,7 @@ export default function NewCampaignSendPage() {
           <div className="space-y-4">
             {/* Option 1 : Envoi immédiat */}
             <label
-              className="flex items-start gap-3 p-4 border-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-50"
+              className="flex items-start gap-3 p-4 border-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-50 dark:bg-slate-800"
               style={{
                 borderColor: scheduleType === 'immediate' ? 'var(--color-primary)' : 'var(--color-border)',
                 backgroundColor: scheduleType === 'immediate' ? 'var(--color-primary-light, rgba(59, 130, 246, 0.05))' : 'transparent'
@@ -396,7 +396,7 @@ export default function NewCampaignSendPage() {
 
             {/* Option 2 : Envoi programmé */}
             <label
-              className="flex items-start gap-3 p-4 border-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-50"
+              className="flex items-start gap-3 p-4 border-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-50 dark:bg-slate-800"
               style={{
                 borderColor: scheduleType === 'scheduled' ? 'var(--color-primary)' : 'var(--color-border)',
                 backgroundColor: scheduleType === 'scheduled' ? 'var(--color-primary-light, rgba(59, 130, 246, 0.05))' : 'transparent'

@@ -25,7 +25,7 @@ export default function NewOrganisationPage() {
     <div className="space-y-6 max-w-3xl">
       <div>
         <h1 className="text-3xl font-bold text-ardoise">Nouvelle organisation</h1>
-        <p className="text-gray-600 mt-2">
+        <p className="text-gray-600 dark:text-slate-400 mt-2">
           Créez une nouvelle organisation (distributeur, émetteur, fournisseur de service, etc.)
         </p>
       </div>

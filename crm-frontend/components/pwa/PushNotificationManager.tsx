@@ -93,7 +93,7 @@ export function PushNotificationManager() {
                   // Hide this prompt (can be shown again in settings)
                   setIsDismissed(true)
                 }}
-                className="px-4 py-2 rounded-md text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className="px-4 py-2 rounded-md text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:bg-slate-800 dark:hover:bg-gray-700 transition-colors"
               >
                 Plus tard
               </button>

@@ -60,7 +60,7 @@ const INSIGHT_TYPE_CONFIG = {
 }
 
 const IMPACT_CONFIG = {
-  low: { label: 'Faible', color: 'bg-gray-100 text-gray-700' },
+  low: { label: 'Faible', color: 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300' },
   medium: { label: 'Moyen', color: 'bg-orange-100 text-orange-700' },
   high: { label: 'Élevé', color: 'bg-red-100 text-red-700' },
 }
@@ -117,11 +117,11 @@ export function AIInsightsWidget({
           <div className="space-y-3">
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="animate-pulse">
-                <div className="flex gap-3 p-4 border border-gray-200 rounded-lg">
+                <div className="flex gap-3 p-4 border border-gray-200 dark:border-slate-700 rounded-lg">
                   <div className="h-10 w-10 rounded-full bg-gray-200"></div>
                   <div className="flex-1 space-y-2">
                     <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                    <div className="h-3 bg-gray-100 rounded w-full"></div>
+                    <div className="h-3 bg-gray-100 dark:bg-slate-800 rounded w-full"></div>
                   </div>
                 </div>
               </div>
@@ -209,7 +209,7 @@ export function AIInsightsWidget({
                     </div>
                   </div>
 
-                  <p className="text-sm text-gray-700">
+                  <p className="text-sm text-gray-700 dark:text-slate-300">
                     {insight.description}
                   </p>
 

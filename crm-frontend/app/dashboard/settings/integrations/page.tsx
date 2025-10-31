@@ -218,19 +218,19 @@ export default function IntegrationsSettingsPage() {
       <header>
         <Link
           href="/dashboard/settings"
-          className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 mb-4"
+          className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white dark:text-slate-100 mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Retour aux paramètres
         </Link>
 
-        <h1 className="text-3xl font-bold text-gray-900">Intégrations</h1>
-        <p className="text-gray-600 mt-2">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Intégrations</h1>
+        <p className="text-gray-600 dark:text-slate-400 mt-2">
           Connectez votre CRM avec vos outils externes et pilotez l’automatisation.
         </p>
       </header>
 
-      <div className="border-b border-gray-200">
+      <div className="border-b border-gray-200 dark:border-slate-700">
         <nav className="-mb-px flex space-x-8" aria-label="Tabs">
           {tabs.map(({ id, label, icon: Icon }) => (
             <button
@@ -240,7 +240,7 @@ export default function IntegrationsSettingsPage() {
                 'flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition',
                 activeTab === id
                   ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                  : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-slate-300 hover:border-gray-300 dark:border-slate-600',
               )}
             >
               <Icon className="w-5 h-5" />
@@ -253,11 +253,11 @@ export default function IntegrationsSettingsPage() {
       <div className="space-y-8">
         {activeTab === 'email' && (
           <>
-            <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <section className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-6">
               <Mail className="h-6 w-6 text-blue-500" />
               <div>
-                <h2 className="text-xl font-semibold text-gray-900">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
                   Fournisseur d’envoi
                 </h2>
                 <p className="text-sm text-gray-500">
@@ -266,17 +266,17 @@ export default function IntegrationsSettingsPage() {
               </div>
             </div>
 
-            <div className="rounded-xl border border-gray-100 bg-gray-50 p-5">
+            <div className="rounded-xl border border-gray-100 bg-gray-50 dark:bg-slate-800 p-5">
               <div className="flex items-start justify-between">
                 <div className="space-y-1">
                   <p className="text-xs uppercase tracking-wide text-gray-500">
                     Provider actif
                   </p>
-                  <p className="text-lg font-semibold text-gray-900">
+                  <p className="text-lg font-semibold text-gray-900 dark:text-slate-100">
                     {activeEmailConfig?.provider?.toUpperCase() ?? 'Non configuré'}
                   </p>
                   {activeEmailConfig?.from_email && (
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 dark:text-slate-400">
                       Expéditeur :{' '}
                       <span className="font-medium">{activeEmailConfig.from_email}</span>
                     </p>
@@ -287,7 +287,7 @@ export default function IntegrationsSettingsPage() {
                     'inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold',
                     emailStatus === 'connected'
                       ? 'bg-emerald-50 text-emerald-600'
-                      : 'bg-gray-100 text-gray-600',
+                      : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400',
                   )}
                 >
                   {emailStatus === 'connected' ? (
@@ -319,7 +319,7 @@ export default function IntegrationsSettingsPage() {
                   <div className="grid gap-3 sm:grid-cols-2">
                     <button
                       onClick={handleCopySender}
-                      className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
+                      className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:bg-slate-800 transition"
                     >
                       <Copy className="h-4 w-4" />
                       Copier l’adresse expéditeur
@@ -338,7 +338,7 @@ export default function IntegrationsSettingsPage() {
                     </button>
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 dark:text-slate-400">
                     Aucun provider n’est encore défini. Configurez Resend, Sendgrid ou Mailgun pour
                     envoyer vos emails transactionnels.
                   </p>
@@ -347,7 +347,7 @@ export default function IntegrationsSettingsPage() {
                 <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
                   <button
                     onClick={() => router.push(ROUTES.SETTINGS.EMAIL_APIS)}
-                    className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-1.5 font-medium text-gray-700 hover:bg-gray-50 transition"
+                    className="inline-flex items-center gap-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-1.5 font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:bg-slate-800 transition"
                   >
                     Ouvrir la gestion complète
                   </button>
@@ -368,19 +368,19 @@ export default function IntegrationsSettingsPage() {
             </section>
 
             {/* Multi-Mail Accounts Manager */}
-            <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm mt-6">
+            <section className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm mt-6">
               <EmailAccountsManager />
             </section>
           </>
         )}
 
         {activeTab === 'webhooks' && (
-          <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <section className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <Webhook className="h-6 w-6 text-purple-500" />
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900">Webhooks sortants</h2>
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">Webhooks sortants</h2>
                   <p className="text-sm text-gray-500">
                     Déclenchez vos automatisations sur les événements clés du CRM.
                   </p>
@@ -407,7 +407,7 @@ export default function IntegrationsSettingsPage() {
                   : 'Impossible de récupérer les webhooks'}
               </p>
             ) : (webhooksData?.length ?? 0) === 0 ? (
-              <div className="rounded-xl border border-dashed border-gray-200 p-5 text-sm text-gray-600">
+              <div className="rounded-xl border border-dashed border-gray-200 dark:border-slate-700 p-5 text-sm text-gray-600 dark:text-slate-400">
                 Aucun webhook n’est encore configuré. Utilisez le bouton « Gérer » pour en créer un.
               </div>
             ) : (
@@ -419,7 +419,7 @@ export default function IntegrationsSettingsPage() {
                   >
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="font-semibold text-gray-900">
+                        <h3 className="font-semibold text-gray-900 dark:text-slate-100">
                           {webhook.description || 'Webhook sans titre'}
                         </h3>
                         <span
@@ -427,7 +427,7 @@ export default function IntegrationsSettingsPage() {
                             'inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold',
                             webhook.is_active
                               ? 'bg-emerald-50 text-emerald-600'
-                              : 'bg-gray-100 text-gray-600',
+                              : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400',
                           )}
                         >
                           <span
@@ -439,7 +439,7 @@ export default function IntegrationsSettingsPage() {
                           {webhook.is_active ? 'Actif' : 'Inactif'}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600 font-mono break-words mb-2">
+                      <p className="text-sm text-gray-600 dark:text-slate-400 font-mono break-words mb-2">
                         {webhook.url}
                       </p>
                       <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500">
@@ -460,13 +460,13 @@ export default function IntegrationsSettingsPage() {
                       <button
                         onClick={() => handleToggleWebhook(webhook)}
                         disabled={isWebhookMutating}
-                        className="px-3 py-1.5 rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 transition disabled:opacity-60"
+                        className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:bg-slate-800 transition disabled:opacity-60"
                       >
                         {webhook.is_active ? 'Désactiver' : 'Activer'}
                       </button>
                       <button
                         onClick={() => router.push(`/dashboard/settings/webhooks?id=${webhook.id}`)}
-                        className="px-3 py-1.5 rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 transition"
+                        className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:bg-slate-800 transition"
                       >
                         Ouvrir
                       </button>
@@ -482,11 +482,11 @@ export default function IntegrationsSettingsPage() {
           <section className="space-y-6">
             <AIConfigSection />
 
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
               <div className="flex items-center gap-3 mb-6">
                 <Brain className="h-6 w-6 text-indigo-500" />
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
                     Autofill – Statistiques d’usage
                   </h2>
                   <p className="text-sm text-gray-500">
@@ -501,7 +501,7 @@ export default function IntegrationsSettingsPage() {
                   Lecture des métriques…
                 </div>
               ) : !autofillStats ? (
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 dark:text-slate-400">
                   Aucune donnée collectée pour le moment. Activez les logs et utilisez l’autofill
                   pour alimenter ces métriques.
                 </p>
@@ -527,19 +527,19 @@ export default function IntegrationsSettingsPage() {
 
                   {topSourceMix.length > 0 && (
                     <div>
-                      <h3 className="text-sm font-semibold text-gray-900 mb-2">
+                      <h3 className="text-sm font-semibold text-gray-900 dark:text-slate-100 mb-2">
                         Sources les plus utilisées
                       </h3>
                       <div className="grid gap-3 md:grid-cols-3">
                         {topSourceMix.map(([source, data]) => (
                           <div
                             key={source}
-                            className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-sm"
+                            className="rounded-lg border border-gray-100 bg-gray-50 dark:bg-slate-800 px-4 py-3 text-sm"
                           >
-                            <p className="font-semibold text-gray-900 uppercase">
+                            <p className="font-semibold text-gray-900 dark:text-slate-100 uppercase">
                               {source.replace('_', ' ')}
                             </p>
-                            <p className="text-gray-600">
+                            <p className="text-gray-600 dark:text-slate-400">
                               {data.count} suggestions ({data.percentage.toFixed(1)} %)
                             </p>
                           </div>
@@ -550,17 +550,17 @@ export default function IntegrationsSettingsPage() {
 
                   {autofillStats.pattern_confidence_by_domain.length > 0 && (
                     <div>
-                      <h3 className="text-sm font-semibold text-gray-900 mb-2">
+                      <h3 className="text-sm font-semibold text-gray-900 dark:text-slate-100 mb-2">
                         Domaines les plus fiables
                       </h3>
                       <div className="grid gap-3 md:grid-cols-2">
                         {autofillStats.pattern_confidence_by_domain.slice(0, 4).map((item) => (
                           <div
                             key={item.domain}
-                            className="rounded-lg border border-gray-100 bg-white px-4 py-3 text-sm shadow-sm"
+                            className="rounded-lg border border-gray-100 bg-white dark:bg-slate-900 px-4 py-3 text-sm shadow-sm"
                           >
-                            <p className="font-semibold text-gray-900">{item.domain}</p>
-                            <p className="text-gray-600">
+                            <p className="font-semibold text-gray-900 dark:text-slate-100">{item.domain}</p>
+                            <p className="text-gray-600 dark:text-slate-400">
                               {item.samples} échantillons – confiance moyenne{' '}
                               {(item.avg_confidence * 100).toFixed(1)} %
                             </p>
@@ -572,21 +572,21 @@ export default function IntegrationsSettingsPage() {
 
                   <div className="grid gap-6 md:grid-cols-2">
                     <div>
-                      <h3 className="text-sm font-semibold text-gray-900 mb-2">
+                      <h3 className="text-sm font-semibold text-gray-900 dark:text-slate-100 mb-2">
                         Timeline (7 derniers jours)
                       </h3>
-                      <ul className="space-y-2 text-sm text-gray-600">
+                      <ul className="space-y-2 text-sm text-gray-600 dark:text-slate-400">
                         {timelinePreview.map((entry) => {
                           const applyRate = Math.min(100, Math.round(entry.apply_rate * 100))
                           const ignored = Math.max(entry.suggestions - entry.applied, 0)
                           return (
                             <li
                               key={entry.date}
-                              className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2"
+                              className="rounded-lg border border-gray-100 bg-gray-50 dark:bg-slate-800 px-3 py-2"
                             >
                               <div className="flex items-center justify-between gap-2">
-                                <span className="font-medium text-gray-900">{entry.date}</span>
-                                <span className="text-gray-900 font-medium">
+                                <span className="font-medium text-gray-900 dark:text-slate-100">{entry.date}</span>
+                                <span className="text-gray-900 dark:text-slate-100 font-medium">
                                   {entry.suggestions} sugg. · {applyRate} %
                                 </span>
                               </div>
@@ -608,24 +608,24 @@ export default function IntegrationsSettingsPage() {
                       </ul>
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-gray-900 mb-2">
+                      <h3 className="text-sm font-semibold text-gray-900 dark:text-slate-100 mb-2">
                         Top contributeurs (30 jours)
                       </h3>
-                      <ul className="space-y-2 text-sm text-gray-600">
+                      <ul className="space-y-2 text-sm text-gray-600 dark:text-slate-400">
                         {leaderboardPreview.length === 0 ? (
-                          <li className="rounded-lg border border-dashed border-gray-200 px-3 py-2">
+                          <li className="rounded-lg border border-dashed border-gray-200 dark:border-slate-700 px-3 py-2">
                             Pas encore de leaderboard – commencez à utiliser l’autofill.
                           </li>
                         ) : (
                           leaderboardPreview.map((entry) => (
                             <li
                               key={entry.rank}
-                              className="flex items-center justify-between rounded-lg border border-gray-100 bg-white px-3 py-2 shadow-sm"
+                              className="flex items-center justify-between rounded-lg border border-gray-100 bg-white dark:bg-slate-900 px-3 py-2 shadow-sm"
                             >
                               <span>
                                 #{entry.rank} – {entry.user_name}
                               </span>
-                              <span className="text-gray-900 font-medium">
+                              <span className="text-gray-900 dark:text-slate-100 font-medium">
                                 {(entry.apply_rate * 100).toFixed(0)} %
                               </span>
                             </li>
@@ -646,11 +646,11 @@ export default function IntegrationsSettingsPage() {
             <OutlookConnector />
 
             {/* Autres connecteurs (à venir) */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
               <div className="flex items-center gap-3 mb-6">
                 <Link2 className="h-6 w-6 text-orange-500" />
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900">Autres connecteurs</h2>
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">Autres connecteurs</h2>
                   <p className="text-sm text-gray-500">
                     Zapier, Make, Slack… Ces intégrations arrivent prochainement pour automatiser
                     vos workflows.
@@ -658,7 +658,7 @@ export default function IntegrationsSettingsPage() {
                 </div>
               </div>
 
-              <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50/50 p-6 text-sm text-gray-600">
+              <div className="rounded-xl border border-dashed border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/50 p-6 text-sm text-gray-600 dark:text-slate-400">
                 Nous finalisons l'API publique et les connecteurs (Zapier/Make). Laissez-nous un
                 message si vous souhaitez participer à la bêta privée.
               </div>
@@ -667,18 +667,18 @@ export default function IntegrationsSettingsPage() {
         )}
       </div>
 
-      <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+      <section className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
         <div className="flex items-center gap-3 mb-6">
           <Shield className="h-6 w-6 text-indigo-500" />
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">Journal de sécurité</h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">Journal de sécurité</h2>
             <p className="text-sm text-gray-500">
               Historique des modifications liées aux intégrations (bientôt disponible).
             </p>
           </div>
         </div>
 
-        <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50/50 p-5 text-sm text-gray-600">
+        <div className="rounded-xl border border-dashed border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/50 p-5 text-sm text-gray-600 dark:text-slate-400">
           Le log d’audit détaillé (clés API, changements de webhooks, connexions externes) sera
           exposé ici une fois le module de traçabilité finalisé.
         </div>
@@ -697,9 +697,9 @@ function StatCard({
   caption?: string
 }) {
   return (
-    <div className="rounded-xl border border-gray-100 bg-white px-4 py-3 shadow-sm">
+    <div className="rounded-xl border border-gray-100 bg-white dark:bg-slate-900 px-4 py-3 shadow-sm">
       <p className="text-xs uppercase tracking-wide text-gray-500">{label}</p>
-      <p className="text-2xl font-semibold text-gray-900 mt-1">{value}</p>
+      <p className="text-2xl font-semibold text-gray-900 dark:text-slate-100 mt-1">{value}</p>
       {caption && <p className="text-xs text-gray-500 mt-1">{caption}</p>}
     </div>
   )

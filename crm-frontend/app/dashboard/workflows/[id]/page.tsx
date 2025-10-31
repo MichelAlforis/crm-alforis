@@ -192,7 +192,7 @@ export default function WorkflowDetailPage() {
         }
       default:
         return {
-          icon: <Zap className="text-gray-600" size={20} />,
+          icon: <Zap className="text-gray-600 dark:text-slate-400" size={20} />,
           label: type || 'Action',
           description: JSON.stringify(action.config).slice(0, 100),
         }
@@ -688,7 +688,7 @@ export default function WorkflowDetailPage() {
               <div className="flex gap-2 justify-end">
                 <button
                   onClick={() => setShowExecuteModal(false)}
-                  className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
+                  className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:bg-slate-800 dark:hover:bg-gray-700 rounded-lg transition"
                 >
                   Annuler
                 </button>

@@ -55,7 +55,7 @@ export default function ThemeToggle({ className, size = 'md' }: ThemeToggleProps
         className={clsx(
           baseClasses,
           sizeClasses,
-          'rounded-lg hover:bg-white/80 dark:hover:bg-slate-700/80 hover:scale-110 active:scale-95',
+          'rounded-lg hover:bg-white dark:bg-slate-900/80 dark:hover:bg-slate-700/80 hover:scale-110 active:scale-95',
           'text-slate-600 dark:text-slate-300',
           className
         )}

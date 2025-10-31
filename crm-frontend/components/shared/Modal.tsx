@@ -46,7 +46,7 @@ export function Modal({ isOpen, onClose, title, children, footer, size = 'md' }:
               <h2 className="text-lg font-semibold">{title}</h2>
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-gray-400 hover:text-gray-600 dark:text-slate-400"
               >
                 ✕
               </button>

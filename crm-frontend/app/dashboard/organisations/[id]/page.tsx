@@ -170,20 +170,20 @@ export default function OrganisationDetailPage() {
       <div className="flex items-center gap-3 mb-4">
         <Link
           href="/dashboard/organisations"
-          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+          className="flex items-center gap-2 text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white dark:text-slate-100 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
           <span className="text-sm">Annuaire</span>
         </Link>
         <span className="text-gray-400">•</span>
-        <span className="text-sm text-gray-600">Organisations</span>
+        <span className="text-sm text-gray-600 dark:text-slate-400">Organisations</span>
       </div>
 
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-3xl font-bold text-ardoise">{organisation.name}</h1>
-          <p className="text-gray-600 mt-1">
+          <p className="text-gray-600 dark:text-slate-400 mt-1">
             {ORGANISATION_CATEGORY_LABELS[organisation.category]} •{' '}
             {organisation.is_active ? (
               <span className="text-green-600 font-medium">Active</span>
@@ -224,14 +224,14 @@ export default function OrganisationDetailPage() {
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200">
+      <div className="border-b border-gray-200 dark:border-slate-700">
         <nav className="flex gap-8">
           <button
             onClick={() => setActiveTab('informations')}
             className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${
               activeTab === 'informations'
                 ? 'border-bleu text-bleu'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-slate-300 hover:border-gray-300 dark:border-slate-600'
             }`}
           >
             Informations
@@ -241,7 +241,7 @@ export default function OrganisationDetailPage() {
             className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${
               activeTab === 'activite'
                 ? 'border-bleu text-bleu'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-slate-300 hover:border-gray-300 dark:border-slate-600'
             }`}
           >
             Activité
@@ -257,15 +257,15 @@ export default function OrganisationDetailPage() {
         <h2 className="text-xl font-semibold mb-4">Informations générales</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <p className="text-sm text-gray-600">Email</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Email</p>
             <p className="font-medium">{organisation.email || '-'}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Téléphone</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Téléphone</p>
             <p className="font-medium">{organisation.main_phone || '-'}</p>
           </div>
           <div className="md:col-span-2">
-            <p className="text-sm text-gray-600 mb-2">Statut emails marketing</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400 mb-2">Statut emails marketing</p>
             {organisation.email_unsubscribed ? (
               <div className="flex items-center gap-2">
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
@@ -282,7 +282,7 @@ export default function OrganisationDetailPage() {
             )}
           </div>
           <div>
-            <p className="text-sm text-gray-600">Site web</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Site web</p>
             <p className="font-medium">
               {organisation.website ? (
                 <a
@@ -299,15 +299,15 @@ export default function OrganisationDetailPage() {
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Adresse</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Adresse</p>
             <p className="font-medium">{organisation.address || '-'}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Pays</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Pays</p>
             <p className="font-medium">{getCountryLabel(organisation.country_code)}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Langue</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Langue</p>
             <p className="font-medium">{getLanguageLabel(organisation.language)}</p>
           </div>
         </div>
@@ -323,7 +323,7 @@ export default function OrganisationDetailPage() {
             {organisation.people_links.map((link: any) => (
               <div
                 key={link.id}
-                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-800 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
               >
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
@@ -339,7 +339,7 @@ export default function OrganisationDetailPage() {
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-4 mt-1 text-sm text-gray-600">
+                  <div className="flex items-center gap-4 mt-1 text-sm text-gray-600 dark:text-slate-400">
                     {link.job_title && <span>{link.job_title}</span>}
                     {link.work_email && <span>{link.work_email}</span>}
                     {link.work_phone && <span>{link.work_phone}</span>}
@@ -364,8 +364,8 @@ export default function OrganisationDetailPage() {
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Date de signature</span>
-              <span className="font-medium text-gray-900">
+              <span className="text-gray-600 dark:text-slate-400">Date de signature</span>
+              <span className="font-medium text-gray-900 dark:text-slate-100">
                 {mandats[0].date_debut
                   ? new Date(mandats[0].date_debut).toLocaleDateString('fr-FR', {
                       day: 'numeric',
@@ -376,7 +376,7 @@ export default function OrganisationDetailPage() {
               </span>
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Statut</span>
+              <span className="text-gray-600 dark:text-slate-400">Statut</span>
               <span
                 className={`px-2 py-1 text-xs rounded ${
                   mandats[0].status === 'ACTIF' || mandats[0].status === 'SIGNE'

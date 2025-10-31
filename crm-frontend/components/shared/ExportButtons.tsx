@@ -76,9 +76,9 @@ export function ExportButtons({
     () =>
       clsx(
         'inline-flex items-center gap-2 rounded-xl border font-semibold transition-all duration-200',
-        'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1',
+        'focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-1',
         'disabled:opacity-60 disabled:cursor-not-allowed',
-        'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-400 shadow-sm',
+        'border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:bg-slate-800 hover:border-gray-400 shadow-sm',
         size === 'sm' ? 'px-3 py-1.5 text-sm' : 'px-4 py-2 text-sm',
       ),
     [size],

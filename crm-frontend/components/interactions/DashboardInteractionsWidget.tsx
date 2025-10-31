@@ -28,7 +28,7 @@ export function DashboardInteractionsWidget({ limit = 5 }: DashboardInteractions
               <div className="w-10 h-10 bg-gray-200 rounded-full flex-shrink-0" />
               <div className="flex-1 space-y-2">
                 <div className="h-4 bg-gray-200 rounded w-3/4" />
-                <div className="h-3 bg-gray-100 rounded w-1/2" />
+                <div className="h-3 bg-gray-100 dark:bg-slate-800 rounded w-1/2" />
               </div>
             </div>
           ))}
@@ -99,7 +99,7 @@ function InteractionRow({ interaction }: { interaction: Interaction }) {
                           (interaction.external_participants?.length ?? 0)
 
   return (
-    <div className="flex gap-3 items-start hover:bg-gray-50 p-2 rounded-lg transition-colors">
+    <div className="flex gap-3 items-start hover:bg-gray-50 dark:bg-slate-800 p-2 rounded-lg transition-colors">
       <div className="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0">
         <Icon className="w-5 h-5 text-bleu" />
       </div>
@@ -107,7 +107,7 @@ function InteractionRow({ interaction }: { interaction: Interaction }) {
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">
+            <p className="text-sm font-medium text-gray-900 dark:text-slate-100 truncate">
               {interaction.title}
             </p>
             <div className="flex items-center gap-2 mt-1">
@@ -129,7 +129,7 @@ function InteractionRow({ interaction }: { interaction: Interaction }) {
         </div>
 
         {interaction.body && (
-          <p className="text-xs text-gray-600 mt-1 line-clamp-1">
+          <p className="text-xs text-gray-600 dark:text-slate-400 mt-1 line-clamp-1">
             {interaction.body}
           </p>
         )}

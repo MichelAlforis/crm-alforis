@@ -43,7 +43,7 @@ interface EmailSendDetail {
 
 const getStatusBadge = (status: string) => {
   const statusMap: Record<string, { label: string; className: string }> = {
-    queued: { label: 'En file', className: 'bg-gray-100 text-gray-700' },
+    queued: { label: 'En file', className: 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300' },
     sending: { label: 'En cours', className: 'bg-yellow-100 text-yellow-700' },
     sent: { label: 'Envoyé', className: 'bg-green-100 text-green-700' },
     delivered: { label: 'Délivré', className: 'bg-success/20 text-success' },
@@ -52,7 +52,7 @@ const getStatusBadge = (status: string) => {
     failed: { label: 'Échec', className: 'bg-red-100 text-red-700' },
     bounced: { label: 'Rebond', className: 'bg-orange-100 text-orange-700' },
   }
-  const config = statusMap[status] || { label: status, className: 'bg-gray-100 text-gray-700' }
+  const config = statusMap[status] || { label: status, className: 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300' }
   return (
     <span className={`px-2 py-1 rounded text-xs font-medium ${config.className}`}>
       {config.label}
@@ -265,7 +265,7 @@ export default function SendStatsPage() {
                   setStatusFilter(e.target.value)
                   setPage(1)
                 }}
-                className="w-full pl-10 pr-3 py-2 border border-border rounded-lg text-sm bg-white"
+                className="w-full pl-10 pr-3 py-2 border border-border rounded-lg text-sm bg-white dark:bg-slate-900"
               >
                 <option value="">Tous les statuts</option>
                 <option value="queued">En file</option>

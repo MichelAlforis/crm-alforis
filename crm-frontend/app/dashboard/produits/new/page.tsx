@@ -25,7 +25,7 @@ export default function NewProduitPage() {
     <div className="space-y-6 max-w-3xl">
       <div>
         <h1 className="text-3xl font-bold text-ardoise">Nouveau produit</h1>
-        <p className="text-gray-600 mt-2">
+        <p className="text-gray-600 dark:text-slate-400 mt-2">
           Créez un nouveau produit financier (OPCVM, ETF, SCPI, Assurance Vie, PER, etc.)
         </p>
       </div>

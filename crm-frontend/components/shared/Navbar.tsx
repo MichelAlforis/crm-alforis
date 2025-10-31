@@ -81,7 +81,7 @@ export default function Navbar() {
                   href="/dashboard/tasks"
                   onMouseEnter={() => setShowTasksTooltip(true)}
                   onMouseLeave={() => setShowTasksTooltip(false)}
-                  className="relative w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/80 dark:hover:bg-slate-700/80 hover:scale-110 active:scale-95 transition-all duration-200"
+                  className="relative w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white dark:bg-slate-900/80 dark:hover:bg-slate-700/80 hover:scale-110 active:scale-95 transition-all duration-200"
                   aria-label="Voir les tâches du jour"
                 >
                   <ClipboardList className="w-5 h-5 text-slate-600 dark:text-slate-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
@@ -116,7 +116,7 @@ export default function Navbar() {
             <div className="relative">
               <button
                 onClick={() => setShowUserMenu(!showUserMenu)}
-                className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gradient-to-br hover:from-white/80 hover:to-gray-50/80 dark:hover:from-slate-800/50 dark:hover:to-slate-700/50 hover:shadow-sm transition-all duration-200 group border border-transparent hover:border-gray-200/50 dark:hover:border-slate-700/50"
+                className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gradient-to-br hover:from-white/80 hover:to-gray-50/80 dark:hover:from-slate-800/50 dark:hover:to-slate-700/50 hover:shadow-sm transition-all duration-200 group border border-transparent hover:border-gray-200 dark:border-slate-700/50 dark:hover:border-slate-700/50"
                 aria-label="Menu utilisateur"
               >
                 <div className="hidden sm:flex flex-col items-end">

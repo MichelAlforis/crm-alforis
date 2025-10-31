@@ -31,7 +31,7 @@ const PRIORITIES: { value: TaskPriority; label: string; color: string }[] = [
   { value: 'haute', label: '🟠 Haute', color: 'text-orange-600' },
   { value: 'moyenne', label: '🟡 Moyenne', color: 'text-yellow-600' },
   { value: 'basse', label: '🔵 Basse', color: 'text-blue-600' },
-  { value: 'non_prioritaire', label: '⚪ Non prioritaire', color: 'text-gray-600' },
+  { value: 'non_prioritaire', label: '⚪ Non prioritaire', color: 'text-gray-600 dark:text-slate-400' },
 ]
 
 const CATEGORIES: { value: TaskCategory; label: string }[] = [
@@ -180,14 +180,14 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
 
       {/* Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
           {/* Header */}
-          <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl">
+          <div className="sticky top-0 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700 px-6 py-4 rounded-t-2xl">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-gray-900">✨ Nouvelle tâche</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100">✨ Nouvelle tâche</h2>
               <button
                 onClick={onClose}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 dark:bg-slate-800 rounded-lg transition-colors"
                 type="button"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -207,14 +207,14 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
 
             {/* Title */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">
                 Titre <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
                 placeholder="Ex: Relancer prospect Acme Corp"
                 required
                 autoFocus
@@ -223,13 +223,13 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">
                 Description
               </label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent resize-none"
                 rows={3}
                 placeholder="Détails de la tâche..."
               />
@@ -237,7 +237,7 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
 
             {/* Due Date + Quick Buttons */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">
                 Date d'échéance <span className="text-red-500">*</span>
               </label>
               <div className="flex gap-2">
@@ -245,27 +245,27 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
                   type="date"
                   value={formData.due_date}
                   onChange={(e) => setFormData({ ...formData, due_date: e.target.value })}
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="flex-1 px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => handleQuickDate(0)}
-                  className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors"
+                  className="px-3 py-2 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 text-gray-700 dark:text-slate-300 rounded-lg text-sm font-medium transition-colors"
                 >
                   Aujourd'hui
                 </button>
                 <button
                   type="button"
                   onClick={() => handleQuickDate(1)}
-                  className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors"
+                  className="px-3 py-2 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 text-gray-700 dark:text-slate-300 rounded-lg text-sm font-medium transition-colors"
                 >
                   +1j
                 </button>
                 <button
                   type="button"
                   onClick={() => handleQuickDate(7)}
-                  className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors"
+                  className="px-3 py-2 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 text-gray-700 dark:text-slate-300 rounded-lg text-sm font-medium transition-colors"
                 >
                   +1sem
                 </button>
@@ -274,7 +274,7 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
 
             {/* Priority */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">
                 Priorité
               </label>
               <div className="grid grid-cols-5 gap-2">
@@ -286,7 +286,7 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
                     className={`px-3 py-2 border rounded-lg text-sm font-medium transition-all ${
                       formData.priority === priority.value
                         ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-500'
-                        : 'border-gray-300 hover:border-gray-400 bg-white'
+                        : 'border-gray-300 dark:border-slate-600 hover:border-gray-400 bg-white dark:bg-slate-900'
                     }`}
                   >
                     {priority.label}
@@ -297,7 +297,7 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
 
             {/* Category */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">
                 Catégorie
               </label>
               <div className="grid grid-cols-4 gap-2">
@@ -309,7 +309,7 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
                     className={`px-3 py-2 border rounded-lg text-sm font-medium transition-all ${
                       formData.category === category.value
                         ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-500'
-                        : 'border-gray-300 hover:border-gray-400 bg-white'
+                        : 'border-gray-300 dark:border-slate-600 hover:border-gray-400 bg-white dark:bg-slate-900'
                     }`}
                   >
                     {category.label}
@@ -366,11 +366,11 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
             </div>
 
             {/* Actions */}
-            <div className="flex flex-col sm:flex-row sm:justify-end gap-3 pt-4 border-t border-gray-200">
+            <div className="flex flex-col sm:flex-row sm:justify-end gap-3 pt-4 border-t border-gray-200 dark:border-slate-700">
               <button
                 type="button"
                 onClick={onClose}
-                className="w-full sm:w-auto px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors"
+                className="w-full sm:w-auto px-6 py-2.5 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:bg-slate-800 font-medium transition-colors"
                 disabled={isCreating}
               >
                 Annuler

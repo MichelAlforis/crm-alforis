@@ -53,10 +53,10 @@ interface RecipientWithTracking {
 type FilterType = 'all' | 'clicked' | 'opened' | 'not_opened' | 'bounced'
 
 const FILTER_OPTIONS: Array<{ value: FilterType; label: string; icon: React.ReactNode; color: string }> = [
-  { value: 'all', label: 'Tous', icon: <Users className="w-4 h-4" />, color: 'bg-gray-100 text-gray-700' },
+  { value: 'all', label: 'Tous', icon: <Users className="w-4 h-4" />, color: 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300' },
   { value: 'clicked', label: 'Ont cliqué', icon: <MousePointerClick className="w-4 h-4" />, color: 'bg-red-100 text-red-700' },
   { value: 'opened', label: 'Ont ouvert', icon: <Eye className="w-4 h-4" />, color: 'bg-primary/20 text-primary' },
-  { value: 'not_opened', label: 'Non ouverts', icon: <Mail className="w-4 h-4" />, color: 'bg-gray-100 text-gray-700' },
+  { value: 'not_opened', label: 'Non ouverts', icon: <Mail className="w-4 h-4" />, color: 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300' },
   { value: 'bounced', label: 'Rebonds', icon: <Ban className="w-4 h-4" />, color: 'bg-orange-100 text-orange-700' },
 ]
 
@@ -234,8 +234,8 @@ export default function BatchTrackingPage() {
                   Sur {batch.total_recipients} destinataires
                 </p>
               </div>
-              <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
-                <Mail className="w-6 h-6 text-gray-600" />
+              <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center">
+                <Mail className="w-6 h-6 text-gray-600 dark:text-slate-400" />
               </div>
             </div>
           </CardBody>
@@ -339,7 +339,7 @@ export default function BatchTrackingPage() {
               >
                 {option.icon}
                 <span>{option.label}</span>
-                <span className="ml-1 px-2 py-0.5 rounded-full bg-white/30 text-xs font-semibold">
+                <span className="ml-1 px-2 py-0.5 rounded-full bg-white dark:bg-slate-900/30 text-xs font-semibold">
                   {filterCounts[option.value] || 0}
                 </span>
               </button>

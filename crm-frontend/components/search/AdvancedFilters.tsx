@@ -65,7 +65,7 @@ export default function AdvancedFilters({
           <select
             value={value as string}
             onChange={(e) => handleChange(filter.key, e.target.value || undefined)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 outline-none bg-white dark:bg-slate-900"
           >
             {filter.options?.map((option) => (
               <option key={option.value} value={option.value}>
@@ -82,7 +82,7 @@ export default function AdvancedFilters({
             value={value as string}
             onChange={(e) => handleChange(filter.key, e.target.value || undefined)}
             placeholder={filter.placeholder || 'Rechercher...'}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 outline-none"
           />
         )
 
@@ -92,7 +92,7 @@ export default function AdvancedFilters({
             type="date"
             value={value as string}
             onChange={(e) => handleChange(filter.key, e.target.value || undefined)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 outline-none"
           />
         )
 
@@ -105,7 +105,7 @@ export default function AdvancedFilters({
               return (
                 <label
                   key={option.value}
-                  className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors"
+                  className="flex items-center gap-3 p-2 hover:bg-gray-50 dark:bg-slate-800 rounded-lg cursor-pointer transition-colors"
                 >
                   <input
                     type="checkbox"
@@ -119,9 +119,9 @@ export default function AdvancedFilters({
                         newValues.length > 0 ? newValues : undefined
                       )
                     }}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                    className="w-4 h-4 text-blue-600 border-gray-300 dark:border-slate-600 rounded focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                   />
-                  <span className="text-sm text-gray-700">{option.label}</span>
+                  <span className="text-sm text-gray-700 dark:text-slate-300">{option.label}</span>
                 </label>
               )
             })}
@@ -144,7 +144,7 @@ export default function AdvancedFilters({
                     ${
                       isSelected
                         ? 'border-blue-600 bg-blue-50 text-blue-700'
-                        : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                        : 'border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:bg-slate-800'
                     }
                   `}
                 >
@@ -172,7 +172,7 @@ export default function AdvancedFilters({
           ${
             activeFiltersCount > 0
               ? 'border-blue-600 text-blue-700 bg-blue-50'
-              : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+              : 'border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:bg-slate-800'
           }
         `}
       >
@@ -195,16 +195,16 @@ export default function AdvancedFilters({
           />
 
           {/* Panel */}
-          <div className="absolute right-0 top-full mt-2 w-80 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-200">
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
-              <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-slate-700">
+              <h3 className="font-semibold text-gray-900 dark:text-slate-100 flex items-center gap-2">
                 <Filter className="w-4 h-4" />
                 Filtres avancés
               </h3>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-1 hover:bg-gray-100 dark:hover:bg-slate-700 dark:bg-slate-800 rounded-lg transition-colors"
                 aria-label="Fermer"
               >
                 <X className="w-4 h-4" />
@@ -215,7 +215,7 @@ export default function AdvancedFilters({
             <div className="p-4 space-y-4 max-h-[60vh] overflow-y-auto">
               {filters.map((filter) => (
                 <div key={filter.key}>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                     {filter.label}
                   </label>
                   {renderFilterInput(filter)}
@@ -230,12 +230,12 @@ export default function AdvancedFilters({
             </div>
 
             {/* Footer */}
-            <div className="flex items-center gap-2 px-4 py-3 border-t border-gray-200 bg-gray-50">
+            <div className="flex items-center gap-2 px-4 py-3 border-t border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800">
               <button
                 onClick={() => {
                   handleReset()
                 }}
-                className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:bg-slate-800 transition-colors"
               >
                 Réinitialiser
               </button>

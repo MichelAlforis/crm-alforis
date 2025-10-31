@@ -178,7 +178,7 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({
           </div>
         ) : filteredTemplates.length === 0 ? (
           <div className="rounded-radius-md border border-dashed border-border bg-muted/40 p-spacing-xl text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-sm">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white dark:bg-slate-900 shadow-sm">
               <Sparkles className="h-6 w-6 text-primary" />
             </div>
             <h3 className="mt-spacing-sm text-lg font-semibold text-text-primary">

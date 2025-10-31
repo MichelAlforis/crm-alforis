@@ -167,7 +167,7 @@ export function SearchEntity({
           onKeyDown={handleKeyDown}
           onFocus={() => setIsOpen(true)}
           placeholder={placeholder}
-          className="w-full pl-9 pr-9 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full pl-9 pr-9 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
         />
         {isLoading && (
           <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 animate-spin" />
@@ -175,7 +175,7 @@ export function SearchEntity({
         {currentValue && !isLoading && (
           <button
             onClick={handleClearClick}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-slate-400"
           >
             <X className="h-4 w-4" />
           </button>
@@ -203,7 +203,7 @@ export function SearchEntity({
                   className={`w-full px-4 py-3 text-left border-b border-gray-100 dark:border-gray-700 last:border-0 ${
                     idx === highlightIndex
                       ? 'bg-blue-50 dark:bg-blue-900/30'
-                      : 'hover:bg-gray-50 dark:hover:bg-gray-700'
+                      : 'hover:bg-gray-50 dark:bg-slate-800 dark:hover:bg-gray-700'
                   }`}
                 >
                   <div className="text-sm font-medium text-gray-900 dark:text-white truncate">

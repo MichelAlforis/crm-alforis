@@ -289,7 +289,7 @@ export const EmailEditor: React.FC<EmailEditorProps> = ({
                 size="xs"
                 onClick={() => handleInsertVariable(token)}
                 leftIcon={<Copy className="h-3.5 w-3.5" />}
-                className="border border-border bg-white/60 text-xs text-text-secondary transition hover:bg-white hover:text-text-primary"
+                className="border border-border bg-white dark:bg-slate-900/60 text-xs text-text-secondary transition hover:bg-white hover:text-text-primary"
               >
                 {token.label}
               </Button>

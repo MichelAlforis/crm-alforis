@@ -30,7 +30,7 @@ export default function NewMandatPage() {
     <div className="space-y-6 max-w-3xl">
       <div>
         <h1 className="text-3xl font-bold text-ardoise">Nouveau mandat de distribution</h1>
-        <p className="text-gray-600 mt-2">
+        <p className="text-gray-600 dark:text-slate-400 mt-2">
           Créez un nouveau mandat de distribution pour une organisation
         </p>
       </div>

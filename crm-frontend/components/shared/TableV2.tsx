@@ -160,7 +160,7 @@ function CollapsedRow<T>({ row, rowIdx, columns, getCellValue }: CollapsedRowPro
   )
 
   return (
-    <div className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
+    <div className="border border-gray-200 dark:border-slate-700 rounded-lg p-4 bg-white dark:bg-slate-900 shadow-sm">
       {/* Collapsed View - High Priority */}
       <div className="space-y-2">
         {highPriorityColumns.map((column, colIdx) => {
@@ -171,7 +171,7 @@ function CollapsedRow<T>({ row, rowIdx, columns, getCellValue }: CollapsedRowPro
               <span className="text-xs text-gray-500 font-medium min-w-[80px]">
                 {column.header}
               </span>
-              <span className="text-sm text-gray-900 text-right flex-1">
+              <span className="text-sm text-gray-900 dark:text-slate-100 text-right flex-1">
                 {column.render ? column.render(value, row, rowIdx) : value}
               </span>
             </div>
@@ -206,7 +206,7 @@ function CollapsedRow<T>({ row, rowIdx, columns, getCellValue }: CollapsedRowPro
                 <span className="text-xs text-gray-500 font-medium min-w-[80px]">
                   {column.header}
                 </span>
-                <span className="text-sm text-gray-900 text-right flex-1">
+                <span className="text-sm text-gray-900 dark:text-slate-100 text-right flex-1">
                   {column.render ? column.render(value, row, rowIdx) : value}
                 </span>
               </div>
@@ -246,8 +246,8 @@ export function TableV2<T = any>({
   // Variant styles
   const variants = {
     default: '',
-    striped: '[&_tbody_tr:nth-child(even)]:bg-gray-50/50',
-    bordered: 'border border-gray-200',
+    striped: '[&_tbody_tr:nth-child(even)]:bg-gray-50 dark:bg-slate-800/50',
+    bordered: 'border border-gray-200 dark:border-slate-700',
   }
 
   // Get sticky positions
@@ -277,14 +277,14 @@ export function TableV2<T = any>({
     <>
       {/* Desktop/Tablet Table */}
       <div className={clsx(
-        'hidden md:block w-full overflow-hidden rounded-lg border border-gray-200',
+        'hidden md:block w-full overflow-hidden rounded-lg border border-gray-200 dark:border-slate-700',
         variants[variant]
       )}>
         <div className="overflow-x-auto">
           <table className={clsx('w-full table-fixed', sizes[size])}>
             <thead
               className={clsx(
-                'bg-gray-50 border-b border-gray-200',
+                'bg-gray-50 dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700',
                 stickyHeader && 'sticky top-0 z-20 shadow-sm'
               )}
             >
@@ -306,11 +306,11 @@ export function TableV2<T = any>({
                     <th
                       key={idx}
                       className={clsx(
-                        'px-4 py-3 text-left font-semibold text-gray-700 bg-gray-50',
+                        'px-4 py-3 text-left font-semibold text-gray-700 dark:text-slate-300 bg-gray-50 dark:bg-slate-800',
                         'first:pl-6 last:pr-6',
                         column.width,
                         column.minWidth && `min-w-[${column.minWidth}]`,
-                        column.sortable && 'cursor-pointer hover:text-gray-900 select-none',
+                        column.sortable && 'cursor-pointer hover:text-gray-900 dark:hover:text-white dark:text-slate-100 select-none',
                         column.className,
                         // Sticky styles
                         isSticky && 'sticky z-10',
@@ -354,7 +354,7 @@ export function TableV2<T = any>({
                 data.map((row, rowIdx) => (
                   <tr
                     key={getRowKey(row, rowIdx)}
-                    className="hover:bg-gray-50/80 transition-colors duration-150"
+                    className="hover:bg-gray-50 dark:bg-slate-800/80 transition-colors duration-150"
                   >
                     {visibleColumns.map((column, colIdx) => {
                       const value = getCellValue(row, column.accessor)
@@ -374,7 +374,7 @@ export function TableV2<T = any>({
                         <td
                           key={colIdx}
                           className={clsx(
-                            'px-4 py-3 text-gray-900 bg-white align-middle overflow-hidden',
+                            'px-4 py-3 text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900 align-middle overflow-hidden',
                             'first:pl-6 last:pr-6',
                             column.className,
                             // Sticky styles
@@ -416,7 +416,7 @@ export function TableV2<T = any>({
           {isLoading ? (
             <>
               {[...Array(3)].map((_, idx) => (
-                <div key={idx} className="border border-gray-200 rounded-lg p-4 bg-white space-y-2">
+                <div key={idx} className="border border-gray-200 dark:border-slate-700 rounded-lg p-4 bg-white dark:bg-slate-900 space-y-2">
                   <div className="h-4 bg-gray-200 rounded animate-pulse w-2/3" />
                   <div className="h-4 bg-gray-200 rounded animate-pulse w-1/2" />
                   <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4" />
@@ -424,7 +424,7 @@ export function TableV2<T = any>({
               ))}
             </>
           ) : isEmpty || data.length === 0 ? (
-            <div className="border border-gray-200 rounded-lg p-8 bg-white text-center">
+            <div className="border border-gray-200 dark:border-slate-700 rounded-lg p-8 bg-white dark:bg-slate-900 text-center">
               <p className="text-gray-500 text-sm">{emptyMessage}</p>
             </div>
           ) : (

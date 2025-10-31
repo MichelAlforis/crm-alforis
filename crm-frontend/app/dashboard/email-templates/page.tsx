@@ -396,7 +396,7 @@ export default function EmailTemplatesPage() {
               <div>
                 <Label>Aperçu HTML</Label>
                 <div
-                  className="mt-1 p-4 bg-white border rounded-lg overflow-auto"
+                  className="mt-1 p-4 bg-white dark:bg-slate-900 border rounded-lg overflow-auto"
                   dangerouslySetInnerHTML={{ __html: previewTemplate.body_html }}
                 />
               </div>

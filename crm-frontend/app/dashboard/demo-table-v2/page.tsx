@@ -110,7 +110,7 @@ export default function DemoTableV2Page() {
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
             {value.charAt(0)}
           </div>
-          <span className="font-medium text-gray-900">{value}</span>
+          <span className="font-medium text-gray-900 dark:text-slate-100">{value}</span>
         </div>
       )
     },
@@ -138,7 +138,7 @@ export default function DemoTableV2Page() {
       render: (value: string) => (
         <a
           href={`tel:${value}`}
-          className="text-gray-700 hover:text-gray-900 flex items-center gap-1"
+          className="text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white dark:text-slate-100 flex items-center gap-1"
         >
           <Phone className="w-3.5 h-3.5" />
           <span>{value}</span>
@@ -152,7 +152,7 @@ export default function DemoTableV2Page() {
       priority: 'medium', // 📱 Collapsed by default on mobile
       className: 'max-w-[180px]',
       render: (value: string) => (
-        <span className="text-gray-700 truncate block" title={value}>{value}</span>
+        <span className="text-gray-700 dark:text-slate-300 truncate block" title={value}>{value}</span>
       )
     },
     {
@@ -160,7 +160,7 @@ export default function DemoTableV2Page() {
       accessor: 'location',
       priority: 'low', // 📱 Collapsed by default on mobile
       render: (value: string) => (
-        <div className="flex items-center gap-1 text-gray-600 text-xs">
+        <div className="flex items-center gap-1 text-gray-600 dark:text-slate-400 text-xs">
           <MapPin className="w-3.5 h-3.5" />
           <span>{value}</span>
         </div>
@@ -174,7 +174,7 @@ export default function DemoTableV2Page() {
       render: (value: 'active' | 'inactive' | 'pending') => {
         const styles = {
           active: 'bg-green-100 text-green-800 border-green-200',
-          inactive: 'bg-gray-100 text-gray-800 border-gray-200',
+          inactive: 'bg-gray-100 dark:bg-slate-800 text-gray-800 border-gray-200 dark:border-slate-700',
           pending: 'bg-yellow-100 text-yellow-800 border-yellow-200'
         }
         const labels = {
@@ -211,7 +211,7 @@ export default function DemoTableV2Page() {
       sortable: true,
       priority: 'low', // 📱 Collapsed by default on mobile
       render: (value: string) => (
-        <span className="text-gray-600 text-sm">
+        <span className="text-gray-600 dark:text-slate-400 text-sm">
           {new Date(value).toLocaleDateString('fr-FR', {
             day: '2-digit',
             month: 'short',
@@ -282,10 +282,10 @@ export default function DemoTableV2Page() {
     <div className="p-4 md:p-8 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">
           Demo Table V2 Responsive 🚀
         </h1>
-        <p className="text-gray-600 mt-2">
+        <p className="text-gray-600 dark:text-slate-400 mt-2">
           Table avancée avec colonnes sticky, collapse mobile, et détection du pointer
         </p>
       </div>
@@ -294,32 +294,32 @@ export default function DemoTableV2Page() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
           <div className="text-2xl mb-2">📌</div>
-          <h3 className="font-semibold text-gray-900">Colonnes Sticky</h3>
-          <p className="text-xs text-gray-600 mt-1">
+          <h3 className="font-semibold text-gray-900 dark:text-slate-100">Colonnes Sticky</h3>
+          <p className="text-xs text-gray-600 dark:text-slate-400 mt-1">
             "Nom" fixé à gauche, "Actions" à droite
           </p>
         </Card>
 
         <Card className="p-4 bg-gradient-to-br from-green-50 to-green-100 border-green-200">
           <div className="text-2xl mb-2">📱</div>
-          <h3 className="font-semibold text-gray-900">Collapse Mobile</h3>
-          <p className="text-xs text-gray-600 mt-1">
+          <h3 className="font-semibold text-gray-900 dark:text-slate-100">Collapse Mobile</h3>
+          <p className="text-xs text-gray-600 dark:text-slate-400 mt-1">
             Priorité: high → visible, low → replié
           </p>
         </Card>
 
         <Card className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
           <div className="text-2xl mb-2">👆</div>
-          <h3 className="font-semibold text-gray-900">Pointer Detection</h3>
-          <p className="text-xs text-gray-600 mt-1">
+          <h3 className="font-semibold text-gray-900 dark:text-slate-100">Pointer Detection</h3>
+          <p className="text-xs text-gray-600 dark:text-slate-400 mt-1">
             Adapte les interactions tactiles vs souris
           </p>
         </Card>
 
         <Card className="p-4 bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
           <div className="text-2xl mb-2">⋮</div>
-          <h3 className="font-semibold text-gray-900">Menu Overflow</h3>
-          <p className="text-xs text-gray-600 mt-1">
+          <h3 className="font-semibold text-gray-900 dark:text-slate-100">Menu Overflow</h3>
+          <p className="text-xs text-gray-600 dark:text-slate-400 mt-1">
             Actions groupées en "..." sur tactile
           </p>
         </Card>
@@ -327,10 +327,10 @@ export default function DemoTableV2Page() {
 
       {/* Instructions */}
       <Card className="p-6 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 border-blue-200">
-        <h2 className="text-lg font-bold text-gray-900 mb-3">
+        <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100 mb-3">
           📋 Instructions de test
         </h2>
-        <ul className="space-y-2 text-sm text-gray-700">
+        <ul className="space-y-2 text-sm text-gray-700 dark:text-slate-300">
           <li className="flex items-start gap-2">
             <span className="font-bold text-blue-600">Desktop:</span>
             <span>Scrollez horizontalement → "Nom" et "Actions" restent fixes</span>
@@ -371,14 +371,14 @@ export default function DemoTableV2Page() {
       </Card>
 
       {/* Technical Details */}
-      <Card className="p-6 bg-gray-50 border-gray-200">
-        <h2 className="text-lg font-bold text-gray-900 mb-3">
+      <Card className="p-6 bg-gray-50 dark:bg-slate-800 border-gray-200 dark:border-slate-700">
+        <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100 mb-3">
           🔧 Détails techniques
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
-            <h3 className="font-semibold text-gray-900 mb-2">Fonctionnalités V2:</h3>
-            <ul className="space-y-1 text-gray-700 list-disc list-inside">
+            <h3 className="font-semibold text-gray-900 dark:text-slate-100 mb-2">Fonctionnalités V2:</h3>
+            <ul className="space-y-1 text-gray-700 dark:text-slate-300 list-disc list-inside">
               <li>Colonnes sticky (left/right)</li>
               <li>Priorités de colonnes (high/medium/low)</li>
               <li>Collapse/expand sur mobile</li>
@@ -387,8 +387,8 @@ export default function DemoTableV2Page() {
             </ul>
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900 mb-2">Props TableV2:</h3>
-            <ul className="space-y-1 text-gray-700 list-disc list-inside">
+            <h3 className="font-semibold text-gray-900 dark:text-slate-100 mb-2">Props TableV2:</h3>
+            <ul className="space-y-1 text-gray-700 dark:text-slate-300 list-disc list-inside">
               <li><code className="text-xs bg-gray-200 px-1 rounded">sticky: 'left' | 'right'</code></li>
               <li><code className="text-xs bg-gray-200 px-1 rounded">priority: 'high' | 'medium' | 'low'</code></li>
               <li><code className="text-xs bg-gray-200 px-1 rounded">mobileCollapse: boolean</code></li>

@@ -59,7 +59,7 @@ export function OrganisationAISuggestions({ organisationId }: OrganisationAISugg
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-purple-600" />
-          <h3 className="text-lg font-semibold text-gray-900">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">
             Suggestions IA pour cette organisation
           </h3>
         </div>
@@ -70,7 +70,7 @@ export function OrganisationAISuggestions({ organisationId }: OrganisationAISugg
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="px-3 py-1.5 text-sm border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
           >
             <option value="">Tous</option>
             <option value={AISuggestionStatus.PENDING}>En attente</option>
@@ -90,9 +90,9 @@ export function OrganisationAISuggestions({ organisationId }: OrganisationAISugg
         <>
           {/* Empty state */}
           {(!suggestions || suggestions.length === 0) && (
-            <div className="text-center py-12 bg-gray-50 rounded-xl">
+            <div className="text-center py-12 bg-gray-50 dark:bg-slate-800 rounded-xl">
               <Sparkles className="w-10 h-10 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-600 font-medium">Aucune suggestion</p>
+              <p className="text-gray-600 dark:text-slate-400 font-medium">Aucune suggestion</p>
               <p className="text-sm text-gray-500 mt-1">
                 L'Agent IA n'a pas encore généré de suggestions pour cette organisation
               </p>

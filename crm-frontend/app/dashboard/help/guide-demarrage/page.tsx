@@ -7,12 +7,12 @@ export default function GuideDemarrage() {
   return (
     <div className="max-w-4xl mx-auto p-6 lg:p-8 space-y-8">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-gray-600">
-        <Link href="/dashboard/help" className="hover:text-gray-900 transition">
+      <nav className="flex items-center gap-2 text-sm text-gray-600 dark:text-slate-400">
+        <Link href="/dashboard/help" className="hover:text-gray-900 dark:hover:text-white dark:text-slate-100 transition">
           Aide
         </Link>
         <span>/</span>
-        <span className="text-gray-900 font-medium">Guide de démarrage</span>
+        <span className="text-gray-900 dark:text-slate-100 font-medium">Guide de démarrage</span>
       </nav>
 
       {/* Header */}
@@ -22,10 +22,10 @@ export default function GuideDemarrage() {
             <Rocket className="h-12 w-12 text-blue-600" />
           </div>
         </div>
-        <h1 className="text-4xl font-bold text-gray-900">
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-slate-100">
           Bienvenue dans ALFORIS CRM
         </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <p className="text-lg text-gray-600 dark:text-slate-400 max-w-2xl mx-auto">
           Suivez ce guide en 10 minutes pour découvrir les fonctionnalités essentielles et commencer à utiliser le CRM efficacement
         </p>
       </header>
@@ -62,13 +62,13 @@ export default function GuideDemarrage() {
       {/* Étape 1 : Découvrir le Dashboard */}
       <section className="space-y-6">
         <div className="border-l-4 border-blue-600 pl-6 py-2">
-          <h2 className="text-2xl font-bold text-gray-900 mb-3">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-3">
             1. Découvrir le tableau de bord
           </h2>
-          <p className="text-gray-700 mb-4">
+          <p className="text-gray-700 dark:text-slate-300 mb-4">
             Après connexion, vous arrivez sur votre <strong>Dashboard</strong> qui affiche :
           </p>
-          <ul className="space-y-2 text-gray-700">
+          <ul className="space-y-2 text-gray-700 dark:text-slate-300">
             <li className="flex items-start gap-2">
               <span className="font-semibold text-blue-600">📊</span>
               <span><strong>KPIs</strong> : Nombre d&apos;organisations actives, mandats, interactions récentes</span>
@@ -86,8 +86,8 @@ export default function GuideDemarrage() {
               <span><strong>Notifications</strong> : Alertes importantes</span>
             </li>
           </ul>
-          <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-            <p className="text-sm text-gray-700">
+          <div className="mt-4 p-4 bg-gray-50 dark:bg-slate-800 rounded-lg">
+            <p className="text-sm text-gray-700 dark:text-slate-300">
               💡 <strong>Astuce</strong> : Le menu de gauche vous permet d&apos;accéder à toutes les sections : Organisations, Personnes, Mandats, Produits, Workflows, Marketing.
             </p>
           </div>
@@ -99,18 +99,18 @@ export default function GuideDemarrage() {
         <div className="border-l-4 border-purple-600 pl-6 py-2">
           <div className="flex items-center gap-3 mb-3">
             <Building2 className="h-6 w-6 text-purple-600" />
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100">
               2. Créer votre première organisation
             </h2>
           </div>
-          <p className="text-gray-700 mb-4">
+          <p className="text-gray-700 dark:text-slate-300 mb-4">
             Une organisation représente une banque, un gestionnaire d&apos;actifs, ou tout client/prospect avec qui vous travaillez.
           </p>
-          <ol className="space-y-4 text-gray-700">
+          <ol className="space-y-4 text-gray-700 dark:text-slate-300">
             <li className="flex items-start gap-3">
               <span className="flex-shrink-0 w-8 h-8 bg-purple-100 text-purple-700 rounded-full flex items-center justify-center font-bold">1</span>
               <div>
-                <strong>Étape 1</strong> : Cliquez sur <span className="px-2 py-1 bg-gray-100 rounded font-mono text-sm">Organisations</span> dans le menu de gauche
+                <strong>Étape 1</strong> : Cliquez sur <span className="px-2 py-1 bg-gray-100 dark:bg-slate-800 rounded font-mono text-sm">Organisations</span> dans le menu de gauche
               </div>
             </li>
             <li className="flex items-start gap-3">
@@ -150,14 +150,14 @@ export default function GuideDemarrage() {
         <div className="border-l-4 border-green-600 pl-6 py-2">
           <div className="flex items-center gap-3 mb-3">
             <Users className="h-6 w-6 text-green-600" />
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100">
               3. Ajouter un contact
             </h2>
           </div>
-          <p className="text-gray-700 mb-3">
+          <p className="text-gray-700 dark:text-slate-300 mb-3">
             Maintenant, ajoutons une personne de contact dans cette organisation :
           </p>
-          <ol className="space-y-4 text-gray-700">
+          <ol className="space-y-4 text-gray-700 dark:text-slate-300">
             <li className="flex items-start gap-3">
               <span className="flex-shrink-0 w-8 h-8 bg-green-100 text-green-700 rounded-full flex items-center justify-center font-bold">1</span>
               <div>
@@ -197,14 +197,14 @@ export default function GuideDemarrage() {
         <div className="border-l-4 border-amber-600 pl-6 py-2">
           <div className="flex items-center gap-3 mb-3">
             <MessageSquare className="h-6 w-6 text-amber-600" />
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100">
               4. Enregistrer une interaction
             </h2>
           </div>
-          <p className="text-gray-700 mb-3">
+          <p className="text-gray-700 dark:text-slate-300 mb-3">
             Gardez une trace de chaque échange avec vos contacts :
           </p>
-          <ol className="space-y-4 text-gray-700">
+          <ol className="space-y-4 text-gray-700 dark:text-slate-300">
             <li className="flex items-start gap-3">
               <span className="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center font-bold">1</span>
               <div>
@@ -248,14 +248,14 @@ export default function GuideDemarrage() {
         <div className="border-l-4 border-red-600 pl-6 py-2">
           <div className="flex items-center gap-3 mb-3">
             <CheckSquare className="h-6 w-6 text-red-600" />
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100">
               5. Créer une tâche de suivi
             </h2>
           </div>
-          <p className="text-gray-700 mb-3">
+          <p className="text-gray-700 dark:text-slate-300 mb-3">
             Ne perdez jamais une opportunité grâce aux rappels :
           </p>
-          <ol className="space-y-4 text-gray-700">
+          <ol className="space-y-4 text-gray-700 dark:text-slate-300">
             <li className="flex items-start gap-3">
               <span className="flex-shrink-0 w-8 h-8 bg-red-100 text-red-700 rounded-full flex items-center justify-center font-bold">1</span>
               <div>
@@ -297,42 +297,42 @@ export default function GuideDemarrage() {
 
       {/* Félicitations */}
       <section className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-8 text-center border border-green-200">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-4">
           🎉 Félicitations !
         </h2>
-        <p className="text-lg text-gray-700 mb-6 max-w-2xl mx-auto">
+        <p className="text-lg text-gray-700 dark:text-slate-300 mb-6 max-w-2xl mx-auto">
           Vous maîtrisez les bases du CRM. Continuez à explorer les fonctionnalités avancées pour booster votre productivité :
         </p>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 max-w-3xl mx-auto">
           <Link
             href="/dashboard/help/guides/workflows"
-            className="p-4 bg-white rounded-lg border border-green-200 hover:border-green-400 hover:shadow-md transition"
+            className="p-4 bg-white dark:bg-slate-900 rounded-lg border border-green-200 hover:border-green-400 hover:shadow-md transition"
           >
-            <div className="flex items-center justify-center gap-2 font-semibold text-gray-900 mb-1">
+            <div className="flex items-center justify-center gap-2 font-semibold text-gray-900 dark:text-slate-100 mb-1">
               <Zap className="h-5 w-5 text-amber-500" />
               <span>Workflows</span>
             </div>
-            <div className="text-sm text-gray-600">Automatisez vos tâches</div>
+            <div className="text-sm text-gray-600 dark:text-slate-400">Automatisez vos tâches</div>
           </Link>
           <Link
             href="/dashboard/help/guides/marketing"
-            className="p-4 bg-white rounded-lg border border-green-200 hover:border-green-400 hover:shadow-md transition"
+            className="p-4 bg-white dark:bg-slate-900 rounded-lg border border-green-200 hover:border-green-400 hover:shadow-md transition"
           >
-            <div className="flex items-center justify-center gap-2 font-semibold text-gray-900 mb-1">
+            <div className="flex items-center justify-center gap-2 font-semibold text-gray-900 dark:text-slate-100 mb-1">
               <span>📧</span>
               <span>Marketing</span>
             </div>
-            <div className="text-sm text-gray-600">Campagnes email</div>
+            <div className="text-sm text-gray-600 dark:text-slate-400">Campagnes email</div>
           </Link>
           <Link
             href="/dashboard/help/guides/filtres"
-            className="p-4 bg-white rounded-lg border border-green-200 hover:border-green-400 hover:shadow-md transition"
+            className="p-4 bg-white dark:bg-slate-900 rounded-lg border border-green-200 hover:border-green-400 hover:shadow-md transition"
           >
-            <div className="flex items-center justify-center gap-2 font-semibold text-gray-900 mb-1">
+            <div className="flex items-center justify-center gap-2 font-semibold text-gray-900 dark:text-slate-100 mb-1">
               <span>🔍</span>
               <span>Filtres</span>
             </div>
-            <div className="text-sm text-gray-600">Recherches avancées</div>
+            <div className="text-sm text-gray-600 dark:text-slate-400">Recherches avancées</div>
           </Link>
         </div>
       </section>

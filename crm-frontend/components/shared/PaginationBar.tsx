@@ -103,8 +103,8 @@ export default function PaginationBar({
         edge && 'px-2',
         current
           ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold shadow-md'
-          : 'bg-white text-gray-700 border-2 border-blue-200 hover:border-blue-400 hover:bg-blue-50 shadow-sm',
-        disabled && 'opacity-50 cursor-not-allowed hover:bg-white hover:border-blue-200',
+          : 'bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 border-2 border-blue-200 hover:border-blue-400 hover:bg-blue-50 shadow-sm',
+        disabled && 'opacity-50 cursor-not-allowed hover:bg-white dark:bg-slate-900 hover:border-blue-200',
         !disabled && 'hover:scale-105 active:scale-95'
       )}
       aria-current={current ? 'page' : undefined}
@@ -122,7 +122,7 @@ export default function PaginationBar({
       <div
         className={clsx(
           'flex w-full items-center justify-between gap-3',
-          'rounded-2xl border-2 border-gray-200 bg-gradient-to-r from-gray-50 to-blue-50/30 p-3 backdrop-blur-sm',
+          'rounded-2xl border-2 border-gray-200 dark:border-slate-700 bg-gradient-to-r from-gray-50 to-blue-50/30 p-3 backdrop-blur-sm',
           'shadow-sm',
           className
         )}
@@ -169,7 +169,7 @@ export default function PaginationBar({
               item === 'ellipsis' ? (
                 <div
                   key={`ellipsis-${idx}`}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-400"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 dark:bg-slate-800 text-gray-400"
                 >
                   <MoreHorizontal className="h-4 w-4" />
                 </div>
@@ -221,7 +221,7 @@ export default function PaginationBar({
         </div>
 
         {/* Droite : résumé + select page size */}
-        <div className="flex items-center gap-3 text-sm text-gray-600">
+        <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-slate-400">
           <div className="hidden sm:block font-medium">
             {totalItems != null ? (
               <span>
@@ -244,7 +244,7 @@ export default function PaginationBar({
               <select
                 value={String(limit)}
                 onChange={(e) => onLimitChange?.(parseInt(e.target.value, 10))}
-                className="px-3 py-1.5 text-sm font-medium border-2 border-blue-300 rounded-lg bg-white text-gray-800 hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all cursor-pointer shadow-sm"
+                className="px-3 py-1.5 text-sm font-medium border-2 border-blue-300 rounded-lg bg-white dark:bg-slate-900 text-gray-800 hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 transition-all cursor-pointer shadow-sm"
               >
                 {pageSizeOptions.map((opt) => (
                   <option key={opt} value={String(opt)}>

@@ -47,7 +47,7 @@ export default function DashboardLayout({
         <div className="text-center space-y-4">
           <Loader2 className="w-12 h-12 text-blue-600 animate-spin mx-auto" />
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
               Chargement
             </h2>
             <p className="text-sm text-gray-500 mt-1">
@@ -85,10 +85,10 @@ export default function DashboardLayout({
               <Navbar />
 
               {/* Page Content - Scrollable */}
-              <main className="flex-1 bg-gray-50 overflow-y-auto">
+              <main className="flex-1 bg-gray-50 dark:bg-slate-800 overflow-y-auto">
                 <div className="dashboard-content animate-fadeIn">
                   {/* Breadcrumb Navigation */}
-                  <div className="px-6 py-3 bg-white border-b border-gray-200">
+                  <div className="px-6 py-3 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700">
                     <Breadcrumbs showHome />
                   </div>
 

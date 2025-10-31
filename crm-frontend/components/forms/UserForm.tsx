@@ -161,12 +161,12 @@ export function UserForm({
 
       {/* Role Selection */}
       <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">
+        <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
           Rôle
         </label>
         <select
           {...register('role_id')}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bleu focus:border-transparent"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-bleu focus:border-transparent"
           disabled={isLoading}
         >
           <option value="">-- Aucun rôle --</option>
@@ -182,12 +182,12 @@ export function UserForm({
 
       {/* Team Selection */}
       <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">
+        <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
           Équipe
         </label>
         <select
           {...register('team_id')}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bleu focus:border-transparent"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-bleu focus:border-transparent"
           disabled={isLoading}
         >
           <option value="">-- Aucune équipe --</option>
@@ -206,10 +206,10 @@ export function UserForm({
           <input
             type="checkbox"
             {...register('is_active')}
-            className="rounded border-gray-300 text-bleu focus:ring-bleu"
+            className="rounded border-gray-300 dark:border-slate-600 text-bleu focus:ring-bleu"
             disabled={isLoading}
           />
-          <span className="text-sm text-gray-700">
+          <span className="text-sm text-gray-700 dark:text-slate-300">
             Utilisateur actif
           </span>
         </label>
@@ -218,10 +218,10 @@ export function UserForm({
           <input
             type="checkbox"
             {...register('is_superuser')}
-            className="rounded border-gray-300 text-bleu focus:ring-bleu"
+            className="rounded border-gray-300 dark:border-slate-600 text-bleu focus:ring-bleu"
             disabled={isLoading}
           />
-          <span className="text-sm text-gray-700">
+          <span className="text-sm text-gray-700 dark:text-slate-300">
             Super utilisateur (accès complet)
           </span>
         </label>

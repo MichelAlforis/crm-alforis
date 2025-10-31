@@ -15,7 +15,7 @@ export default function DemoModernUnitsPage() {
       {/* ============= SAFE AREAS DEMO ============= */}
       {/* Header with iOS safe area */}
       <header
-        className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200"
+        className="sticky top-0 z-50 bg-white dark:bg-slate-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-slate-700"
         style={{
           // iOS safe area for notch
           paddingTop: 'max(1rem, env(safe-area-inset-top))',
@@ -29,10 +29,10 @@ export default function DemoModernUnitsPage() {
               <Smartphone className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-fluid-2xl font-bold text-gray-900">
+              <h1 className="text-fluid-2xl font-bold text-gray-900 dark:text-slate-100">
                 Modern Viewport Units
               </h1>
-              <p className="text-fluid-sm text-gray-600">
+              <p className="text-fluid-sm text-gray-600 dark:text-slate-400">
                 dvh, dvw & iOS Safe Areas
               </p>
             </div>
@@ -62,13 +62,13 @@ export default function DemoModernUnitsPage() {
 
           {/* Problem Demonstration */}
           <section>
-            <h2 className="text-fluid-3xl font-bold text-gray-900 mb-fluid-4">
+            <h2 className="text-fluid-3xl font-bold text-gray-900 dark:text-slate-100 mb-fluid-4">
               🐛 Le Problème avec vh
             </h2>
 
             <div className="grid md:grid-cols-2 gap-fluid-4">
               {/* Bad: vh */}
-              <div className="bg-white rounded-lg border-2 border-red-200 overflow-hidden">
+              <div className="bg-white dark:bg-slate-900 rounded-lg border-2 border-red-200 overflow-hidden">
                 <div className="bg-red-50 p-fluid-3 border-b border-red-200">
                   <div className="flex items-center gap-2">
                     <X className="w-4 h-4 text-red-600" />
@@ -91,7 +91,7 @@ export default function DemoModernUnitsPage() {
                       </p>
                     </div>
                   </div>
-                  <ul className="mt-fluid-3 space-y-fluid-2 text-fluid-sm text-gray-600">
+                  <ul className="mt-fluid-3 space-y-fluid-2 text-fluid-sm text-gray-600 dark:text-slate-400">
                     <li>❌ Sur mobile, la barre d'URL cache le contenu</li>
                     <li>❌ Taille change lors du scroll (barre d'URL apparaît/disparaît)</li>
                     <li>❌ Layout instable et expérience dégradée</li>
@@ -100,7 +100,7 @@ export default function DemoModernUnitsPage() {
               </div>
 
               {/* Good: dvh */}
-              <div className="bg-white rounded-lg border-2 border-green-200 overflow-hidden">
+              <div className="bg-white dark:bg-slate-900 rounded-lg border-2 border-green-200 overflow-hidden">
                 <div className="bg-green-50 p-fluid-3 border-b border-green-200">
                   <div className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-green-600" />
@@ -123,7 +123,7 @@ export default function DemoModernUnitsPage() {
                       </p>
                     </div>
                   </div>
-                  <ul className="mt-fluid-3 space-y-fluid-2 text-fluid-sm text-gray-600">
+                  <ul className="mt-fluid-3 space-y-fluid-2 text-fluid-sm text-gray-600 dark:text-slate-400">
                     <li>✅ Tient compte de la barre d'URL mobile</li>
                     <li>✅ Taille stable, même lors du scroll</li>
                     <li>✅ Meilleure UX sur tous les devices</li>
@@ -135,7 +135,7 @@ export default function DemoModernUnitsPage() {
 
           {/* Full Height Demo */}
           <section>
-            <h2 className="text-fluid-3xl font-bold text-gray-900 mb-fluid-4">
+            <h2 className="text-fluid-3xl font-bold text-gray-900 dark:text-slate-100 mb-fluid-4">
               📱 Démo: Page Pleine Hauteur
             </h2>
 
@@ -189,11 +189,11 @@ export default function DemoModernUnitsPage() {
 
           {/* iOS Safe Areas */}
           <section>
-            <h2 className="text-fluid-3xl font-bold text-gray-900 mb-fluid-4">
+            <h2 className="text-fluid-3xl font-bold text-gray-900 dark:text-slate-100 mb-fluid-4">
               🍎 iOS Safe Areas (Encoches & Home Indicator)
             </h2>
 
-            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <div className="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
               {/* Simulated iPhone Notch */}
               <div className="bg-gray-900 relative">
                 <div
@@ -219,8 +219,8 @@ export default function DemoModernUnitsPage() {
                 </div>
 
                 {/* Content */}
-                <div className="bg-white p-fluid-4" style={{ minHeight: '40dvh' }}>
-                  <p className="text-fluid-base text-gray-700 mb-fluid-4">
+                <div className="bg-white dark:bg-slate-900 p-fluid-4" style={{ minHeight: '40dvh' }}>
+                  <p className="text-fluid-base text-gray-700 dark:text-slate-300 mb-fluid-4">
                     Le contenu s'affiche correctement sous l'encoche et au-dessus de l'indicateur d'accueil iOS.
                   </p>
 
@@ -349,7 +349,7 @@ module.exports = {
 
           {/* Browser Support */}
           <section className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-fluid-6">
-            <h2 className="text-fluid-2xl font-bold text-gray-900 mb-fluid-4">
+            <h2 className="text-fluid-2xl font-bold text-gray-900 dark:text-slate-100 mb-fluid-4">
               🌐 Support Navigateurs
             </h2>
 
@@ -358,13 +358,13 @@ module.exports = {
                 <h3 className="text-fluid-lg font-semibold text-green-900 mb-fluid-2">
                   dvh/dvw Units
                 </h3>
-                <ul className="space-y-fluid-1 text-fluid-sm text-gray-700">
+                <ul className="space-y-fluid-1 text-fluid-sm text-gray-700 dark:text-slate-300">
                   <li>✅ iOS Safari 15.4+ (2022)</li>
                   <li>✅ Chrome 108+ (2022)</li>
                   <li>✅ Firefox 101+ (2022)</li>
                   <li>✅ Edge 108+ (2022)</li>
                 </ul>
-                <p className="text-fluid-xs text-gray-600 mt-fluid-2">
+                <p className="text-fluid-xs text-gray-600 dark:text-slate-400 mt-fluid-2">
                   Fallback: utiliser vh comme backup
                 </p>
               </div>
@@ -373,13 +373,13 @@ module.exports = {
                 <h3 className="text-fluid-lg font-semibold text-green-900 mb-fluid-2">
                   Safe Area Insets
                 </h3>
-                <ul className="space-y-fluid-1 text-fluid-sm text-gray-700">
+                <ul className="space-y-fluid-1 text-fluid-sm text-gray-700 dark:text-slate-300">
                   <li>✅ iOS Safari 11.2+ (2018)</li>
                   <li>✅ Chrome Android (tous)</li>
                   <li>✅ Safari macOS (notch MacBook Pro)</li>
                   <li>⚠️ Desktop browsers: 0px (pas d'effet)</li>
                 </ul>
-                <p className="text-fluid-xs text-gray-600 mt-fluid-2">
+                <p className="text-fluid-xs text-gray-600 dark:text-slate-400 mt-fluid-2">
                   Utilise max() pour garantir un padding minimum
                 </p>
               </div>
@@ -390,7 +390,7 @@ module.exports = {
 
       {/* Fixed Bottom Navigation with Safe Area */}
       <nav
-        className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50"
+        className="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-700 shadow-lg z-50"
         style={{
           paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))',
         }}
@@ -399,7 +399,7 @@ module.exports = {
           {['Accueil', 'Recherche', 'Profil'].map((label) => (
             <button
               key={label}
-              className="flex flex-col items-center gap-1 px-fluid-3 py-fluid-2 text-gray-600 hover:text-cyan-600 transition-colors"
+              className="flex flex-col items-center gap-1 px-fluid-3 py-fluid-2 text-gray-600 dark:text-slate-400 hover:text-cyan-600 transition-colors"
             >
               <div className="w-6 h-6 bg-gray-300 rounded-full" />
               <span className="text-fluid-xs">{label}</span>

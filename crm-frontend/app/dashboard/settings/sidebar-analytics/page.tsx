@@ -99,7 +99,7 @@ export default function SidebarAnalyticsPage() {
       <div>
         <Link
           href="/dashboard/settings"
-          className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 mb-4"
+          className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white dark:text-slate-100 mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Retour aux paramètres
@@ -107,10 +107,10 @@ export default function SidebarAnalyticsPage() {
 
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">
               Analytics Sidebar
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-600 dark:text-slate-400 mt-2">
               Analysez votre utilisation de la navigation pour optimiser votre workflow
             </p>
           </div>
@@ -118,14 +118,14 @@ export default function SidebarAnalyticsPage() {
           <div className="flex gap-3">
             <button
               onClick={handleExport}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:bg-slate-800 transition"
             >
               <Download className="w-4 h-4" />
               Exporter
             </button>
             <button
               onClick={() => setShowResetConfirm(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-red-300 bg-white text-red-700 hover:bg-red-50 transition"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-red-300 bg-white dark:bg-slate-900 text-red-700 hover:bg-red-50 transition"
             >
               <RefreshCw className="w-4 h-4" />
               Réinitialiser
@@ -136,27 +136,27 @@ export default function SidebarAnalyticsPage() {
 
       {/* Stats globales */}
       <div className="grid gap-6 md:grid-cols-3">
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <MousePointerClick className="w-8 h-8 text-blue-500" />
             <span className="text-xs font-semibold text-gray-500 uppercase">
               Total Clics
             </span>
           </div>
-          <p className="mt-4 text-3xl font-bold text-gray-900">{totalClicks}</p>
+          <p className="mt-4 text-3xl font-bold text-gray-900 dark:text-slate-100">{totalClicks}</p>
           <p className="text-sm text-gray-500 mt-1">
             Navigation sidebar
           </p>
         </div>
 
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <Clock className="w-8 h-8 text-emerald-500" />
             <span className="text-xs font-semibold text-gray-500 uppercase">
               Temps Total
             </span>
           </div>
-          <p className="mt-4 text-3xl font-bold text-gray-900">
+          <p className="mt-4 text-3xl font-bold text-gray-900 dark:text-slate-100">
             {totalTimeFormatted}
           </p>
           <p className="text-sm text-gray-500 mt-1">
@@ -164,14 +164,14 @@ export default function SidebarAnalyticsPage() {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <Star className="w-8 h-8 text-yellow-500" />
             <span className="text-xs font-semibold text-gray-500 uppercase">
               Favoris
             </span>
           </div>
-          <p className="mt-4 text-3xl font-bold text-gray-900">
+          <p className="mt-4 text-3xl font-bold text-gray-900 dark:text-slate-100">
             {sidebar.favorites.length}
           </p>
           <p className="text-sm text-gray-500 mt-1">
@@ -187,10 +187,10 @@ export default function SidebarAnalyticsPage() {
             <div className="flex items-center gap-3">
               <Lightbulb className="w-6 h-6 text-indigo-600" />
               <div>
-                <h2 className="text-xl font-semibold text-gray-900">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
                   Suggestions Intelligentes
                 </h2>
-                <p className="text-sm text-gray-600 mt-1">
+                <p className="text-sm text-gray-600 dark:text-slate-400 mt-1">
                   Basées sur votre utilisation des 30 derniers jours
                 </p>
               </div>
@@ -207,10 +207,10 @@ export default function SidebarAnalyticsPage() {
             {suggestionsWithLabels.map((item) => (
               <div
                 key={item.href}
-                className="flex items-center justify-between p-4 rounded-xl bg-white border border-indigo-100"
+                className="flex items-center justify-between p-4 rounded-xl bg-white dark:bg-slate-900 border border-indigo-100"
               >
                 <div className="flex-1">
-                  <p className="font-semibold text-gray-900">{item.label}</p>
+                  <p className="font-semibold text-gray-900 dark:text-slate-100">{item.label}</p>
                   <p className="text-xs text-gray-500 mt-1">{item.href}</p>
                 </div>
                 <div className="flex items-center gap-6 text-sm">
@@ -241,11 +241,11 @@ export default function SidebarAnalyticsPage() {
       )}
 
       {/* Top 10 des sections les plus utilisées */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
         <div className="flex items-center gap-3 mb-6">
           <TrendingUp className="w-6 h-6 text-purple-500" />
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
               Sections les Plus Utilisées
             </h2>
             <p className="text-sm text-gray-500">
@@ -281,7 +281,7 @@ export default function SidebarAnalyticsPage() {
 
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <p className="font-semibold text-gray-900">
+                      <p className="font-semibold text-gray-900 dark:text-slate-100">
                         {stat.label || stat.href.split('/').pop()}
                       </p>
                       {isFavorite && (
@@ -331,20 +331,20 @@ export default function SidebarAnalyticsPage() {
           onClick={() => setShowResetConfirm(false)}
         >
           <div
-            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
+            className="w-full max-w-md rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-xl font-semibold text-gray-900">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
               Réinitialiser les analytics ?
             </h3>
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-gray-600 dark:text-slate-400">
               Cette action supprimera toutes les données de tracking (clics, temps passé, etc.).
               Cette action est irréversible.
             </p>
             <div className="mt-6 flex justify-end gap-3">
               <button
                 onClick={() => setShowResetConfirm(false)}
-                className="px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
+                className="px-4 py-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:bg-slate-800"
               >
                 Annuler
               </button>

@@ -74,7 +74,7 @@ export const OrganisationTimeline: React.FC<OrganisationTimelineProps> = ({
             <select
               value={selectedFilter}
               onChange={(e) => setSelectedFilter(e.target.value)}
-              className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-bleu focus:border-transparent"
+              className="text-sm border border-gray-300 dark:border-slate-600 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-bleu focus:border-transparent"
             >
               {ACTIVITY_FILTERS.map((filter) => (
                 <option key={filter.value} value={filter.value}>
@@ -100,7 +100,7 @@ export const OrganisationTimeline: React.FC<OrganisationTimelineProps> = ({
                 <div className="h-10 w-10 rounded-full bg-gray-200" />
                 <div className="flex-1 space-y-2">
                   <div className="h-3 w-2/3 rounded bg-gray-200" />
-                  <div className="h-3 w-1/2 rounded bg-gray-100" />
+                  <div className="h-3 w-1/2 rounded bg-gray-100 dark:bg-slate-800" />
                 </div>
               </div>
             ))}
@@ -145,11 +145,11 @@ export const OrganisationTimeline: React.FC<OrganisationTimelineProps> = ({
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2 text-xs text-text-secondary">
-                      <span className="rounded-full bg-gray-100 px-2 py-0.5 text-text-secondary">
+                      <span className="rounded-full bg-gray-100 dark:bg-slate-800 px-2 py-0.5 text-text-secondary">
                         {config.label}
                       </span>
                       {organisationName && (
-                        <span className="rounded-full bg-gray-100 px-2 py-0.5 text-text-secondary">
+                        <span className="rounded-full bg-gray-100 dark:bg-slate-800 px-2 py-0.5 text-text-secondary">
                           {organisationName}
                         </span>
                       )}

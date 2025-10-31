@@ -156,12 +156,12 @@ export default function AIConfigSection() {
   return (
     <div className="space-y-6">
       {/* Header Section */}
-      <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-blue-50 to-purple-50 p-6 shadow-sm">
+      <div className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-gradient-to-br from-blue-50 to-purple-50 p-6 shadow-sm">
         <div className="flex items-center gap-3">
           <Brain className="h-8 w-8 text-purple-600" />
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Intelligence Artificielle</h2>
-            <p className="text-gray-600 mt-1">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100">Intelligence Artificielle</h2>
+            <p className="text-gray-600 dark:text-slate-400 mt-1">
               Configurez les paramètres de l'agent IA et les clés API des fournisseurs
             </p>
           </div>
@@ -170,15 +170,15 @@ export default function AIConfigSection() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Provider & Model */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 space-y-4">
-          <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 p-6 space-y-4">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
             <Zap className="h-5 w-5 text-blue-600" />
             Fournisseur IA
           </h3>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                 Provider
               </label>
               <select
@@ -186,7 +186,7 @@ export default function AIConfigSection() {
                 onChange={(e) =>
                   setFormData({ ...formData, provider: e.target.value as AIProvider })
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
               >
                 <option value={AIProvider.ANTHROPIC}>Anthropic (Claude)</option>
                 <option value={AIProvider.OPENAI}>OpenAI (GPT)</option>
@@ -195,14 +195,14 @@ export default function AIConfigSection() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                 Modèle
               </label>
               <input
                 type="text"
                 value={formData.model_name}
                 onChange={(e) => setFormData({ ...formData, model_name: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
                 placeholder="claude-3-5-sonnet-20241022"
               />
             </div>
@@ -210,9 +210,9 @@ export default function AIConfigSection() {
         </div>
 
         {/* API Keys Section */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 space-y-6">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 p-6 space-y-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
               <Key className="h-5 w-5 text-green-600" />
               Clés API
             </h3>
@@ -227,7 +227,7 @@ export default function AIConfigSection() {
           {/* Anthropic Claude */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
                 Anthropic Claude API Key
               </label>
               <div className="flex items-center gap-2">
@@ -255,13 +255,13 @@ export default function AIConfigSection() {
                 type={showApiKeys.anthropic ? 'text' : 'password'}
                 value={apiKeys.anthropic}
                 onChange={(e) => setApiKeys({ ...apiKeys, anthropic: e.target.value })}
-                className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                className="w-full px-4 py-2 pr-12 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent font-mono text-sm"
                 placeholder="sk-ant-api03-xxxxxxxxxxxxxxxxxx"
               />
               <button
                 type="button"
                 onClick={() => setShowApiKeys({ ...showApiKeys, anthropic: !showApiKeys.anthropic })}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-slate-400"
               >
                 {showApiKeys.anthropic ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
@@ -271,7 +271,7 @@ export default function AIConfigSection() {
           {/* OpenAI */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
                 OpenAI API Key
               </label>
               <div className="flex items-center gap-2">
@@ -299,13 +299,13 @@ export default function AIConfigSection() {
                 type={showApiKeys.openai ? 'text' : 'password'}
                 value={apiKeys.openai}
                 onChange={(e) => setApiKeys({ ...apiKeys, openai: e.target.value })}
-                className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                className="w-full px-4 py-2 pr-12 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent font-mono text-sm"
                 placeholder="sk-proj-xxxxxxxxxxxxxxxxxx"
               />
               <button
                 type="button"
                 onClick={() => setShowApiKeys({ ...showApiKeys, openai: !showApiKeys.openai })}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-slate-400"
               >
                 {showApiKeys.openai ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
@@ -315,7 +315,7 @@ export default function AIConfigSection() {
           {/* Mistral AI */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
                 Mistral AI API Key (EU - RGPD)
               </label>
               <div className="flex items-center gap-2">
@@ -343,13 +343,13 @@ export default function AIConfigSection() {
                 type={showApiKeys.mistral ? 'text' : 'password'}
                 value={apiKeys.mistral}
                 onChange={(e) => setApiKeys({ ...apiKeys, mistral: e.target.value })}
-                className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                className="w-full px-4 py-2 pr-12 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent font-mono text-sm"
                 placeholder="xxxxxxxxxxxxxxxxxx"
               />
               <button
                 type="button"
                 onClick={() => setShowApiKeys({ ...showApiKeys, mistral: !showApiKeys.mistral })}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-slate-400"
               >
                 {showApiKeys.mistral ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
@@ -362,7 +362,7 @@ export default function AIConfigSection() {
           {/* Ollama */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
                 Ollama URL (optionnel)
               </label>
               <div className="flex items-center gap-2">
@@ -389,7 +389,7 @@ export default function AIConfigSection() {
               type="text"
               value={apiKeys.ollama}
               onChange={(e) => setApiKeys({ ...apiKeys, ollama: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent font-mono text-sm"
               placeholder="http://localhost:11434"
             />
           </div>
@@ -420,12 +420,12 @@ export default function AIConfigSection() {
         </div>
 
         {/* Model Parameters */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 space-y-4">
-          <h3 className="text-xl font-bold text-gray-900">Paramètres du modèle</h3>
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 p-6 space-y-4">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100">Paramètres du modèle</h3>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                 Temperature (créativité)
               </label>
               <input
@@ -437,13 +437,13 @@ export default function AIConfigSection() {
                 onChange={(e) =>
                   setFormData({ ...formData, temperature: parseFloat(e.target.value) })
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
               />
               <p className="text-xs text-gray-500 mt-1">0.0 (précis) - 1.0 (créatif)</p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                 Max Tokens
               </label>
               <input
@@ -455,19 +455,19 @@ export default function AIConfigSection() {
                 onChange={(e) =>
                   setFormData({ ...formData, max_tokens: parseInt(e.target.value) })
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
               />
             </div>
           </div>
         </div>
 
         {/* Thresholds */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 space-y-4">
-          <h3 className="text-xl font-bold text-gray-900">Seuils de confiance</h3>
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 p-6 space-y-4">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100">Seuils de confiance</h3>
 
           <div className="space-y-4">
             <div>
-              <label className="flex items-center justify-between text-sm font-medium text-gray-700 mb-2">
+              <label className="flex items-center justify-between text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                 <span>Détection doublons</span>
                 <span className="text-blue-600">{(formData.duplicate_threshold * 100).toFixed(0)}%</span>
               </label>
@@ -485,7 +485,7 @@ export default function AIConfigSection() {
             </div>
 
             <div>
-              <label className="flex items-center justify-between text-sm font-medium text-gray-700 mb-2">
+              <label className="flex items-center justify-between text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                 <span>Enrichissement</span>
                 <span className="text-blue-600">{(formData.enrichment_threshold * 100).toFixed(0)}%</span>
               </label>
@@ -503,7 +503,7 @@ export default function AIConfigSection() {
             </div>
 
             <div>
-              <label className="flex items-center justify-between text-sm font-medium text-gray-700 mb-2">
+              <label className="flex items-center justify-between text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                 <span>Contrôle qualité</span>
                 <span className="text-blue-600">{(formData.quality_threshold * 100).toFixed(0)}%</span>
               </label>
@@ -523,8 +523,8 @@ export default function AIConfigSection() {
         </div>
 
         {/* Auto-apply */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 space-y-4">
-          <h3 className="text-xl font-bold text-gray-900">Application automatique</h3>
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 p-6 space-y-4">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100">Application automatique</h3>
 
           <div className="flex items-center gap-3">
             <input
@@ -534,16 +534,16 @@ export default function AIConfigSection() {
               onChange={(e) =>
                 setFormData({ ...formData, auto_apply_enabled: e.target.checked })
               }
-              className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              className="h-5 w-5 rounded border-gray-300 dark:border-slate-600 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-400"
             />
-            <label htmlFor="auto-apply" className="text-sm font-medium text-gray-700">
+            <label htmlFor="auto-apply" className="text-sm font-medium text-gray-700 dark:text-slate-300">
               Appliquer automatiquement les suggestions avec haute confiance
             </label>
           </div>
 
           {formData.auto_apply_enabled && (
             <div>
-              <label className="flex items-center justify-between text-sm font-medium text-gray-700 mb-2">
+              <label className="flex items-center justify-between text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                 <span>Seuil d'auto-application</span>
                 <span className="text-blue-600">{(formData.auto_apply_threshold * 100).toFixed(0)}%</span>
               </label>
@@ -566,12 +566,12 @@ export default function AIConfigSection() {
         </div>
 
         {/* Budget & Cache */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 space-y-4">
-          <h3 className="text-xl font-bold text-gray-900">Budget et optimisation</h3>
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 p-6 space-y-4">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100">Budget et optimisation</h3>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                 Budget quotidien (USD)
               </label>
               <input
@@ -583,12 +583,12 @@ export default function AIConfigSection() {
                 onChange={(e) =>
                   setFormData({ ...formData, daily_budget_usd: parseFloat(e.target.value) })
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                 Durée du cache (heures)
               </label>
               <input
@@ -600,7 +600,7 @@ export default function AIConfigSection() {
                 onChange={(e) =>
                   setFormData({ ...formData, cache_ttl_hours: parseInt(e.target.value) })
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
               />
             </div>
           </div>
@@ -611,9 +611,9 @@ export default function AIConfigSection() {
               id="cache-enabled"
               checked={formData.cache_enabled}
               onChange={(e) => setFormData({ ...formData, cache_enabled: e.target.checked })}
-              className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              className="h-5 w-5 rounded border-gray-300 dark:border-slate-600 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-400"
             />
-            <label htmlFor="cache-enabled" className="text-sm font-medium text-gray-700">
+            <label htmlFor="cache-enabled" className="text-sm font-medium text-gray-700 dark:text-slate-300">
               Activer le cache (économise 70-80% des coûts API)
             </label>
           </div>
@@ -624,7 +624,7 @@ export default function AIConfigSection() {
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            className="px-6 py-2 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:bg-slate-800 transition-colors"
           >
             Annuler
           </button>

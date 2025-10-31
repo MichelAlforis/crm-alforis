@@ -32,7 +32,7 @@ export default function AIStatCard({
   return (
     <div
       className={clsx(
-        'relative overflow-hidden rounded-2xl bg-white p-6 shadow-lg transition-all duration-300',
+        'relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-lg transition-all duration-300',
         onClick && 'cursor-pointer hover:shadow-xl hover:scale-105'
       )}
       onClick={onClick}
@@ -44,8 +44,8 @@ export default function AIStatCard({
       <div className="relative z-10">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <p className="text-sm font-medium text-gray-600">{title}</p>
-            <p className="mt-2 text-3xl font-bold text-gray-900">{value}</p>
+            <p className="text-sm font-medium text-gray-600 dark:text-slate-400">{title}</p>
+            <p className="mt-2 text-3xl font-bold text-gray-900 dark:text-slate-100">{value}</p>
             {subtitle && <p className="mt-1 text-xs text-gray-500">{subtitle}</p>}
           </div>
 

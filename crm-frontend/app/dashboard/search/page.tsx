@@ -112,11 +112,11 @@ async function safeText(res: Response) {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mb-8">
-      <h2 className="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide flex items-center gap-2">
+      <h2 className="text-sm font-bold text-gray-700 dark:text-slate-300 mb-3 uppercase tracking-wide flex items-center gap-2">
         <Sparkles className="w-4 h-4 text-blue-500" />
         {title}
       </h2>
-      <div className="divide-y divide-gray-100 rounded-xl border border-gray-200 overflow-hidden bg-white shadow-sm">{children}</div>
+      <div className="divide-y divide-gray-100 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden bg-white dark:bg-slate-900 shadow-sm">{children}</div>
     </section>
   )
 }
@@ -137,12 +137,12 @@ function Row({ item, q }: { item: SearchItem; q: string }) {
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <div className="truncate font-semibold text-gray-900 group-hover:text-blue-900">{highlight(title, q)}</div>
+          <div className="truncate font-semibold text-gray-900 dark:text-slate-100 group-hover:text-blue-900">{highlight(title, q)}</div>
           <ArrowRight className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
         </div>
-        {subtitle && <div className="truncate text-sm text-gray-600 mt-0.5">{highlight(subtitle, q)}</div>}
+        {subtitle && <div className="truncate text-sm text-gray-600 dark:text-slate-400 mt-0.5">{highlight(subtitle, q)}</div>}
       </div>
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 group-hover:bg-blue-100 group-hover:text-blue-700 transition-colors">
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 group-hover:bg-blue-100 group-hover:text-blue-700 transition-colors">
         {LABELS[item.type]}
       </span>
     </a>
@@ -164,7 +164,7 @@ function Tabs({
       'inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200',
       active
         ? 'border-blue-600 text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md'
-        : 'border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400',
+        : 'border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:bg-slate-800 hover:border-gray-400',
     ].join(' ')
 
   const mkHref = (type?: SearchItem['type']) => {
@@ -213,34 +213,34 @@ export default async function Page({
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 mb-4">
             <SearchIcon className="w-8 h-8 text-blue-600" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-3">Recherche Globale</h1>
-          <p className="text-lg text-gray-600">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100 mb-3">Recherche Globale</h1>
+          <p className="text-lg text-gray-600 dark:text-slate-400">
             Recherchez dans vos fournisseurs, investisseurs, contacts, opportunités et KPIs
           </p>
         </header>
 
         <div className="max-w-3xl mx-auto">
-          <div className="rounded-2xl border-2 border-dashed border-gray-300 bg-gradient-to-br from-gray-50 to-blue-50/30 p-8">
+          <div className="rounded-2xl border-2 border-dashed border-gray-300 dark:border-slate-600 bg-gradient-to-br from-gray-50 to-blue-50/30 p-8">
             <div className="flex items-start gap-3 mb-6">
               <Sparkles className="w-5 h-5 text-blue-600 mt-0.5" />
               <div>
-                <p className="font-semibold text-gray-900 mb-2">Exemples de recherche</p>
-                <ul className="space-y-2 text-gray-700">
+                <p className="font-semibold text-gray-900 dark:text-slate-100 mb-2">Exemples de recherche</p>
+                <ul className="space-y-2 text-gray-700 dark:text-slate-300">
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                    <span>Nom d'entreprise : <code className="px-2 py-0.5 bg-white rounded text-sm">Mandarine Gestion</code></span>
+                    <span>Nom d'entreprise : <code className="px-2 py-0.5 bg-white dark:bg-slate-900 rounded text-sm">Mandarine Gestion</code></span>
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                    <span>Nom de contact : <code className="px-2 py-0.5 bg-white rounded text-sm">Michel</code></span>
+                    <span>Nom de contact : <code className="px-2 py-0.5 bg-white dark:bg-slate-900 rounded text-sm">Michel</code></span>
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                    <span>Email : <code className="px-2 py-0.5 bg-white rounded text-sm">contact@example.com</code></span>
+                    <span>Email : <code className="px-2 py-0.5 bg-white dark:bg-slate-900 rounded text-sm">contact@example.com</code></span>
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                    <span>Mots-clés : <code className="px-2 py-0.5 bg-white rounded text-sm">Luxembourg</code>, <code className="px-2 py-0.5 bg-white rounded text-sm">CIO</code></span>
+                    <span>Mots-clés : <code className="px-2 py-0.5 bg-white dark:bg-slate-900 rounded text-sm">Luxembourg</code>, <code className="px-2 py-0.5 bg-white rounded text-sm">CIO</code></span>
                   </li>
                 </ul>
               </div>
@@ -286,14 +286,14 @@ export default async function Page({
       <header className="mb-8">
         <div className="flex items-center gap-3 mb-2">
           <SearchIcon className="w-6 h-6 text-blue-600" />
-          <h1 className="text-2xl font-bold text-gray-900">Résultats pour</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100">Résultats pour</h1>
         </div>
         <div className="flex items-center gap-2 text-3xl font-bold">
           <span className="text-gray-400">«</span>
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{q}</span>
           <span className="text-gray-400">»</span>
         </div>
-        <p className="text-gray-600 mt-2">
+        <p className="text-gray-600 dark:text-slate-400 mt-2">
           {hasAny ? `${ORDER.reduce((sum, t) => sum + (counts[t] || 0), 0)} résultat${ORDER.reduce((sum, t) => sum + (counts[t] || 0), 0) > 1 ? 's' : ''} trouvé${ORDER.reduce((sum, t) => sum + (counts[t] || 0), 0) > 1 ? 's' : ''}` : 'Aucun résultat'}
         </p>
       </header>
@@ -329,11 +329,11 @@ export default async function Page({
 
       {!hasAny && !error && (
         <div className="text-center py-16">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-100 mb-4">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-100 dark:bg-slate-800 mb-4">
             <SearchIcon className="w-10 h-10 text-gray-400" />
           </div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">Aucun résultat trouvé</h3>
-          <p className="text-gray-600 mb-6">
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-slate-100 mb-2">Aucun résultat trouvé</h3>
+          <p className="text-gray-600 dark:text-slate-400 mb-6">
             Essayez d'autres mots-clés ou vérifiez l'orthographe
           </p>
           <div className="inline-flex flex-col gap-2 text-sm text-gray-500">

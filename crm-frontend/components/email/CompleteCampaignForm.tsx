@@ -307,7 +307,7 @@ export const CompleteCampaignForm: React.FC<CompleteCampaignFormProps> = ({
                     Sujet : {selectedTemplate.subject}
                   </p>
                   <div
-                    className="prose prose-sm max-w-none rounded-radius-sm border border-border bg-white p-spacing-sm max-h-60 overflow-y-auto"
+                    className="prose prose-sm max-w-none rounded-radius-sm border border-border bg-white dark:bg-slate-900 p-spacing-sm max-h-60 overflow-y-auto"
                     dangerouslySetInnerHTML={{ __html: selectedTemplate.html_content }}
                   />
                 </div>

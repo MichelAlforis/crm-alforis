@@ -86,7 +86,7 @@ export function RecipientTrackingList({
     }
     return {
       label: '⚪ Envoyé',
-      className: 'bg-gray-100 text-gray-700 border-gray-200',
+      className: 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-700',
     }
   }
 

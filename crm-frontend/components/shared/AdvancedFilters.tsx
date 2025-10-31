@@ -30,7 +30,7 @@ interface AdvancedFiltersProps {
 }
 
 const baseInputClasses =
-  'w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+  'w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400'
 
 export function AdvancedFilters({
   filters,
@@ -111,7 +111,7 @@ export function AdvancedFilters({
                       'inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs cursor-pointer transition',
                       isChecked
                         ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                        : 'border-gray-200 dark:border-slate-700 hover:border-gray-300 dark:border-slate-600 text-gray-600 dark:text-slate-400'
                     )}
                   >
                     <input
@@ -175,7 +175,7 @@ export function AdvancedFilters({
   return (
     <div
       className={clsx(
-        'border border-gray-200 rounded-xl bg-white shadow-sm',
+        'border border-gray-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 shadow-sm',
         className
       )}
     >

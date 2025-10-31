@@ -99,7 +99,7 @@ export default function DashboardV2Page() {
               <Sparkles className="h-6 w-6 text-purple-500 @md:h-8 @md:w-8" />
               Dashboard V2 - Executive
             </h1>
-            <p className="text-fluid-base text-gray-600">
+            <p className="text-fluid-base text-gray-600 dark:text-slate-400">
               Vision stratégique de votre activité en temps réel
             </p>
           </div>
@@ -107,7 +107,7 @@ export default function DashboardV2Page() {
             <select
               value={kpiPeriod}
               onChange={(e) => setKpiPeriod(e.target.value as any)}
-              className="w-full @sm:w-auto rounded-lg border border-gray-300 bg-white px-fluid-3 py-fluid-2 text-fluid-sm focus:outline-none focus:ring-2 focus:ring-bleu min-h-[44px]"
+              className="w-full @sm:w-auto rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-fluid-3 py-fluid-2 text-fluid-sm focus:outline-none focus:ring-2 focus:ring-bleu min-h-[44px]"
             >
               <option value="week">7 jours</option>
               <option value="month">30 jours</option>
@@ -214,7 +214,7 @@ export default function DashboardV2Page() {
           <Briefcase className="h-7 w-7 text-bleu @md:h-8 @md:w-8" />
           Dashboard V2 - Commercial
         </h1>
-        <p className="text-fluid-base text-gray-600">
+        <p className="text-fluid-base text-gray-600 dark:text-slate-400">
           Optimisez votre pipeline et vos actions commerciales
         </p>
       </section>
@@ -269,7 +269,7 @@ export default function DashboardV2Page() {
           <Users className="h-7 w-7 text-vert @md:h-8 @md:w-8" />
           Dashboard V2 - Manager
         </h1>
-        <p className="text-fluid-base text-gray-600">
+        <p className="text-fluid-base text-gray-600 dark:text-slate-400">
           Pilotez la performance de votre équipe
         </p>
       </section>
@@ -336,8 +336,8 @@ export default function DashboardV2Page() {
       {/* View Selector */}
       <Card padding="none" className="@container p-fluid-3 @md:p-fluid-4">
         <div className="flex flex-col @sm:flex-row @sm:items-center @sm:justify-between gap-fluid-3">
-          <div className="flex items-center gap-fluid-2 text-fluid-base text-gray-700">
-            <LayoutIcon className="h-5 w-5 text-gray-600" />
+          <div className="flex items-center gap-fluid-2 text-fluid-base text-gray-700 dark:text-slate-300">
+            <LayoutIcon className="h-5 w-5 text-gray-600 dark:text-slate-400" />
             <span className="font-medium">Vue:</span>
           </div>
           <div className="grid grid-cols-1 gap-fluid-2 @sm:grid-cols-3 w-full @lg:w-auto">
@@ -351,7 +351,7 @@ export default function DashboardV2Page() {
                   className={`flex items-center justify-center gap-2 rounded-lg px-fluid-3 py-fluid-2 text-fluid-sm font-medium transition-all min-h-[44px] ${
                     isActive
                       ? 'bg-bleu text-white shadow-md'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200'
                   }`}
                   title={config.description}
                 >

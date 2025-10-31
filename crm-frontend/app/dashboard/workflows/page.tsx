@@ -209,7 +209,7 @@ export default function WorkflowsPage() {
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-slate-400 dark:hover:text-gray-300"
               >
                 ✕
               </button>
@@ -414,7 +414,7 @@ export default function WorkflowsPage() {
                   <div className="flex items-center gap-2">
                     <a
                       href={`/dashboard/workflows/${workflow.id}`}
-                      className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition"
+                      className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:bg-slate-800 dark:hover:bg-gray-700 rounded transition"
                       title="Voir détails"
                     >
                       <Eye size={18} />
@@ -446,7 +446,7 @@ export default function WorkflowsPage() {
                           ? 'text-gray-300 dark:text-gray-600 cursor-not-allowed'
                           : workflow.status === 'active'
                           ? 'text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20'
-                          : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                          : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:bg-slate-800 dark:hover:bg-gray-700'
                       }`}
                       title={
                         workflow.is_template

@@ -50,7 +50,7 @@ export function DataTableRow<T = any>({
     <tr
       className={clsx(
         'group transition-all duration-200',
-        'hover:bg-gray-50/80 dark:hover:bg-slate-800/50',
+        'hover:bg-gray-50 dark:bg-slate-800/80 dark:hover:bg-slate-800/50',
         isSelected && 'bg-blue-50/50 dark:bg-blue-500/10',
         onClick && 'cursor-pointer'
       )}
@@ -65,7 +65,7 @@ export function DataTableRow<T = any>({
             type="checkbox"
             checked={isSelected}
             onChange={onSelect}
-            className="w-4 h-4 rounded border-gray-300 dark:border-slate-600 text-blue-600 focus:ring-2 focus:ring-blue-500/20 transition-all cursor-pointer"
+            className="w-4 h-4 rounded border-gray-300 dark:border-slate-600 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400/20 transition-all cursor-pointer"
           />
         </td>
       )}
@@ -102,7 +102,7 @@ export function DataTableRow<T = any>({
                       e.stopPropagation()
                       action.onClick(row)
                     }}
-                    className="p-2 rounded-lg text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-slate-200 transition-all"
+                    className="p-2 rounded-lg text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:bg-slate-800 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-slate-200 transition-all"
                     title={action.label}
                   >
                     {Icon && <Icon className="w-4 h-4" />}
@@ -112,7 +112,7 @@ export function DataTableRow<T = any>({
             </div>
           )}
 
-          <button className="p-2 rounded-lg text-gray-400 dark:text-slate-500 opacity-0 group-hover:opacity-100 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-600 dark:hover:text-slate-300 transition-all">
+          <button className="p-2 rounded-lg text-gray-400 dark:text-slate-500 opacity-0 group-hover:opacity-100 hover:bg-gray-100 dark:bg-slate-800 dark:hover:bg-slate-700 hover:text-gray-600 dark:hover:text-slate-300 transition-all">
             <MoreVertical className="w-4 h-4" />
           </button>
         </div>

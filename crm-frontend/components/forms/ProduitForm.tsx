@@ -82,7 +82,7 @@ export function ProduitForm({
 
       <div>
         <div className="flex items-center gap-2 mb-2">
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
             Type de produit *
           </label>
           <HelpTooltip
@@ -107,7 +107,7 @@ export function ProduitForm({
       {showIsinField && (
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
               Code ISIN
             </label>
             <HelpTooltip
@@ -144,11 +144,11 @@ export function ProduitForm({
       </Select>
 
       <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">Description</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">Description</label>
         <textarea
           {...register('description')}
           rows={4}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
           placeholder="Décrivez le produit, ses caractéristiques principales..."
         />
         {errors.description && (

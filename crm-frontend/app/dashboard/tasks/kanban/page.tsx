@@ -29,18 +29,18 @@ function KanbanTaskCard({
     <div
       draggable
       onDragStart={(e) => onDragStart(e, task)}
-      className="group bg-white border border-gray-200 rounded-xl p-4 cursor-grab active:cursor-grabbing hover:shadow-xl hover:border-blue-300 transition-all duration-300 hover:scale-105 active:scale-100 active:rotate-2"
+      className="group bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl p-4 cursor-grab active:cursor-grabbing hover:shadow-xl hover:border-blue-300 transition-all duration-300 hover:scale-105 active:scale-100 active:rotate-2"
     >
       <div className="flex items-start gap-3">
-        <div className="w-8 h-8 flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg border border-gray-200 group-hover:border-blue-300 transition-colors">
+        <div className="w-8 h-8 flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg border border-gray-200 dark:border-slate-700 group-hover:border-blue-300 transition-colors">
           <span className="text-lg">{PRIORITY_EMOJI[task.priority]}</span>
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-gray-900 text-sm mb-1.5 group-hover:text-blue-600 transition-colors line-clamp-2">
+          <h3 className="font-semibold text-gray-900 dark:text-slate-100 text-sm mb-1.5 group-hover:text-blue-600 transition-colors line-clamp-2">
             {task.title}
           </h3>
           {task.description && (
-            <p className="text-xs text-gray-600 line-clamp-2 mb-3 leading-relaxed">{task.description}</p>
+            <p className="text-xs text-gray-600 dark:text-slate-400 line-clamp-2 mb-3 leading-relaxed">{task.description}</p>
           )}
 
           <div className="flex flex-col gap-1.5 text-xs">
@@ -116,11 +116,11 @@ function KanbanColumn({
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
     >
-      <div className="flex items-center justify-between mb-5 pb-3 border-b-2 border-gray-200">
-        <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+      <div className="flex items-center justify-between mb-5 pb-3 border-b-2 border-gray-200 dark:border-slate-700">
+        <h2 className="text-base font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
           {title}
         </h2>
-        <div className="flex items-center justify-center min-w-[28px] h-7 px-2 bg-white/80 backdrop-blur-sm rounded-full text-sm font-bold text-gray-700 border border-gray-200 shadow-sm">
+        <div className="flex items-center justify-center min-w-[28px] h-7 px-2 bg-white dark:bg-slate-900/80 backdrop-blur-sm rounded-full text-sm font-bold text-gray-700 dark:text-slate-300 border border-gray-200 dark:border-slate-700 shadow-sm">
           {count}
         </div>
       </div>
@@ -210,21 +210,21 @@ export default function KanbanPage() {
                   </svg>
                 </div>
                 <div>
-                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Kanban Board</h1>
-                  <p className="text-sm text-gray-600 mt-0.5">Glissez-déposez vos tâches pour changer leur statut</p>
+                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-slate-100">Kanban Board</h1>
+                  <p className="text-sm text-gray-600 dark:text-slate-400 mt-0.5">Glissez-déposez vos tâches pour changer leur statut</p>
                 </div>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-2.5 shadow-sm">
-                <span className="text-sm text-gray-600">Total : </span>
-                <span className="font-bold text-gray-900 text-lg">{total}</span>
+              <div className="bg-white dark:bg-slate-900/80 backdrop-blur-sm border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-2.5 shadow-sm">
+                <span className="text-sm text-gray-600 dark:text-slate-400">Total : </span>
+                <span className="font-bold text-gray-900 dark:text-slate-100 text-lg">{total}</span>
               </div>
 
               <a
                 href="/dashboard/tasks"
-                className="inline-flex items-center gap-2 px-5 py-2.5 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-white hover:border-gray-400 font-medium transition-all shadow-sm hover:shadow"
+                className="inline-flex items-center gap-2 px-5 py-2.5 border-2 border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 rounded-xl hover:bg-white dark:bg-slate-900 hover:border-gray-400 font-medium transition-all shadow-sm hover:shadow"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -242,7 +242,7 @@ export default function KanbanPage() {
             status="todo"
             tasks={todoTasks}
             count={todoTasks.length}
-            color="bg-gradient-to-br from-gray-50 to-slate-50 border-2 border-gray-200 shadow-lg"
+            color="bg-gradient-to-br from-gray-50 to-slate-50 border-2 border-gray-200 dark:border-slate-700 shadow-lg"
             onDrop={handleDrop}
             onDragOver={handleDragOver}
           />
@@ -270,8 +270,8 @@ export default function KanbanPage() {
 
         {/* Quick Add Button */}
         <div className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 flex flex-col gap-3 items-end z-50">
-          <div className="hidden sm:flex bg-white/95 backdrop-blur-sm rounded-xl shadow-xl px-4 py-2.5 text-sm text-gray-700 border border-gray-200 animate-bounce">
-            <kbd className="px-2 py-1 bg-gradient-to-br from-gray-100 to-gray-200 rounded-md text-xs font-mono font-semibold border border-gray-300 shadow-sm">⌘K</kbd>
+          <div className="hidden sm:flex bg-white dark:bg-slate-900/95 backdrop-blur-sm rounded-xl shadow-xl px-4 py-2.5 text-sm text-gray-700 dark:text-slate-300 border border-gray-200 dark:border-slate-700 animate-bounce">
+            <kbd className="px-2 py-1 bg-gradient-to-br from-gray-100 to-gray-200 rounded-md text-xs font-mono font-semibold border border-gray-300 dark:border-slate-600 shadow-sm">⌘K</kbd>
             <span className="ml-2">pour ajouter</span>
           </div>
           <button

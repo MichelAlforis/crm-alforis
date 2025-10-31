@@ -232,11 +232,11 @@ export default function AutofillHITLPage() {
     <div className="p-6 max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-3">
           <Sparkles className="w-8 h-8 text-purple-600" />
           HITL v2 - Validation Suggestions
         </h1>
-        <p className="text-gray-600 mt-2">
+        <p className="text-gray-600 dark:text-slate-400 mt-2">
           Validez en masse les suggestions d'autofill avec enrichissement web
         </p>
       </div>
@@ -270,14 +270,14 @@ export default function AutofillHITLPage() {
       <div className="mb-4 flex gap-2">
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2"
+          className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:bg-slate-800 flex items-center gap-2"
         >
           <Filter className="w-4 h-4" />
           Filtres
         </button>
         <button
           onClick={fetchSuggestions}
-          className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2"
+          className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:bg-slate-800 flex items-center gap-2"
         >
           <RefreshCw className="w-4 h-4" />
           Actualiser
@@ -286,16 +286,16 @@ export default function AutofillHITLPage() {
 
       {/* Filters Panel */}
       {showFilters && (
-        <div className="mb-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+        <div className="mb-4 p-4 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg">
           <div className="grid grid-cols-4 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                 Status
               </label>
               <select
                 value={filters.status || ''}
                 onChange={(e) => setFilters({ ...filters, status: e.target.value || undefined })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg"
               >
                 <option value="">Tous</option>
                 <option value="pending">En attente</option>
@@ -306,7 +306,7 @@ export default function AutofillHITLPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                 Enrichi web
               </label>
               <select
@@ -315,7 +315,7 @@ export default function AutofillHITLPage() {
                   ...filters,
                   web_enriched: e.target.value === '' ? undefined : e.target.value === 'true'
                 })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg"
               >
                 <option value="">Tous</option>
                 <option value="true">Oui</option>
@@ -324,7 +324,7 @@ export default function AutofillHITLPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                 Confidence min
               </label>
               <input
@@ -337,19 +337,19 @@ export default function AutofillHITLPage() {
                   ...filters,
                   min_confidence: e.target.value ? parseFloat(e.target.value) : undefined
                 })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg"
                 placeholder="0.0 - 1.0"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                 Source enrichment
               </label>
               <select
                 value={filters.enrichment_source || ''}
                 onChange={(e) => setFilters({ ...filters, enrichment_source: e.target.value || undefined })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg"
               >
                 <option value="">Toutes</option>
                 <option value="serpapi">SerpAPI</option>
@@ -362,9 +362,9 @@ export default function AutofillHITLPage() {
       )}
 
       {/* Table */}
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg overflow-hidden">
         <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
+          <thead className="bg-gray-50 dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700">
             <tr>
               <th className="px-4 py-3 text-left">
                 <input
@@ -374,11 +374,11 @@ export default function AutofillHITLPage() {
                   className="w-4 h-4"
                 />
               </th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Type</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Données</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Confidence</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Status</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Actions</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-slate-300">Type</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-slate-300">Données</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-slate-300">Confidence</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-slate-300">Status</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-slate-300">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -396,7 +396,7 @@ export default function AutofillHITLPage() {
               </tr>
             ) : (
               suggestions.map((suggestion) => (
-                <tr key={suggestion.id} className="hover:bg-gray-50">
+                <tr key={suggestion.id} className="hover:bg-gray-50 dark:bg-slate-800">
                   <td className="px-4 py-3">
                     <input
                       type="checkbox"
@@ -417,7 +417,7 @@ export default function AutofillHITLPage() {
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <div className="text-sm text-gray-900">
+                    <div className="text-sm text-gray-900 dark:text-slate-100">
                       {Object.entries(suggestion.suggested_data).slice(0, 3).map(([key, value]) => (
                         <div key={key}>
                           <span className="font-medium">{key}:</span> {String(value)}
@@ -468,7 +468,7 @@ export default function AutofillHITLPage() {
                         <Globe className="w-4 h-4" />
                       </button>
                       <button
-                        className="p-1 text-gray-600 hover:bg-gray-50 rounded"
+                        className="p-1 text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:bg-slate-800 rounded"
                         title="Historique"
                       >
                         <History className="w-4 h-4" />
@@ -505,7 +505,7 @@ export default function AutofillHITLPage() {
       </div>
 
       {/* Stats */}
-      <div className="mt-4 text-sm text-gray-600">
+      <div className="mt-4 text-sm text-gray-600 dark:text-slate-400">
         {suggestions.length} suggestion{suggestions.length > 1 ? 's' : ''} •
         {' '}{suggestions.filter(s => s.web_enriched).length} enrichie{suggestions.filter(s => s.web_enriched).length > 1 ? 's' : ''} web
       </div>

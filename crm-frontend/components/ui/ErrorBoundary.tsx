@@ -76,11 +76,11 @@ export class ErrorBoundary extends Component<Props, State> {
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
           <div className="max-w-2xl w-full">
             {/* Card principale */}
-            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden">
               {/* Header avec icône */}
               <div className="bg-gradient-to-r from-red-500 to-rose-600 px-8 py-6">
                 <div className="flex items-center gap-4">
-                  <div className="flex items-center justify-center w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm">
+                  <div className="flex items-center justify-center w-16 h-16 rounded-full bg-white dark:bg-slate-900/20 backdrop-blur-sm">
                     <AlertTriangle className="w-8 h-8 text-white" />
                   </div>
                   <div className="flex-1">
@@ -113,11 +113,11 @@ export class ErrorBoundary extends Component<Props, State> {
 
                 {/* Stack trace (dev only) */}
                 {process.env.NODE_ENV === 'development' && this.state.errorInfo && (
-                  <details className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                    <summary className="font-semibold text-gray-900 cursor-pointer hover:text-gray-700">
+                  <details className="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-4">
+                    <summary className="font-semibold text-gray-900 dark:text-slate-100 cursor-pointer hover:text-gray-700 dark:text-slate-300">
                       Détails techniques (développement)
                     </summary>
-                    <pre className="mt-3 text-xs text-gray-700 overflow-x-auto font-mono bg-white p-3 rounded border border-gray-200">
+                    <pre className="mt-3 text-xs text-gray-700 dark:text-slate-300 overflow-x-auto font-mono bg-white dark:bg-slate-900 p-3 rounded border border-gray-200 dark:border-slate-700">
                       {this.state.errorInfo.componentStack}
                     </pre>
                   </details>
@@ -135,7 +135,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
                   <button
                     onClick={this.handleGoHome}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border-2 border-gray-300 hover:border-gray-400 hover:bg-gray-50 transition-all"
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 font-semibold rounded-lg border-2 border-gray-300 dark:border-slate-600 hover:border-gray-400 hover:bg-gray-50 dark:bg-slate-800 transition-all"
                   >
                     <Home className="w-5 h-5" />
                     Accueil
@@ -143,7 +143,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
                   <button
                     onClick={this.handleReload}
-                    className="sm:w-auto px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-all"
+                    className="sm:w-auto px-6 py-3 bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 font-medium rounded-lg hover:bg-gray-200 transition-all"
                   >
                     Recharger la page
                   </button>
@@ -164,7 +164,7 @@ export class ErrorBoundary extends Component<Props, State> {
             </div>
 
             {/* Footer */}
-            <div className="mt-4 text-center text-sm text-gray-600">
+            <div className="mt-4 text-center text-sm text-gray-600 dark:text-slate-400">
               <p>TPM Finance CRM · Support technique disponible</p>
             </div>
           </div>

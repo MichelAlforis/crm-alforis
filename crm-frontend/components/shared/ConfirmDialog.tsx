@@ -84,7 +84,7 @@ export function ConfirmDialog({
       onClick={handleBackdropClick}
     >
       <div
-        className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 duration-200"
+        className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 duration-200"
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirm-dialog-title"
@@ -98,7 +98,7 @@ export function ConfirmDialog({
           <div className="flex-1 pt-1">
             <h3
               id="confirm-dialog-title"
-              className="text-lg font-semibold text-gray-900 leading-tight"
+              className="text-lg font-semibold text-gray-900 dark:text-slate-100 leading-tight"
             >
               {title}
             </h3>
@@ -109,18 +109,18 @@ export function ConfirmDialog({
         <div className="px-6 pb-6">
           <p
             id="confirm-dialog-description"
-            className="text-sm text-gray-600 leading-relaxed pl-16"
+            className="text-sm text-gray-600 dark:text-slate-400 leading-relaxed pl-16"
           >
             {message}
           </p>
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-end gap-3 px-6 py-4 bg-gray-50 border-t border-gray-100">
+        <div className="flex items-center justify-end gap-3 px-6 py-4 bg-gray-50 dark:bg-slate-800 border-t border-gray-100">
           <button
             onClick={onClose}
             disabled={isLoading}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {cancelText}
           </button>
@@ -133,7 +133,7 @@ export function ConfirmDialog({
               config.confirmButtonText,
               type === 'danger' && 'focus:ring-red-500',
               type === 'warning' && 'focus:ring-orange-500',
-              type === 'info' && 'focus:ring-blue-500',
+              type === 'info' && 'focus:ring-blue-500 dark:focus:ring-blue-400',
               type === 'success' && 'focus:ring-green-500'
             )}
           >

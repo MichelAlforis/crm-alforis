@@ -70,7 +70,7 @@ export function DataTablePagination({
         <button
           onClick={() => onPageChange(clampedCurrentPage - 1)}
           disabled={clampedCurrentPage === 1}
-          className="p-2 rounded-lg border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          className="p-2 rounded-lg border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:bg-slate-800 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
           <ChevronLeft className="w-4 h-4" />
         </button>
@@ -84,7 +84,7 @@ export function DataTablePagination({
               'min-w-[36px] h-9 px-3 text-sm font-medium rounded-lg transition-all',
               page === clampedCurrentPage
                 ? 'bg-blue-600 text-white'
-                : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700',
+                : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:bg-slate-800 dark:hover:bg-slate-700',
               page === '...' && 'cursor-default hover:bg-transparent'
             )}
           >
@@ -95,7 +95,7 @@ export function DataTablePagination({
         <button
           onClick={() => onPageChange(clampedCurrentPage + 1)}
           disabled={clampedCurrentPage === totalPages || totalPages === 0}
-          className="p-2 rounded-lg border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          className="p-2 rounded-lg border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:bg-slate-800 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
           <ChevronRight className="w-4 h-4" />
         </button>

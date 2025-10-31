@@ -116,7 +116,7 @@ export function PWAManager() {
             </p>
             <button
               onClick={handleUpdate}
-              className="w-full bg-white text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              className="w-full bg-white dark:bg-slate-900 text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-md text-sm font-medium transition-colors"
             >
               Mettre à jour maintenant
             </button>

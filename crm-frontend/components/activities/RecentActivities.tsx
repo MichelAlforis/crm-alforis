@@ -32,8 +32,8 @@ const activityColors = {
   email: 'text-purple-600 bg-purple-50',
   reunion: 'text-green-600 bg-green-50',
   dejeuner: 'text-orange-600 bg-orange-50',
-  note: 'text-gray-600 bg-gray-50',
-  autre: 'text-gray-600 bg-gray-50',
+  note: 'text-gray-600 dark:text-slate-400 bg-gray-50 dark:bg-slate-800',
+  autre: 'text-gray-600 dark:text-slate-400 bg-gray-50 dark:bg-slate-800',
 }
 
 export default function RecentActivities({
@@ -121,7 +121,7 @@ export default function RecentActivities({
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white dark:bg-slate-900 rounded-lg shadow p-6">
         <h3 className="text-lg font-semibold mb-4">Dernières interactions</h3>
         <div className="space-y-3">
           {[...Array(3)].map((_, i) => (
@@ -140,7 +140,7 @@ export default function RecentActivities({
 
   if (error) {
     return (
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white dark:bg-slate-900 rounded-lg shadow p-6">
         <h3 className="text-lg font-semibold mb-4">Dernières interactions</h3>
         <div className="text-red-600 text-sm">Erreur: {error}</div>
       </div>
@@ -148,9 +148,9 @@ export default function RecentActivities({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow">
+    <div className="bg-white dark:bg-slate-900 rounded-lg shadow">
       {/* Header */}
-      <div className="p-6 border-b border-gray-200">
+      <div className="p-6 border-b border-gray-200 dark:border-slate-700">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold">Dernières interactions</h3>
           <Link
@@ -176,7 +176,7 @@ export default function RecentActivities({
                   className={`px-3 py-1 rounded-full text-xs font-medium transition-colors flex items-center gap-1 ${
                     isActive
                       ? 'bg-blue-100 text-blue-700 border border-blue-300'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 hover:bg-gray-200'
                   }`}
                 >
                   <Icon className="h-3 w-3" />
@@ -204,7 +204,7 @@ export default function RecentActivities({
               <Link
                 key={activity.id}
                 href={`/dashboard/interactions/${activity.id}`}
-                className="p-4 hover:bg-gray-50 transition-colors flex items-start gap-3 group"
+                className="p-4 hover:bg-gray-50 dark:bg-slate-800 transition-colors flex items-start gap-3 group"
               >
                 {/* Icône */}
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${colorClass}`}>
@@ -213,7 +213,7 @@ export default function RecentActivities({
 
                 {/* Contenu */}
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-medium text-gray-900 group-hover:text-blue-600 transition-colors truncate">
+                  <h4 className="font-medium text-gray-900 dark:text-slate-100 group-hover:text-blue-600 transition-colors truncate">
                     {activity.title}
                   </h4>
 

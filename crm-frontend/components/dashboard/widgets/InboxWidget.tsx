@@ -38,7 +38,7 @@ export function InboxWidget({ limit = 5 }: InboxWidgetProps) {
               <div className="w-10 h-10 bg-gray-200 rounded-full flex-shrink-0" />
               <div className="flex-1 space-y-2">
                 <div className="h-4 bg-gray-200 rounded w-3/4" />
-                <div className="h-3 bg-gray-100 rounded w-1/2" />
+                <div className="h-3 bg-gray-100 dark:bg-slate-800 rounded w-1/2" />
               </div>
             </div>
           ))}
@@ -83,7 +83,7 @@ export function InboxWidget({ limit = 5 }: InboxWidgetProps) {
 
       {interactions.length === 0 ? (
         <div className="text-center py-8 text-gray-500">
-          <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+          <div className="w-12 h-12 bg-gray-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-3">
             <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -143,14 +143,14 @@ function InboxRow({ interaction }: { interaction: Interaction }) {
   return (
     <Link
       href={`/dashboard/inbox?interaction_id=${interaction.id}`}
-      className="flex gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+      className="flex gap-3 p-3 rounded-lg hover:bg-gray-50 dark:bg-slate-800 transition-colors group"
     >
       <div className="w-10 h-10 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center flex-shrink-0">
         <span className="text-lg">{typeIcon}</span>
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2">
-          <p className="text-sm font-medium text-gray-900 line-clamp-1 group-hover:text-blue-600 transition-colors">
+          <p className="text-sm font-medium text-gray-900 dark:text-slate-100 line-clamp-1 group-hover:text-blue-600 transition-colors">
             {interaction.title}
           </p>
           {urgencyInfo && (

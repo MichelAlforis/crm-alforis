@@ -140,7 +140,7 @@ export default function FileUpload({
         className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
           dragActive
             ? 'border-blue-500 bg-blue-50'
-            : 'border-gray-300 hover:border-gray-400'
+            : 'border-gray-300 dark:border-slate-600 hover:border-gray-400'
         } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -159,7 +159,7 @@ export default function FileUpload({
         />
 
         <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-        <p className="text-sm text-gray-600 mb-2">
+        <p className="text-sm text-gray-600 dark:text-slate-400 mb-2">
           Glissez-déposez vos fichiers ici ou cliquez pour sélectionner
         </p>
         <p className="text-xs text-gray-500">
@@ -173,13 +173,13 @@ export default function FileUpload({
       {/* Liste des fichiers */}
       {files.length > 0 && (
         <div className="space-y-2">
-          <h4 className="text-sm font-medium text-gray-700">
+          <h4 className="text-sm font-medium text-gray-700 dark:text-slate-300">
             Fichiers sélectionnés ({files.length})
           </h4>
           {files.map((uploadedFile) => (
             <div
               key={uploadedFile.id}
-              className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200"
+              className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700"
             >
               {uploadedFile.preview ? (
                 <img
@@ -192,7 +192,7 @@ export default function FileUpload({
               )}
 
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 truncate">
+                <p className="text-sm font-medium text-gray-900 dark:text-slate-100 truncate">
                   {uploadedFile.file.name}
                 </p>
                 <p className="text-xs text-gray-500">

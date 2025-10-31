@@ -15,7 +15,7 @@ import { apiClient } from '@/lib/api'
 import type { EmailCampaign } from '@/lib/types'
 
 const STATUS_COLORS = {
-  draft: 'bg-gray-100 text-gray-700',
+  draft: 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300',
   scheduled: 'bg-blue-100 text-blue-700',
   sending: 'bg-orange-100 text-orange-700',
   sent: 'bg-green-100 text-green-700',
@@ -160,7 +160,7 @@ export default function CampaignsPage() {
       priority: 'high',
       minWidth: '120px',
       render: (value: string) => (
-        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[value as keyof typeof STATUS_COLORS] || 'bg-gray-100 text-gray-700'}`}>
+        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[value as keyof typeof STATUS_COLORS] || 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300'}`}>
           {STATUS_LABELS[value as keyof typeof STATUS_LABELS] || value}
         </span>
       ),
@@ -279,11 +279,11 @@ export default function CampaignsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-text-tertiary">Brouillons</p>
-                <p className="text-3xl font-bold text-gray-700 mt-1">{stats.draft}</p>
+                <p className="text-3xl font-bold text-gray-700 dark:text-slate-300 mt-1">{stats.draft}</p>
                 <p className="text-xs text-text-secondary mt-1">À terminer</p>
               </div>
-              <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
-                <Clock className="w-6 h-6 text-gray-600" />
+              <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center">
+                <Clock className="w-6 h-6 text-gray-600 dark:text-slate-400" />
               </div>
             </div>
           </CardBody>

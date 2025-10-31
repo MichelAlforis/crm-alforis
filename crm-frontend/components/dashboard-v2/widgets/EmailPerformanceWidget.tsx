@@ -116,7 +116,7 @@ export function EmailPerformanceWidget({
               <p className="text-fluid-2xl font-bold text-bleu">
                 {data.total_sent.toLocaleString()}
               </p>
-              <p className="text-fluid-sm text-gray-600">Emails envoyés</p>
+              <p className="text-fluid-sm text-gray-600 dark:text-slate-400">Emails envoyés</p>
             </div>
           </div>
         </div>
@@ -127,7 +127,7 @@ export function EmailPerformanceWidget({
           <div className="rounded-lg border border-green-200 bg-green-50 p-fluid-3 text-center">
             <CheckCircle className="mx-auto mb-1 h-6 w-6 text-green-600" />
             <p className="text-fluid-xl font-bold text-green-700">{data.delivery_rate}%</p>
-            <p className="text-fluid-xs text-gray-600">Délivrés</p>
+            <p className="text-fluid-xs text-gray-600 dark:text-slate-400">Délivrés</p>
             <p className="mt-1 text-fluid-xs text-gray-500">{data.delivered}</p>
           </div>
 
@@ -135,7 +135,7 @@ export function EmailPerformanceWidget({
           <div className="rounded-lg border border-blue-200 bg-blue-50 p-fluid-3 text-center">
             <Mail className="mx-auto mb-1 h-6 w-6 text-blue-600" />
             <p className="text-fluid-xl font-bold text-blue-700">{data.open_rate}%</p>
-            <p className="text-fluid-xs text-gray-600">Ouverts</p>
+            <p className="text-fluid-xs text-gray-600 dark:text-slate-400">Ouverts</p>
             <p className="mt-1 text-fluid-xs text-gray-500">{data.opened}</p>
           </div>
 
@@ -143,7 +143,7 @@ export function EmailPerformanceWidget({
           <div className="rounded-lg border border-purple-200 bg-purple-50 p-fluid-3 text-center">
             <MousePointer className="mx-auto mb-1 h-6 w-6 text-purple-600" />
             <p className="text-fluid-xl font-bold text-purple-700">{data.click_rate}%</p>
-            <p className="text-fluid-xs text-gray-600">Cliqués</p>
+            <p className="text-fluid-xs text-gray-600 dark:text-slate-400">Cliqués</p>
             <p className="mt-1 text-fluid-xs text-gray-500">{data.clicked}</p>
           </div>
         </div>
@@ -162,23 +162,23 @@ export function EmailPerformanceWidget({
         )}
 
         {/* Benchmark indicators */}
-        <div className="border-t border-gray-200 pt-fluid-2">
+        <div className="border-t border-gray-200 dark:border-slate-700 pt-fluid-2">
           <p className="mb-fluid-2 text-fluid-xs text-gray-500">Benchmarks moyens:</p>
           <div className="grid grid-cols-1 gap-fluid-1 text-fluid-xs @sm:grid-cols-3">
             <div>
-              <span className="text-gray-600">Délivr:</span>{' '}
+              <span className="text-gray-600 dark:text-slate-400">Délivr:</span>{' '}
               <span className={data.delivery_rate >= 95 ? 'font-medium text-green-600' : 'text-orange-600'}>
                 95%+
               </span>
             </div>
             <div>
-              <span className="text-gray-600">Ouv:</span>{' '}
+              <span className="text-gray-600 dark:text-slate-400">Ouv:</span>{' '}
               <span className={data.open_rate >= 20 ? 'font-medium text-green-600' : 'text-orange-600'}>
                 20%+
               </span>
             </div>
             <div>
-              <span className="text-gray-600">Clic:</span>{' '}
+              <span className="text-gray-600 dark:text-slate-400">Clic:</span>{' '}
               <span className={data.click_rate >= 3 ? 'font-medium text-green-600' : 'text-orange-600'}>
                 3%+
               </span>

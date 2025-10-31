@@ -35,7 +35,7 @@ export function DataTableHeader({
               type="checkbox"
               checked={isAllSelected}
               onChange={onSelectAll}
-              className="w-4 h-4 rounded border-gray-300 dark:border-slate-600 text-blue-600 focus:ring-2 focus:ring-blue-500/20 transition-all cursor-pointer"
+              className="w-4 h-4 rounded border-gray-300 dark:border-slate-600 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400/20 transition-all cursor-pointer"
             />
           </th>
         )}
@@ -50,7 +50,7 @@ export function DataTableHeader({
               key={column.id}
               className={clsx(
                 'px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-slate-300 uppercase tracking-wider',
-                column.sortable && 'cursor-pointer select-none hover:bg-gray-100 dark:hover:bg-slate-800/50 transition-colors',
+                column.sortable && 'cursor-pointer select-none hover:bg-gray-100 dark:bg-slate-800 dark:hover:bg-slate-800/50 transition-colors',
                 column.width && `w-[${column.width}]`,
                 column.minWidth && `min-w-[${column.minWidth}]`
               )}

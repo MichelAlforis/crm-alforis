@@ -115,7 +115,7 @@ export function PWAInstallPrompt() {
             </div>
             <button
               onClick={handleDismiss}
-              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              className="text-gray-400 hover:text-gray-600 dark:text-slate-400 dark:hover:text-gray-300 transition-colors"
               aria-label="Fermer"
             >
               <X className="w-4 h-4" />
@@ -149,7 +149,7 @@ export function PWAInstallPrompt() {
             </div>
             <button
               onClick={handleDismiss}
-              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              className="text-gray-400 hover:text-gray-600 dark:text-slate-400 dark:hover:text-gray-300 transition-colors"
               aria-label="Fermer"
             >
               <X className="w-4 h-4" />
@@ -170,7 +170,7 @@ export function PWAInstallPrompt() {
             </button>
             <button
               onClick={handleDismiss}
-              className="px-4 py-2 rounded-md text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className="px-4 py-2 rounded-md text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:bg-slate-800 dark:hover:bg-gray-700 transition-colors"
             >
               Plus tard
             </button>

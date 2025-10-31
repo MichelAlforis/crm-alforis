@@ -96,7 +96,7 @@ export default function UsersPage() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold text-ardoise">Gestion des utilisateurs</h1>
-          <p className="text-gray-600 mt-1">Créer, modifier et supprimer des comptes utilisateurs</p>
+          <p className="text-gray-600 dark:text-slate-400 mt-1">Créer, modifier et supprimer des comptes utilisateurs</p>
         </div>
         <Button onClick={handleOpenCreate} className="flex items-center gap-2">
           <Plus className="w-4 h-4" />
@@ -105,7 +105,7 @@ export default function UsersPage() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg shadow p-4 mb-6">
+      <div className="bg-white dark:bg-slate-900 rounded-lg shadow p-4 mb-6">
         <div className="flex gap-4 items-center">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -114,15 +114,15 @@ export default function UsersPage() {
               placeholder="Rechercher par email, nom..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bleu focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-bleu focus:border-transparent"
             />
           </div>
-          <label className="flex items-center gap-2 text-sm text-gray-700">
+          <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-slate-300">
             <input
               type="checkbox"
               checked={includeInactive}
               onChange={(e) => setIncludeInactive(e.target.checked)}
-              className="rounded border-gray-300 text-bleu focus:ring-bleu"
+              className="rounded border-gray-300 dark:border-slate-600 text-bleu focus:ring-bleu"
             />
             Inclure utilisateurs inactifs
           </label>
@@ -130,14 +130,14 @@ export default function UsersPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-lg shadow overflow-hidden">
         {isLoading ? (
           <div className="p-8 text-center text-gray-500">Chargement...</div>
         ) : !data || data.items.length === 0 ? (
           <div className="p-8 text-center text-gray-500">Aucun utilisateur trouvé</div>
         ) : (
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 dark:bg-slate-800">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Utilisateur
@@ -159,16 +159,16 @@ export default function UsersPage() {
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white dark:bg-slate-900 divide-y divide-gray-200">
               {data.items.map((user) => (
-                <tr key={user.id} className={!user.is_active ? 'bg-gray-50 opacity-60' : ''}>
+                <tr key={user.id} className={!user.is_active ? 'bg-gray-50 dark:bg-slate-800 opacity-60' : ''}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="flex-shrink-0 h-10 w-10 bg-bleu text-white rounded-full flex items-center justify-center font-semibold">
                         {user.full_name?.charAt(0) || user.email.charAt(0).toUpperCase()}
                       </div>
                       <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
+                        <div className="text-sm font-medium text-gray-900 dark:text-slate-100">
                           {user.full_name || user.username || 'Sans nom'}
                         </div>
                         {user.username && (
@@ -177,7 +177,7 @@ export default function UsersPage() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-slate-100">
                     {user.email}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -186,7 +186,7 @@ export default function UsersPage() {
                         ? 'bg-purple-100 text-purple-800'
                         : user.role_name
                           ? 'bg-blue-100 text-blue-800'
-                          : 'bg-gray-100 text-gray-800'
+                          : 'bg-gray-100 dark:bg-slate-800 text-gray-800'
                     }`}>
                       {user.is_superuser ? 'Superuser' : user.role_name || 'Aucun'}
                     </span>
@@ -238,7 +238,7 @@ export default function UsersPage() {
 
       {/* Stats */}
       {data && (
-        <div className="mt-4 text-sm text-gray-600">
+        <div className="mt-4 text-sm text-gray-600 dark:text-slate-400">
           {data.total} utilisateur{data.total > 1 ? 's' : ''} au total
         </div>
       )}
@@ -246,14 +246,14 @@ export default function UsersPage() {
       {/* Modal Création/Édition */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+          <div className="bg-white dark:bg-slate-900 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700 px-6 py-4 flex justify-between items-center">
               <h2 className="text-2xl font-bold text-ardoise">
                 {editingUser ? 'Modifier l\'utilisateur' : 'Nouvel utilisateur'}
               </h2>
               <button
                 onClick={handleCloseModal}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-gray-400 hover:text-gray-600 dark:text-slate-400 transition-colors"
               >
                 <X className="w-6 h-6" />
               </button>

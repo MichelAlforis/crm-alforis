@@ -39,7 +39,7 @@ function getConfidenceColor(confidence: number): string {
   if (confidence >= 0.9) return 'bg-green-50 border-green-200 text-green-700'
   if (confidence >= 0.75) return 'bg-blue-50 border-blue-200 text-blue-700'
   if (confidence >= 0.5) return 'bg-yellow-50 border-yellow-200 text-yellow-700'
-  return 'bg-gray-50 border-gray-200 text-gray-600'
+  return 'bg-gray-50 dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400'
 }
 
 /**
@@ -165,7 +165,7 @@ export function SuggestionPill({
               <button
                 type="button"
                 onClick={onAccept}
-                className="p-1.5 hover:bg-white/50 rounded transition-colors"
+                className="p-1.5 hover:bg-white dark:bg-slate-900/50 rounded transition-colors"
                 aria-label="Accepter la suggestion (Enter)"
               >
                 <Check className="w-4 h-4" />
@@ -181,7 +181,7 @@ export function SuggestionPill({
               <button
                 type="button"
                 onClick={onReject}
-                className="p-1.5 hover:bg-white/50 rounded transition-colors"
+                className="p-1.5 hover:bg-white dark:bg-slate-900/50 rounded transition-colors"
                 aria-label="Rejeter la suggestion (Esc)"
               >
                 <X className="w-4 h-4" />

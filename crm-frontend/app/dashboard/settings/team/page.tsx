@@ -55,25 +55,25 @@ export default function TeamSettingsPage() {
       <div>
         <Link
           href="/dashboard/settings"
-          className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 mb-4"
+          className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white dark:text-slate-100 mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Retour aux paramètres
         </Link>
 
-        <h1 className="text-3xl font-bold text-gray-900">Équipe & Facturation</h1>
-        <p className="text-gray-600 mt-2">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Équipe & Facturation</h1>
+        <p className="text-gray-600 dark:text-slate-400 mt-2">
           Gérez votre abonnement, votre équipe et vos factures
         </p>
       </div>
 
       {/* Abonnement & Facturation */}
-      <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+      <section className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-3">
             <CreditCard className="h-6 w-6 text-sky-500" />
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
                 Abonnement &amp; facturation
               </h2>
               <p className="text-sm text-gray-500">
@@ -88,21 +88,21 @@ export default function TeamSettingsPage() {
         </div>
 
         <div className="mt-6 grid gap-6 lg:grid-cols-3">
-          <div className="rounded-xl border border-gray-100 bg-gray-50 px-4 py-4">
+          <div className="rounded-xl border border-gray-100 bg-gray-50 dark:bg-slate-800 px-4 py-4">
             <p className="text-xs font-semibold uppercase text-gray-500">
               Prochaine facture
             </p>
-            <p className="mt-2 text-lg font-semibold text-gray-900">
+            <p className="mt-2 text-lg font-semibold text-gray-900 dark:text-slate-100">
               {billingSummary.amount}
             </p>
             <p className="text-sm text-gray-500">{billingSummary.nextInvoice}</p>
           </div>
 
-          <div className="rounded-xl border border-gray-100 bg-gray-50 px-4 py-4">
+          <div className="rounded-xl border border-gray-100 bg-gray-50 dark:bg-slate-800 px-4 py-4">
             <p className="text-xs font-semibold uppercase text-gray-500">
               Licences utilisées
             </p>
-            <p className="mt-2 text-lg font-semibold text-gray-900">
+            <p className="mt-2 text-lg font-semibold text-gray-900 dark:text-slate-100">
               {billingSummary.seatsUsed}/{billingSummary.seatsTotal}
             </p>
             <div className="mt-3 h-2 w-full rounded-full bg-gray-200">
@@ -121,11 +121,11 @@ export default function TeamSettingsPage() {
             </p>
           </div>
 
-          <div className="rounded-xl border border-gray-100 bg-gray-50 px-4 py-4">
+          <div className="rounded-xl border border-gray-100 bg-gray-50 dark:bg-slate-800 px-4 py-4">
             <p className="text-xs font-semibold uppercase text-gray-500">
               Moyen de paiement
             </p>
-            <p className="mt-2 text-sm font-semibold text-gray-900">
+            <p className="mt-2 text-sm font-semibold text-gray-900 dark:text-slate-100">
               Carte • **** 8421
             </p>
             <p className="text-xs text-gray-500">
@@ -133,7 +133,7 @@ export default function TeamSettingsPage() {
             </p>
             <button
               onClick={() => alert('La mise à jour du moyen de paiement sera disponible avec Stripe.')}
-              className="mt-3 inline-flex items-center rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
+              className="mt-3 inline-flex items-center rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-slate-300 transition hover:border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:bg-slate-800"
             >
               Mettre à jour
             </button>
@@ -155,11 +155,11 @@ export default function TeamSettingsPage() {
       </section>
 
       {/* Équipe & Accès */}
-      <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+      <section className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
         <div className="flex items-center gap-3">
           <Users className="h-6 w-6 text-rose-500" />
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
               Équipe &amp; accès
             </h2>
             <p className="text-sm text-gray-500">
@@ -177,7 +177,7 @@ export default function TeamSettingsPage() {
                 className="flex items-center justify-between gap-4 rounded-xl border border-gray-100 px-4 py-3 transition hover:border-rose-200 hover:bg-rose-50/40"
               >
                 <div>
-                  <p className="text-sm font-semibold text-gray-900">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-slate-100">
                     {member.name}
                   </p>
                   <p className="text-xs text-gray-500">{member.role}</p>
@@ -186,7 +186,7 @@ export default function TeamSettingsPage() {
                   className={`rounded-full px-3 py-1 text-xs font-semibold ${
                     member.status === 'Actif'
                       ? 'bg-emerald-50 text-emerald-600'
-                      : 'bg-gray-100 text-gray-600'
+                      : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400'
                   }`}
                 >
                   {member.status}
@@ -195,8 +195,8 @@ export default function TeamSettingsPage() {
             ))}
           </div>
 
-          <aside className="rounded-xl border border-gray-100 bg-gray-50 p-4">
-            <h3 className="text-sm font-semibold text-gray-900">
+          <aside className="rounded-xl border border-gray-100 bg-gray-50 dark:bg-slate-800 p-4">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-slate-100">
               Invitations en cours
             </h3>
             <p className="mt-1 text-xs text-gray-500">
@@ -205,14 +205,14 @@ export default function TeamSettingsPage() {
 
             <div className="mt-4 space-y-3">
               {pendingInvites.length === 0 ? (
-                <p className="rounded-lg bg-white px-3 py-2 text-xs text-gray-500">
+                <p className="rounded-lg bg-white dark:bg-slate-900 px-3 py-2 text-xs text-gray-500">
                   Aucune invitation en attente.
                 </p>
               ) : (
                 pendingInvites.map((invite) => (
                   <div
                     key={invite.email}
-                    className="rounded-lg bg-white px-3 py-2 text-xs text-gray-700"
+                    className="rounded-lg bg-white dark:bg-slate-900 px-3 py-2 text-xs text-gray-700 dark:text-slate-300"
                   >
                     <p className="font-medium">{invite.email}</p>
                     <p className="text-[11px] text-gray-500">{invite.sentAt}</p>
@@ -240,17 +240,17 @@ export default function TeamSettingsPage() {
             if (e.target === e.currentTarget) setShowInviteModal(false)
           }}
         >
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl animate-in slide-in-from-bottom duration-300">
-            <h3 className="text-xl font-semibold text-gray-900">
+          <div className="w-full max-w-md rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-xl animate-in slide-in-from-bottom duration-300">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
               Inviter un collaborateur
             </h3>
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-gray-600 dark:text-slate-400">
               Entrez l&apos;adresse email du collaborateur à inviter.
             </p>
             <div className="mt-4">
               <label
                 htmlFor="invite-email"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-700 dark:text-slate-300"
               >
                 Adresse email
               </label>
@@ -266,7 +266,7 @@ export default function TeamSettingsPage() {
                   }
                 }}
                 disabled={isInviting}
-                className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 disabled:bg-gray-50 disabled:cursor-not-allowed"
+                className="mt-2 w-full rounded-lg border border-gray-300 dark:border-slate-600 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 disabled:bg-gray-50 dark:bg-slate-800 disabled:cursor-not-allowed"
                 autoFocus
               />
             </div>
@@ -277,7 +277,7 @@ export default function TeamSettingsPage() {
                   setInviteEmail('')
                 }}
                 disabled={isInviting}
-                className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 transition hover:border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Annuler
               </button>

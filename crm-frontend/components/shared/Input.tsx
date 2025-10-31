@@ -16,7 +16,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="mb-4">
         {label && (
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
             {label}
           </label>
         )}
@@ -32,7 +32,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             className={clsx(
               'w-full py-2 border rounded-lg text-sm transition-colors',
               leftIcon ? 'pl-10 pr-3' : 'px-3',
-              error ? 'border-rouge focus:ring-rouge' : 'border-gray-300 focus:ring-bleu',
+              error ? 'border-rouge focus:ring-rouge' : 'border-gray-300 dark:border-slate-600 focus:ring-bleu',
               'focus:outline-none focus:ring-2'
             )}
           />

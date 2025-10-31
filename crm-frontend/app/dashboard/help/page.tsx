@@ -446,10 +446,10 @@ export default function HelpPage() {
             Centre d&apos;aide
           </span>
         </div>
-        <h1 className="text-4xl font-bold text-gray-900">
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-slate-100">
           Comment pouvons-nous vous aider ?
         </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <p className="text-lg text-gray-600 dark:text-slate-400 max-w-2xl mx-auto">
           Trouvez rapidement des réponses à vos questions ou contactez notre équipe support
         </p>
       </header>
@@ -463,14 +463,14 @@ export default function HelpPage() {
             placeholder="Rechercher dans la documentation..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-xl border border-gray-200 bg-white pl-12 pr-4 py-4 text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 shadow-sm"
+            className="w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 pl-12 pr-4 py-4 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 shadow-sm"
           />
         </div>
       </div>
 
       {/* Resources Grid */}
       <section>
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-6">
           Ressources populaires
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -483,13 +483,13 @@ export default function HelpPage() {
                 href={resource.link}
                 className={`rounded-xl border ${colors.border} ${colors.bg} p-6 transition hover:shadow-lg hover:scale-105`}
               >
-                <div className={`inline-flex rounded-lg ${colors.icon} p-3 bg-white/80 mb-4`}>
+                <div className={`inline-flex rounded-lg ${colors.icon} p-3 bg-white dark:bg-slate-900/80 mb-4`}>
                   <Icon className="h-6 w-6" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-2">
                   {resource.title}
                 </h3>
-                <p className="text-sm text-gray-600">{resource.description}</p>
+                <p className="text-sm text-gray-600 dark:text-slate-400">{resource.description}</p>
               </a>
             )
           })}
@@ -499,7 +499,7 @@ export default function HelpPage() {
       {/* FAQ Section */}
       <section>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100">
             Questions fréquentes
           </h2>
           <div className="flex gap-2">
@@ -510,7 +510,7 @@ export default function HelpPage() {
                 className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
                   selectedCategory === category
                     ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200'
                 }`}
               >
                 {category}
@@ -521,8 +521,8 @@ export default function HelpPage() {
 
         <div className="space-y-3">
           {filteredFAQs.length === 0 ? (
-            <div className="rounded-xl border border-gray-200 bg-gray-50 p-8 text-center">
-              <p className="text-gray-600">
+            <div className="rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-8 text-center">
+              <p className="text-gray-600 dark:text-slate-400">
                 Aucune question ne correspond à votre recherche.
               </p>
             </div>
@@ -530,17 +530,17 @@ export default function HelpPage() {
             filteredFAQs.map((faq, index) => (
               <div
                 key={index}
-                className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden transition hover:shadow-md"
+                className="rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm overflow-hidden transition hover:shadow-md"
               >
                 <button
                   onClick={() => setExpandedFAQ(expandedFAQ === index ? null : index)}
-                  className="w-full flex items-center justify-between gap-4 p-5 text-left hover:bg-gray-50 transition"
+                  className="w-full flex items-center justify-between gap-4 p-5 text-left hover:bg-gray-50 dark:bg-slate-800 transition"
                 >
                   <div className="flex-1">
                     <span className="inline-block text-xs font-semibold uppercase tracking-wide text-blue-600 mb-1">
                       {faq.category}
                     </span>
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">
                       {faq.question}
                     </h3>
                   </div>
@@ -551,7 +551,7 @@ export default function HelpPage() {
                   )}
                 </button>
                 {expandedFAQ === index && (
-                  <div className="px-5 pb-5 text-gray-600 border-t border-gray-100 pt-4">
+                  <div className="px-5 pb-5 text-gray-600 dark:text-slate-400 border-t border-gray-100 pt-4">
                     {faq.answer}
                   </div>
                 )}
@@ -562,16 +562,16 @@ export default function HelpPage() {
       </section>
 
       {/* Contact Support */}
-      <section id="support" className="rounded-2xl border border-gray-200 bg-gradient-to-br from-blue-50 to-indigo-50 p-8">
+      <section id="support" className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-gradient-to-br from-blue-50 to-indigo-50 p-8">
         <div className="flex justify-center mb-4">
           <div className="inline-flex rounded-full bg-blue-100 p-4">
             <Mail className="h-8 w-8 text-blue-600" />
           </div>
         </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2 text-center">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-2 text-center">
           Vous ne trouvez pas ce que vous cherchez ?
         </h2>
-        <p className="text-gray-600 mb-6 max-w-xl mx-auto text-center">
+        <p className="text-gray-600 dark:text-slate-400 mb-6 max-w-xl mx-auto text-center">
           Notre équipe support est disponible du lundi au vendredi de 9h à 18h pour répondre à toutes vos questions
         </p>
 
@@ -579,11 +579,11 @@ export default function HelpPage() {
           {/* Email */}
           <a
             href="mailto:support@alforis.fr"
-            className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition"
+            className="flex flex-col items-center gap-2 p-4 bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:shadow-md transition"
           >
             <Mail className="h-6 w-6 text-blue-600" />
-            <span className="font-semibold text-gray-900">Email</span>
-            <span className="text-sm text-gray-600">support@alforis.fr</span>
+            <span className="font-semibold text-gray-900 dark:text-slate-100">Email</span>
+            <span className="text-sm text-gray-600 dark:text-slate-400">support@alforis.fr</span>
             <span className="text-xs text-gray-500">Réponse sous 24h</span>
           </a>
 
@@ -595,11 +595,11 @@ export default function HelpPage() {
                 ;(window as any).$crisp.push(['do', 'chat:open'])
               }
             }}
-            className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition"
+            className="flex flex-col items-center gap-2 p-4 bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:shadow-md transition"
           >
             <MessageCircle className="h-6 w-6 text-green-600" />
-            <span className="font-semibold text-gray-900">Chat en direct</span>
-            <span className="text-sm text-gray-600">Assistance immédiate</span>
+            <span className="font-semibold text-gray-900 dark:text-slate-100">Chat en direct</span>
+            <span className="text-sm text-gray-600 dark:text-slate-400">Assistance immédiate</span>
             <span className="inline-flex items-center gap-1 text-xs">
               <span className="h-2 w-2 bg-green-500 rounded-full animate-pulse" />
               <span className="text-green-700 font-medium">En ligne</span>
@@ -609,16 +609,16 @@ export default function HelpPage() {
           {/* Téléphone */}
           <a
             href="tel:+33123456789"
-            className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition"
+            className="flex flex-col items-center gap-2 p-4 bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:shadow-md transition"
           >
             <Phone className="h-6 w-6 text-purple-600" />
-            <span className="font-semibold text-gray-900">Téléphone</span>
-            <span className="text-sm text-gray-600">01 23 45 67 89</span>
+            <span className="font-semibold text-gray-900 dark:text-slate-100">Téléphone</span>
+            <span className="text-sm text-gray-600 dark:text-slate-400">01 23 45 67 89</span>
             <span className="text-xs text-gray-500">Lun-Ven 9h-18h</span>
           </a>
         </div>
 
-        <div className="text-center text-sm text-gray-600">
+        <div className="text-center text-sm text-gray-600 dark:text-slate-400">
           Pour les urgences techniques, contactez-nous à{' '}
           <a href="mailto:support-urgent@alforis.fr" className="text-blue-600 hover:underline font-medium">
             support-urgent@alforis.fr

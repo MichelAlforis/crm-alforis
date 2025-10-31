@@ -437,7 +437,7 @@ export default function EmailCampaignDetailPage() {
                       <div>
                         <Label className="text-sm font-medium">Corps de l'email</Label>
                         <div
-                          className="mt-1 p-4 bg-white border rounded-lg overflow-auto max-h-96"
+                          className="mt-1 p-4 bg-white dark:bg-slate-900 border rounded-lg overflow-auto max-h-96"
                           dangerouslySetInnerHTML={{ __html: currentPreview.body_html }}
                         />
                       </div>

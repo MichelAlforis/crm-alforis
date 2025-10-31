@@ -106,7 +106,7 @@ export default function InteractionComposerInline({
         placeholder="Titre de l'interaction..."
         required
         maxLength={200}
-        className="w-full px-3 py-2 mb-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+        className="w-full px-3 py-2 mb-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 dark:bg-gray-700 dark:text-white"
       />
 
       {/* Description */}
@@ -115,7 +115,7 @@ export default function InteractionComposerInline({
         onChange={(e) => setBody(e.target.value)}
         placeholder="Description (optionnel)..."
         rows={2}
-        className="w-full px-3 py-2 mb-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white resize-none"
+        className="w-full px-3 py-2 mb-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 dark:bg-gray-700 dark:text-white resize-none"
       />
 
       {/* Submit */}

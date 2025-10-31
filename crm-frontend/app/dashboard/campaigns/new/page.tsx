@@ -76,11 +76,11 @@ export default function NewCampaignPage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
               <Mail className="w-6 h-6 text-bleu" />
               Nouvelle Campagne Email
             </h1>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-gray-600 dark:text-slate-400 mt-1">
               Créez une campagne complète avec template et destinataires
             </p>
           </div>

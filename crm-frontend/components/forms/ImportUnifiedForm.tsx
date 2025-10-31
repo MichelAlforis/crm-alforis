@@ -322,14 +322,14 @@ export default function ImportUnifiedForm() {
             <div className="flex gap-2">
               <button
                 onClick={() => downloadTemplate('organisations')}
-                className="text-xs bg-white hover:bg-blue-50 text-blue-700 px-3 py-1.5 rounded border border-blue-300 transition-colors flex items-center gap-1"
+                className="text-xs bg-white dark:bg-slate-900 hover:bg-blue-50 text-blue-700 px-3 py-1.5 rounded border border-blue-300 transition-colors flex items-center gap-1"
               >
                 <Download className="w-3 h-3" />
                 Template Organisations
               </button>
               <button
                 onClick={() => downloadTemplate('people')}
-                className="text-xs bg-white hover:bg-blue-50 text-blue-700 px-3 py-1.5 rounded border border-blue-300 transition-colors flex items-center gap-1"
+                className="text-xs bg-white dark:bg-slate-900 hover:bg-blue-50 text-blue-700 px-3 py-1.5 rounded border border-blue-300 transition-colors flex items-center gap-1"
               >
                 <Download className="w-3 h-3" />
                 Template Personnes
@@ -362,7 +362,7 @@ export default function ImportUnifiedForm() {
         {/* Organisations */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+            <h3 className="font-semibold text-gray-900 dark:text-slate-100 flex items-center gap-2">
               <FileText className="w-4 h-4" />
               Organisations
             </h3>
@@ -373,7 +373,7 @@ export default function ImportUnifiedForm() {
               </span>
             )}
           </div>
-          <div className="border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 transition-colors">
+          <div className="border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg hover:border-blue-400 transition-colors">
             <label className="cursor-pointer block p-6 text-center">
               <input
                 type="file"
@@ -396,7 +396,7 @@ export default function ImportUnifiedForm() {
                   <p className="text-xs text-gray-500 mt-1">Cliquez pour changer</p>
                 </div>
               ) : (
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-gray-600 dark:text-slate-400">
                   <p className="font-medium text-blue-600">Cliquez pour sélectionner</p>
                   <p className="text-xs mt-1">ou glissez-déposez votre fichier CSV</p>
                 </div>
@@ -411,7 +411,7 @@ export default function ImportUnifiedForm() {
         {/* People */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+            <h3 className="font-semibold text-gray-900 dark:text-slate-100 flex items-center gap-2">
               <FileText className="w-4 h-4" />
               Personnes
             </h3>
@@ -422,7 +422,7 @@ export default function ImportUnifiedForm() {
               </span>
             )}
           </div>
-          <div className="border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 transition-colors">
+          <div className="border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg hover:border-blue-400 transition-colors">
             <label className="cursor-pointer block p-6 text-center">
               <input
                 type="file"
@@ -445,7 +445,7 @@ export default function ImportUnifiedForm() {
                   <p className="text-xs text-gray-500 mt-1">Cliquez pour changer</p>
                 </div>
               ) : (
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-gray-600 dark:text-slate-400">
                   <p className="font-medium text-blue-600">Cliquez pour sélectionner</p>
                   <p className="text-xs mt-1">ou glissez-déposez votre fichier CSV</p>
                 </div>
@@ -505,7 +505,7 @@ export default function ImportUnifiedForm() {
               setShowResult(false);
               setValidationErrors([]);
             }}
-            className="px-6 bg-gray-200 hover:bg-gray-300 text-gray-700"
+            className="px-6 bg-gray-200 hover:bg-gray-300 text-gray-700 dark:text-slate-300"
           >
             Réinitialiser
           </Button>
@@ -556,15 +556,15 @@ export default function ImportUnifiedForm() {
       )}
 
       {/* Guide */}
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-        <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+      <div className="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-4">
+        <h4 className="font-semibold text-gray-900 dark:text-slate-100 mb-3 flex items-center gap-2">
           <FileText className="w-4 h-4" />
           Format CSV attendu
         </h4>
         <div className="grid md:grid-cols-2 gap-4 text-xs">
-          <div className="bg-white rounded p-3 border">
+          <div className="bg-white dark:bg-slate-900 rounded p-3 border">
             <p className="font-semibold text-gray-800 mb-2">Organisations (requis):</p>
-            <ul className="space-y-1 text-gray-600">
+            <ul className="space-y-1 text-gray-600 dark:text-slate-400">
               <li><span className="font-medium text-red-600">name*</span> - Nom de l'organisation</li>
               <li>email - Email principal</li>
               <li>phone - Téléphone</li>
@@ -573,9 +573,9 @@ export default function ImportUnifiedForm() {
               <li>country - Pays (code ISO)</li>
             </ul>
           </div>
-          <div className="bg-white rounded p-3 border">
+          <div className="bg-white dark:bg-slate-900 rounded p-3 border">
             <p className="font-semibold text-gray-800 mb-2">Personnes (requis):</p>
-            <ul className="space-y-1 text-gray-600">
+            <ul className="space-y-1 text-gray-600 dark:text-slate-400">
               <li><span className="font-medium text-red-600">first name*</span> - Prénom</li>
               <li><span className="font-medium text-red-600">last name*</span> - Nom</li>
               <li>personal email - Email personnel</li>

@@ -32,7 +32,7 @@ export default function OfflineIndicator() {
       className={`fixed top-0 left-0 right-0 z-[9999] px-6 py-4 shadow-2xl flex items-center justify-center gap-3 animate-slide-down ${
         isOnline
           ? 'bg-green-600 text-white'
-          : 'bg-yellow-500 text-gray-900'
+          : 'bg-yellow-500 text-gray-900 dark:text-slate-100'
       }`}
       role="alert"
     >

@@ -125,9 +125,9 @@ export default function SuggestionsTable({
 
   if (suggestions.length === 0) {
     return (
-      <div className="text-center py-12 bg-gray-50 rounded-xl">
+      <div className="text-center py-12 bg-gray-50 dark:bg-slate-800 rounded-xl">
         <Sparkles className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-        <p className="text-gray-600 font-medium">Aucune suggestion trouvée</p>
+        <p className="text-gray-600 dark:text-slate-400 font-medium">Aucune suggestion trouvée</p>
         <p className="text-sm text-gray-500 mt-1">
           Lancez une analyse pour générer des suggestions
         </p>
@@ -136,10 +136,10 @@ export default function SuggestionsTable({
   }
 
   return (
-    <div className="overflow-hidden bg-white rounded-xl shadow-lg">
+    <div className="overflow-hidden bg-white dark:bg-slate-900 rounded-xl shadow-lg">
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-50 dark:bg-slate-800">
             <tr>
               <th className="w-12 px-6 py-4">
                 <input
@@ -149,33 +149,33 @@ export default function SuggestionsTable({
                     if (el) el.indeterminate = isSomeSelected
                   }}
                   onChange={handleSelectAll}
-                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="h-4 w-4 rounded border-gray-300 dark:border-slate-600 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-400"
                 />
               </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wider">
                 Type
               </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wider">
                 Suggestion
               </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wider">
                 Entité
               </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wider">
                 Confiance
               </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wider">
                 Statut
               </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wider">
                 Date
               </th>
-              <th className="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="px-6 py-4 text-right text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200 bg-white">
+          <tbody className="divide-y divide-gray-200 bg-white dark:bg-slate-900">
             {suggestions.map((suggestion) => {
               const isSelected = selectedIds.includes(suggestion.id)
               const typeConfig = TYPE_ICONS[suggestion.type]
@@ -187,7 +187,7 @@ export default function SuggestionsTable({
                 <tr
                   key={suggestion.id}
                   className={clsx(
-                    'transition-colors hover:bg-gray-50',
+                    'transition-colors hover:bg-gray-50 dark:bg-slate-800',
                     isSelected && 'bg-blue-50'
                   )}
                 >
@@ -196,14 +196,14 @@ export default function SuggestionsTable({
                       type="checkbox"
                       checked={isSelected}
                       onChange={() => handleSelectOne(suggestion.id)}
-                      className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="h-4 w-4 rounded border-gray-300 dark:border-slate-600 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-400"
                     />
                   </td>
 
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
                       <TypeIcon className={clsx('h-5 w-5', typeConfig.color)} />
-                      <span className="text-sm font-medium text-gray-900">
+                      <span className="text-sm font-medium text-gray-900 dark:text-slate-100">
                         {typeConfig.label}
                       </span>
                     </div>
@@ -211,7 +211,7 @@ export default function SuggestionsTable({
 
                   <td className="px-6 py-4">
                     <div className="max-w-md">
-                      <p className="text-sm font-semibold text-gray-900 truncate">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-slate-100 truncate">
                         {suggestion.title}
                       </p>
                       <p className="text-xs text-gray-500 truncate mt-1">
@@ -222,7 +222,7 @@ export default function SuggestionsTable({
 
                   <td className="px-6 py-4">
                     <div className="text-sm">
-                      <p className="font-medium text-gray-900 capitalize">
+                      <p className="font-medium text-gray-900 dark:text-slate-100 capitalize">
                         {suggestion.entity_type}
                       </p>
                       <p className="text-gray-500">ID: {suggestion.entity_id}</p>

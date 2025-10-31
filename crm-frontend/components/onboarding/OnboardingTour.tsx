@@ -17,10 +17,10 @@ const TOUR_STEPS = [
             <span className="text-2xl">👋</span>
           </div>
           <div className="flex-1">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-2">
               Bienvenue sur ALFORIS CRM
             </h2>
-            <p className="text-gray-700 leading-relaxed">
+            <p className="text-gray-700 dark:text-slate-300 leading-relaxed">
               Découvrons ensemble les 4 sections essentielles pour démarrer efficacement.
             </p>
           </div>
@@ -42,13 +42,13 @@ const TOUR_STEPS = [
           <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
             <span className="text-lg">📊</span>
           </div>
-          <h3 className="font-bold text-gray-900 text-lg">1. Module CRM</h3>
+          <h3 className="font-bold text-gray-900 dark:text-slate-100 text-lg">1. Module CRM</h3>
         </div>
-        <p className="text-gray-700 leading-relaxed">
-          <strong className="text-gray-900">Organisations</strong> : Gérez clients, distributeurs, partenaires
+        <p className="text-gray-700 dark:text-slate-300 leading-relaxed">
+          <strong className="text-gray-900 dark:text-slate-100">Organisations</strong> : Gérez clients, distributeurs, partenaires
         </p>
-        <p className="text-gray-700 leading-relaxed">
-          <strong className="text-gray-900">Contacts</strong> : Suivez les personnes clés (directeurs, gérants)
+        <p className="text-gray-700 dark:text-slate-300 leading-relaxed">
+          <strong className="text-gray-900 dark:text-slate-100">Contacts</strong> : Suivez les personnes clés (directeurs, gérants)
         </p>
         <div className="mt-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-3 border-l-4 border-blue-500">
           <p className="text-sm text-blue-900">
@@ -67,9 +67,9 @@ const TOUR_STEPS = [
           <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center">
             <span className="text-lg">⚡</span>
           </div>
-          <h3 className="font-bold text-gray-900 text-lg">2. Automatisation</h3>
+          <h3 className="font-bold text-gray-900 dark:text-slate-100 text-lg">2. Automatisation</h3>
         </div>
-        <p className="text-gray-700 leading-relaxed mb-3">
+        <p className="text-gray-700 dark:text-slate-300 leading-relaxed mb-3">
           Gagnez du temps avec nos outils d'automatisation :
         </p>
         <div className="space-y-2.5">
@@ -121,23 +121,23 @@ const TOUR_STEPS = [
           <div className="w-8 h-8 bg-gradient-to-br from-pink-500 to-rose-600 rounded-lg flex items-center justify-center">
             <span className="text-lg">📧</span>
           </div>
-          <h3 className="font-bold text-gray-900 text-lg">3. Marketing Email</h3>
+          <h3 className="font-bold text-gray-900 dark:text-slate-100 text-lg">3. Marketing Email</h3>
         </div>
-        <p className="text-gray-700 leading-relaxed">
+        <p className="text-gray-700 dark:text-slate-300 leading-relaxed">
           Créez des campagnes professionnelles en 3 étapes :
         </p>
         <div className="space-y-2">
           <div className="flex items-center gap-3 bg-gradient-to-r from-pink-50 to-rose-50 rounded-lg p-2.5">
             <span className="flex-shrink-0 w-6 h-6 bg-pink-500 text-white rounded-full flex items-center justify-center text-xs font-bold">1</span>
-            <span className="text-sm font-medium text-gray-700">Sélectionnez vos contacts</span>
+            <span className="text-sm font-medium text-gray-700 dark:text-slate-300">Sélectionnez vos contacts</span>
           </div>
           <div className="flex items-center gap-3 bg-gradient-to-r from-pink-50 to-rose-50 rounded-lg p-2.5">
             <span className="flex-shrink-0 w-6 h-6 bg-pink-500 text-white rounded-full flex items-center justify-center text-xs font-bold">2</span>
-            <span className="text-sm font-medium text-gray-700">Personnalisez votre template</span>
+            <span className="text-sm font-medium text-gray-700 dark:text-slate-300">Personnalisez votre template</span>
           </div>
           <div className="flex items-center gap-3 bg-gradient-to-r from-pink-50 to-rose-50 rounded-lg p-2.5">
             <span className="flex-shrink-0 w-6 h-6 bg-pink-500 text-white rounded-full flex items-center justify-center text-xs font-bold">3</span>
-            <span className="text-sm font-medium text-gray-700">Suivez les performances en temps réel</span>
+            <span className="text-sm font-medium text-gray-700 dark:text-slate-300">Suivez les performances en temps réel</span>
           </div>
         </div>
       </div>
@@ -152,9 +152,9 @@ const TOUR_STEPS = [
           <div className="w-8 h-8 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg flex items-center justify-center">
             <span className="text-lg">❓</span>
           </div>
-          <h3 className="font-bold text-gray-900 text-lg">4. Centre d'Aide</h3>
+          <h3 className="font-bold text-gray-900 dark:text-slate-100 text-lg">4. Centre d'Aide</h3>
         </div>
-        <p className="text-gray-700 leading-relaxed">
+        <p className="text-gray-700 dark:text-slate-300 leading-relaxed">
           Tout ce dont vous avez besoin pour devenir expert :
         </p>
         <div className="grid grid-cols-2 gap-2">
@@ -184,7 +184,7 @@ const TOUR_STEPS = [
             </div>
           </div>
           <p className="text-xs text-blue-100 mt-2">
-            💡 Astuce : Survolez les champs avec <span className="inline-flex items-center gap-1 bg-white/20 px-2 py-0.5 rounded">❓</span> pour des infos contextuelles
+            💡 Astuce : Survolez les champs avec <span className="inline-flex items-center gap-1 bg-white dark:bg-slate-900/20 px-2 py-0.5 rounded">❓</span> pour des infos contextuelles
           </p>
         </div>
       </div>
@@ -271,7 +271,7 @@ export function OnboardingTour({ children }: OnboardingTourProps) {
           <button
             onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
             disabled={isFirst}
-            className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            className="px-4 py-2 text-sm text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white dark:text-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
             Retour
           </button>

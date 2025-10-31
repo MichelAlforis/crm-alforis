@@ -255,7 +255,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                 />
 
                 {/* Search Input */}
-                <div className="relative flex items-center gap-3 px-6 py-4 border-b border-gray-200/50">
+                <div className="relative flex items-center gap-3 px-6 py-4 border-b border-gray-200 dark:border-slate-700/50">
                   {mode === 'chainAction' ? (
                     <motion.div
                       initial={{ scale: 0 }}
@@ -284,7 +284,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                           ? 'Historique récent...'
                           : 'Rechercher, calculer, ou créer...'
                     }
-                    className="flex-1 bg-transparent border-none outline-none text-gray-900 placeholder:text-gray-400 font-medium tracking-[0.02em] text-lg"
+                    className="flex-1 bg-transparent border-none outline-none text-gray-900 dark:text-slate-100 placeholder:text-gray-400 font-medium tracking-[0.02em] text-lg"
                     style={{ caretColor: '#E39F70' }}
                   />
                   <div className="flex items-center gap-2">
@@ -296,7 +296,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                         setFeedbackSettings(getFeedbackSettings())
                         haptic('light')
                       }}
-                      className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors"
+                      className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 dark:bg-slate-800/80 transition-colors"
                       title={feedbackSettings.soundEnabled ? 'Désactiver sons' : 'Activer sons'}
                     >
                       {feedbackSettings.soundEnabled ? (
@@ -305,7 +305,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                         <VolumeX className="w-5 h-5 text-gray-500" />
                       )}
                     </motion.button>
-                    <kbd className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-500 bg-gray-100/80 rounded-lg border border-gray-200">
+                    <kbd className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-500 bg-gray-100 dark:bg-slate-800/80 rounded-lg border border-gray-200 dark:border-slate-700">
                       ESC
                     </kbd>
                   </div>
@@ -327,7 +327,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                         onSelect={() => runCommand(() => console.log('Clipboard action'), clipboardSuggestion.value)}
                       >
                         <div className="flex flex-col gap-0.5">
-                          <span className="font-medium tracking-[0.02em] text-gray-900">
+                          <span className="font-medium tracking-[0.02em] text-gray-900 dark:text-slate-100">
                             {clipboardSuggestion.action.label}
                           </span>
                           <span className="text-sm font-normal text-gray-500 leading-snug">
@@ -355,7 +355,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                         }}
                       >
                         <div className="flex flex-col gap-0.5">
-                          <span className="font-mono text-2xl text-gray-900 tracking-tight">
+                          <span className="font-mono text-2xl text-gray-900 dark:text-slate-100 tracking-tight">
                             {parsedCommand.entities.calculation?.toLocaleString('fr-FR')}
                           </span>
                           <span className="text-sm font-normal text-gray-500 leading-snug">
@@ -402,7 +402,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                           <div className="flex items-center gap-3">
                             <span className="text-xl">{suggestion.icon}</span>
                             <div className="flex flex-col gap-0.5">
-                              <span className="font-medium tracking-[0.02em] text-gray-900">
+                              <span className="font-medium tracking-[0.02em] text-gray-900 dark:text-slate-100">
                                 {suggestion.label}
                               </span>
                               <span className="text-sm font-normal text-gray-500 leading-snug">
@@ -430,7 +430,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                             setMode('command')
                           }}
                         >
-                          <span className="font-medium tracking-[0.02em] text-gray-900">
+                          <span className="font-medium tracking-[0.02em] text-gray-900 dark:text-slate-100">
                             {item.query}
                           </span>
                         </CommandItemV3>
@@ -451,7 +451,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
                           onSelect={() => handleSelect(result.data, result.type)}
                         >
                           <div className="flex flex-col gap-0.5">
-                            <span className="font-medium tracking-[0.02em] text-gray-900">
+                            <span className="font-medium tracking-[0.02em] text-gray-900 dark:text-slate-100">
                               {result.title}
                             </span>
                             {result.subtitle && (
@@ -569,7 +569,7 @@ function CommandItemV3({ children, icon: Icon, shortcut, onSelect }: CommandItem
   return (
     <Command.Item
       onSelect={onSelect}
-      className="group flex items-center gap-3 px-4 py-3 mb-1 rounded-[12px] cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 hover:scale-[1.01] hover:shadow-[0_0_12px_rgba(227,159,112,0.15)] data-[selected=true]:bg-orange-50/50 data-[selected=true]:text-gray-900 data-[selected=true]:scale-[1.01] data-[selected=true]:translate-y-[-1px] data-[selected=true]:shadow-[0_0_16px_rgba(227,159,112,0.25),0_0_0_1px_rgba(227,159,112,0.3)]"
+      className="group flex items-center gap-3 px-4 py-3 mb-1 rounded-[12px] cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white dark:text-slate-100 hover:bg-gray-50 dark:bg-slate-800/80 hover:scale-[1.01] hover:shadow-[0_0_12px_rgba(227,159,112,0.15)] data-[selected=true]:bg-orange-50/50 data-[selected=true]:text-gray-900 data-[selected=true]:scale-[1.01] data-[selected=true]:translate-y-[-1px] data-[selected=true]:shadow-[0_0_16px_rgba(227,159,112,0.25),0_0_0_1px_rgba(227,159,112,0.3)]"
     >
       {Icon && (
         <motion.div
@@ -582,7 +582,7 @@ function CommandItemV3({ children, icon: Icon, shortcut, onSelect }: CommandItem
       )}
       <span className="flex-1 font-medium tracking-[0.02em]">{children}</span>
       {shortcut && (
-        <kbd className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-500 bg-gray-100/80 rounded-lg border border-gray-200 group-data-[selected=true]:text-orange-600 group-data-[selected=true]:border-orange-300 group-data-[selected=true]:bg-orange-50">
+        <kbd className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-500 bg-gray-100 dark:bg-slate-800/80 rounded-lg border border-gray-200 dark:border-slate-700 group-data-[selected=true]:text-orange-600 group-data-[selected=true]:border-orange-300 group-data-[selected=true]:bg-orange-50">
           {shortcut}
         </kbd>
       )}

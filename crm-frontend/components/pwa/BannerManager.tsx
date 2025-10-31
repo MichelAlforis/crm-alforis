@@ -221,7 +221,7 @@ export function BannerManager() {
         {/* Bouton fermer */}
         <button
           onClick={currentBanner.onDismiss}
-          className="absolute top-2 right-2 p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          className="absolute top-2 right-2 p-1 rounded-md hover:bg-gray-100 dark:bg-slate-800 dark:hover:bg-gray-700 transition-colors"
           aria-label="Fermer"
         >
           <X className="w-4 h-4 text-gray-500 dark:text-gray-400" />
@@ -260,7 +260,7 @@ export function BannerManager() {
               </button>
               <button
                 onClick={currentBanner.onDismiss}
-                className="px-4 py-2 rounded-md text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className="px-4 py-2 rounded-md text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:bg-slate-800 dark:hover:bg-gray-700 transition-colors"
               >
                 {currentBanner.dismissLabel}
               </button>

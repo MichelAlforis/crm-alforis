@@ -159,7 +159,7 @@ export function EntityAutocompleteInput({
   return (
     <div className="relative">
       {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>
@@ -186,8 +186,8 @@ export function EntityAutocompleteInput({
             className={`
               w-full h-12 pl-11 pr-11 rounded-lg border-2 text-sm font-medium
               transition-all duration-200 outline-none
-              ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
-              ${error ? 'border-red-500' : isFocused ? 'border-blue-500 shadow-lg shadow-blue-100' : 'border-gray-300 hover:border-gray-400'}
+              ${disabled ? 'bg-gray-100 dark:bg-slate-800 cursor-not-allowed' : 'bg-white dark:bg-slate-900'}
+              ${error ? 'border-red-500' : isFocused ? 'border-blue-500 shadow-lg shadow-blue-100' : 'border-gray-300 dark:border-slate-600 hover:border-gray-400'}
               placeholder:text-gray-400
             `}
             aria-label={label || 'Rechercher'}
@@ -199,7 +199,7 @@ export function EntityAutocompleteInput({
             <button
               type="button"
               onClick={handleClear}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded-full transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 dark:hover:bg-slate-700 dark:bg-slate-800 rounded-full transition-colors"
               aria-label="Effacer"
             >
               <X className="w-4 h-4 text-gray-500" />
@@ -209,7 +209,7 @@ export function EntityAutocompleteInput({
       </div>
 
       {shouldShowDropdown && (
-        <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200">
           <div ref={listRef} className="max-h-80 overflow-y-auto" onScroll={handleScroll}>
             {isLoading && options.length === 0 ? (
               <div className="p-6 text-center text-sm text-gray-500">
@@ -218,7 +218,7 @@ export function EntityAutocompleteInput({
               </div>
             ) : options.length > 0 ? (
               <>
-                <div className="px-3 py-2 text-xs font-semibold text-gray-500 bg-gray-50 border-b border-gray-200">
+                <div className="px-3 py-2 text-xs font-semibold text-gray-500 bg-gray-50 dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700">
                   {options.length} résultat{options.length > 1 ? 's' : ''} trouvé{options.length > 1 ? 's' : ''}
                 </div>
                 {options.map((option, index) => (
@@ -229,18 +229,18 @@ export function EntityAutocompleteInput({
                     onMouseEnter={() => setHighlightedIndex(index)}
                     className={`
                       w-full px-4 py-3 text-left transition-colors border-b border-gray-100 last:border-0
-                      ${index === highlightedIndex ? 'bg-blue-50' : 'hover:bg-gray-50'}
+                      ${index === highlightedIndex ? 'bg-blue-50' : 'hover:bg-gray-50 dark:bg-slate-800'}
                       ${option.id === value ? 'bg-blue-100 font-medium' : ''}
                     `}
                   >
-                    <div className="text-sm font-medium text-gray-900">{option.label}</div>
+                    <div className="text-sm font-medium text-gray-900 dark:text-slate-100">{option.label}</div>
                     {option.sublabel && (
                       <div className="text-xs text-gray-500 mt-0.5">{option.sublabel}</div>
                     )}
                   </button>
                 ))}
                 {(hasMore || isLoadingMore) && (
-                  <div className="p-3 text-center text-xs text-gray-500 bg-gray-50 border-t border-gray-200">
+                  <div className="p-3 text-center text-xs text-gray-500 bg-gray-50 dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700">
                     {isLoadingMore ? (
                       <>
                         <Loader2 className="w-4 h-4 animate-spin mx-auto mb-1" />

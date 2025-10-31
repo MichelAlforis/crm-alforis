@@ -83,8 +83,8 @@ const PROVIDER_CONFIG = {
     name: 'Autre IMAP',
     icon: '⚙️',
     color: 'from-gray-500 to-gray-600',
-    bgColor: 'bg-gray-50',
-    textColor: 'text-gray-700',
+    bgColor: 'bg-gray-50 dark:bg-slate-800',
+    textColor: 'text-gray-700 dark:text-slate-300',
     type: 'imap',
   },
 }
@@ -229,7 +229,7 @@ export default function EmailAccountsPage() {
             <p className="text-slate-600">Chargement...</p>
           </div>
         ) : accounts.length === 0 ? (
-          <div className="backdrop-blur-xl bg-white/60 border border-white/40 rounded-3xl p-16 text-center shadow-2xl">
+          <div className="backdrop-blur-xl bg-white dark:bg-slate-900/60 border border-white/40 rounded-3xl p-16 text-center shadow-2xl">
             <Mail className="w-20 h-20 text-slate-300 mx-auto mb-6" />
             <h3 className="text-2xl font-bold text-slate-900 mb-2">Aucun compte configuré</h3>
             <p className="text-slate-600 mb-8">Ajoutez votre premier compte email pour commencer</p>
@@ -247,7 +247,7 @@ export default function EmailAccountsPage() {
               return (
                 <div
                   key={account.id}
-                  className="group backdrop-blur-xl bg-white/70 border border-white/50 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]"
+                  className="group backdrop-blur-xl bg-white dark:bg-slate-900/70 border border-white/50 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]"
                 >
                   {/* Header */}
                   <div className="flex items-start justify-between mb-4">
@@ -346,7 +346,7 @@ export default function EmailAccountsPage() {
       {/* Add Account Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="backdrop-blur-xl bg-white/90 border border-white/50 rounded-3xl p-8 max-w-2xl w-full shadow-2xl animate-slideUp">
+          <div className="backdrop-blur-xl bg-white dark:bg-slate-900/90 border border-white/50 rounded-3xl p-8 max-w-2xl w-full shadow-2xl animate-slideUp">
             <h2 className="text-3xl font-bold text-slate-900 mb-6">Ajouter un compte email</h2>
 
             {/* Provider Selection */}
@@ -361,7 +361,7 @@ export default function EmailAccountsPage() {
                     className={`p-6 rounded-2xl border-2 transition-all duration-300 ${
                       isSelected
                         ? `bg-gradient-to-br ${config.color} text-white border-transparent shadow-xl scale-105`
-                        : 'bg-white/50 border-slate-200 hover:border-slate-300 hover:bg-white/80'
+                        : 'bg-white dark:bg-slate-900/50 border-slate-200 hover:border-slate-300 hover:bg-white/80'
                     }`}
                   >
                     <div className="text-4xl mb-2">{config.icon}</div>
@@ -380,7 +380,7 @@ export default function EmailAccountsPage() {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="contact@alforis.fr"
-                  className="w-full px-4 py-3 bg-white/80 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="w-full px-4 py-3 bg-white dark:bg-slate-900/80 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all"
                 />
               </div>
 
@@ -393,7 +393,7 @@ export default function EmailAccountsPage() {
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     placeholder="••••••••"
-                    className="w-full pl-11 pr-4 py-3 bg-white/80 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                    className="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-900/80 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all"
                   />
                 </div>
               </div>
@@ -407,7 +407,7 @@ export default function EmailAccountsPage() {
                       value={formData.server}
                       onChange={(e) => setFormData({ ...formData, server: e.target.value })}
                       placeholder="imap.ionos.fr"
-                      className="w-full px-4 py-3 bg-white/80 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                      className="w-full px-4 py-3 bg-white dark:bg-slate-900/80 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all"
                     />
                   </div>
 
@@ -418,7 +418,7 @@ export default function EmailAccountsPage() {
                       value={formData.port}
                       onChange={(e) => setFormData({ ...formData, port: e.target.value })}
                       placeholder="993"
-                      className="w-full px-4 py-3 bg-white/80 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                      className="w-full px-4 py-3 bg-white dark:bg-slate-900/80 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all"
                     />
                   </div>
                 </>
@@ -431,7 +431,7 @@ export default function EmailAccountsPage() {
                   value={formData.display_name}
                   onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
                   placeholder="Contact Alforis"
-                  className="w-full px-4 py-3 bg-white/80 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="w-full px-4 py-3 bg-white dark:bg-slate-900/80 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all"
                 />
               </div>
             </div>

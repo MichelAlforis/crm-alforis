@@ -133,7 +133,7 @@ export default function ProduitsPage() {
             value === 'actif'
               ? 'bg-green-100 text-green-800'
               : value === 'inactif'
-                ? 'bg-gray-100 text-gray-800'
+                ? 'bg-gray-100 dark:bg-slate-800 text-gray-800'
                 : 'bg-yellow-100 text-yellow-800'
           }`}
         >
@@ -166,7 +166,7 @@ export default function ProduitsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-ardoise">Produits</h1>
-          <p className="text-gray-600 mt-1">
+          <p className="text-gray-600 dark:text-slate-400 mt-1">
             Gérez vos produits financiers (OPCVM, ETF, SCPI, Assurance Vie, PER, etc.)
           </p>
         </div>
@@ -233,7 +233,7 @@ export default function ProduitsPage() {
       </Card>
 
       {data && (
-        <div className="flex items-center justify-between text-sm text-gray-600">
+        <div className="flex items-center justify-between text-sm text-gray-600 dark:text-slate-400">
           <p>
             Total: {filteredData?.length || 0} / {data.total} produits
           </p>

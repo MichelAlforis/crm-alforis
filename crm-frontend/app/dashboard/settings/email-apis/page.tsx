@@ -151,11 +151,11 @@ export default function EmailApisSettingsPage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
               <Mail className="w-8 h-8 text-bleu" />
               APIs Email
             </h1>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-gray-600 dark:text-slate-400 mt-1">
               Gérez vos clés API pour l'envoi de campagnes email
             </p>
           </div>
@@ -187,10 +187,10 @@ export default function EmailApisSettingsPage() {
           <Card>
             <CardBody className="text-center py-12">
               <Mail className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-2">
                 Aucune configuration
               </h3>
-              <p className="text-sm text-gray-600 mb-6">
+              <p className="text-sm text-gray-600 dark:text-slate-400 mb-6">
                 Ajoutez votre première configuration email pour commencer à envoyer des campagnes
               </p>
               <Button
@@ -209,7 +209,7 @@ export default function EmailApisSettingsPage() {
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-lg font-semibold text-gray-900">{config.name}</h3>
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">{config.name}</h3>
                       <span
                         className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border ${
                           PROVIDER_INFO[config.provider].color
@@ -225,22 +225,22 @@ export default function EmailApisSettingsPage() {
                       )}
                     </div>
                     {config.description && (
-                      <p className="text-sm text-gray-600 mb-3">{config.description}</p>
+                      <p className="text-sm text-gray-600 dark:text-slate-400 mb-3">{config.description}</p>
                     )}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                       {config.from_email && (
                         <div>
                           <span className="text-gray-500">Email expéditeur:</span>
-                          <p className="font-medium text-gray-900">{config.from_email}</p>
+                          <p className="font-medium text-gray-900 dark:text-slate-100">{config.from_email}</p>
                         </div>
                       )}
                       <div>
                         <span className="text-gray-500">Limite/min:</span>
-                        <p className="font-medium text-gray-900">{config.rate_limit_per_minute}</p>
+                        <p className="font-medium text-gray-900 dark:text-slate-100">{config.rate_limit_per_minute}</p>
                       </div>
                       <div>
                         <span className="text-gray-500">Taille lots:</span>
-                        <p className="font-medium text-gray-900">{config.batch_size}</p>
+                        <p className="font-medium text-gray-900 dark:text-slate-100">{config.batch_size}</p>
                       </div>
                       {config.last_tested_at && (
                         <div>
@@ -251,7 +251,7 @@ export default function EmailApisSettingsPage() {
                             ) : (
                               <X className="w-3 h-3 text-red-600" />
                             )}
-                            <p className="font-medium text-gray-900">
+                            <p className="font-medium text-gray-900 dark:text-slate-100">
                               {new Date(config.last_tested_at).toLocaleDateString()}
                             </p>
                           </div>
@@ -492,7 +492,7 @@ function CreateConfigModal({ onClose, onSuccess }: { onClose: () => void; onSucc
                   type="checkbox"
                   checked={formData.is_active}
                   onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                  className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                  className="w-4 h-4 text-primary border-gray-300 dark:border-slate-600 rounded focus:ring-primary"
                 />
                 <span className="text-sm text-text-primary">Activer cette configuration immédiatement</span>
               </label>
@@ -573,7 +573,7 @@ function EditConfigModal({
           <div className="p-6 space-y-6">
             <div>
               <h3 className="text-xl font-semibold text-text-primary">Modifier la configuration</h3>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-gray-600 dark:text-slate-400 mt-1">
                 Provider: <span className="font-medium">{PROVIDER_INFO[config.provider].name}</span>
               </p>
             </div>
@@ -653,7 +653,7 @@ function EditConfigModal({
                     type="checkbox"
                     checked={formData.track_opens}
                     onChange={(e) => setFormData({ ...formData, track_opens: e.target.checked })}
-                    className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                    className="w-4 h-4 text-primary border-gray-300 dark:border-slate-600 rounded focus:ring-primary"
                   />
                   <span className="text-sm text-text-primary">Tracker les ouvertures</span>
                 </label>
@@ -662,7 +662,7 @@ function EditConfigModal({
                     type="checkbox"
                     checked={formData.track_clicks}
                     onChange={(e) => setFormData({ ...formData, track_clicks: e.target.checked })}
-                    className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                    className="w-4 h-4 text-primary border-gray-300 dark:border-slate-600 rounded focus:ring-primary"
                   />
                   <span className="text-sm text-text-primary">Tracker les clics</span>
                 </label>

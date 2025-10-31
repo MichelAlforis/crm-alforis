@@ -189,7 +189,7 @@ export default function MandatDetailPage() {
             value === 'ACTIF'
               ? 'bg-green-100 text-green-800'
               : value === 'ARCHIVE'
-                ? 'bg-gray-100 text-gray-800'
+                ? 'bg-gray-100 dark:bg-slate-800 text-gray-800'
                 : 'bg-yellow-100 text-yellow-800'
           }`}
         >
@@ -236,7 +236,7 @@ export default function MandatDetailPage() {
           <h1 className="text-3xl font-bold text-ardoise">
             {mandat.numero_mandat ? mandat.numero_mandat : `Mandat #${mandat.id}`}
           </h1>
-          <p className="text-gray-600 mt-1">
+          <p className="text-gray-600 dark:text-slate-400 mt-1">
             <Link
               href={`/dashboard/organisations/${mandat.organisation.id}`}
               className="text-bleu hover:underline"
@@ -268,13 +268,13 @@ export default function MandatDetailPage() {
         <h2 className="text-xl font-semibold mb-4">Informations du mandat</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <p className="text-sm text-gray-600">Date de début</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Date de début</p>
             <p className="font-medium">
               {mandat.date_debut ? new Date(mandat.date_debut).toLocaleDateString('fr-FR') : '-'}
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Date de fin</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Date de fin</p>
             <p className="font-medium">
               {mandat.date_fin
                 ? new Date(mandat.date_fin).toLocaleDateString('fr-FR')
@@ -282,11 +282,11 @@ export default function MandatDetailPage() {
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Statut</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Statut</p>
             <p className="font-medium">{MANDAT_STATUS_LABELS[mandat.status]}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Mandat actif</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Mandat actif</p>
             <p className="font-medium">
               {isActif ? (
                 <span className="text-green-600">✓ Oui</span>
@@ -311,7 +311,7 @@ export default function MandatDetailPage() {
           <div>
             <h2 className="text-xl font-semibold">Produits associés ({produits?.length || 0})</h2>
             {produits && produits.length > 0 && (
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-gray-600 dark:text-slate-400 mt-1">
                 Total allocation:{' '}
                 <span className={`font-semibold ${totalAllocation === 100 ? 'text-green-600' : 'text-orange-600'}`}>
                   {totalAllocation.toFixed(2)}%

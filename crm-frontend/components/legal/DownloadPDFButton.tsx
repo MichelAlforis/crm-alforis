@@ -57,8 +57,8 @@ export default function DownloadPDFButton({
     <div className={`bg-blue-50 border border-blue-200 rounded-lg p-4 ${className}`}>
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-semibold text-gray-900">{title}</p>
-          {description && <p className="text-xs text-gray-600 mt-1">{description}</p>}
+          <p className="text-sm font-semibold text-gray-900 dark:text-slate-100">{title}</p>
+          {description && <p className="text-xs text-gray-600 dark:text-slate-400 mt-1">{description}</p>}
         </div>
         <button
           onClick={handleDownload}

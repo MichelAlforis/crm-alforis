@@ -89,7 +89,7 @@ export default function CampaignPreviewPage() {
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 border-4 border-bleu border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-gray-600">Chargement de la prévisualisation...</p>
+            <p className="text-gray-600 dark:text-slate-400">Chargement de la prévisualisation...</p>
           </div>
         </div>
       </div>
@@ -140,7 +140,7 @@ export default function CampaignPreviewPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-ardoise">Prévisualisation des emails</h1>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-gray-600 dark:text-slate-400 mt-1">
               Email {currentEmailNumber} sur {totalEmails}
             </p>
           </div>
@@ -154,7 +154,7 @@ export default function CampaignPreviewPage() {
             >
               Précédent
             </Button>
-            <span className="text-sm text-gray-600 px-3">
+            <span className="text-sm text-gray-600 dark:text-slate-400 px-3">
               {currentEmailNumber} / {totalEmails}
             </span>
             <Button
@@ -218,7 +218,7 @@ export default function CampaignPreviewPage() {
                 <span className="text-xs font-medium text-text-secondary">Aperçu de l'email</span>
               </div>
             </div>
-            <div className="p-6 bg-white max-h-[600px] overflow-y-auto">
+            <div className="p-6 bg-white dark:bg-slate-900 max-h-[600px] overflow-y-auto">
               <div
                 dangerouslySetInnerHTML={{ __html: currentPreview.body_html }}
                 className="prose prose-sm max-w-none"

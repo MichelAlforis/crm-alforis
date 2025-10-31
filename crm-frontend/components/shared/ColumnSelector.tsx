@@ -49,27 +49,27 @@ export function ColumnSelector<T = any>({
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
       >
         <Settings className="w-4 h-4" />
         <span>Colonnes</span>
-        <span className="px-1.5 py-0.5 text-xs bg-gray-100 text-gray-600 rounded">
+        <span className="px-1.5 py-0.5 text-xs bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 rounded">
           {visibleCount}/{columns.length}
         </span>
       </button>
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-          <div className="p-3 border-b border-gray-200">
+        <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg shadow-lg z-50">
+          <div className="p-3 border-b border-gray-200 dark:border-slate-700">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-gray-900">Gérer les colonnes</h3>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-slate-100">Gérer les colonnes</h3>
               <button
                 onClick={() => {
                   onReset()
                   setIsOpen(false)
                 }}
-                className="flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors"
+                className="flex items-center gap-1 px-2 py-1 text-xs text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white dark:text-slate-100 hover:bg-gray-100 dark:hover:bg-slate-700 dark:bg-slate-800 rounded transition-colors"
                 title="Réinitialiser"
               >
                 <RotateCcw className="w-3 h-3" />
@@ -89,8 +89,8 @@ export function ColumnSelector<T = any>({
                 className={clsx(
                   'w-full flex items-center gap-3 px-3 py-2 text-sm rounded transition-colors',
                   column.visible
-                    ? 'text-gray-900 bg-blue-50 hover:bg-blue-100'
-                    : 'text-gray-600 hover:bg-gray-100'
+                    ? 'text-gray-900 dark:text-slate-100 bg-blue-50 hover:bg-blue-100'
+                    : 'text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700 dark:bg-slate-800'
                 )}
               >
                 {column.visible ? (
@@ -106,7 +106,7 @@ export function ColumnSelector<T = any>({
             ))}
           </div>
 
-          <div className="p-3 border-t border-gray-200 bg-gray-50 text-xs text-gray-600">
+          <div className="p-3 border-t border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 text-xs text-gray-600 dark:text-slate-400">
             {visibleCount} colonne{visibleCount > 1 ? 's' : ''} visible
             {visibleCount > 1 ? 's' : ''}
           </div>

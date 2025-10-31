@@ -65,7 +65,7 @@ const SelectTrigger = React.forwardRef<
       ref={ref}
       onClick={() => setIsOpen(!isOpen)}
       className={cn(
-        'flex h-10 w-full items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+        'flex h-10 w-full items-center justify-between rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-sm ring-offset-background placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
         className
       )}
       {...props}
@@ -103,7 +103,7 @@ const SelectContent = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        'absolute z-50 w-full mt-2 max-h-96 min-w-[8rem] overflow-y-auto rounded-md border border-gray-300 bg-white text-sm shadow-lg',
+        'absolute z-50 w-full mt-2 max-h-96 min-w-[8rem] overflow-y-auto rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm shadow-lg',
         className
       )}
       {...props}

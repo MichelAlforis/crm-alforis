@@ -181,17 +181,17 @@ export default function Sidebar() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <ThemeToggle size="sm" className="inline-flex bg-white/10 text-white hover:bg-white/20" />
+                  <ThemeToggle size="sm" className="inline-flex bg-white dark:bg-slate-900/10 text-white hover:bg-white/20" />
                   <button
                     onClick={sidebar.toggleCollapsed}
-                    className="hidden lg:flex p-2 hover:bg-white/10 rounded-lg transition-all duration-200 group"
+                    className="hidden lg:flex p-2 hover:bg-white dark:bg-slate-900/10 rounded-lg transition-all duration-200 group"
                     aria-label="Réduire le menu"
                   >
                     <ChevronLeft className="w-4 h-4 text-slate-300 group-hover:text-white transition-colors" />
                   </button>
                   <button
                     onClick={sidebar.closeMobile}
-                    className="lg:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
+                    className="lg:hidden p-2 hover:bg-white dark:bg-slate-900/10 rounded-lg transition-colors"
                     aria-label="Fermer le menu"
                   >
                     <X className="w-4 h-4 text-slate-300" />
@@ -202,12 +202,12 @@ export default function Sidebar() {
               <div className="flex flex-col items-center gap-2">
                 <button
                   onClick={sidebar.toggleCollapsed}
-                  className="mx-auto p-2 hover:bg-white/10 rounded-lg transition-all duration-200"
+                  className="mx-auto p-2 hover:bg-white dark:bg-slate-900/10 rounded-lg transition-all duration-200"
                   aria-label="Étendre le menu"
                 >
                   <ChevronRight className="w-5 h-5 text-slate-300" />
                 </button>
-                <ThemeToggle size="sm" className="bg-white/10 text-white hover:bg-white/20" />
+                <ThemeToggle size="sm" className="bg-white dark:bg-slate-900/10 text-white hover:bg-white/20" />
               </div>
             )}
           </div>
@@ -288,7 +288,7 @@ export default function Sidebar() {
                           'rounded-lg flex-shrink-0',
                           'transition-all duration-300',
                           isSubitem ? 'w-6 h-6' : 'w-8 h-8',
-                          active ? 'bg-white/20' : 'bg-yellow-500/10'
+                          active ? 'bg-white dark:bg-slate-900/20' : 'bg-yellow-500/10'
                         )}>
                           <Icon className={clsx(isSubitem ? 'w-3.5 h-3.5' : 'w-4 h-4')} />
                         </div>
@@ -371,7 +371,7 @@ export default function Sidebar() {
                           'overflow-hidden',
                           active
                             ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-2xl shadow-blue-500/40 scale-105'
-                            : 'text-slate-300 hover:text-white hover:bg-white/10 hover:scale-102'
+                            : 'text-slate-300 hover:text-white hover:bg-white dark:bg-slate-900/10 hover:scale-102'
                         )}
                       >
                         {/* Hover Effect Background */}
@@ -388,8 +388,8 @@ export default function Sidebar() {
                           'w-10 h-10 rounded-xl flex-shrink-0',
                           'transition-all duration-300',
                           active
-                            ? 'bg-white/20 shadow-lg'
-                            : 'bg-white/5 group-hover:bg-white/15 group-hover:scale-110'
+                            ? 'bg-white dark:bg-slate-900/20 shadow-lg'
+                            : 'bg-white dark:bg-slate-900/5 group-hover:bg-white/15 group-hover:scale-110'
                         )}>
                           <Icon className={clsx('w-5 h-5 transition-all duration-300', active && 'scale-110 drop-shadow-lg')} />
                         </div>
@@ -418,7 +418,7 @@ export default function Sidebar() {
                           'p-1.5 rounded-lg transition-all duration-200',
                           'opacity-0 group-hover/item:opacity-100',
                           isFav && 'opacity-100',
-                          'hover:bg-white/20 hover:scale-110'
+                          'hover:bg-white dark:bg-slate-900/20 hover:scale-110'
                         )}
                         title={isFav ? 'Retirer des favoris' : 'Ajouter aux favoris'}
                       >
@@ -443,7 +443,7 @@ export default function Sidebar() {
                           'transition-all duration-300 cursor-pointer',
                           active
                             ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-2xl'
-                            : 'bg-white/5 text-slate-300 hover:bg-white/15 hover:text-white'
+                            : 'bg-white dark:bg-slate-900/5 text-slate-300 hover:bg-white/15 hover:text-white'
                         )}
                         title={item.label}
                       >
@@ -474,7 +474,7 @@ export default function Sidebar() {
                           'overflow-hidden',
                           active
                             ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-2xl shadow-blue-500/40 scale-105'
-                            : 'text-slate-300 hover:text-white hover:bg-white/10 hover:scale-102',
+                            : 'text-slate-300 hover:text-white hover:bg-white dark:bg-slate-900/10 hover:scale-102',
                           sidebar.collapsed && 'justify-center'
                         )}
                         title={sidebar.collapsed ? item.label : undefined}
@@ -494,7 +494,7 @@ export default function Sidebar() {
                           'relative flex items-center justify-center',
                           'w-10 h-10 rounded-xl flex-shrink-0',
                           'transition-all duration-300',
-                          active ? 'bg-white/20 shadow-lg' : 'bg-white/5 group-hover:bg-white/15 group-hover:scale-110'
+                          active ? 'bg-white dark:bg-slate-900/20 shadow-lg' : 'bg-white/5 group-hover:bg-white/15 group-hover:scale-110'
                         )}>
                           <Icon className={clsx('w-5 h-5 transition-all duration-300', active && 'scale-110 drop-shadow-lg')} />
                         </div>
@@ -515,14 +515,14 @@ export default function Sidebar() {
                               <div className={clsx(
                                 'px-2.5 py-1 rounded-lg text-xs font-bold',
                                 'transition-all duration-300 shadow-sm',
-                                active ? 'bg-white/30 text-white shadow-lg' : 'bg-white/10 text-slate-300 group-hover:bg-white/20 group-hover:scale-110'
+                                active ? 'bg-white dark:bg-slate-900/30 text-white shadow-lg' : 'bg-white/10 text-slate-300 group-hover:bg-white/20 group-hover:scale-110'
                               )}>
                                 {dynamicBadge}
                               </div>
                             )}
 
                             {/* Active Indicator */}
-                            {active && <div className="w-1.5 h-10 bg-white rounded-full shadow-lg animate-pulse" />}
+                            {active && <div className="w-1.5 h-10 bg-white dark:bg-slate-900 rounded-full shadow-lg animate-pulse" />}
                           </>
                         )}
 
@@ -546,7 +546,7 @@ export default function Sidebar() {
                             'p-1.5 rounded-lg transition-all duration-200',
                             'opacity-0 group-hover/item:opacity-100',
                             isFav && 'opacity-100',
-                            'hover:bg-white/20 hover:scale-110'
+                            'hover:bg-white dark:bg-slate-900/20 hover:scale-110'
                           )}
                           title={isFav ? 'Retirer des favoris' : 'Ajouter aux favoris'}
                         >
@@ -578,8 +578,8 @@ export default function Sidebar() {
                                 'flex items-center gap-2 px-3 py-2 rounded-lg',
                                 'transition-all duration-200',
                                 subActive
-                                  ? 'bg-white/20 text-white font-semibold shadow-lg'
-                                  : 'text-slate-400 hover:text-white hover:bg-white/10'
+                                  ? 'bg-white dark:bg-slate-900/20 text-white font-semibold shadow-lg'
+                                  : 'text-slate-400 hover:text-white hover:bg-white dark:bg-slate-900/10'
                               )}
                             >
                               <SubIcon className="w-4 h-4" />
@@ -597,7 +597,7 @@ export default function Sidebar() {
                                 'p-1 rounded transition-all duration-200',
                                 'opacity-0 group-hover/subitem:opacity-100',
                                 isSubFav && 'opacity-100',
-                                'hover:bg-white/20 hover:scale-110'
+                                'hover:bg-white dark:bg-slate-900/20 hover:scale-110'
                               )}
                               title={isSubFav ? 'Retirer des favoris' : 'Ajouter aux favoris'}
                             >
@@ -645,7 +645,7 @@ export default function Sidebar() {
                 </div>
                 <button
                   onClick={logout}
-                  className="p-2 hover:bg-white/20 rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110"
+                  className="p-2 hover:bg-white dark:bg-slate-900/20 rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110"
                   title="Déconnexion"
                 >
                   <LogOut className="w-4 h-4 text-slate-400 hover:text-red-400" />

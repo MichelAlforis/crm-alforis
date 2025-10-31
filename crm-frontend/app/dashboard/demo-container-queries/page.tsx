@@ -25,19 +25,19 @@ export default function DemoContainerQueriesPage() {
             <div className="p-3 bg-indigo-500 rounded-lg">
               <Box className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-fluid-4xl font-bold text-gray-900">
+            <h1 className="text-fluid-4xl font-bold text-gray-900 dark:text-slate-100">
               Container Queries
             </h1>
           </div>
 
-          <p className="text-fluid-lg text-gray-600 mb-fluid-6">
+          <p className="text-fluid-lg text-gray-600 dark:text-slate-400 mb-fluid-6">
             Les <strong>container queries</strong> permettent des composants qui s'adaptent à leur <em>conteneur parent</em>
             plutôt qu'au viewport. Redimensionnez les containers ci-dessous!
           </p>
 
           {/* Container Width Controls */}
-          <div className="bg-white border border-gray-200 rounded-lg p-fluid-4">
-            <p className="text-fluid-sm text-gray-600 mb-fluid-3 font-medium">
+          <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg p-fluid-4">
+            <p className="text-fluid-sm text-gray-600 dark:text-slate-400 mb-fluid-3 font-medium">
               Taille du container:
             </p>
             <div className="flex gap-fluid-2">
@@ -46,7 +46,7 @@ export default function DemoContainerQueriesPage() {
                 className={`px-fluid-3 py-fluid-2 rounded-lg transition-colors flex items-center gap-2 ${
                   containerWidth === 'small'
                     ? 'bg-indigo-500 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200'
                 }`}
               >
                 <Minimize2 className="w-4 h-4" />
@@ -57,7 +57,7 @@ export default function DemoContainerQueriesPage() {
                 className={`px-fluid-3 py-fluid-2 rounded-lg transition-colors flex items-center gap-2 ${
                   containerWidth === 'medium'
                     ? 'bg-indigo-500 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200'
                 }`}
               >
                 <Box className="w-4 h-4" />
@@ -68,7 +68,7 @@ export default function DemoContainerQueriesPage() {
                 className={`px-fluid-3 py-fluid-2 rounded-lg transition-colors flex items-center gap-2 ${
                   containerWidth === 'large'
                     ? 'bg-indigo-500 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200'
                 }`}
               >
                 <Maximize2 className="w-4 h-4" />
@@ -82,11 +82,11 @@ export default function DemoContainerQueriesPage() {
         <div className={`mx-auto transition-all duration-300 ${widths[containerWidth]}`}>
           {/* Example 1: User Card with Container Query */}
           <section className="mb-fluid-8">
-            <h2 className="text-fluid-2xl font-bold text-gray-900 mb-fluid-4">
+            <h2 className="text-fluid-2xl font-bold text-gray-900 dark:text-slate-100 mb-fluid-4">
               📇 Carte Utilisateur Adaptive
             </h2>
 
-            <div className="@container bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+            <div className="@container bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm overflow-hidden">
               {/*
                 @container enables container queries
                 @sm, @md, @lg work like breakpoints but relative to container
@@ -101,26 +101,26 @@ export default function DemoContainerQueriesPage() {
 
                 {/* Content */}
                 <div className="flex-1 text-center @lg:text-left">
-                  <h3 className="text-fluid-xl @sm:text-fluid-2xl @lg:text-fluid-3xl font-bold text-gray-900 mb-fluid-2">
+                  <h3 className="text-fluid-xl @sm:text-fluid-2xl @lg:text-fluid-3xl font-bold text-gray-900 dark:text-slate-100 mb-fluid-2">
                     John Doe
                   </h3>
-                  <p className="text-fluid-base text-gray-600 mb-fluid-4">
+                  <p className="text-fluid-base text-gray-600 dark:text-slate-400 mb-fluid-4">
                     Senior Product Designer
                   </p>
 
                   {/* Contact Info - Changes layout based on container */}
                   <div className="grid grid-cols-1 @sm:grid-cols-2 gap-fluid-2 @lg:gap-fluid-3">
-                    <div className="flex items-center gap-2 @lg:gap-3 justify-center @lg:justify-start p-fluid-2 bg-gray-50 rounded-lg">
+                    <div className="flex items-center gap-2 @lg:gap-3 justify-center @lg:justify-start p-fluid-2 bg-gray-50 dark:bg-slate-800 rounded-lg">
                       <Mail className="w-4 h-4 text-indigo-500 flex-shrink-0" />
-                      <span className="text-fluid-sm text-gray-700">john@example.com</span>
+                      <span className="text-fluid-sm text-gray-700 dark:text-slate-300">john@example.com</span>
                     </div>
-                    <div className="flex items-center gap-2 @lg:gap-3 justify-center @lg:justify-start p-fluid-2 bg-gray-50 rounded-lg">
+                    <div className="flex items-center gap-2 @lg:gap-3 justify-center @lg:justify-start p-fluid-2 bg-gray-50 dark:bg-slate-800 rounded-lg">
                       <Phone className="w-4 h-4 text-indigo-500 flex-shrink-0" />
-                      <span className="text-fluid-sm text-gray-700">+33 6 12 34 56 78</span>
+                      <span className="text-fluid-sm text-gray-700 dark:text-slate-300">+33 6 12 34 56 78</span>
                     </div>
-                    <div className="flex items-center gap-2 @lg:gap-3 justify-center @lg:justify-start p-fluid-2 bg-gray-50 rounded-lg @sm:col-span-2">
+                    <div className="flex items-center gap-2 @lg:gap-3 justify-center @lg:justify-start p-fluid-2 bg-gray-50 dark:bg-slate-800 rounded-lg @sm:col-span-2">
                       <MapPin className="w-4 h-4 text-indigo-500 flex-shrink-0" />
-                      <span className="text-fluid-sm text-gray-700">Paris, France</span>
+                      <span className="text-fluid-sm text-gray-700 dark:text-slate-300">Paris, France</span>
                     </div>
                   </div>
                 </div>
@@ -130,7 +130,7 @@ export default function DemoContainerQueriesPage() {
                   <button className="flex-1 @lg:flex-none px-fluid-4 py-fluid-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors text-fluid-sm font-medium">
                     Message
                   </button>
-                  <button className="flex-1 @lg:flex-none px-fluid-4 py-fluid-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-fluid-sm font-medium">
+                  <button className="flex-1 @lg:flex-none px-fluid-4 py-fluid-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:bg-slate-800 transition-colors text-fluid-sm font-medium">
                     Profile
                   </button>
                 </div>
@@ -140,26 +140,26 @@ export default function DemoContainerQueriesPage() {
 
           {/* Example 2: Product Grid */}
           <section className="mb-fluid-8">
-            <h2 className="text-fluid-2xl font-bold text-gray-900 mb-fluid-4">
+            <h2 className="text-fluid-2xl font-bold text-gray-900 dark:text-slate-100 mb-fluid-4">
               🛍️ Grille Produits Adaptive
             </h2>
 
-            <div className="@container bg-white rounded-lg border border-gray-200 p-fluid-4 @sm:p-fluid-6">
+            <div className="@container bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 p-fluid-4 @sm:p-fluid-6">
               {/* Grid adapts to container width */}
               <div className="grid grid-cols-1 @sm:grid-cols-2 @lg:grid-cols-3 @xl:grid-cols-4 gap-fluid-3 @lg:gap-fluid-4">
                 {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
                   <div
                     key={i}
-                    className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow"
+                    className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 dark:border-slate-700 rounded-lg overflow-hidden hover:shadow-md transition-shadow"
                   >
                     <div className="aspect-square bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center">
                       <span className="text-4xl">📦</span>
                     </div>
                     <div className="p-fluid-3">
-                      <h4 className="text-fluid-base font-semibold text-gray-900 mb-fluid-1">
+                      <h4 className="text-fluid-base font-semibold text-gray-900 dark:text-slate-100 mb-fluid-1">
                         Produit {i}
                       </h4>
-                      <p className="text-fluid-sm text-gray-600 mb-fluid-2">
+                      <p className="text-fluid-sm text-gray-600 dark:text-slate-400 mb-fluid-2">
                         Description courte
                       </p>
                       <div className="flex items-center justify-between">
@@ -179,11 +179,11 @@ export default function DemoContainerQueriesPage() {
 
           {/* Example 3: Dashboard Stats */}
           <section className="mb-fluid-8">
-            <h2 className="text-fluid-2xl font-bold text-gray-900 mb-fluid-4">
+            <h2 className="text-fluid-2xl font-bold text-gray-900 dark:text-slate-100 mb-fluid-4">
               📊 Stats Dashboard Adaptive
             </h2>
 
-            <div className="@container bg-white rounded-lg border border-gray-200 p-fluid-4 @sm:p-fluid-6">
+            <div className="@container bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 p-fluid-4 @sm:p-fluid-6">
               {/* Stats grid - container aware */}
               <div className="grid grid-cols-1 @sm:grid-cols-2 @lg:grid-cols-4 gap-fluid-4">
                 {[
@@ -194,9 +194,9 @@ export default function DemoContainerQueriesPage() {
                 ].map((stat, i) => (
                   <div
                     key={i}
-                    className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-lg p-fluid-4 @lg:p-fluid-5"
+                    className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 dark:border-slate-700 rounded-lg p-fluid-4 @lg:p-fluid-5"
                   >
-                    <p className="text-fluid-sm text-gray-600 mb-fluid-2">
+                    <p className="text-fluid-sm text-gray-600 dark:text-slate-400 mb-fluid-2">
                       {stat.label}
                     </p>
                     <p className={`text-fluid-2xl @lg:text-fluid-3xl font-bold text-${stat.color}-600`}>

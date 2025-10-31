@@ -25,7 +25,7 @@ export default function AIConfigRedirectPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 flex items-center justify-center p-6">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center space-y-6">
+      <div className="max-w-md w-full bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-8 text-center space-y-6">
         <div className="flex justify-center">
           <div className="relative">
             <Settings className="h-16 w-16 text-purple-600 animate-spin" style={{ animationDuration: '3s' }} />
@@ -34,10 +34,10 @@ export default function AIConfigRedirectPage() {
         </div>
 
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100">
             Redirection en cours...
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-slate-400">
             La configuration IA a été déplacée vers la page <strong>Intégrations</strong> centralisée.
           </p>
         </div>

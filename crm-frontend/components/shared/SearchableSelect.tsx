@@ -129,7 +129,7 @@ export function SearchableSelect({
   return (
     <div ref={containerRef} className="relative">
       {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>
@@ -140,15 +140,15 @@ export function SearchableSelect({
         onClick={handleToggle}
         disabled={disabled}
         className={`
-          w-full px-4 py-3 text-left border rounded-lg bg-white
+          w-full px-4 py-3 text-left border rounded-lg bg-white dark:bg-slate-900
           flex items-center justify-between gap-2
           transition-colors
-          ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'hover:border-gray-400'}
-          ${error ? 'border-red-500' : 'border-gray-300'}
+          ${disabled ? 'bg-gray-100 dark:bg-slate-800 cursor-not-allowed' : 'hover:border-gray-400'}
+          ${error ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'}
           ${isOpen ? 'ring-2 ring-blue-500 border-blue-500' : ''}
         `}
       >
-        <span className={selectedOption ? 'text-gray-900' : 'text-gray-500'}>
+        <span className={selectedOption ? 'text-gray-900 dark:text-slate-100' : 'text-gray-500'}>
           {selectedOption ? selectedOption.label : placeholder}
         </span>
         <div className="flex items-center gap-1">
@@ -173,8 +173,8 @@ export function SearchableSelect({
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
-          <div className="p-2 border-b border-gray-200">
+        <div className="absolute z-50 w-full mt-1 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-lg shadow-lg">
+          <div className="p-2 border-b border-gray-200 dark:border-slate-700">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
@@ -184,7 +184,7 @@ export function SearchableSelect({
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Rechercher..."
-                className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-9 pr-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
               />
             </div>
           </div>
@@ -208,14 +208,14 @@ export function SearchableSelect({
                     `}
                     onMouseEnter={() => setHighlightedIndex(index)}
                   >
-                    <div className="text-sm text-gray-900">{option.label}</div>
+                    <div className="text-sm text-gray-900 dark:text-slate-100">{option.label}</div>
                     {option.sublabel && (
                       <div className="text-xs text-gray-500">{option.sublabel}</div>
                     )}
                   </button>
                 ))}
                 {(hasMore || isLoadingMore) && (
-                  <div className="p-3 text-center text-xs text-gray-500 bg-gray-50">
+                  <div className="p-3 text-center text-xs text-gray-500 bg-gray-50 dark:bg-slate-800">
                     {isLoadingMore
                       ? 'Chargement...'
                       : 'Faites défiler pour charger plus'}

@@ -101,7 +101,7 @@ export function OrganisationForm({
 
       <div>
         <div className="flex items-center gap-2 mb-2">
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
             Catégorie *
           </label>
           <HelpTooltip
@@ -197,15 +197,15 @@ export function OrganisationForm({
           type="checkbox"
           id="is_active"
           {...register('is_active')}
-          className="h-4 w-4 rounded border-gray-300"
+          className="h-4 w-4 rounded border-gray-300 dark:border-slate-600"
         />
-        <label htmlFor="is_active" className="text-sm text-gray-700">
+        <label htmlFor="is_active" className="text-sm text-gray-700 dark:text-slate-300">
           Organisation active
         </label>
       </div>
 
       {/* Champs avancés */}
-      <div className="pt-4 border-t border-gray-200">
+      <div className="pt-4 border-t border-gray-200 dark:border-slate-700">
         <button
           type="button"
           onClick={() => setShowAdvanced(!showAdvanced)}
@@ -223,10 +223,10 @@ export function OrganisationForm({
         </button>
 
         {showAdvanced && (
-          <div className="mt-4 space-y-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
+          <div className="mt-4 space-y-4 bg-gray-50 dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
                   AUM (Assets Under Management)
                 </label>
                 <HelpTooltip
@@ -259,7 +259,7 @@ export function OrganisationForm({
 
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
                   Stratégies d'investissement
                 </label>
                 <HelpTooltip
@@ -272,7 +272,7 @@ export function OrganisationForm({
                 {...register('strategies')}
                 placeholder="Une stratégie par ligne (ex: Actions Europe, Obligations, etc.)"
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bleu focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-bleu focus:border-transparent"
               />
               <p className="text-xs text-gray-500 mt-1">
                 Entrez une stratégie par ligne
@@ -280,14 +280,14 @@ export function OrganisationForm({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                 Notes internes
               </label>
               <textarea
                 {...register('notes')}
                 placeholder="Notes et commentaires internes..."
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bleu focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-bleu focus:border-transparent"
               />
             </div>
           </div>

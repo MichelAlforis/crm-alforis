@@ -134,7 +134,7 @@ function DropdownPortal({ triggerRef, isOpen, onClose, children }: DropdownPorta
         onClick={(e) => e.stopPropagation()}
         onTouchEnd={(e) => e.stopPropagation()}
       >
-        <div className="min-w-[160px] bg-white border border-gray-200 rounded-lg shadow-lg py-1">
+        <div className="min-w-[160px] bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg shadow-lg py-1">
           {children}
         </div>
       </div>
@@ -164,7 +164,7 @@ export function OverflowMenu({
       case 'success':
         return 'text-green-600 hover:bg-green-50'
       default:
-        return 'text-gray-700 hover:bg-gray-50'
+        return 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:bg-slate-800'
     }
   }
 
@@ -210,8 +210,8 @@ export function OverflowMenu({
         className={clsx(
           'p-1.5 rounded transition-colors min-w-[32px] min-h-[32px] flex items-center justify-center',
           isOpen
-            ? 'bg-gray-100 text-gray-900'
-            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+            ? 'bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-slate-100'
+            : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:bg-slate-800 hover:text-gray-900 dark:hover:text-white dark:text-slate-100'
         )}
         title="Actions"
         aria-label="Open actions menu"
