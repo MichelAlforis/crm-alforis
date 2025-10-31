@@ -4,6 +4,7 @@ import { logger } from '@/lib/logger'
 import React, { useEffect, useState } from 'react'
 import { Card } from '@/components/shared'
 import { storage, AUTH_STORAGE_KEYS } from '@/lib/constants'
+import { MetricCard } from '@/components/monitoring/MetricCard'
 
 // Types
 interface SystemMetrics {
