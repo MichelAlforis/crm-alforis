@@ -6,6 +6,7 @@ import { logger } from '@/lib/logger'
 
 import { useEffect } from 'react'
 import { onCLS, onFCP, onLCP, onTTFB, onINP, type Metric } from 'web-vitals'
+import { storage } from '@/lib/constants'
 
 interface WebVitalsReporterProps {
   /**
@@ -56,13 +57,13 @@ export function WebVitalsReporter({ debug = false, analyticsEndpoint }: WebVital
 
       // Store in localStorage for dev inspection
       if (typeof window !== 'undefined' && debug) {
-        const vitals = JSON.parse(localStorage.getItem('web-vitals') || '{}')
+        const vitals = storage.get<Record<string, any>>('web-vitals', {})
         vitals[name] = {
           value: Math.round(value),
           rating,
           timestamp: new Date().toISOString(),
         }
-        localStorage.setItem('web-vitals', JSON.stringify(vitals))
+        storage.set('web-vitals', vitals)
       }
     }
 
@@ -117,7 +118,7 @@ function sendToAnalytics(endpoint: string, metric: Metric) {
  */
 if (typeof window !== 'undefined') {
   (window as any).getWebVitals = () => {
-    const vitals = localStorage.getItem('web-vitals')
+    const vitals = storage.get('web-vitals')
     if (vitals) {
       const parsed = JSON.parse(vitals)
       console.table(parsed)
