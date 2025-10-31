@@ -6,6 +6,7 @@
 import React, { useState } from 'react'
 import { X, Phone, Mail, Users, Coffee, FileText, Calendar } from 'lucide-react'
 import { Input } from '@/components/shared/Input'
+import { storage, AUTH_STORAGE_KEYS } from '@/lib/constants'
 
 interface InteractionCreateModalProps {
   isOpen: boolean
@@ -56,7 +57,7 @@ export default function InteractionCreateModal({
     setError(null)
 
     try {
-      const token = localStorage.getItem('access_token') || localStorage.getItem('auth_token')
+      const token = storage.get(AUTH_STORAGE_KEYS.TOKEN) || storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN)
 
       const recipients = []
       if (participantName || participantEmail) {
