@@ -7,6 +7,7 @@ import { useToast } from '@/components/ui/Toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Upload, FileText, CheckCircle2, AlertCircle, Download } from 'lucide-react';
 import { logger } from '@/lib/logger'
+import { IMPORT_ENDPOINTS } from "@/lib/constants"
 
 interface CSVRow {
   [key: string]: string;
@@ -235,7 +236,7 @@ export default function ImportUnifiedForm() {
       // Step 1: Import organisations (if any)
       let orgResult = { total: 0, created: [], failed: 0, errors: [] };
       if (organisations.length > 0) {
-        const orgRes = await fetch('/api/v1/imports/organisations/bulk?type_org=' + orgType, {
+        const orgRes = await fetch(IMPORT_ENDPOINTS.ORGANISATIONS_BULK + '?type_org=' + orgType, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(organisations)
@@ -248,7 +249,7 @@ export default function ImportUnifiedForm() {
       // Step 2: Import people (if any)
       let peopleResult = { total: 0, created: [], failed: 0, errors: [] };
       if (people.length > 0) {
-        const peopleRes = await fetch('/api/v1/imports/people/bulk', {
+        const peopleRes = await fetch(IMPORT_ENDPOINTS.PEOPLE_BULK, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(people)

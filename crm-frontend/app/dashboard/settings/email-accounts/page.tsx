@@ -7,6 +7,7 @@
 
 import { useState, useEffect } from 'react'
 import { storage, AUTH_STORAGE_KEYS, PREFERENCES_STORAGE_KEYS } from "@/lib/constants"
+import { EMAIL_ENDPOINTS } from "@/lib/constants"
 import {
   Mail,
   Plus,
@@ -110,7 +111,7 @@ export default function EmailAccountsPage() {
   const fetchAccounts = async () => {
     try {
       setLoading(true)
-      const res = await fetch('/api/v1/email-accounts', {
+      const res = await fetch(EMAIL_ENDPOINTS.EMAIL_ACCOUNTS, {
         headers: {
           Authorization: `Bearer ${storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN)}`,
         },
@@ -128,7 +129,7 @@ export default function EmailAccountsPage() {
 
   const handleAddAccount = async () => {
     try {
-      const res = await fetch('/api/v1/email-accounts', {
+      const res = await fetch(EMAIL_ENDPOINTS.EMAIL_ACCOUNTS, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN)}`,

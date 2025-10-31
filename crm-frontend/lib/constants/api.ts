@@ -80,6 +80,10 @@ export const EMAIL_ENDPOINTS = {
   // Email API configuration
   EMAIL_APIS: '/api/v1/email-apis',
   EMAIL_API_DETAIL: (id: string | number) => `/api/v1/email-apis/${id}`,
+
+  // Email accounts (multi-mail)
+  EMAIL_ACCOUNTS: '/api/v1/email-accounts',
+  EMAIL_ACCOUNT_DETAIL: (id: string | number) => `/api/v1/email-accounts/${id}`,
 } as const;
 
 /**

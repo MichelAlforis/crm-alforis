@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { Button, Alert } from '@/components/shared'
 import { useToast } from '@/components/ui/Toast'
+import { IMPORT_ENDPOINTS } from "@/lib/constants"
 
 interface ImportPeopleFormProps {
   onSuccess?: () => void
@@ -69,7 +70,7 @@ export function ImportPeopleForm({ onSuccess }: ImportPeopleFormProps) {
         return
       }
 
-      const response = await fetch('/api/v1/imports/people/bulk', {
+      const response = await fetch(IMPORT_ENDPOINTS.PEOPLE_BULK, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(people),
