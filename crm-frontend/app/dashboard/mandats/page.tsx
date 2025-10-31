@@ -142,7 +142,7 @@ export default function MandatsPage() {
         accessor: 'date_debut',
         priority: 'medium',
         minWidth: '120px',
-        render: (value: unknown, row) => new Date(value).toLocaleDateString('fr-FR'),
+        render: (value: unknown) => new Date(value).toLocaleDateString('fr-FR'),
       },
       {
         header: 'Date fin',
@@ -158,7 +158,7 @@ export default function MandatsPage() {
         sticky: 'right',
         priority: 'high',
         minWidth: '120px',
-        render: (value: unknown, row) => {
+        render: (value: unknown) => {
           const actions: OverflowAction[] = [
             {
               label: 'Voir',
