@@ -108,7 +108,7 @@ const SortIcon = ({ column, sortConfig }: { column: string; sortConfig?: TableV2
 // ============= SKELETON ROW =============
 const SkeletonRow = ({ columns }: { columns: ColumnV2[] }) => (
   <tr>
-    {columns.filter(_ => !_.hidden).map((col, idx) => (
+    {columns.filter(_ => !_.hidden).map((_, idx) => (
       <td key={idx} className="px-4 py-3">
         <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4" />
       </td>

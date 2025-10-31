@@ -108,9 +108,9 @@ export default function DemoTableV2Page() {
       render: (value: unknown) => (
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
-            {value.charAt(0)}
+            {String(value).charAt(0)}
           </div>
-          <span className="font-medium text-gray-900 dark:text-slate-100">{value}</span>
+          <span className="font-medium text-gray-900 dark:text-slate-100">{String(value)}</span>
         </div>
       )
     },
