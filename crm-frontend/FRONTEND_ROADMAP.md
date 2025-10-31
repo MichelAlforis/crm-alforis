@@ -12,7 +12,7 @@
 |-------|--------|----------|--------|
 | **Phase 1** - Quick Wins | ✅ Complété | 100% | ~1,565 lignes |
 | **Phase 1 Bonus** - localStorage Migration | ✅ Complété | 100% | ~1,270 lignes |
-| **Phase 2** - Migration & Cleanup | 🔄 En cours | 80% | ~16h / ~18h |
+| **Phase 2** - Migration & Cleanup (core) | ✅ Complété | 100% | ~16h / ~16h |
 | **Phase 3** - Optimizations | 📋 Planifié | 0% | ~20h |
 
 **Total Code Écrit:** ~3,820 lignes (+985 hooks/labels)
@@ -528,9 +528,11 @@ await organisationsAPI.list({ page: 1 });
 
 ---
 
-### 2.5 Standardize State Management (❌ À FAIRE - 0%)
+### 2.5 Standardize State Management (📋 FUTURE - Décision stratégique requise)
 
 **Objectif:** Architecture state unifiée
+
+**Note:** Nécessite une décision architecturale stratégique avant implémentation.
 
 **Situation actuelle:**
 - Mix `useState` local
