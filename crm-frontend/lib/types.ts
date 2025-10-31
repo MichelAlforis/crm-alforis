@@ -416,6 +416,7 @@ export interface EmailCampaign {
   subject?: string | null
   preheader?: string | null
   audience_filters?: Record<string, any> | null
+  recipient_filters?: Record<string, any> | null // Legacy field
   audience_snapshot?: EmailAudienceSnapshot | null
   scheduled_at?: string | null
   timezone?: string | null
@@ -424,6 +425,8 @@ export interface EmailCampaign {
   is_ab_test: boolean
   ab_test_split_percentage: number
   rate_limit_per_minute?: number | null
+  batch_size?: number | null
+  delay_between_batches?: number | null
   total_recipients?: number | null
   total_sent: number
   last_sent_at?: string | null
@@ -527,9 +530,12 @@ export interface EmailCampaignStats {
   delivered: number
   opens: number
   unique_opens: number
+  total_opened?: number // Legacy field
   clicks: number
   unique_clicks: number
+  total_clicked?: number // Legacy field
   bounces: number
+  total_bounced?: number // Legacy field
   unsubscribes: number
   complaints: number
   open_rate: number
