@@ -1,8 +1,8 @@
 # 🎯 CRM - Roadmap TODO Priorisée
 
-**Date:** 31 Octobre 2025 - 16:00
-**Version:** v8.9.0
-**Base:** Post-déploiement production + Tests E2E Playwright
+**Date:** 31 Octobre 2025 - 17:00
+**Version:** v8.10.0
+**Base:** Post-déploiement production + Tests E2E Playwright + CI/CD E2E Integration
 
 ---
 
@@ -204,18 +204,70 @@ SELECT * FROM pg_stat_statements ORDER BY mean_exec_time DESC LIMIT 10;
 // react-intersection-observer
 ```
 
-### 16. CI/CD GitHub Actions (3h)
-**Status:** ❌ Deploy manuel
-**Impact:** DevOps
-**Effort:** 3h
+### ✅ 16. CI/CD GitHub Actions (3h)
+**Status:** ✅ COMPLETÉ + E2E Intégré (31 Oct 2025 - 17h00)
+**Impact:** DevOps + CI/CD automatisé
+**Effort:** 3h (existant) + 30min (E2E integration)
+**Commits:**
+- `cc6630a9` - feat(ci): Integrate Playwright E2E tests in CI/CD pipeline
 
+**Workflows Actifs:**
+1. ✅ [.github/workflows/ci-cd.yml](.github/workflows/ci-cd.yml) - Pipeline complet (527 lignes)
+   - 🐍 **Lint Backend:** black, flake8, isort, mypy
+   - ⚛️ **Lint Frontend:** ESLint, TypeScript, Prettier
+   - 🧪 **Test Backend:** pytest + coverage 70% + PostgreSQL 15 + Redis 7
+   - ⚛️ **Test Frontend:** Jest (TODO: implement)
+   - 🎭 **Test E2E:** Playwright - 4 tests publics (no auth)
+   - 📊 **SonarQube:** Quality gates + coverage analysis
+   - 🔒 **Security:** Trivy scan HIGH/CRITICAL
+   - 🐳 **Build:** Docker images (api, frontend, worker)
+   - 🚀 **Deploy Staging:** develop → staging.crm.alforis.fr
+   - 🚀 **Deploy Production:** main → crm.alforis.fr (Hetzner)
+   - 📋 **Summary:** Tableau récapitulatif des jobs
+
+2. ✅ [.github/workflows/test.yml](.github/workflows/test.yml) - Tests rapides (118 lignes)
+   - 🐍 Backend: pytest -m "not slow"
+   - ⚛️ Frontend: npm test (fast)
+   - ⚡ Triggers: feature/**, fix/**
+
+3. ✅ [.github/workflows/size-guard.yml](.github/workflows/size-guard.yml) - Gardien de taille (86 lignes)
+   - 🐍 Python: 600 lignes max
+   - ⚛️ TypeScript: 500 lignes max (800 pour pages)
+
+**Job Test E2E (Nouvellement intégré):**
 ```yaml
-# .github/workflows/deploy.yml
-- Lint
-- Tests
-- Build
-- Deploy
+test-e2e:
+  name: 🎭 Tests E2E Playwright
+  runs-on: ubuntu-latest
+  needs: [lint-frontend]
+  timeout-minutes: 15
+
+  steps:
+    - Install Node.js 20
+    - npm ci
+    - Install Playwright chromium
+    - Run 4 public tests (chromium-public)
+    - Upload HTML report (30 days)
+    - Upload test results (7 days)
 ```
+
+**Artifacts:**
+- playwright-report/ (interactive HTML, JSON)
+- playwright-results/ (traces, videos, screenshots)
+
+**Pipeline Flow:**
+```
+lint-backend ────┐
+lint-frontend ───┼─→ test-backend ───┐
+                 └─→ test-frontend ──┼─→ test-e2e ─→ sonarqube ─→ build ─→ deploy-staging
+                    security ────────┘                                   └─→ deploy-production
+```
+
+**Metrics:**
+- ⏱️ Durée totale: ~10min (lint 2min + tests 6min + build 2min)
+- ✅ Tests E2E: 4/39 tests actifs (10%)
+- 📦 Docker images: api, frontend, worker
+- 🎯 Coverage: Backend 70%, Frontend TODO
 
 ### ✅ 17. Staging Environment (2h)
 **Status:** ✅ COMPLETÉ (31 Oct 2025)
@@ -350,12 +402,13 @@ npm run test:e2e:report   # Rapport HTML interactif
 |----------|--------|------------|-----------|--------------|--------|
 | **P0** | 4 | 3 ✅ | 1 ⏸️ | 2h45 | 🔴 Critique |
 | **P1** | 6 | 6 ✅ | 0 | 9h | 🟠 Important |
-| **P2** | 10 | 3 ✅ | 7 | 41h → 33h restants | 🟡 Nice to have |
+| **P2** | 10 | 4 ✅ | 6 | 41h → 30h restants | 🟡 Nice to have |
 
-**Total:** 20 tâches, 12 complétées ✅ (60%), 7 restantes (35%), 1 reportée ⏸️ (5%)
-**Effort accompli:** 19h45 / 53h (37%)
+**Total:** 20 tâches, 13 complétées ✅ (65%), 6 restantes (30%), 1 reportée ⏸️ (5%)
+**Effort accompli:** 20h15 / 53h (38%)
 
 **P2 Complétées (31 Oct 2025):**
+- ✅ 16. CI/CD GitHub Actions (3h30) - Pipeline complet + E2E Playwright intégré
 - ✅ 17. Staging Environment (2h) - docker-compose.staging.yml + deploy script
 - ✅ 18. Monitoring Uptime (2h) - UptimeRobot + SSL monitoring
 - ✅ 19. Tests E2E Playwright (6h) - 39 tests créés, migration Cypress réussie
@@ -458,6 +511,19 @@ Selon feedback users et priorités business
 
 **Résultats tests:** ✅ 4/4 passés (100%) en 21.4s
 
+### ✅ CI/CD GitHub Actions - E2E Integration (30min)
+- Nouveau job `test-e2e` intégré dans [.github/workflows/ci-cd.yml](.github/workflows/ci-cd.yml)
+- Exécution automatique des 4 tests publics (no auth) dans CI/CD
+- Artifacts uploadés: playwright-report/ (30j) + test-results/ (7j)
+- Pipeline flow: lint → test-e2e → sonarqube → build → deploy
+- Summary report mis à jour avec résultats E2E
+- Commit: cc6630a9 (+55 lignes)
+
+**Impact:**
+- ✅ CI/CD pipeline complet avec E2E testing
+- ⏱️ +2min au pipeline total (~10min)
+- 📊 Coverage E2E: 10% (4/39 tests actifs)
+
 ---
 
 ## 🎯 **PROCHAINES ACTIONS RECOMMANDÉES**
@@ -466,14 +532,22 @@ Selon feedback users et priorités business
 1. Créer user test@alforis.fr dans DB PostgreSQL
 2. Décommenter projects auth dans playwright.config.ts
 3. Lancer 35 tests avec auth: `npm run test:e2e`
-4. Intégrer dans CI/CD GitHub Actions
+4. ✅ ~~Intégrer dans CI/CD GitHub Actions~~ **FAIT**
 
-### Priorité 2 - P2 Restantes
-- **Dark Mode** (4h) - Theme sombre UI
+### Priorité 2 - P2 Restantes (30h)
+**Quick Wins (5h):**
+- **PWA Install** (1h) - Bannière + instructions installation
+- **Deep Links** (2h) - Navigation directe depuis emails
 - **Infinite Scroll** (2h) - Pagination infinie
-- **Monitoring Grafana** (4h) - Dashboards métriques
-- **CI/CD GitHub Actions** (3h) - Pipeline automatisé
+
+**Features UX (12h):**
+- **Dark Mode** (4h) - Theme sombre UI
 - **Documentation User** (8h) - Guide démarrage + FAQ
+
+**Infrastructure (13h):**
+- **Monitoring Grafana** (4h) - Dashboards métriques
+- **Logs Centralisés** (5h) - ELK Stack / Loki
+- **Migration Database** (4h) - Alembic rollback
 
 ### Priorité 3 - P0 Reportée
 - **OAuth Apps** (1h) - Gmail + Outlook (user flemme mais débloque Multi-Mail)
