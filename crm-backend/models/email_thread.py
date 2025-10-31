@@ -63,7 +63,7 @@ class EmailThread(Base):
 
     # Métadonnées du thread (JSON)
     # Contient: message_ids, in_reply_to_ids, references, etc.
-    thread_metadata = Column(JSON, default=dict)
+    thread_metadata = Column("metadata", JSON, default=dict)  # Map to 'metadata' column in DB
 
     # Timestamps
     created_at = Column(DateTime, default=datetime.now, nullable=False)
