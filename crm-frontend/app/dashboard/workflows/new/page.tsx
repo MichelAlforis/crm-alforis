@@ -14,6 +14,7 @@ import {
   Code,
 } from 'lucide-react'
 import { HelpTooltip } from '@/components/help/HelpTooltip'
+import { storage, AUTH_STORAGE_KEYS } from '@/lib/constants'
 
 // Builder visuel avec @xyflow/react (chargement dynamique)
 const WorkflowBuilderClient = dynamic(
@@ -123,7 +124,7 @@ export default function NewWorkflowPage() {
     setError(null)
 
     try {
-      const token = localStorage.getItem('access_token') || localStorage.getItem('auth_token')
+      const token = storage.get(AUTH_STORAGE_KEYS.TOKEN) || storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN)
 
       // Parser JSON
       let parsedTriggerConfig = null

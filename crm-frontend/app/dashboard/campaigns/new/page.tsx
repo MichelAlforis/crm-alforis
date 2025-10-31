@@ -9,6 +9,7 @@ import { Button } from '@/components/shared'
 import { useToast } from '@/components/ui/Toast'
 import { CampaignWizard } from '@/components/email/CampaignWizard'
 import { apiClient } from '@/lib/api'
+import { storage } from '@/lib/constants'
 
 interface CampaignResponse {
   id: number
@@ -48,7 +49,7 @@ export default function NewCampaignPage() {
   const handleSaveDraft = async (formData: any) => {
     // Sauvegarde locale pour le moment (peut être étendu avec un endpoint backend)
     try {
-      localStorage.setItem('campaign_draft', JSON.stringify(formData))
+      storage.set('campaign_draft', formData)
       logger.log('Draft saved to localStorage')
       showToast({
         type: 'success',

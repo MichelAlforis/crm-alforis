@@ -31,6 +31,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from core import get_current_user, get_db
+from core.cache import RedisClient
 from core.encryption import decrypt_value, encrypt_value
 from models.email_message import EmailMessage
 from models.interaction import Interaction
@@ -437,6 +438,15 @@ async def o365_authorize(
         login_hint=login_hint,
     )
 
+    # Store state in Redis for CSRF validation (5min TTL)
+    try:
+        redis_client = RedisClient.get_client()
+        redis_client.setex(f"oauth:state:{state}", 300, str(user_id))
+    except Exception as e:
+        # Log but don't fail - degrade gracefully
+        import logging
+        logging.warning(f"Failed to store OAuth state in Redis: {e}")
+
     return {
         "authorization_url": authorization_url,
         "state": state,
@@ -519,7 +529,33 @@ async def o365_callback(
 
     service = O365OAuthService(db)
 
-    # TODO: Vérifier state CSRF
+    # Validate CSRF state token
+    try:
+        redis_client = RedisClient.get_client()
+        stored_user_id = redis_client.get(f"oauth:state:{state}")
+
+        if not stored_user_id:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid or expired state token. Please restart the OAuth flow."
+            )
+
+        # Delete state after validation (one-time use)
+        redis_client.delete(f"oauth:state:{state}")
+
+        # Verify user_id matches
+        user_id = current_user.get("user_id") or current_user.get("sub")
+        if str(user_id) != stored_user_id:
+            raise HTTPException(
+                status_code=403,
+                detail="State token does not match current user"
+            )
+    except HTTPException:
+        raise
+    except Exception as e:
+        # Log but allow if Redis is down (degrade gracefully)
+        import logging
+        logging.warning(f"CSRF validation failed (Redis error): {e}")
 
     # Échanger code → tokens
     token_data = await service.exchange_code_for_token(code)

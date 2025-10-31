@@ -4,6 +4,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import { storage, AUTH_STORAGE_KEYS } from "@/lib/constants"
 import { Card, CardHeader, CardBody } from '@/components/shared/Card'
 import { Alert } from '@/components/shared/Alert'
 import { Mail, CheckCircle, MousePointer, XCircle, Send } from 'lucide-react'
@@ -42,7 +43,7 @@ export function EmailPerformanceWidget({
 
     try {
       const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-      const token = localStorage.getItem('auth_token')
+      const token = storage.get(AUTH_STORAGE_KEYS.TOKEN)
 
       const response = await fetch(
         `${API_BASE}/dashboard/email-performance?period=${period}`,
