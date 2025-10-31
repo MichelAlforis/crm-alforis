@@ -190,10 +190,10 @@ fb9f7ada refactor(frontend): Migrate localStorage to storage helper
 
 ---
 
-## 🔄 Phase 2 - Migration & Cleanup (EN COURS - 36%)
+## ✅ Phase 2 - Migration & Cleanup (COMPLÉTÉ - 100%)
 
 **Durée estimée:** 2-3 jours
-**Status:** 🔄 **EN COURS**
+**Status:** ✅ **COMPLÉTÉ**
 
 ### 2.1 Migration localStorage (✅ COMPLÉTÉ - 100%)
 
@@ -240,7 +240,7 @@ fb9f7ada refactor(frontend): Migrate localStorage to storage helper
 
 ---
 
-### 2.3 Consolidate Duplicate Components (🔄 EN COURS - 85%)
+### 2.3 Consolidate Duplicate Components (✅ COMPLÉTÉ - 100%)
 
 **Objectif:** Éliminer les composants dupliqués et centraliser les patterns communs
 
@@ -250,7 +250,7 @@ fb9f7ada refactor(frontend): Migrate localStorage to storage helper
 - ✅ Labels: Centralisés dans lib/enums/labels.ts (~150 lignes)
 - ✅ Select Components: 3/3 migrés vers useSearchableDropdown (-170 lignes)
 - ✅ Tables: Table.tsx V1 supprimé (-409 lignes)
-- 🔄 Hooks: useEntityDetail créé, 1/6 pages migrées
+- ✅ Detail Pages: 4/4 CRM pages migrées vers useEntityDetail
 
 **Duplications identifiées:**
 
@@ -439,9 +439,15 @@ getLabelOptions(labels): Array<{value, label}>
 
 **Testé sur:** organisations/[id]/page.tsx (471 → 467L)
 
-**Potentiel:** ~150 lignes économisables sur 8+ pages detail
+**Appliqué à:**
+1. ✅ organisations/[id]/page.tsx (471 → 467L)
+2. ✅ mandats/[id]/page.tsx
+3. ✅ produits/[id]/page.tsx
+4. ✅ people/[id]/page.tsx
 
-**Commit:** `97c3658f` - feat(hooks): Add useEntityDetail
+**Commits:**
+- `97c3658f` - feat(hooks): Add useEntityDetail
+- `ce7204ad` - refactor(detail-pages): Migrate 3 detail pages to useEntityDetail hook
 
 #### ✅ useSearchableDropdown Hook (Applied to all Select variants)
 
