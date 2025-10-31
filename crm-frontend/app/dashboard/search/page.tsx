@@ -64,7 +64,7 @@ const LABELS: Record<SearchItem['type'], string> = {
   info: 'Informations',
 }
 
-const ICONS: Record<SearchItem['type'], React.ComponentType<any>> = {
+const ICONS: Record<SearchItem['type'], React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
   fournisseur: Factory,
   investisseur: Building2,
   organisation: Building2,
@@ -85,6 +85,23 @@ const ORDER: SearchItem['type'][] = [
   'kpi',
   'info',
 ]
+
+const getErrorMessage = (error: unknown): string => {
+  if (error instanceof Error && error.message) {
+    return error.message
+  }
+
+  if (
+    error &&
+    typeof error === 'object' &&
+    'message' in error &&
+    typeof (error as { message?: unknown }).message === 'string'
+  ) {
+    return (error as { message: string }).message
+  }
+
+  return 'Une erreur est survenue.'
+}
 
 // ----- Data fetch -----
 async function getResults(q: string) {
@@ -262,8 +279,8 @@ export default async function Page({
   try {
     const payload = await getResults(q)
     results = payload.results || []
-  } catch (e: any) {
-    error = e?.message || 'Une erreur est survenue.'
+  } catch (e) {
+    error = getErrorMessage(e)
   }
 
   // Regroupement + compteurs

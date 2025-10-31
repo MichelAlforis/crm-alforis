@@ -12,19 +12,61 @@ import { Card, Button, Modal, Alert } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { Trash2 } from 'lucide-react'
+import { useToast } from '@/hooks/useToast'
 
 // Lazy load KPI form (loaded only when modal opens)
 const KPIForm = lazy(() => import("@/components/forms").then(m => ({ default: m.KPIForm })))
 
 // OLD: import { KPIForm } from '@/components/forms'
-import { KPI, KPICreate } from '@/lib/types'
+import type { KPI, KPICreate } from '@/lib/types'
 import { storage, AUTH_STORAGE_KEYS } from '@/lib/constants'
 import { useUIStore } from '@/stores/ui'
 import { useUrlState } from '@/hooks/useUrlState'
 
+type OrganisationListItem = {
+  id: number
+  name: string
+  organisation_type?: string | null
+}
+
+const getErrorMessage = (error: unknown, fallback: string): string => {
+  if (error instanceof Error && error.message) {
+    return error.message
+  }
+
+  if (
+    error &&
+    typeof error === 'object' &&
+    'message' in error &&
+    typeof (error as { message?: unknown }).message === 'string'
+  ) {
+    return (error as { message: string }).message
+  }
+
+  return fallback
+}
+
+const normalizeKpis = (payload: unknown): KPI[] => {
+  if (Array.isArray(payload)) {
+    return payload as KPI[]
+  }
+
+  if (
+    payload &&
+    typeof payload === 'object' &&
+    'items' in payload &&
+    Array.isArray((payload as { items: unknown }).items)
+  ) {
+    return (payload as { items: KPI[] }).items
+  }
+
+  return []
+}
+
 export default function KPIsPage() {
   const { data: organisations } = useOrganisations({ limit: 200 })
   const { confirm, ConfirmDialogComponent } = useConfirm()
+  const { showToast } = useToast()
 
   // URL state for fournisseur (shareable, bookmarkable)
   const [selectedFournisseurIdParam, setSelectedFournisseurIdParam] = useUrlState('fournisseur', '')
@@ -43,7 +85,8 @@ export default function KPIsPage() {
 
   // Filter for fournisseur type organisations only
   const fournisseurs = useMemo(() => {
-    return organisations?.items?.filter((org: any) => org.organisation_type === 'fournisseur') || []
+    const items = (organisations?.items ?? []) as OrganisationListItem[]
+    return items.filter((org) => org.organisation_type === 'fournisseur')
   }, [organisations])
 
   useEffect(() => {
@@ -65,10 +108,10 @@ export default function KPIsPage() {
         }
       })
       if (!response.ok) throw new Error('Failed to fetch KPIs')
-      const data = await response.json()
-      setKpis(Array.isArray(data) ? data : data.items || [])
-    } catch (err: any) {
-      setKpisError(err.message || 'Erreur lors du chargement des KPIs')
+      const data = await response.json().catch(() => null)
+      setKpis(normalizeKpis(data))
+    } catch (err: unknown) {
+      setKpisError(getErrorMessage(err, 'Erreur lors du chargement des KPIs'))
       setKpis([])
     } finally {
       setKpisLoading(false)
@@ -91,8 +134,13 @@ export default function KPIsPage() {
       if (!response.ok) throw new Error('Failed to create KPI')
       await fetchKPIs()
       closeModal()
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.error('Error creating KPI:', err)
+      showToast({
+        type: 'error',
+        title: 'Erreur',
+        message: getErrorMessage(err, 'Impossible de créer le KPI'),
+      })
     }
   }
 
@@ -116,8 +164,13 @@ export default function KPIsPage() {
           })
           if (!response.ok) throw new Error('Failed to delete KPI')
           await fetchKPIs()
-        } catch (err: any) {
+        } catch (err: unknown) {
           logger.error('Error deleting KPI:', err)
+          showToast({
+            type: 'error',
+            title: 'Erreur',
+            message: getErrorMessage(err, 'Impossible de supprimer le KPI'),
+          })
         }
       },
     })

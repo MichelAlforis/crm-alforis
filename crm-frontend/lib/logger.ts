@@ -22,7 +22,7 @@ export const logger = {
   /**
    * Log debug - Seulement en développement
    */
-  log: (...args: any[]) => {
+  log: (...args: unknown[]) => {
     if (shouldLogVerbose) {
       console.log(...args)
     }
@@ -31,7 +31,7 @@ export const logger = {
   /**
    * Log info - Seulement en développement
    */
-  info: (...args: any[]) => {
+  info: (...args: unknown[]) => {
     if (shouldLogVerbose) {
       console.info(...args)
     }
@@ -40,7 +40,7 @@ export const logger = {
   /**
    * Log warning - Toujours affiché
    */
-  warn: (...args: any[]) => {
+  warn: (...args: unknown[]) => {
     console.warn(...args)
   },
 
@@ -48,7 +48,7 @@ export const logger = {
    * Log error - Toujours affiché
    * Utiliser pour les erreurs qui doivent être tracées en production
    */
-  error: (...args: any[]) => {
+  error: (...args: unknown[]) => {
     console.error(...args)
   },
 
@@ -73,7 +73,7 @@ export const logger = {
   /**
    * Log table - Seulement en développement
    */
-  table: (data: any) => {
+  table: (data: unknown) => {
     if (shouldLogVerbose) {
       console.table(data)
     }
@@ -105,7 +105,7 @@ export const logger = {
 /**
  * Helper pour logger uniquement en développement avec un préfixe
  */
-export const devLog = (prefix: string, ...args: any[]) => {
+export const devLog = (prefix: string, ...args: unknown[]) => {
   if (shouldLogVerbose) {
     console.log(`[${prefix}]`, ...args)
   }
@@ -114,7 +114,7 @@ export const devLog = (prefix: string, ...args: any[]) => {
 /**
  * Helper pour logger les erreurs avec contexte
  */
-export const logError = (context: string, error: any, additionalData?: any) => {
+export const logError = (context: string, error: unknown, additionalData?: unknown) => {
   console.error(`[${context}] Error:`, error)
   if (additionalData && isDevelopment) {
     console.error('Additional data:', additionalData)

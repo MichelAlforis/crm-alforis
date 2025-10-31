@@ -15,7 +15,6 @@ import {
 import { useMandatsByOrganisation } from '@/hooks/useMandats'
 import { Card, Button, Alert, Modal, ConfirmDialog } from '@/components/shared'
 import { SkeletonCard } from '@/components/ui/Skeleton'
-import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
 import type { OrganisationUpdate } from '@/lib/types'
 import { ORGANISATION_CATEGORY_LABELS, ORGANISATION_STATUS_LABELS } from "@/lib/enums/labels"
 import { OrganisationTimeline } from '@/components/organisations/OrganisationTimeline'
@@ -23,6 +22,10 @@ import { useToast } from '@/hooks/useToast'
 import { CampaignSubscriptionManager } from '@/components/email/CampaignSubscriptionManager'
 import { ActivityTab } from '@/components/interactions/ActivityTab'
 import { useEntityDetail } from '@/hooks/useEntityDetail'
+
+// Composants extraits
+import { OrganisationInfoCard } from '@/components/organisations/OrganisationInfoCard'
+import { OrganisationContactsList } from '@/components/organisations/OrganisationContactsList'
 
 // Lazy load heavy form component (loaded only when modal opens)
 const OrganisationForm = lazy(() => import('@/components/forms').then(m => ({ default: m.OrganisationForm })))
@@ -252,104 +255,8 @@ export default function OrganisationDetailPage() {
       {/* Tab Content - Informations */}
       {activeTab === 'informations' && (
         <>
-          {/* Informations générales */}
-          <Card>
-        <h2 className="text-xl font-semibold mb-4">Informations générales</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <p className="text-sm text-gray-600 dark:text-slate-400">Email</p>
-            <p className="font-medium">{organisation.email || '-'}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600 dark:text-slate-400">Téléphone</p>
-            <p className="font-medium">{organisation.main_phone || '-'}</p>
-          </div>
-          <div className="md:col-span-2">
-            <p className="text-sm text-gray-600 dark:text-slate-400 mb-2">Statut emails marketing</p>
-            {organisation.email_unsubscribed ? (
-              <div className="flex items-center gap-2">
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
-                  🚫 Désinscrit des emails marketing
-                </span>
-                <span className="text-xs text-gray-500">
-                  (Conformité RGPD - Aucun email ne sera envoyé)
-                </span>
-              </div>
-            ) : (
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                ✅ Abonné aux emails marketing
-              </span>
-            )}
-          </div>
-          <div>
-            <p className="text-sm text-gray-600 dark:text-slate-400">Site web</p>
-            <p className="font-medium">
-              {organisation.website ? (
-                <a
-                  href={organisation.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-bleu hover:underline"
-                >
-                  {organisation.website}
-                </a>
-              ) : (
-                '-'
-              )}
-            </p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600 dark:text-slate-400">Adresse</p>
-            <p className="font-medium">{organisation.address || '-'}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600 dark:text-slate-400">Pays</p>
-            <p className="font-medium">{getCountryLabel(organisation.country_code)}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600 dark:text-slate-400">Langue</p>
-            <p className="font-medium">{getLanguageLabel(organisation.language)}</p>
-          </div>
-        </div>
-      </Card>
-
-      {/* Contacts */}
-      {organisation.people_links && organisation.people_links.length > 0 && (
-        <Card>
-          <h2 className="text-xl font-semibold mb-4">
-            Contacts ({organisation.people_links.length})
-          </h2>
-          <div className="space-y-3">
-            {organisation.people_links.map((link: any) => (
-              <div
-                key={link.id}
-                className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-800 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
-              >
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <Link
-                      href={`/dashboard/people/${link.person?.id}`}
-                      className="font-medium text-bleu hover:underline"
-                    >
-                      {link.person?.first_name} {link.person?.last_name}
-                    </Link>
-                    {link.is_primary && (
-                      <span className="px-2 py-0.5 text-xs bg-blue-100 text-blue-700 rounded">
-                        Principal
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-4 mt-1 text-sm text-gray-600 dark:text-slate-400">
-                    {link.job_title && <span>{link.job_title}</span>}
-                    {link.work_email && <span>{link.work_email}</span>}
-                    {link.work_phone && <span>{link.work_phone}</span>}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
-      )}
+          <OrganisationInfoCard organisation={organisation} />
+          <OrganisationContactsList contacts={organisation.people_links || []} />
 
       {/* Mandats - Simplified view */}
       {mandats && mandats.length > 0 && (

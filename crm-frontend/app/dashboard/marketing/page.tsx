@@ -10,6 +10,29 @@ import { apiClient } from '@/lib/api'
 import { useToast } from '@/hooks/useToast'
 import { logger } from '@/lib/logger'
 
+const getErrorMessage = (error: unknown): string => {
+  if (
+    error &&
+    typeof error === 'object' &&
+    'response' in error &&
+    error.response &&
+    typeof error.response === 'object' &&
+    'data' in error.response &&
+    error.response.data &&
+    typeof error.response.data === 'object' &&
+    'detail' in error.response.data &&
+    typeof error.response.data.detail === 'string'
+  ) {
+    return error.response.data.detail
+  }
+
+  if (error instanceof Error && error.message) {
+    return error.message
+  }
+
+  return 'Impossible de charger les statistiques'
+}
+
 interface Campaign {
   id: number
   name: string
@@ -84,37 +107,37 @@ export default function MarketingDashboard() {
         apiClient.get('/email/templates'),
       ])
 
-      const campaigns = campaignsRes.data?.items || []
-      const lists = listsRes.data?.items || []
-      const templates = templatesRes.data || []
+      const campaigns = campaignsRes.data?.items ?? []
+      const lists = listsRes.data?.items ?? []
+      const templates = templatesRes.data ?? []
 
       // Calculer les statistiques
       const campaignStats = {
         total: campaigns.length,
-        draft: campaigns.filter((c: any) => c.status === 'draft').length,
-        scheduled: campaigns.filter((c: any) => c.status === 'scheduled').length,
-        sent: campaigns.filter((c: any) => c.status === 'sent').length,
-        sending: campaigns.filter((c: any) => c.status === 'sending').length,
+        draft: campaigns.filter((campaign) => campaign.status === 'draft').length,
+        scheduled: campaigns.filter((campaign) => campaign.status === 'scheduled').length,
+        sent: campaigns.filter((campaign) => campaign.status === 'sent').length,
+        sending: campaigns.filter((campaign) => campaign.status === 'sending').length,
       }
 
       const listStats = {
         total: lists.length,
-        active: lists.filter((l: any) => l.is_active).length,
-        totalRecipients: lists.reduce((sum: number, l: any) => sum + (l.recipient_count || 0), 0),
+        active: lists.filter((list) => list.is_active).length,
+        totalRecipients: lists.reduce<number>((sum, list) => sum + (list.recipient_count || 0), 0),
       }
 
       const templateStats = {
         total: templates.length,
       }
 
-      const sentCampaigns = campaigns.filter((c: any) => c.status === 'sent')
+      const sentCampaigns = campaigns.filter((campaign) => campaign.status === 'sent')
       const performance = {
-        totalSent: sentCampaigns.reduce((sum: number, c: any) => sum + (c.sent_count || 0), 0),
+        totalSent: sentCampaigns.reduce<number>((sum, campaign) => sum + (campaign.sent_count || 0), 0),
         avgOpenRate: sentCampaigns.length > 0
-          ? sentCampaigns.reduce((sum: number, c: any) => sum + (c.open_rate || 0), 0) / sentCampaigns.length
+          ? sentCampaigns.reduce<number>((sum, campaign) => sum + (campaign.open_rate || 0), 0) / sentCampaigns.length
           : 0,
         avgClickRate: sentCampaigns.length > 0
-          ? sentCampaigns.reduce((sum: number, c: any) => sum + (c.click_rate || 0), 0) / sentCampaigns.length
+          ? sentCampaigns.reduce<number>((sum, campaign) => sum + (campaign.click_rate || 0), 0) / sentCampaigns.length
           : 0,
       }
 
@@ -124,12 +147,12 @@ export default function MarketingDashboard() {
         templates: templateStats,
         performance,
       })
-    } catch (error: any) {
+    } catch (error: unknown) {
       logger.error('Erreur chargement stats marketing:', error)
       showToast({
         type: 'error',
         title: 'Erreur',
-        message: 'Impossible de charger les statistiques',
+        message: getErrorMessage(error),
       })
     } finally {
       setLoading(false)

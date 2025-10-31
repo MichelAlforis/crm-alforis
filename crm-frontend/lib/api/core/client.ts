@@ -18,7 +18,72 @@ const API_BASE_URL = (() => {
 // ============= TYPES =============
 
 interface RequestConfig extends RequestInit {
-  params?: Record<string, any>
+  params?: Record<string, unknown>
+}
+
+type ValidationError = {
+  loc?: unknown
+  msg?: unknown
+  detail?: unknown
+}
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null
+
+const isValidationError = (value: unknown): value is ValidationError =>
+  isRecord(value) && ('loc' in value || 'msg' in value || 'detail' in value)
+
+const formatValidationErrors = (errors: unknown[]): string =>
+  errors
+    .map((rawError) => {
+      if (!isValidationError(rawError)) {
+        return null
+      }
+
+      const { loc, msg, detail } = rawError
+      const fieldPath = Array.isArray(loc)
+        ? loc
+            .filter((part): part is string => typeof part === 'string')
+            .join(' > ')
+        : undefined
+
+      const baseMessage =
+        typeof msg === 'string'
+          ? msg
+          : typeof detail === 'string'
+          ? detail
+          : undefined
+
+      if (!baseMessage) return null
+
+      return fieldPath ? `${fieldPath}: ${baseMessage}` : baseMessage
+    })
+    .filter((value): value is string => Boolean(value))
+    .join(', ')
+
+const formatErrorDetail = (payload: unknown): string => {
+  if (!payload) return 'Une erreur est survenue'
+
+  if (isRecord(payload)) {
+    const { detail } = payload
+
+    if (typeof detail === 'string') {
+      return detail
+    }
+
+    if (Array.isArray(detail)) {
+      const formatted = formatValidationErrors(detail)
+      if (formatted) {
+        return formatted
+      }
+    }
+
+    if (isRecord(detail)) {
+      return JSON.stringify(detail)
+    }
+  }
+
+  return 'Une erreur est survenue'
 }
 
 // ============= BASE HTTP CLIENT CLASS =============
@@ -176,7 +241,7 @@ export class BaseHttpClient {
   /**
    * Construit une URL absolue vers l'API avec paramètres de requête
    */
-  private buildUrl(endpoint: string, params?: Record<string, any>): string {
+  private buildUrl(endpoint: string, params?: Record<string, unknown>): string {
     let url = this.baseUrl.replace(/\/$/, '') + (endpoint.startsWith('/') ? endpoint : '/' + endpoint)
     if (params) {
       const query = new URLSearchParams()
@@ -278,27 +343,11 @@ export class BaseHttpClient {
 
       // Gérer les erreurs HTTP
       if (!response.ok) {
-        const error = await response.json().catch(() => ({}))
-
-        let detailMessage = 'Une erreur est survenue'
-
-        if (typeof error.detail === 'string') {
-          detailMessage = error.detail
-        } else if (Array.isArray(error.detail)) {
-          // FastAPI validation errors
-          detailMessage = error.detail
-            .map((err: any) => {
-              const field = err.loc && err.loc.length > 1 ? err.loc[err.loc.length - 1] : 'champ'
-              return `${field}: ${err.msg || 'erreur de validation'}`
-            })
-            .join(', ')
-        } else if (error.detail && typeof error.detail === 'object') {
-          detailMessage = JSON.stringify(error.detail)
-        }
+        const payload = await response.json().catch(() => undefined)
 
         throw {
           status_code: response.status,
-          detail: detailMessage,
+          detail: formatErrorDetail(payload),
         } as ApiError
       }
 
@@ -314,10 +363,14 @@ export class BaseHttpClient {
       }
 
       return JSON.parse(text) as T
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Réformater les erreurs
-      if (error && typeof error === 'object' && 'status_code' in error && 'detail' in error) {
-        throw error
+      if (
+        isRecord(error) &&
+        typeof error.status_code === 'number' &&
+        typeof error.detail === 'string'
+      ) {
+        throw error as ApiError
       }
       throw {
         status_code: 500,
@@ -331,7 +384,7 @@ export class BaseHttpClient {
   /**
    * Retourne l'URL absolue vers un endpoint API
    */
-  public resolveUrl(endpoint: string, params?: Record<string, any>): string {
+  public resolveUrl(endpoint: string, params?: Record<string, unknown>): string {
     return this.buildUrl(endpoint, params)
   }
 
@@ -355,7 +408,7 @@ export class BaseHttpClient {
   /**
    * POST request générique
    */
-  public async post<T>(endpoint: string, body?: any, config?: RequestConfig): Promise<{ data: T }> {
+  public async post<T>(endpoint: string, body?: unknown, config?: RequestConfig): Promise<{ data: T }> {
     const data = await this.request<T>(endpoint, {
       ...config,
       method: 'POST',
@@ -367,7 +420,7 @@ export class BaseHttpClient {
   /**
    * PUT request générique
    */
-  public async put<T>(endpoint: string, body?: any, config?: RequestConfig): Promise<{ data: T }> {
+  public async put<T>(endpoint: string, body?: unknown, config?: RequestConfig): Promise<{ data: T }> {
     const data = await this.request<T>(endpoint, {
       ...config,
       method: 'PUT',
@@ -379,7 +432,7 @@ export class BaseHttpClient {
   /**
    * PATCH request générique
    */
-  public async patch<T>(endpoint: string, body?: any, config?: RequestConfig): Promise<{ data: T }> {
+  public async patch<T>(endpoint: string, body?: unknown, config?: RequestConfig): Promise<{ data: T }> {
     const data = await this.request<T>(endpoint, {
       ...config,
       method: 'PATCH',
