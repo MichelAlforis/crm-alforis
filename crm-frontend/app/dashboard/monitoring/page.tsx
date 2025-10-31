@@ -3,6 +3,7 @@
 import { logger } from '@/lib/logger'
 import React, { useEffect, useState } from 'react'
 import { Card } from '@/components/shared'
+import { storage, AUTH_STORAGE_KEYS } from '@/lib/constants'
 
 // Types
 interface SystemMetrics {
@@ -102,7 +103,7 @@ export default function MonitoringPage() {
   const [clearingCache, setClearingCache] = useState(false)
 
   const API_BASE = process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '') || 'http://localhost:8000'
-  const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null
+  const token = typeof window !== 'undefined' ? storage.get(AUTH_STORAGE_KEYS.TOKEN) : null
 
   const fetchMonitoring = async () => {
     try {
@@ -114,7 +115,7 @@ export default function MonitoringPage() {
 
       if (response.status === 401) {
         if (token) {
-          localStorage.removeItem('access_token')
+          storage.remove(AUTH_STORAGE_KEYS.TOKEN)
         }
         window.location.href = '/auth/login?redirect=/dashboard/monitoring'
         return

@@ -8,6 +8,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Search, Sparkles, Clock, X, Loader2, TrendingUp } from 'lucide-react'
 import { useDebounce } from '@/hooks/useDebounce'
+import { storage } from '@/lib/constants'
 
 interface Props {
   placeholder?: string
@@ -59,9 +60,9 @@ export default function GlobalSearchInputAdvanced({
   // Charger l'historique au mount
   useEffect(() => {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY)
+      const stored = storage.get<SearchHistory[]>(STORAGE_KEY)
       if (stored) {
-        setSearchHistory(JSON.parse(stored))
+        setSearchHistory(stored)
       }
     } catch (e) {
       logger.error('Error loading search history:', e)
@@ -91,13 +92,13 @@ export default function GlobalSearchInputAdvanced({
     ].slice(0, MAX_HISTORY)
 
     setSearchHistory(newHistory)
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newHistory))
+    storage.set(STORAGE_KEY, newHistory)
   }, [searchHistory])
 
   // Effacer l'historique
   const clearHistory = useCallback(() => {
     setSearchHistory([])
-    localStorage.removeItem(STORAGE_KEY)
+    storage.remove(STORAGE_KEY)
   }, [])
 
   // Recherche en temps réel

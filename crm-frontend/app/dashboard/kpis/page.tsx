@@ -14,6 +14,7 @@ import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { Trash2 } from 'lucide-react'
 import { KPIForm } from '@/components/forms'
 import { KPI, KPICreate } from '@/lib/types'
+import { storage, AUTH_STORAGE_KEYS } from '@/lib/constants'
 
 export default function KPIsPage() {
   const { data: organisations } = useOrganisations({ limit: 200 })
@@ -41,7 +42,7 @@ export default function KPIsPage() {
     setKpisError(undefined)
     try {
       const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-      const token = localStorage.getItem('access_token')
+      const token = storage.get(AUTH_STORAGE_KEYS.TOKEN)
       const response = await fetch(`${API_BASE}/api/v1/stats/organisation/${selectedFournisseurId}/kpis`, {
         headers: {
           'Authorization': token ? `Bearer ${token}` : '',
@@ -62,7 +63,7 @@ export default function KPIsPage() {
     if (!selectedFournisseurId) return
     try {
       const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-      const token = localStorage.getItem('access_token')
+      const token = storage.get(AUTH_STORAGE_KEYS.TOKEN)
       const response = await fetch(`${API_BASE}/api/v1/stats/organisation/${selectedFournisseurId}/kpis`, {
         method: 'POST',
         headers: {
@@ -90,7 +91,7 @@ export default function KPIsPage() {
       onConfirm: async () => {
         try {
           const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-          const token = localStorage.getItem('access_token')
+          const token = storage.get(AUTH_STORAGE_KEYS.TOKEN)
           const response = await fetch(`${API_BASE}/api/v1/stats/kpis/${kpiId}`, {
             method: 'DELETE',
             headers: {

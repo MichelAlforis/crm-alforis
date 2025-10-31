@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/useToast";
 import { logger } from '@/lib/logger'
+import { storage, AUTH_STORAGE_KEYS } from '@/lib/constants'
 
 interface Campaign {
   id: number;
@@ -96,7 +97,7 @@ export default function EmailCampaignDetailPage() {
 
   const fetchCampaign = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN);
       const response = await fetch(`/api/v1/email/campaigns/${campaignId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -129,7 +130,7 @@ export default function EmailCampaignDetailPage() {
   const fetchPreviews = async (page: number = 1) => {
     setLoadingPreviews(true);
     try {
-      const token = localStorage.getItem("token");
+      const token = storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN);
       const response = await fetch(
         `/email/campaigns/campaigns/${campaignId}/preview?page=${page}&page_size=10`,
         {
@@ -160,7 +161,7 @@ export default function EmailCampaignDetailPage() {
 
   const handlePrepareCampaign = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = storage.get(AUTH_STORAGE_KEYS.LEGACY_TOKEN);
       const response = await fetch(`/email/campaigns/campaigns/${campaignId}/prepare`, {
         method: "POST",
         headers: {

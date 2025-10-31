@@ -6,6 +6,7 @@ import clsx from 'clsx'
 import { useToast } from '@/components/ui/Toast'
 import { apiClient } from '@/lib/api'
 import OutlookConsentModal from './OutlookConsentModal'
+import { storage } from '@/lib/constants'
 
 interface MicrosoftAccount {
   email: string
@@ -81,7 +82,7 @@ export default function OutlookConnector() {
       const { authorization_url, state } = await apiClient.outlookAuthorize()
 
       // Stocker le state pour la validation du callback
-      localStorage.setItem('outlook_oauth_state', state)
+      storage.set('outlook_oauth_state', state)
 
       // Étape 2: Ouvrir popup OAuth
       const width = 600
@@ -114,7 +115,7 @@ export default function OutlookConnector() {
           const { code, state: returnedState } = event.data
 
           // Vérifier le state CSRF
-          const storedState = localStorage.getItem('outlook_oauth_state')
+          const storedState = storage.get('outlook_oauth_state')
           if (returnedState !== storedState) {
             showToast({
               type: 'error',
@@ -146,7 +147,7 @@ export default function OutlookConnector() {
               message: error?.message || 'Impossible de connecter Outlook'
             })
           } finally {
-            localStorage.removeItem('outlook_oauth_state')
+            storage.remove('outlook_oauth_state')
           }
         }
       }
@@ -156,7 +157,7 @@ export default function OutlookConnector() {
       // Timeout après 5 minutes
       setTimeout(() => {
         window.removeEventListener('message', handleMessage)
-        localStorage.removeItem('outlook_oauth_state')
+        storage.remove('outlook_oauth_state')
       }, 5 * 60 * 1000)
 
     } catch (error: any) {
