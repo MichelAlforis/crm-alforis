@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useTasks } from '@/hooks/useTasks'
 import { useEntityPreload } from '@/hooks/useEntityPreload'
 import { useOrganisationSelect } from '@/hooks/useOrganisationSelect'
 import { useFormToast } from '@/hooks/useFormToast'
 import { usePaginatedOptions, type PaginatedFetcherParams } from '@/hooks/usePaginatedOptions'
+import { useAIAutofill } from '@/hooks/useAIAutofill'
 import { apiClient } from '@/lib/api'
 import type {
   TaskInput,
@@ -14,6 +15,7 @@ import type {
   Person,
 } from '@/lib/types'
 import { SearchableSelect } from '@/components/shared'
+import { FieldContextMenu } from '@/components/ui/FieldContextMenu'
 
 interface TaskFormProps {
   isOpen: boolean
@@ -103,6 +105,21 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
   })
 
   const [error, setError] = useState<string | null>(null)
+
+  // ✅ Autofill hook
+  const {
+    handleFieldRightClick,
+    showContextMenu,
+    menuPosition,
+    activeField,
+    handleAutofillSuggest,
+  } = useAIAutofill({
+    entityType: 'task',
+    formData,
+    onFieldUpdate: (fieldName, value) => {
+      setFormData((prev) => ({ ...prev, [fieldName]: value }))
+    },
+  })
 
   // Pré-charger l'organisation sélectionnée (via useOrganisationSelect preloadId)
 
@@ -205,7 +222,7 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
               </div>
             )}
 
-            {/* Title */}
+            {/* Title with Autofill */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">
                 Titre <span className="text-red-500">*</span>
@@ -214,14 +231,15 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                onContextMenu={(e) => handleFieldRightClick(e, 'title')}
                 className="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
-                placeholder="Ex: Relancer prospect Acme Corp"
+                placeholder="Ex: Relancer prospect Acme Corp (clic-droit pour IA)"
                 required
                 autoFocus
               />
             </div>
 
-            {/* Description */}
+            {/* Description with Autofill */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">
                 Description
@@ -229,9 +247,10 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onContextMenu={(e) => handleFieldRightClick(e, 'description')}
                 className="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent resize-none"
                 rows={3}
-                placeholder="Détails de la tâche..."
+                placeholder="Détails de la tâche... (clic-droit pour IA)"
               />
             </div>
 
@@ -384,6 +403,15 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
               </button>
             </div>
           </form>
+
+          {/* ✅ Autofill Context Menu */}
+          <FieldContextMenu
+            show={showContextMenu}
+            position={menuPosition}
+            fieldName={activeField}
+            onAutofill={handleAutofillSuggest}
+            onClose={() => {}}
+          />
         </div>
       </div>
     </>
