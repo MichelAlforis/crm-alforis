@@ -249,7 +249,7 @@ GET /api/v1/ai/autofill/stats/leaderboard     # Top 10 utilisateurs
 | Mistral   | mistral-large-latest  | $0.003   | ~33k requêtes    |
 | OpenAI    | gpt-4o-mini           | $0.0003  | ~333k requêtes   |
 | Anthropic | claude-3.5-sonnet     | $0.007   | ~14k requêtes    |
-| Ollama    | llama3.1:8b (local)   | $0       | Illimité         |
+| Ollama    | mistral:7b (local)    | $0       | Illimité         |
 
 ---
 

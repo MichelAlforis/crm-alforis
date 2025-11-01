@@ -44,7 +44,7 @@ ANTHROPIC_MAX_TOKENS=500
 
 # ===== Ollama (local, optionnel) =====
 OLLAMA_BASE_URL=http://ollama:11434
-OLLAMA_MODEL=llama3.1:8b
+OLLAMA_MODEL=mistral:7b
 ```
 
 ---
@@ -84,7 +84,7 @@ LLM_CACHE_TTL_SECONDS=60               # Cache réponses identiques (60s)
 # Pas de LLM en dev → autofill utilise rules + DB patterns uniquement
 # Ou Ollama local si tu veux tester
 OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=llama3.1:8b
+OLLAMA_MODEL=mistral:7b
 LLM_PRIMARY_PROVIDER=ollama
 ```
 
@@ -138,7 +138,7 @@ LLM_CACHE_TTL_SECONDS=60
 | OpenAI    | gpt-4o                       | $2.50  | $10    | ~$0.005   |
 | Anthropic | claude-3-5-sonnet-20241022   | $3     | $15    | ~$0.007   |
 | Anthropic | claude-3-opus                | $15    | $75    | ~$0.035   |
-| Ollama    | llama3.1:8b (local)          | FREE   | FREE   | $0        |
+| Ollama    | mistral:7b (local)           | FREE   | FREE   | $0        |
 
 **Note:** Moyen/req basé sur ~500 tokens input + 200 tokens output pour autofill.
 

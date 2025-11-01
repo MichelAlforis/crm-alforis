@@ -106,7 +106,7 @@ class Settings(BaseSettings):
 
     # Ollama (Local LLM)
     ollama_base_url: str = "http://localhost:11434"
-    ollama_model: str = "llama3.1:latest"
+    ollama_model: str = "mistral:7b"
 
     # AI Agent Settings
     ai_auto_apply_enabled: bool = False  # Auto-appliquer suggestions haute confiance
