@@ -16,6 +16,7 @@ import {
   TrendingUp,
 } from 'lucide-react'
 import Link from 'next/link'
+import { PageContainer, PageTitle } from '@/components/shared'
 
 interface Guide {
   slug: string
@@ -156,22 +157,21 @@ export default function GuidesPage() {
       : guides.filter((g) => g.category === selectedCategory)
 
   return (
-    <div className="max-w-7xl mx-auto p-6 lg:p-8 space-y-8">
+    <PageContainer width="default">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-gray-600 dark:text-slate-400">
-        <Link href="/dashboard/help" className="hover:text-gray-900 dark:hover:text-white dark:text-slate-100 transition">
+      <nav className="flex items-center gap-2 text-fluid-sm text-text-secondary dark:text-slate-400">
+        <Link href="/dashboard/help" className="hover:text-text-primary dark:hover:text-white dark:text-text-primary transition">
           Aide
         </Link>
         <span>/</span>
-        <span className="text-gray-900 dark:text-slate-100 font-medium">Guides</span>
+        <span className="text-text-primary dark:text-text-primary font-medium">Guides</span>
       </nav>
 
       {/* Header */}
-      <header className="text-center space-y-4">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-slate-100">Guides par Fonctionnalité</h1>
-        <p className="text-lg text-gray-600 dark:text-slate-400 max-w-2xl mx-auto">
-          Maîtrisez chaque module du CRM avec nos guides détaillés étape par étape
-        </p>
+      <header className="space-y-spacing-md text-center">
+        <PageTitle subtitle="Maîtrisez chaque module du CRM avec nos guides détaillés étape par étape">
+          Guides par Fonctionnalité
+        </PageTitle>
       </header>
 
       {/* Filtres de catégorie */}
@@ -182,8 +182,8 @@ export default function GuidesPage() {
             onClick={() => setSelectedCategory(category)}
             className={`px-4 py-2 rounded-lg font-medium transition ${
               selectedCategory === category
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200'
+                ? 'bg-primary text-white'
+                : 'bg-gray-100 dark:bg-slate-800 text-text-secondary dark:text-slate-300 hover:bg-gray-200'
             }`}
           >
             {category}
@@ -192,19 +192,19 @@ export default function GuidesPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-center">
-          <div className="text-3xl font-bold text-blue-600">{guides.length}</div>
-          <div className="text-sm text-blue-800">Guides disponibles</div>
+      <div className="grid gap-spacing-md md:grid-cols-3">
+        <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 text-center">
+          <div className="text-fluid-3xl font-bold text-primary">{guides.length}</div>
+          <div className="text-fluid-sm text-success">Guides disponibles</div>
         </div>
-        <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
-          <div className="text-3xl font-bold text-green-600">
+        <div className="rounded-xl border border-green-200 bg-success/10 p-4 text-center">
+          <div className="text-fluid-3xl font-bold text-success">
             {guides.reduce((acc, g) => acc + g.readTime, 0)} min
           </div>
-          <div className="text-sm text-green-800">Temps de lecture total</div>
+          <div className="text-fluid-sm text-success">Temps de lecture total</div>
         </div>
-        <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 text-center">
-          <div className="text-3xl font-bold text-purple-600">
+        <div className="rounded-xl border border-purple-200 bg-purple-50 p-4 text-center">
+          <div className="text-fluid-3xl font-bold text-purple-600">
             {new Set(guides.map((g) => g.category)).size}
           </div>
           <div className="text-sm text-purple-800">Catégories</div>
@@ -212,7 +212,7 @@ export default function GuidesPage() {
       </div>
 
       {/* Guides Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-spacing-lg md:grid-cols-2 lg:grid-cols-3">
         {filteredGuides.map((guide) => {
           const Icon = guide.icon
           const colors = colorMap[guide.color]
@@ -221,7 +221,7 @@ export default function GuidesPage() {
             <Link
               key={guide.slug}
               href={`/dashboard/help/guides/${guide.slug}`}
-              className={`group rounded-xl border-2 ${colors.border} ${colors.bg} p-6 transition hover:shadow-lg hover:scale-105`}
+              className={`group rounded-xl border-2 ${colors.border} ${colors.bg} p-spacing-lg transition hover:shadow-lg hover:scale-105`}
             >
               {/* Icon */}
               <div className={`inline-flex rounded-lg ${colors.icon} p-3 bg-white dark:bg-slate-900/80 mb-4`}>
@@ -229,17 +229,17 @@ export default function GuidesPage() {
               </div>
 
               {/* Title */}
-              <h3 className={`text-xl font-semibold ${colors.text} mb-2 group-hover:underline`}>
+              <h3 className={`text-fluid-xl font-semibold ${colors.text} mb-2 group-hover:underline`}>
                 {guide.title}
               </h3>
 
               {/* Description */}
-              <p className="text-gray-700 dark:text-slate-300 text-sm mb-4">{guide.description}</p>
+              <p className="text-text-secondary dark:text-slate-300 text-fluid-sm mb-4">{guide.description}</p>
 
               {/* Meta */}
               <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-4">
-                  <span className="flex items-center gap-1 text-gray-600 dark:text-slate-400">
+                <div className="flex items-center gap-spacing-md">
+                  <span className="flex items-center gap-1 text-text-secondary dark:text-slate-400">
                     <Clock className="h-3 w-3" />
                     {guide.readTime} min
                   </span>
@@ -258,24 +258,24 @@ export default function GuidesPage() {
       </div>
 
       {/* Call to Action */}
-      <section className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 text-center border border-blue-200">
-        <TrendingUp className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-2">
+      <section className="rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50 p-spacing-xl text-center">
+        <TrendingUp className="mx-auto mb-4 h-12 w-12 text-primary" />
+        <h2 className="mb-2 text-fluid-2xl font-bold text-text-primary dark:text-text-primary">
           Vous ne trouvez pas ce que vous cherchez ?
         </h2>
-        <p className="text-gray-600 dark:text-slate-400 mb-6 max-w-xl mx-auto">
+        <p className="mx-auto mb-spacing-lg max-w-xl text-text-secondary dark:text-slate-400">
           Consultez notre FAQ complète ou contactez notre équipe support
         </p>
         <div className="flex flex-wrap justify-center gap-3">
           <Link
             href="/dashboard/help#faq"
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
+            className="px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:bg-primary-hover transition"
           >
             Voir la FAQ
           </Link>
           <Link
             href="/dashboard/help#support"
-            className="px-6 py-3 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 rounded-lg font-semibold hover:bg-gray-50 dark:bg-slate-800 transition"
+            className="px-6 py-3 border border-gray-300 dark:border-slate-600 bg-surface dark:bg-slate-900 text-text-secondary dark:text-slate-300 rounded-lg font-semibold hover:bg-gray-50 dark:bg-slate-800 transition"
           >
             Contacter le support
           </Link>
@@ -286,12 +286,12 @@ export default function GuidesPage() {
       <section className="text-center">
         <Link
           href="/dashboard/help"
-          className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium transition"
+          className="inline-flex items-center gap-2 text-primary hover:text-blue-700 font-medium transition"
         >
           <ArrowLeft className="h-4 w-4" />
           Retour au centre d&apos;aide
         </Link>
       </section>
-    </div>
+    </PageContainer>
   )
 }

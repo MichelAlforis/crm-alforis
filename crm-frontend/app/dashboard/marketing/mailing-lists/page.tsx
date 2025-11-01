@@ -4,7 +4,7 @@ import React, { useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Plus, Edit, Trash2, List, Users, Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
-import { Card, CardHeader, CardBody, Button } from '@/components/shared'
+import { Card, CardHeader, CardBody, Button, PageContainer, PageHeader, PageSection } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { Alert } from '@/components/shared/Alert'
@@ -79,7 +79,7 @@ export default function MailingListsPage() {
         <div>
           <p className="font-medium text-text-primary">{value}</p>
           {row.description && (
-            <p className="text-xs text-text-tertiary mt-0.5">{row.description}</p>
+            <p className="text-fluid-xs text-text-tertiary mt-0.5">{row.description}</p>
           )}
         </div>
       ),
@@ -90,7 +90,7 @@ export default function MailingListsPage() {
       priority: 'high',
       minWidth: '120px',
       render: (value: unknown) => (
-        <span className="text-sm capitalize">
+        <span className="text-fluid-sm capitalize">
           {value === 'contacts' ? 'Contacts' : 'Organisations'}
         </span>
       ),
@@ -151,81 +151,79 @@ export default function MailingListsPage() {
   const totalRecipients = lists.reduce((acc, list) => acc + list.recipient_count, 0)
 
   return (
-    <div className="space-y-spacing-lg p-spacing-lg">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-text-primary flex items-center gap-2">
-            <List className="w-8 h-8 text-primary" />
-            Listes de Diffusion
-          </h1>
-          <p className="text-text-secondary mt-1">
-            Gérez vos listes de destinataires réutilisables
-          </p>
-        </div>
-        <Link href="/dashboard/marketing/mailing-lists/new">
-          <Button variant="primary" size="lg">
-            <Plus className="w-5 h-5 mr-2" />
-            Nouvelle liste
-          </Button>
-        </Link>
-      </div>
-
-      {/* KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-md">
-        <Card>
-          <CardBody className="p-spacing-md">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-text-tertiary">Total listes</p>
-                <p className="text-3xl font-bold text-text-primary mt-1">{lists.length}</p>
-              </div>
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                <List className="w-6 h-6 text-primary" />
-              </div>
-            </div>
-          </CardBody>
-        </Card>
-
-        <Card>
-          <CardBody className="p-spacing-md">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-text-tertiary">Total destinataires</p>
-                <p className="text-3xl font-bold text-primary mt-1">{totalRecipients}</p>
-              </div>
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                <Users className="w-6 h-6 text-primary" />
-              </div>
-            </div>
-          </CardBody>
-        </Card>
-
-        <Card>
-          <CardBody className="p-spacing-md">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-text-tertiary">Moyenne par liste</p>
-                <p className="text-3xl font-bold text-text-primary mt-1">
-                  {lists.length > 0 ? Math.round(totalRecipients / lists.length) : 0}
-                </p>
-              </div>
-              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                <Calendar className="w-6 h-6 text-blue-600" />
-              </div>
-            </div>
-          </CardBody>
-        </Card>
-      </div>
-
-      {/* Info */}
-      <Alert
-        type="info"
-        message="Les listes de diffusion permettent de sauvegarder vos sélections de destinataires pour les réutiliser rapidement dans vos campagnes."
+    <PageContainer width="default">
+      <PageHeader
+        title="Listes de Diffusion"
+        subtitle="Gérez vos listes de destinataires réutilisables"
+        icon={<List className="w-8 h-8 text-primary" />}
+        actions={
+          <Link href="/dashboard/marketing/mailing-lists/new">
+            <Button variant="primary" size="lg">
+              <Plus className="w-5 h-5 mr-2" />
+              Nouvelle liste
+            </Button>
+          </Link>
+        }
       />
 
-      {/* Table */}
-      <Card>
+      <PageSection>
+        {/* KPIs */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-md">
+          <Card>
+            <CardBody className="p-spacing-md">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-fluid-sm text-text-tertiary">Total listes</p>
+                  <p className="text-fluid-3xl font-bold text-text-primary mt-spacing-xs">{lists.length}</p>
+                </div>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                  <List className="w-6 h-6 text-primary" />
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+
+          <Card>
+            <CardBody className="p-spacing-md">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-fluid-sm text-text-tertiary">Total destinataires</p>
+                  <p className="text-fluid-3xl font-bold text-primary mt-spacing-xs">{totalRecipients}</p>
+                </div>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Users className="w-6 h-6 text-primary" />
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+
+          <Card>
+            <CardBody className="p-spacing-md">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-fluid-sm text-text-tertiary">Moyenne par liste</p>
+                  <p className="text-fluid-3xl font-bold text-text-primary mt-spacing-xs">
+                    {lists.length > 0 ? Math.round(totalRecipients / lists.length) : 0}
+                  </p>
+                </div>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Calendar className="w-6 h-6 text-primary" />
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+        </div>
+
+        {/* Info */}
+        <Alert
+          type="info"
+          message="Les listes de diffusion permettent de sauvegarder vos sélections de destinataires pour les réutiliser rapidement dans vos campagnes."
+        />
+      </PageSection>
+
+      <PageSection>
+        {/* Table */}
+        <Card>
         <CardHeader
           title={`Listes (${lists.length})`}
           subtitle="Toutes vos listes de diffusion"
@@ -246,11 +244,11 @@ export default function MailingListsPage() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
-              <div className="text-sm text-text-secondary">
+            <div className="flex items-center justify-between mt-spacing-md pt-spacing-md border-t border-border">
+              <div className="text-fluid-sm text-text-secondary">
                 Page {pagination.page} sur {totalPages} ({table.filteredData.length} listes au total)
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-spacing-sm">
                 <Button
                   variant="outline"
                   size="sm"
@@ -274,9 +272,10 @@ export default function MailingListsPage() {
           )}
         </CardBody>
       </Card>
+      </PageSection>
 
       {/* Modal de confirmation */}
       <ConfirmDialogComponent />
-    </div>
+    </PageContainer>
   )
 }

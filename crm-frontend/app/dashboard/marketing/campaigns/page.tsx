@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { Plus, Eye, Mail, Edit, Trash2, Download, Copy } from 'lucide-react'
-import { Card, CardHeader, CardBody, Button } from '@/components/shared'
+import { Card, CardHeader, CardBody, Button, PageContainer, PageHeader, PageSection } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { useEmailCampaigns } from '@/hooks/useEmailAutomation'
@@ -16,12 +16,12 @@ import { CampaignStatsCards, CampaignAlerts } from '@/components/marketing/Campa
 import type { EmailCampaign } from '@/lib/types'
 
 const STATUS_COLORS = {
-  draft: 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300',
-  scheduled: 'bg-blue-100 text-blue-700',
-  sending: 'bg-orange-100 text-orange-700',
-  sent: 'bg-green-100 text-green-700',
-  failed: 'bg-red-100 text-red-700',
-  paused: 'bg-yellow-100 text-yellow-700',
+  draft: 'bg-surface-secondary dark:bg-surface-secondary text-text-secondary dark:text-text-secondary',
+  scheduled: 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary',
+  sending: 'bg-warning/10 text-warning dark:bg-warning/20 dark:text-warning-light',
+  sent: 'bg-success/10 text-success dark:bg-success/20 dark:text-success-light',
+  failed: 'bg-danger/10 text-danger dark:bg-danger/20 dark:text-danger-light',
+  paused: 'bg-warning/10 text-warning dark:bg-warning/20 dark:text-warning-light',
 }
 
 const STATUS_LABELS = {
@@ -77,7 +77,7 @@ export default function CampaignsPage() {
             {value}
           </Link>
           {row.subject && (
-            <p className="text-xs text-gray-500 mt-0.5">Objet: {row.subject}</p>
+            <p className="text-fluid-xs text-text-tertiary mt-0.5">Objet: {row.subject}</p>
           )}
         </div>
       ),
@@ -88,7 +88,7 @@ export default function CampaignsPage() {
       priority: 'high',
       minWidth: '120px',
       render: (value: unknown, _row, _index: number) => (
-        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[value as keyof typeof STATUS_COLORS] || 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300'}`}>
+        <span className={`inline-flex items-center px-2 py-1 rounded-full text-fluid-xs font-medium ${STATUS_COLORS[value as keyof typeof STATUS_COLORS] || 'bg-surface-secondary dark:bg-surface-secondary text-text-secondary dark:text-text-secondary'}`}>
           {STATUS_LABELS[value as keyof typeof STATUS_LABELS] || value}
         </span>
       ),
@@ -99,7 +99,7 @@ export default function CampaignsPage() {
       priority: 'medium',
       minWidth: '120px',
       render: (value: unknown, _row, _index: number) => (
-        <span className="text-sm capitalize">{value || '-'}</span>
+        <span className="text-fluid-sm capitalize">{value || '-'}</span>
       ),
     },
     {
@@ -163,54 +163,52 @@ export default function CampaignsPage() {
   ]
 
   return (
-    <div className="space-y-spacing-lg p-spacing-lg">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-text-primary flex items-center gap-2">
-            <Mail className="w-8 h-8 text-primary" />
-            Dashboard Campagnes Email
-          </h1>
-          <p className="text-text-secondary mt-1">
-            Gérez et analysez vos campagnes de marketing par email
-          </p>
-        </div>
-        <Link href="/dashboard/marketing/campaigns/new">
-          <Button variant="primary" size="lg">
-            <Plus className="w-5 h-5 mr-2" />
-            Nouvelle campagne
-          </Button>
-        </Link>
-      </div>
+    <PageContainer width="default">
+      <PageHeader
+        title="Dashboard Campagnes Email"
+        subtitle="Gérez et analysez vos campagnes de marketing par email"
+        icon={<Mail className="w-8 h-8 text-primary" />}
+        actions={
+          <Link href="/dashboard/marketing/campaigns/new">
+            <Button variant="primary" size="lg">
+              <Plus className="w-5 h-5 mr-2" />
+              Nouvelle campagne
+            </Button>
+          </Link>
+        }
+      />
 
-      {/* KPI Cards */}
-      <CampaignStatsCards stats={stats} onFilterChange={setStatusFilter} />
+      <PageSection>
+        {/* KPI Cards */}
+        <CampaignStatsCards stats={stats} onFilterChange={setStatusFilter} />
 
-      {/* Filtres de statut */}
-      {statusFilter && (
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-text-secondary">Filtre actif:</span>
-          <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${STATUS_COLORS[statusFilter as keyof typeof STATUS_COLORS]}`}>
-            {STATUS_LABELS[statusFilter as keyof typeof STATUS_LABELS]}
-          </span>
-          <Button variant="ghost" size="xs" onClick={() => setStatusFilter(null)}>
-            Réinitialiser
-          </Button>
-        </div>
-      )}
+        {/* Filtres de statut */}
+        {statusFilter && (
+          <div className="flex items-center gap-spacing-sm">
+            <span className="text-fluid-sm text-text-secondary">Filtre actif:</span>
+            <span className={`inline-flex items-center px-3 py-1 rounded-full text-fluid-sm font-medium ${STATUS_COLORS[statusFilter as keyof typeof STATUS_COLORS]}`}>
+              {STATUS_LABELS[statusFilter as keyof typeof STATUS_LABELS]}
+            </span>
+            <Button variant="ghost" size="xs" onClick={() => setStatusFilter(null)}>
+              Réinitialiser
+            </Button>
+          </div>
+        )}
 
-      {/* Error message */}
-      {error && (
-        <div className="bg-error/10 border border-error/20 text-error px-4 py-3 rounded-radius-md">
-          Impossible de charger les campagnes
-        </div>
-      )}
+        {/* Error message */}
+        {error && (
+          <div className="bg-error/10 border border-error/20 text-error px-spacing-md py-spacing-sm rounded-radius-md">
+            Impossible de charger les campagnes
+          </div>
+        )}
 
-      {/* Campaign Alerts */}
-      <CampaignAlerts stats={stats} />
+        {/* Campaign Alerts */}
+        <CampaignAlerts stats={stats} />
+      </PageSection>
 
-      {/* Table des campagnes */}
-      <Card>
+      <PageSection>
+        {/* Table des campagnes */}
+        <Card>
         <CardHeader
           title={`Campagnes (${filteredCampaigns.length})`}
           subtitle={statusFilter ? `Filtrées par statut: ${STATUS_LABELS[statusFilter as keyof typeof STATUS_LABELS]}` : 'Toutes vos campagnes email'}
@@ -218,7 +216,7 @@ export default function CampaignsPage() {
         />
         <CardBody>
           {/* Boutons d'export */}
-          <div className="flex items-center justify-end gap-2 mb-4">
+          <div className="flex items-center justify-end gap-spacing-sm mb-spacing-md">
             <Button
               variant="outline"
               size="sm"
@@ -260,11 +258,11 @@ export default function CampaignsPage() {
 
           {/* Pagination personnalisée */}
           {filteredCampaigns.length > 0 && (
-            <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
-              <div className="text-sm text-text-secondary">
+            <div className="flex items-center justify-between mt-spacing-md pt-spacing-md border-t border-border">
+              <div className="text-fluid-sm text-text-secondary">
                 Page {Math.floor(pagination.skip / pagination.limit) + 1} sur {Math.ceil(filteredCampaigns.length / pagination.limit)} ({filteredCampaigns.length} campagnes au total)
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-spacing-sm">
                 <Button
                   variant="outline"
                   size="sm"
@@ -286,9 +284,10 @@ export default function CampaignsPage() {
           )}
         </CardBody>
       </Card>
+      </PageSection>
 
       {/* Modal de confirmation */}
       <ConfirmDialogComponent />
-    </div>
+    </PageContainer>
   )
 }

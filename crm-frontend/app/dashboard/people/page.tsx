@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation'
 import { ROUTES } from "@/lib/constants"
 import { ArrowLeft, Eye, Edit, Trash2, Mail, Phone, MapPin, Briefcase, Download, UserPlus } from 'lucide-react'
 import { usePeople } from '@/hooks/usePeople'
-import { Card, Button, Alert } from '@/components/shared'
+import { Card, Button, Alert, PageContainer, PageHeader, PageSection } from '@/components/shared'
 import { DataTable, Column, QuickAction, BulkAction } from '@/components/shared/DataTable'
 import { Person } from '@/lib/types'
 import { COUNTRY_OPTIONS, LANGUAGE_OPTIONS } from '@/lib/geo'
@@ -53,7 +53,7 @@ export default function PeoplePage() {
         render: (_: unknown, row: any) => (
           <Link
             href={`/dashboard/people/${personSlug(row.id, row.first_name, row.last_name)}`}
-            className="font-medium text-gray-900 dark:text-slate-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className="font-medium text-text-primary dark:text-text-primary hover:text-primary dark:hover:text-primary transition-colors"
             onClick={(e) => e.stopPropagation()}
           >
             {`${row.first_name} ${row.last_name}`}
@@ -68,12 +68,12 @@ export default function PeoplePage() {
         searchable: true,
         render: (value: any) =>
           value ? (
-            <div className="flex items-center gap-1 text-gray-700 dark:text-slate-300">
-              <Briefcase className="w-3.5 h-3.5 flex-shrink-0 text-gray-400 dark:text-slate-500" />
-              <span className="text-sm">{value}</span>
+            <div className="flex items-center gap-spacing-xs text-text-secondary dark:text-text-secondary">
+              <Briefcase className="w-3.5 h-3.5 flex-shrink-0 text-text-disabled dark:text-text-disabled" />
+              <span className="text-fluid-sm">{value}</span>
             </div>
           ) : (
-            <span className="text-gray-400 dark:text-slate-500">-</span>
+            <span className="text-text-disabled dark:text-text-disabled">-</span>
           ),
       },
       {
@@ -86,14 +86,14 @@ export default function PeoplePage() {
           value ? (
             <a
               href={`mailto:${value}`}
-              className="text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+              className="text-fluid-sm text-primary dark:text-primary hover:underline flex items-center gap-spacing-xs"
               onClick={(e) => e.stopPropagation()}
             >
               <Mail className="w-3.5 h-3.5 flex-shrink-0" />
               <span className="truncate">{value}</span>
             </a>
           ) : (
-            <span className="text-gray-400 dark:text-slate-500">-</span>
+            <span className="text-text-disabled dark:text-text-disabled">-</span>
           ),
       },
       {
@@ -105,14 +105,14 @@ export default function PeoplePage() {
           value ? (
             <a
               href={`tel:${value}`}
-              className="text-sm text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-slate-100 flex items-center gap-1"
+              className="text-fluid-sm text-text-secondary dark:text-text-secondary hover:text-text-primary dark:hover:text-text-primary flex items-center gap-spacing-xs"
               onClick={(e) => e.stopPropagation()}
             >
               <Phone className="w-3.5 h-3.5 flex-shrink-0" />
               <span>{value}</span>
             </a>
           ) : (
-            <span className="text-gray-400 dark:text-slate-500">-</span>
+            <span className="text-text-disabled dark:text-text-disabled">-</span>
           ),
       },
       {
@@ -122,12 +122,12 @@ export default function PeoplePage() {
         sortable: true,
         render: (value: any) =>
           value ? (
-            <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-slate-300">
-              <MapPin className="w-3.5 h-3.5 flex-shrink-0 text-gray-400 dark:text-slate-500" />
+            <div className="flex items-center gap-spacing-xs text-fluid-sm text-text-secondary dark:text-text-secondary">
+              <MapPin className="w-3.5 h-3.5 flex-shrink-0 text-text-disabled dark:text-text-disabled" />
               <span>{COUNTRY_LABELS[value] || value}</span>
             </div>
           ) : (
-            <span className="text-gray-400 dark:text-slate-500">-</span>
+            <span className="text-text-disabled dark:text-text-disabled">-</span>
           ),
       },
       {
@@ -137,11 +137,11 @@ export default function PeoplePage() {
         sortable: true,
         render: (value: any) =>
           value ? (
-            <span className="text-sm text-gray-700 dark:text-slate-300">
+            <span className="text-fluid-sm text-text-secondary dark:text-text-secondary">
               {LANGUAGE_LABELS[value] || value}
             </span>
           ) : (
-            <span className="text-gray-400 dark:text-slate-500">-</span>
+            <span className="text-text-disabled dark:text-text-disabled">-</span>
           ),
       },
     ],
@@ -261,76 +261,80 @@ export default function PeoplePage() {
   }, [fetchPeople])
 
   return (
-    <div className="space-y-6">
+    <PageContainer width="default">
       {/* Breadcrumb */}
       <Link
         href="/dashboard"
-        className="inline-flex items-center gap-2 text-gray-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors mb-2"
+        className="inline-flex items-center gap-spacing-sm text-text-secondary dark:text-text-tertiary hover:text-primary dark:hover:text-primary transition-colors mb-spacing-sm"
       >
         <ArrowLeft className="w-5 h-5" />
         <span className="font-medium">Retour à l'annuaire</span>
       </Link>
 
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">
-            Personnes physiques
-          </h1>
-          <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
-            Annuaire centralisé des interlocuteurs et décisionnaires.
-          </p>
+      <PageHeader>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-fluid-3xl font-bold text-text-primary dark:text-text-primary">
+              Personnes physiques
+            </h1>
+            <p className="text-fluid-sm text-text-tertiary dark:text-text-tertiary mt-spacing-xs">
+              Annuaire centralisé des interlocuteurs et décisionnaires.
+            </p>
+          </div>
+          <div className="flex gap-spacing-sm">
+            <Link href="/dashboard/people/import">
+              <Button variant="secondary">
+                📥 Importer
+              </Button>
+            </Link>
+            <Link href="/dashboard/people/new">
+              <Button variant="primary">
+                <UserPlus className="w-4 h-4" />
+                Nouvelle personne
+              </Button>
+            </Link>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <Link href="/dashboard/people/import">
-            <Button variant="secondary">
-              📥 Importer
-            </Button>
-          </Link>
-          <Link href="/dashboard/people/new">
-            <Button variant="primary">
-              <UserPlus className="w-4 h-4" />
-              Nouvelle personne
-            </Button>
-          </Link>
-        </div>
-      </div>
+      </PageHeader>
 
       {/* Error Alert */}
       {people.error && <Alert type="error" message={people.error} />}
 
       {/* DataTable Premium */}
-      <Card>
-        <DataTable<Person>
-          data={people.data?.items || []}
-          columns={columns}
-          keyExtractor={(row) => row.id}
-          searchable={{
-            placeholder: 'Rechercher une personne...',
-            fields: ['first_name', 'last_name', 'personal_email', 'role'],
-          }}
-          bulkActions={bulkActions}
-          quickActions={quickActions}
-          onRowClick={(row) => {
-            router.push(`/dashboard/people/${personSlug(row.id, row.first_name, row.last_name)}`)
-          }}
-          isLoading={people.isLoading}
-          isEmpty={!people.data?.items || people.data.items.length === 0}
-          emptyState={{
-            title: 'Aucune personne',
-            description: 'Commencez par ajouter votre première personne.',
-            action: {
-              label: 'Nouvelle personne',
-              onClick: () => router.push(ROUTES.CRM.PERSON_NEW),
-            },
-          }}
-          pagination={{
-            pageSize: 20,
-            showPageSize: true,
-            pageSizeOptions: [10, 20, 50, 100],
-          }}
-        />
-      </Card>
-    </div>
+      <PageSection>
+        <Card>
+          <DataTable<Person>
+            data={people.data?.items || []}
+            columns={columns}
+            keyExtractor={(row) => row.id}
+            searchable={{
+              placeholder: 'Rechercher une personne...',
+              fields: ['first_name', 'last_name', 'personal_email', 'role'],
+            }}
+            bulkActions={bulkActions}
+            quickActions={quickActions}
+            onRowClick={(row) => {
+              router.push(`/dashboard/people/${personSlug(row.id, row.first_name, row.last_name)}`)
+            }}
+            isLoading={people.isLoading}
+            isEmpty={!people.data?.items || people.data.items.length === 0}
+            emptyState={{
+              title: 'Aucune personne',
+              description: 'Commencez par ajouter votre première personne.',
+              action: {
+                label: 'Nouvelle personne',
+                onClick: () => router.push(ROUTES.CRM.PERSON_NEW),
+              },
+            }}
+            pagination={{
+              pageSize: 20,
+              showPageSize: true,
+              pageSizeOptions: [10, 20, 50, 100],
+            }}
+          />
+        </Card>
+      </PageSection>
+    </PageContainer>
   )
 }

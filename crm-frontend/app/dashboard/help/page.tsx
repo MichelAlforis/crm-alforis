@@ -13,6 +13,7 @@ import {
   ChevronDown,
   ChevronUp,
 } from 'lucide-react'
+import { PageContainer, PageTitle } from '@/components/shared'
 
 interface FAQItem {
   question: string
@@ -437,43 +438,40 @@ export default function HelpPage() {
   }
 
   return (
-    <div className="p-6 lg:p-8 max-w-6xl mx-auto space-y-8">
+    <PageContainer width="default">
       {/* Header */}
       <header className="flex flex-col gap-4 text-center">
         <div className="flex justify-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-sm font-semibold uppercase tracking-wide text-blue-600">
+          <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-fluid-sm font-semibold uppercase tracking-wide text-primary">
             <HelpCircle className="h-4 w-4" />
             Centre d&apos;aide
           </span>
         </div>
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-slate-100">
+        <PageTitle subtitle="Trouvez rapidement des réponses à vos questions ou contactez notre équipe support">
           Comment pouvons-nous vous aider ?
-        </h1>
-        <p className="text-lg text-gray-600 dark:text-slate-400 max-w-2xl mx-auto">
-          Trouvez rapidement des réponses à vos questions ou contactez notre équipe support
-        </p>
+        </PageTitle>
       </header>
 
       {/* Search Bar */}
-      <div className="max-w-2xl mx-auto">
+      <div className="mx-auto max-w-2xl">
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-text-tertiary" />
           <input
             type="text"
             placeholder="Rechercher dans la documentation..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 pl-12 pr-4 py-4 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 shadow-sm"
+            className="w-full rounded-xl border border-border dark:border-slate-700 bg-surface dark:bg-slate-900 pl-12 pr-4 py-4 text-text-primary dark:text-text-primary placeholder:text-text-tertiary focus:border-primary focus:outline-none focus:ring-2 focus:ring-blue-200 shadow-sm"
           />
         </div>
       </div>
 
       {/* Resources Grid */}
       <section>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-6">
+        <h2 className="mb-spacing-lg text-fluid-2xl font-bold text-text-primary dark:text-text-primary">
           Ressources populaires
         </h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-spacing-md sm:grid-cols-2 lg:grid-cols-4">
           {resources.map((resource) => {
             const Icon = resource.icon
             const colors = colorMap[resource.color]
@@ -481,15 +479,15 @@ export default function HelpPage() {
               <a
                 key={resource.title}
                 href={resource.link}
-                className={`rounded-xl border ${colors.border} ${colors.bg} p-6 transition hover:shadow-lg hover:scale-105`}
+                className={`rounded-xl border ${colors.border} ${colors.bg} p-spacing-lg transition hover:shadow-lg hover:scale-105`}
               >
                 <div className={`inline-flex rounded-lg ${colors.icon} p-3 bg-white dark:bg-slate-900/80 mb-4`}>
                   <Icon className="h-6 w-6" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-2">
+                <h3 className="text-fluid-lg font-semibold text-text-primary dark:text-text-primary mb-2">
                   {resource.title}
                 </h3>
-                <p className="text-sm text-gray-600 dark:text-slate-400">{resource.description}</p>
+                <p className="text-fluid-sm text-text-secondary dark:text-slate-400">{resource.description}</p>
               </a>
             )
           })}
@@ -498,8 +496,8 @@ export default function HelpPage() {
 
       {/* FAQ Section */}
       <section>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100">
+        <div className="mb-spacing-lg flex items-center justify-between">
+          <h2 className="text-fluid-2xl font-bold text-text-primary dark:text-text-primary">
             Questions fréquentes
           </h2>
           <div className="flex gap-2">
@@ -507,10 +505,10 @@ export default function HelpPage() {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+                className={`rounded-lg px-4 py-2 text-fluid-sm font-medium transition ${
                   selectedCategory === category
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200'
+                    ? 'bg-primary text-white'
+                    : 'bg-gray-100 dark:bg-slate-800 text-text-secondary dark:text-slate-300 hover:bg-gray-200'
                 }`}
               >
                 {category}
@@ -521,8 +519,8 @@ export default function HelpPage() {
 
         <div className="space-y-3">
           {filteredFAQs.length === 0 ? (
-            <div className="rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-8 text-center">
-              <p className="text-gray-600 dark:text-slate-400">
+            <div className="rounded-xl border border-border dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-spacing-xl text-center">
+              <p className="text-text-secondary dark:text-slate-400">
                 Aucune question ne correspond à votre recherche.
               </p>
             </div>
@@ -530,17 +528,17 @@ export default function HelpPage() {
             filteredFAQs.map((faq, index) => (
               <div
                 key={index}
-                className="rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm overflow-hidden transition hover:shadow-md"
+                className="rounded-xl border border-border dark:border-slate-700 bg-surface dark:bg-slate-900 shadow-sm overflow-hidden transition hover:shadow-md"
               >
                 <button
                   onClick={() => setExpandedFAQ(expandedFAQ === index ? null : index)}
-                  className="w-full flex items-center justify-between gap-4 p-5 text-left hover:bg-gray-50 dark:bg-slate-800 transition"
+                  className="w-full flex items-center justify-between gap-spacing-md p-5 text-left hover:bg-gray-50 dark:bg-slate-800 transition"
                 >
                   <div className="flex-1">
-                    <span className="inline-block text-xs font-semibold uppercase tracking-wide text-blue-600 mb-1">
+                    <span className="inline-block text-xs font-semibold uppercase tracking-wide text-primary mb-1">
                       {faq.category}
                     </span>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">
+                    <h3 className="text-fluid-lg font-semibold text-text-primary dark:text-text-primary">
                       {faq.question}
                     </h3>
                   </div>
@@ -551,7 +549,7 @@ export default function HelpPage() {
                   )}
                 </button>
                 {expandedFAQ === index && (
-                  <div className="px-5 pb-5 text-gray-600 dark:text-slate-400 border-t border-gray-100 pt-4">
+                  <div className="px-5 pb-5 text-text-secondary dark:text-slate-400 border-t border-gray-100 pt-4">
                     {faq.answer}
                   </div>
                 )}
@@ -562,29 +560,29 @@ export default function HelpPage() {
       </section>
 
       {/* Contact Support */}
-      <section id="support" className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-gradient-to-br from-blue-50 to-indigo-50 p-8">
+      <section id="support" className="rounded-2xl border border-border dark:border-slate-700 bg-gradient-to-br from-blue-50 to-indigo-50 p-spacing-xl">
         <div className="flex justify-center mb-4">
           <div className="inline-flex rounded-full bg-blue-100 p-4">
-            <Mail className="h-8 w-8 text-blue-600" />
+            <Mail className="h-8 w-8 text-primary" />
           </div>
         </div>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-2 text-center">
+        <h2 className="mb-2 text-center text-fluid-2xl font-bold text-text-primary dark:text-text-primary">
           Vous ne trouvez pas ce que vous cherchez ?
         </h2>
-        <p className="text-gray-600 dark:text-slate-400 mb-6 max-w-xl mx-auto text-center">
+        <p className="mx-auto mb-spacing-lg max-w-xl text-center text-text-secondary dark:text-slate-400">
           Notre équipe support est disponible du lundi au vendredi de 9h à 18h pour répondre à toutes vos questions
         </p>
 
-        <div className="grid gap-4 md:grid-cols-3 mb-6">
+        <div className="grid gap-spacing-md md:grid-cols-3 mb-spacing-lg">
           {/* Email */}
           <a
             href="mailto:support@alforis.fr"
-            className="flex flex-col items-center gap-2 p-4 bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:shadow-md transition"
+            className="flex flex-col items-center gap-2 p-4 bg-surface dark:bg-slate-900 rounded-lg border border-border dark:border-slate-700 hover:border-blue-300 hover:shadow-md transition"
           >
-            <Mail className="h-6 w-6 text-blue-600" />
-            <span className="font-semibold text-gray-900 dark:text-slate-100">Email</span>
-            <span className="text-sm text-gray-600 dark:text-slate-400">support@alforis.fr</span>
-            <span className="text-xs text-gray-500">Réponse sous 24h</span>
+            <Mail className="h-6 w-6 text-primary" />
+            <span className="font-semibold text-text-primary dark:text-text-primary">Email</span>
+            <span className="text-fluid-sm text-text-secondary dark:text-slate-400">support@alforis.fr</span>
+            <span className="text-xs text-text-tertiary">Réponse sous 24h</span>
           </a>
 
           {/* Chat */}
@@ -595,11 +593,11 @@ export default function HelpPage() {
                 ;(window as any).$crisp.push(['do', 'chat:open'])
               }
             }}
-            className="flex flex-col items-center gap-2 p-4 bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:shadow-md transition"
+            className="flex flex-col items-center gap-2 p-4 bg-surface dark:bg-slate-900 rounded-lg border border-border dark:border-slate-700 hover:border-blue-300 hover:shadow-md transition"
           >
-            <MessageCircle className="h-6 w-6 text-green-600" />
-            <span className="font-semibold text-gray-900 dark:text-slate-100">Chat en direct</span>
-            <span className="text-sm text-gray-600 dark:text-slate-400">Assistance immédiate</span>
+            <MessageCircle className="h-6 w-6 text-success" />
+            <span className="font-semibold text-text-primary dark:text-text-primary">Chat en direct</span>
+            <span className="text-fluid-sm text-text-secondary dark:text-slate-400">Assistance immédiate</span>
             <span className="inline-flex items-center gap-1 text-xs">
               <span className="h-2 w-2 bg-green-500 rounded-full animate-pulse" />
               <span className="text-green-700 font-medium">En ligne</span>
@@ -609,22 +607,22 @@ export default function HelpPage() {
           {/* Téléphone */}
           <a
             href="tel:+33123456789"
-            className="flex flex-col items-center gap-2 p-4 bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 hover:border-blue-300 hover:shadow-md transition"
+            className="flex flex-col items-center gap-2 p-4 bg-surface dark:bg-slate-900 rounded-lg border border-border dark:border-slate-700 hover:border-blue-300 hover:shadow-md transition"
           >
             <Phone className="h-6 w-6 text-purple-600" />
-            <span className="font-semibold text-gray-900 dark:text-slate-100">Téléphone</span>
-            <span className="text-sm text-gray-600 dark:text-slate-400">01 23 45 67 89</span>
-            <span className="text-xs text-gray-500">Lun-Ven 9h-18h</span>
+            <span className="font-semibold text-text-primary dark:text-text-primary">Téléphone</span>
+            <span className="text-fluid-sm text-text-secondary dark:text-slate-400">01 23 45 67 89</span>
+            <span className="text-xs text-text-tertiary">Lun-Ven 9h-18h</span>
           </a>
         </div>
 
-        <div className="text-center text-sm text-gray-600 dark:text-slate-400">
+        <div className="text-center text-fluid-sm text-text-secondary dark:text-slate-400">
           Pour les urgences techniques, contactez-nous à{' '}
-          <a href="mailto:support-urgent@alforis.fr" className="text-blue-600 hover:underline font-medium">
+          <a href="mailto:support-urgent@alforis.fr" className="text-primary hover:underline font-medium">
             support-urgent@alforis.fr
           </a>
         </div>
       </section>
-    </div>
+    </PageContainer>
   )
 }

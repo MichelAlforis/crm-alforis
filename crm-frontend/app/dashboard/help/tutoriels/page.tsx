@@ -2,6 +2,7 @@
 
 import { Video, ArrowLeft, Clock, Play } from 'lucide-react'
 import Link from 'next/link'
+import { PageContainer, PageTitle } from '@/components/shared'
 
 interface Tutorial {
   title: string
@@ -49,41 +50,40 @@ const tutorials: Tutorial[] = [
 
 export default function TutorielsPage() {
   return (
-    <div className="max-w-6xl mx-auto p-6 lg:p-8 space-y-8">
+    <PageContainer width="default">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-gray-600 dark:text-slate-400">
-        <Link href="/dashboard/help" className="hover:text-gray-900 dark:hover:text-white dark:text-slate-100 transition">
+      <nav className="flex items-center gap-2 text-fluid-sm text-text-secondary dark:text-slate-400">
+        <Link href="/dashboard/help" className="hover:text-text-primary dark:hover:text-white dark:text-text-primary transition">
           Aide
         </Link>
         <span>/</span>
-        <span className="text-gray-900 dark:text-slate-100 font-medium">Tutoriels vidéo</span>
+        <span className="text-text-primary dark:text-text-primary font-medium">Tutoriels vidéo</span>
       </nav>
 
       {/* Header */}
-      <header className="text-center space-y-4">
+      <header className="space-y-spacing-md text-center">
         <div className="flex justify-center">
-          <div className="p-4 rounded-full bg-purple-50">
+          <div className="rounded-full bg-purple-50 p-4">
             <Video className="h-12 w-12 text-purple-600" />
           </div>
         </div>
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-slate-100">Tutoriels Vidéo</h1>
-        <p className="text-lg text-gray-600 dark:text-slate-400 max-w-2xl mx-auto">
-          Regardez nos démonstrations pas à pas pour maîtriser rapidement le CRM
-        </p>
+        <PageTitle subtitle="Regardez nos démonstrations pas à pas pour maîtriser rapidement le CRM">
+          Tutoriels Vidéo
+        </PageTitle>
       </header>
 
       {/* Coming Soon Message */}
-      <div className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 rounded-2xl p-12 text-center">
-        <div className="inline-flex items-center justify-center w-20 h-20 bg-purple-100 rounded-full mb-6">
+      <div className="rounded-2xl border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50 p-12 text-center">
+        <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-purple-100">
           <Video className="h-10 w-10 text-purple-600" />
         </div>
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-slate-100 mb-4">
+        <h2 className="mb-4 text-fluid-3xl font-bold text-text-primary dark:text-text-primary">
           Bientôt disponible !
         </h2>
-        <p className="text-lg text-gray-700 dark:text-slate-300 mb-6 max-w-xl mx-auto">
+        <p className="mx-auto mb-spacing-lg max-w-xl text-fluid-lg text-text-secondary dark:text-slate-300">
           Nous préparons une bibliothèque complète de tutoriels vidéo pour vous accompagner dans l&apos;utilisation du CRM.
         </p>
-        <div className="grid gap-4 sm:grid-cols-2 max-w-2xl mx-auto text-left">
+        <div className="grid gap-spacing-md sm:grid-cols-2 max-w-2xl mx-auto text-left">
           <div className="bg-white dark:bg-slate-900 rounded-lg p-4 border border-purple-200">
             <div className="font-semibold text-purple-900 mb-2">📹 Vidéos de démonstration</div>
             <p className="text-sm text-gray-600 dark:text-slate-400">
@@ -113,7 +113,7 @@ export default function TutorielsPage() {
 
       {/* Tutoriels à venir (preview) */}
       <section>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-6">
+        <h2 className="mb-6 text-fluid-2xl font-bold text-gray-900 dark:text-slate-100">
           Tutoriels en préparation
         </h2>
         <div className="grid gap-6 md:grid-cols-2">
@@ -145,11 +145,11 @@ export default function TutorielsPage() {
       </section>
 
       {/* Alternative : Guides écrits */}
-      <section className="bg-blue-50 border border-blue-200 rounded-2xl p-8">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-4 text-center">
+      <section className="rounded-2xl border border-blue-200 bg-blue-50 p-8">
+        <h2 className="mb-4 text-center text-fluid-2xl font-bold text-gray-900 dark:text-slate-100">
           En attendant, consultez nos guides écrits
         </h2>
-        <p className="text-gray-700 dark:text-slate-300 mb-6 text-center max-w-xl mx-auto">
+        <p className="mx-auto mb-6 max-w-xl text-center text-gray-700 dark:text-slate-300">
           Toutes les fonctionnalités sont documentées dans nos guides détaillés avec captures d&apos;écran
         </p>
         <div className="flex justify-center">
@@ -182,6 +182,6 @@ export default function TutorielsPage() {
           Retour au centre d&apos;aide
         </Link>
       </section>
-    </div>
+    </PageContainer>
   )
 }
