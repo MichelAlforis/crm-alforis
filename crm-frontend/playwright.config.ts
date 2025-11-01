@@ -15,6 +15,9 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './e2e',
 
+  /* Global setup: vérifie que l'API est prête avant de lancer les tests */
+  globalSetup: './playwright/global-setup.ts',
+
   /* Timeout par test (30s) */
   timeout: 30000,
 

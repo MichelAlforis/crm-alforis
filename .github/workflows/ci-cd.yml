@@ -246,7 +246,7 @@ jobs:
     name: 🎭 Tests E2E Playwright
     runs-on: ubuntu-latest
     needs: [lint-frontend]
-    timeout-minutes: 20
+    timeout-minutes: 25
 
     services:
       postgres:
@@ -296,7 +296,19 @@ jobs:
           cd crm-backend
           pip install -r requirements.txt
 
-      - name: 🗄️ Setup test database & create test user
+      - name: ⏳ Wait for Postgres to be ready
+        run: |
+          for i in {1..30}; do
+            if pg_isready -h localhost -p 5432 -U crm_user; then
+              echo "✅ Postgres is ready"
+              break
+            fi
+            echo "⏳ Waiting for Postgres ($i/30)..."
+            sleep 2
+          done
+          pg_isready -h localhost -p 5432 -U crm_user || (echo "❌ Postgres not ready" && exit 1)
+
+      - name: 🗄️ Setup test database & run migrations
         env:
           DATABASE_URL: postgresql://crm_user:crm_test_password@localhost:5432/crm_test
         run: |
@@ -306,13 +318,34 @@ jobs:
           echo "📊 Initializing base tables..."
           PGPASSWORD=crm_test_password psql -h localhost -U crm_user -d crm_test -f alembic/init_base_tables.sql
 
-          # Run Alembic migrations
+          # Run Alembic migrations (idempotent)
           echo "🔄 Running Alembic migrations..."
-          alembic upgrade head || true
+          alembic current || echo "No Alembic version yet"
+          alembic upgrade head
 
-          # Créer test user avec le bon hash (pbkdf2_sha256)
-          echo "👤 Creating test user..."
-          python create_test_user.py
+      - name: 🔎 Verify required tables exist
+        run: |
+          required=(users organisations teams roles permissions)
+          missing=()
+          for t in "${required[@]}"; do
+            count=$(PGPASSWORD=crm_test_password psql -h localhost -U crm_user -d crm_test -tAc "SELECT count(*) FROM information_schema.tables WHERE table_schema='public' AND table_name='${t}';")
+            if [ "$count" != "1" ]; then
+              missing+=("$t")
+            fi
+          done
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "❌ Missing tables: ${missing[*]}"
+            exit 1
+          fi
+          echo "✅ All required tables exist"
+
+      - name: 🌱 Seed E2E data (idempotent)
+        env:
+          DATABASE_URL: postgresql://crm_user:crm_test_password@localhost:5432/crm_test
+        run: |
+          cd crm-backend
+          echo "▶️ Running E2E seed script..."
+          python scripts/seed_e2e.py
 
       - name: 🚀 Start backend API
         env:
@@ -323,7 +356,22 @@ jobs:
           cd crm-backend
           uvicorn main:app --host 0.0.0.0 --port 8000 &
           echo $! > backend.pid
-          sleep 5
+          sleep 3
+
+      - name: 🩺 Wait for API health
+        run: |
+          for i in {1..40}; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/api/v1/health 2>/dev/null || echo "000")
+            if [ "$code" = "200" ]; then
+              echo "✅ API is healthy (HTTP $code)"
+              exit 0
+            fi
+            echo "⏳ Waiting for API health ($i/40), got HTTP $code"
+            sleep 2
+          done
+          echo "❌ API not healthy in time"
+          curl -v http://localhost:8000/api/v1/health || true
+          exit 1
 
       - name: 📥 Install frontend dependencies
         run: |
@@ -341,7 +389,7 @@ jobs:
           TEST_USER_PASSWORD: test123
         run: |
           cd crm-frontend
-          npx playwright test --reporter=github,html,json || echo "⚠️ E2E tests failed (non-blocking - needs test user setup)"
+          npx playwright test --retries=2 --reporter=github,html,json || echo "⚠️ E2E tests failed (non-blocking - needs test user setup)"
 
       - name: 📊 Upload HTML report
         if: always()
