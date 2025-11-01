@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Input } from '@/components/shared'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/shared/Button'
 import { UserCreate, UserUpdate } from '@/hooks/useUsers'
 
 interface UserFormProps {

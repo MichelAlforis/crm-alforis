@@ -58,19 +58,6 @@ export const ROUTES = {
     MAILING_LIST_NEW: '/dashboard/marketing/mailing-lists/new',
   },
 
-  // Email Campaigns (Legacy - consider merging with Marketing)
-  EMAIL: {
-    CAMPAIGNS: '/dashboard/email-campaigns',
-    CAMPAIGN_DETAIL: (id: string | number) => `/dashboard/email-campaigns/${id}`,
-    CAMPAIGN_NEW: '/dashboard/email-campaigns/new',
-
-    TEMPLATES: '/dashboard/email-templates',
-    TEMPLATE_DETAIL: (id: string | number) => `/dashboard/email-templates/${id}`,
-    TEMPLATE_NEW: '/dashboard/email-templates/new',
-
-    EMAIL_APIS: '/dashboard/email-apis',
-  },
-
   // Workflows
   WORKFLOWS: {
     BASE: '/dashboard/workflows',

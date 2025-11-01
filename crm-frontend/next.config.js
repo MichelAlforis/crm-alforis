@@ -225,6 +225,68 @@ const nextConfig = {
     ];
   },
 
+  // Redirects 301 pour routes marketing consolidées
+  async redirects() {
+    return [
+      // ============================================
+      // CAMPAGNES - Redirection vers /marketing/campaigns
+      // ============================================
+      {
+        source: '/dashboard/campaigns',
+        destination: '/dashboard/marketing/campaigns',
+        permanent: true, // 301 redirect
+      },
+      {
+        source: '/dashboard/campaigns/new',
+        destination: '/dashboard/marketing/campaigns/new',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/campaigns/:id',
+        destination: '/dashboard/marketing/campaigns/:id',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/campaigns/:id/preview',
+        destination: '/dashboard/marketing/campaigns/:id/preview',
+        permanent: true,
+      },
+
+      // ============================================
+      // EMAIL CAMPAIGNS - Redirection vers /marketing/campaigns
+      // ============================================
+      {
+        source: '/dashboard/email-campaigns',
+        destination: '/dashboard/marketing/campaigns',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/email-campaigns/new',
+        destination: '/dashboard/marketing/campaigns/new',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/email-campaigns/:id',
+        destination: '/dashboard/marketing/campaigns/:id',
+        permanent: true,
+      },
+
+      // ============================================
+      // MAILING LISTS - Redirection vers /marketing/mailing-lists
+      // ============================================
+      {
+        source: '/dashboard/mailing-lists',
+        destination: '/dashboard/marketing/mailing-lists',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/mailing-lists/:id',
+        destination: '/dashboard/marketing/mailing-lists/:id',
+        permanent: true,
+      },
+    ];
+  },
+
   // Rewrites pour proxy API (bypass CORS en dev)
   async rewrites() {
     // En dev, proxy vers localhost:8000 pour éviter CORS

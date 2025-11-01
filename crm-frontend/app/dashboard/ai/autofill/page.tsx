@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/shared/Button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
@@ -137,21 +137,13 @@ export default function AutofillJobsPage() {
             {/* Run Button */}
             <Button
               onClick={handleRunJob}
-              disabled={isRunning}
+              variant="primary"
+              isLoading={isRunning}
+              leftIcon={!isRunning ? <Play className="h-5 w-5" /> : undefined}
               className="w-full"
               size="lg"
             >
-              {isRunning ? (
-                <>
-                  <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                  Traitement en cours...
-                </>
-              ) : (
-                <>
-                  <Play className="h-5 w-5 mr-2" />
-                  Lancer le Job
-                </>
-              )}
+              {isRunning ? 'Traitement en cours...' : 'Lancer le Job'}
             </Button>
           </CardContent>
         </Card>

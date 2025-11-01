@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/shared/Button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/components/ui/Toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -478,24 +478,18 @@ export default function ImportUnifiedForm() {
       {/* Boutons */}
       <div className="flex gap-3">
         <Button
+          variant="primary"
           onClick={handleSubmit}
           disabled={isLoading || (!organisationsCSV && !peopleCSV)}
-          className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          isLoading={isLoading}
+          leftIcon={!isLoading ? <Upload className="w-4 h-4" /> : undefined}
+          className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
         >
-          {isLoading ? (
-            <>
-              <span className="animate-spin mr-2">⏳</span>
-              Import en cours...
-            </>
-          ) : (
-            <>
-              <Upload className="w-4 h-4 mr-2" />
-              Lancer l'import
-            </>
-          )}
+          {isLoading ? 'Import en cours...' : 'Lancer l\'import'}
         </Button>
         {(organisationsCSV || peopleCSV) && !isLoading && (
           <Button
+            variant="secondary"
             onClick={() => {
               setOrganisationsCSV('');
               setPeopleCSV('');
@@ -505,7 +499,7 @@ export default function ImportUnifiedForm() {
               setShowResult(false);
               setValidationErrors([]);
             }}
-            className="px-6 bg-gray-200 hover:bg-gray-300 text-gray-700 dark:text-slate-300"
+            className="px-6"
           >
             Réinitialiser
           </Button>

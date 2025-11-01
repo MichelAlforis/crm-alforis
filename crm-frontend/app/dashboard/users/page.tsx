@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { Plus, Pencil, Trash2, UserX, Search, X } from 'lucide-react'
 import { useUsers, useDeleteUser, useCreateUser, useUpdateUser, User } from '@/hooks/useUsers'
 import { useConfirm } from '@/hooks/useConfirm'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/shared/Button'
 import { UserForm } from '@/components/forms'
 import { useToast } from '@/hooks/useToast'
 
@@ -98,8 +98,7 @@ export default function UsersPage() {
           <h1 className="text-3xl font-bold text-ardoise">Gestion des utilisateurs</h1>
           <p className="text-gray-600 dark:text-slate-400 mt-1">Créer, modifier et supprimer des comptes utilisateurs</p>
         </div>
-        <Button onClick={handleOpenCreate} className="flex items-center gap-2">
-          <Plus className="w-4 h-4" />
+        <Button onClick={handleOpenCreate} variant="primary" leftIcon={<Plus className="w-4 h-4" />}>
           Nouvel utilisateur
         </Button>
       </div>
