@@ -17,7 +17,8 @@
 # - ENCRYPTION_KEY (obligatoire)
 # - EMAIL_ENCRYPTION_KEY (obligatoire)
 # - GRAFANA_ADMIN_PASSWORD (obligatoire)
-# - FLOWER_BASIC_AUTH (obligatoire, format: user:password)
+# - FLOWER_USER (obligatoire, défaut: admin)
+# - FLOWER_PASSWORD (obligatoire)
 # - ALLOWED_ORIGINS (optionnel, défaut: ["https://crm.alforis.fr"])
 # - NEXT_PUBLIC_API_URL (optionnel, défaut: /api/v1)
 # - MICROSOFT_CLIENT_ID, MICROSOFT_CLIENT_SECRET (optionnel, pour Outlook)
@@ -426,9 +427,10 @@ services:
       POSTGRES_HOST: postgres
       PYTHONPATH: /app
       # Flower Basic Auth (obligatoire en prod)
-      FLOWER_BASIC_AUTH: ${FLOWER_BASIC_AUTH:-admin:change_me_in_production}
+      FLOWER_USER: ${FLOWER_USER:-admin}
+      FLOWER_PASSWORD: ${FLOWER_PASSWORD:-change_me_in_production}
     working_dir: /app
-    command: celery -A celery_app flower --port=5555 --basic-auth=${FLOWER_BASIC_AUTH}
+    command: sh -c 'celery -A celery_app flower --port=5555 --basic_auth=$$FLOWER_USER:$$FLOWER_PASSWORD'
     ports:
       - "127.0.0.1:5555:5555"
     networks:
