@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/shared/Button'
 import { Input } from '@/components/shared/Input'
 import { Alert } from '@/components/shared/Alert'
 import { useEmailTemplates } from '@/hooks/useEmailAutomation'
@@ -143,7 +143,7 @@ export function TemplateEditModal({
                 <div className="hidden md:flex items-center gap-1 md:gap-2">
                   <Button
                     size="sm"
-                    variant={viewport.isMode('desktop') ? 'default' : 'outline'}
+                    variant={viewport.isMode('desktop') ? 'primary' : 'outline'}
                     onClick={() => viewport.setMode('desktop')}
                     title="Vue Desktop"
                   >
@@ -151,7 +151,7 @@ export function TemplateEditModal({
                   </Button>
                   <Button
                     size="sm"
-                    variant={viewport.isMode('mobile') ? 'default' : 'outline'}
+                    variant={viewport.isMode('mobile') ? 'primary' : 'outline'}
                     onClick={() => viewport.setMode('mobile')}
                     title="Vue Mobile"
                   >
@@ -268,7 +268,7 @@ export function TemplateEditModal({
                 <div className="flex md:hidden items-center gap-1 bg-white dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700">
                   <Button
                     size="sm"
-                    variant={viewport.isMode('desktop') ? 'default' : 'ghost'}
+                    variant={viewport.isMode('desktop') ? 'primary' : 'ghost'}
                     onClick={() => viewport.setMode('desktop')}
                     title="Vue Desktop"
                     className="h-7 px-2"
@@ -277,7 +277,7 @@ export function TemplateEditModal({
                   </Button>
                   <Button
                     size="sm"
-                    variant={viewport.isMode('mobile') ? 'default' : 'ghost'}
+                    variant={viewport.isMode('mobile') ? 'primary' : 'ghost'}
                     onClick={() => viewport.setMode('mobile')}
                     title="Vue Mobile"
                     className="h-7 px-2"
@@ -344,22 +344,21 @@ export function TemplateEditModal({
                 Annuler
               </Button>
               <Button
+                variant="primary"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
+                isLoading={isSubmitting}
+                leftIcon={!isSubmitting ? <Save className="w-3 h-3 md:w-4 md:h-4" /> : undefined}
                 className="flex-1 sm:flex-none bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-xs md:text-sm"
                 size="sm"
               >
                 {isSubmitting ? (
                   <>
-                    <div className="w-3 h-3 md:w-4 md:h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-1 md:mr-2" />
                     <span className="hidden sm:inline">Enregistrement...</span>
                     <span className="sm:hidden">...</span>
                   </>
                 ) : (
-                  <>
-                    <Save className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
-                    Enregistrer
-                  </>
+                  'Enregistrer'
                 )}
               </Button>
             </div>
