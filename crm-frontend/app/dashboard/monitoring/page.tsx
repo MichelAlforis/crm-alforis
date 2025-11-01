@@ -2,6 +2,7 @@
 
 import { logger } from '@/lib/logger'
 import React, { useEffect, useState } from 'react'
+import { PageContainer } from '@/components/layout/PageContainer'
 import { Card } from '@/components/shared'
 import { storage, AUTH_STORAGE_KEYS } from '@/lib/constants'
 
@@ -241,18 +242,18 @@ export default function MonitoringPage() {
 
   if (loading) {
     return (
-      <div className="p-6">
+    <PageContainer width="default">
         <h1 className="text-2xl font-bold mb-6">Monitoring Système</h1>
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
-      </div>
+    </PageContainer>
     )
   }
 
   if (error) {
     return (
-      <div className="p-6">
+      <PageContainer width="default">
         <h1 className="text-2xl font-bold mb-6">Monitoring Système</h1>
         <Card className="bg-red-50 border-red-200">
           <div className="p-4">
@@ -260,14 +261,14 @@ export default function MonitoringPage() {
             <p className="text-red-600 text-sm mt-1">{error}</p>
           </div>
         </Card>
-      </div>
+      </PageContainer>
     )
   }
 
   if (!data) return null
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <PageContainer width="wide">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -661,6 +662,6 @@ export default function MonitoringPage() {
       <div className="mt-6 text-center text-sm text-gray-500">
         Last updated: {new Date(data.timestamp).toLocaleString('fr-FR')}
       </div>
-    </div>
+    </PageContainer>
   )
 }

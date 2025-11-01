@@ -14,6 +14,7 @@
  */
 
 import { useState, useEffect } from 'react'
+import { PageContainer } from '@/components/layout/PageContainer'
 import { storage, AUTH_STORAGE_KEYS } from "@/lib/constants"
 import {
   CheckCircle,
@@ -228,7 +229,7 @@ export default function AutofillHITLPage() {
   }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <PageContainer width="wide">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-3">
@@ -508,6 +509,6 @@ export default function AutofillHITLPage() {
         {suggestions.length} suggestion{suggestions.length > 1 ? 's' : ''} •
         {' '}{suggestions.filter(s => s.web_enriched).length} enrichie{suggestions.filter(s => s.web_enriched).length > 1 ? 's' : ''} web
       </div>
-    </div>
+    </PageContainer>
   )
 }

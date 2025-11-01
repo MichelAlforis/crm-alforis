@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect, lazy, Suspense } from 'react'
 import { storage, AUTH_STORAGE_KEYS } from "@/lib/constants"
-import { Card, Button } from '@/components/shared'
+import { Card, Button, PageContainer } from '@/components/shared'
 import { Alert } from '@/components/shared/Alert'
 import {
   Settings,
@@ -332,15 +332,15 @@ export default function DashboardV2Page() {
   )
 
   return (
-    <div className="@container flex flex-col gap-fluid-4 @md:gap-fluid-5 @xl:gap-fluid-6 pt-fluid-2 pb-[max(2rem,env(safe-area-inset-bottom))]">
+    <PageContainer width="wide" spacing="normal" className="@container">
       {/* View Selector */}
-      <Card padding="none" className="@container p-fluid-3 @md:p-fluid-4">
-        <div className="flex flex-col @sm:flex-row @sm:items-center @sm:justify-between gap-fluid-3">
-          <div className="flex items-center gap-fluid-2 text-fluid-base text-gray-700 dark:text-slate-300">
-            <LayoutIcon className="h-5 w-5 text-gray-600 dark:text-slate-400" />
+      <Card padding="none" className="@container p-spacing-sm @md:p-spacing-md">
+        <div className="flex flex-col @sm:flex-row @sm:items-center @sm:justify-between gap-spacing-sm">
+          <div className="flex items-center gap-spacing-xs text-fluid-base text-text-primary">
+            <LayoutIcon className="h-5 w-5 text-text-secondary" />
             <span className="font-medium">Vue:</span>
           </div>
-          <div className="grid grid-cols-1 gap-fluid-2 @sm:grid-cols-3 w-full @lg:w-auto">
+          <div className="grid grid-cols-1 gap-spacing-xs @sm:grid-cols-3 w-full @lg:w-auto">
             {viewConfigs.map((config) => {
               const Icon = config.icon
               const isActive = selectedView === config.id
@@ -348,10 +348,10 @@ export default function DashboardV2Page() {
                 <button
                   key={config.id}
                   onClick={() => setSelectedView(config.id)}
-                  className={`flex items-center justify-center gap-2 rounded-lg px-fluid-3 py-fluid-2 text-fluid-sm font-medium transition-all min-h-[44px] ${
+                  className={`flex items-center justify-center gap-spacing-xs rounded-lg px-spacing-sm py-spacing-xs text-fluid-sm font-medium transition-all min-h-[44px] ${
                     isActive
                       ? 'bg-bleu text-white shadow-md'
-                      : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200'
+                      : 'bg-gray-100 dark:bg-slate-800 text-text-primary hover:bg-gray-200'
                   }`}
                   title={config.description}
                 >
@@ -366,10 +366,10 @@ export default function DashboardV2Page() {
 
       {/* Render selected view */}
       <Suspense fallback={
-        <div className="space-y-6 animate-pulse">
+        <div className="space-y-spacing-lg animate-pulse">
           <div className="h-32 bg-gray-200 dark:bg-gray-800 rounded-lg" />
           <div className="h-64 bg-gray-200 dark:bg-gray-800 rounded-lg" />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-spacing-md">
             <div className="h-48 bg-gray-200 dark:bg-gray-800 rounded-lg" />
             <div className="h-48 bg-gray-200 dark:bg-gray-800 rounded-lg" />
           </div>
@@ -379,6 +379,6 @@ export default function DashboardV2Page() {
         {selectedView === 'commercial' && renderCommercialView()}
         {selectedView === 'manager' && renderManagerView()}
       </Suspense>
-    </div>
+    </PageContainer>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { PageContainer } from '@/components/layout/PageContainer'
 import { AI_INTENT_LABELS } from "@/lib/enums/labels"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -104,7 +105,7 @@ export default function EmailIntelligencePage() {
   }
 
   return (
-    <div className="space-y-6">
+    <PageContainer width="default">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -431,6 +432,6 @@ export default function EmailIntelligencePage() {
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+    </PageContainer>
   )
 }

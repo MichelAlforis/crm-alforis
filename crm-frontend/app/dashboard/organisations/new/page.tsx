@@ -5,6 +5,7 @@
 
 import React from 'react'
 import { useRouter } from 'next/navigation'
+import { PageContainer } from '@/components/layout/PageContainer'
 import { Card } from '@/components/shared'
 import { OrganisationForm } from '@/components/forms'
 import { useCreateOrganisation } from '@/hooks/useOrganisations'
@@ -21,7 +22,7 @@ export default function NewOrganisationPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-3xl">
+    <PageContainer width="narrow">
       <div>
         <h1 className="text-3xl font-bold text-ardoise">Nouvelle organisation</h1>
         <p className="text-gray-600 dark:text-slate-400 mt-2">
@@ -37,6 +38,6 @@ export default function NewOrganisationPage() {
           submitLabel="Créer l'organisation"
         />
       </Card>
-    </div>
+    </PageContainer>
   )
 }

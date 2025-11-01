@@ -3,6 +3,7 @@
 import { logger } from '@/lib/logger'
 import { storage, PREFERENCES_STORAGE_KEYS } from "@/lib/constants"
 import { useState } from 'react'
+import { PageContainer } from '@/components/layout/PageContainer'
 import { Shield } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { useToast } from '@/components/ui/Toast'
@@ -203,7 +204,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="p-6 lg:p-8 max-w-5xl mx-auto space-y-8">
+    <PageContainer width="default">
       <header className="flex flex-col gap-2">
         <span className="inline-flex items-center gap-2 self-start rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-blue-600">
           <Shield className="h-3.5 w-3.5" />
@@ -289,6 +290,6 @@ export default function SettingsPage() {
         onClose={() => setShowNewsletterModal(false)}
         onSubscribe={handleNewsletterSubmit}
       />
-    </div>
+    </PageContainer>
   )
 }

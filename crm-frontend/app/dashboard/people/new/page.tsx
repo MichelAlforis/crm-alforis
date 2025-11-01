@@ -6,6 +6,7 @@
 import React, { lazy, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { PageContainer } from '@/components/layout/PageContainer'
 import { Card, Button } from '@/components/shared'
 import { usePeople } from '@/hooks/usePeople'
 import type { PersonInput } from '@/lib/types'
@@ -23,7 +24,7 @@ export default function NewPersonPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <PageContainer width="narrow">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-ardoise">Nouvelle personne</h1>
@@ -46,6 +47,6 @@ export default function NewPersonPage() {
           />
         </Suspense>
       </Card>
-    </div>
+    </PageContainer>
   )
 }

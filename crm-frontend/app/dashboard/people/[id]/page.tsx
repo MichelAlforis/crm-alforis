@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { PageContainer } from '@/components/layout/PageContainer'
 import { ROUTES } from "@/lib/constants"
 import { Modal } from '@/components/shared'
 import { PersonForm, PersonOrgLinkForm } from '@/components/forms'
@@ -206,7 +207,7 @@ export default function PersonDetailPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <PageContainer width="default">
       <PersonDetailHeader
         person={person}
         onEdit={() => setIsEditModalOpen(true)}
@@ -290,6 +291,6 @@ export default function PersonDetailPage() {
       </Modal>
 
       <ConfirmDialogComponent />
-    </div>
+    </PageContainer>
   )
 }

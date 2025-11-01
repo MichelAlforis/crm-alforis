@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { PageContainer } from '@/components/layout/PageContainer'
 import { Plus, Pencil, Trash2, UserX, Search, X } from 'lucide-react'
 import { useUsers, useDeleteUser, useCreateUser, useUpdateUser, User } from '@/hooks/useUsers'
 import { useConfirm } from '@/hooks/useConfirm'
@@ -91,7 +92,7 @@ export default function UsersPage() {
   }
 
   return (
-    <div className="p-6">
+    <PageContainer width="default">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
@@ -272,6 +273,6 @@ export default function UsersPage() {
 
       {/* Confirmation Dialog */}
       <ConfirmDialogComponent />
-    </div>
+    </PageContainer>
   )
 }

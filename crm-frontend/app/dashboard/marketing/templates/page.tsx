@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { FileText, Plus, Edit, Trash2, Eye, Download } from 'lucide-react'
 import { Card } from '@/components/ui/card'
-import { Button } from '@/components/shared/Button'
+import { Button, PageContainer } from '@/components/shared'
 import { useEmailTemplates } from '@/hooks/useEmailAutomation'
 import { useExport } from '@/hooks/useExport'
 import { useConfirm } from '@/hooks/useConfirm'
@@ -53,21 +53,21 @@ export default function TemplatesPage() {
 
   if (loading) {
     return (
-      <div className="p-4 md:p-8">
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/2 md:w-1/4"></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+      <PageContainer width="default">
+        <div className="animate-pulse space-y-spacing-md">
+          <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded-radius-md w-1/2 md:w-1/4"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md md:gap-spacing-lg">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-48 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              <div key={i} className="h-48 bg-gray-200 dark:bg-gray-700 rounded-radius-md"></div>
             ))}
           </div>
         </div>
-      </div>
+      </PageContainer>
     )
   }
 
   return (
-    <div className="p-4 md:p-8 space-y-4 md:space-y-6">
+    <PageContainer width="default">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex-1 min-w-0">
@@ -92,7 +92,7 @@ export default function TemplatesPage() {
 
       {/* Boutons d'export */}
       {templates.length > 0 && (
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center justify-end gap-spacing-xs">
           <Button
             variant="outline"
             size="sm"
@@ -128,7 +128,7 @@ export default function TemplatesPage() {
 
       {/* Templates Grid */}
       {templates.length === 0 ? (
-        <Card className="p-8 md:p-12 text-center">
+        <Card className="p-spacing-2xl md:p-spacing-3xl text-center">
           <FileText className="mx-auto h-12 w-12 md:h-16 md:w-16 text-gray-400 mb-3 md:mb-4" />
           <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-2">
             Aucun template
@@ -147,14 +147,14 @@ export default function TemplatesPage() {
           </Button>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md md:gap-spacing-lg">
           {templates.map((template) => (
             <Card
               key={template.id}
-              className="p-4 md:p-6 hover:shadow-lg transition-shadow"
+              className="p-spacing-md md:p-spacing-lg hover:shadow-lg transition-shadow"
             >
-              <div className="flex items-start gap-3 md:gap-4 mb-3 md:mb-4">
-                <div className="p-2 md:p-3 bg-gradient-to-br from-pink-100 to-rose-100 dark:from-pink-900/20 dark:to-rose-900/20 rounded-lg md:rounded-xl flex-shrink-0">
+              <div className="flex items-start gap-spacing-sm md:gap-spacing-md mb-spacing-sm md:mb-spacing-md">
+                <div className="p-spacing-xs md:p-spacing-sm bg-gradient-to-br from-pink-100 to-rose-100 dark:from-pink-900/20 dark:to-rose-900/20 rounded-radius-md md:rounded-radius-lg flex-shrink-0">
                   <FileText className="h-5 w-5 md:h-6 md:w-6 text-pink-600 dark:text-pink-400" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -239,6 +239,6 @@ export default function TemplatesPage() {
 
       {/* Confirm Dialog */}
       <ConfirmDialogComponent />
-    </div>
+    </PageContainer>
   )
 }

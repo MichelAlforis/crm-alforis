@@ -5,6 +5,7 @@
 
 import React, { useState, lazy, Suspense } from 'react'
 import Link from 'next/link'
+import { PageContainer } from '@/components/layout/PageContainer'
 import { ROUTES } from "@/lib/constants"
 import { ArrowLeft, Power, PowerOff } from 'lucide-react'
 import {
@@ -157,7 +158,7 @@ export default function OrganisationDetailPage() {
 
 
   return (
-    <div className="space-y-6">
+    <PageContainer width="default">
       {/* Header with back button */}
       <div className="flex items-center gap-3 mb-4">
         <Link
@@ -360,6 +361,6 @@ export default function OrganisationDetailPage() {
         cancelText="Annuler"
         isLoading={deleteMutation.isPending}
       />
-    </div>
+    </PageContainer>
   )
 }

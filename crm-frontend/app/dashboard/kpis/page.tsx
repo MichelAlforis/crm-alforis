@@ -8,7 +8,7 @@ import React, { useEffect, useState, useMemo, lazy, Suspense } from 'react'
 import Link from 'next/link'
 import { useOrganisations } from '@/hooks/useOrganisations'
 import { useConfirm } from '@/hooks/useConfirm'
-import { Card, Button, Modal, Alert } from '@/components/shared'
+import { Card, Button, Modal, Alert, PageContainer, PageHeader, PageSection, PageTitle } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { Trash2 } from 'lucide-react'
@@ -272,73 +272,81 @@ export default function KPIsPage() {
   const selectedFournisseur = fournisseurs.find(f => f.id === selectedFournisseurId)
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-ardoise">KPIs par Fournisseur</h1>
+    <PageContainer width="wide" spacing="normal">
+      <PageHeader>
+        <PageTitle>KPIs par Fournisseur</PageTitle>
+      </PageHeader>
 
       {/* Sélection du fournisseur */}
-      <Card>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
-            Sélectionner un fournisseur
-          </label>
-          <select
-            value={selectedFournisseurId || ''}
-            onChange={(e) => setSelectedFournisseurId(e.target.value ? parseInt(e.target.value) : null)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-bleu"
-          >
-            <option value="">-- Choisir un fournisseur --</option>
-            {fournisseurs?.map((fss: any) => (
-              <option key={fss.id} value={fss.id}>
-                {fss.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      </Card>
+      <PageSection>
+        <Card>
+          <div className="mb-spacing-md">
+            <label className="block text-fluid-sm font-medium text-text-primary mb-spacing-xs">
+              Sélectionner un fournisseur
+            </label>
+            <select
+              value={selectedFournisseurId || ''}
+              onChange={(e) => setSelectedFournisseurId(e.target.value ? parseInt(e.target.value) : null)}
+              className="w-full px-spacing-sm py-spacing-xs border border-gray-300 dark:border-slate-600 rounded-lg text-fluid-sm focus:outline-none focus:ring-2 focus:ring-bleu"
+            >
+              <option value="">-- Choisir un fournisseur --</option>
+              {fournisseurs?.map((fss: any) => (
+                <option key={fss.id} value={fss.id}>
+                  {fss.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </Card>
+      </PageSection>
 
       {selectedFournisseurId && selectedFournisseur && (
         <>
           {/* En-tête avec lien détail fournisseur */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-ardoise">
-                {selectedFournisseur.name}
-              </h2>
-              <Link 
-                href={`/dashboard/organisations/${selectedFournisseurId}`}
-                className="text-bleu hover:underline text-sm mt-1 inline-block"
-              >
-                Voir détail de l'organisation →
-              </Link>
+          <PageSection>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-spacing-md">
+              <div>
+                <h2 className="text-fluid-2xl font-bold text-text-primary">
+                  {selectedFournisseur.name}
+                </h2>
+                <Link
+                  href={`/dashboard/organisations/${selectedFournisseurId}`}
+                  className="text-bleu hover:underline text-fluid-sm mt-spacing-xs inline-block"
+                >
+                  Voir détail de l'organisation →
+                </Link>
+              </div>
+              <Button variant="primary" onClick={() => openModal('create-kpi')}>
+                + Ajouter KPI
+              </Button>
             </div>
-            <Button variant="primary" onClick={() => openModal('create-kpi')}>
-              + Ajouter KPI
-            </Button>
-          </div>
+          </PageSection>
 
           {/* Stats cards */}
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            <Card className="text-center">
-              <div className="text-2xl font-bold text-bleu">{totalRDV}</div>
-              <p className="text-gray-600 dark:text-slate-400 text-xs">RDV totaux</p>
-            </Card>
-            <Card className="text-center">
-              <div className="text-2xl font-bold text-purple-500">{totalPitchs}</div>
-              <p className="text-gray-600 dark:text-slate-400 text-xs">Pitchs totaux</p>
-            </Card>
-            <Card className="text-center">
-              <div className="text-2xl font-bold text-vert">{totalClosings}</div>
-              <p className="text-gray-600 dark:text-slate-400 text-xs">Closings totaux</p>
-            </Card>
-            <Card className="text-center">
-              <div className="text-2xl font-bold text-orange-500">{totalRevenue}€</div>
-              <p className="text-gray-600 dark:text-slate-400 text-xs">Revenu total</p>
-            </Card>
-            <Card className="text-center">
-              <div className="text-2xl font-bold text-indigo-500">{kpis.length}</div>
-              <p className="text-gray-600 dark:text-slate-400 text-xs">Mois saisies</p>
-            </Card>
-          </div>
+          <PageSection>
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-spacing-md">
+              <Card className="text-center">
+                <div className="text-fluid-2xl font-bold text-bleu">{totalRDV}</div>
+                <p className="text-text-secondary text-fluid-xs">RDV totaux</p>
+              </Card>
+              <Card className="text-center">
+                <div className="text-fluid-2xl font-bold text-purple-500">{totalPitchs}</div>
+                <p className="text-text-secondary text-fluid-xs">Pitchs totaux</p>
+              </Card>
+              <Card className="text-center">
+                <div className="text-fluid-2xl font-bold text-vert">{totalClosings}</div>
+                <p className="text-text-secondary text-fluid-xs">Closings totaux</p>
+              </Card>
+              <Card className="text-center">
+                <div className="text-fluid-2xl font-bold text-orange-500">{totalRevenue}€</div>
+                <p className="text-text-secondary text-fluid-xs">Revenu total</p>
+              </Card>
+              <Card className="text-center">
+                <div className="text-fluid-2xl font-bold text-indigo-500">{kpis.length}</div>
+                <p className="text-text-secondary text-fluid-xs">Mois saisies</p>
+              </Card>
+            </div>
+          </PageSection>
 
           {/* Erreurs */}
           {kpisError && (
@@ -346,19 +354,21 @@ export default function KPIsPage() {
           )}
 
           {/* Tableau des KPIs */}
-          <Card className="overflow-x-auto">
-            <TableV2<KPI>
-              columns={columns}
-              data={kpis}
-              isLoading={kpisLoading}
-              isEmpty={kpis.length === 0}
-              emptyMessage="Aucun KPI enregistré pour ce fournisseur"
-              rowKey={(row) => row.id?.toString() || `${row.year}-${row.month}`}
-              size="md"
-              variant="default"
-              stickyHeader
-            />
-          </Card>
+          <PageSection>
+            <Card className="overflow-x-auto">
+              <TableV2<KPI>
+                columns={columns}
+                data={kpis}
+                isLoading={kpisLoading}
+                isEmpty={kpis.length === 0}
+                emptyMessage="Aucun KPI enregistré pour ce fournisseur"
+                rowKey={(row) => row.id?.toString() || `${row.year}-${row.month}`}
+                size="md"
+                variant="default"
+                stickyHeader
+              />
+            </Card>
+          </PageSection>
 
           {/* Modal formulaire */}
           <Modal
@@ -366,7 +376,7 @@ export default function KPIsPage() {
             onClose={closeModal}
             title={`Ajouter un KPI pour ${selectedFournisseur.name}`}
           >
-            <Suspense fallback={<div className="p-4">Chargement...</div>}>
+            <Suspense fallback={<div className="p-spacing-md">Chargement...</div>}>
               <KPIForm
                 onSubmit={handleAddKPI}
                 isLoading={kpisLoading}
@@ -379,6 +389,6 @@ export default function KPIsPage() {
 
       {/* Confirmation Dialog */}
       <ConfirmDialogComponent />
-    </div>
+    </PageContainer>
   )
 }

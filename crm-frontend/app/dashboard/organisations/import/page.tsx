@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import { PageContainer } from '@/components/layout/PageContainer'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ROUTES } from "@/lib/constants"
@@ -11,7 +12,7 @@ export default function ImportOrganisationsPage() {
   const router = useRouter()
 
   return (
-    <div className="space-y-6">
+    <PageContainer width="default">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-ardoise">Importer des organisations</h1>
@@ -84,6 +85,6 @@ Tech Solutions,info@tech.com,https://tech.com,DE,DE,+49301234567`}
           </div>
         </div>
       </Card>
-    </div>
+    </PageContainer>
   )
 }

@@ -7,6 +7,7 @@ import { ArrowLeft, Mail, Eye, MousePointerClick, Ban, TrendingUp, Users } from 
 import { Card, CardHeader, CardBody } from '@/components/shared/Card'
 import { Button } from '@/components/shared/Button'
 import { Alert } from '@/components/shared/Alert'
+import { PageContainer } from '@/components/shared'
 import { RecipientTrackingList } from '@/components/email/RecipientTrackingList'
 import { apiClient } from '@/lib/api'
 import { useToast } from '@/components/ui/Toast'
@@ -166,12 +167,12 @@ export default function BatchTrackingPage() {
 
   if (isLoading || !batch) {
     return (
-      <div className="p-6">
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-muted/20 rounded w-1/3" />
-          <div className="h-32 bg-muted/20 rounded" />
+      <PageContainer width="default">
+        <div className="animate-pulse space-y-spacing-md">
+          <div className="h-8 bg-muted/20 rounded-radius-md w-1/3" />
+          <div className="h-32 bg-muted/20 rounded-radius-md" />
         </div>
-      </div>
+      </PageContainer>
     )
   }
 
@@ -191,7 +192,7 @@ export default function BatchTrackingPage() {
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <PageContainer width="default">
       {/* Header */}
       <div>
         <Link
@@ -222,9 +223,9 @@ export default function BatchTrackingPage() {
       </div>
 
       {/* KPIs Globaux */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-spacing-md">
         <Card>
-          <CardBody className="p-4">
+          <CardBody className="p-spacing-md">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-text-tertiary">Envoyés</p>
@@ -233,7 +234,7 @@ export default function BatchTrackingPage() {
                   Sur {batch.total_recipients} destinataires
                 </p>
               </div>
-              <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-background-secondary flex items-center justify-center">
                 <Mail className="w-6 h-6 text-gray-600 dark:text-slate-400" />
               </div>
             </div>
@@ -241,7 +242,7 @@ export default function BatchTrackingPage() {
         </Card>
 
         <Card>
-          <CardBody className="p-4">
+          <CardBody className="p-spacing-md">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-text-tertiary">Ouverts</p>
@@ -258,7 +259,7 @@ export default function BatchTrackingPage() {
         </Card>
 
         <Card>
-          <CardBody className="p-4">
+          <CardBody className="p-spacing-md">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-text-tertiary">Cliqués</p>
@@ -275,7 +276,7 @@ export default function BatchTrackingPage() {
         </Card>
 
         <Card>
-          <CardBody className="p-4">
+          <CardBody className="p-spacing-md">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-text-tertiary">Rebonds</p>
@@ -354,6 +355,6 @@ export default function BatchTrackingPage() {
           />
         </CardBody>
       </Card>
-    </div>
+    </PageContainer>
   )
 }

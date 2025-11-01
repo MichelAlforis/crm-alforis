@@ -5,11 +5,12 @@
 'use client'
 
 import React from 'react'
+import { PageContainer } from '@/components/layout/PageContainer'
 import { Type, Ruler, Smartphone, Monitor, Tablet } from 'lucide-react'
 
 export default function DemoFluidPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <PageContainer width="wide">
       {/* Hero Section with Fluid Typography */}
       <section className="px-fluid-4 py-fluid-12">
         <div className="max-w-7xl mx-auto">
@@ -248,6 +249,6 @@ spacing: {
           </p>
         </div>
       </section>
-    </div>
+    </PageContainer>
   )
 }

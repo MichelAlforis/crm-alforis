@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/shared/Button";
+import { PageContainer, PageHeader, PageSection, PageTitle } from "@/components/shared";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -185,21 +186,19 @@ export default function EmailTemplatesPage() {
   };
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
+    <PageContainer width="default" spacing="normal">
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold">Templates d'Email</h1>
-          <p className="text-muted-foreground">
-            Créez et gérez vos templates d'emails réutilisables
-          </p>
-        </div>
-        <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-          <DialogTrigger asChild>
-            <Button variant="primary" onClick={() => setShowCreateDialog(true)} leftIcon={<Plus className="h-4 w-4" />}>
-              Nouveau Template
-            </Button>
-          </DialogTrigger>
+      <PageHeader>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-spacing-md">
+          <PageTitle subtitle="Créez et gérez vos templates d'emails réutilisables">
+            Templates d'Email
+          </PageTitle>
+          <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+            <DialogTrigger asChild>
+              <Button variant="primary" onClick={() => setShowCreateDialog(true)} leftIcon={<Plus className="h-4 w-4" />}>
+                Nouveau Template
+              </Button>
+            </DialogTrigger>
           <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Créer un nouveau template</DialogTitle>
@@ -279,26 +278,28 @@ export default function EmailTemplatesPage() {
               </Button>
               <Button variant="primary" onClick={handleCreateTemplate}>Créer</Button>
             </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </PageHeader>
 
       {/* Templates list */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {loading ? (
-          <div className="col-span-full text-center py-8 text-muted-foreground">
-            Chargement...
-          </div>
-        ) : templates.length === 0 ? (
-          <div className="col-span-full text-center py-12">
-            <Mail className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p className="text-muted-foreground mb-4">Aucun template pour le moment</p>
-            <Button variant="primary" onClick={() => setShowCreateDialog(true)}>
-              Créer votre premier template
-            </Button>
-          </div>
-        ) : (
-          templates.map((template) => (
+      <PageSection>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
+          {loading ? (
+            <div className="col-span-full text-center py-spacing-2xl text-muted-foreground">
+              Chargement...
+            </div>
+          ) : templates.length === 0 ? (
+            <div className="col-span-full text-center py-spacing-3xl">
+              <Mail className="h-12 w-12 mx-auto mb-spacing-md opacity-50" />
+              <p className="text-muted-foreground mb-spacing-md">Aucun template pour le moment</p>
+              <Button variant="primary" onClick={() => setShowCreateDialog(true)}>
+                Créer votre premier template
+              </Button>
+            </div>
+          ) : (
+            templates.map((template) => (
             <Card key={template.id} className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex items-start justify-between">
@@ -359,11 +360,12 @@ export default function EmailTemplatesPage() {
                     </Button>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          ))
-        )}
-      </div>
+                </CardContent>
+              </Card>
+            ))
+          )}
+        </div>
+      </PageSection>
 
       {/* Preview Dialog */}
       <Dialog open={showPreviewDialog} onOpenChange={setShowPreviewDialog}>
@@ -420,6 +422,6 @@ export default function EmailTemplatesPage() {
 
       {/* Confirmation Dialog */}
       <ConfirmDialogComponent />
-    </div>
+    </PageContainer>
   );
 }

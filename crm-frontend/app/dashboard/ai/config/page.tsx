@@ -8,6 +8,7 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { PageContainer } from '@/components/layout/PageContainer'
 import { Settings, ArrowRight } from 'lucide-react'
 import { ROUTES, withQuery } from '@/lib/constants'
 
@@ -24,7 +25,8 @@ export default function AIConfigRedirectPage() {
   }, [router])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 flex items-center justify-center p-6">
+    <PageContainer width="narrow">
+      <div className="flex items-center justify-center min-h-[60vh]">
       <div className="max-w-md w-full bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-8 text-center space-y-6">
         <div className="flex justify-center">
           <div className="relative">
@@ -56,6 +58,7 @@ export default function AIConfigRedirectPage() {
           Redirection automatique dans 2 secondes...
         </p>
       </div>
-    </div>
+      </div>
+    </PageContainer>
   )
 }

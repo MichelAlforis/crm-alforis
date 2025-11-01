@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 export default function GuideDemarrage() {
   return (
-    <div className="max-w-4xl mx-auto p-6 lg:p-8 space-y-8">
+    <PageContainer width="default">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-gray-600 dark:text-slate-400">
         <Link href="/dashboard/help" className="hover:text-gray-900 dark:hover:text-white dark:text-slate-100 transition">
@@ -347,6 +347,6 @@ export default function GuideDemarrage() {
           Retour au centre d&apos;aide
         </Link>
       </section>
-    </div>
+    </PageContainer>
   )
 }

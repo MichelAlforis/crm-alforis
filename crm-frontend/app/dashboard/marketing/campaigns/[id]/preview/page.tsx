@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, ChevronLeft, ChevronRight, Mail, User, Building2 } from 'lucide-react'
-import { Card, Alert, Button } from '@/components/shared'
+import { Card, Alert, Button, PageContainer } from '@/components/shared'
 import { apiClient } from '@/lib/api'
 
 interface EmailPreview {
@@ -85,32 +85,32 @@ export default function CampaignPreviewPage() {
 
   if (isLoading) {
     return (
-      <div className="p-6">
+      <PageContainer width="narrow">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="w-8 h-8 border-4 border-bleu border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <p className="text-gray-600 dark:text-slate-400">Chargement de la prévisualisation...</p>
           </div>
         </div>
-      </div>
+      </PageContainer>
     )
   }
 
   if (error) {
     return (
-      <div className="p-6">
+      <PageContainer width="narrow">
         <Link href={`/dashboard/marketing/campaigns/${campaignId}`} className="inline-flex items-center text-sm text-bleu hover:underline mb-4">
           <ArrowLeft className="w-4 h-4 mr-1" />
           Retour à la campagne
         </Link>
         <Alert type="error" message={error} />
-      </div>
+      </PageContainer>
     )
   }
 
   if (!previewData || previewData.previews.length === 0) {
     return (
-      <div className="p-6">
+      <PageContainer width="narrow">
         <Link href={`/dashboard/marketing/campaigns/${campaignId}`} className="inline-flex items-center text-sm text-bleu hover:underline mb-4">
           <ArrowLeft className="w-4 h-4 mr-1" />
           Retour à la campagne
@@ -119,7 +119,7 @@ export default function CampaignPreviewPage() {
           type="warning"
           message="Aucun email à prévisualiser. Vérifiez que votre campagne a des destinataires valides."
         />
-      </div>
+      </PageContainer>
     )
   }
 
@@ -130,7 +130,7 @@ export default function CampaignPreviewPage() {
   const canGoNext = currentPage < previewData.total_pages || currentPreviewIndex < previewData.previews.length - 1
 
   return (
-    <div className="p-6 max-w-6xl mx-auto space-y-6">
+    <PageContainer width="narrow">
       {/* Header */}
       <div>
         <Link href={`/dashboard/marketing/campaigns/${campaignId}`} className="inline-flex items-center text-sm text-bleu hover:underline mb-2">
@@ -254,6 +254,6 @@ export default function CampaignPreviewPage() {
           Suivant
         </Button>
       </div>
-    </div>
+    </PageContainer>
   )
 }

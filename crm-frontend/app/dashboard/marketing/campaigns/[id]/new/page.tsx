@@ -8,6 +8,7 @@ import { Card, CardHeader, CardBody } from '@/components/shared/Card'
 import { Button } from '@/components/shared/Button'
 import { Alert } from '@/components/shared/Alert'
 import { Select } from '@/components/shared/Select'
+import { PageContainer } from '@/components/shared'
 import { apiClient } from '@/lib/api'
 import { useToast } from '@/components/ui/Toast'
 import { useEmailTemplates } from '@/hooks/useEmailAutomation'
@@ -204,19 +205,19 @@ export default function NewCampaignSendPage() {
   }
 
   if (isLoading) {
-    return <div className="p-6">Chargement...</div>
+    return <PageContainer width="narrow"><div>Chargement...</div></PageContainer>
   }
 
   if (!campaign) {
     return (
-      <div className="p-6">
+      <PageContainer width="narrow">
         <Alert type="error" message="Campagne introuvable" />
-      </div>
+      </PageContainer>
     )
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <PageContainer width="narrow">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
@@ -265,7 +266,7 @@ export default function NewCampaignSendPage() {
               value={sendName}
               onChange={(e) => setSendName(e.target.value)}
               placeholder="Ex: Newsletter Janvier 2025, Relance prospects, etc."
-              className="w-full px-3 py-2 border border-border rounded-lg text-sm"
+              className="w-full px-spacing-sm py-spacing-xs border border-border rounded-radius-md text-sm"
               maxLength={255}
             />
             <p className="text-xs text-text-tertiary mt-1">
@@ -368,7 +369,7 @@ export default function NewCampaignSendPage() {
           <div className="space-y-4">
             {/* Option 1 : Envoi immédiat */}
             <label
-              className="flex items-start gap-3 p-4 border-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-50 dark:bg-slate-800"
+              className="flex items-start gap-spacing-sm p-spacing-md border-2 rounded-radius-md cursor-pointer transition-colors hover:bg-gray-50 dark:bg-slate-800"
               style={{
                 borderColor: scheduleType === 'immediate' ? 'var(--color-primary)' : 'var(--color-border)',
                 backgroundColor: scheduleType === 'immediate' ? 'var(--color-primary-light, rgba(59, 130, 246, 0.05))' : 'transparent'
@@ -395,7 +396,7 @@ export default function NewCampaignSendPage() {
 
             {/* Option 2 : Envoi programmé */}
             <label
-              className="flex items-start gap-3 p-4 border-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-50 dark:bg-slate-800"
+              className="flex items-start gap-spacing-sm p-spacing-md border-2 rounded-radius-md cursor-pointer transition-colors hover:bg-gray-50 dark:bg-slate-800"
               style={{
                 borderColor: scheduleType === 'scheduled' ? 'var(--color-primary)' : 'var(--color-border)',
                 backgroundColor: scheduleType === 'scheduled' ? 'var(--color-primary-light, rgba(59, 130, 246, 0.05))' : 'transparent'
@@ -428,7 +429,7 @@ export default function NewCampaignSendPage() {
                         type="date"
                         value={scheduledDate}
                         onChange={(e) => setScheduledDate(e.target.value)}
-                        className="w-full px-3 py-2 border border-border rounded-lg text-sm"
+                        className="w-full px-spacing-sm py-spacing-xs border border-border rounded-radius-md text-sm"
                       />
                     </div>
                     <div>
@@ -439,7 +440,7 @@ export default function NewCampaignSendPage() {
                         type="time"
                         value={scheduledTime}
                         onChange={(e) => setScheduledTime(e.target.value)}
-                        className="w-full px-3 py-2 border border-border rounded-lg text-sm"
+                        className="w-full px-spacing-sm py-spacing-xs border border-border rounded-radius-md text-sm"
                       />
                     </div>
                   </div>
@@ -467,6 +468,6 @@ export default function NewCampaignSendPage() {
           {isSending ? 'Création en cours...' : 'Créer l\'envoi'}
         </Button>
       </div>
-    </div>
+    </PageContainer>
   )
 }

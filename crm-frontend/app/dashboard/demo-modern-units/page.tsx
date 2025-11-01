@@ -5,13 +5,14 @@
 'use client'
 
 import React, { useState } from 'react'
+import { PageContainer } from '@/components/layout/PageContainer'
 import { Smartphone, Info, Check, X } from 'lucide-react'
 
 export default function DemoModernUnitsPage() {
   const [showComparison, setShowComparison] = useState(false)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-blue-50">
+    <PageContainer width="wide">
       {/* ============= SAFE AREAS DEMO ============= */}
       {/* Header with iOS safe area */}
       <header
@@ -410,6 +411,6 @@ module.exports = {
 
       {/* Spacer for fixed nav */}
       <div className="h-20" />
-    </div>
+    </PageContainer>
   )
 }

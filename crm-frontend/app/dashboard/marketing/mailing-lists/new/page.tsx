@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { ROUTES } from "@/lib/constants"
 import { ArrowLeft, Save, ChevronDown, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
-import { Card, CardHeader, CardBody, Button, Alert } from '@/components/shared'
+import { Card, CardHeader, CardBody, Button, Alert, PageContainer } from '@/components/shared'
 import { Input } from '@/components/shared/Input'
 import { Select } from '@/components/shared/Select'
 import { useMailingLists } from '@/hooks/useMailingLists'
@@ -80,7 +80,7 @@ export default function NewMailingListPage() {
   }
 
   return (
-    <div className="space-y-spacing-lg p-spacing-lg max-w-7xl mx-auto">
+    <PageContainer width="default">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -263,6 +263,6 @@ export default function NewMailingListPage() {
           )}
         </CardBody>
       </Card>
-    </div>
+    </PageContainer>
   )
 }

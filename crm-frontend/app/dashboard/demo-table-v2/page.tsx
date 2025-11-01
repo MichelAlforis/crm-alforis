@@ -4,6 +4,7 @@
 // ============= DEMO TABLE V2 RESPONSIVE =============
 
 import React from 'react'
+import { PageContainer } from '@/components/layout/PageContainer'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { Card } from '@/components/shared'
@@ -280,7 +281,7 @@ export default function DemoTableV2Page() {
   }, [sortConfig])
 
   return (
-    <div className="p-4 md:p-8 space-y-6">
+    <PageContainer width="wide">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">
@@ -399,6 +400,6 @@ export default function DemoTableV2Page() {
           </div>
         </div>
       </Card>
-    </div>
+    </PageContainer>
   )
 }

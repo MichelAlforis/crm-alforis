@@ -5,7 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { ROUTES } from "@/lib/constants"
 import { ArrowLeft, Save, Loader2, ChevronDown, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
-import { Card, CardHeader, CardBody, Button, Alert } from '@/components/shared'
+import { Card, CardHeader, CardBody, Button, Alert, PageContainer } from '@/components/shared'
 import { Input } from '@/components/shared/Input'
 import { Select } from '@/components/shared/Select'
 import { useMailingLists, useMailingList } from '@/hooks/useMailingLists'
@@ -109,18 +109,20 @@ export default function EditMailingListPage() {
 
   if (isLoadingList) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-4" />
-          <p className="text-text-secondary">Chargement de la liste...</p>
+      <PageContainer width="default">
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-4" />
+            <p className="text-text-secondary">Chargement de la liste...</p>
+          </div>
         </div>
-      </div>
+      </PageContainer>
     )
   }
 
   if (!mailingList) {
     return (
-      <div className="space-y-spacing-lg p-spacing-lg">
+      <PageContainer width="default">
         <Alert
           type="error"
           message="Liste de diffusion introuvable"
@@ -131,12 +133,12 @@ export default function EditMailingListPage() {
             Retour aux listes
           </Button>
         </Link>
-      </div>
+      </PageContainer>
     )
   }
 
   return (
-    <div className="space-y-spacing-lg p-spacing-lg max-w-7xl mx-auto">
+    <PageContainer width="default">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -347,6 +349,6 @@ export default function EditMailingListPage() {
           )}
         </CardBody>
       </Card>
-    </div>
+    </PageContainer>
   )
 }

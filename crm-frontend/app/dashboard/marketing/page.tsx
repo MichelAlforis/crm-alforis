@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import { PageContainer } from '@/components/layout/PageContainer'
 import { useRouter } from 'next/navigation'
 import { ROUTES } from "@/lib/constants"
 import { Mail, List, FileText, TrendingUp, Send, Users, Clock } from 'lucide-react'
@@ -161,7 +162,7 @@ export default function MarketingDashboard() {
 
   if (loading || !stats) {
     return (
-      <div className="p-8">
+    <PageContainer width="default">
         <div className="animate-pulse space-y-4">
           <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -170,12 +171,12 @@ export default function MarketingDashboard() {
             ))}
           </div>
         </div>
-      </div>
+    </PageContainer>
     )
   }
 
   return (
-    <div className="p-8 space-y-8">
+    <PageContainer width="default">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -382,6 +383,6 @@ export default function MarketingDashboard() {
           </Button>
         </Card>
       </div>
-    </div>
+    </PageContainer>
   )
 }

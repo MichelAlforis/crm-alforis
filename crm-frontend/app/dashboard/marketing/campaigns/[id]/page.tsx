@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { ROUTES } from "@/lib/constants"
 import Link from 'next/link'
 import { ArrowLeft, Mail, Eye, MousePointerClick, Ban, Edit, Trash2, Plus, Clock, ChevronLeft, ChevronRight, TrendingUp } from 'lucide-react'
-import { Card, Alert, Button } from '@/components/shared'
+import { Card, Alert, Button, PageContainer } from '@/components/shared'
 import { useEmailCampaign, useEmailCampaignStats } from '@/hooks/useEmailAutomation'
 import { useToast } from '@/components/ui/Toast'
 import { apiClient } from '@/lib/api'
@@ -126,13 +126,13 @@ export default function CampaignDetailPage() {
     })
   }
 
-  if (isLoading) return <div className="p-6">Chargement...</div>
-  if (error || !campaign) return <div className="p-6"><Alert type="error" message="Campagne introuvable" /></div>
+  if (isLoading) return <PageContainer width="default"><div>Chargement...</div></PageContainer>
+  if (error || !campaign) return <PageContainer width="default"><Alert type="error" message="Campagne introuvable" /></PageContainer>
 
   const totalPages = Math.ceil(totalSends / limit)
 
   return (
-    <div className="space-y-6 p-6">
+    <PageContainer width="default">
       {/* Header */}
       <div>
         <Link href="/dashboard/marketing/campaigns" className="inline-flex items-center text-sm text-primary hover:underline mb-2">
@@ -176,10 +176,10 @@ export default function CampaignDetailPage() {
       </div>
 
       {/* Statistiques globales */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-primary/10 rounded-lg">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-spacing-md">
+        <Card className="p-spacing-md">
+          <div className="flex items-center gap-spacing-sm">
+            <div className="p-spacing-sm bg-primary/10 rounded-radius-md">
               <Mail className="w-5 h-5 text-primary" />
             </div>
             <div>
@@ -189,9 +189,9 @@ export default function CampaignDetailPage() {
           </div>
         </Card>
 
-        <Card className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-success/10 rounded-lg">
+        <Card className="p-spacing-md">
+          <div className="flex items-center gap-spacing-sm">
+            <div className="p-spacing-sm bg-success/10 rounded-radius-md">
               <Eye className="w-5 h-5 text-success" />
             </div>
             <div>
@@ -206,9 +206,9 @@ export default function CampaignDetailPage() {
           </div>
         </Card>
 
-        <Card className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-purple-100 rounded-lg">
+        <Card className="p-spacing-md">
+          <div className="flex items-center gap-spacing-sm">
+            <div className="p-spacing-sm bg-purple-100 rounded-radius-md">
               <MousePointerClick className="w-5 h-5 text-purple-600" />
             </div>
             <div>
@@ -223,9 +223,9 @@ export default function CampaignDetailPage() {
           </div>
         </Card>
 
-        <Card className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-error/10 rounded-lg">
+        <Card className="p-spacing-md">
+          <div className="flex items-center gap-spacing-sm">
+            <div className="p-spacing-sm bg-error/10 rounded-radius-md">
               <Ban className="w-5 h-5 text-error" />
             </div>
             <div>
@@ -243,7 +243,7 @@ export default function CampaignDetailPage() {
 
       {/* Liste des envois */}
       <Card>
-        <div className="p-6">
+        <div className="p-spacing-lg">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold flex items-center gap-2">
               <TrendingUp className="w-5 h-5 text-primary" />
@@ -421,6 +421,6 @@ export default function CampaignDetailPage() {
 
       {/* Modal de confirmation */}
       <ConfirmDialogComponent />
-    </div>
+    </PageContainer>
   )
 }

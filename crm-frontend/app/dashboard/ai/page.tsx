@@ -15,6 +15,7 @@ import {
 } from '@/hooks/useAI'
 import AIStatCard from '@/components/ai/AIStatCard'
 import AIExecutionsList from '@/components/ai/AIExecutionsList'
+import { PageContainer } from '@/components/layout/PageContainer'
 import {
   Sparkles,
   CheckCircle,
@@ -58,10 +59,8 @@ export default function AIDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
+    <PageContainer width="wide">
+        <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Agent IA
@@ -74,28 +73,28 @@ export default function AIDashboardPage() {
           <div className="flex gap-3">
             <Link
               href="/dashboard/ai/intelligence"
-              className="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-all flex items-center gap-2 font-medium shadow-lg"
+              className="px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-all flex items-center gap-2 font-medium shadow-lg"
             >
               <TrendingUp className="h-4 w-4" />
               Dashboard Intelligence
             </Link>
             <Link
               href="/dashboard/ai/autofill"
-              className="px-4 py-2 bg-gradient-to-r from-green-600 to-teal-600 text-white rounded-lg hover:opacity-90 transition-all flex items-center gap-2 font-medium shadow-lg"
+              className="px-4 py-3 bg-gradient-to-r from-green-600 to-teal-600 text-white rounded-lg hover:opacity-90 transition-all flex items-center gap-2 font-medium shadow-lg"
             >
               <Zap className="h-4 w-4" />
               Batch Autofill
             </Link>
             <Link
               href="/dashboard/ai/suggestions"
-              className="px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:bg-slate-800 transition-colors flex items-center gap-2"
+              className="px-4 py-3 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:bg-slate-800 transition-colors flex items-center gap-2"
             >
               <List className="h-4 w-4" />
               Suggestions
             </Link>
             <Link
               href="/dashboard/ai/config"
-              className="px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:bg-slate-800 transition-colors flex items-center gap-2"
+              className="px-4 py-3 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:bg-slate-800 transition-colors flex items-center gap-2"
             >
               <Settings className="h-4 w-4" />
               Configuration
@@ -155,7 +154,7 @@ export default function AIDashboardPage() {
                   <div className="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent" />
                 )}
               </div>
-              <h3 className="text-lg font-bold text-white">Détecter doublons</h3>
+              <h3 className="text-fluid-lg font-bold text-white">Détecter doublons</h3>
               <p className="text-sm text-purple-100 mt-2">
                 Analyse les 100 dernières organisations
               </p>
@@ -173,7 +172,7 @@ export default function AIDashboardPage() {
                   <div className="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent" />
                 )}
               </div>
-              <h3 className="text-lg font-bold text-white">Enrichir données</h3>
+              <h3 className="text-fluid-lg font-bold text-white">Enrichir données</h3>
               <p className="text-sm text-blue-100 mt-2">
                 Complète les champs manquants (50 org)
               </p>
@@ -191,7 +190,7 @@ export default function AIDashboardPage() {
                   <div className="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent" />
                 )}
               </div>
-              <h3 className="text-lg font-bold text-white">Contrôle qualité</h3>
+              <h3 className="text-fluid-lg font-bold text-white">Contrôle qualité</h3>
               <p className="text-sm text-green-100 mt-2">
                 Vérifie la cohérence des données
               </p>
@@ -205,7 +204,7 @@ export default function AIDashboardPage() {
               <div className="flex items-center justify-between mb-3">
                 <Mail className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-lg font-bold text-white">Parser Signature</h3>
+              <h3 className="text-fluid-lg font-bold text-white">Parser Signature</h3>
               <p className="text-sm text-orange-100 mt-2">
                 Extraire infos d'une signature email
               </p>
@@ -213,8 +212,8 @@ export default function AIDashboardPage() {
           </div>
         </div>
 
-        {/* Suggestions by Type */}
-        {stats && stats.suggestions_by_type && Object.keys(stats.suggestions_by_type).length > 0 && (
+      {/* Suggestions by Type */}
+      {stats && stats.suggestions_by_type && Object.keys(stats.suggestions_by_type).length > 0 && (
           <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg p-6">
             <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-4">Répartition par type</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -223,12 +222,12 @@ export default function AIDashboardPage() {
                   <p className="text-sm text-gray-600 dark:text-slate-400 capitalize">
                     {type.replace(/_/g, ' ')}
                   </p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-slate-100 mt-1">{count}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-slate-100 mt-2">{count}</p>
                 </div>
               ))}
             </div>
           </div>
-        )}
+      )}
 
         {/* Recent Executions */}
         <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg p-6">
@@ -245,7 +244,6 @@ export default function AIDashboardPage() {
             <AIExecutionsList executions={executions || []} />
           )}
         </div>
-      </div>
 
       {/* Parse Signature Modal */}
       {showParseModal && (
@@ -278,7 +276,7 @@ export default function AIDashboardPage() {
             <div className="p-6 space-y-6">
               {/* Input */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-gray-600 dark:text-slate-400 mb-2">
                   Corps de l'email (avec signature)
                 </label>
                 <textarea
@@ -336,8 +334,8 @@ export default function AIDashboardPage() {
                           <div className="grid grid-cols-2 gap-3">
                             {Object.entries(parseResult.data).map(([key, value]) => (
                               <div key={key} className="bg-white dark:bg-slate-900 rounded p-3 border border-gray-200 dark:border-slate-700">
-                                <p className="text-xs text-gray-500 uppercase tracking-wide">{key.replace(/_/g, ' ')}</p>
-                                <p className="font-medium text-gray-900 dark:text-slate-100 mt-1">{String(value)}</p>
+                                <p className="text-fluid-xs text-gray-500 uppercase tracking-wide">{key.replace(/_/g, ' ')}</p>
+                                <p className="font-medium text-gray-900 dark:text-slate-100 mt-2">{String(value)}</p>
                               </div>
                             ))}
                           </div>
@@ -358,6 +356,6 @@ export default function AIDashboardPage() {
           </div>
         </div>
       )}
-    </div>
+    </PageContainer>
   )
 }

@@ -5,6 +5,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { PageContainer } from '@/components/layout/PageContainer'
 import { Box, Maximize2, Minimize2, Mail, Phone, MapPin } from 'lucide-react'
 
 export default function DemoContainerQueriesPage() {
@@ -17,7 +18,7 @@ export default function DemoContainerQueriesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50 p-fluid-4">
+    <PageContainer width="wide">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-fluid-8">
@@ -258,6 +259,6 @@ export default function DemoContainerQueriesPage() {
           </div>
         </section>
       </div>
-    </div>
+    </PageContainer>
   )
 }

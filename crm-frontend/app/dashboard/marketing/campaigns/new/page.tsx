@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { ROUTES } from "@/lib/constants"
 import Link from 'next/link'
 import { ArrowLeft, Mail } from 'lucide-react'
-import { Button } from '@/components/shared'
+import { Button, PageContainer } from '@/components/shared'
 import { useToast } from '@/components/ui/Toast'
 import { CampaignWizard } from '@/components/email/CampaignWizard'
 import { apiClient } from '@/lib/api'
@@ -171,7 +171,7 @@ export default function NewCampaignPage() {
   }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <PageContainer width="narrow">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -199,6 +199,6 @@ export default function NewCampaignPage() {
         onSaveDraft={handleSaveDraft}
         isSubmitting={isCreating}
       />
-    </div>
+    </PageContainer>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { PageContainer } from '@/components/layout/PageContainer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/shared/Button'
 import { Input } from '@/components/ui/input'
@@ -67,7 +68,7 @@ export default function AutofillJobsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <PageContainer width="default">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold">🔄 Batch Email Autofill</h1>
@@ -302,6 +303,6 @@ export default function AutofillJobsPage() {
           </p>
         </CardContent>
       </Card>
-    </div>
+    </PageContainer>
   )
 }
