@@ -35,6 +35,8 @@ volumes:
     driver: local
   caddy-logs:
     driver: local
+  ollama-models:
+    driver: local
 
 # --- Services ---
 services:
@@ -154,6 +156,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      ollama:
+        condition: service_healthy
     # Docker Compose charge automatiquement .env à la racine
     environment:
       # URL de connexion PostgreSQL (utilise le nom du service 'postgres')
@@ -163,6 +167,9 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
+      # Ollama (AI Local LLM)
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.1:latest}
       # Sécurité
       DEBUG: "False"
       SECRET_KEY: ${SECRET_KEY:?SECRET_KEY doit être défini dans .env}
@@ -237,3 +244,41 @@ services:
       options:
         max-size: "50m"
         max-file: "5"
+
+  # ========================================
+  # OLLAMA (Local LLM for AI features)
+  # ========================================
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:11434:11434"
+    networks:
+      - crm-network
+    volumes:
+      - ollama-models:/root/.ollama
+    environment:
+      # Config optimisée pour production
+      OLLAMA_MAX_LOADED_MODELS: 1           # 1 modèle en mémoire
+      OLLAMA_NUM_PARALLEL: 2                # 2 requêtes parallèles
+      OLLAMA_MAX_QUEUE: 5                   # Queue jusqu'à 5 requêtes
+      OLLAMA_KEEP_ALIVE: 5m                 # Garde modèle 5min en RAM
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'      # 2 CPU sur 4 (50%)
+          memory: 5G       # 5GB max
+        reservations:
+          cpus: '1.0'      # Démarre avec 1 CPU
+          memory: 2G       # 2GB minimum
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
