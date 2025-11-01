@@ -235,14 +235,14 @@ function ResetPasswordForm() {
                         required
                         disabled={isLoading}
                         minLength={6}
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full px-spacing-md py-spacing-sm rounded-lg border border-border focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                         placeholder="••••••••"
                       />
-                      <p className="mt-1 text-xs text-gray-500">Minimum 6 caractères</p>
+                      <p className="mt-1 text-fluid-xs text-text-secondary">Minimum 6 caractères</p>
                     </div>
 
                     <div>
-                      <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label htmlFor="confirmPassword" className="block text-fluid-sm font-medium text-text-primary mb-spacing-xs">
                         Confirmer le mot de passe
                       </label>
                       <input
@@ -253,7 +253,7 @@ function ResetPasswordForm() {
                         required
                         disabled={isLoading}
                         minLength={6}
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full px-spacing-md py-spacing-sm rounded-lg border border-border focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                         placeholder="••••••••"
                       />
                     </div>
@@ -261,7 +261,7 @@ function ResetPasswordForm() {
                     <button
                       type="submit"
                       disabled={isLoading}
-                      className="w-full py-3 px-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-medium rounded-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-lg shadow-orange-500/30"
+                      className="w-full py-spacing-sm px-spacing-md bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-medium rounded-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-lg shadow-orange-500/30"
                     >
                       {isLoading ? 'Réinitialisation...' : 'Réinitialiser le mot de passe'}
                     </button>
@@ -271,18 +271,18 @@ function ResetPasswordForm() {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-6"
+                  className="text-center py-spacing-lg"
                 >
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-spacing-md">
                     <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <h2 className="text-xl font-bold text-gray-900 mb-2">Succès!</h2>
-                  <p className="text-sm text-gray-600 mb-4">
+                  <h2 className="text-fluid-xl font-bold text-text-primary mb-spacing-xs">Succès!</h2>
+                  <p className="text-fluid-sm text-text-secondary mb-spacing-md">
                     Votre mot de passe a été réinitialisé avec succès.
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-fluid-xs text-text-secondary">
                     Redirection vers la page de connexion...
                   </p>
                 </motion.div>
@@ -294,11 +294,11 @@ function ResetPasswordForm() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.5 }}
-                  className="mt-6 text-center"
+                  className="mt-spacing-lg text-center"
                 >
                   <Link
                     href="/auth/login"
-                    className="text-sm font-medium text-gray-600 hover:text-orange-500 transition-colors inline-flex items-center gap-1 group"
+                    className="text-fluid-sm font-medium text-text-secondary hover:text-orange-500 transition-colors inline-flex items-center gap-1 group"
                   >
                     <svg className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
