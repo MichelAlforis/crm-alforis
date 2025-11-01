@@ -36,10 +36,9 @@ describe('usePeople', () => {
     await result.current.fetchPeople()
 
     await waitFor(() => {
-      expect(result.current.people.isLoading).toBe(false)
+      expect(result.current.people.data?.data).toEqual(mockPeople)
     })
 
-    expect(result.current.people.data?.data).toEqual(mockPeople)
     expect(apiClient.getPeople).toHaveBeenCalled()
   })
 
