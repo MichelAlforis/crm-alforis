@@ -45,27 +45,27 @@
 ## 📋 Checklist Migration
 
 ### Avant Migration (sur CPX31)
-- [ ] Backup complet DB
-- [ ] Export `.env` (secrets)
-- [ ] Noter IP actuelle (DNS update)
-- [ ] Liste services actifs
-- [ ] Backup volumes Docker
+- [x] Backup complet DB
+- [x] Export `.env` (secrets)
+- [x] Noter IP actuelle (DNS update)
+- [x] Liste services actifs
+- [x] Backup volumes Docker
 
 ### Pendant Migration (nouveau CPX42)
-- [ ] Provisionner CPX42 sur Hetzner
-- [ ] Installer OS (Ubuntu 22.04)
-- [ ] Installer Docker + Docker Compose
-- [ ] Cloner repo CRM
-- [ ] Restore `.env`
-- [ ] Restore DB backup
-- [ ] Deploy avec `docker-compose.cpx42.yml`
-- [ ] Run `./scripts/migrate-to-cpx42.sh`
+- [x] Provisionner CPX42 sur Hetzner ✅ (serveur actuel: 159.69.108.234)
+- [x] Installer OS (Ubuntu 22.04) ✅
+- [x] Installer Docker + Docker Compose ✅
+- [x] Cloner repo CRM ✅ (/srv/crm-alforis)
+- [x] Restore `.env` ✅
+- [x] Restore DB backup ✅ (migration automatique Alembic)
+- [x] Deploy avec `docker-compose.prod.yml` ✅ (avec Ollama intégré)
+- [x] Télécharger modèle Ollama (mistral:7b) ✅
 
 ### Après Migration
-- [ ] Update DNS A record vers nouvelle IP
+- [x] Update DNS A record vers nouvelle IP ✅ (crm.alforis.fr → 159.69.108.234)
 - [ ] Tester OAuth (Gmail + Outlook)
 - [ ] Tester Multi-Mail sync
-- [ ] Tester Ollama suggestions
+- [x] Tester Ollama suggestions ✅ (mistral:7b opérationnel)
 - [ ] Monitorer RAM/CPU 24h
 - [ ] Désactiver ancien CPX31
 

@@ -169,7 +169,7 @@ services:
       REDIS_DB: 0
       # Ollama (AI Local LLM)
       OLLAMA_BASE_URL: http://ollama:11434
-      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.1:latest}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-mistral:7b}
       # Sécurité
       DEBUG: "False"
       SECRET_KEY: ${SECRET_KEY:?SECRET_KEY doit être défini dans .env}
