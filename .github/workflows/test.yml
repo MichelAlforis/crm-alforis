@@ -98,7 +98,7 @@ jobs:
       - name: Run tests
         run: |
           cd crm-frontend
-          npm run test -- --watchAll=false --maxWorkers=2
+          npm run test:run
 
   # ============================================================================
   # 📊 SUMMARY
