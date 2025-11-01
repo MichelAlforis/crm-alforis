@@ -19,7 +19,7 @@ depends_on = None
 
 
 def upgrade():
-    # Mailing Lists
+    # Mailing Lists (without foreign key to users for now)
     op.create_table(
         "mailing_lists",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -40,13 +40,13 @@ def upgrade():
             nullable=False,
         ),
         sa.Column("updated_at", sa.DateTime(timezone=True), nullable=True),
-        sa.ForeignKeyConstraint(["created_by"], ["users.id"], ondelete="SET NULL"),
+        # Foreign key removed - will be added later when users table exists
         sa.PrimaryKeyConstraint("id"),
     )
 
     # Indexes
     op.create_index("ix_mailing_lists_name", "mailing_lists", ["name"])
-    op.create_index('ix_mailing_lists_created_by", "mailing_lists', ["created_by"])
+    op.create_index("ix_mailing_lists_created_by", "mailing_lists", ["created_by"])
     op.create_index("ix_mailing_lists_is_active", "mailing_lists", ["is_active"])
 
 
