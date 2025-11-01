@@ -4,7 +4,7 @@ from typing import Dict, Optional
 import secrets
 import hashlib
 
-from fastapi import APIRouter, Depends, Form, HTTPException, Request, status
+from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import jwt
 from pydantic import BaseModel, EmailStr, Field, field_validator
@@ -117,6 +117,7 @@ TEST_USERS = {
 @limiter.limit("5/minute")  # Strict: 5 attempts per minute to prevent brute-force
 async def login(
     request: Request,
+    response: Response,
     credentials: LoginRequest,
     db: Session = Depends(get_db)
 ):
