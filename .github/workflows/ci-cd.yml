@@ -295,20 +295,8 @@ jobs:
           cd crm-backend
           alembic upgrade head || true
 
-          # Créer user test@alforis.fr avec password test123
-          psql postgresql://crm_user:crm_test_password@localhost:5432/crm_test << 'EOF'
-          INSERT INTO users (email, hashed_password, full_name, is_active, is_superuser, created_at, updated_at)
-          VALUES (
-            'test@alforis.fr',
-            '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5lXQKl8Nm5vNu',
-            'Test User',
-            true,
-            false,
-            NOW(),
-            NOW()
-          )
-          ON CONFLICT (email) DO NOTHING;
-          EOF
+          # Créer test user avec le bon hash (pbkdf2_sha256)
+          python create_test_user.py
 
       - name: 🚀 Start backend API
         env:
