@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { ROUTES } from "@/lib/constants"
 import { useProduit, useUpdateProduit, useDeleteProduit } from '@/hooks/useProduits'
 import { useEntityDetail } from '@/hooks/useEntityDetail'
-import { Card, Button, Alert, Modal } from '@/components/shared'
+import { Card, Button, Alert, Modal, PageContainer, PageHeader, PageSection, PageTitle } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { Eye } from 'lucide-react'
@@ -50,23 +50,31 @@ export default function ProduitDetailPage() {
   }
 
   if (!isValidId) {
-    return <div className="text-center p-6">Produit introuvable</div>
+    return (
+      <PageContainer width="default">
+        <div className="text-center p-spacing-lg">Produit introuvable</div>
+      </PageContainer>
+    )
   }
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <SkeletonCard />
-        <SkeletonCard />
-      </div>
+      <PageContainer width="default">
+        <div className="space-y-spacing-lg">
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
+      </PageContainer>
     )
   }
 
   if (error || !produit) {
     return (
-      <div className="text-center p-6">
-        <Alert type="error" message="Produit non trouvé" />
-      </div>
+      <PageContainer width="default">
+        <div className="text-center p-spacing-lg">
+          <Alert type="error" message="Produit non trouvé" />
+        </div>
+      </PageContainer>
     )
   }
 
@@ -148,106 +156,109 @@ export default function ProduitDetailPage() {
   ]
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-ardoise">{produit.name}</h1>
-          <p className="text-gray-600 dark:text-slate-400 mt-1">
-            {PRODUIT_TYPE_LABELS[produit.type]} •{' '}
-            <span
-              className={
-                produit.status === 'ACTIF'
-                  ? 'text-green-600'
-                  : produit.status === 'ARCHIVE'
-                    ? 'text-gray-500'
-                    : 'text-yellow-600'
-              }
-            >
-              {PRODUIT_STATUS_LABELS[produit.status]}
-            </span>
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="secondary" onClick={() => setIsEditModalOpen(true)}>
-            Modifier
-          </Button>
-          <Button variant="danger" onClick={handleDelete} disabled={deleteMutation.isPending}>
-            {deleteMutation.isPending ? 'Suppression...' : 'Supprimer'}
-          </Button>
-        </div>
-      </div>
-
-      {/* Informations générales */}
-      <Card>
-        <h2 className="text-xl font-semibold mb-4">Informations générales</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <PageContainer width="default">
+      <PageHeader>
+        <div className="flex items-start justify-between">
           <div>
-            <p className="text-sm text-gray-600 dark:text-slate-400">Type de produit</p>
-            <p className="font-medium">{PRODUIT_TYPE_LABELS[produit.type]}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600 dark:text-slate-400">Code ISIN</p>
-            <p className="font-medium font-mono">{produit.isin_code || '-'}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600 dark:text-slate-400">Statut</p>
-            <p className="font-medium">{PRODUIT_STATUS_LABELS[produit.status]}</p>
-          </div>
-          <div className="col-span-2">
-            <p className="text-sm text-gray-600 dark:text-slate-400">Description</p>
-            <p className="font-medium">{produit.description || '-'}</p>
-          </div>
-        </div>
-      </Card>
-
-      {/* Mandats associés */}
-      <Card>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">
-            Mandats associés ({produit.mandats?.length || 0})
-          </h2>
-        </div>
-
-        {produit.mandats && produit.mandats.length > 0 ? (
-          <TableV2<MandatRow>
-            columns={mandatColumns}
-            data={produit.mandats}
-            isLoading={false}
-            isEmpty={false}
-            getRowKey={(row: any) => row.id.toString()}
-            size="md"
-            variant="default"
-            stickyHeader
-          />
-        ) : (
-          <div className="text-center py-8 text-gray-500">
-            Aucun mandat associé à ce produit.
-            <p className="mt-2 text-sm">
-              Associez ce produit à un mandat depuis la{' '}
-              <Link href="/dashboard/mandats" className="text-bleu hover:underline">
-                page des mandats
-              </Link>
-              .
+            <PageTitle>{produit.name}</PageTitle>
+            <p className="text-text-secondary mt-1">
+              {PRODUIT_TYPE_LABELS[produit.type]} •{' '}
+              <span
+                className={
+                  produit.status === 'ACTIF'
+                    ? 'text-green-600'
+                    : produit.status === 'ARCHIVE'
+                      ? 'text-gray-500'
+                      : 'text-yellow-600'
+                }
+              >
+                {PRODUIT_STATUS_LABELS[produit.status]}
+              </span>
             </p>
           </div>
-        )}
-      </Card>
+          <div className="flex gap-spacing-sm">
+            <Button variant="secondary" onClick={() => setIsEditModalOpen(true)}>
+              Modifier
+            </Button>
+            <Button variant="danger" onClick={handleDelete} disabled={deleteMutation.isPending}>
+              {deleteMutation.isPending ? 'Suppression...' : 'Supprimer'}
+            </Button>
+          </div>
+        </div>
+      </PageHeader>
 
-      {/* Modal d'édition */}
-      <Modal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        title="Modifier le produit"
-      >
-        <ProduitForm
-          initialData={produit}
-          onSubmit={handleUpdate}
-          isLoading={updateMutation.isPending}
-          error={updateMutation.error?.message}
-          submitLabel="Enregistrer"
-        />
-      </Modal>
-    </div>
+      <PageSection>
+        {/* Informations générales */}
+        <Card>
+          <h2 className="text-fluid-xl font-semibold mb-spacing-md">Informations générales</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md">
+            <div>
+              <p className="text-fluid-sm text-text-secondary">Type de produit</p>
+              <p className="font-medium">{PRODUIT_TYPE_LABELS[produit.type]}</p>
+            </div>
+            <div>
+              <p className="text-fluid-sm text-text-secondary">Code ISIN</p>
+              <p className="font-medium font-mono">{produit.isin_code || '-'}</p>
+            </div>
+            <div>
+              <p className="text-fluid-sm text-text-secondary">Statut</p>
+              <p className="font-medium">{PRODUIT_STATUS_LABELS[produit.status]}</p>
+            </div>
+            <div className="col-span-2">
+              <p className="text-fluid-sm text-text-secondary">Description</p>
+              <p className="font-medium">{produit.description || '-'}</p>
+            </div>
+          </div>
+        </Card>
+
+        {/* Mandats associés */}
+        <Card>
+          <div className="flex items-center justify-between mb-spacing-md">
+            <h2 className="text-fluid-xl font-semibold">
+              Mandats associés ({produit.mandats?.length || 0})
+            </h2>
+          </div>
+
+          {produit.mandats && produit.mandats.length > 0 ? (
+            <TableV2<MandatRow>
+              columns={mandatColumns}
+              data={produit.mandats}
+              isLoading={false}
+              isEmpty={false}
+              getRowKey={(row: any) => row.id.toString()}
+              size="md"
+              variant="default"
+              stickyHeader
+            />
+          ) : (
+            <div className="text-center py-spacing-lg text-text-tertiary">
+              Aucun mandat associé à ce produit.
+              <p className="mt-spacing-sm text-fluid-sm">
+                Associez ce produit à un mandat depuis la{' '}
+                <Link href="/dashboard/mandats" className="text-bleu hover:underline">
+                  page des mandats
+                </Link>
+                .
+              </p>
+            </div>
+          )}
+        </Card>
+
+        {/* Modal d'édition */}
+        <Modal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          title="Modifier le produit"
+        >
+          <ProduitForm
+            initialData={produit}
+            onSubmit={handleUpdate}
+            isLoading={updateMutation.isPending}
+            error={updateMutation.error?.message}
+            submitLabel="Enregistrer"
+          />
+        </Modal>
+      </PageSection>
+    </PageContainer>
   )
 }

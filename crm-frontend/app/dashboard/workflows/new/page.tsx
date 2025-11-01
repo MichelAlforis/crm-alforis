@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import { HelpTooltip } from '@/components/help/HelpTooltip'
 import { storage, AUTH_STORAGE_KEYS, ROUTES } from '@/lib/constants'
+import { PageContainer } from '@/components/shared'
 
 // Builder visuel avec @xyflow/react (chargement dynamique)
 const WorkflowBuilderClient = dynamic(
@@ -202,41 +203,41 @@ export default function NewWorkflowPage() {
   const selectedTrigger = TRIGGER_TYPES.find((t) => t.value === triggerType)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      {/* Header fixe */}
-      <div className="sticky top-0 z-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+    <PageContainer width="default">
+      <div className="space-y-spacing-lg">
+        {/* Header fixe */}
+        <div className="sticky top-0 z-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-border -mx-spacing-lg px-spacing-lg py-spacing-md mb-spacing-lg">
           <div className="flex items-center justify-between">
             {/* Left: Back + Title */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-spacing-md">
               <button
                 onClick={() => router.push(ROUTES.WORKFLOWS.BASE)}
-                className="p-2 hover:bg-gray-100 dark:bg-slate-800 dark:hover:bg-gray-700 rounded-lg transition"
+                className="p-spacing-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
               >
-                <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                <ArrowLeft className="w-5 h-5 text-text-secondary" />
               </button>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent flex items-center gap-2">
+                <h1 className="text-fluid-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent flex items-center gap-spacing-sm">
                   <Sparkles className="w-6 h-6 text-purple-600" />
                   Nouveau Workflow
                 </h1>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                <p className="text-fluid-sm text-text-secondary mt-1">
                   Créez votre automation en quelques étapes
                 </p>
               </div>
             </div>
 
             {/* Right: Actions */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-spacing-sm">
               {step === 'builder' && (
                 <>
-                  <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+                  <div className="flex items-center gap-spacing-xs bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
                     <button
                       onClick={() => setMode('visual')}
-                      className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition ${
+                      className={`flex items-center gap-spacing-xs px-3 py-1.5 rounded-md text-fluid-sm font-medium transition ${
                         mode === 'visual'
                           ? 'bg-white dark:bg-gray-600 text-purple-600 dark:text-purple-400 shadow'
-                          : 'text-gray-600 dark:text-gray-400'
+                          : 'text-text-secondary'
                       }`}
                     >
                       <Wand2 className="w-4 h-4" />
@@ -244,10 +245,10 @@ export default function NewWorkflowPage() {
                     </button>
                     <button
                       onClick={() => setMode('json')}
-                      className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition ${
+                      className={`flex items-center gap-spacing-xs px-3 py-1.5 rounded-md text-fluid-sm font-medium transition ${
                         mode === 'json'
                           ? 'bg-white dark:bg-gray-600 text-purple-600 dark:text-purple-400 shadow'
-                          : 'text-gray-600 dark:text-gray-400'
+                          : 'text-text-secondary'
                       }`}
                     >
                       <Code className="w-4 h-4" />
@@ -258,7 +259,7 @@ export default function NewWorkflowPage() {
                   <button
                     onClick={() => handleSave(true)}
                     disabled={saving}
-                    className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:bg-slate-800 dark:hover:bg-gray-700 transition disabled:opacity-50"
+                    className="flex items-center gap-spacing-xs px-spacing-md py-spacing-sm border border-border text-text-primary rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition disabled:opacity-50"
                   >
                     <Save className="w-4 h-4" />
                     Brouillon
@@ -267,7 +268,7 @@ export default function NewWorkflowPage() {
                   <button
                     onClick={() => handleSave(false)}
                     disabled={saving}
-                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition shadow-lg shadow-purple-500/30 disabled:opacity-50"
+                    className="flex items-center gap-spacing-xs px-spacing-md py-spacing-sm bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition shadow-lg shadow-purple-500/30 disabled:opacity-50"
                   >
                     <Play className="w-4 h-4" />
                     Activer
@@ -277,23 +278,19 @@ export default function NewWorkflowPage() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Stepper */}
-        <div className="flex items-center justify-center mb-12">
+        <div className="flex items-center justify-center mb-spacing-xl">
           {(['info', 'trigger', 'builder'] as const).map((s, idx) => (
             <div key={s} className="flex items-center">
               <div
-                className={`flex items-center gap-3 px-6 py-3 rounded-lg transition cursor-pointer ${
+                className={`flex items-center gap-spacing-sm px-spacing-lg py-spacing-md rounded-lg transition cursor-pointer ${
                   step === s
                     ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg'
                     : step === 'info' && s !== 'info'
-                    ? 'bg-gray-100 dark:bg-gray-800 text-gray-400'
+                    ? 'bg-gray-100 dark:bg-gray-800 text-text-tertiary'
                     : step === 'trigger' && s === 'builder'
-                    ? 'bg-gray-100 dark:bg-gray-800 text-gray-400'
-                    : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+                    ? 'bg-gray-100 dark:bg-gray-800 text-text-tertiary'
+                    : 'bg-surface text-text-secondary'
                 }`}
                 onClick={() => {
                   if (
@@ -310,7 +307,7 @@ export default function NewWorkflowPage() {
                 <span className="font-medium capitalize">{s === 'info' ? 'Informations' : s === 'trigger' ? 'Déclencheur' : 'Actions'}</span>
               </div>
               {idx < 2 && (
-                <div className="w-12 h-0.5 bg-gray-300 dark:bg-gray-700 mx-2" />
+                <div className="w-12 h-0.5 bg-border mx-2" />
               )}
             </div>
           ))}
@@ -318,24 +315,24 @@ export default function NewWorkflowPage() {
 
         {/* Error */}
         {error && (
-          <div className="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg flex items-start gap-2">
+          <div className="mb-spacing-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-400 px-spacing-md py-spacing-sm rounded-lg flex items-start gap-spacing-sm">
             <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-            <span className="text-sm">{error}</span>
+            <span className="text-fluid-sm">{error}</span>
           </div>
         )}
 
         {/* Step: Info */}
         {step === 'info' && (
           <div className="max-w-2xl mx-auto">
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+            <div className="bg-surface rounded-xl shadow-xl p-spacing-lg border border-border">
+              <h2 className="text-fluid-2xl font-bold text-text-primary mb-spacing-lg flex items-center gap-spacing-sm">
                 <Sparkles className="w-6 h-6 text-purple-600" />
                 Informations générales
               </h2>
 
-              <div className="space-y-6">
+              <div className="space-y-spacing-lg">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-fluid-sm font-medium text-text-secondary mb-spacing-sm">
                     Nom du workflow *
                   </label>
                   <input
@@ -343,13 +340,13 @@ export default function NewWorkflowPage() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Ex: Relance automatique deal inactif"
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                    className="w-full px-spacing-md py-spacing-sm border border-border bg-surface text-text-primary rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-fluid-sm font-medium text-text-secondary mb-spacing-sm">
                     Description (optionnel)
                   </label>
                   <textarea
@@ -357,14 +354,14 @@ export default function NewWorkflowPage() {
                     onChange={(e) => setDescription(e.target.value)}
                     rows={3}
                     placeholder="Décrivez l'objectif de ce workflow..."
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition resize-none"
+                    className="w-full px-spacing-md py-spacing-sm border border-border bg-surface text-text-primary rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition resize-none"
                   />
                 </div>
 
                 <button
                   onClick={() => setStep('trigger')}
                   disabled={!name.trim()}
-                  className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition shadow-lg shadow-purple-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-spacing-md bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition shadow-lg shadow-purple-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Continuer vers le déclencheur →
                 </button>
@@ -376,9 +373,9 @@ export default function NewWorkflowPage() {
         {/* Step: Trigger */}
         {step === 'trigger' && (
           <div className="max-w-4xl mx-auto">
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
-              <div className="flex items-center gap-2 mb-2">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <div className="bg-surface rounded-xl shadow-xl p-spacing-lg border border-border">
+              <div className="flex items-center gap-spacing-sm mb-spacing-sm">
+                <h2 className="text-fluid-2xl font-bold text-text-primary flex items-center gap-spacing-sm">
                   <Zap className="w-6 h-6 text-yellow-500" />
                   Choisir le déclencheur
                 </h2>
@@ -388,7 +385,7 @@ export default function NewWorkflowPage() {
                   size="md"
                 />
               </div>
-              <p className="text-gray-600 dark:text-gray-400 mb-8">
+              <p className="text-text-secondary mb-spacing-lg">
                 Quand ce workflow doit-il s'exécuter ?
               </p>
 
@@ -446,16 +443,16 @@ export default function NewWorkflowPage() {
                 </div>
               )}
 
-              <div className="flex gap-3">
+              <div className="flex gap-spacing-sm">
                 <button
                   onClick={() => setStep('info')}
-                  className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:bg-slate-800 dark:hover:bg-gray-700 transition"
+                  className="px-spacing-lg py-spacing-md border border-border text-text-primary rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition"
                 >
                   ← Retour
                 </button>
                 <button
                   onClick={() => setStep('builder')}
-                  className="flex-1 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition shadow-lg shadow-purple-500/30"
+                  className="flex-1 py-spacing-md bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition shadow-lg shadow-purple-500/30"
                 >
                   Continuer vers les actions →
                 </button>
@@ -468,13 +465,13 @@ export default function NewWorkflowPage() {
         {step === 'builder' && (
           <div>
             {mode === 'visual' ? (
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 border border-gray-200 dark:border-gray-700">
-                <div className="mb-4">
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+              <div className="bg-surface rounded-xl shadow-xl p-spacing-lg border border-border">
+                <div className="mb-spacing-md">
+                  <h2 className="text-fluid-xl font-bold text-text-primary mb-1 flex items-center gap-spacing-sm">
                     <Wand2 className="w-5 h-5 text-purple-600" />
                     Builder Visuel
                   </h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-fluid-sm text-text-secondary">
                     Glissez-déposez les actions pour construire votre workflow
                   </p>
                 </div>
@@ -483,23 +480,23 @@ export default function NewWorkflowPage() {
                   onUpdate={(nodes, edges) => setBuilderData({ nodes, edges })}
                 />
 
-                <div className="mt-4 flex gap-3">
+                <div className="mt-spacing-md flex gap-spacing-sm">
                   <button
                     onClick={() => setStep('trigger')}
-                    className="px-6 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:bg-slate-800 dark:hover:bg-gray-700 transition"
+                    className="px-spacing-lg py-spacing-sm border border-border text-text-primary rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition"
                   >
                     ← Retour
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 border border-gray-200 dark:border-gray-700">
-                <div className="mb-4">
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+              <div className="bg-surface rounded-xl shadow-xl p-spacing-lg border border-border">
+                <div className="mb-spacing-md">
+                  <h2 className="text-fluid-xl font-bold text-text-primary mb-1 flex items-center gap-spacing-sm">
                     <Code className="w-5 h-5 text-blue-600" />
                     Mode JSON
                   </h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-fluid-sm text-text-secondary">
                     Définissez les actions en JSON (pour utilisateurs avancés)
                   </p>
                 </div>
@@ -517,13 +514,13 @@ export default function NewWorkflowPage() {
     }
   }
 ]`}
-                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg text-sm font-mono focus:ring-2 focus:ring-purple-500 focus:outline-none resize-none"
+                  className="w-full px-spacing-md py-spacing-sm bg-gray-50 dark:bg-gray-900 border border-border text-text-primary rounded-lg text-fluid-sm font-mono focus:ring-2 focus:ring-purple-500 focus:outline-none resize-none"
                 />
 
-                <div className="mt-4 flex gap-3">
+                <div className="mt-spacing-md flex gap-spacing-sm">
                   <button
                     onClick={() => setStep('trigger')}
-                    className="px-6 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:bg-slate-800 dark:hover:bg-gray-700 transition"
+                    className="px-spacing-lg py-spacing-sm border border-border text-text-primary rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition"
                   >
                     ← Retour
                   </button>
@@ -533,6 +530,6 @@ export default function NewWorkflowPage() {
           </div>
         )}
       </div>
-    </div>
+    </PageContainer>
   )
 }

@@ -4,7 +4,7 @@
 'use client'
 import { logger } from '@/lib/logger'
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Input, Button, Alert, Select } from '@/components/shared'
 import { Person, PersonInput } from '@/lib/types'
@@ -295,7 +295,11 @@ export function PersonForm({
   const handleFormSubmit = async (data: PersonInput) => {
     try {
       await onSubmit(data)
-      initialData ? toast.successUpdate() : toast.successCreate()
+      if (initialData) {
+        toast.successUpdate()
+      } else {
+        toast.successCreate()
+      }
     } catch (err: any) {
       toast.error(err)
       throw err

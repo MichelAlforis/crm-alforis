@@ -34,6 +34,7 @@ import type { Webhook as WebhookType } from '@/lib/types'
 import AIConfigSection from './AIConfigSection'
 import OutlookConnector from '@/components/integrations/OutlookConnector'
 import EmailAccountsManager from '@/components/integrations/EmailAccountsManager'
+import { PageContainer, PageHeader, PageSection, PageTitle } from '@/components/shared'
 
 type Tab = 'email' | 'webhooks' | 'ai' | 'connectors'
 
@@ -214,33 +215,33 @@ export default function IntegrationsSettingsPage() {
   }
 
   return (
-    <div className="p-6 lg:p-8 max-w-5xl mx-auto space-y-8">
-      <header>
+    <PageContainer width="default">
+      <PageHeader>
         <Link
           href="/dashboard/settings"
-          className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white dark:text-slate-100 mb-4"
+          className="inline-flex items-center gap-spacing-sm text-fluid-sm text-text-secondary hover:text-text-primary mb-spacing-md"
         >
           <ArrowLeft className="w-4 h-4" />
           Retour aux paramètres
         </Link>
 
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Intégrations</h1>
-        <p className="text-gray-600 dark:text-slate-400 mt-2">
-          Connectez votre CRM avec vos outils externes et pilotez l’automatisation.
-        </p>
-      </header>
+        <PageTitle subtitle="Connectez votre CRM avec vos outils externes et pilotez l'automatisation">
+          Intégrations
+        </PageTitle>
+      </PageHeader>
 
-      <div className="border-b border-gray-200 dark:border-slate-700">
+      <PageSection>
+      <div className="border-b border-border">
         <nav className="-mb-px flex space-x-8" aria-label="Tabs">
           {tabs.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
               onClick={() => handleTabChange(id)}
               className={clsx(
-                'flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition',
+                'flex items-center gap-spacing-sm py-4 px-1 border-b-2 font-medium text-fluid-sm whitespace-nowrap transition',
                 activeTab === id
                   ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-slate-300 hover:border-gray-300 dark:border-slate-600',
+                  : 'border-transparent text-text-secondary hover:text-text-primary hover:border-border',
               )}
             >
               <Icon className="w-5 h-5" />
@@ -250,23 +251,23 @@ export default function IntegrationsSettingsPage() {
         </nav>
       </div>
 
-      <div className="space-y-8">
+      <div className="space-y-spacing-2xl">
         {activeTab === 'email' && (
           <>
-            <section className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
-            <div className="flex items-center gap-3 mb-6">
+            <section className="rounded-2xl border border-border bg-surface p-spacing-lg shadow-sm">
+            <div className="flex items-center gap-spacing-sm mb-spacing-lg">
               <Mail className="h-6 w-6 text-blue-500" />
               <div>
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
-                  Fournisseur d’envoi
+                <h2 className="text-fluid-xl font-semibold text-text-primary">
+                  Fournisseur d'envoi
                 </h2>
-                <p className="text-sm text-gray-500">
-                  Gérez l’API utilisée pour vos emails transactionnels.
+                <p className="text-fluid-sm text-text-secondary">
+                  Gérez l'API utilisée pour vos emails transactionnels.
                 </p>
               </div>
             </div>
 
-            <div className="rounded-xl border border-gray-100 bg-gray-50 dark:bg-slate-800 p-5">
+            <div className="rounded-xl border border-border bg-surface-secondary p-5">
               <div className="flex items-start justify-between">
                 <div className="space-y-1">
                   <p className="text-xs uppercase tracking-wide text-gray-500">
@@ -678,12 +679,13 @@ export default function IntegrationsSettingsPage() {
           </div>
         </div>
 
-        <div className="rounded-xl border border-dashed border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/50 p-5 text-sm text-gray-600 dark:text-slate-400">
-          Le log d’audit détaillé (clés API, changements de webhooks, connexions externes) sera
+        <div className="rounded-xl border border-dashed border-border bg-surface-secondary p-5 text-fluid-sm text-text-secondary">
+          Le log d'audit détaillé (clés API, changements de webhooks, connexions externes) sera
           exposé ici une fois le module de traçabilité finalisé.
         </div>
       </section>
-    </div>
+      </PageSection>
+    </PageContainer>
   )
 }
 
@@ -697,10 +699,10 @@ function StatCard({
   caption?: string
 }) {
   return (
-    <div className="rounded-xl border border-gray-100 bg-white dark:bg-slate-900 px-4 py-3 shadow-sm">
-      <p className="text-xs uppercase tracking-wide text-gray-500">{label}</p>
-      <p className="text-2xl font-semibold text-gray-900 dark:text-slate-100 mt-1">{value}</p>
-      {caption && <p className="text-xs text-gray-500 mt-1">{caption}</p>}
+    <div className="rounded-xl border border-border bg-surface px-4 py-3 shadow-sm">
+      <p className="text-xs uppercase tracking-wide text-text-secondary">{label}</p>
+      <p className="text-fluid-2xl font-semibold text-text-primary mt-1">{value}</p>
+      {caption && <p className="text-xs text-text-secondary mt-1">{caption}</p>}
     </div>
   )
 }

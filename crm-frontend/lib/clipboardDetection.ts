@@ -80,7 +80,7 @@ export async function analyzeClipboard(): Promise<ClipboardSuggestion | null> {
     }
 
     return null
-  } catch (error) {
+  } catch (_error) {
     // Clipboard permission denied or not available
     return null
   }

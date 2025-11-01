@@ -8,6 +8,7 @@ import {
   useBillingSummary,
   useTeamOverview,
 } from '@/hooks/useSettingsData'
+import { PageContainer, PageHeader, PageSection, PageTitle } from '@/components/shared'
 
 export default function TeamSettingsPage() {
   const { showToast } = useToast()
@@ -50,33 +51,32 @@ export default function TeamSettingsPage() {
   }
 
   return (
-    <div className="p-6 lg:p-8 max-w-5xl mx-auto space-y-8">
-      {/* Header */}
-      <div>
+    <PageContainer width="default">
+      <PageHeader>
         <Link
           href="/dashboard/settings"
-          className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white dark:text-slate-100 mb-4"
+          className="inline-flex items-center gap-spacing-sm text-fluid-sm text-text-secondary hover:text-text-primary mb-spacing-md"
         >
           <ArrowLeft className="w-4 h-4" />
           Retour aux paramètres
         </Link>
 
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Équipe & Facturation</h1>
-        <p className="text-gray-600 dark:text-slate-400 mt-2">
-          Gérez votre abonnement, votre équipe et vos factures
-        </p>
-      </div>
+        <PageTitle subtitle="Gérez votre abonnement, votre équipe et vos factures">
+          Équipe & Facturation
+        </PageTitle>
+      </PageHeader>
 
+      <PageSection>
       {/* Abonnement & Facturation */}
-      <section className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
+      <section className="rounded-2xl border border-border bg-surface p-spacing-lg shadow-sm">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-3">
             <CreditCard className="h-6 w-6 text-sky-500" />
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
+              <h2 className="text-fluid-xl font-semibold text-text-primary">
                 Abonnement &amp; facturation
               </h2>
-              <p className="text-sm text-gray-500">
+              <p className="text-fluid-sm text-text-secondary">
                 Suivez votre offre CRM, la consommation de licences et les
                 prochaines échéances.
               </p>
@@ -87,22 +87,22 @@ export default function TeamSettingsPage() {
           </span>
         </div>
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-3">
-          <div className="rounded-xl border border-gray-100 bg-gray-50 dark:bg-slate-800 px-4 py-4">
-            <p className="text-xs font-semibold uppercase text-gray-500">
+        <div className="mt-spacing-lg grid gap-spacing-lg lg:grid-cols-3">
+          <div className="rounded-xl border border-border bg-surface-secondary px-4 py-4">
+            <p className="text-xs font-semibold uppercase text-text-secondary">
               Prochaine facture
             </p>
-            <p className="mt-2 text-lg font-semibold text-gray-900 dark:text-slate-100">
+            <p className="mt-2 text-fluid-lg font-semibold text-text-primary">
               {billingSummary.amount}
             </p>
-            <p className="text-sm text-gray-500">{billingSummary.nextInvoice}</p>
+            <p className="text-fluid-sm text-text-secondary">{billingSummary.nextInvoice}</p>
           </div>
 
-          <div className="rounded-xl border border-gray-100 bg-gray-50 dark:bg-slate-800 px-4 py-4">
-            <p className="text-xs font-semibold uppercase text-gray-500">
+          <div className="rounded-xl border border-border bg-surface-secondary px-4 py-4">
+            <p className="text-xs font-semibold uppercase text-text-secondary">
               Licences utilisées
             </p>
-            <p className="mt-2 text-lg font-semibold text-gray-900 dark:text-slate-100">
+            <p className="mt-2 text-fluid-lg font-semibold text-text-primary">
               {billingSummary.seatsUsed}/{billingSummary.seatsTotal}
             </p>
             <div className="mt-3 h-2 w-full rounded-full bg-gray-200">
@@ -116,31 +116,31 @@ export default function TeamSettingsPage() {
                 }}
               />
             </div>
-            <p className="mt-2 text-xs text-gray-500">
+            <p className="mt-2 text-xs text-text-secondary">
               Les licences additionnelles seront facturées automatiquement.
             </p>
           </div>
 
-          <div className="rounded-xl border border-gray-100 bg-gray-50 dark:bg-slate-800 px-4 py-4">
-            <p className="text-xs font-semibold uppercase text-gray-500">
+          <div className="rounded-xl border border-border bg-surface-secondary px-4 py-4">
+            <p className="text-xs font-semibold uppercase text-text-secondary">
               Moyen de paiement
             </p>
-            <p className="mt-2 text-sm font-semibold text-gray-900 dark:text-slate-100">
+            <p className="mt-2 text-fluid-sm font-semibold text-text-primary">
               Carte • **** 8421
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-text-secondary">
               Dernière mise à jour : 12 mars 2024
             </p>
             <button
               onClick={() => alert('La mise à jour du moyen de paiement sera disponible avec Stripe.')}
-              className="mt-3 inline-flex items-center rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-slate-300 transition hover:border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:bg-slate-800"
+              className="mt-3 inline-flex items-center rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-medium text-text-primary transition hover:border-border hover:bg-surface-secondary"
             >
               Mettre à jour
             </button>
           </div>
         </div>
 
-        <div className="mt-6 flex flex-wrap justify-between gap-3 text-sm text-gray-500">
+        <div className="mt-spacing-lg flex flex-wrap justify-between gap-spacing-sm text-fluid-sm text-text-secondary">
           <p>
             L&apos;historique détaillé et les factures PDF seront disponibles ici
             une fois Stripe connecté à l&apos;API back-office.
@@ -155,32 +155,32 @@ export default function TeamSettingsPage() {
       </section>
 
       {/* Équipe & Accès */}
-      <section className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
+      <section className="rounded-2xl border border-border bg-surface p-spacing-lg shadow-sm">
         <div className="flex items-center gap-3">
           <Users className="h-6 w-6 text-rose-500" />
           <div>
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
+            <h2 className="text-fluid-xl font-semibold text-text-primary">
               Équipe &amp; accès
             </h2>
-            <p className="text-sm text-gray-500">
+            <p className="text-fluid-sm text-text-secondary">
               Visualisez qui a accès au CRM et anticipez les prochaines
               invitations.
             </p>
           </div>
         </div>
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-[2fr_1fr]">
+        <div className="mt-spacing-lg grid gap-spacing-lg lg:grid-cols-[2fr_1fr]">
           <div className="space-y-4">
             {teamMembers.map((member) => (
               <div
                 key={member.name}
-                className="flex items-center justify-between gap-4 rounded-xl border border-gray-100 px-4 py-3 transition hover:border-rose-200 hover:bg-rose-50/40"
+                className="flex items-center justify-between gap-spacing-md rounded-xl border border-border px-4 py-3 transition hover:border-rose-200 hover:bg-rose-50/40"
               >
                 <div>
-                  <p className="text-sm font-semibold text-gray-900 dark:text-slate-100">
+                  <p className="text-fluid-sm font-semibold text-text-primary">
                     {member.name}
                   </p>
-                  <p className="text-xs text-gray-500">{member.role}</p>
+                  <p className="text-xs text-text-secondary">{member.role}</p>
                 </div>
                 <span
                   className={`rounded-full px-3 py-1 text-xs font-semibold ${
@@ -195,27 +195,27 @@ export default function TeamSettingsPage() {
             ))}
           </div>
 
-          <aside className="rounded-xl border border-gray-100 bg-gray-50 dark:bg-slate-800 p-4">
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-slate-100">
+          <aside className="rounded-xl border border-border bg-surface-secondary p-4">
+            <h3 className="text-fluid-sm font-semibold text-text-primary">
               Invitations en cours
             </h3>
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-text-secondary">
               Les nouveaux collaborateurs recevront un email automatique.
             </p>
 
             <div className="mt-4 space-y-3">
               {pendingInvites.length === 0 ? (
-                <p className="rounded-lg bg-white dark:bg-slate-900 px-3 py-2 text-xs text-gray-500">
+                <p className="rounded-lg bg-surface px-3 py-2 text-xs text-text-secondary">
                   Aucune invitation en attente.
                 </p>
               ) : (
                 pendingInvites.map((invite) => (
                   <div
                     key={invite.email}
-                    className="rounded-lg bg-white dark:bg-slate-900 px-3 py-2 text-xs text-gray-700 dark:text-slate-300"
+                    className="rounded-lg bg-surface px-3 py-2 text-xs text-text-primary"
                   >
                     <p className="font-medium">{invite.email}</p>
-                    <p className="text-[11px] text-gray-500">{invite.sentAt}</p>
+                    <p className="text-[11px] text-text-secondary">{invite.sentAt}</p>
                   </div>
                 ))
               )}
@@ -240,17 +240,17 @@ export default function TeamSettingsPage() {
             if (e.target === e.currentTarget) setShowInviteModal(false)
           }}
         >
-          <div className="w-full max-w-md rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-xl animate-in slide-in-from-bottom duration-300">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
+          <div className="w-full max-w-md rounded-2xl bg-surface p-spacing-lg shadow-xl animate-in slide-in-from-bottom duration-300">
+            <h3 className="text-fluid-xl font-semibold text-text-primary">
               Inviter un collaborateur
             </h3>
-            <p className="mt-2 text-sm text-gray-600 dark:text-slate-400">
+            <p className="mt-2 text-fluid-sm text-text-secondary">
               Entrez l&apos;adresse email du collaborateur à inviter.
             </p>
             <div className="mt-4">
               <label
                 htmlFor="invite-email"
-                className="block text-sm font-medium text-gray-700 dark:text-slate-300"
+                className="block text-fluid-sm font-medium text-text-primary"
               >
                 Adresse email
               </label>
@@ -266,25 +266,25 @@ export default function TeamSettingsPage() {
                   }
                 }}
                 disabled={isInviting}
-                className="mt-2 w-full rounded-lg border border-gray-300 dark:border-slate-600 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 disabled:bg-gray-50 dark:bg-slate-800 disabled:cursor-not-allowed"
+                className="mt-2 w-full rounded-lg border border-border px-4 py-2 text-fluid-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 disabled:bg-surface-secondary disabled:cursor-not-allowed"
                 autoFocus
               />
             </div>
-            <div className="mt-6 flex justify-end gap-3">
+            <div className="mt-spacing-lg flex justify-end gap-spacing-sm">
               <button
                 onClick={() => {
                   setShowInviteModal(false)
                   setInviteEmail('')
                 }}
                 disabled={isInviting}
-                className="rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 transition hover:border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="rounded-lg border border-border bg-surface px-4 py-2 text-fluid-sm font-medium text-text-primary transition hover:bg-surface-secondary disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Annuler
               </button>
               <button
                 onClick={handleInviteSubmit}
                 disabled={isInviting}
-                className="rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-fluid-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 Envoyer l&apos;invitation
               </button>
@@ -292,6 +292,7 @@ export default function TeamSettingsPage() {
           </div>
         </div>
       )}
-    </div>
+      </PageSection>
+    </PageContainer>
   )
 }

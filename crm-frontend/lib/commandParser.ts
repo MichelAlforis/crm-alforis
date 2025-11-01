@@ -123,7 +123,7 @@ function parseCalculation(input: string, original: string): ParsedCommand {
       confidence: 1.0,
       originalInput: original,
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       intent: 'unknown',
       entities: { rawQuery: original },

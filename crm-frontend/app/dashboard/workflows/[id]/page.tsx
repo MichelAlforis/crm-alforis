@@ -6,6 +6,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { ROUTES } from "@/lib/constants"
 import { useWorkflows } from '@/hooks/useWorkflows'
 import { useConfirm } from '@/hooks/useConfirm'
+import { PageContainer, PageHeader, PageSection, PageTitle } from '@/components/shared'
 import {
   ArrowLeft,
   Play,
@@ -225,116 +226,116 @@ export default function WorkflowDetailPage() {
 
   if (singleWorkflow.isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6 flex items-center justify-center">
-        <div className="text-gray-600 dark:text-gray-400">Chargement...</div>
-      </div>
+      <PageContainer width="default">
+        <div className="flex items-center justify-center py-spacing-xl">
+          <div className="text-text-secondary">Chargement...</div>
+        </div>
+      </PageContainer>
     )
   }
 
   if (singleWorkflow.error || !singleWorkflow.data) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
-        <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-lg">
+      <PageContainer width="default">
+        <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-spacing-md rounded-lg">
           {singleWorkflow.error || 'Workflow introuvable'}
         </div>
-      </div>
+      </PageContainer>
     )
   }
 
   const workflow = singleWorkflow.data
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-6">
-          <button
-            onClick={() => router.back()}
-            className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-4"
-          >
-            <ArrowLeft size={20} />
-            Retour
-          </button>
+    <PageContainer width="default">
+      <PageHeader>
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-spacing-sm text-text-secondary hover:text-text-primary mb-spacing-md"
+        >
+          <ArrowLeft size={20} />
+          Retour
+        </button>
 
-          <div className="flex justify-between items-start">
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {workflow.name}
-                </h1>
-                {workflow.is_template && (
-                  <span className="px-3 py-1 rounded-lg text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 flex items-center gap-2">
-                    <BookTemplate size={16} />
-                    Template
-                  </span>
-                )}
-              </div>
-              {workflow.description && (
-                <p className="text-gray-600 dark:text-gray-400">{workflow.description}</p>
-              )}
+        <div className="flex justify-between items-start">
+          <div className="flex-1">
+            <div className="flex items-center gap-spacing-sm mb-spacing-sm">
+              <PageTitle>{workflow.name}</PageTitle>
               {workflow.is_template && (
-                <div className="mt-3 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-3">
-                  <p className="text-sm text-purple-900 dark:text-purple-200">
-                    💡 <strong>Template en lecture seule</strong> - Ce workflow est un modèle prêt à l'emploi.
-                    Utilisez le bouton "Utiliser ce template" pour créer votre propre version personnalisable.
-                  </p>
-                </div>
+                <span className="px-3 py-1 rounded-lg text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 flex items-center gap-2">
+                  <BookTemplate size={16} />
+                  Template
+                </span>
               )}
             </div>
+            {workflow.description && (
+              <p className="text-text-secondary">{workflow.description}</p>
+            )}
+            {workflow.is_template && (
+              <div className="mt-spacing-sm bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-spacing-sm">
+                <p className="text-fluid-sm text-purple-900 dark:text-purple-200">
+                  💡 <strong>Template en lecture seule</strong> - Ce workflow est un modèle prêt à l'emploi.
+                  Utilisez le bouton "Utiliser ce template" pour créer votre propre version personnalisable.
+                </p>
+              </div>
+            )}
+          </div>
 
-            <div className="flex items-center gap-2">
-              {workflow.is_template ? (
-                // Boutons pour TEMPLATE
+          <div className="flex items-center gap-spacing-sm">
+            {workflow.is_template ? (
+              // Boutons pour TEMPLATE
+              <button
+                onClick={handleDuplicate}
+                className="flex items-center gap-spacing-sm bg-gradient-to-r from-purple-600 to-blue-600 text-white px-spacing-lg py-spacing-md rounded-lg hover:from-purple-700 hover:to-blue-700 transition shadow-lg shadow-purple-500/30"
+                disabled={operation.isLoading}
+              >
+                <Copy size={18} />
+                Utiliser ce template
+              </button>
+            ) : (
+              // Boutons pour WORKFLOW PERSONNALISÉ
+              <>
                 <button
-                  onClick={handleDuplicate}
-                  className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-purple-700 hover:to-blue-700 transition shadow-lg shadow-purple-500/30"
+                  onClick={() => setShowExecuteModal(true)}
+                  className="flex items-center gap-spacing-sm bg-primary text-white px-spacing-md py-spacing-sm rounded-lg hover:bg-blue-700 transition"
                   disabled={operation.isLoading}
                 >
-                  <Copy size={18} />
-                  Utiliser ce template
+                  <Play size={18} />
+                  Exécuter
                 </button>
-              ) : (
-                // Boutons pour WORKFLOW PERSONNALISÉ
-                <>
-                  <button
-                    onClick={() => setShowExecuteModal(true)}
-                    className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-                    disabled={operation.isLoading}
-                  >
-                    <Play size={18} />
-                    Exécuter
-                  </button>
 
-                  <button
-                    onClick={handleToggle}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition ${
-                      workflow.status === 'active'
-                        ? 'bg-green-600 text-white hover:bg-green-700'
-                        : 'bg-gray-600 text-white hover:bg-gray-700'
-                    }`}
-                    disabled={operation.isLoading}
-                  >
-                    {workflow.status === 'active' ? <Power size={18} /> : <PowerOff size={18} />}
-                    {workflow.status === 'active' ? 'Actif' : 'Inactif'}
-                  </button>
+                <button
+                  onClick={handleToggle}
+                  className={`flex items-center gap-spacing-sm px-spacing-md py-spacing-sm rounded-lg transition ${
+                    workflow.status === 'active'
+                      ? 'bg-green-600 text-white hover:bg-green-700'
+                      : 'bg-gray-600 text-white hover:bg-gray-700'
+                  }`}
+                  disabled={operation.isLoading}
+                >
+                  {workflow.status === 'active' ? <Power size={18} /> : <PowerOff size={18} />}
+                  {workflow.status === 'active' ? 'Actif' : 'Inactif'}
+                </button>
 
-                  <button
-                    onClick={handleDelete}
-                    className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition"
-                    disabled={operation.isLoading}
-                  >
-                    <Trash2 size={18} />
-                  </button>
-                </>
-              )}
-            </div>
+                <button
+                  onClick={handleDelete}
+                  className="p-spacing-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition"
+                  disabled={operation.isLoading}
+                >
+                  <Trash2 size={18} />
+                </button>
+              </>
+            )}
           </div>
         </div>
+      </PageHeader>
+
+      <PageSection>
 
         {/* Section "Comment ça marche?" pour les templates */}
         {workflow.is_template && (
-          <div className="mb-8 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/10 dark:to-purple-900/10 border border-blue-200 dark:border-blue-800 rounded-xl p-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
+          <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/10 dark:to-purple-900/10 border border-blue-200 dark:border-blue-800 rounded-xl p-spacing-lg">
+            <h2 className="text-fluid-2xl font-bold text-text-primary mb-spacing-lg flex items-center gap-spacing-sm">
               <Zap className="text-blue-600" size={28} />
               Comment ça marche?
             </h2>
@@ -414,15 +415,15 @@ export default function WorkflowDetailPage() {
         )}
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-6 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex gap-spacing-sm border-b border-border">
           {(['details', 'executions', 'stats'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 font-medium transition ${
+              className={`px-spacing-md py-spacing-sm font-medium transition ${
                 activeTab === tab
-                  ? 'text-blue-600 border-b-2 border-blue-600'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                  ? 'text-primary border-b-2 border-primary'
+                  : 'text-text-secondary hover:text-text-primary'
               }`}
             >
               {tab === 'details' && 'Détails'}
@@ -433,33 +434,33 @@ export default function WorkflowDetailPage() {
         </div>
 
         {/* Content */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6">
+        <div className="bg-surface rounded-lg p-spacing-lg">
           {activeTab === 'details' && (
-            <div className="space-y-6">
+            <div className="space-y-spacing-lg">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                <h3 className="text-fluid-lg font-semibold text-text-primary mb-spacing-sm">
                   Configuration
                 </h3>
-                <dl className="grid grid-cols-2 gap-4">
+                <dl className="grid grid-cols-2 gap-spacing-md">
                   <div>
-                    <dt className="text-sm text-gray-600 dark:text-gray-400">Type de trigger</dt>
-                    <dd className="text-gray-900 dark:text-white font-medium">
+                    <dt className="text-fluid-sm text-text-secondary">Type de trigger</dt>
+                    <dd className="text-text-primary font-medium">
                       {workflow.trigger_type}
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-sm text-gray-600 dark:text-gray-400">Statut</dt>
-                    <dd className="text-gray-900 dark:text-white font-medium">{workflow.status}</dd>
+                    <dt className="text-fluid-sm text-text-secondary">Statut</dt>
+                    <dd className="text-text-primary font-medium">{workflow.status}</dd>
                   </div>
                   <div>
-                    <dt className="text-sm text-gray-600 dark:text-gray-400">Exécutions</dt>
-                    <dd className="text-gray-900 dark:text-white font-medium">
+                    <dt className="text-fluid-sm text-text-secondary">Exécutions</dt>
+                    <dd className="text-text-primary font-medium">
                       {workflow.execution_count}
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-sm text-gray-600 dark:text-gray-400">Dernière exécution</dt>
-                    <dd className="text-gray-900 dark:text-white font-medium">
+                    <dt className="text-fluid-sm text-text-secondary">Dernière exécution</dt>
+                    <dd className="text-text-primary font-medium">
                       {workflow.last_executed_at
                         ? new Date(workflow.last_executed_at).toLocaleString()
                         : 'Jamais'}
@@ -520,12 +521,12 @@ export default function WorkflowDetailPage() {
 
           {activeTab === 'executions' && (
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              <h3 className="text-fluid-lg font-semibold text-text-primary mb-spacing-md">
                 Historique des exécutions
               </h3>
 
               {executions.isLoading ? (
-                <div className="text-center py-8 text-gray-600 dark:text-gray-400">
+                <div className="text-center py-spacing-lg text-text-secondary">
                   Chargement...
                 </div>
               ) : executions.data && executions.data.items.length > 0 ? (
@@ -583,12 +584,12 @@ export default function WorkflowDetailPage() {
 
           {activeTab === 'stats' && (
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
+              <h3 className="text-fluid-lg font-semibold text-text-primary mb-spacing-lg">
                 Statistiques
               </h3>
 
               {stats.isLoading ? (
-                <div className="text-center py-8 text-gray-600 dark:text-gray-400">
+                <div className="text-center py-spacing-lg text-text-secondary">
                   Chargement...
                 </div>
               ) : stats.data ? (
@@ -667,35 +668,35 @@ export default function WorkflowDetailPage() {
         {/* Modal exécution manuelle */}
         {showExecuteModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+            <div className="bg-surface rounded-lg p-spacing-lg max-w-md w-full mx-4">
+              <h2 className="text-fluid-xl font-bold text-text-primary mb-spacing-md">
                 Exécuter le workflow
               </h2>
 
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <div className="mb-spacing-md">
+                <label className="block text-fluid-sm font-medium text-text-secondary mb-spacing-sm">
                   ID de l'organisation
                 </label>
                 <input
                   type="number"
                   value={entityId}
                   onChange={(e) => setEntityId(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-border rounded-lg bg-surface text-text-primary"
                   placeholder="123"
                 />
               </div>
 
-              <div className="flex gap-2 justify-end">
+              <div className="flex gap-spacing-sm justify-end">
                 <button
                   onClick={() => setShowExecuteModal(false)}
-                  className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:bg-slate-800 dark:hover:bg-gray-700 rounded-lg transition"
+                  className="px-spacing-md py-spacing-sm text-text-secondary hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
                 >
                   Annuler
                 </button>
                 <button
                   onClick={handleExecute}
                   disabled={!entityId || operation.isLoading}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-spacing-md py-spacing-sm bg-primary text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {operation.isLoading ? 'Exécution...' : 'Exécuter'}
                 </button>
@@ -703,10 +704,10 @@ export default function WorkflowDetailPage() {
             </div>
           </div>
         )}
-      </div>
 
-      {/* Confirmation Dialog */}
-      <ConfirmDialogComponent />
-    </div>
+        {/* Confirmation Dialog */}
+        <ConfirmDialogComponent />
+      </PageSection>
+    </PageContainer>
   )
 }

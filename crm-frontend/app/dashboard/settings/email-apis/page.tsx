@@ -23,6 +23,7 @@ import { Card, CardBody } from '@/components/shared/Card'
 import { Button } from '@/components/shared/Button'
 import { Input } from '@/components/shared/Input'
 import { Select } from '@/components/shared/Select'
+import { PageContainer, PageHeader, PageSection } from '@/components/shared'
 
 const PROVIDER_OPTIONS = [
   { value: 'resend', label: 'Resend (Recommandé)' },
@@ -140,26 +141,26 @@ export default function EmailApisSettingsPage() {
   }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/dashboard/settings">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Retour
-            </Button>
-          </Link>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
-              <Mail className="w-8 h-8 text-bleu" />
-              APIs Email
-            </h1>
-            <p className="text-sm text-gray-600 dark:text-slate-400 mt-1">
-              Gérez vos clés API pour l'envoi de campagnes email
-            </p>
+    <PageContainer width="default">
+      <PageHeader>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-spacing-md">
+            <Link href="/dashboard/settings">
+              <Button variant="ghost" size="sm">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Retour
+              </Button>
+            </Link>
+            <div>
+              <h1 className="text-fluid-3xl font-bold text-text-primary flex items-center gap-spacing-sm">
+                <Mail className="w-8 h-8 text-bleu" />
+                APIs Email
+              </h1>
+              <p className="text-fluid-sm text-text-secondary mt-1">
+                Gérez vos clés API pour l'envoi de campagnes email
+              </p>
+            </div>
           </div>
-        </div>
         <Button
           variant="primary"
           onClick={() => setShowCreateModal(true)}
@@ -167,8 +168,10 @@ export default function EmailApisSettingsPage() {
         >
           Nouvelle configuration
         </Button>
-      </div>
+        </div>
+      </PageHeader>
 
+      <PageSection>
       {/* Info Banner */}
       <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 flex items-start gap-3">
         <Key className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
@@ -382,7 +385,8 @@ export default function EmailApisSettingsPage() {
           </Card>
         </div>
       )}
-    </div>
+      </PageSection>
+    </PageContainer>
   )
 }
 

@@ -5,7 +5,7 @@
 
 import React, { lazy, Suspense } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card } from '@/components/shared'
+import { Card, PageContainer, PageHeader, PageSection, PageTitle } from '@/components/shared'
 import { useCreateProduit } from '@/hooks/useProduits'
 import type { ProduitCreate } from '@/lib/types'
 
@@ -23,24 +23,28 @@ export default function NewProduitPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-3xl">
-      <div>
-        <h1 className="text-3xl font-bold text-ardoise">Nouveau produit</h1>
-        <p className="text-gray-600 dark:text-slate-400 mt-2">
-          Créez un nouveau produit financier (OPCVM, ETF, SCPI, Assurance Vie, PER, etc.)
-        </p>
-      </div>
+    <PageContainer width="narrow">
+      <PageHeader>
+        <div>
+          <PageTitle>Nouveau produit</PageTitle>
+          <p className="text-text-secondary mt-spacing-sm">
+            Créez un nouveau produit financier (OPCVM, ETF, SCPI, Assurance Vie, PER, etc.)
+          </p>
+        </div>
+      </PageHeader>
 
-      <Card>
-        <Suspense fallback={<div className="p-8 text-center">Chargement du formulaire...</div>}>
-          <ProduitForm
-            onSubmit={handleSubmit}
-            isLoading={createMutation.isPending}
-            error={createMutation.error?.message}
-            submitLabel="Créer le produit"
-          />
-        </Suspense>
-      </Card>
-    </div>
+      <PageSection>
+        <Card>
+          <Suspense fallback={<div className="p-spacing-lg text-center">Chargement du formulaire...</div>}>
+            <ProduitForm
+              onSubmit={handleSubmit}
+              isLoading={createMutation.isPending}
+              error={createMutation.error?.message}
+              submitLabel="Créer le produit"
+            />
+          </Suspense>
+        </Card>
+      </PageSection>
+    </PageContainer>
   )
 }

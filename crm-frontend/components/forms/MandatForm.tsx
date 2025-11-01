@@ -111,7 +111,11 @@ export function MandatForm({
       await onSubmit(payload)
 
       // Toast de succès standardisé
-      initialData ? toast.successUpdate() : toast.successCreate()
+      if (initialData) {
+        toast.successUpdate()
+      } else {
+        toast.successCreate()
+      }
     } catch (err: any) {
       // Toast d'erreur avec extraction intelligente du message
       toast.error(err)

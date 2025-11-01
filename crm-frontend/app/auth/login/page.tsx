@@ -99,13 +99,13 @@ export default function LoginPage() {
             />
 
             {/* Content */}
-            <div className="relative p-8 md:p-10">
+            <div className="relative p-spacing-2xl md:p-spacing-3xl">
               {/* Logo */}
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="flex justify-center mb-10"
+                className="flex justify-center mb-spacing-3xl"
               >
                 <svg
                   width="72"
@@ -160,7 +160,7 @@ export default function LoginPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
-                className="mt-6 text-center text-sm text-gray-500"
+                className="mt-spacing-lg text-center text-fluid-sm text-text-secondary"
               >
                 <p>© 2025 Alforis Finance. Tous droits réservés.</p>
               </motion.div>

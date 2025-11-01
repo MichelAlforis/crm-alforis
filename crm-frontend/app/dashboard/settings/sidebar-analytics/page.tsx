@@ -17,6 +17,7 @@ import { useSidebarAnalytics } from '@/hooks/useSidebarAnalytics'
 import { useSidebar } from '@/hooks/useSidebar'
 import { SIDEBAR_SECTIONS } from '@/config/sidebar.config'
 import { useToast } from '@/components/ui/Toast'
+import { PageContainer, PageHeader, PageSection, PageTitle } from '@/components/shared'
 
 export default function SidebarAnalyticsPage() {
   const analytics = useSidebarAnalytics()
@@ -94,45 +95,41 @@ export default function SidebarAnalyticsPage() {
   }
 
   return (
-    <div className="p-6 lg:p-8 max-w-6xl mx-auto space-y-8">
-      {/* Header */}
-      <div>
+    <PageContainer width="default">
+      <PageHeader>
         <Link
           href="/dashboard/settings"
-          className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white dark:text-slate-100 mb-4"
+          className="inline-flex items-center gap-spacing-sm text-fluid-sm text-text-secondary hover:text-text-primary mb-spacing-md"
         >
           <ArrowLeft className="w-4 h-4" />
           Retour aux paramètres
         </Link>
 
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">
-              Analytics Sidebar
-            </h1>
-            <p className="text-gray-600 dark:text-slate-400 mt-2">
-              Analysez votre utilisation de la navigation pour optimiser votre workflow
-            </p>
-          </div>
+          <PageTitle subtitle="Analysez votre utilisation de la navigation pour optimiser votre workflow">
+            Analytics Sidebar
+          </PageTitle>
 
-          <div className="flex gap-3">
+          <div className="flex gap-spacing-sm">
             <button
               onClick={handleExport}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:bg-slate-800 transition"
+              className="inline-flex items-center gap-spacing-sm px-4 py-2 rounded-lg border border-border bg-surface text-text-primary hover:bg-surface-secondary transition"
             >
               <Download className="w-4 h-4" />
               Exporter
             </button>
             <button
               onClick={() => setShowResetConfirm(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-red-300 bg-white dark:bg-slate-900 text-red-700 hover:bg-red-50 transition"
+              className="inline-flex items-center gap-spacing-sm px-4 py-2 rounded-lg border border-red-300 bg-surface text-red-700 hover:bg-red-50 transition"
             >
               <RefreshCw className="w-4 h-4" />
               Réinitialiser
             </button>
           </div>
         </div>
-      </div>
+      </PageHeader>
+
+      <PageSection>
 
       {/* Stats globales */}
       <div className="grid gap-6 md:grid-cols-3">
@@ -358,6 +355,7 @@ export default function SidebarAnalyticsPage() {
           </div>
         </div>
       )}
-    </div>
+      </PageSection>
+    </PageContainer>
   )
 }

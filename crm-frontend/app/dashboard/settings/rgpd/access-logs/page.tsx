@@ -8,6 +8,7 @@ import { useToast } from '@/components/ui/Toast'
 import { apiClient } from '@/lib/api'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
+import { PageContainer, PageHeader, PageSection, PageTitle } from '@/components/shared'
 
 interface AccessLog {
   id: number
@@ -119,20 +120,20 @@ export default function AccessLogsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
+    <PageContainer width="default">
+      <PageHeader>
+        <div className="flex items-center gap-spacing-sm mb-2">
           <Shield className="w-8 h-8 text-blue-600" />
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Logs d'accès RGPD</h1>
+          <PageTitle subtitle="Traçabilité des accès aux données personnelles (conformité CNIL)">
+            Logs d'accès RGPD
+          </PageTitle>
         </div>
-        <p className="text-gray-600 dark:text-slate-400">
-          Traçabilité des accès aux données personnelles (conformité CNIL)
-        </p>
-      </div>
+      </PageHeader>
+
+      <PageSection>
 
       {/* Filters */}
-      <div className="bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6 mb-6">
+      <div className="bg-surface rounded-lg shadow-sm border border-border p-spacing-lg mb-spacing-lg">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {/* Search */}
           <div className="md:col-span-2">
@@ -313,6 +314,7 @@ export default function AccessLogsPage() {
           </table>
         </div>
       </div>
-    </div>
+      </PageSection>
+    </PageContainer>
   )
 }

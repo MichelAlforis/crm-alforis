@@ -64,7 +64,7 @@ export function CommandPaletteV3({ open, onOpenChange }: CommandPaletteV3Props) 
   const inputRef = useRef<HTMLInputElement>(null)
 
   const { results, isSearching } = useGlobalSearch(search)
-  const { suggestions: aiSuggestions, isLoading: aiLoading } = useAiSuggestions({
+  const { suggestions: aiSuggestions, isLoading: _aiLoading } = useAiSuggestions({
     query: search,
     enabled: open && search.length >= 2,
     debounceMs: 300,

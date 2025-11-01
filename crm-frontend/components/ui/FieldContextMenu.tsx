@@ -41,7 +41,7 @@ export function FieldContextMenu({
   const [suggestions, setSuggestions] = useState<FieldSuggestion[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [selectedIndex, _setSelectedIndex] = useState<number | null>(null);
 
   // Fetch suggestions depuis l'API
   useEffect(() => {

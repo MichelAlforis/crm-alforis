@@ -22,6 +22,7 @@ import {
   Zap,
   AlertCircle,
 } from 'lucide-react'
+import { PageContainer, PageHeader, PageSection, PageTitle } from '@/components/shared'
 
 type Provider = 'ionos' | 'gmail' | 'outlook' | 'exchange' | 'ovh' | 'generic'
 
@@ -199,18 +200,13 @@ export default function EmailAccountsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-8">
-      {/* Header */}
-      <div className="max-w-6xl mx-auto mb-8">
+    <PageContainer width="default">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      <PageHeader>
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent mb-2">
-              Comptes Email
-            </h1>
-            <p className="text-slate-600">
-              Connectez vos boîtes mail IONOS, Gmail ou Outlook pour synchroniser automatiquement vos emails
-            </p>
-          </div>
+          <PageTitle subtitle="Connectez vos boîtes mail IONOS, Gmail ou Outlook pour synchroniser automatiquement vos emails">
+            Comptes Email
+          </PageTitle>
           <button
             onClick={() => setShowAddModal(true)}
             className="group relative px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-semibold shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-300 hover:scale-105 flex items-center gap-2"
@@ -219,10 +215,11 @@ export default function EmailAccountsPage() {
             Ajouter un compte
           </button>
         </div>
-      </div>
+      </PageHeader>
 
+      <PageSection>
       {/* Accounts Grid */}
-      <div className="max-w-6xl mx-auto">
+      <div>
         {loading ? (
           <div className="text-center py-20">
             <RefreshCw className="w-12 h-12 text-slate-400 animate-spin mx-auto mb-4" />
@@ -489,6 +486,8 @@ export default function EmailAccountsPage() {
           animation: slideUp 0.3s ease-out;
         }
       `}</style>
-    </div>
+      </PageSection>
+      </div>
+    </PageContainer>
   )
 }

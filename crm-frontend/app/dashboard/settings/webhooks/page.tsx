@@ -21,6 +21,10 @@ import {
   Alert,
   Modal,
   Input,
+  PageContainer,
+  PageHeader,
+  PageTitle,
+  PageSection,
 } from '@/components/shared'
 import { useToast } from '@/components/ui/Toast'
 import { useConfirm } from '@/hooks/useConfirm'
@@ -224,17 +228,18 @@ export default function WebhookSettingsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-2">
-        <Link href="/dashboard/settings" className="inline-flex items-center text-sm text-bleu hover:underline">
+    <PageContainer width="default">
+      <PageHeader>
+        <Link href="/dashboard/settings" className="inline-flex items-center text-fluid-sm text-bleu hover:underline mb-spacing-md">
           <LinkIcon className="w-4 h-4 mr-1" />
           Retour aux paramètres
         </Link>
-        <h1 className="text-3xl font-bold text-ardoise">Webhooks & Integrations</h1>
-        <p className="text-gray-600 dark:text-slate-400 max-w-2xl">
-          Automatisez vos intégrations externes en recevant des notifications HTTP lorsqu’un évènement clé se produit dans le CRM.
-        </p>
-      </div>
+        <PageTitle subtitle="Automatisez vos intégrations externes en recevant des notifications HTTP lorsqu'un évènement clé se produit dans le CRM">
+          Webhooks & Integrations
+        </PageTitle>
+      </PageHeader>
+
+      <PageSection>
 
       {error && (
         <Alert
@@ -464,6 +469,7 @@ export default function WebhookSettingsPage() {
   </div>
 </form>
       </Modal>
-    </div>
+      </PageSection>
+    </PageContainer>
   )
 }

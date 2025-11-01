@@ -74,7 +74,7 @@ export function playSound(type: keyof typeof SOUNDS) {
     audio.play().catch(() => {
       // Ignore errors (user interaction required)
     })
-  } catch (error) {
+  } catch (_error) {
     // Ignore
   }
 }
@@ -88,7 +88,7 @@ export function haptic(pattern: keyof typeof HAPTIC_PATTERNS = 'light') {
   try {
     const vibration = HAPTIC_PATTERNS[pattern]
     navigator.vibrate(vibration)
-  } catch (error) {
+  } catch (_error) {
     // Ignore
   }
 }

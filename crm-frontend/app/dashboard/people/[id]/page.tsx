@@ -19,7 +19,7 @@ import { PersonDetailHeader } from '@/components/people/PersonDetailHeader'
 import { PersonInfoCard } from '@/components/people/PersonInfoCard'
 import { PersonOrganizationsSection } from '@/components/people/PersonOrganizationsSection'
 
-interface OrganizationLinkRow extends PersonOrganizationLink {
+interface _OrganizationLinkRow extends PersonOrganizationLink {
   organizationLabel: string
   personLabel: string
 }
@@ -51,6 +51,7 @@ export default function PersonDetailPage() {
     remove,
     updatePersonOrganizationLink,
     deletePersonOrganizationLink,
+    linkPersonToOrganization,
   } = usePeople()
 
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
@@ -146,7 +147,6 @@ export default function PersonDetailPage() {
     setLinkError(undefined)
 
     try {
-      const { linkPersonToOrganization } = usePeople()
       await linkPersonToOrganization(personId, linkPayload.organization_id, linkPayload)
       setIsLinkModalOpen(false)
       setLinkPayload({

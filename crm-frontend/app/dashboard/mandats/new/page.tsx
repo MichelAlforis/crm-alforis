@@ -6,6 +6,7 @@
 import React, { lazy, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Card } from '@/components/shared'
+import { PageContainer, PageHeader, PageSection, PageTitle } from '@/components/shared'
 import { useCreateMandat } from '@/hooks/useMandats'
 import type { MandatDistributionCreate } from '@/lib/types'
 
@@ -28,25 +29,27 @@ export default function NewMandatPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-3xl">
-      <div>
-        <h1 className="text-3xl font-bold text-ardoise">Nouveau mandat de distribution</h1>
-        <p className="text-gray-600 dark:text-slate-400 mt-2">
+    <PageContainer width="narrow">
+      <PageHeader>
+        <PageTitle>Nouveau mandat de distribution</PageTitle>
+        <p className="text-text-secondary mt-2">
           Créez un nouveau mandat de distribution pour une organisation
         </p>
-      </div>
+      </PageHeader>
 
-      <Card>
-        <Suspense fallback={<div className="p-8 text-center">Chargement du formulaire...</div>}>
-          <MandatForm
-            organisationId={organisationId}
-            onSubmit={handleSubmit}
-            isLoading={createMutation.isPending}
-            error={createMutation.error?.message}
-            submitLabel="Créer le mandat"
-          />
-        </Suspense>
-      </Card>
-    </div>
+      <PageSection>
+        <Card>
+          <Suspense fallback={<div className="p-spacing-lg text-center">Chargement du formulaire...</div>}>
+            <MandatForm
+              organisationId={organisationId}
+              onSubmit={handleSubmit}
+              isLoading={createMutation.isPending}
+              error={createMutation.error?.message}
+              submitLabel="Créer le mandat"
+            />
+          </Suspense>
+        </Card>
+      </PageSection>
+    </PageContainer>
   )
 }

@@ -59,7 +59,7 @@ export default function TaskForm({ isOpen, onClose, initialData }: TaskFormProps
     hasMore: hasMoreOrganisations,
     search: searchOrganisations,
     loadMore: loadMoreOrganisations,
-    upsertOption: upsertOrganisationOption,
+    upsertOption: _upsertOrganisationOption,
   } = useOrganisationSelect({
     preloadId: initialData?.organisation_id,
     activeOnly: true,

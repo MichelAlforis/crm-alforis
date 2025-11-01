@@ -9,7 +9,7 @@ import { Eye } from 'lucide-react'
 import { useProduits } from '@/hooks/useProduits'
 import { useFilters } from '@/hooks/useFilters'
 import { usePagination } from '@/hooks/usePagination'
-import { Card, Button, Input, Alert, AdvancedFilters } from '@/components/shared'
+import { Card, Button, Input, Alert, AdvancedFilters, PageContainer, PageHeader, PageSection, PageTitle } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { ProduitType, ProduitStatus } from '@/lib/types'
@@ -119,7 +119,7 @@ export default function ProduitsPage() {
       priority: 'medium',
       minWidth: '140px',
       render: (value: string | null) => (
-        <span className="font-mono text-sm">{value || '-'}</span>
+        <span className="font-mono text-fluid-sm">{value || '-'}</span>
       ),
     },
     {
@@ -162,83 +162,87 @@ export default function ProduitsPage() {
   ]
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-ardoise">Produits</h1>
-          <p className="text-gray-600 dark:text-slate-400 mt-1">
-            Gérez vos produits financiers (OPCVM, ETF, SCPI, Assurance Vie, PER, etc.)
-          </p>
+    <PageContainer width="default">
+      <PageHeader>
+        <div className="flex items-center justify-between">
+          <div>
+            <PageTitle>Produits</PageTitle>
+            <p className="text-text-secondary mt-1">
+              Gérez vos produits financiers (OPCVM, ETF, SCPI, Assurance Vie, PER, etc.)
+            </p>
+          </div>
+          <Link href="/dashboard/produits/new">
+            <Button variant="primary">+ Nouveau produit</Button>
+          </Link>
         </div>
-        <Link href="/dashboard/produits/new">
-          <Button variant="primary">+ Nouveau produit</Button>
-        </Link>
-      </div>
+      </PageHeader>
 
-      <Card>
-        <div className="space-y-4">
-          <Input
-            placeholder="Rechercher par nom ou ISIN..."
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
+      <PageSection>
+        <Card>
+          <div className="space-y-spacing-md">
+            <Input
+              placeholder="Rechercher par nom ou ISIN..."
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
+            <AdvancedFilters
+              filters={advancedFilterDefinitions}
+              values={filters.values}
+              onChange={filters.handleChange}
+              onReset={filters.reset}
+            />
+          </div>
+        </Card>
+
+        {error && <Alert type="error" message={error.message || 'Erreur de chargement'} />}
+
+        <Card>
+          <TableV2<Produit>
+            columns={columns}
+            data={filteredData?.slice(pagination.skip, pagination.skip + pagination.limit) || []}
+            getRowKey={(row: any) => row.id.toString()}
+            size="md"
+            variant="default"
+            stickyHeader
+            emptyMessage="Aucun produit trouvé"
           />
-          <AdvancedFilters
-            filters={advancedFilterDefinitions}
-            values={filters.values}
-            onChange={filters.handleChange}
-            onReset={filters.reset}
-          />
-        </div>
-      </Card>
 
-      {error && <Alert type="error" message={error.message || 'Erreur de chargement'} />}
-
-      <Card>
-        <TableV2<Produit>
-          columns={columns}
-          data={filteredData?.slice(pagination.skip, pagination.skip + pagination.limit) || []}
-          getRowKey={(row: any) => row.id.toString()}
-          size="md"
-          variant="default"
-          stickyHeader
-          emptyMessage="Aucun produit trouvé"
-        />
-
-        {/* Pagination personnalisée */}
-        {filteredData && filteredData.length > 0 && (
-          <div className="flex items-center justify-between mt-4 pt-4 border-t border-border px-4">
-            <div className="text-sm text-text-secondary">
-              Page {Math.floor(pagination.skip / pagination.limit) + 1} sur {Math.ceil(filteredData.length / pagination.limit)} ({filteredData.length} produits au total)
+          {/* Pagination personnalisée */}
+          {filteredData && filteredData.length > 0 && (
+            <div className="flex items-center justify-between mt-spacing-md pt-spacing-md border-t border-border px-spacing-md">
+              <div className="text-fluid-sm text-text-secondary">
+                Page {Math.floor(pagination.skip / pagination.limit) + 1} sur {Math.ceil(filteredData.length / pagination.limit)} ({filteredData.length} produits au total)
+              </div>
+              <div className="flex items-center gap-spacing-sm">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => pagination.setSkip(Math.max(0, pagination.skip - pagination.limit))}
+                  disabled={pagination.skip === 0}
+                >
+                  Précédent
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => pagination.setSkip(pagination.skip + pagination.limit)}
+                  disabled={pagination.skip + pagination.limit >= filteredData.length}
+                >
+                  Suivant
+                </Button>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => pagination.setSkip(Math.max(0, pagination.skip - pagination.limit))}
-                disabled={pagination.skip === 0}
-              >
-                Précédent
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => pagination.setSkip(pagination.skip + pagination.limit)}
-                disabled={pagination.skip + pagination.limit >= filteredData.length}
-              >
-                Suivant
-              </Button>
-            </div>
+          )}
+        </Card>
+
+        {data && (
+          <div className="flex items-center justify-between text-fluid-sm text-text-secondary">
+            <p>
+              Total: {filteredData?.length || 0} / {data.total} produits
+            </p>
           </div>
         )}
-      </Card>
-
-      {data && (
-        <div className="flex items-center justify-between text-sm text-gray-600 dark:text-slate-400">
-          <p>
-            Total: {filteredData?.length || 0} / {data.total} produits
-          </p>
-        </div>
-      )}
-    </div>
+      </PageSection>
+    </PageContainer>
   )
 }

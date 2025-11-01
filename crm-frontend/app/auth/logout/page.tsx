@@ -6,6 +6,7 @@
 import { useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { Card } from '@/components/shared'
+import { PageContainer } from '@/components/shared'
 
 export default function LogoutPage() {
   const { logout } = useAuth()
@@ -16,9 +17,11 @@ export default function LogoutPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <Card>
-        <p className="text-center">Déconnexion en cours...</p>
-      </Card>
+      <PageContainer width="narrow">
+        <Card>
+          <p className="text-center text-text-primary">Déconnexion en cours...</p>
+        </Card>
+      </PageContainer>
     </div>
   )
 }

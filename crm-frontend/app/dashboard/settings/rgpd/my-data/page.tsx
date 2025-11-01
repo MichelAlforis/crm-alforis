@@ -14,6 +14,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useToast } from '@/components/ui/Toast'
 import { apiClient } from '@/lib/api'
 import { format } from 'date-fns'
+import { PageContainer, PageHeader, PageSection, PageTitle } from '@/components/shared'
 
 export default function MyDataPage() {
   const { user, logout } = useAuth()
@@ -86,18 +87,17 @@ export default function MyDataPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
+    <PageContainer width="narrow">
+      <PageHeader>
+        <div className="flex items-center gap-spacing-sm mb-2">
           <Shield className="w-8 h-8 text-blue-600" />
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Mes données personnelles</h1>
+          <PageTitle subtitle="Gérez vos données personnelles conformément au RGPD (Règlement Général sur la Protection des Données)">
+            Mes données personnelles
+          </PageTitle>
         </div>
-        <p className="text-gray-600 dark:text-slate-400">
-          Gérez vos données personnelles conformément au RGPD (Règlement Général sur la Protection
-          des Données)
-        </p>
-      </div>
+      </PageHeader>
+
+      <PageSection>
 
       {/* User Info */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
@@ -307,6 +307,7 @@ export default function MyDataPage() {
           </div>
         </div>
       )}
-    </div>
+      </PageSection>
+    </PageContainer>
   )
 }

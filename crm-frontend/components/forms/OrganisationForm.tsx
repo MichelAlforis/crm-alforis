@@ -81,7 +81,11 @@ export function OrganisationForm({
   const handleFormSubmit = async (data: OrganisationCreate) => {
     try {
       await onSubmit(data)
-      initialData ? toast.successUpdate() : toast.successCreate()
+      if (initialData) {
+        toast.successUpdate()
+      } else {
+        toast.successCreate()
+      }
     } catch (err: any) {
       toast.error(err)
       throw err

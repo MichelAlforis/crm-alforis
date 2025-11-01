@@ -2,7 +2,7 @@
 import { logger } from '@/lib/logger'
 
 import { useInbox, useUpdateInteractionStatus, useUpdateInteractionNextAction } from '@/hooks/useInteractions'
-import { AdvancedFilters } from '@/components/shared'
+import { AdvancedFilters, PageContainer, PageHeader, PageSection, PageTitle } from '@/components/shared'
 import { useFilters } from '@/hooks/useFilters'
 import type { Interaction, InteractionStatus } from '@/types/interaction'
 import {
@@ -272,112 +272,106 @@ export default function InboxPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20">
-      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-6 lg:mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                  </svg>
-                </div>
-                <div>
-                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-slate-100">Inbox</h1>
-                  <p className="text-sm text-gray-600 dark:text-slate-400 mt-0.5">Actions à traiter et suivis en cours</p>
-                </div>
+    <PageContainer width="wide" spacing="normal">
+      <PageHeader>
+        <div className="flex items-center gap-spacing-md mb-spacing-xs">
+          <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg">
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+            </svg>
+          </div>
+          <PageTitle subtitle="Actions à traiter et suivis en cours">
+            Inbox
+          </PageTitle>
+        </div>
+
+        {/* Filters */}
+        <div className="mt-spacing-lg">
+          <AdvancedFilters
+            filters={advancedFilterDefinitions}
+            values={filters.values as unknown as Record<string, unknown>}
+            onChange={filters.handleChange}
+            onReset={filters.reset}
+          />
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-spacing-md sm:gap-spacing-lg mt-spacing-lg">
+          <div className="bg-white dark:bg-slate-900/80 backdrop-blur-sm border border-gray-200 dark:border-slate-700 rounded-xl px-spacing-md py-spacing-sm shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-spacing-xs">
+              <div className="w-8 h-8 bg-gray-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
+                <svg className="w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-fluid-xs text-text-secondary">Total</p>
+                <p className="text-fluid-lg font-bold text-text-primary">{total}</p>
               </div>
             </div>
           </div>
 
-          {/* Filters */}
-          <div className="mt-6">
-            <AdvancedFilters
-              filters={advancedFilterDefinitions}
-              values={filters.values as unknown as Record<string, unknown>}
-              onChange={filters.handleChange}
-              onReset={filters.reset}
-            />
+          <div className="bg-white dark:bg-slate-900/80 backdrop-blur-sm border border-gray-200 dark:border-slate-700 rounded-xl px-spacing-md py-spacing-sm shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-spacing-xs">
+              <div className="w-8 h-8 bg-gray-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
+                <svg className="w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-fluid-xs text-text-secondary">À faire</p>
+                <p className="text-fluid-lg font-bold text-text-primary">{stats.todo}</p>
+              </div>
+            </div>
           </div>
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-6">
-            <div className="bg-white dark:bg-slate-900/80 backdrop-blur-sm border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-gray-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
-                  <svg className="w-4 h-4 text-gray-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-600 dark:text-slate-400">Total</p>
-                  <p className="text-lg font-bold text-gray-900 dark:text-slate-100">{total}</p>
-                </div>
+          <div className="bg-white dark:bg-slate-900/80 backdrop-blur-sm border border-blue-200 rounded-xl px-spacing-md py-spacing-sm shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-spacing-xs">
+              <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-fluid-xs text-text-secondary">En cours</p>
+                <p className="text-fluid-lg font-bold text-blue-600">{stats.in_progress}</p>
               </div>
             </div>
+          </div>
 
-            <div className="bg-white dark:bg-slate-900/80 backdrop-blur-sm border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-gray-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
-                  <svg className="w-4 h-4 text-gray-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-600 dark:text-slate-400">À faire</p>
-                  <p className="text-lg font-bold text-gray-900 dark:text-slate-100">{stats.todo}</p>
-                </div>
+          <div className="bg-white dark:bg-slate-900/80 backdrop-blur-sm border border-green-200 rounded-xl px-spacing-md py-spacing-sm shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-spacing-xs">
+              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
               </div>
-            </div>
-
-            <div className="bg-white dark:bg-slate-900/80 backdrop-blur-sm border border-blue-200 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-600 dark:text-slate-400">En cours</p>
-                  <p className="text-lg font-bold text-blue-600">{stats.in_progress}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white dark:bg-slate-900/80 backdrop-blur-sm border border-green-200 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-600 dark:text-slate-400">Terminées</p>
-                  <p className="text-lg font-bold text-green-600">{stats.done}</p>
-                </div>
+              <div>
+                <p className="text-fluid-xs text-text-secondary">Terminées</p>
+                <p className="text-fluid-lg font-bold text-green-600">{stats.done}</p>
               </div>
             </div>
           </div>
         </div>
+      </PageHeader>
 
-        {/* List */}
-        <div className="space-y-3">
+      {/* List */}
+      <PageSection>
+        <div className="space-y-spacing-sm">
           {isLoading ? (
-            <div className="bg-white dark:bg-slate-900/80 backdrop-blur-sm rounded-xl p-12 text-center">
+            <div className="bg-white dark:bg-slate-900/80 backdrop-blur-sm rounded-xl p-spacing-3xl text-center">
               <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-              <p className="mt-4 text-sm text-gray-600 dark:text-slate-400">Chargement...</p>
+              <p className="mt-spacing-md text-fluid-sm text-text-secondary">Chargement...</p>
             </div>
           ) : interactions.length === 0 ? (
-            <div className="bg-white dark:bg-slate-900/80 backdrop-blur-sm rounded-xl p-12 text-center">
-              <div className="w-16 h-16 bg-gray-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="bg-white dark:bg-slate-900/80 backdrop-blur-sm rounded-xl p-spacing-3xl text-center">
+              <div className="w-16 h-16 bg-gray-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-spacing-md">
                 <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                 </svg>
               </div>
-              <p className="text-gray-500 text-sm">Aucune interaction à traiter</p>
-              <p className="text-gray-400 text-xs mt-1">Changez les filtres ou créez une nouvelle interaction</p>
+              <p className="text-text-secondary text-fluid-sm">Aucune interaction à traiter</p>
+              <p className="text-gray-400 text-fluid-xs mt-spacing-xs">Changez les filtres ou créez une nouvelle interaction</p>
             </div>
           ) : (
             interactions.map((interaction) => (
@@ -389,7 +383,7 @@ export default function InboxPage() {
             ))
           )}
         </div>
-      </div>
-    </div>
+      </PageSection>
+    </PageContainer>
   )
 }

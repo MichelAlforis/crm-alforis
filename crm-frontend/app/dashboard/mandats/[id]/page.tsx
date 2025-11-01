@@ -11,6 +11,7 @@ import { useProduitsByMandat, useDeleteMandatProduitAssociation } from '@/hooks/
 import { useConfirm } from '@/hooks/useConfirm'
 import { useEntityDetail } from '@/hooks/useEntityDetail'
 import { Card, Button, Alert, Modal } from '@/components/shared'
+import { PageContainer, PageHeader, PageSection, PageTitle } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { Eye, Trash2 } from 'lucide-react'
@@ -98,23 +99,31 @@ export default function MandatDetailPage() {
   }
 
   if (mandatId === null) {
-    return <div className="text-center p-6">Mandat introuvable</div>
+    return (
+      <PageContainer width="default">
+        <div className="text-center p-spacing-lg">Mandat introuvable</div>
+      </PageContainer>
+    )
   }
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <SkeletonCard />
-        <SkeletonCard />
-      </div>
+      <PageContainer width="default">
+        <div className="space-y-spacing-lg">
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
+      </PageContainer>
     )
   }
 
   if (error || !mandat) {
     return (
-      <div className="text-center p-6">
-        <Alert type="error" message="Mandat non trouvé" />
-      </div>
+      <PageContainer width="default">
+        <div className="text-center p-spacing-lg">
+          <Alert type="error" message="Mandat non trouvé" />
+        </div>
+      </PageContainer>
     )
   }
 
@@ -236,135 +245,138 @@ export default function MandatDetailPage() {
   }))
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-ardoise">
-            {mandat.numero_mandat ? mandat.numero_mandat : `Mandat #${mandat.id}`}
-          </h1>
-          <p className="text-gray-600 dark:text-slate-400 mt-1">
-            <Link
-              href={`/dashboard/organisations/${mandat.organisation.id}`}
-              className="text-bleu hover:underline"
-            >
-              {mandat.organisation.name}
-            </Link>{' '}
-            •{' '}
-            <span
-              className={
-                isActif ? 'text-green-600 font-semibold' : 'text-gray-500'
-              }
-            >
-              {MANDAT_STATUS_LABELS[mandat.status]}
-            </span>
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="secondary" onClick={() => setIsEditModalOpen(true)}>
-            Modifier
-          </Button>
-          <Button variant="danger" onClick={handleDeleteClick} disabled={deleteMutation.isPending}>
-            {deleteMutation.isPending ? 'Suppression...' : 'Supprimer'}
-          </Button>
-        </div>
-      </div>
-
-      {/* Informations du mandat */}
-      <Card>
-        <h2 className="text-xl font-semibold mb-4">Informations du mandat</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <PageContainer width="default">
+      <PageHeader>
+        <div className="flex items-start justify-between">
           <div>
-            <p className="text-sm text-gray-600 dark:text-slate-400">Date de début</p>
-            <p className="font-medium">
-              {mandat.date_debut ? new Date(mandat.date_debut).toLocaleDateString('fr-FR') : '-'}
+            <PageTitle>
+              {mandat.numero_mandat ? mandat.numero_mandat : `Mandat #${mandat.id}`}
+            </PageTitle>
+            <p className="text-text-secondary mt-1">
+              <Link
+                href={`/dashboard/organisations/${mandat.organisation.id}`}
+                className="text-bleu hover:underline"
+              >
+                {mandat.organisation.name}
+              </Link>{' '}
+              •{' '}
+              <span
+                className={
+                  isActif ? 'text-green-600 font-semibold' : 'text-text-tertiary'
+                }
+              >
+                {MANDAT_STATUS_LABELS[mandat.status]}
+              </span>
             </p>
           </div>
-          <div>
-            <p className="text-sm text-gray-600 dark:text-slate-400">Date de fin</p>
-            <p className="font-medium">
-              {mandat.date_fin
-                ? new Date(mandat.date_fin).toLocaleDateString('fr-FR')
-                : 'Indéterminée'}
-            </p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600 dark:text-slate-400">Statut</p>
-            <p className="font-medium">{MANDAT_STATUS_LABELS[mandat.status]}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600 dark:text-slate-400">Mandat actif</p>
-            <p className="font-medium">
-              {isActif ? (
-                <span className="text-green-600">✓ Oui</span>
-              ) : (
-                <span className="text-gray-500">✗ Non</span>
-              )}
-            </p>
+          <div className="flex gap-2">
+            <Button variant="secondary" onClick={() => setIsEditModalOpen(true)}>
+              Modifier
+            </Button>
+            <Button variant="danger" onClick={handleDeleteClick} disabled={deleteMutation.isPending}>
+              {deleteMutation.isPending ? 'Suppression...' : 'Supprimer'}
+            </Button>
           </div>
         </div>
+      </PageHeader>
 
-        {isActif && (
-          <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded text-sm text-green-700">
-            ℹ️ Ce mandat est actif. Les produits associés peuvent être utilisés dans les
-            interactions.
-          </div>
-        )}
-      </Card>
-
-      {/* Produits associés */}
-      <Card>
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h2 className="text-xl font-semibold">Produits associés ({produitRows.length})</h2>
-            {produitRows.length > 0 && (
-              <p className="text-sm text-gray-600 dark:text-slate-400 mt-1">
-                Total allocation:{' '}
-                <span className={`font-semibold ${totalAllocation === 100 ? 'text-green-600' : 'text-orange-600'}`}>
-                  {totalAllocation.toFixed(2)}%
-                </span>
-                {totalAllocation !== 100 && (
-                  <span className="ml-2 text-orange-600">
-                    ⚠️ Devrait être 100%
-                  </span>
+      <PageSection>
+        {/* Informations du mandat */}
+        <Card>
+          <h2 className="text-fluid-xl font-semibold mb-spacing-md">Informations du mandat</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p className="text-fluid-sm text-text-secondary">Date de début</p>
+              <p className="font-medium">
+                {mandat.date_debut ? new Date(mandat.date_debut).toLocaleDateString('fr-FR') : '-'}
+              </p>
+            </div>
+            <div>
+              <p className="text-fluid-sm text-text-secondary">Date de fin</p>
+              <p className="font-medium">
+                {mandat.date_fin
+                  ? new Date(mandat.date_fin).toLocaleDateString('fr-FR')
+                  : 'Indéterminée'}
+              </p>
+            </div>
+            <div>
+              <p className="text-fluid-sm text-text-secondary">Statut</p>
+              <p className="font-medium">{MANDAT_STATUS_LABELS[mandat.status]}</p>
+            </div>
+            <div>
+              <p className="text-fluid-sm text-text-secondary">Mandat actif</p>
+              <p className="font-medium">
+                {isActif ? (
+                  <span className="text-green-600">✓ Oui</span>
+                ) : (
+                  <span className="text-text-tertiary">✗ Non</span>
                 )}
               </p>
-            )}
+            </div>
           </div>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => setIsAssociationModalOpen(true)}
-            disabled={!isActif}
-          >
-            + Associer un produit
-          </Button>
-        </div>
 
-        {!isActif && (
-          <Alert
-            type="warning"
-            message="Le mandat doit être signé ou actif pour associer des produits."
-          />
-        )}
+          {isActif && (
+            <div className="mt-spacing-md p-spacing-sm bg-green-50 border border-green-200 rounded text-fluid-sm text-green-700">
+              ℹ️ Ce mandat est actif. Les produits associés peuvent être utilisés dans les
+              interactions.
+            </div>
+          )}
+        </Card>
 
-        {produitRows.length > 0 ? (
-          <TableV2<ProduitRow>
-            columns={produitColumns}
-            data={produitRows}
-            isLoading={false}
-            isEmpty={false}
-            rowKey={(row) => row.id.toString()}
-            size="md"
-            variant="default"
-            stickyHeader
-          />
-        ) : (
-          <div className="text-center py-8 text-gray-500">
-            Aucun produit associé à ce mandat.
+        {/* Produits associés */}
+        <Card>
+          <div className="flex items-center justify-between mb-spacing-md">
+            <div>
+              <h2 className="text-fluid-xl font-semibold">Produits associés ({produitRows.length})</h2>
+              {produitRows.length > 0 && (
+                <p className="text-fluid-sm text-text-secondary mt-1">
+                  Total allocation:{' '}
+                  <span className={`font-semibold ${totalAllocation === 100 ? 'text-green-600' : 'text-orange-600'}`}>
+                    {totalAllocation.toFixed(2)}%
+                  </span>
+                  {totalAllocation !== 100 && (
+                    <span className="ml-2 text-orange-600">
+                      ⚠️ Devrait être 100%
+                    </span>
+                  )}
+                </p>
+              )}
+            </div>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => setIsAssociationModalOpen(true)}
+              disabled={!isActif}
+            >
+              + Associer un produit
+            </Button>
           </div>
-        )}
-      </Card>
+
+          {!isActif && (
+            <Alert
+              type="warning"
+              message="Le mandat doit être signé ou actif pour associer des produits."
+            />
+          )}
+
+          {produitRows.length > 0 ? (
+            <TableV2<ProduitRow>
+              columns={produitColumns}
+              data={produitRows}
+              isLoading={false}
+              isEmpty={false}
+              rowKey={(row) => row.id.toString()}
+              size="md"
+              variant="default"
+              stickyHeader
+            />
+          ) : (
+            <div className="text-center py-8 text-text-tertiary">
+              Aucun produit associé à ce mandat.
+            </div>
+          )}
+        </Card>
+      </PageSection>
 
       {/* Modal d'édition */}
       <Modal
@@ -392,6 +404,6 @@ export default function MandatDetailPage() {
 
       {/* Confirmation Dialogs */}
       <ConfirmDialogComponent />
-    </div>
+    </PageContainer>
   )
 }

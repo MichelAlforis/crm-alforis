@@ -11,6 +11,7 @@ import { useMandats } from '@/hooks/useMandats'
 import { useFilters } from '@/hooks/useFilters'
 import { usePagination } from '@/hooks/usePagination'
 import { Card, Button, Alert, AdvancedFilters, ExportButtons } from '@/components/shared'
+import { PageContainer, PageHeader, PageSection, PageTitle } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { SearchEntity } from '@/components/shared/Search'
@@ -231,99 +232,103 @@ export default function MandatsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <PageContainer width="default">
       {/* Breadcrumb */}
       <Link
         href="/dashboard"
-        className="inline-flex items-center gap-2 text-gray-600 dark:text-slate-400 hover:text-bleu transition-colors mb-2"
+        className="inline-flex items-center gap-2 text-text-secondary hover:text-bleu transition-colors mb-spacing-md"
       >
         <ArrowLeft className="w-5 h-5" />
         <span className="font-medium">Retour à l'annuaire</span>
       </Link>
 
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-ardoise">Mandats de distribution</h1>
-          <p className="text-gray-600 dark:text-slate-400 mt-1">
-            Gérez les mandats de distribution de vos organisations
-          </p>
+      <PageHeader>
+        <div className="flex items-center justify-between">
+          <div>
+            <PageTitle>Mandats de distribution</PageTitle>
+            <p className="text-text-secondary mt-1">
+              Gérez les mandats de distribution de vos organisations
+            </p>
+          </div>
+          <Link href="/dashboard/mandats/new">
+            <Button variant="primary">+ Nouveau mandat</Button>
+          </Link>
         </div>
-        <Link href="/dashboard/mandats/new">
-          <Button variant="primary">+ Nouveau mandat</Button>
-        </Link>
-      </div>
+      </PageHeader>
 
-      <Card>
-        <div className="space-y-4">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <SearchEntity
-              placeholder="Rechercher un mandat…"
-              entityType="mandats"
-              onQueryChange={setSearchQuery}
-              onSubmit={setSearchQuery}
-              onSelectSuggestion={(suggestion) => {
-                if (suggestion?.id) {
-                  router.push(`/dashboard/mandats/${suggestion.id}`)
-                }
-              }}
-            />
-            <ExportButtons
-              resource="mandats"
-              params={exportParams}
-              baseFilename="mandats"
+      <PageSection>
+        <Card>
+          <div className="space-y-spacing-md">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <SearchEntity
+                placeholder="Rechercher un mandat…"
+                entityType="mandats"
+                onQueryChange={setSearchQuery}
+                onSubmit={setSearchQuery}
+                onSelectSuggestion={(suggestion) => {
+                  if (suggestion?.id) {
+                    router.push(`/dashboard/mandats/${suggestion.id}`)
+                  }
+                }}
+              />
+              <ExportButtons
+                resource="mandats"
+                params={exportParams}
+                baseFilename="mandats"
+              />
+            </div>
+            <AdvancedFilters
+              filters={advancedFilterDefinitions}
+              values={filters.values as Record<string, unknown>}
+              onChange={filters.handleChange}
+              onReset={filters.reset}
             />
           </div>
-          <AdvancedFilters
-            filters={advancedFilterDefinitions}
-            values={filters.values as Record<string, unknown>}
-            onChange={filters.handleChange}
-            onReset={filters.reset}
+        </Card>
+
+        {error && <Alert type="error" message={error.message || 'Erreur de chargement'} />}
+
+        <Card>
+          <TableV2<Mandat>
+            columns={columns}
+            data={paginatedMandats as Mandat[]}
+            rowKey={(row) => row.id.toString()}
+            sortConfig={sortConfig}
+            onSort={handleSort}
+            size="md"
+            variant="default"
+            stickyHeader
+            emptyMessage="Aucun mandat trouvé"
           />
-        </div>
-      </Card>
 
-      {error && <Alert type="error" message={error.message || 'Erreur de chargement'} />}
-
-      <Card>
-        <TableV2<Mandat>
-          columns={columns}
-          data={paginatedMandats as Mandat[]}
-          rowKey={(row) => row.id.toString()}
-          sortConfig={sortConfig}
-          onSort={handleSort}
-          size="md"
-          variant="default"
-          stickyHeader
-          emptyMessage="Aucun mandat trouvé"
-        />
-
-        {/* Pagination personnalisée */}
-        {filteredMandats.length > 0 && (
-          <div className="flex items-center justify-between mt-4 pt-4 border-t border-border px-4">
-            <div className="text-sm text-text-secondary">
-              Page {Math.floor(pagination.skip / pagination.limit) + 1} sur {Math.ceil(filteredMandats.length / pagination.limit)} ({filteredMandats.length} mandats au total)
+          {/* Pagination personnalisée */}
+          {filteredMandats.length > 0 && (
+            <div className="flex items-center justify-between mt-spacing-md pt-spacing-md border-t border-border px-spacing-md">
+              <div className="text-fluid-sm text-text-secondary">
+                Page {Math.floor(pagination.skip / pagination.limit) + 1} sur {Math.ceil(filteredMandats.length / pagination.limit)} ({filteredMandats.length} mandats au total)
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => pagination.setSkip(Math.max(0, pagination.skip - pagination.limit))}
+                  disabled={pagination.skip === 0}
+                >
+                  Précédent
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => pagination.setSkip(pagination.skip + pagination.limit)}
+                  disabled={pagination.skip + pagination.limit >= filteredMandats.length}
+                >
+                  Suivant
+                </Button>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => pagination.setSkip(Math.max(0, pagination.skip - pagination.limit))}
-                disabled={pagination.skip === 0}
-              >
-                Précédent
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => pagination.setSkip(pagination.skip + pagination.limit)}
-                disabled={pagination.skip + pagination.limit >= filteredMandats.length}
-              >
-                Suivant
-              </Button>
-            </div>
-          </div>
-        )}
-      </Card>
-    </div>
+          )}
+        </Card>
+      </PageSection>
+    </PageContainer>
   )
 }

@@ -105,13 +105,13 @@ export default function ForgotPasswordPage() {
             }}
           >
             {/* Content */}
-            <div className="relative p-8 md:p-10">
+            <div className="relative p-spacing-2xl md:p-spacing-3xl">
               {/* Logo */}
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="flex justify-center mb-8"
+                className="flex justify-center mb-spacing-2xl"
               >
                 <Link href="/auth/login" className="inline-block transition-opacity hover:opacity-80">
                   <svg
@@ -151,12 +151,12 @@ export default function ForgotPasswordPage() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
-                    className="text-center mb-6"
+                    className="text-center mb-spacing-lg"
                   >
-                    <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                    <h1 className="text-fluid-2xl font-bold text-text-primary mb-spacing-xs">
                       Mot de passe oublié?
                     </h1>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-fluid-sm text-text-secondary">
                       Entrez votre email pour recevoir un lien de réinitialisation
                     </p>
                   </motion.div>
@@ -167,10 +167,10 @@ export default function ForgotPasswordPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 }}
                     onSubmit={handleSubmit}
-                    className="space-y-6"
+                    className="space-y-spacing-lg"
                   >
                     <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label htmlFor="email" className="block text-fluid-sm font-medium text-text-primary mb-spacing-xs">
                         Email
                       </label>
                       <input
@@ -180,7 +180,7 @@ export default function ForgotPasswordPage() {
                         onChange={(e) => setEmail(e.target.value)}
                         required
                         disabled={isLoading}
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full px-spacing-md py-spacing-sm rounded-lg border border-border focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                         placeholder="votre@email.com"
                       />
                     </div>
@@ -188,7 +188,7 @@ export default function ForgotPasswordPage() {
                     <button
                       type="submit"
                       disabled={isLoading}
-                      className="w-full py-3 px-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-medium rounded-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-lg shadow-orange-500/30"
+                      className="w-full py-spacing-sm px-spacing-md bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-medium rounded-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-lg shadow-orange-500/30"
                     >
                       {isLoading ? 'Envoi en cours...' : 'Envoyer le lien'}
                     </button>
@@ -198,20 +198,20 @@ export default function ForgotPasswordPage() {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-6"
+                  className="text-center py-spacing-lg"
                 >
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-spacing-md">
                     <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <h2 className="text-xl font-bold text-gray-900 mb-2">Email envoyé!</h2>
-                  <p className="text-sm text-gray-600 mb-6">
+                  <h2 className="text-fluid-xl font-bold text-text-primary mb-spacing-xs">Email envoyé!</h2>
+                  <p className="text-fluid-sm text-text-secondary mb-spacing-lg">
                     Si cet email existe dans notre système, vous recevrez un lien de réinitialisation.
                   </p>
                   <Link
                     href="/auth/login"
-                    className="text-sm font-medium text-orange-500 hover:text-orange-600 transition-colors"
+                    className="text-fluid-sm font-medium text-orange-500 hover:text-orange-600 transition-colors"
                   >
                     Retour à la connexion
                   </Link>
@@ -224,11 +224,11 @@ export default function ForgotPasswordPage() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.5 }}
-                  className="mt-6 text-center"
+                  className="mt-spacing-lg text-center"
                 >
                   <Link
                     href="/auth/login"
-                    className="text-sm font-medium text-gray-600 hover:text-orange-500 transition-colors inline-flex items-center gap-1 group"
+                    className="text-fluid-sm font-medium text-text-secondary hover:text-orange-500 transition-colors inline-flex items-center gap-1 group"
                   >
                     <svg className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />

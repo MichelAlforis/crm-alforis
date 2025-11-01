@@ -159,13 +159,13 @@ function ResetPasswordForm() {
             }}
           >
             {/* Content */}
-            <div className="relative p-8 md:p-10">
+            <div className="relative p-spacing-2xl md:p-spacing-3xl">
               {/* Logo */}
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="flex justify-center mb-8"
+                className="flex justify-center mb-spacing-2xl"
               >
                 <Link href="/auth/login" className="inline-block transition-opacity hover:opacity-80">
                   <svg
@@ -205,12 +205,12 @@ function ResetPasswordForm() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
-                    className="text-center mb-6"
+                    className="text-center mb-spacing-lg"
                   >
-                    <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                    <h1 className="text-fluid-2xl font-bold text-text-primary mb-spacing-xs">
                       Nouveau mot de passe
                     </h1>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-fluid-sm text-text-secondary">
                       Choisissez un nouveau mot de passe pour votre compte
                     </p>
                   </motion.div>
@@ -221,10 +221,10 @@ function ResetPasswordForm() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 }}
                     onSubmit={handleSubmit}
-                    className="space-y-6"
+                    className="space-y-spacing-lg"
                   >
                     <div>
-                      <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label htmlFor="newPassword" className="block text-fluid-sm font-medium text-text-primary mb-spacing-xs">
                         Nouveau mot de passe
                       </label>
                       <input
