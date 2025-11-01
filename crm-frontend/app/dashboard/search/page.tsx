@@ -2,7 +2,6 @@
 // app/dashboard/search/page.tsx — version optimisée
 // ============================
 import React from 'react'
-import { PageContainer } from '@/components/layout/PageContainer'
 import { headers } from 'next/headers'
 import type { SearchItem } from '@/lib/search'
 import {
