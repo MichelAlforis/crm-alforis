@@ -179,7 +179,7 @@ jobs:
           DEBUG: "false"
         run: |
           cd crm-backend
-          pytest --cov=. --cov-report=xml --cov-report=html --cov-report=term-missing -v || echo "⚠️ Backend tests failed (non-blocking)"
+          pytest --cov=. --cov-report=xml --cov-report=html --cov-report=term-missing -v -n auto || echo "⚠️ Backend tests failed (non-blocking)"
 
       - name: 📊 Upload coverage to Codecov
         uses: codecov/codecov-action@v4
