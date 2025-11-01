@@ -379,7 +379,7 @@ jobs:
         with:
           args: >
             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            -Dsonar.projectKey=alforis-crm
+            -Dsonar.projectKey=MichelAlforis_crm-alforis
             -Dsonar.python.coverage.reportPaths=crm-backend/coverage.xml
             -Dsonar.javascript.lcov.reportPaths=crm-frontend/coverage/lcov.info
             -Dsonar.sources=crm-backend,crm-frontend
