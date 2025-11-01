@@ -42,6 +42,7 @@ export default function OrganisationsPage() {
         id: 'name',
         header: 'Nom',
         accessor: 'name',
+        priority: 'high',
         sortable: true,
         searchable: true,
         render: (value: unknown, row: any) => (
@@ -58,6 +59,7 @@ export default function OrganisationsPage() {
         id: 'category',
         header: 'Catégorie',
         accessor: 'category',
+        priority: 'high',
         sortable: true,
         searchable: true,
         render: (value: OrganisationCategory | null) =>
@@ -73,6 +75,7 @@ export default function OrganisationsPage() {
         id: 'email',
         header: 'Email',
         accessor: 'email',
+        priority: 'medium',
         sortable: true,
         searchable: true,
         render: (value: any) =>
@@ -93,6 +96,7 @@ export default function OrganisationsPage() {
         id: 'phone',
         header: 'Téléphone',
         accessor: 'main_phone',
+        priority: 'medium',
         sortable: true,
         render: (value: any) =>
           value ? (
@@ -112,6 +116,7 @@ export default function OrganisationsPage() {
         id: 'country',
         header: 'Pays',
         accessor: 'country_code',
+        priority: 'high',
         sortable: true,
         render: (value: any) => {
           const label = getCountryLabel(value)
@@ -126,6 +131,7 @@ export default function OrganisationsPage() {
         id: 'language',
         header: 'Langue',
         accessor: 'language',
+        priority: 'low',
         sortable: true,
         render: (value: any) => {
           const label = getLanguageLabel(value)
@@ -140,6 +146,7 @@ export default function OrganisationsPage() {
         id: 'website',
         header: 'Site web',
         accessor: 'website',
+        priority: 'low',
         sortable: true,
         render: (value: any) =>
           value ? (
@@ -161,6 +168,7 @@ export default function OrganisationsPage() {
         id: 'status',
         header: 'Statut',
         accessor: 'is_active',
+        priority: 'high',
         sortable: true,
         render: (value: boolean) => (
           <span

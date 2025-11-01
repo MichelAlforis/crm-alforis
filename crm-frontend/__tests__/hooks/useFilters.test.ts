@@ -14,9 +14,9 @@ describe('useFilters', () => {
       status: '',
     }
 
-    const { result } = renderHook(() => useFilters(defaultFilters))
+    const { result } = renderHook(() => useFilters({ initialValues: defaultFilters }))
 
-    expect(result.current.filters).toEqual(defaultFilters)
+    expect(result.current.values).toEqual(defaultFilters)
   })
 
   it('should update single filter', () => {
@@ -26,14 +26,14 @@ describe('useFilters', () => {
       status: '',
     }
 
-    const { result } = renderHook(() => useFilters(defaultFilters))
+    const { result } = renderHook(() => useFilters({ initialValues: defaultFilters }))
 
     act(() => {
       result.current.setFilter('search', 'test query')
     })
 
-    expect(result.current.filters.search).toBe('test query')
-    expect(result.current.filters.category).toBe('')
+    expect(result.current.values.search).toBe('test query')
+    expect(result.current.values.category).toBe('')
   })
 
   it('should update multiple filters', () => {
@@ -43,17 +43,17 @@ describe('useFilters', () => {
       status: '',
     }
 
-    const { result } = renderHook(() => useFilters(defaultFilters))
+    const { result } = renderHook(() => useFilters({ initialValues: defaultFilters }))
 
     act(() => {
-      result.current.setFilters({
+      result.current.setValues({
         search: 'test',
         category: 'DISTRIBUTEUR',
         status: 'ACTIF',
       })
     })
 
-    expect(result.current.filters).toEqual({
+    expect(result.current.values).toEqual({
       search: 'test',
       category: 'DISTRIBUTEUR',
       status: 'ACTIF',
@@ -67,23 +67,23 @@ describe('useFilters', () => {
       status: '',
     }
 
-    const { result } = renderHook(() => useFilters(defaultFilters))
+    const { result } = renderHook(() => useFilters({ initialValues: defaultFilters }))
 
     act(() => {
-      result.current.setFilters({
+      result.current.setValues({
         search: 'test',
         category: 'DISTRIBUTEUR',
         status: 'ACTIF',
       })
     })
 
-    expect(result.current.filters.search).toBe('test')
+    expect(result.current.values.search).toBe('test')
 
     act(() => {
-      result.current.resetFilters()
+      result.current.reset()
     })
 
-    expect(result.current.filters).toEqual(defaultFilters)
+    expect(result.current.values).toEqual(defaultFilters)
   })
 
   it('should clear single filter', () => {
@@ -93,23 +93,24 @@ describe('useFilters', () => {
       status: '',
     }
 
-    const { result } = renderHook(() => useFilters(defaultFilters))
+    const { result } = renderHook(() => useFilters({ initialValues: defaultFilters }))
 
     act(() => {
-      result.current.setFilters({
+      result.current.setValues({
         search: 'test',
         category: 'DISTRIBUTEUR',
+        status: '',
       })
     })
 
-    expect(result.current.filters.search).toBe('test')
+    expect(result.current.values.search).toBe('test')
 
     act(() => {
       result.current.setFilter('search', '')
     })
 
-    expect(result.current.filters.search).toBe('')
-    expect(result.current.filters.category).toBe('DISTRIBUTEUR')
+    expect(result.current.values.search).toBe('')
+    expect(result.current.values.category).toBe('DISTRIBUTEUR')
   })
 
   it('should handle active filters count', () => {
@@ -119,22 +120,23 @@ describe('useFilters', () => {
       status: '',
     }
 
-    const { result } = renderHook(() => useFilters(defaultFilters))
+    const { result } = renderHook(() => useFilters({ initialValues: defaultFilters }))
 
     // Initially no active filters
-    const initialActive = Object.values(result.current.filters).filter(v => v !== '').length
-    expect(initialActive).toBe(0)
+    expect(result.current.hasActiveFilters).toBe(false)
+    expect(result.current.activeCount).toBe(0)
 
     act(() => {
-      result.current.setFilters({
+      result.current.setValues({
         search: 'test',
         category: 'DISTRIBUTEUR',
+        status: '',
       })
     })
 
     // Now 2 active filters
-    const activeCount = Object.values(result.current.filters).filter(v => v !== '').length
-    expect(activeCount).toBe(2)
+    expect(result.current.hasActiveFilters).toBe(true)
+    expect(result.current.activeCount).toBe(2)
   })
 
   it('should handle boolean filters', () => {
@@ -144,12 +146,12 @@ describe('useFilters', () => {
       hasEmail: false,
     }
 
-    const { result } = renderHook(() => useFilters(defaultFilters))
+    const { result } = renderHook(() => useFilters({ initialValues: defaultFilters }))
 
     act(() => {
       result.current.setFilter('isActive', true)
     })
 
-    expect(result.current.filters.isActive).toBe(true)
+    expect(result.current.values.isActive).toBe(true)
   })
 })

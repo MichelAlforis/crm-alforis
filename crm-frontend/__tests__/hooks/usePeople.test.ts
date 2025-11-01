@@ -1,15 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { renderHook, waitFor } from '@testing-library/react'
+import { waitFor, renderHookWithProviders } from '../test-utils'
 import { usePeople } from '@/hooks/usePeople'
-import { peopleAPI } from '@/lib/api'
+import { apiClient } from '@/lib/api'
 
 vi.mock('@/lib/api', () => ({
-  peopleAPI: {
+  apiClient: {
     getPeople: vi.fn(),
     getPerson: vi.fn(),
     createPerson: vi.fn(),
     updatePerson: vi.fn(),
     deletePerson: vi.fn(),
+    createPersonOrganizationLink: vi.fn(),
+    updatePersonOrganizationLink: vi.fn(),
+    deletePersonOrganizationLink: vi.fn(),
   },
 }))
 
@@ -23,44 +26,42 @@ describe('usePeople', () => {
       { id: 1, first_name: 'John', last_name: 'Doe', email: 'john@example.com' },
       { id: 2, first_name: 'Jane', last_name: 'Smith', email: 'jane@example.com' },
     ]
-    vi.mocked(peopleAPI.getPeople).mockResolvedValue({
+    vi.mocked(apiClient.getPeople).mockResolvedValue({
       data: mockPeople,
       total: 2,
-      page: 1,
-      limit: 20,
     })
 
-    const { result } = renderHook(() => usePeople())
+    const { result } = renderHookWithProviders(() => usePeople())
+
+    await result.current.fetchPeople()
 
     await waitFor(() => {
-      expect(result.current.isLoading).toBe(false)
+      expect(result.current.people.isLoading).toBe(false)
     })
 
-    expect(result.current.data).toEqual(mockPeople)
-    expect(peopleAPI.getPeople).toHaveBeenCalledWith(
-      expect.objectContaining({ page: 1, limit: 20 })
-    )
+    expect(result.current.people.data?.data).toEqual(mockPeople)
+    expect(apiClient.getPeople).toHaveBeenCalled()
   })
 
   it('should filter people by search term', async () => {
     const mockPeople = [
       { id: 1, first_name: 'John', last_name: 'Doe', email: 'john@example.com' },
     ]
-    vi.mocked(peopleAPI.getPeople).mockResolvedValue({
+    vi.mocked(apiClient.getPeople).mockResolvedValue({
       data: mockPeople,
       total: 1,
-      page: 1,
-      limit: 20,
     })
 
-    const { result } = renderHook(() => usePeople({ search: 'John' }))
+    const { result } = renderHookWithProviders(() => usePeople())
+
+    await result.current.fetchPeople(0, 50, { q: 'John' })
 
     await waitFor(() => {
-      expect(result.current.isLoading).toBe(false)
+      expect(result.current.people.isLoading).toBe(false)
     })
 
-    expect(peopleAPI.getPeople).toHaveBeenCalledWith(
-      expect.objectContaining({ search: 'John' })
+    expect(apiClient.getPeople).toHaveBeenCalledWith(
+      0, 50, expect.objectContaining({ q: 'John' })
     )
   })
 
@@ -72,16 +73,18 @@ describe('usePeople', () => {
     }
     const createdPerson = { id: 3, ...newPerson }
 
-    vi.mocked(peopleAPI.createPerson).mockResolvedValue(createdPerson)
+    vi.mocked(apiClient.createPerson).mockResolvedValue(createdPerson)
+    vi.mocked(apiClient.getPeople).mockResolvedValue({ data: [], total: 0 })
 
-    const { result } = renderHook(() => usePeople())
+    const { result } = renderHookWithProviders(() => usePeople())
+
+    await result.current.createPerson(newPerson)
 
     await waitFor(() => {
-      expect(result.current.isLoading).toBe(false)
+      expect(result.current.create.success).toBe(true)
     })
 
-    // Note: Assumes hook exposes createPerson mutation
-    expect(peopleAPI.createPerson).toBeDefined()
+    expect(apiClient.createPerson).toHaveBeenCalledWith(newPerson)
   })
 
   it('should update person successfully', async () => {
@@ -92,52 +95,64 @@ describe('usePeople', () => {
       personal_email: 'john.updated@example.com',
     }
 
-    vi.mocked(peopleAPI.updatePerson).mockResolvedValue(updatedPerson)
+    vi.mocked(apiClient.updatePerson).mockResolvedValue(updatedPerson)
+    vi.mocked(apiClient.getPerson).mockResolvedValue(updatedPerson)
 
-    expect(peopleAPI.updatePerson).toBeDefined()
+    const { result } = renderHookWithProviders(() => usePeople())
+
+    await result.current.updatePerson(1, { last_name: 'Doe Updated' })
+
+    await waitFor(() => {
+      expect(result.current.update.success).toBe(true)
+    })
+
+    expect(apiClient.updatePerson).toHaveBeenCalledWith(1, { last_name: 'Doe Updated' })
   })
 
   it('should delete person successfully', async () => {
-    vi.mocked(peopleAPI.deletePerson).mockResolvedValue(undefined)
+    vi.mocked(apiClient.deletePerson).mockResolvedValue(undefined)
+    vi.mocked(apiClient.getPeople).mockResolvedValue({ data: [], total: 0 })
 
-    const { result } = renderHook(() => usePeople())
+    const { result } = renderHookWithProviders(() => usePeople())
+
+    await result.current.deletePerson(1)
 
     await waitFor(() => {
-      expect(result.current.isLoading).toBe(false)
+      expect(result.current.remove.success).toBe(true)
     })
 
-    expect(peopleAPI.deletePerson).toBeDefined()
+    expect(apiClient.deletePerson).toHaveBeenCalledWith(1)
   })
 
   it('should handle fetch error gracefully', async () => {
     const errorMessage = 'Failed to fetch people'
-    vi.mocked(peopleAPI.getPeople).mockRejectedValue(new Error(errorMessage))
+    vi.mocked(apiClient.getPeople).mockRejectedValue({ detail: errorMessage })
 
-    const { result } = renderHook(() => usePeople())
+    const { result } = renderHookWithProviders(() => usePeople())
+
+    await result.current.fetchPeople()
 
     await waitFor(() => {
-      expect(result.current.isLoading).toBe(false)
+      expect(result.current.people.error).toBeTruthy()
     })
 
-    expect(result.current.error).toBeTruthy()
+    expect(result.current.people.error).toContain(errorMessage)
   })
 
   it('should paginate correctly', async () => {
-    vi.mocked(peopleAPI.getPeople).mockResolvedValue({
+    vi.mocked(apiClient.getPeople).mockResolvedValue({
       data: [],
       total: 100,
-      page: 3,
-      limit: 20,
     })
 
-    const { result } = renderHook(() => usePeople({ page: 3, limit: 20 }))
+    const { result } = renderHookWithProviders(() => usePeople())
+
+    await result.current.fetchPeople(60, 20)
 
     await waitFor(() => {
-      expect(result.current.isLoading).toBe(false)
+      expect(result.current.people.isLoading).toBe(false)
     })
 
-    expect(peopleAPI.getPeople).toHaveBeenCalledWith(
-      expect.objectContaining({ page: 3, limit: 20 })
-    )
+    expect(apiClient.getPeople).toHaveBeenCalledWith(60, 20, undefined)
   })
 })

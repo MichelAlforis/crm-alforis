@@ -84,27 +84,27 @@ export default function TutorielsPage() {
           Nous préparons une bibliothèque complète de tutoriels vidéo pour vous accompagner dans l&apos;utilisation du CRM.
         </p>
         <div className="grid gap-spacing-md sm:grid-cols-2 max-w-2xl mx-auto text-left">
-          <div className="bg-white dark:bg-slate-900 rounded-lg p-4 border border-purple-200">
+          <div className="bg-surface dark:bg-slate-900 rounded-lg p-4 border border-purple-200">
             <div className="font-semibold text-purple-900 mb-2">📹 Vidéos de démonstration</div>
-            <p className="text-sm text-gray-600 dark:text-slate-400">
+            <p className="text-fluid-sm text-text-secondary dark:text-slate-400">
               Tutoriels complets sur chaque fonctionnalité du CRM
             </p>
           </div>
-          <div className="bg-white dark:bg-slate-900 rounded-lg p-4 border border-purple-200">
+          <div className="bg-surface dark:bg-slate-900 rounded-lg p-4 border border-purple-200">
             <div className="font-semibold text-purple-900 mb-2">🎯 Cas d&apos;usage réels</div>
-            <p className="text-sm text-gray-600 dark:text-slate-400">
+            <p className="text-fluid-sm text-text-secondary dark:text-slate-400">
               Exemples concrets d&apos;utilisation par nos clients
             </p>
           </div>
-          <div className="bg-white dark:bg-slate-900 rounded-lg p-4 border border-purple-200">
+          <div className="bg-surface dark:bg-slate-900 rounded-lg p-4 border border-purple-200">
             <div className="font-semibold text-purple-900 mb-2">⚡ Astuces et raccourcis</div>
-            <p className="text-sm text-gray-600 dark:text-slate-400">
+            <p className="text-fluid-sm text-text-secondary dark:text-slate-400">
               Optimisez votre productivité avec nos conseils d&apos;experts
             </p>
           </div>
-          <div className="bg-white dark:bg-slate-900 rounded-lg p-4 border border-purple-200">
+          <div className="bg-surface dark:bg-slate-900 rounded-lg p-4 border border-purple-200">
             <div className="font-semibold text-purple-900 mb-2">🆕 Nouvelles fonctionnalités</div>
-            <p className="text-sm text-gray-600 dark:text-slate-400">
+            <p className="text-fluid-sm text-text-secondary dark:text-slate-400">
               Restez à jour avec les dernières évolutions du CRM
             </p>
           </div>
@@ -113,14 +113,14 @@ export default function TutorielsPage() {
 
       {/* Tutoriels à venir (preview) */}
       <section>
-        <h2 className="mb-6 text-fluid-2xl font-bold text-gray-900 dark:text-slate-100">
+        <h2 className="mb-spacing-lg text-fluid-2xl font-bold text-text-primary dark:text-text-primary">
           Tutoriels en préparation
         </h2>
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-spacing-lg md:grid-cols-2">
           {tutorials.map((tutorial, index) => (
             <div
               key={index}
-              className="group rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 overflow-hidden opacity-60"
+              className="group rounded-xl border border-border dark:border-slate-700 bg-gray-50 dark:bg-slate-800 overflow-hidden opacity-60"
             >
               {/* Thumbnail placeholder */}
               <div className="relative aspect-video bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
@@ -136,8 +136,8 @@ export default function TutorielsPage() {
 
               {/* Content */}
               <div className="p-4">
-                <h3 className="font-semibold text-gray-900 dark:text-slate-100 mb-2">{tutorial.title}</h3>
-                <p className="text-sm text-gray-600 dark:text-slate-400">{tutorial.description}</p>
+                <h3 className="font-semibold text-text-primary dark:text-text-primary mb-2">{tutorial.title}</h3>
+                <p className="text-fluid-sm text-text-secondary dark:text-slate-400">{tutorial.description}</p>
               </div>
             </div>
           ))}
@@ -145,17 +145,17 @@ export default function TutorielsPage() {
       </section>
 
       {/* Alternative : Guides écrits */}
-      <section className="rounded-2xl border border-blue-200 bg-blue-50 p-8">
-        <h2 className="mb-4 text-center text-fluid-2xl font-bold text-gray-900 dark:text-slate-100">
+      <section className="rounded-2xl border border-blue-200 bg-blue-50 p-spacing-xl">
+        <h2 className="mb-4 text-center text-fluid-2xl font-bold text-text-primary dark:text-text-primary">
           En attendant, consultez nos guides écrits
         </h2>
-        <p className="mx-auto mb-6 max-w-xl text-center text-gray-700 dark:text-slate-300">
+        <p className="mx-auto mb-spacing-lg max-w-xl text-center text-text-secondary dark:text-slate-300">
           Toutes les fonctionnalités sont documentées dans nos guides détaillés avec captures d&apos;écran
         </p>
         <div className="flex justify-center">
           <Link
             href="/dashboard/help/guides"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:bg-primary-hover transition"
           >
             📚 Voir tous les guides
           </Link>
@@ -163,12 +163,12 @@ export default function TutorielsPage() {
       </section>
 
       {/* Notification */}
-      <section className="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-6">
-        <h3 className="font-semibold text-gray-900 dark:text-slate-100 mb-2">
+      <section className="bg-gray-50 dark:bg-slate-800 border border-border dark:border-slate-700 rounded-xl p-spacing-lg">
+        <h3 className="font-semibold text-text-primary dark:text-text-primary mb-2">
           🔔 Soyez notifié de la sortie des tutoriels vidéo
         </h3>
-        <p className="text-sm text-gray-600 dark:text-slate-400 mb-4">
-          Contactez le support à <a href="mailto:support@alforis.fr" className="text-blue-600 hover:underline">support@alforis.fr</a> pour être informé dès la mise en ligne des premières vidéos.
+        <p className="text-fluid-sm text-text-secondary dark:text-slate-400 mb-4">
+          Contactez le support à <a href="mailto:support@alforis.fr" className="text-primary hover:underline">support@alforis.fr</a> pour être informé dès la mise en ligne des premières vidéos.
         </p>
       </section>
 
@@ -176,7 +176,7 @@ export default function TutorielsPage() {
       <section className="text-center">
         <Link
           href="/dashboard/help"
-          className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium transition"
+          className="inline-flex items-center gap-2 text-primary hover:text-blue-700 font-medium transition"
         >
           <ArrowLeft className="h-4 w-4" />
           Retour au centre d&apos;aide

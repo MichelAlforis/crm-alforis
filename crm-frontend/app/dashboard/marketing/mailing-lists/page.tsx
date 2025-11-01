@@ -239,6 +239,7 @@ export default function MailingListsPage() {
             size="md"
             variant="default"
             stickyHeader
+            mobileCollapse={true}
             emptyMessage="Aucune liste créée. Créez votre première liste de diffusion !"
           />
 

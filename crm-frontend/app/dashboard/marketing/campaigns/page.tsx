@@ -253,6 +253,7 @@ export default function CampaignsPage() {
             size="md"
             variant="default"
             stickyHeader
+            mobileCollapse={true}
             emptyMessage={statusFilter ? `Aucune campagne avec le statut "${STATUS_LABELS[statusFilter as keyof typeof STATUS_LABELS]}"` : "Aucune campagne créée. Créez votre première campagne !"}
           />
 

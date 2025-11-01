@@ -1,9 +1,9 @@
 /**
  * Tests pour le composant SuggestionsTable
- * @jest-environment jsdom
  */
 
 import React from 'react'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import SuggestionsTable from '@/components/ai/SuggestionsTable'
@@ -39,13 +39,13 @@ const mockSuggestions: AISuggestion[] = [
 ]
 
 describe('SuggestionsTable', () => {
-  const mockOnSelectChange = jest.fn()
-  const mockOnPreview = jest.fn()
-  const mockOnApprove = jest.fn()
-  const mockOnReject = jest.fn()
+  const mockOnSelectChange = vi.fn()
+  const mockOnPreview = vi.fn()
+  const mockOnApprove = vi.fn()
+  const mockOnReject = vi.fn()
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('should render suggestions table', () => {

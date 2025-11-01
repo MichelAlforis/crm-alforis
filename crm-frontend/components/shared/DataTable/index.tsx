@@ -24,6 +24,7 @@ import { DataTableEmpty } from './DataTableEmpty'
 import { DataTableSkeleton } from './DataTableSkeleton'
 import { DataTablePagination } from './DataTablePagination'
 import { DataTableBulkActions } from './DataTableBulkActions'
+import { DataTableMobileCard } from './DataTableMobileCard'
 
 export interface Column<T = unknown> {
   id: string
@@ -35,6 +36,7 @@ export interface Column<T = unknown> {
   filterable?: boolean
   width?: string
   minWidth?: string
+  priority?: 'high' | 'medium' | 'low' // For mobile card view
 }
 
 export interface BulkAction<T = unknown> {
@@ -154,7 +156,25 @@ export function DataTable<T = unknown>({
 
   // Loading state
   if (isLoading) {
-    return <DataTableSkeleton columns={columns.length} rows={5} />
+    return (
+      <div className="space-y-4">
+        {/* Desktop skeleton */}
+        <div className="hidden md:block">
+          <DataTableSkeleton columns={columns.length} rows={5} />
+        </div>
+
+        {/* Mobile skeleton */}
+        <div className="md:hidden space-y-spacing-sm">
+          {Array.from({ length: 3 }).map((_, idx) => (
+            <div key={idx} className="border border-gray-200 dark:border-slate-700 rounded-lg p-spacing-md bg-white dark:bg-slate-900 space-y-2">
+              <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded animate-pulse w-2/3" />
+              <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded animate-pulse w-1/2" />
+              <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded animate-pulse w-3/4" />
+            </div>
+          ))}
+        </div>
+      </div>
+    )
   }
 
   // Empty state
@@ -228,8 +248,8 @@ export function DataTable<T = unknown>({
         />
       )}
 
-      {/* Table */}
-      <div className="border border-gray-200 dark:border-slate-700 rounded-lg overflow-hidden bg-white dark:bg-slate-800 shadow-sm">
+      {/* Desktop Table */}
+      <div className="hidden md:block border border-gray-200 dark:border-slate-700 rounded-lg overflow-hidden bg-white dark:bg-slate-800 shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full">
             <DataTableHeader
@@ -262,6 +282,27 @@ export function DataTable<T = unknown>({
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Mobile Cards */}
+      <div className="md:hidden space-y-spacing-sm">
+        {data.map((row) => {
+          const key = keyExtractor(row)
+          const isSelected = selectedRows.has(key)
+
+          return (
+            <DataTableMobileCard
+              key={key}
+              row={row}
+              columns={columns}
+              isSelected={isSelected}
+              onSelect={() => handleSelectRow(key)}
+              onClick={onRowClick}
+              quickActions={quickActions}
+              hasSelection={!!bulkActions}
+            />
+          )
+        })}
       </div>
 
       {/* Pagination */}

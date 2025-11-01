@@ -48,6 +48,7 @@ export default function PeoplePage() {
         id: 'name',
         header: 'Nom complet',
         accessor: (row) => `${row.first_name} ${row.last_name}`,
+        priority: 'high',
         sortable: true,
         searchable: true,
         render: (_: unknown, row: any) => (
@@ -64,6 +65,7 @@ export default function PeoplePage() {
         id: 'role',
         header: 'Rôle',
         accessor: 'role',
+        priority: 'medium',
         sortable: true,
         searchable: true,
         render: (value: any) =>
@@ -80,6 +82,7 @@ export default function PeoplePage() {
         id: 'email',
         header: 'Email',
         accessor: 'personal_email',
+        priority: 'high',
         sortable: true,
         searchable: true,
         render: (value: any) =>
@@ -100,6 +103,7 @@ export default function PeoplePage() {
         id: 'phone',
         header: 'Téléphone',
         accessor: 'personal_phone',
+        priority: 'medium',
         sortable: true,
         render: (value: any) =>
           value ? (
@@ -119,6 +123,7 @@ export default function PeoplePage() {
         id: 'country',
         header: 'Pays',
         accessor: 'country_code',
+        priority: 'high',
         sortable: true,
         render: (value: any) =>
           value ? (
@@ -134,6 +139,7 @@ export default function PeoplePage() {
         id: 'language',
         header: 'Langue',
         accessor: 'language',
+        priority: 'low',
         sortable: true,
         render: (value: any) =>
           value ? (

@@ -1,15 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { renderHook, waitFor } from '@testing-library/react'
+import { waitFor, renderHookWithProviders } from '../test-utils'
 import { useOrganisations } from '@/hooks/useOrganisations'
-import { organisationsAPI } from '@/lib/api'
+import { apiClient } from '@/lib/api'
 
 vi.mock('@/lib/api', () => ({
-  organisationsAPI: {
+  apiClient: {
     getOrganisations: vi.fn(),
     getOrganisation: vi.fn(),
     createOrganisation: vi.fn(),
     updateOrganisation: vi.fn(),
     deleteOrganisation: vi.fn(),
+    searchOrganisations: vi.fn(),
+    getOrganisationsByLanguage: vi.fn(),
+    getOrganisationsStats: vi.fn(),
   },
 }))
 
@@ -23,33 +26,29 @@ describe('useOrganisations', () => {
       { id: 1, name: 'Org 1', category: 'DISTRIBUTEUR' },
       { id: 2, name: 'Org 2', category: 'CGPI' },
     ]
-    vi.mocked(organisationsAPI.getOrganisations).mockResolvedValue({
+    vi.mocked(apiClient.getOrganisations).mockResolvedValue({
       data: mockOrganisations,
       total: 2,
-      page: 1,
-      limit: 20,
     })
 
-    const { result } = renderHook(() => useOrganisations())
+    const { result } = renderHookWithProviders(() => useOrganisations())
 
     await waitFor(() => {
-      expect(result.current.isLoading).toBe(false)
+      expect(result.current.isSuccess).toBe(true)
     })
 
-    expect(result.current.data).toEqual(mockOrganisations)
-    expect(organisationsAPI.getOrganisations).toHaveBeenCalledWith(
-      expect.objectContaining({ page: 1, limit: 20 })
-    )
+    expect(result.current.data?.data).toEqual(mockOrganisations)
+    expect(apiClient.getOrganisations).toHaveBeenCalled()
   })
 
   it('should handle fetch organisations error', async () => {
     const errorMessage = 'Failed to fetch organisations'
-    vi.mocked(organisationsAPI.getOrganisations).mockRejectedValue(new Error(errorMessage))
+    vi.mocked(apiClient.getOrganisations).mockRejectedValue(new Error(errorMessage))
 
-    const { result } = renderHook(() => useOrganisations())
+    const { result } = renderHookWithProviders(() => useOrganisations())
 
     await waitFor(() => {
-      expect(result.current.isLoading).toBe(false)
+      expect(result.current.isError).toBe(true)
     })
 
     expect(result.current.error).toBeTruthy()
@@ -60,40 +59,36 @@ describe('useOrganisations', () => {
     const mockOrganisations = [
       { id: 1, name: 'Test Org', category: 'DISTRIBUTEUR' },
     ]
-    vi.mocked(organisationsAPI.getOrganisations).mockResolvedValue({
+    vi.mocked(apiClient.getOrganisations).mockResolvedValue({
       data: mockOrganisations,
       total: 1,
-      page: 1,
-      limit: 20,
     })
 
-    const { result } = renderHook(() => useOrganisations({ search: 'Test' }))
+    const { result } = renderHookWithProviders(() => useOrganisations({ language: 'fr' }))
 
     await waitFor(() => {
-      expect(result.current.isLoading).toBe(false)
+      expect(result.current.isSuccess).toBe(true)
     })
 
-    expect(organisationsAPI.getOrganisations).toHaveBeenCalledWith(
-      expect.objectContaining({ search: 'Test' })
+    expect(apiClient.getOrganisations).toHaveBeenCalledWith(
+      expect.objectContaining({ language: 'fr' })
     )
   })
 
   it('should paginate organisations correctly', async () => {
-    vi.mocked(organisationsAPI.getOrganisations).mockResolvedValue({
+    vi.mocked(apiClient.getOrganisations).mockResolvedValue({
       data: [],
       total: 100,
-      page: 2,
-      limit: 20,
     })
 
-    const { result } = renderHook(() => useOrganisations({ page: 2, limit: 20 }))
+    const { result } = renderHookWithProviders(() => useOrganisations({ skip: 20, limit: 20 }))
 
     await waitFor(() => {
-      expect(result.current.isLoading).toBe(false)
+      expect(result.current.isSuccess).toBe(true)
     })
 
-    expect(organisationsAPI.getOrganisations).toHaveBeenCalledWith(
-      expect.objectContaining({ page: 2, limit: 20 })
+    expect(apiClient.getOrganisations).toHaveBeenCalledWith(
+      expect.objectContaining({ skip: 20, limit: 20 })
     )
   })
 })
