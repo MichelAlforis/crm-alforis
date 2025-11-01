@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { ROUTES } from "@/lib/constants"
 import { useToast } from '@/hooks/useToast'
 import { logger } from '@/lib/logger'
+import { PageContainer } from '@/components/shared'
 
 function ResetPasswordForm() {
   const [newPassword, setNewPassword] = useState('')
@@ -112,7 +113,8 @@ function ResetPasswordForm() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
+    <PageContainer width="full" spacing="tight" className="!p-0">
+      <div className="relative min-h-screen overflow-hidden">
       {/* Video Background */}
       <div className="absolute inset-0">
         <video
@@ -311,7 +313,8 @@ function ResetPasswordForm() {
           </div>
         </motion.div>
       </div>
-    </div>
+      </div>
+    </PageContainer>
   )
 }
 

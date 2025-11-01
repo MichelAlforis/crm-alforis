@@ -1,5 +1,6 @@
 import React from 'react'
 import DownloadPDFButton from '@/components/legal/DownloadPDFButton'
+import { PageContainer, PageHeader, PageTitle } from '@/components/shared'
 
 export const metadata = {
   title: 'CGV - Conditions Générales de Vente | CRM Alforis',
@@ -8,33 +9,29 @@ export const metadata = {
 
 export default function CGVPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            CONDITIONS GÉNÉRALES DE VENTE
-          </h1>
-          <p className="text-lg text-gray-600">ALFORIS FINANCE – CRM Alforis</p>
-          <p className="text-sm text-gray-500 mt-2">
-            Version : 1.0 – Mise à jour du 28 octobre 2025
-          </p>
-          <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">
-            <span>📋</span>
-            <span>SaaS B2B</span>
-          </div>
+    <PageContainer width="narrow">
+      <PageHeader>
+        <PageTitle subtitle="ALFORIS FINANCE – CRM Alforis">
+          CONDITIONS GÉNÉRALES DE VENTE
+        </PageTitle>
+        <p className="text-fluid-sm text-text-secondary mt-spacing-xs">
+          Version : 1.0 – Mise à jour du 28 octobre 2025
+        </p>
+        <div className="mt-spacing-sm inline-flex items-center gap-spacing-xs px-spacing-sm py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">
+          <span>📋</span>
+          <span>SaaS B2B</span>
         </div>
+      </PageHeader>
 
-        {/* Download Button */}
-        <DownloadPDFButton
-          documentType="cgv"
-          title="Télécharger les CGV"
-          description="Format PDF pour signature client"
-          className="mb-6"
-        />
+      {/* Download Button */}
+      <DownloadPDFButton
+        documentType="cgv"
+        title="Télécharger les CGV"
+        description="Format PDF pour signature client"
+      />
 
-        {/* Content */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 prose prose-sm max-w-none">
+      {/* Content */}
+      <div className="prose dark:prose-invert max-w-none">
 
           {/* Section 1 */}
           <section className="mb-8">
@@ -307,24 +304,23 @@ export default function CGVPage() {
             </div>
           </section>
 
-        </div>
-
-        {/* Footer */}
-        <div className="mt-8 text-center">
-          <a
-            href="/legal"
-            className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-medium mr-6"
-          >
-            ← Documents Légaux
-          </a>
-          <a
-            href="/dashboard"
-            className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-medium"
-          >
-            ← Retour au CRM
-          </a>
-        </div>
       </div>
-    </div>
+
+      {/* Footer */}
+      <div className="text-center">
+        <a
+          href="/legal"
+          className="inline-flex items-center text-fluid-sm text-blue-600 hover:text-blue-800 font-medium mr-spacing-lg"
+        >
+          ← Documents Légaux
+        </a>
+        <a
+          href="/dashboard"
+          className="inline-flex items-center text-fluid-sm text-blue-600 hover:text-blue-800 font-medium"
+        >
+          ← Retour au CRM
+        </a>
+      </div>
+    </PageContainer>
   )
 }

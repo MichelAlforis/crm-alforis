@@ -1,5 +1,6 @@
 import React from 'react'
 import DownloadPDFButton from '@/components/legal/DownloadPDFButton'
+import { PageContainer, PageHeader, PageTitle } from '@/components/shared'
 
 export const metadata = {
   title: 'DPA - Data Processing Agreement | CRM Alforis',
@@ -8,39 +9,35 @@ export const metadata = {
 
 export default function DPAPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            DATA PROCESSING AGREEMENT (DPA)
-          </h1>
-          <p className="text-lg text-gray-600">Convention de Sous-Traitance RGPD</p>
-          <p className="text-sm text-gray-500 mt-2">
-            Version : 1.0 – Mise à jour du 28 octobre 2025
-          </p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <span className="inline-flex items-center gap-2 px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-semibold">
-              <span>🔒</span>
-              <span>Article 28 RGPD</span>
-            </span>
-            <span className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">
-              <span>🇪🇺</span>
-              <span>Données UE</span>
-            </span>
-          </div>
+    <PageContainer width="narrow">
+      <PageHeader>
+        <PageTitle subtitle="Convention de Sous-Traitance RGPD">
+          DATA PROCESSING AGREEMENT (DPA)
+        </PageTitle>
+        <p className="text-fluid-sm text-text-secondary mt-spacing-xs">
+          Version : 1.0 – Mise à jour du 28 octobre 2025
+        </p>
+        <div className="mt-spacing-sm flex flex-wrap gap-spacing-xs">
+          <span className="inline-flex items-center gap-spacing-xs px-spacing-sm py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-semibold">
+            <span>🔒</span>
+            <span>Article 28 RGPD</span>
+          </span>
+          <span className="inline-flex items-center gap-spacing-xs px-spacing-sm py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">
+            <span>🇪🇺</span>
+            <span>Données UE</span>
+          </span>
         </div>
+      </PageHeader>
 
-        {/* Download Button */}
-        <DownloadPDFButton
-          documentType="dpa"
-          title="Télécharger le DPA"
-          description="Format PDF prêt à signer"
-          className="mb-6"
-        />
+      {/* Download Button */}
+      <DownloadPDFButton
+        documentType="dpa"
+        title="Télécharger le DPA"
+        description="Format PDF prêt à signer"
+      />
 
-        {/* Content */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 prose prose-sm max-w-none">
+      {/* Content */}
+      <div className="prose dark:prose-invert max-w-none">
 
           {/* Parties */}
           <section className="mb-8">
@@ -268,24 +265,23 @@ export default function DPAPage() {
             </p>
           </section>
 
-        </div>
-
-        {/* Footer */}
-        <div className="mt-8 text-center">
-          <a
-            href="/legal"
-            className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-medium mr-6"
-          >
-            ← Documents Légaux
-          </a>
-          <a
-            href="/dashboard"
-            className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-medium"
-          >
-            ← Retour au CRM
-          </a>
-        </div>
       </div>
-    </div>
+
+      {/* Footer */}
+      <div className="text-center">
+        <a
+          href="/legal"
+          className="inline-flex items-center text-fluid-sm text-blue-600 hover:text-blue-800 font-medium mr-spacing-lg"
+        >
+          ← Documents Légaux
+        </a>
+        <a
+          href="/dashboard"
+          className="inline-flex items-center text-fluid-sm text-blue-600 hover:text-blue-800 font-medium"
+        >
+          ← Retour au CRM
+        </a>
+      </div>
+    </PageContainer>
   )
 }

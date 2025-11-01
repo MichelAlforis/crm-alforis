@@ -3,6 +3,7 @@
 import { useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
+import { PageContainer } from '@/components/shared'
 
 function OutlookCallbackContent() {
   const searchParams = useSearchParams()
@@ -50,15 +51,17 @@ function OutlookCallbackContent() {
   }, [searchParams])
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="text-center">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-4" />
-        <h2 className="text-lg font-semibold text-gray-900">Authentification en cours...</h2>
-        <p className="text-sm text-gray-500 mt-2">
-          Vous allez être redirigé automatiquement.
-        </p>
+    <PageContainer width="narrow">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-4" />
+          <h2 className="text-lg font-semibold text-gray-900">Authentification en cours...</h2>
+          <p className="text-sm text-gray-500 mt-2">
+            Vous allez être redirigé automatiquement.
+          </p>
+        </div>
       </div>
-    </div>
+    </PageContainer>
   )
 }
 

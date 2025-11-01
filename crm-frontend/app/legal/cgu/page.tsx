@@ -1,5 +1,6 @@
 import React from 'react'
 import DownloadPDFButton from '@/components/legal/DownloadPDFButton'
+import { PageContainer, PageHeader, PageTitle } from '@/components/shared'
 
 export const metadata = {
   title: 'CGU - Conditions Générales d\'Utilisation | CRM Alforis',
@@ -8,29 +9,25 @@ export const metadata = {
 
 export default function CGUPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            CONDITIONS GÉNÉRALES D'UTILISATION
-          </h1>
-          <p className="text-lg text-gray-600">CRM Alforis Finance</p>
-          <p className="text-sm text-gray-500 mt-2">
-            Version : 1.0 – Mise à jour du 28 octobre 2025
-          </p>
-        </div>
+    <PageContainer width="narrow">
+      <PageHeader>
+        <PageTitle subtitle="CRM Alforis Finance">
+          CONDITIONS GÉNÉRALES D'UTILISATION
+        </PageTitle>
+        <p className="text-fluid-sm text-text-secondary mt-spacing-xs">
+          Version : 1.0 – Mise à jour du 28 octobre 2025
+        </p>
+      </PageHeader>
 
-        {/* Download Button */}
-        <DownloadPDFButton
-          documentType="cgu"
-          title="Télécharger les CGU"
-          description="Format PDF pour archivage"
-          className="mb-6"
-        />
+      {/* Download Button */}
+      <DownloadPDFButton
+        documentType="cgu"
+        title="Télécharger les CGU"
+        description="Format PDF pour archivage"
+      />
 
-        {/* Content */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 prose prose-sm max-w-none">
+      {/* Content */}
+      <div className="prose dark:prose-invert max-w-none">
 
           {/* Section 1 */}
           <section className="mb-8">
@@ -231,18 +228,17 @@ export default function CGUPage() {
             </p>
           </section>
 
-        </div>
-
-        {/* Footer */}
-        <div className="mt-8 text-center">
-          <a
-            href="/dashboard"
-            className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-medium"
-          >
-            ← Retour au CRM
-          </a>
-        </div>
       </div>
-    </div>
+
+      {/* Footer */}
+      <div className="text-center">
+        <a
+          href="/dashboard"
+          className="inline-flex items-center text-fluid-sm text-blue-600 hover:text-blue-800 font-medium"
+        >
+          ← Retour au CRM
+        </a>
+      </div>
+    </PageContainer>
   )
 }

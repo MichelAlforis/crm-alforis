@@ -7,12 +7,14 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { LoginForm } from '@/components/forms'
 import { useAuth } from '@/hooks/useAuth'
+import { PageContainer } from '@/components/shared'
 
 export default function LoginPage() {
   const { login, isSubmitting, error } = useAuth()
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
+    <PageContainer width="full" spacing="tight" className="!p-0">
+      <div className="relative min-h-screen overflow-hidden">
       {/* Video Background */}
       <div className="absolute inset-0">
         {/* Optimized Video Background - 705KB WebM */}
@@ -176,6 +178,7 @@ export default function LoginPage() {
           />
         </motion.div>
       </div>
-    </div>
+      </div>
+    </PageContainer>
   )
 }

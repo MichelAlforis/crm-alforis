@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useToast } from '@/hooks/useToast'
 import { logger } from '@/lib/logger'
+import { PageContainer } from '@/components/shared'
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
@@ -58,7 +59,8 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
+    <PageContainer width="full" spacing="tight" className="!p-0">
+      <div className="relative min-h-screen overflow-hidden">
       {/* Video Background */}
       <div className="absolute inset-0">
         <video
@@ -241,6 +243,7 @@ export default function ForgotPasswordPage() {
           </div>
         </motion.div>
       </div>
-    </div>
+      </div>
+    </PageContainer>
   )
 }
