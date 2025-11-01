@@ -167,7 +167,11 @@ jobs:
           DATABASE_URL: postgresql://crm_user:crm_test_password@localhost:5432/crm_test
         run: |
           cd crm-backend
+          # Initialize base tables first
+          echo "📊 Initializing base tables..."
+          PGPASSWORD=crm_test_password psql -h localhost -U crm_user -d crm_test -f alembic/init_base_tables.sql
           # Run migrations
+          echo "🔄 Running Alembic migrations..."
           alembic upgrade head || true
 
       - name: 🧪 Run tests with coverage
@@ -297,9 +301,17 @@ jobs:
           DATABASE_URL: postgresql://crm_user:crm_test_password@localhost:5432/crm_test
         run: |
           cd crm-backend
+
+          # Initialize base tables first
+          echo "📊 Initializing base tables..."
+          PGPASSWORD=crm_test_password psql -h localhost -U crm_user -d crm_test -f alembic/init_base_tables.sql
+
+          # Run Alembic migrations
+          echo "🔄 Running Alembic migrations..."
           alembic upgrade head || true
 
           # Créer test user avec le bon hash (pbkdf2_sha256)
+          echo "👤 Creating test user..."
           python create_test_user.py
 
       - name: 🚀 Start backend API
