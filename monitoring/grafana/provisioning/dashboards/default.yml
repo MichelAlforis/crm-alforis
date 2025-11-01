@@ -1,18 +1,12 @@
-# ============================================
-# GRAFANA DASHBOARDS PROVISIONING
-# ============================================
-# Auto-charge les dashboards depuis /var/lib/grafana/dashboards
-
 apiVersion: 1
 
 providers:
-  - name: 'CRM Dashboards'
+  - name: 'Alforis CRM Dashboards'
     orgId: 1
     folder: ''
     type: file
     disableDeletion: false
-    updateIntervalSeconds: 30
+    updateIntervalSeconds: 10
     allowUiUpdates: true
     options:
       path: /var/lib/grafana/dashboards
-      foldersFromFilesStructure: true

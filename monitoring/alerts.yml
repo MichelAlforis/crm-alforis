@@ -1,203 +1,81 @@
-# ============================================
-# PROMETHEUS ALERTING RULES - CRM TPM FINANCE
-# ============================================
-# Règles d'alerting pour détecter les problèmes critiques:
-# - CPU élevé (>90% pendant 5min)
-# - RAM élevée (>90% pendant 5min)
-# - Disque plein (>85%)
-# - API down (health check échoue)
-# - Taux d'erreur élevé (>5% pendant 5min)
-# - Requêtes lentes (p95 >2s)
+# Prometheus Alert Rules for Alforis CRM
 
 groups:
-  # ========================================
-  # ALERTES SYSTÈME
-  # ========================================
-  - name: system_alerts
+  - name: crm_service_alerts
     interval: 30s
     rules:
-      # CPU élevé
-      - alert: HighCPUUsage
-        expr: system_cpu_percent > 90
-        for: 5m
-        labels:
-          severity: warning
-          service: system
-        annotations:
-          summary: "CPU usage critique (instance {{ $labels.instance }})"
-          description: "CPU à {{ $value }}% pendant plus de 5 minutes"
-
-      # CPU critique
-      - alert: CriticalCPUUsage
-        expr: system_cpu_percent > 95
-        for: 2m
-        labels:
-          severity: critical
-          service: system
-        annotations:
-          summary: "CPU usage CRITIQUE (instance {{ $labels.instance }})"
-          description: "CPU à {{ $value }}% - risque de crash imminent"
-
-      # RAM élevée
-      - alert: HighMemoryUsage
-        expr: system_memory_percent > 90
-        for: 5m
-        labels:
-          severity: warning
-          service: system
-        annotations:
-          summary: "Memory usage élevé (instance {{ $labels.instance }})"
-          description: "RAM à {{ $value }}% pendant plus de 5 minutes"
-
-      # RAM critique
-      - alert: CriticalMemoryUsage
-        expr: system_memory_percent > 95
-        for: 2m
-        labels:
-          severity: critical
-          service: system
-        annotations:
-          summary: "Memory usage CRITIQUE (instance {{ $labels.instance }})"
-          description: "RAM à {{ $value }}% - risque d'OOM imminent"
-
-      # Disque plein
-      - alert: DiskSpaceRunningOut
-        expr: system_disk_percent > 85
-        for: 10m
-        labels:
-          severity: warning
-          service: system
-        annotations:
-          summary: "Espace disque faible (instance {{ $labels.instance }})"
-          description: "Disque à {{ $value }}% - nettoyage requis"
-
-      # Disque critique
-      - alert: DiskSpaceCritical
-        expr: system_disk_percent > 95
-        for: 5m
-        labels:
-          severity: critical
-          service: system
-        annotations:
-          summary: "Espace disque CRITIQUE (instance {{ $labels.instance }})"
-          description: "Disque à {{ $value }}% - action immédiate requise"
-
-  # ========================================
-  # ALERTES BASE DE DONNÉES
-  # ========================================
-  - name: database_alerts
-    interval: 30s
-    rules:
-      # Trop de connexions actives
-      - alert: HighDatabaseConnections
-        expr: db_connections_active > 40
-        for: 5m
-        labels:
-          severity: warning
-          service: database
-        annotations:
-          summary: "Nombre élevé de connexions DB"
-          description: "{{ $value }} connexions actives (limite: 50)"
-
-      # Taux d'échec élevé des tâches
-      - alert: HighTaskFailureRate
-        expr: |
-          (
-            rate(tasks_failed_last_24h[5m]) /
-            (rate(tasks_created_last_24h[5m]) + 0.001)
-          ) > 0.1
-        for: 5m
-        labels:
-          severity: warning
-          service: application
-        annotations:
-          summary: "Taux d'échec des tâches élevé"
-          description: "Plus de 10% des tâches échouent"
-
-  # ========================================
-  # ALERTES CACHE REDIS
-  # ========================================
-  - name: cache_alerts
-    interval: 30s
-    rules:
-      # Cache hit rate faible
-      - alert: LowCacheHitRate
-        expr: |
-          (
-            cache_hits_total /
-            (cache_hits_total + cache_misses_total + 0.001)
-          ) < 0.5
-        for: 10m
-        labels:
-          severity: info
-          service: cache
-        annotations:
-          summary: "Cache hit rate faible"
-          description: "Hit rate < 50% - optimisation possible"
-
-      # Mémoire cache élevée
-      - alert: HighCacheMemory
-        expr: cache_memory_bytes > 500000000  # 500MB
-        for: 5m
-        labels:
-          severity: info
-          service: cache
-        annotations:
-          summary: "Cache Redis utilise beaucoup de mémoire"
-          description: "{{ $value | humanize }}B utilisés"
-
-  # ========================================
-  # ALERTES MÉTIER
-  # ========================================
-  - name: business_alerts
-    interval: 1m
-    rules:
-      # Pas d'activité utilisateur
-      - alert: NoUserActivity
-        expr: rate(interactions_created_last_24h[1h]) == 0
-        for: 2h
-        labels:
-          severity: info
-          service: application
-        annotations:
-          summary: "Aucune activité utilisateur détectée"
-          description: "Pas de nouvelles interactions depuis 2 heures"
-
-      # Emails bloqués
-      - alert: EmailsSendingFailed
-        expr: rate(emails_sent_total{status="failed"}[5m]) > 0.1
-        for: 5m
-        labels:
-          severity: warning
-          service: email
-        annotations:
-          summary: "Échec d'envoi d'emails"
-          description: "{{ $value }} emails/s échouent"
-
-  # ========================================
-  # ALERTES DISPONIBILITÉ
-  # ========================================
-  - name: availability_alerts
-    interval: 30s
-    rules:
-      # Service down
+      # Service Down Alerts
       - alert: ServiceDown
-        expr: up{job="crm-api"} == 0
-        for: 1m
-        labels:
-          severity: critical
-          service: api
-        annotations:
-          summary: "CRM API est DOWN"
-          description: "Le service {{ $labels.job }} est inaccessible"
-
-      # Prometheus ne peut pas scraper
-      - alert: PrometheusTargetDown
         expr: up == 0
         for: 2m
         labels:
-          severity: warning
-          service: monitoring
+          severity: critical
         annotations:
-          summary: "Prometheus target down: {{ $labels.job }}"
-          description: "Target {{ $labels.instance }} inaccessible"
+          summary: "Service {{ $labels.job }} is down"
+          description: "{{ $labels.job }} has been down for more than 2 minutes."
+
+      # High Error Rate
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High error rate detected on {{ $labels.service }}"
+          description: "Error rate is {{ $value }} per second."
+
+      # API Response Time
+      - alert: HighAPILatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High API latency on {{ $labels.service }}"
+          description: "95th percentile latency is {{ $value }}s."
+
+  - name: crm_resource_alerts
+    interval: 30s
+    rules:
+      # Database Alerts
+      - alert: DatabaseConnectionsHigh
+        expr: pg_stat_database_numbackends > 40
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High number of database connections"
+          description: "{{ $value }} active connections to database."
+
+      # Redis Alerts
+      - alert: RedisMemoryHigh
+        expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Redis memory usage is high"
+          description: "Redis is using {{ $value | humanizePercentage }} of available memory."
+
+  - name: crm_celery_alerts
+    interval: 30s
+    rules:
+      # Celery Worker Alerts
+      - alert: CeleryWorkerDown
+        expr: celery_workers_active == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "No active Celery workers"
+          description: "All Celery workers are down. Background tasks will not be processed."
+
+      # Celery Queue Size
+      - alert: CeleryQueueHigh
+        expr: celery_tasks_pending > 100
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Celery queue is growing"
+          description: "{{ $value }} tasks pending in queue."

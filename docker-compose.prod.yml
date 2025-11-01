@@ -123,7 +123,7 @@ services:
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-crm_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD doit être défini dans .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD required in .env}
       POSTGRES_DB: ${POSTGRES_DB:-crm_db}
       PGDATA: /var/lib/postgresql/data/pgdata
     command:
@@ -187,14 +187,14 @@ services:
       OLLAMA_MODEL: ${OLLAMA_MODEL:-mistral:7b}
       # Sécurité
       DEBUG: "False"
-      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY doit être défini dans .env}
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY required in .env}
       ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-["https://crm.alforis.fr"]}
       # JWT
       JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
       JWT_EXPIRATION_HOURS: ${JWT_EXPIRATION_HOURS:-24}
       # AI Agent - Encryption
-      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?ENCRYPTION_KEY doit être défini dans .env}
-      EMAIL_ENCRYPTION_KEY: ${EMAIL_ENCRYPTION_KEY:?EMAIL_ENCRYPTION_KEY doit être défini dans .env}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?ENCRYPTION_KEY required in .env}
+      EMAIL_ENCRYPTION_KEY: ${EMAIL_ENCRYPTION_KEY:?EMAIL_ENCRYPTION_KEY required in .env}
       # Microsoft OAuth (Outlook)
       MICROSOFT_CLIENT_ID: ${MICROSOFT_CLIENT_ID}
       MICROSOFT_CLIENT_SECRET: ${MICROSOFT_CLIENT_SECRET}
@@ -330,9 +330,9 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
-      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY doit être défini dans .env}
-      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?ENCRYPTION_KEY doit être défini dans .env}
-      EMAIL_ENCRYPTION_KEY: ${EMAIL_ENCRYPTION_KEY:?EMAIL_ENCRYPTION_KEY doit être défini dans .env}
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY required in .env}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?ENCRYPTION_KEY required in .env}
+      EMAIL_ENCRYPTION_KEY: ${EMAIL_ENCRYPTION_KEY:?EMAIL_ENCRYPTION_KEY required in .env}
       ENVIRONMENT: production
       POSTGRES_USER: ${POSTGRES_USER:-crm_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -380,9 +380,9 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
-      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY doit être défini dans .env}
-      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?ENCRYPTION_KEY doit être défini dans .env}
-      EMAIL_ENCRYPTION_KEY: ${EMAIL_ENCRYPTION_KEY:?EMAIL_ENCRYPTION_KEY doit être défini dans .env}
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY required in .env}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?ENCRYPTION_KEY required in .env}
+      EMAIL_ENCRYPTION_KEY: ${EMAIL_ENCRYPTION_KEY:?EMAIL_ENCRYPTION_KEY required in .env}
       ENVIRONMENT: production
       POSTGRES_USER: ${POSTGRES_USER:-crm_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -426,7 +426,7 @@ services:
       POSTGRES_HOST: postgres
       PYTHONPATH: /app
       # Flower Basic Auth (obligatoire en prod)
-      FLOWER_BASIC_AUTH: ${FLOWER_BASIC_AUTH:?FLOWER_BASIC_AUTH doit être défini dans .env (format: user:password)}
+      FLOWER_BASIC_AUTH: ${FLOWER_BASIC_AUTH:-admin:change_me_in_production}
     working_dir: /app
     command: celery -A celery_app flower --port=5555 --basic-auth=${FLOWER_BASIC_AUTH}
     ports:
@@ -494,7 +494,7 @@ services:
       - "127.0.0.1:3001:3000"
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
-      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?GRAFANA_ADMIN_PASSWORD doit être défini dans .env}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?GRAFANA_ADMIN_PASSWORD required in .env}
       GF_SERVER_ROOT_URL: ${GRAFANA_ROOT_URL:-https://crm.alforis.fr/grafana}
       GF_INSTALL_PLUGINS: ""
     volumes:

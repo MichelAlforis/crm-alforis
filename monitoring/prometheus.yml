@@ -1,79 +1,68 @@
-# ============================================
-# PROMETHEUS CONFIGURATION - CRM TPM FINANCE
-# ============================================
-# Scraping config pour collecter les métriques depuis:
-# - FastAPI backend (/metrics endpoint)
-# - PostgreSQL exporter (optionnel)
-# - Redis exporter (optionnel)
-# - Node exporter (optionnel - métriques système)
+# Prometheus Configuration for Alforis CRM
+# Scrape metrics from all services
 
 global:
-  scrape_interval: 15s      # Scrape toutes les 15 secondes
-  evaluation_interval: 15s  # Évaluation des règles toutes les 15s
+  scrape_interval: 15s
+  evaluation_interval: 15s
   external_labels:
-    cluster: 'crm-tpm-finance'
+    cluster: 'alforis-crm-production'
     environment: 'production'
 
-# Alertmanager configuration (optionnel - à configurer plus tard)
-# alerting:
-#   alertmanagers:
-#     - static_configs:
-#         - targets:
-#           - alertmanager:9093
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+          # - alertmanager:9093
 
-# Règles d'alerting
+# Load rules once and periodically evaluate them
 rule_files:
   - '/etc/prometheus/alerts.yml'
 
 # Scrape configurations
 scrape_configs:
-  # ========================================
-  # CRM BACKEND API (FastAPI /metrics)
-  # ========================================
-  - job_name: 'crm-api'
-    static_configs:
-      - targets: ['api:8000']
-        labels:
-          service: 'fastapi-backend'
-          app: 'crm-api'
-    metrics_path: '/api/v1/metrics'
-    scrape_interval: 10s
-    scrape_timeout: 5s
-
-  # ========================================
-  # PROMETHEUS SELF-MONITORING
-  # ========================================
+  # Prometheus itself
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
         labels:
           service: 'prometheus'
 
-  # ========================================
-  # REDIS (optionnel - nécessite redis_exporter)
-  # ========================================
-  # - job_name: 'redis'
-  #   static_configs:
-  #     - targets: ['redis-exporter:9121']
-  #       labels:
-  #         service: 'redis'
-  #         app: 'cache'
+  # FastAPI Application
+  - job_name: 'api'
+    static_configs:
+      - targets: ['api:8000']
+        labels:
+          service: 'fastapi-api'
+    metrics_path: '/api/v1/metrics'
+    scrape_interval: 10s
 
-  # ========================================
-  # POSTGRESQL (optionnel - nécessite postgres_exporter)
-  # ========================================
-  # - job_name: 'postgres'
-  #   static_configs:
-  #     - targets: ['postgres-exporter:9187']
-  #       labels:
-  #         service: 'postgres'
-  #         app: 'database'
+  # PostgreSQL Database
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres:5432']
+        labels:
+          service: 'postgresql'
 
-  # ========================================
-  # NODE EXPORTER (optionnel - métriques système host)
-  # ========================================
-  # - job_name: 'node'
-  #   static_configs:
-  #     - targets: ['node-exporter:9100']
-  #       labels:
-  #         service: 'node-exporter'
+  # Redis Cache
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:6379']
+        labels:
+          service: 'redis'
+
+  # Caddy Reverse Proxy
+  - job_name: 'caddy'
+    static_configs:
+      - targets: ['caddy:2019']
+        labels:
+          service: 'caddy'
+    metrics_path: '/metrics'
+
+  # Grafana
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['grafana:3000']
+        labels:
+          service: 'grafana'
+    metrics_path: '/metrics'
