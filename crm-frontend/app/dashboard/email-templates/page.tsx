@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shared/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -196,8 +196,7 @@ export default function EmailTemplatesPage() {
         </div>
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
           <DialogTrigger asChild>
-            <Button onClick={() => setShowCreateDialog(true)}>
-              <Plus className="h-4 w-4 mr-2" />
+            <Button variant="primary" onClick={() => setShowCreateDialog(true)} leftIcon={<Plus className="h-4 w-4" />}>
               Nouveau Template
             </Button>
           </DialogTrigger>
@@ -278,7 +277,7 @@ export default function EmailTemplatesPage() {
               <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
                 Annuler
               </Button>
-              <Button onClick={handleCreateTemplate}>Créer</Button>
+              <Button variant="primary" onClick={handleCreateTemplate}>Créer</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -294,7 +293,7 @@ export default function EmailTemplatesPage() {
           <div className="col-span-full text-center py-12">
             <Mail className="h-12 w-12 mx-auto mb-4 opacity-50" />
             <p className="text-muted-foreground mb-4">Aucun template pour le moment</p>
-            <Button variant="outline" onClick={() => setShowCreateDialog(true)}>
+            <Button variant="primary" onClick={() => setShowCreateDialog(true)}>
               Créer votre premier template
             </Button>
           </div>
@@ -344,8 +343,8 @@ export default function EmailTemplatesPage() {
                       size="sm"
                       className="flex-1"
                       onClick={() => handlePreview(template)}
+                      leftIcon={<Eye className="h-4 w-4" />}
                     >
-                      <Eye className="h-4 w-4 mr-1" />
                       Voir
                     </Button>
                     <Button variant="outline" size="sm">

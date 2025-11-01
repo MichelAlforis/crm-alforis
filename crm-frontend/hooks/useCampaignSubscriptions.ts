@@ -99,13 +99,13 @@ export function useCampaignSubscriptions(campaignId: number, only_active: boolea
 
       showToast({
         type: 'success',
-        message: 'Abonnement créé avec succès',
+        title: 'Abonnement créé avec succès',
       })
     },
     onError: (error: any) => {
       showToast({
         type: 'error',
-        message: error?.message || 'Erreur lors de la création de l\'abonnement',
+        title: error?.message || 'Erreur lors de la création de l\'abonnement',
       })
     },
   })
@@ -121,13 +121,13 @@ export function useCampaignSubscriptions(campaignId: number, only_active: boolea
 
       showToast({
         type: 'success',
-        message: 'Désabonnement réussi',
+        title: 'Désabonnement réussi',
       })
     },
     onError: (error: any) => {
       showToast({
         type: 'error',
-        message: error?.message || 'Erreur lors du désabonnement',
+        title: error?.message || 'Erreur lors du désabonnement',
       })
     },
   })
@@ -147,13 +147,13 @@ export function useCampaignSubscriptions(campaignId: number, only_active: boolea
 
       showToast({
         type: 'success',
-        message: `${data.created} abonnement(s) créé(s) avec succès${data.already_exists > 0 ? ` (${data.already_exists} déjà existant(s))` : ''}`,
+        title: `${data.created} abonnement(s) créé(s) avec succès${data.already_exists > 0 ? ` (${data.already_exists} déjà existant(s))` : ''}`,
       })
     },
     onError: (error: any) => {
       showToast({
         type: 'error',
-        message: error?.message || 'Erreur lors de l\'abonnement en masse',
+        title: error?.message || 'Erreur lors de l\'abonnement en masse',
       })
     },
   })
@@ -285,13 +285,13 @@ export function useSubscribeToCampaign() {
 
       showToast({
         type: 'success',
-        message: `Abonné à la campagne "${data.campaign_name}" avec succès`,
+        title: `Abonné à la campagne "${data.campaign_name}" avec succès`,
       })
     },
     onError: (error: any) => {
       showToast({
         type: 'error',
-        message: error?.message || 'Erreur lors de l\'abonnement à la campagne',
+        title: error?.message || 'Erreur lors de l\'abonnement à la campagne',
       })
     },
   })
@@ -309,13 +309,13 @@ export function useSubscribeToCampaign() {
 
       showToast({
         type: 'success',
-        message: 'Désabonnement réussi',
+        title: 'Désabonnement réussi',
       })
     },
     onError: (error: any) => {
       showToast({
         type: 'error',
-        message: error?.message || 'Erreur lors du désabonnement',
+        title: error?.message || 'Erreur lors du désabonnement',
       })
     },
   })

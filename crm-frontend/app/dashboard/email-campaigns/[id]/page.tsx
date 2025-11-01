@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shared/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -236,8 +236,7 @@ export default function EmailCampaignDetailPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" onClick={() => router.back()}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
+          <Button variant="ghost" onClick={() => router.back()} leftIcon={<ArrowLeft className="h-4 w-4" />}>
             Retour
           </Button>
           <div>
@@ -254,25 +253,21 @@ export default function EmailCampaignDetailPage() {
         <div className="flex gap-2">
           {campaign.status === "draft" && (
             <>
-              <Button variant="outline" onClick={() => fetchPreviews()}>
-                <Eye className="h-4 w-4 mr-2" />
+              <Button variant="outline" onClick={() => fetchPreviews()} leftIcon={<Eye className="h-4 w-4" />}>
                 Prévisualiser
               </Button>
-              <Button onClick={handlePrepareCampaign}>
-                <CheckCircle className="h-4 w-4 mr-2" />
+              <Button variant="primary" onClick={handlePrepareCampaign} leftIcon={<CheckCircle className="h-4 w-4" />}>
                 Préparer
               </Button>
             </>
           )}
           {campaign.status === "scheduled" && (
-            <Button onClick={handleStartCampaign}>
-              <Send className="h-4 w-4 mr-2" />
+            <Button variant="primary" onClick={handleStartCampaign} leftIcon={<Send className="h-4 w-4" />}>
               Démarrer
             </Button>
           )}
           {campaign.status === "sending" && (
-            <Button variant="outline">
-              <Pause className="h-4 w-4 mr-2" />
+            <Button variant="outline" leftIcon={<Pause className="h-4 w-4" />}>
               Mettre en pause
             </Button>
           )}
@@ -357,8 +352,7 @@ export default function EmailCampaignDetailPage() {
                 <p className="text-muted-foreground mb-4">
                   Aucune prévisualisation chargée
                 </p>
-                <Button onClick={() => fetchPreviews()}>
-                  <Eye className="h-4 w-4 mr-2" />
+                <Button variant="primary" onClick={() => fetchPreviews()} leftIcon={<Eye className="h-4 w-4" />}>
                   Charger les prévisualisations
                 </Button>
               </CardContent>

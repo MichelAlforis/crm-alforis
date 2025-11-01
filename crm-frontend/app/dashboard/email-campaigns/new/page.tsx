@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shared/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -237,8 +237,7 @@ export default function NewEmailCampaignPage() {
   return (
     <div className="container mx-auto py-6 max-w-4xl">
       <div className="mb-6">
-        <Button variant="ghost" onClick={() => router.back()}>
-          <ArrowLeft className="h-4 w-4 mr-2" />
+        <Button variant="ghost" onClick={() => router.back()} leftIcon={<ArrowLeft className="h-4 w-4" />}>
           Retour
         </Button>
       </div>
@@ -332,7 +331,7 @@ export default function NewEmailCampaignPage() {
             </div>
 
             <div className="flex justify-end pt-4">
-              <Button onClick={() => setStep(2)} disabled={!name || !templateId}>
+              <Button variant="primary" onClick={() => setStep(2)} disabled={!name || !templateId}>
                 Suivant
               </Button>
             </div>
@@ -356,7 +355,7 @@ export default function NewEmailCampaignPage() {
               <Label>Type de destinataires</Label>
               <div className="grid grid-cols-2 gap-4 mt-2">
                 <Button
-                  variant={targetType === "organisations" ? "default" : "outline"}
+                  variant={targetType === "organisations" ? "primary" : "outline"}
                   onClick={() => setTargetType("organisations")}
                   className="h-auto py-4"
                 >
@@ -367,7 +366,7 @@ export default function NewEmailCampaignPage() {
                   </div>
                 </Button>
                 <Button
-                  variant={targetType === "contacts" ? "default" : "outline"}
+                  variant={targetType === "contacts" ? "primary" : "outline"}
                   onClick={() => setTargetType("contacts")}
                   className="h-auto py-4"
                 >
@@ -461,7 +460,7 @@ export default function NewEmailCampaignPage() {
               <Button variant="outline" onClick={() => setStep(1)}>
                 Précédent
               </Button>
-              <Button onClick={() => setStep(3)} disabled={recipientCount === 0}>
+              <Button variant="primary" onClick={() => setStep(3)} disabled={recipientCount === 0}>
                 Suivant
               </Button>
             </div>
@@ -540,8 +539,7 @@ export default function NewEmailCampaignPage() {
               <Button variant="outline" onClick={() => setStep(2)}>
                 Précédent
               </Button>
-              <Button onClick={handleCreateCampaign}>
-                <Send className="h-4 w-4 mr-2" />
+              <Button variant="primary" onClick={handleCreateCampaign} leftIcon={<Send className="h-4 w-4" />}>
                 Créer la campagne
               </Button>
             </div>
