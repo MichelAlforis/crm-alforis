@@ -42,10 +42,10 @@ export default function MyDataPage() {
       document.body.removeChild(link)
       URL.revokeObjectURL(url)
 
-      showToast('Vos données ont été exportées avec succès', 'success')
+      showToast({ type: 'success', message: 'Vos données ont été exportées avec succès' })
     } catch (error) {
       console.error('Export failed:', error)
-      showToast('Erreur lors de l\'export de vos données', 'error')
+      showToast({ type: 'error', message: 'Erreur lors de l\'export de vos données' })
     } finally {
       setIsExporting(false)
     }
@@ -53,12 +53,12 @@ export default function MyDataPage() {
 
   const handleDelete = async () => {
     if (deleteConfirm !== 'SUPPRIMER') {
-      showToast('Veuillez taper "SUPPRIMER" pour confirmer', 'error')
+      showToast({ type: 'error', message: 'Veuillez taper "SUPPRIMER" pour confirmer' })
       return
     }
 
     if (deleteReason.trim().length < 10) {
-      showToast('Veuillez indiquer une raison (minimum 10 caractères)', 'error')
+      showToast({ type: 'error', message: 'Veuillez indiquer une raison (minimum 10 caractères)' })
       return
     }
 
@@ -71,7 +71,7 @@ export default function MyDataPage() {
         },
       })
 
-      showToast('Vos données ont été supprimées. Vous allez être déconnecté.', 'success')
+      showToast({ type: 'success', message: 'Vos données ont été supprimées. Vous allez être déconnecté.' })
 
       // Logout after 3 seconds
       setTimeout(() => {
@@ -80,7 +80,7 @@ export default function MyDataPage() {
       }, 3000)
     } catch (error) {
       console.error('Delete failed:', error)
-      showToast('Erreur lors de la suppression de vos données', 'error')
+      showToast({ type: 'error', message: 'Erreur lors de la suppression de vos données' })
       setIsDeleting(false)
     }
   }

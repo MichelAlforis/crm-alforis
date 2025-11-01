@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shared/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Mail, Plus, Send, Users, TrendingUp, Clock } from "lucide-react";
@@ -97,8 +97,11 @@ export default function EmailCampaignsPage() {
             Gérez vos campagnes d'emailing et suivez leurs performances
           </p>
         </div>
-        <Button onClick={() => router.push(ROUTES.EMAIL.CAMPAIGN_NEW)}>
-          <Plus className="h-4 w-4 mr-2" />
+        <Button
+          variant="primary"
+          onClick={() => router.push(ROUTES.EMAIL.CAMPAIGN_NEW)}
+          leftIcon={<Plus className="h-4 w-4" />}
+        >
           Nouvelle Campagne
         </Button>
       </div>

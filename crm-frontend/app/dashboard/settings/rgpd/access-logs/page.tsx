@@ -61,7 +61,7 @@ export default function AccessLogsPage() {
       setLogs((response.data as any).logs || [])
     } catch (error) {
       console.error('Failed to fetch access logs:', error)
-      showToast('Erreur lors du chargement des logs', 'error')
+      showToast({ type: 'error', message: 'Erreur lors du chargement des logs' })
     } finally {
       setIsLoading(false)
     }
@@ -88,10 +88,10 @@ export default function AccessLogsPage() {
       document.body.removeChild(link)
       URL.revokeObjectURL(url)
 
-      showToast('Logs exportés avec succès', 'success')
+      showToast({ type: 'success', message: 'Logs exportés avec succès' })
     } catch (error) {
       console.error('Export failed:', error)
-      showToast('Erreur lors de l\'export', 'error')
+      showToast({ type: 'error', message: 'Erreur lors de l\'export' })
     }
   }
 
