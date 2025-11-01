@@ -103,19 +103,19 @@ export default function MandatsPage() {
         sticky: 'left',
         priority: 'high',
         minWidth: '140px',
-        render: (value: string | null) => value || '-',
+        render: (value: unknown) => (value as string | null) || '-',
       },
       {
         header: 'Organisation',
         accessor: 'organisation',
         priority: 'high',
         minWidth: '200px',
-        render: (org: any) => (
+        render: (org: unknown) => (
           <Link
-            href={`/dashboard/organisations/${org.id}`}
+            href={`/dashboard/organisations/${(org as any).id}`}
             className="text-bleu hover:underline"
           >
-            {org.name}
+            {(org as any).name}
           </Link>
         ),
       },
@@ -124,34 +124,39 @@ export default function MandatsPage() {
         accessor: 'status',
         priority: 'high',
         minWidth: '120px',
-        render: (value: MandatStatus) => (
-          <span
-            className={`px-2 py-1 text-xs rounded ${
-              value === 'ACTIF' || value === 'SIGNE'
-                ? 'bg-green-100 text-green-800'
-                : value === 'EXPIRE' || value === 'RESILIE'
-                  ? 'bg-red-100 text-red-800'
-                  : 'bg-yellow-100 text-yellow-800'
-            }`}
-          >
-            {MANDAT_STATUS_LABELS[value]}
-          </span>
-        ),
+        render: (value: unknown) => {
+          const status = value as MandatStatus
+          return (
+            <span
+              className={`px-2 py-1 text-xs rounded ${
+                status === 'ACTIF' || status === 'SIGNE'
+                  ? 'bg-green-100 text-green-800'
+                  : status === 'EXPIRE' || status === 'RESILIE'
+                    ? 'bg-red-100 text-red-800'
+                    : 'bg-yellow-100 text-yellow-800'
+              }`}
+            >
+              {MANDAT_STATUS_LABELS[status]}
+            </span>
+          )
+        },
       },
       {
         header: 'Date début',
         accessor: 'date_debut',
         priority: 'medium',
         minWidth: '120px',
-        render: (value: unknown) => new Date(value).toLocaleDateString('fr-FR'),
+        render: (value: unknown) => new Date(value as string | number | Date).toLocaleDateString('fr-FR'),
       },
       {
         header: 'Date fin',
         accessor: 'date_fin',
         priority: 'low',
         minWidth: '120px',
-        render: (value: string | null) =>
-          value ? new Date(value).toLocaleDateString('fr-FR') : 'Indéterminée',
+        render: (value: unknown) => {
+          const dateValue = value as string | null
+          return dateValue ? new Date(dateValue).toLocaleDateString('fr-FR') : 'Indéterminée'
+        },
       },
       {
         header: 'Actions',
@@ -159,12 +164,12 @@ export default function MandatsPage() {
         sticky: 'right',
         priority: 'high',
         minWidth: '120px',
-        render: (_: unknown) => {
+        render: (value: unknown, row: Mandat) => {
           const actions: OverflowAction[] = [
             {
               label: 'Voir',
               icon: Eye,
-              onClick: () => router.push(`/dashboard/mandats/${id}`),
+              onClick: () => router.push(`/dashboard/mandats/${row.id}`),
               variant: 'default',
             },
           ]

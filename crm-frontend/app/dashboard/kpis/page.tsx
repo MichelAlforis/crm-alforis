@@ -233,7 +233,7 @@ export default function KPIsPage() {
       accessor: 'source',
       priority: 'low',
       minWidth: '110px',
-      render: (_: string | undefined, row: KPI) =>
+      render: (_value: unknown, row: KPI) =>
         row.auto_generated ? (
           <span className="text-xs font-medium text-orange-500">Automatique</span>
         ) : (
@@ -246,7 +246,8 @@ export default function KPIsPage() {
       sticky: 'right',
       priority: 'high',
       minWidth: '120px',
-      render: (id: number | null, row: KPI) => {
+      render: (value: unknown, row: KPI) => {
+        const id = value as number | null
         if (!id || row.auto_generated) {
           return <span className="text-xs text-gray-400">—</span>
         }

@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { Plus, Eye, Mail, Edit, Trash2, Download, Copy } from 'lucide-react'
-import { Card, CardHeader, CardBody, Button, PageContainer, PageHeader, PageSection } from '@/components/shared'
+import { Card, CardHeader, CardBody, Button, PageContainer, PageSection } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { useEmailCampaigns } from '@/hooks/useEmailAutomation'
@@ -164,19 +164,21 @@ export default function CampaignsPage() {
 
   return (
     <PageContainer width="default">
-      <PageHeader
-        title="Dashboard Campagnes Email"
-        subtitle="Gérez et analysez vos campagnes de marketing par email"
-        icon={<Mail className="w-8 h-8 text-primary" />}
-        actions={
-          <Link href="/dashboard/marketing/campaigns/new">
-            <Button variant="primary" size="lg">
-              <Plus className="w-5 h-5 mr-2" />
-              Nouvelle campagne
-            </Button>
-          </Link>
-        }
-      />
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-4">
+          <Mail className="w-8 h-8 text-primary" />
+          <div>
+            <h1 className="text-2xl font-bold">Dashboard Campagnes Email</h1>
+            <p className="text-text-secondary">Gérez et analysez vos campagnes de marketing par email</p>
+          </div>
+        </div>
+        <Link href="/dashboard/marketing/campaigns/new">
+          <Button variant="primary" size="lg">
+            <Plus className="w-5 h-5 mr-2" />
+            Nouvelle campagne
+          </Button>
+        </Link>
+      </div>
 
       <PageSection>
         {/* KPI Cards */}

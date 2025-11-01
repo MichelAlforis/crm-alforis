@@ -4,7 +4,7 @@ import React, { useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Plus, Edit, Trash2, List, Users, Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
-import { Card, CardHeader, CardBody, Button, PageContainer, PageHeader, PageSection } from '@/components/shared'
+import { Card, CardHeader, CardBody, Button, PageContainer, PageSection } from '@/components/shared'
 import { TableV2, ColumnV2 } from '@/components/shared/TableV2'
 import { OverflowMenu, OverflowAction } from '@/components/shared/OverflowMenu'
 import { Alert } from '@/components/shared/Alert'
@@ -77,7 +77,7 @@ export default function MailingListsPage() {
       minWidth: '200px',
       render: (value: unknown, row: MailingList, _index: number) => (
         <div>
-          <p className="font-medium text-text-primary">{value}</p>
+          <p className="font-medium text-text-primary">{value as string}</p>
           {row.description && (
             <p className="text-fluid-xs text-text-tertiary mt-0.5">{row.description}</p>
           )}
@@ -152,19 +152,21 @@ export default function MailingListsPage() {
 
   return (
     <PageContainer width="default">
-      <PageHeader
-        title="Listes de Diffusion"
-        subtitle="Gérez vos listes de destinataires réutilisables"
-        icon={<List className="w-8 h-8 text-primary" />}
-        actions={
-          <Link href="/dashboard/marketing/mailing-lists/new">
-            <Button variant="primary" size="lg">
-              <Plus className="w-5 h-5 mr-2" />
-              Nouvelle liste
-            </Button>
-          </Link>
-        }
-      />
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-4">
+          <List className="w-8 h-8 text-primary" />
+          <div>
+            <h1 className="text-2xl font-bold">Listes de Diffusion</h1>
+            <p className="text-text-secondary">Gérez vos listes de destinataires réutilisables</p>
+          </div>
+        </div>
+        <Link href="/dashboard/marketing/mailing-lists/new">
+          <Button variant="primary" size="lg">
+            <Plus className="w-5 h-5 mr-2" />
+            Nouvelle liste
+          </Button>
+        </Link>
+      </div>
 
       <PageSection>
         {/* KPIs */}

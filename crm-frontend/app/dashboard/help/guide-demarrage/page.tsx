@@ -2,6 +2,7 @@
 
 import { Rocket, CheckCircle2, ArrowLeft, Building2, Users, MessageSquare, CheckSquare, Zap } from 'lucide-react'
 import Link from 'next/link'
+import { PageContainer } from '@/components/layout/PageContainer'
 
 export default function GuideDemarrage() {
   return (

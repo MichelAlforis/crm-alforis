@@ -27,11 +27,6 @@ export default function EditMailingListPage() {
 
   const [recipientFilters, setRecipientFilters] = useState<RecipientFilters>({
     target_type: 'contacts',
-    languages: [],
-    countries: [],
-    organisation_categories: [],
-    specific_ids: [],
-    exclude_ids: [],
   })
 
   const [recipientCount, setRecipientCount] = useState(0)
@@ -48,15 +43,15 @@ export default function EditMailingListPage() {
       })
       setRecipientFilters({
         target_type: mailingList.target_type as 'contacts' | 'organisations',
-        languages: mailingList.filters?.languages || [],
-        countries: mailingList.filters?.countries || [],
-        organisation_categories: mailingList.filters?.organisation_categories || [],
-        organisation_types: mailingList.filters?.organisation_types || [],
-        cities: mailingList.filters?.cities || [],
-        roles: mailingList.filters?.roles || [],
+        languages: mailingList.filters?.languages,
+        countries: mailingList.filters?.countries,
+        organisation_categories: mailingList.filters?.organisation_categories,
+        organisation_types: mailingList.filters?.organisation_types,
+        cities: mailingList.filters?.cities,
+        roles: mailingList.filters?.roles,
         is_active: mailingList.filters?.is_active,
-        specific_ids: mailingList.filters?.specific_ids || [],
-        exclude_ids: mailingList.filters?.exclude_ids || [],
+        specific_ids: mailingList.filters?.specific_ids,
+        exclude_ids: mailingList.filters?.exclude_ids,
       })
       setRecipientCount(mailingList.recipient_count)
     }

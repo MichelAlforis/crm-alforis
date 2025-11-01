@@ -295,23 +295,20 @@ export default function BatchTrackingPage() {
 
       {/* Alerte leads chauds */}
       {filterCounts.clicked > 0 && (
-        <Alert
-          type="success"
-          message={
-            <div className="flex items-center justify-between">
-              <span>
-                🔥 <strong>{filterCounts.clicked} lead(s) chaud(s)</strong> ont cliqué ! Moment idéal pour les rappeler.
-              </span>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => setFilter('clicked')}
-              >
-                Voir les leads chauds
-              </Button>
-            </div>
-          }
-        />
+        <Alert type="success">
+          <div className="flex items-center justify-between">
+            <span>
+              🔥 <strong>{filterCounts.clicked} lead(s) chaud(s)</strong> ont cliqué ! Moment idéal pour les rappeler.
+            </span>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => setFilter('clicked')}
+            >
+              Voir les leads chauds
+            </Button>
+          </div>
+        </Alert>
       )}
 
       {/* Filtres + Destinataires */}
