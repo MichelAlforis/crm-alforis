@@ -7,12 +7,21 @@
 # - Healthchecks robustes
 # - Logs limités avec rotation
 # - Variables d'environnement sécurisées
+# - Monitoring avec Prometheus + Grafana
+# - Tâches asynchrones avec Celery + Flower
+# - AI Local avec Ollama (mistral:7b)
 
 # IMPORTANT: Créer un fichier .env à la racine avec:
-# - POSTGRES_PASSWORD
-# - SECRET_KEY
-# - ALLOWED_ORIGINS
-# - NEXT_PUBLIC_API_URL
+# - POSTGRES_PASSWORD (obligatoire)
+# - SECRET_KEY (obligatoire)
+# - ENCRYPTION_KEY (obligatoire)
+# - EMAIL_ENCRYPTION_KEY (obligatoire)
+# - GRAFANA_ADMIN_PASSWORD (obligatoire)
+# - FLOWER_BASIC_AUTH (obligatoire, format: user:password)
+# - ALLOWED_ORIGINS (optionnel, défaut: ["https://crm.alforis.fr"])
+# - NEXT_PUBLIC_API_URL (optionnel, défaut: /api/v1)
+# - MICROSOFT_CLIENT_ID, MICROSOFT_CLIENT_SECRET (optionnel, pour Outlook)
+# - SERPAPI_API_KEY (optionnel, pour enrichissement web)
 
 # --- Réseau ---
 networks:
@@ -29,6 +38,8 @@ volumes:
     driver: local
   api-backups:
     driver: local
+  api-logs:
+    driver: local
   caddy-data:
     driver: local
   caddy-config:
@@ -36,6 +47,10 @@ volumes:
   caddy-logs:
     driver: local
   ollama-models:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
     driver: local
 
 # --- Services ---
@@ -76,7 +91,7 @@ services:
         max-file: "3"
 
   # ========================================
-  # REDIS (Cache & Event Bus)
+  # REDIS (Cache & Celery Broker)
   # ========================================
   redis:
     image: redis:7-alpine
@@ -89,7 +104,7 @@ services:
     networks:
       - crm-network
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
       interval: 10s
       timeout: 3s
       retries: 5
@@ -179,6 +194,16 @@ services:
       JWT_EXPIRATION_HOURS: ${JWT_EXPIRATION_HOURS:-24}
       # AI Agent - Encryption
       ENCRYPTION_KEY: ${ENCRYPTION_KEY:?ENCRYPTION_KEY doit être défini dans .env}
+      EMAIL_ENCRYPTION_KEY: ${EMAIL_ENCRYPTION_KEY:?EMAIL_ENCRYPTION_KEY doit être défini dans .env}
+      # Microsoft OAuth (Outlook)
+      MICROSOFT_CLIENT_ID: ${MICROSOFT_CLIENT_ID}
+      MICROSOFT_CLIENT_SECRET: ${MICROSOFT_CLIENT_SECRET}
+      MICROSOFT_REDIRECT_URI: ${MICROSOFT_REDIRECT_URI}
+      # Web Enrichment
+      SERPAPI_API_KEY: ${SERPAPI_API_KEY}
+      # Webhooks
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET}
+      UNSUBSCRIBE_JWT_SECRET: ${UNSUBSCRIBE_JWT_SECRET}
       # Environnement
       ENVIRONMENT: production
       MAX_UPLOAD_SIZE_MB: ${MAX_UPLOAD_SIZE_MB:-10}
@@ -191,6 +216,7 @@ services:
     volumes:
       - api-uploads:/app/uploads
       - api-backups:/app/backups
+      - api-logs:/app/logs
     networks:
       - crm-network
     healthcheck:
@@ -272,7 +298,213 @@ services:
           cpus: '1.0'      # Démarre avec 1 CPU
           memory: 2G       # 2GB minimum
     healthcheck:
-      test: ["CMD", "/bin/ollama", "list"]
+      test: ["CMD-SHELL", "curl -f http://localhost:11434/api/tags || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ========================================
+  # CELERY WORKER (Background Tasks)
+  # ========================================
+  celery-worker:
+    build:
+      context: ./crm-backend
+      dockerfile: Dockerfile
+      target: production
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-crm_user}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-crm_db}
+      REDIS_URL: redis://redis:6379/0
+      REDIS_ENABLED: "True"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY doit être défini dans .env}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?ENCRYPTION_KEY doit être défini dans .env}
+      EMAIL_ENCRYPTION_KEY: ${EMAIL_ENCRYPTION_KEY:?EMAIL_ENCRYPTION_KEY doit être défini dans .env}
+      ENVIRONMENT: production
+      POSTGRES_USER: ${POSTGRES_USER:-crm_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-crm_db}
+      POSTGRES_HOST: postgres
+      PYTHONPATH: /app
+    working_dir: /app
+    command: celery -A celery_app worker --loglevel=info --concurrency=2 --max-tasks-per-child=100
+    volumes:
+      - api-logs:/app/logs
+    networks:
+      - crm-network
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A celery_app inspect ping || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ========================================
+  # CELERY BEAT (Periodic Task Scheduler)
+  # ========================================
+  celery-beat:
+    build:
+      context: ./crm-backend
+      dockerfile: Dockerfile
+      target: production
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      celery-worker:
+        condition: service_started
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-crm_user}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-crm_db}
+      REDIS_URL: redis://redis:6379/0
+      REDIS_ENABLED: "True"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY doit être défini dans .env}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?ENCRYPTION_KEY doit être défini dans .env}
+      EMAIL_ENCRYPTION_KEY: ${EMAIL_ENCRYPTION_KEY:?EMAIL_ENCRYPTION_KEY doit être défini dans .env}
+      ENVIRONMENT: production
+      POSTGRES_USER: ${POSTGRES_USER:-crm_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-crm_db}
+      POSTGRES_HOST: postgres
+      PYTHONPATH: /app
+    working_dir: /app
+    command: celery -A celery_app beat --loglevel=info --schedule=/tmp/celerybeat-schedule
+    volumes:
+      - api-logs:/app/logs
+    networks:
+      - crm-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ========================================
+  # FLOWER (Celery Monitoring UI)
+  # ========================================
+  flower:
+    build:
+      context: ./crm-backend
+      dockerfile: Dockerfile
+      target: production
+    restart: always
+    depends_on:
+      redis:
+        condition: service_healthy
+      celery-worker:
+        condition: service_started
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+      DATABASE_URL: postgresql://${POSTGRES_USER:-crm_user}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-crm_db}
+      POSTGRES_USER: ${POSTGRES_USER:-crm_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-crm_db}
+      POSTGRES_HOST: postgres
+      PYTHONPATH: /app
+      # Flower Basic Auth (obligatoire en prod)
+      FLOWER_BASIC_AUTH: ${FLOWER_BASIC_AUTH:?FLOWER_BASIC_AUTH doit être défini dans .env (format: user:password)}
+    working_dir: /app
+    command: celery -A celery_app flower --port=5555 --basic-auth=${FLOWER_BASIC_AUTH}
+    ports:
+      - "127.0.0.1:5555:5555"
+    networks:
+      - crm-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5555 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ========================================
+  # PROMETHEUS (Metrics Collection & Scraping)
+  # ========================================
+  prometheus:
+    image: prom/prometheus:latest
+    restart: always
+    depends_on:
+      api:
+        condition: service_started
+    ports:
+      - "127.0.0.1:9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - crm-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:9090/-/healthy || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ========================================
+  # GRAFANA (Metrics Visualization & Dashboards)
+  # ========================================
+  grafana:
+    image: grafana/grafana:latest
+    restart: always
+    depends_on:
+      prometheus:
+        condition: service_started
+    ports:
+      - "127.0.0.1:3001:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?GRAFANA_ADMIN_PASSWORD doit être défini dans .env}
+      GF_SERVER_ROOT_URL: ${GRAFANA_ROOT_URL:-https://crm.alforis.fr/grafana}
+      GF_INSTALL_PLUGINS: ""
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    networks:
+      - crm-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
