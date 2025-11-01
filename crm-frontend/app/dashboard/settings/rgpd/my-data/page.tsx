@@ -28,7 +28,7 @@ export default function MyDataPage() {
     try {
       setIsExporting(true)
       const response = await apiClient.get('/rgpd/export')
-      const data = response.data.data
+      const data = (response.data as any).data
 
       // Create JSON file and download
       const jsonStr = JSON.stringify(data, null, 2)

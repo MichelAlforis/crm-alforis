@@ -46,7 +46,7 @@ export const TemplateCreateModal: React.FC<TemplateCreateModalProps> = ({
       })
 
       // Succès
-      const template = response.data
+      const template = response.data as any
 
       // Reset form
       setFormData({
@@ -56,7 +56,7 @@ export const TemplateCreateModal: React.FC<TemplateCreateModalProps> = ({
       })
 
       // Callback
-      if (onSuccess && template.id) {
+      if (onSuccess && template?.id) {
         onSuccess(template.id)
       }
 

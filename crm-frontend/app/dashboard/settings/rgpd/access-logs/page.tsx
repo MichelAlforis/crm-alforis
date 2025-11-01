@@ -58,7 +58,7 @@ export default function AccessLogsPage() {
       params.append('limit', '100')
 
       const response = await apiClient.get(`/rgpd/access-logs?${params.toString()}`)
-      setLogs(response.data.logs || [])
+      setLogs((response.data as any).logs || [])
     } catch (error) {
       console.error('Failed to fetch access logs:', error)
       showToast('Erreur lors du chargement des logs', 'error')
@@ -75,7 +75,7 @@ export default function AccessLogsPage() {
       params.append('limit', '1000')
 
       const response = await apiClient.get(`/rgpd/access-logs?${params.toString()}`)
-      const data = response.data.logs || []
+      const data = (response.data as any).logs || []
 
       const jsonStr = JSON.stringify(data, null, 2)
       const blob = new Blob([jsonStr], { type: 'application/json' })

@@ -475,7 +475,7 @@ export const useParseSignature = () => {
       const response = await apiClient.post('/ai/parse-signature', data)
       return response.data
     },
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       if (data.success) {
         toast({
           title: '✅ Signature parsée',

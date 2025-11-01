@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { FileText, Plus, Edit, Trash2, Eye, Download } from 'lucide-react'
 import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/shared/Button'
 import { useEmailTemplates } from '@/hooks/useEmailAutomation'
 import { useExport } from '@/hooks/useExport'
 import { useConfirm } from '@/hooks/useConfirm'
@@ -79,11 +79,12 @@ export default function TemplatesPage() {
           </p>
         </div>
         <Button
+          variant="primary"
           onClick={() => setIsCreateModalOpen(true)}
+          leftIcon={<Plus className="h-4 w-4" />}
           className="w-full sm:w-auto bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700"
           size="sm"
         >
-          <Plus className="mr-2 h-4 w-4" />
           <span className="hidden sm:inline">Nouveau Template</span>
           <span className="sm:hidden">Nouveau</span>
         </Button>
@@ -97,9 +98,9 @@ export default function TemplatesPage() {
             size="sm"
             onClick={() => exportData('csv')}
             disabled={isExporting}
+            leftIcon={<Download className="w-3 h-3 md:w-4 md:h-4" />}
             className="text-xs md:text-sm"
           >
-            <Download className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
             CSV
           </Button>
           <Button
@@ -107,9 +108,9 @@ export default function TemplatesPage() {
             size="sm"
             onClick={() => exportData('excel')}
             disabled={isExporting}
+            leftIcon={<Download className="w-3 h-3 md:w-4 md:h-4" />}
             className="text-xs md:text-sm"
           >
-            <Download className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
             Excel
           </Button>
           <Button
@@ -117,9 +118,9 @@ export default function TemplatesPage() {
             size="sm"
             onClick={() => exportData('pdf')}
             disabled={isExporting}
+            leftIcon={<Download className="w-3 h-3 md:w-4 md:h-4" />}
             className="text-xs md:text-sm"
           >
-            <Download className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
             PDF
           </Button>
         </div>
@@ -136,11 +137,12 @@ export default function TemplatesPage() {
             Créez votre premier template email pour commencer
           </p>
           <Button
+            variant="primary"
             onClick={() => setIsCreateModalOpen(true)}
+            leftIcon={<Plus className="h-4 w-4" />}
             className="w-full sm:w-auto bg-gradient-to-r from-pink-500 to-rose-600"
             size="sm"
           >
-            <Plus className="mr-2 h-4 w-4" />
             Créer un Template
           </Button>
         </Card>
@@ -174,10 +176,10 @@ export default function TemplatesPage() {
                   size="sm"
                   variant="outline"
                   onClick={() => handlePreview(template)}
+                  leftIcon={<Eye className="h-3 w-3" />}
                   className="flex-1 text-xs md:text-sm"
                   title="Aperçu"
                 >
-                  <Eye className="mr-1 h-3 w-3" />
                   <span className="hidden sm:inline">Aperçu</span>
                   <span className="sm:hidden">Voir</span>
                 </Button>
@@ -185,10 +187,10 @@ export default function TemplatesPage() {
                   size="sm"
                   variant="outline"
                   onClick={() => handleEdit(template)}
+                  leftIcon={<Edit className="h-3 w-3" />}
                   className="flex-1 text-xs md:text-sm"
                   title="Modifier"
                 >
-                  <Edit className="mr-1 h-3 w-3" />
                   Modifier
                 </Button>
                 <Button

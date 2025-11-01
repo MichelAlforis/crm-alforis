@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { ROUTES } from "@/lib/constants"
 import { Mail, List, FileText, TrendingUp, Send, Users, Clock } from 'lucide-react'
 import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/shared/Button'
 import { apiClient } from '@/lib/api'
 import { useToast } from '@/hooks/useToast'
 import { logger } from '@/lib/logger'
@@ -187,10 +187,11 @@ export default function MarketingDashboard() {
           </p>
         </div>
         <Button
+          variant="primary"
           onClick={() => router.push(ROUTES.MARKETING.CAMPAIGN_NEW)}
+          leftIcon={<Mail className="h-4 w-4" />}
           className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
         >
-          <Mail className="mr-2 h-4 w-4" />
           Nouvelle Campagne
         </Button>
       </div>
@@ -292,11 +293,13 @@ export default function MarketingDashboard() {
           </div>
 
           <Button
+            variant="primary"
             onClick={(e) => {
               e.stopPropagation()
               router.push(ROUTES.MARKETING.CAMPAIGN_NEW)
             }}
-            className="w-full mt-4 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600"
+            fullWidth
+            className="mt-4 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600"
           >
             Nouvelle Campagne
           </Button>
@@ -332,11 +335,13 @@ export default function MarketingDashboard() {
           </div>
 
           <Button
+            variant="primary"
             onClick={(e) => {
               e.stopPropagation()
               router.push(ROUTES.MARKETING.MAILING_LISTS)
             }}
-            className="w-full mt-4 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600"
+            fullWidth
+            className="mt-4 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600"
           >
             Gérer les Listes
           </Button>
@@ -365,11 +370,13 @@ export default function MarketingDashboard() {
           </div>
 
           <Button
+            variant="primary"
             onClick={(e) => {
               e.stopPropagation()
               router.push(ROUTES.MARKETING.TEMPLATES)
             }}
-            className="w-full mt-4 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600"
+            fullWidth
+            className="mt-4 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600"
           >
             Gérer les Templates
           </Button>
