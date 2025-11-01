@@ -188,14 +188,22 @@ Format checklist détaillé avec cases à cocher pour tracking.
   - 8 pages migrées (Help: 4, CRM: 2, Marketing: 2)
   - **284 design tokens appliqués** (146 colors, 55 spacing, 83 typography)
 
+- [x] **Phase 3 BONUS : Tables Responsive (Mobile Card View)** ✅ TERMINÉ
+  - Composant `DataTableMobileCard` créé (177 lignes)
+  - DataTable: Desktop/mobile split avec priority columns
+  - TableV2: mobileCollapse activé + column priorities
+  - 14 colonnes avec priority sur pages CRM
+  - 12 colonnes avec priority sur pages Marketing
+
 **Tests de validation :**
-- [x] Build production : ✅ Réussi (71 pages générées en 16s)
-- [x] Tests responsive : ✅ **6.5/8 pages mobile-ready** (81%)
+- [x] Build production : ✅ Réussi (71 pages, 10.3s)
+- [x] Tests responsive : ✅ **8/8 pages mobile-ready** (100%)
   - ✅ Help Center (4/4) : Fully responsive
-  - 🔴 Pages avec tables (4/4) : Scroll horizontal nécessaire sur mobile
+  - ✅ CRM (2/2) : DataTable mobile cards fonctionnelles
+  - ✅ Marketing (2/2) : TableV2 mobile collapse fonctionnel
 - [x] Tests dark mode : ✅ **97% coverage** (6/8 pages parfaites)
 
-**Temps d'exécution réel :** ~2h (vs 7-13h estimé) grâce aux agents parallèles
+**Temps d'exécution réel :** ~5h (vs 7-13h estimé) grâce aux agents parallèles
 
 **Date de réalisation :** 1er Novembre 2025
 

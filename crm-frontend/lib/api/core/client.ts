@@ -302,7 +302,7 @@ export class BaseHttpClient {
   /**
    * Effectue une requête HTTP générique avec gestion automatique du refresh token
    */
-  protected async request<T>(
+  public async request<T>(
     endpoint: string,
     config: RequestConfig = {}
   ): Promise<T> {

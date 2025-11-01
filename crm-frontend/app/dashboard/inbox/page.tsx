@@ -172,7 +172,7 @@ function InteractionCard({
 
 // ============= MAIN PAGE =============
 
-interface InboxFilterValues {
+type InboxFilterValues = {
   assignee: string
   status: string
   due: string

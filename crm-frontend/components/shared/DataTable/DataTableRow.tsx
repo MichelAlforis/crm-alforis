@@ -73,7 +73,7 @@ export function DataTableRow<T = any>({
       {/* Data cells */}
       {columns.map((column) => {
         const value = getCellValue(column, row)
-        const displayValue = column.cell ? column.cell(value, row) : value
+        const displayValue: React.ReactNode = column.cell ? column.cell(value, row) : value
 
         return (
           <td

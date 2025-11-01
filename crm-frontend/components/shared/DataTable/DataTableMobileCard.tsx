@@ -87,7 +87,7 @@ export function DataTableMobileCard<T = any>({
       <div className="space-y-spacing-xs">
         {highPriorityColumns.map((column) => {
           const value = getCellValue(column, row)
-          const displayValue = column.cell ? column.cell(value, row) : value
+          const displayValue: React.ReactNode = column.cell ? column.cell(value, row) : value
 
           return (
             <div key={column.id} className="flex justify-between items-start gap-spacing-sm">
@@ -126,7 +126,7 @@ export function DataTableMobileCard<T = any>({
         <div className="mt-3 pt-3 border-t border-gray-100 dark:border-slate-700 space-y-spacing-xs">
           {lowPriorityColumns.map((column) => {
             const value = getCellValue(column, row)
-            const displayValue = column.cell ? column.cell(value, row) : value
+            const displayValue: React.ReactNode = column.cell ? column.cell(value, row) : value
 
             return (
               <div key={column.id} className="flex justify-between items-start gap-spacing-sm">

@@ -71,10 +71,10 @@ export default function CampaignsPage() {
       sticky: 'left',
       priority: 'high',
       minWidth: '200px',
-      render: (value: unknown, row: EmailCampaign, _index: number) => (
+      render: (value: unknown, row: EmailCampaign, _index: number): React.ReactNode => (
         <div>
           <Link href={`/dashboard/marketing/campaigns/${row.id}`} className="font-medium text-bleu hover:underline">
-            {value}
+            {String(value)}
           </Link>
           {row.subject && (
             <p className="text-fluid-xs text-text-tertiary mt-0.5">Objet: {row.subject}</p>
@@ -87,9 +87,9 @@ export default function CampaignsPage() {
       accessor: 'status',
       priority: 'high',
       minWidth: '120px',
-      render: (value: unknown, _row, _index: number) => (
+      render: (value: unknown, _row, _index: number): React.ReactNode => (
         <span className={`inline-flex items-center px-2 py-1 rounded-full text-fluid-xs font-medium ${STATUS_COLORS[value as keyof typeof STATUS_COLORS] || 'bg-surface-secondary dark:bg-surface-secondary text-text-secondary dark:text-text-secondary'}`}>
-          {STATUS_LABELS[value as keyof typeof STATUS_LABELS] || value}
+          {STATUS_LABELS[value as keyof typeof STATUS_LABELS] || String(value)}
         </span>
       ),
     },
@@ -98,8 +98,8 @@ export default function CampaignsPage() {
       accessor: 'provider',
       priority: 'medium',
       minWidth: '120px',
-      render: (value: unknown, _row, _index: number) => (
-        <span className="text-fluid-sm capitalize">{value || '-'}</span>
+      render: (value: unknown, _row, _index: number): React.ReactNode => (
+        <span className="text-fluid-sm capitalize">{String(value) || '-'}</span>
       ),
     },
     {
@@ -107,15 +107,15 @@ export default function CampaignsPage() {
       accessor: 'created_at',
       priority: 'medium',
       minWidth: '120px',
-      render: (value: unknown, _row, _index: number) => new Date(value).toLocaleDateString('fr-FR'),
+      render: (value: unknown, _row, _index: number): React.ReactNode => new Date(String(value)).toLocaleDateString('fr-FR'),
     },
     {
       header: 'Programmée pour',
       accessor: 'scheduled_at',
       priority: 'low',
       minWidth: '140px',
-      render: (value: unknown, _row, _index: number) =>
-        value ? new Date(value).toLocaleString('fr-FR') : '-',
+      render: (value: unknown, _row, _index: number): React.ReactNode =>
+        value ? new Date(String(value)).toLocaleString('fr-FR') : '-',
     },
     {
       header: 'Actions',

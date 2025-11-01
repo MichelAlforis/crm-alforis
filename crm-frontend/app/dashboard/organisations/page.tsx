@@ -45,13 +45,13 @@ export default function OrganisationsPage() {
         priority: 'high',
         sortable: true,
         searchable: true,
-        render: (value: unknown, row: any) => (
+        render: (value: unknown, row: any): React.ReactNode => (
           <Link
             href={`/dashboard/organisations/${row.id}`}
             className="font-medium text-text-primary dark:text-text-primary hover:text-primary dark:hover:text-primary transition-colors"
             onClick={(e) => e.stopPropagation()}
           >
-            {value}
+            {String(value)}
           </Link>
         ),
       },

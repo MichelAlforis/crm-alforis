@@ -105,7 +105,7 @@ export default function DemoTableV2Page() {
       sticky: 'left', // ✨ Sticky column on the left
       priority: 'high', // 📱 Always visible on mobile
       minWidth: '200px',
-      render: (value: unknown) => (
+      render: (value: unknown): React.ReactNode => (
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
             {String(value).charAt(0)}
@@ -120,14 +120,14 @@ export default function DemoTableV2Page() {
       sortable: true,
       priority: 'high', // 📱 Always visible on mobile
       maxWidth: '280px', // Force column width with table-fixed
-      render: (value: unknown) => (
+      render: (value: unknown): React.ReactNode => (
         <a
           href={`mailto:${value}`}
           className="flex items-center gap-1 min-w-0 text-blue-600 hover:text-blue-700 hover:underline"
-          title={value}
+          title={String(value)}
         >
           <Mail className="w-3.5 h-3.5 flex-shrink-0" />
-          <span className="truncate block min-w-0">{value}</span>
+          <span className="truncate block min-w-0">{String(value)}</span>
         </a>
       )
     },
@@ -135,13 +135,13 @@ export default function DemoTableV2Page() {
       header: 'Téléphone',
       accessor: 'phone',
       priority: 'medium', // 📱 Collapsed by default on mobile
-      render: (value: unknown) => (
+      render: (value: unknown): React.ReactNode => (
         <a
           href={`tel:${value}`}
           className="text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white dark:text-slate-100 flex items-center gap-1"
         >
           <Phone className="w-3.5 h-3.5" />
-          <span>{value}</span>
+          <span>{String(value)}</span>
         </a>
       )
     },
@@ -151,18 +151,18 @@ export default function DemoTableV2Page() {
       sortable: true,
       priority: 'medium', // 📱 Collapsed by default on mobile
       className: 'max-w-[180px]',
-      render: (value: unknown) => (
-        <span className="text-gray-700 dark:text-slate-300 truncate block" title={value}>{value}</span>
+      render: (value: unknown): React.ReactNode => (
+        <span className="text-gray-700 dark:text-slate-300 truncate block" title={String(value)}>{String(value)}</span>
       )
     },
     {
       header: 'Localisation',
       accessor: 'location',
       priority: 'low', // 📱 Collapsed by default on mobile
-      render: (value: unknown) => (
+      render: (value: unknown): React.ReactNode => (
         <div className="flex items-center gap-1 text-gray-600 dark:text-slate-400 text-xs">
           <MapPin className="w-3.5 h-3.5" />
-          <span>{value}</span>
+          <span>{String(value)}</span>
         </div>
       )
     },
@@ -171,7 +171,8 @@ export default function DemoTableV2Page() {
       accessor: 'status',
       sortable: true,
       priority: 'high', // 📱 Always visible on mobile
-      render: (value: 'active' | 'inactive' | 'pending') => {
+      render: (value: unknown): React.ReactNode => {
+        const statusValue = value as 'active' | 'inactive' | 'pending'
         const styles = {
           active: 'bg-green-100 text-green-800 border-green-200',
           inactive: 'bg-gray-100 dark:bg-slate-800 text-gray-800 border-gray-200 dark:border-slate-700',
@@ -184,8 +185,8 @@ export default function DemoTableV2Page() {
         }
 
         return (
-          <span className={`px-2 py-1 text-xs font-medium rounded-full border ${styles[value]}`}>
-            {labels[value]}
+          <span className={`px-2 py-1 text-xs font-medium rounded-full border ${styles[statusValue]}`}>
+            {labels[statusValue]}
           </span>
         )
       }
@@ -195,13 +196,13 @@ export default function DemoTableV2Page() {
       accessor: 'revenue',
       sortable: true,
       priority: 'medium', // 📱 Collapsed by default on mobile
-      render: (value: unknown) => (
+      render: (value: unknown): React.ReactNode => (
         <span className="font-semibold text-green-700">
           {new Intl.NumberFormat('fr-FR', {
             style: 'currency',
             currency: 'EUR',
             minimumFractionDigits: 0
-          }).format(value)}
+          }).format(Number(value))}
         </span>
       )
     },
@@ -210,9 +211,9 @@ export default function DemoTableV2Page() {
       accessor: 'lastContact',
       sortable: true,
       priority: 'low', // 📱 Collapsed by default on mobile
-      render: (value: unknown) => (
+      render: (value: unknown): React.ReactNode => (
         <span className="text-gray-600 dark:text-slate-400 text-sm">
-          {new Date(value).toLocaleDateString('fr-FR', {
+          {new Date(String(value)).toLocaleDateString('fr-FR', {
             day: '2-digit',
             month: 'short',
             year: 'numeric'

@@ -29,7 +29,7 @@ interface Mandat {
   date_fin: string | null
 }
 
-interface MandatFilters {
+type MandatFilters = {
   status: string
   dateFrom: string
   dateTo: string

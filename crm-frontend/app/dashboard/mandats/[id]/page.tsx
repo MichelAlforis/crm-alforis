@@ -150,14 +150,14 @@ export default function MandatDetailPage() {
       accessor: 'type',
       priority: 'high',
       minWidth: '140px',
-      render: (value: unknown, _row, _index: number) => MANDAT_TYPE_LABELS[value] || value,
+      render: (value: unknown, _row, _index: number): React.ReactNode => MANDAT_TYPE_LABELS[value as keyof typeof MANDAT_TYPE_LABELS] || String(value),
     },
     {
       header: 'Code ISIN',
       accessor: 'isin_code',
       priority: 'medium',
       minWidth: '140px',
-      render: (value: unknown, _row, _index: number) => value || '-',
+      render: (value: unknown, _row, _index: number): React.ReactNode => String(value) || '-',
     },
     {
       header: 'Allocation',
@@ -181,7 +181,7 @@ export default function MandatDetailPage() {
       accessor: 'status',
       priority: 'medium',
       minWidth: '100px',
-      render: (value: unknown, _row, _index: number) => (
+      render: (value: unknown, _row, _index: number): React.ReactNode => (
         <span
           className={`px-2 py-1 text-xs rounded ${
             value === 'ACTIF'
@@ -191,7 +191,7 @@ export default function MandatDetailPage() {
                 : 'bg-yellow-100 text-yellow-800'
           }`}
         >
-          {value}
+          {String(value)}
         </span>
       ),
     },

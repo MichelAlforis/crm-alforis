@@ -89,7 +89,7 @@ export default function MailingListsPage() {
       accessor: 'target_type',
       priority: 'high',
       minWidth: '120px',
-      render: (value: unknown) => (
+      render: (value: unknown): React.ReactNode => (
         <span className="text-fluid-sm capitalize">
           {value === 'contacts' ? 'Contacts' : 'Organisations'}
         </span>
@@ -100,10 +100,10 @@ export default function MailingListsPage() {
       accessor: 'recipient_count',
       priority: 'high',
       minWidth: '140px',
-      render: (value: unknown) => (
+      render: (value: unknown): React.ReactNode => (
         <div className="flex items-center gap-2">
           <Users className="w-4 h-4 text-text-tertiary" />
-          <span className="font-semibold text-primary">{value}</span>
+          <span className="font-semibold text-primary">{String(value)}</span>
         </div>
       ),
     },
@@ -112,15 +112,15 @@ export default function MailingListsPage() {
       accessor: 'last_used_at',
       priority: 'medium',
       minWidth: '150px',
-      render: (value: unknown, _row, _index: number) =>
-        value ? new Date(value).toLocaleDateString('fr-FR') : 'Jamais utilisée',
+      render: (value: unknown, _row, _index: number): React.ReactNode =>
+        value ? new Date(String(value)).toLocaleDateString('fr-FR') : 'Jamais utilisée',
     },
     {
       header: 'Créée le',
       accessor: 'created_at',
       priority: 'low',
       minWidth: '120px',
-      render: (value: unknown) => new Date(String(value)).toLocaleDateString('fr-FR'),
+      render: (value: unknown): React.ReactNode => new Date(String(value)).toLocaleDateString('fr-FR'),
     },
     {
       header: 'Actions',

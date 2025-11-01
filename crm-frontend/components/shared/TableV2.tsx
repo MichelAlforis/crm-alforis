@@ -165,6 +165,7 @@ function CollapsedRow<T>({ row, rowIdx, columns, getCellValue }: CollapsedRowPro
       <div className="space-y-2">
         {highPriorityColumns.map((column, colIdx) => {
           const value = getCellValue(row, column.accessor)
+          const displayValue: React.ReactNode = column.render ? column.render(value, row, rowIdx) : value
 
           return (
             <div key={colIdx} className="flex justify-between items-start gap-2">
@@ -172,7 +173,7 @@ function CollapsedRow<T>({ row, rowIdx, columns, getCellValue }: CollapsedRowPro
                 {column.header}
               </span>
               <span className="text-sm text-gray-900 dark:text-slate-100 text-right flex-1">
-                {column.render ? column.render(value, row, rowIdx) : value}
+                {displayValue}
               </span>
             </div>
           )
@@ -200,6 +201,7 @@ function CollapsedRow<T>({ row, rowIdx, columns, getCellValue }: CollapsedRowPro
         <div className="mt-3 pt-3 border-t border-gray-100 space-y-2">
           {lowPriorityColumns.map((column, colIdx) => {
             const value = getCellValue(row, column.accessor)
+            const displayValue: React.ReactNode = column.render ? column.render(value, row, rowIdx) : value
 
             return (
               <div key={colIdx} className="flex justify-between items-start gap-2">
@@ -207,7 +209,7 @@ function CollapsedRow<T>({ row, rowIdx, columns, getCellValue }: CollapsedRowPro
                   {column.header}
                 </span>
                 <span className="text-sm text-gray-900 dark:text-slate-100 text-right flex-1">
-                  {column.render ? column.render(value, row, rowIdx) : value}
+                  {displayValue}
                 </span>
               </div>
             )
@@ -367,6 +369,13 @@ export function TableV2<T = unknown>({
                   >
                     {visibleColumns.map((column, colIdx) => {
                       const value = getCellValue(row, column.accessor)
+                      const displayValue: React.ReactNode = column.render
+                        ? column.render(value, row, rowIdx)
+                        : (
+                          <span className="block min-w-0 overflow-hidden text-ellipsis whitespace-nowrap" title={String(value)}>
+                            {String(value)}
+                          </span>
+                        )
                       const isSticky = stickySides[colIdx]
                       const stickyOffset = isSticky
                         ? calculateStickyOffset(visibleColumns, colIdx, isSticky)
@@ -400,13 +409,7 @@ export function TableV2<T = unknown>({
                           }}
                         >
                           <div className="min-w-0">
-                            {column.render
-                              ? column.render(value, row, rowIdx)
-                              : (
-                                <span className="block min-w-0 overflow-hidden text-ellipsis whitespace-nowrap" title={String(value)}>
-                                  {value}
-                                </span>
-                              )}
+                            {displayValue}
                           </div>
                         </td>
                       )
