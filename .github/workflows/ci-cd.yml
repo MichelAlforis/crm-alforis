@@ -360,10 +360,10 @@ jobs:
           retention-days: 7
 
   # ============================================================================
-  # 📊 SONARQUBE ANALYSIS
+  # 📊 SONARCLOUD ANALYSIS
   # ============================================================================
-  sonarqube:
-    name: 📊 SonarQube Analysis
+  sonarcloud:
+    name: 📊 SonarCloud Analysis
     runs-on: ubuntu-latest
     needs: [test-backend, test-frontend, test-e2e]
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
@@ -375,27 +375,31 @@ jobs:
         with:
           fetch-depth: 0  # Full history for better analysis
 
-      - name: 📊 SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v6
+      - name: 🔎 Preflight secrets check
+        run: |
+          if [ -z "${{ secrets.SONAR_TOKEN }}" ]; then
+            echo "❌ SONAR_TOKEN manquant - Configure-le dans GitHub Settings > Secrets"
+            echo "ℹ️ Va sur SonarCloud > My Account > Security > Generate Token"
+            exit 1
+          else
+            echo "✅ SONAR_TOKEN configuré"
+          fi
+
+          if [ -z "${{ secrets.SONAR_ORGANIZATION }}" ]; then
+            echo "⚠️ SONAR_ORGANIZATION manquant - utilisation de la valeur du fichier sonar-project.properties"
+            echo "ℹ️ Recommandé: Configure SONAR_ORGANIZATION dans GitHub Secrets pour plus de flexibilité"
+          else
+            echo "✅ SONAR_ORGANIZATION configuré: ${{ secrets.SONAR_ORGANIZATION }}"
+          fi
+
+      - name: 📊 SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # For PR decoration
         with:
           args: >
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            -Dsonar.projectKey=MichelAlforis_crm-alforis
-            -Dsonar.python.coverage.reportPaths=crm-backend/coverage.xml
-            -Dsonar.javascript.lcov.reportPaths=crm-frontend/coverage/lcov.info
-            -Dsonar.sources=crm-backend,crm-frontend
-            -Dsonar.exclusions=**/*test*/**,**/node_modules/**,**/venv/**
-
-      - name: 🚦 Quality Gate Check
-        uses: SonarSource/sonarqube-quality-gate-action@v1
-        timeout-minutes: 5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        continue-on-error: true
+            -Dsonar.verbose=true
 
   # ============================================================================
   # 🔒 SECURITY SCAN
@@ -431,7 +435,7 @@ jobs:
   build:
     name: 🐳 Build Docker Images
     runs-on: ubuntu-latest
-    needs: [test-backend, test-frontend, test-e2e, sonarqube]
+    needs: [test-backend, test-frontend, test-e2e, sonarcloud]
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
     continue-on-error: true  # Don't fail CI if Docker credentials not configured
 
