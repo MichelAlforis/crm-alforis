@@ -16,8 +16,8 @@ export * from '../lib/types';
 // Re-export specialized type modules
 export * from './activity';
 export * from './ai';
-export * from './email-marketing';
-export * from './interaction';
+// export * from './email-marketing'; // COMMENTED: duplicates EmailEventType, EmailSend from lib/types
+// export * from './interaction'; // COMMENTED: duplicates InteractionStatus, InteractionType from lib/types
 
 // Re-export dashboard types
 export * from '../lib/types/dashboard';
